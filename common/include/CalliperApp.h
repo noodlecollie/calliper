@@ -47,7 +47,7 @@ private:
 	void PlatformSpecificInitialisation(Core** core, PolycodeView* view);
 	void InitialiseResources();
 	void InitialiseScreen();
-	void InitialiseMenuBar();
+	void InitialiseMenu();
 
 private:
 	Core* m_pCore;			// Also cache our core object. This should be alive as long as we are.

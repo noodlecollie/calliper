@@ -17,7 +17,7 @@ CalliperApp::CalliperApp(Core** core, PolycodeView* view)
 	InitialiseScreen();
 
 	// Set up the menu bar.
-	InitialiseMenuBar();
+	InitialiseMenu();
 }
 
 CalliperApp::~CalliperApp()
@@ -123,21 +123,15 @@ void CalliperApp::InitialiseScreen()
 	m_pScreen->rootEntity.processInputEvents = true;
 }
 
-void CalliperApp::InitialiseMenuBar()
+void CalliperApp::InitialiseMenu()
 {
 	assert(!globalMenu);
 
 	// Create the global menu.
-	// TODO: What exactly is this and why is it needed?
+	// This seems to be a global class which manages pop-up menus.
+	// We can use this to make a menu bar at the top of the screen, for example,
+	// by creating a pop-up menu when a button is pressed.
 	globalMenu = new UIGlobalMenu();
 	UITextInput::setMenuSingleton(globalMenu);
 	m_pScreen->addChild(globalMenu);
-
-	// Create the menu bar.
-	m_pMenuBar = new UIMenuBar(300, globalMenu);
-
-	UIMenuBarEntry *fileEntry = m_pMenuBar->addMenuBarEntry("File");
-	fileEntry->addItem("New File", "new_file", KEY_n);
-
-	m_pScreen->addChild(m_pMenuBar);
 }
