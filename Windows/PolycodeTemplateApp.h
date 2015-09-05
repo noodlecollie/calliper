@@ -1,6 +1,8 @@
 #include "PolycodeView.h"
 #include "Polycode.h"
 
+class CalliperApp;
+
 using namespace Polycode;
 
 class PolycodeTemplateApp {
@@ -12,4 +14,5 @@ public:
     
 private:
     Core *core;
+	CalliperApp* app;
 };

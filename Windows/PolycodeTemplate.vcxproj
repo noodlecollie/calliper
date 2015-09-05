@@ -43,6 +43,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\common\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -77,10 +78,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\src\CalliperApp.cpp" />
     <ClCompile Include="PolycodeTemplate.cpp" />
     <ClCompile Include="PolycodeTemplateApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\include\CalliperApp.h" />
     <ClInclude Include="PolycodeTemplateApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,16 +1,16 @@
 #include "PolycodeTemplateApp.h"
+#include "CalliperApp.h"
 
-PolycodeTemplateApp::PolycodeTemplateApp(PolycodeView *view) {
-	core = new Win32Core(view, 640,480,false, false, 0, 0,60);	  
-	CoreServices::getInstance()->getResourceManager()->addArchive("default.pak");
-	CoreServices::getInstance()->getResourceManager()->addDirResource("default", false);
-
-	// Write your code here
+PolycodeTemplateApp::PolycodeTemplateApp(PolycodeView *view)
+{
+	app = new CalliperApp(&core, view);
 }
-PolycodeTemplateApp::~PolycodeTemplateApp() {
-    
+PolycodeTemplateApp::~PolycodeTemplateApp()
+{
+	delete app;
 }
 
-bool PolycodeTemplateApp::Update() {
-	return core->updateAndRender();
+bool PolycodeTemplateApp::Update()
+{
+	return app->Update();
 }
