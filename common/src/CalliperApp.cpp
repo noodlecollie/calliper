@@ -1,9 +1,9 @@
 #include "CalliperApp.h"
+#include "CUITestWindow.h"
 
 using namespace Polycode;
 
 CalliperApp* globalApp = NULL;
-UIGlobalMenu* globalMenu = NULL;
 
 CalliperApp::CalliperApp(Core** core, PolycodeView* view)
 {
@@ -13,11 +13,11 @@ CalliperApp::CalliperApp(Core** core, PolycodeView* view)
 	// Load resources that are needed on startup.
 	InitialiseResources();
 
-	// Set up the screen scene.
-	InitialiseScreen();
+	// Initialise all global objects.
+	InitialiseGlobals();
 
-	// Set up the menu bar.
-	InitialiseMenu();
+	// Set up the UI.
+	InitialiseUI();
 }
 
 CalliperApp::~CalliperApp()
@@ -71,8 +71,8 @@ void CalliperApp::InitialiseResources()
 	CoreServices::getInstance()->getResourceManager()->addDirResource("hdr");
 
 	// Load UI content.
-	CoreServices::getInstance()->getResourceManager()->addArchive("UIThemes.pak");
-	CoreServices::getInstance()->getConfig()->loadConfig("Polycode", "UIThemes/default/theme.xml");
+	CoreServices::getInstance()->getResourceManager()->addArchive("standardtheme");
+	CoreServices::getInstance()->getConfig()->loadConfig("Polycode", "standardtheme/theme.xml");
 
 	// Load Calliper's native content.
 	Logger::log("Adding native content...\n");
@@ -123,15 +123,35 @@ void CalliperApp::InitialiseScreen()
 	m_pScreen->rootEntity.processInputEvents = true;
 }
 
-void CalliperApp::InitialiseMenu()
+void CalliperApp::InitialiseUI()
 {
-	assert(!globalMenu);
+	m_pUITestWindow = new CUITestWindow("UI Elements", 350, 350);
+	m_pScreen->addChild(m_pUITestWindow);
+}
 
+void CalliperApp::InitialiseGlobals()
+{
+	InitialiseScreen();
+	
 	// Create the global menu.
 	// This seems to be a global class which manages pop-up menus.
 	// We can use this to make a menu bar at the top of the screen, for example,
 	// by creating a pop-up menu when a button is pressed.
-	globalMenu = new UIGlobalMenu();
-	UITextInput::setMenuSingleton(globalMenu);
-	m_pScreen->addChild(globalMenu);
+	m_pGlobalMenu = new UIGlobalMenu();
+	UITextInput::setMenuSingleton(m_pGlobalMenu);
+	m_pScreen->addChild(m_pGlobalMenu);
+
+	m_pGlobalColourPicker = new UIColorPicker();
+	m_pGlobalColourPicker->setPosition(0, 0);
+	m_pScreen->addChild(m_pGlobalColourPicker);
+}
+
+UIGlobalMenu* CalliperApp::GetGlobalMenu() const
+{
+	return m_pGlobalMenu;
+}
+
+UIColorPicker* CalliperApp::GetGlobalColorPicker() const
+{
+	return m_pGlobalColourPicker;
 }

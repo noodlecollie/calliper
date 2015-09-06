@@ -82,11 +82,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\common\src\CalliperApp.cpp" />
+    <ClCompile Include="..\common\src\CUITestWindow.cpp" />
     <ClCompile Include="PolycodeTemplate.cpp" />
     <ClCompile Include="PolycodeTemplateApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\include\CalliperApp.h" />
+    <ClInclude Include="..\common\include\CUITestWindow.h" />
     <ClInclude Include="PolycodeTemplateApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

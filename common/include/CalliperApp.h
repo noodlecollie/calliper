@@ -11,6 +11,8 @@ using namespace Polycode;
 class CalliperApp;
 extern CalliperApp* globalApp;
 
+class CUITestWindow;
+
 class CalliperApp
 {
 public:
@@ -42,17 +44,25 @@ public:
 	String GetSystemStringName() const;
 
 	Scene* GetScreen() const;
+	UIGlobalMenu* GetGlobalMenu() const;
+	UIColorPicker* GetGlobalColorPicker() const;
 
 private:
 	void PlatformSpecificInitialisation(Core** core, PolycodeView* view);
 	void InitialiseResources();
+	void InitialiseGlobals();
 	void InitialiseScreen();
-	void InitialiseMenu();
+	void InitialiseUI();
 
 private:
 	Core* m_pCore;			// Also cache our core object. This should be alive as long as we are.
 	Scene* m_pScreen;		// 2D scene that holds the UI etc.
 	UIMenuBar* m_pMenuBar;	// Application menu bar.
+
+	UIGlobalMenu* m_pGlobalMenu;
+	UIColorPicker* m_pGlobalColourPicker;
+
+	CUITestWindow* m_pUITestWindow;
 };
 
 #endif // CALLIPER_APP_H

@@ -6,10 +6,16 @@
     <ClCompile Include="..\common\src\CalliperApp.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\src\CUITestWindow.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PolycodeTemplateApp.h" />
     <ClInclude Include="..\common\include\CalliperApp.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\CUITestWindow.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

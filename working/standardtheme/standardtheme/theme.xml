@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<PolyConfig>
+
+    <!-- T, B, L and R parameters are the offsets in pixels from the top,
+    bottom, left and right respectively that the main centre of the texture starts.
+    The borders around this are stretched/shrunk to fit along the edges. -->
+    
+	<uiScale>1.0</uiScale>
+
+	<uiDefaultFontName>sans</uiDefaultFontName>
+	<uiDefaultFontColor>0xc7c7c7ff</uiDefaultFontColor>
+
+	<uiBgColor>0x1e1e1eff</uiBgColor>
+	<uiAccentColor>0x31687fff</uiAccentColor>	
+	<uiHeaderBgColor>0x616161ff</uiHeaderBgColor>
+	<uiSmallHeaderBgColor>0x868686ff</uiSmallHeaderBgColor>
+	<uiHeaderFontColor>0x000000c8</uiHeaderFontColor>
+	<uiSectionFontColor>0x00000080</uiSectionFontColor>
+	<uiMenuBarBgColor>0x00000000</uiMenuBarBgColor>
+
+	<uiTextInputFontName>sans</uiTextInputFontName>
+	<uiTextInputFontNameMultiLine>mono</uiTextInputFontNameMultiLine>
+	<uiDefaultFontSize>12</uiDefaultFontSize>
+	<uiTextInputFontSize>12</uiTextInputFontSize>
+	<uiTextInputFontOffsetY>-2</uiTextInputFontOffsetY>		
+	<uiTextInputFontSizeMultiline>12</uiTextInputFontSizeMultiline>	
+	<uiTreeArrowIconImage>standardtheme/arrowIcon.png</uiTreeArrowIconImage>
+	<uiTreeCellHeight>20</uiTreeCellHeight>
+	<uiTreeTextOffsetX>2</uiTreeTextOffsetX>
+	<uiTreeTextOffsetY>2</uiTreeTextOffsetY>
+	<uiTreeCellPadding>3</uiTreeCellPadding>
+	
+	<textBgSkin>standardtheme/textfield.png</textBgSkin>
+	<textBgSkinMultiline>standardtheme/textfieldMulti.png</textBgSkinMultiline>
+	<textBgSkinT>7</textBgSkinT>
+	<textBgSkinR>7</textBgSkinR>
+	<textBgSkinB>7</textBgSkinB>
+	<textBgSkinL>7</textBgSkinL>
+	<textBgSkinPadding>6</textBgSkinPadding>
+	<textEditLineSpacing>14</textEditLineSpacing>
+	
+	<uiTreeCellSkin>standardtheme/treeCellBg.png</uiTreeCellSkin>
+	<uiTreeCellSkinPadding>0</uiTreeCellSkinPadding>
+	<uiTreeCellSkinT>3</uiTreeCellSkinT>
+	<uiTreeCellSkinR>3</uiTreeCellSkinR>
+	<uiTreeCellSkinB>3</uiTreeCellSkinB>
+	<uiTreeCellSkinL>3</uiTreeCellSkinL>
+	<uiTreeFontColor>0x000000c8</uiTreeFontColor>
+	<uiTreeCellSelectorSkin>standardtheme/selector.png</uiTreeCellSelectorSkin>
+	<uiTreeCellSelectorSkinPadding>0</uiTreeCellSelectorSkinPadding>
+	<uiTreeCellSelectorSkinT>4</uiTreeCellSelectorSkinT>
+	<uiTreeCellSelectorSkinR>3</uiTreeCellSelectorSkinR>
+	<uiTreeCellSelectorSkinB>4</uiTreeCellSelectorSkinB>
+	<uiTreeCellSelectorSkinL>0</uiTreeCellSelectorSkinL>
+	
+	<uiTreeContainerSkin>standardtheme/treeBg.png</uiTreeContainerSkin>
+	<uiTreeContainerSkinPadding>0</uiTreeContainerSkinPadding>
+	<uiTreeContainerSkinT>2</uiTreeContainerSkinT>
+	<uiTreeContainerSkinR>2</uiTreeContainerSkinR>
+	<uiTreeContainerSkinB>2</uiTreeContainerSkinB>
+	<uiTreeContainerSkinL>2</uiTreeContainerSkinL>
+	
+	<uiScrollDefaultSize>19</uiScrollDefaultSize>	
+	<uiScrollPanePadding>0</uiScrollPanePadding>
+
+	<uiButtonSkin>standardtheme/button_new.png</uiButtonSkin>
+	<uiButtonFocusedSkin>standardtheme/buttonFocused_new.png</uiButtonFocusedSkin>
+	<uiButtonFontSize>12</uiButtonFontSize>	
+	<uiButtonFontColor>0xc7c7c7ff</uiButtonFontColor>
+	<uiButtonLabelOffsetX>0</uiButtonLabelOffsetX>
+	<uiButtonLabelOffsetY>1</uiButtonLabelOffsetY>	
+	<uiButtonSkinT>1</uiButtonSkinT>
+	<uiButtonSkinR>1</uiButtonSkinR>
+	<uiButtonSkinB>1</uiButtonSkinB>
+	<uiButtonSkinL>1</uiButtonSkinL>
+
+	<uiWindowSkin>standardtheme/windowBg_new.png</uiWindowSkin>
+	<uiWindowSkinT>1</uiWindowSkinT>
+	<uiWindowSkinR>1</uiWindowSkinR>
+	<uiWindowSkinB>1</uiWindowSkinB>
+	<uiWindowSkinL>1</uiWindowSkinL>
+	<uiWindowSkinPadding>16</uiWindowSkinPadding>		
+	<uiWindowTitleFont>sans</uiWindowTitleFont>
+	<uiWindowFontColor>0xf1f1f1ff</uiWindowFontColor>	
+	<uiWindowTitleFontSize>12</uiWindowTitleFontSize>
+	<uiWindowTitleX>15</uiWindowTitleX>	
+	<uiWindowTitleY>10</uiWindowTitleY>
+	<uiWindowTitleBarHeight>25</uiWindowTitleBarHeight>
+	<uiWindowTitleBarOffset>5</uiWindowTitleBarOffset>
+	<uiWindowCloseIcon>standardtheme/closeIcon_new.png</uiWindowCloseIcon>
+	<uiCloseIconX>6</uiCloseIconX>	
+	<uiCloseIconY>6</uiCloseIconY>		
+
+	<uiScrollBgSkin>standardtheme/scrollBg.png</uiScrollBgSkin>
+	<uiScrollBgSkinPadding>1</uiScrollBgSkinPadding>
+	<uiScrollBgSkinT>8</uiScrollBgSkinT>
+	<uiScrollBgSkinR>8</uiScrollBgSkinR>
+	<uiScrollBgSkinB>8</uiScrollBgSkinB>
+	<uiScrollBgSkinL>8</uiScrollBgSkinL>
+	
+	<uiScrollHandleSkin>standardtheme/scrollHandle.png</uiScrollHandleSkin>
+	<uiScrollHandleSkinT>6</uiScrollHandleSkinT>
+	<uiScrollHandleSkinR>6</uiScrollHandleSkinR>
+	<uiScrollHandleSkinB>6</uiScrollHandleSkinB>
+	<uiScrollHandleSkinL>6</uiScrollHandleSkinL>
+		
+	<uiScrollHandleMinSize>30</uiScrollHandleMinSize>	
+	<uiTreeContainerScrollBarOffset>27</uiTreeContainerScrollBarOffset>
+	
+	<uiCheckBoxFont>sans</uiCheckBoxFont>
+	<uiCheckBoxFontSize>12</uiCheckBoxFontSize>	
+	<uiCheckBoxCheckedImage>standardtheme/checkboxChecked_new.png</uiCheckBoxCheckedImage>
+	<uiCheckBoxUncheckedImage>standardtheme/checkboxUnchecked_new.png</uiCheckBoxUncheckedImage>
+	<uiCheckBoxLabelOffsetX>4</uiCheckBoxLabelOffsetX>
+	<uiCheckBoxLabelOffsetY>2</uiCheckBoxLabelOffsetY>
+		
+	<uiComboBoxFont>sans</uiComboBoxFont>
+	<uiComboBoxFontSize>12</uiComboBoxFontSize>
+	<uiComboBoxDropdownImage>standardtheme/comboBoxDrop_new.png</uiComboBoxDropdownImage>
+	<uiComboBoxBgImage>standardtheme/comboBoxBg_new.png</uiComboBoxBgImage>
+	<uiComboBoxHeight>19</uiComboBoxHeight>
+	<uiComboBoxBgT>1</uiComboBoxBgT>
+	<uiComboBoxBgR>1</uiComboBoxBgR>
+	<uiComboBoxBgB>1</uiComboBoxBgB>
+	<uiComboBoxBgL>1</uiComboBoxBgL>
+	<uiComboBoxDropX>10</uiComboBoxDropX>
+	<uiComboBoxDropY>1</uiComboBoxDropY>
+	<uiComboBoxTextOffsetX>7</uiComboBoxTextOffsetX>
+	<uiComboBoxTextOffsetY>1</uiComboBoxTextOffsetY>		
+
+
+	<uiMenuFont>sans</uiMenuFont>
+	<uiMenuFontSize>12</uiMenuFontSize>
+	<uiMenuTextOffsetX>10</uiMenuTextOffsetX>
+	<uiMenuTextOffsetY>-1</uiMenuTextOffsetY>		
+	<uiMenuPaddingX>3</uiMenuPaddingX>
+	<uiMenuPaddingY>10</uiMenuPaddingY>
+	<uiMenuItemHeight>22</uiMenuItemHeight>
+	<uiMenuBgImage>standardtheme/menuBg.png</uiMenuBgImage>	
+	<uiMenuBgT>7</uiMenuBgT>
+	<uiMenuBgR>7</uiMenuBgR>
+	<uiMenuBgB>11</uiMenuBgB>
+	<uiMenuBgL>7</uiMenuBgL>			
+	<uiMenuSelectorBgImage>standardtheme/menuSelector.png</uiMenuSelectorBgImage>	
+	<uiMenuSelectorBgT>0</uiMenuSelectorBgT>
+	<uiMenuSelectorBgR>0</uiMenuSelectorBgR>
+	<uiMenuSelectorBgB>0</uiMenuSelectorBgB>
+	<uiMenuSelectorBgL>0</uiMenuSelectorBgL>
+	<uiMenuSelectorPadding>3</uiMenuSelectorPadding>
+
+	<uiIconSelectorBg>standardtheme/iconSelectorBg.png</uiIconSelectorBg>
+	<uiIconSelectorBgT>7</uiIconSelectorBgT>
+	<uiIconSelectorBgR>7</uiIconSelectorBgR>
+	<uiIconSelectorBgB>7</uiIconSelectorBgB>
+	<uiIconSelectorBgL>7</uiIconSelectorBgL>
+	<uiIconSelectorPaddingX>7</uiIconSelectorPaddingX>	
+	<uiIconSelectorPaddingY>0</uiIconSelectorPaddingY>
+	<uiIconSelectorBox>standardtheme/iconSelectorSelection.png</uiIconSelectorBox>
+	<uiIconSelectorDefaultSize>24</uiIconSelectorDefaultSize>
+	<uiIconSelectorBoxT>0</uiIconSelectorBoxT>
+	<uiIconSelectorBoxR>0</uiIconSelectorBoxR>
+	<uiIconSelectorBoxB>0</uiIconSelectorBoxB>
+	<uiIconSelectorBoxL>0</uiIconSelectorBoxL>		
+
+	<uiColorBoxFrameImage>standardtheme/colorboxFrame_new.png</uiColorBoxFrameImage>
+	<uiColorBoxFrameImageT>4</uiColorBoxFrameImageT>
+	<uiColorBoxFrameImageR>4</uiColorBoxFrameImageR>
+	<uiColorBoxFrameImageB>4</uiColorBoxFrameImageB>
+	<uiColorBoxFrameImageL>4</uiColorBoxFrameImageL>					
+	<uiColorBoxBgImage>standardtheme/colorboxBg.png</uiColorBoxBgImage>
+	<uiColorBoxFrameInset>4</uiColorBoxFrameInset>
+
+	<uiColorPickerMainBg>standardtheme/colorPickerMainBg.png</uiColorPickerMainBg>
+	<uiColorPickerMainFrame>standardtheme/colorPickerMainFrame.png</uiColorPickerMainFrame>
+	<uiColorPickerHueFrame>standardtheme/colorPickerHue.png</uiColorPickerHueFrame>
+	<uiColorPickerHueSelector>standardtheme/colorPickerHueSelector.png</uiColorPickerHueSelector>
+	<uiColorPickerMainSelector>standardtheme/colorPickerMainTarget.png</uiColorPickerMainSelector>
+
+	<uiHSliderGrip>standardtheme/hsliderHandle.png</uiHSliderGrip>
+	<uiHSliderBg>standardtheme/hsliderBg.png</uiHSliderBg>
+	<uiHSliderBgHeight>16</uiHSliderBgHeight>
+	<uiHSliderSidePadding>8</uiHSliderSidePadding>
+	<uiHSliderBgT>7</uiHSliderBgT>
+	<uiHSliderBgR>7</uiHSliderBgR>
+	<uiHSliderBgB>7</uiHSliderBgB>
+	<uiHSliderBgL>7</uiHSliderBgL>
+
+	<uiFileBrowserFileIcon>standardtheme/file.png</uiFileBrowserFileIcon>
+	<uiFileBrowserFolderIcon>standardtheme/folder.png</uiFileBrowserFolderIcon>
+	<uiFileBrowserPlaceIcon>standardtheme/boxIcon.png</uiFileBrowserPlaceIcon>
+</PolyConfig>
