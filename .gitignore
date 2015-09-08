@@ -11,16 +11,16 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-build/
-bld/
-[Bb]in/
-[Oo]bj/
+Windows/[Dd]ebug/
+Windows/[Dd]ebugPublic/
+Windows/[Rr]elease/
+Windows/[Rr]eleases/
+Windows/x64/
+Windows/x86/
+Windows/build/
+Windows/bld/
+Windows/[Bb]in/
+Windows/[Oo]bj/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -218,3 +218,23 @@ _Pvt_Extensions
 
 # Don't include the silly Mac caches
 .DS_Store
+
+## Build generated
+Xcode/build/
+Xcode/DerivedData
+
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+
+## Other
+*.xccheckout
+*.moved-aside
+
