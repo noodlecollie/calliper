@@ -1,7 +1,6 @@
 #ifndef CALLIPER_APP_H
 #define CALLIPER_APP_H
 
-#include "PolycodeView.h"
 #include "Polycode.h"
 #include "PolycodeUI.h"
 
