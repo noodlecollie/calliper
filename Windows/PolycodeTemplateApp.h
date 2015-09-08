@@ -13,6 +13,5 @@ public:
     bool Update();
     
 private:
-    Core *core;
 	CalliperApp* app;
 };

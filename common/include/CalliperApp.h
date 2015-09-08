@@ -30,12 +30,16 @@ public:
 	};
 
 public:
-	// This constructor caters to differing platforms. Pass in the view and the core pointer that
-	// need to be initialised on the given platform.
-	CalliperApp(Core** core, PolycodeView* view);
+	CalliperApp();
 	
 	// Destructor should be called by deleting the app from the platform-specific destructor.
 	~CalliperApp();
+
+	// Should be called once the core pointer has been set up via platform-specific code.
+	// We used to pass things into the constructor, but this doesn't work on Mac where the
+	// code is in Objective-C.
+	void Initialise();
+	Core* appCore;
 
 	// Should be called directly from the platform-specific Update() function.
 	bool Update();
@@ -48,14 +52,12 @@ public:
 	UIColorPicker* GetGlobalColorPicker() const;
 
 private:
-	void PlatformSpecificInitialisation(Core** core, PolycodeView* view);
 	void InitialiseResources();
 	void InitialiseGlobals();
 	void InitialiseScreen();
 	void InitialiseUI();
 
 private:
-	Core* m_pCore;			// Also cache our core object. This should be alive as long as we are.
 	Scene* m_pScreen;		// 2D scene that holds the UI etc.
 	UIMenuBar* m_pMenuBar;	// Application menu bar.
 
