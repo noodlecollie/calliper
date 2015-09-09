@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38861B221BA012780039CD3F /* default.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B1D1BA012780039CD3F /* default.pak */; };
+		38861B231BA012780039CD3F /* hdr.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B1E1BA012780039CD3F /* hdr.pak */; };
+		38861B241BA012780039CD3F /* native.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B1F1BA012780039CD3F /* native.pak */; };
+		38861B251BA012780039CD3F /* standardtheme in Resources */ = {isa = PBXBuildFile; fileRef = 38861B201BA012780039CD3F /* standardtheme */; };
+		38861B261BA012780039CD3F /* UIThemes.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B211BA012780039CD3F /* UIThemes.pak */; };
 		38FD34B71B9EE05F00693AB1 /* libPolycodeUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FD34B61B9EE05F00693AB1 /* libPolycodeUI.a */; };
 		38FD34BC1B9EE2A400693AB1 /* CalliperApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38FD34BB1B9EE2A300693AB1 /* CalliperApp.cpp */; };
 		38FD34BF1B9EE49900693AB1 /* CUITestWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38FD34BE1B9EE49900693AB1 /* CUITestWindow.cpp */; };
@@ -23,7 +28,6 @@
 		6D2800F613760DE400BD8D0D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D2800F513760DE400BD8D0D /* IOKit.framework */; };
 		6D2800F913760E7C00BD8D0D /* PolycodeView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D2800F813760E7C00BD8D0D /* PolycodeView.mm */; };
 		6D2800FC13760F2C00BD8D0D /* PolycodeTemplateApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D2800FA13760F2C00BD8D0D /* PolycodeTemplateApp.mm */; };
-		6D2800FE13760FC400BD8D0D /* default.pak in Resources */ = {isa = PBXBuildFile; fileRef = 6D2800FD13760FC400BD8D0D /* default.pak */; };
 		6DE4C7F513E24B92009A9862 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DE4C7EE13E24B92009A9862 /* libfreetype.a */; };
 		6DE4C7F613E24B92009A9862 /* liblibogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DE4C7EF13E24B92009A9862 /* liblibogg.a */; };
 		6DE4C7F713E24B92009A9862 /* liblibvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DE4C7F013E24B92009A9862 /* liblibvorbis.a */; };
@@ -34,6 +38,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		38861B1D1BA012780039CD3F /* default.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = default.pak; path = ../working/default.pak; sourceTree = "<group>"; };
+		38861B1E1BA012780039CD3F /* hdr.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = hdr.pak; path = ../working/hdr.pak; sourceTree = "<group>"; };
+		38861B1F1BA012780039CD3F /* native.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = native.pak; path = ../working/native.pak; sourceTree = "<group>"; };
+		38861B201BA012780039CD3F /* standardtheme */ = {isa = PBXFileReference; lastKnownFileType = folder; name = standardtheme; path = ../working/standardtheme; sourceTree = "<group>"; };
+		38861B211BA012780039CD3F /* UIThemes.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = UIThemes.pak; path = ../working/UIThemes.pak; sourceTree = "<group>"; };
 		38FD34B61B9EE05F00693AB1 /* libPolycodeUI.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPolycodeUI.a; path = ../../Modules/lib/libPolycodeUI.a; sourceTree = "<group>"; };
 		38FD34BA1B9EE29700693AB1 /* CalliperApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CalliperApp.h; path = ../../common/include/CalliperApp.h; sourceTree = "<group>"; };
 		38FD34BB1B9EE2A300693AB1 /* CalliperApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CalliperApp.cpp; path = ../../common/src/CalliperApp.cpp; sourceTree = "<group>"; };
@@ -95,6 +104,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		38DF398F1B9F47390059014C /* Working Directory */ = {
+			isa = PBXGroup;
+			children = (
+				38861B1D1BA012780039CD3F /* default.pak */,
+				38861B1E1BA012780039CD3F /* hdr.pak */,
+				38861B1F1BA012780039CD3F /* native.pak */,
+				38861B201BA012780039CD3F /* standardtheme */,
+				38861B211BA012780039CD3F /* UIThemes.pak */,
+			);
+			name = "Working Directory";
+			sourceTree = "<group>";
+		};
 		38FD34B81B9EE28C00693AB1 /* common */ = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +130,7 @@
 		6D2800AC13760D3E00BD8D0D = {
 			isa = PBXGroup;
 			children = (
+				38DF398F1B9F47390059014C /* Working Directory */,
 				6D2800C113760D3E00BD8D0D /* PolycodeTemplate */,
 				6D2800BA13760D3E00BD8D0D /* Frameworks */,
 				6D2800B813760D3E00BD8D0D /* Products */,
@@ -235,9 +257,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D2800C613760D3E00BD8D0D /* InfoPlist.strings in Resources */,
+				38861B251BA012780039CD3F /* standardtheme in Resources */,
+				38861B221BA012780039CD3F /* default.pak in Resources */,
 				6D2800CC13760D3E00BD8D0D /* Credits.rtf in Resources */,
+				38861B231BA012780039CD3F /* hdr.pak in Resources */,
+				38861B261BA012780039CD3F /* UIThemes.pak in Resources */,
 				6D2800D213760D3E00BD8D0D /* MainMenu.xib in Resources */,
-				6D2800FE13760FC400BD8D0D /* default.pak in Resources */,
+				38861B241BA012780039CD3F /* native.pak in Resources */,
 				6D022DEA1598EBF30030B45F /* main_icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,10 +367,10 @@
 				INFOPLIST_FILE = "PolycodeTemplate/PolycodeTemplate-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../../Core/lib",
-					"$(SRCROOT)/../../Core/Dependencies/lib",
-					"$(SRCROOT)/../../Modules/lib",
-					"$(SRCROOT)/../../Modules/Dependencies/lib",
+					"\"$(SRCROOT)/../../Core/lib\"",
+					"\"$(SRCROOT)/../../Core/Dependencies/lib\"",
+					"\"$(SRCROOT)/../../Modules/lib\"",
+					"\"$(SRCROOT)/../../Modules/Dependencies/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -373,10 +399,10 @@
 				INFOPLIST_FILE = "PolycodeTemplate/PolycodeTemplate-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../../Core/lib",
-					"$(SRCROOT)/../../Core/Dependencies/lib",
-					"$(SRCROOT)/../../Modules/lib",
-					"$(SRCROOT)/../../Modules/Dependencies/lib",
+					"\"$(SRCROOT)/../../Core/lib\"",
+					"\"$(SRCROOT)/../../Core/Dependencies/lib\"",
+					"\"$(SRCROOT)/../../Modules/lib\"",
+					"\"$(SRCROOT)/../../Modules/Dependencies/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";

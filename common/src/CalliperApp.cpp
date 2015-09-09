@@ -20,6 +20,8 @@ void CalliperApp::Initialise()
 {
 	assert(appCore);
 	globalApp = this;
+	
+	Logger::log("Working directory: %s\n", appCore->getDefaultWorkingDirectory().c_str());
 
 	// Load resources that are needed on startup.
 	InitialiseResources();
@@ -69,21 +71,28 @@ void CalliperApp::InitialiseResources()
 	// addDirResource("default") loads all the contents recursively from this folder.
 
 	// Load default content.
+	Logger::log("Loading default content...\n");
 	CoreServices::getInstance()->getResourceManager()->addArchive("default.pak");
 	CoreServices::getInstance()->getResourceManager()->addDirResource("default", false);
+	Logger::log("Finished loading default content.\n");
 
 	// Load HDR shaders etc.
+	Logger::log("Loading HDR content...\n");
 	CoreServices::getInstance()->getResourceManager()->addArchive("hdr.pak");
 	CoreServices::getInstance()->getResourceManager()->addDirResource("hdr");
+	Logger::log("Finished loading HDR content.\n");
 
 	// Load UI content.
+	Logger::log("Loading standard theme...\n");
 	CoreServices::getInstance()->getResourceManager()->addArchive("standardtheme");
 	CoreServices::getInstance()->getConfig()->loadConfig("Polycode", "standardtheme/theme.xml");
+	Logger::log("Finished loading standard theme.\n");
 
 	// Load Calliper's native content.
 	Logger::log("Adding native content...\n");
 	CoreServices::getInstance()->getResourceManager()->addArchive("native.pak");
 	CoreServices::getInstance()->getResourceManager()->addDirResource("native");
+	Logger::log("Finished adding native content.\n");
 }
 
 CalliperApp::SystemIdentifier CalliperApp::GetSystemIdentifier() const
