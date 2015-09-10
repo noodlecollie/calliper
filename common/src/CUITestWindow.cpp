@@ -43,9 +43,16 @@ CUITestWindow::CUITestWindow(String windowName, Number width, Number height) :
 	m_pHSlider->setPosition(OFFSET_X, OFFSET_Y + (2*28));
 	addChild(m_pHSlider);
 	
-	m_pImageButton = new UIImageButton("native/test.png", 5);
+	m_pImageButton = new UIImageButton("native/test.png", 5.5);
 	m_pImageButton->setPosition(OFFSET_X, OFFSET_Y + (3*28));
 	addChild(m_pImageButton);
+	
+	m_pMenu = new UIMenu(150);
+	m_pMenu->setPosition(OFFSET_X, OFFSET_Y + (7*28));
+	m_pMenu->addOption("Item One", "i1");
+	m_pMenu->addOption("Item Two", "i2");
+	m_pMenu->addOption("Item Three", "i3");
+	addChild(m_pMenu);
 }
 
 CUITestWindow::~CUITestWindow()

@@ -131,17 +131,17 @@
 
 	<uiMenuFont>sans</uiMenuFont>
 	<uiMenuFontSize>12</uiMenuFontSize>
-	<uiMenuTextOffsetX>10</uiMenuTextOffsetX>
-	<uiMenuTextOffsetY>-1</uiMenuTextOffsetY>		
+	<uiMenuTextOffsetX>34</uiMenuTextOffsetX>
+	<uiMenuTextOffsetY>5</uiMenuTextOffsetY>		
 	<uiMenuPaddingX>3</uiMenuPaddingX>
-	<uiMenuPaddingY>10</uiMenuPaddingY>
-	<uiMenuItemHeight>22</uiMenuItemHeight>
-	<uiMenuBgImage>standardtheme/menuBg.png</uiMenuBgImage>	
-	<uiMenuBgT>7</uiMenuBgT>
-	<uiMenuBgR>7</uiMenuBgR>
-	<uiMenuBgB>11</uiMenuBgB>
-	<uiMenuBgL>7</uiMenuBgL>			
-	<uiMenuSelectorBgImage>standardtheme/menuSelector.png</uiMenuSelectorBgImage>	
+	<uiMenuPaddingY>6</uiMenuPaddingY>
+	<uiMenuItemHeight>14</uiMenuItemHeight>
+	<uiMenuBgImage>standardtheme/menuBg_new.png</uiMenuBgImage>	
+	<uiMenuBgT>1</uiMenuBgT>
+	<uiMenuBgR>1</uiMenuBgR>
+	<uiMenuBgB>1</uiMenuBgB>
+	<uiMenuBgL>1</uiMenuBgL>			
+	<uiMenuSelectorBgImage>standardtheme/menuSelector_new.png</uiMenuSelectorBgImage>	
 	<uiMenuSelectorBgT>0</uiMenuSelectorBgT>
 	<uiMenuSelectorBgR>0</uiMenuSelectorBgR>
 	<uiMenuSelectorBgB>0</uiMenuSelectorBgB>

@@ -13,6 +13,7 @@ namespace Polycode
 	class UIComboBox;
 	class UIHSlider;
 	class UIImageButton;
+	class UIMenu;
 }
 
 using namespace Polycode;
@@ -34,6 +35,7 @@ private:
 	UIComboBox*		m_pComboBox;
 	UIHSlider*		m_pHSlider;
 	UIImageButton*	m_pImageButton;
+	UIMenu*			m_pMenu;
 };
 
 #endif // CUITESTWINDOW_H
