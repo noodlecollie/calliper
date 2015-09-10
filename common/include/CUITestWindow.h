@@ -11,6 +11,8 @@ namespace Polycode
 	class UIColorBox;
 	class UIColorPicker;
 	class UIComboBox;
+	class UIHSlider;
+	class UIImageButton;
 }
 
 using namespace Polycode;
@@ -30,6 +32,8 @@ private:
 	UICheckBox*		m_pCheckbox;
 	UIColorBox*		m_pColourBox;
 	UIComboBox*		m_pComboBox;
+	UIHSlider*		m_pHSlider;
+	UIImageButton*	m_pImageButton;
 };
 
 #endif // CUITESTWINDOW_H

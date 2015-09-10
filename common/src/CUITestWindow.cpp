@@ -38,6 +38,14 @@ CUITestWindow::CUITestWindow(String windowName, Number width, Number height) :
 	//m_pColourBox = new UIColorBox(globalApp->GetGlobalColorPicker(), Color(0,0,0,255), 16, 16);
 	//m_pColourBox->setPosition(OFFSET_X, OFFSET_Y + (3 * 28));
 	//addChild(m_pColourBox);
+	
+	m_pHSlider = new UIHSlider(0, 100, 150);
+	m_pHSlider->setPosition(OFFSET_X, OFFSET_Y + (2*28));
+	addChild(m_pHSlider);
+	
+	m_pImageButton = new UIImageButton("native/test.png", 5);
+	m_pImageButton->setPosition(OFFSET_X, OFFSET_Y + (3*28));
+	addChild(m_pImageButton);
 }
 
 CUITestWindow::~CUITestWindow()

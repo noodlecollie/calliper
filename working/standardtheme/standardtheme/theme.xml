@@ -176,14 +176,14 @@
 	<uiColorPickerHueSelector>standardtheme/colorPickerHueSelector.png</uiColorPickerHueSelector>
 	<uiColorPickerMainSelector>standardtheme/colorPickerMainTarget.png</uiColorPickerMainSelector>
 
-	<uiHSliderGrip>standardtheme/hsliderHandle.png</uiHSliderGrip>
-	<uiHSliderBg>standardtheme/hsliderBg.png</uiHSliderBg>
-	<uiHSliderBgHeight>16</uiHSliderBgHeight>
-	<uiHSliderSidePadding>8</uiHSliderSidePadding>
-	<uiHSliderBgT>7</uiHSliderBgT>
-	<uiHSliderBgR>7</uiHSliderBgR>
-	<uiHSliderBgB>7</uiHSliderBgB>
-	<uiHSliderBgL>7</uiHSliderBgL>
+	<uiHSliderGrip>standardtheme/hsliderHandle_new.png</uiHSliderGrip>
+	<uiHSliderBg>standardtheme/hsliderBg_new.png</uiHSliderBg>
+	<uiHSliderBgHeight>13</uiHSliderBgHeight>
+	<uiHSliderSidePadding>7</uiHSliderSidePadding>
+	<uiHSliderBgT>1</uiHSliderBgT>
+	<uiHSliderBgR>1</uiHSliderBgR>
+	<uiHSliderBgB>1</uiHSliderBgB>
+	<uiHSliderBgL>1</uiHSliderBgL>
 
 	<uiFileBrowserFileIcon>standardtheme/file.png</uiFileBrowserFileIcon>
 	<uiFileBrowserFolderIcon>standardtheme/folder.png</uiFileBrowserFolderIcon>
