@@ -22,7 +22,7 @@
 	<uiTextInputFontNameMultiLine>mono</uiTextInputFontNameMultiLine>
 	<uiDefaultFontSize>12</uiDefaultFontSize>
 	<uiTextInputFontSize>12</uiTextInputFontSize>
-	<uiTextInputFontOffsetY>-2</uiTextInputFontOffsetY>		
+	<uiTextInputFontOffsetY>1</uiTextInputFontOffsetY>		
 	<uiTextInputFontSizeMultiline>12</uiTextInputFontSizeMultiline>	
 	<uiTreeArrowIconImage>standardtheme/arrowIcon.png</uiTreeArrowIconImage>
 	<uiTreeCellHeight>20</uiTreeCellHeight>
@@ -30,13 +30,13 @@
 	<uiTreeTextOffsetY>2</uiTreeTextOffsetY>
 	<uiTreeCellPadding>3</uiTreeCellPadding>
 	
-	<textBgSkin>standardtheme/textfield.png</textBgSkin>
+	<textBgSkin>standardtheme/textfield_new.png</textBgSkin>
 	<textBgSkinMultiline>standardtheme/textfieldMulti.png</textBgSkinMultiline>
-	<textBgSkinT>7</textBgSkinT>
-	<textBgSkinR>7</textBgSkinR>
-	<textBgSkinB>7</textBgSkinB>
-	<textBgSkinL>7</textBgSkinL>
-	<textBgSkinPadding>6</textBgSkinPadding>
+	<textBgSkinT>1</textBgSkinT>
+	<textBgSkinR>1</textBgSkinR>
+	<textBgSkinB>1</textBgSkinB>
+	<textBgSkinL>1</textBgSkinL>
+	<textBgSkinPadding>3</textBgSkinPadding>
 	<textEditLineSpacing>14</textEditLineSpacing>
 	
 	<uiTreeCellSkin>standardtheme/treeCellBg.png</uiTreeCellSkin>
@@ -98,11 +98,11 @@
 	<uiScrollBgSkinB>8</uiScrollBgSkinB>
 	<uiScrollBgSkinL>8</uiScrollBgSkinL>
 	
-	<uiScrollHandleSkin>standardtheme/scrollHandle.png</uiScrollHandleSkin>
-	<uiScrollHandleSkinT>6</uiScrollHandleSkinT>
-	<uiScrollHandleSkinR>6</uiScrollHandleSkinR>
-	<uiScrollHandleSkinB>6</uiScrollHandleSkinB>
-	<uiScrollHandleSkinL>6</uiScrollHandleSkinL>
+	<uiScrollHandleSkin>standardtheme/scrollHandle_new.png</uiScrollHandleSkin>
+	<uiScrollHandleSkinT>1</uiScrollHandleSkinT>
+	<uiScrollHandleSkinR>1</uiScrollHandleSkinR>
+	<uiScrollHandleSkinB>1</uiScrollHandleSkinB>
+	<uiScrollHandleSkinL>1</uiScrollHandleSkinL>
 		
 	<uiScrollHandleMinSize>30</uiScrollHandleMinSize>	
 	<uiTreeContainerScrollBarOffset>27</uiTreeContainerScrollBarOffset>
@@ -131,11 +131,11 @@
 
 	<uiMenuFont>sans</uiMenuFont>
 	<uiMenuFontSize>12</uiMenuFontSize>
-	<uiMenuTextOffsetX>34</uiMenuTextOffsetX>
-	<uiMenuTextOffsetY>5</uiMenuTextOffsetY>		
+	<uiMenuTextOffsetX>6</uiMenuTextOffsetX>
+	<uiMenuTextOffsetY>-2</uiMenuTextOffsetY>		
 	<uiMenuPaddingX>3</uiMenuPaddingX>
-	<uiMenuPaddingY>6</uiMenuPaddingY>
-	<uiMenuItemHeight>14</uiMenuItemHeight>
+	<uiMenuPaddingY>3</uiMenuPaddingY>
+	<uiMenuItemHeight>18</uiMenuItemHeight>
 	<uiMenuBgImage>standardtheme/menuBg_new.png</uiMenuBgImage>	
 	<uiMenuBgT>1</uiMenuBgT>
 	<uiMenuBgR>1</uiMenuBgR>
@@ -146,7 +146,7 @@
 	<uiMenuSelectorBgR>0</uiMenuSelectorBgR>
 	<uiMenuSelectorBgB>0</uiMenuSelectorBgB>
 	<uiMenuSelectorBgL>0</uiMenuSelectorBgL>
-	<uiMenuSelectorPadding>3</uiMenuSelectorPadding>
+	<uiMenuSelectorPadding>0</uiMenuSelectorPadding>
 
 	<uiIconSelectorBg>standardtheme/iconSelectorBg.png</uiIconSelectorBg>
 	<uiIconSelectorBgT>7</uiIconSelectorBgT>

@@ -119,7 +119,13 @@ void CalliperApp::InitialiseScreen()
 
 void CalliperApp::InitialiseUI()
 {
-	m_pUITestWindow = new CUITestWindow("UI Elements", 350, 350);
+	// These make sure the labels are aligned correctly.
+	SceneLabel::defaultAnchor = Vector3(-1.0, -1.0, 0.0);
+	SceneLabel::defaultPositionAtBaseline = true;
+	SceneLabel::defaultSnapToPixels = true;
+	SceneLabel::createMipmapsForLabels = false;
+	
+	m_pUITestWindow = new CUITestWindow("UI Elements", 350, 450);
 	m_pScreen->addChild(m_pUITestWindow);
 }
 

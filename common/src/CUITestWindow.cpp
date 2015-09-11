@@ -53,6 +53,19 @@ CUITestWindow::CUITestWindow(String windowName, Number width, Number height) :
 	m_pMenu->addOption("Item Two", "i2");
 	m_pMenu->addOption("Item Three", "i3");
 	addChild(m_pMenu);
+	
+	m_pScrollContent = new UIImageButton("native/test.png");
+	m_pScrollContainer = new UIScrollContainer(m_pScrollContent, true, true, 150, 150);
+	m_pScrollContainer->setPosition(OFFSET_X + 170, OFFSET_Y + (3*28));
+	addChild(m_pScrollContainer);
+	
+	m_pTextInput = new UITextInput(false, 150, 16);
+	m_pTextInput->setPosition(OFFSET_X, OFFSET_Y + (9*28) + 10);
+	addChild(m_pTextInput);
+	
+	m_pMultiline = new UITextInput(true, 150, 100);
+	m_pMultiline->setPosition(OFFSET_X + 170, OFFSET_Y + (9*28) + 10);
+	addChild(m_pMultiline);
 }
 
 CUITestWindow::~CUITestWindow()
