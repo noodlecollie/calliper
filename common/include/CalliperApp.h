@@ -12,7 +12,7 @@ extern CalliperApp* globalApp;
 
 class CUITestWindow;
 
-class CalliperApp
+class CalliperApp : public EventDispatcher
 {
 public:
 	// View setup defaults.
@@ -49,6 +49,9 @@ public:
 	Scene* GetScreen() const;
 	UIGlobalMenu* GetGlobalMenu() const;
 	UIColorPicker* GetGlobalColorPicker() const;
+	
+protected:
+	void handleEvent(Event* event);
 
 private:
 	void InitialiseResources();

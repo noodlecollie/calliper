@@ -5,7 +5,7 @@ using namespace Polycode;
 
 CalliperApp* globalApp = NULL;
 
-CalliperApp::CalliperApp()
+CalliperApp::CalliperApp() : EventDispatcher()
 {
 	// No initialisation here any more - this is platform-specfic.
 	appCore = NULL;
@@ -125,8 +125,15 @@ void CalliperApp::InitialiseUI()
 	SceneLabel::defaultSnapToPixels = true;
 	SceneLabel::createMipmapsForLabels = false;
 	
-	m_pUITestWindow = new CUITestWindow("UI Elements", 350, 450);
-	m_pScreen->addChild(m_pUITestWindow);
+	//m_pUITestWindow = new CUITestWindow("UI Elements", 350, 450);
+	//m_pScreen->addChild(m_pUITestWindow);
+	
+	m_pMenuBar = new UIMenuBar(640, GetGlobalMenu());
+	UIMenuBarEntry *fileEntry = m_pMenuBar->addMenuBarEntry("File");
+	fileEntry->addItem("Quit", "quit", KEY_q);
+	
+	m_pMenuBar->addEventListener(this, UIEvent::OK_EVENT);
+	m_pScreen->addChild(m_pMenuBar);
 }
 
 void CalliperApp::InitialiseGlobals()
@@ -154,4 +161,14 @@ UIGlobalMenu* CalliperApp::GetGlobalMenu() const
 UIColorPicker* CalliperApp::GetGlobalColorPicker() const
 {
 	return m_pGlobalColourPicker;
+}
+
+void CalliperApp::handleEvent(Event* event)
+{
+	if (event->getDispatcher() == m_pMenuBar)
+	{
+		Logger::log("Menu bar event received\n");
+	}
+	
+	EventDispatcher::handleEvent(event);
 }
