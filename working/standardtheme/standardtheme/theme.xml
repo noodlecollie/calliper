@@ -22,20 +22,23 @@
 	<uiTextInputFontNameMultiLine>mono</uiTextInputFontNameMultiLine>
 	<uiDefaultFontSize>12</uiDefaultFontSize>
 	<uiTextInputFontSize>12</uiTextInputFontSize>
-	<uiTextInputFontOffsetY>1</uiTextInputFontOffsetY>		
+	<uiTextInputFontOffsetY>0</uiTextInputFontOffsetY>		
 	<uiTextInputFontSizeMultiline>12</uiTextInputFontSizeMultiline>	
 	<uiTreeArrowIconImage>standardtheme/arrowIcon.png</uiTreeArrowIconImage>
 	<uiTreeCellHeight>20</uiTreeCellHeight>
 	<uiTreeTextOffsetX>2</uiTreeTextOffsetX>
 	<uiTreeTextOffsetY>2</uiTreeTextOffsetY>
 	<uiTreeCellPadding>3</uiTreeCellPadding>
+    <uiTextInputFontColor>0xc7c7c7ff</uiTextInputFontColor>
+	<uiTextInputFontColorMultiLine>0xc7c7c7ff</uiTextInputFontColorMultiLine>
 	
 	<textBgSkin>standardtheme/textfield_new.png</textBgSkin>
-	<textBgSkinMultiline>standardtheme/textfieldMulti.png</textBgSkinMultiline>
-	<textBgSkinT>1</textBgSkinT>
-	<textBgSkinR>1</textBgSkinR>
-	<textBgSkinB>1</textBgSkinB>
-	<textBgSkinL>1</textBgSkinL>
+	<textBgSkinMultiline>standardtheme/textfieldMulti_new.png</textBgSkinMultiline>
+	<textBgSkinFocus>standardtheme/textfield_focus_new.png</textBgSkinFocus>
+	<textBgSkinT>2</textBgSkinT>
+	<textBgSkinR>2</textBgSkinR>
+	<textBgSkinB>2</textBgSkinB>
+	<textBgSkinL>2</textBgSkinL>
 	<textBgSkinPadding>3</textBgSkinPadding>
 	<textEditLineSpacing>14</textEditLineSpacing>
 	
@@ -133,8 +136,8 @@
 	<uiMenuFontSize>12</uiMenuFontSize>
 	<uiMenuTextOffsetX>6</uiMenuTextOffsetX>
 	<uiMenuTextOffsetY>-2</uiMenuTextOffsetY>		
-	<uiMenuPaddingX>3</uiMenuPaddingX>
-	<uiMenuPaddingY>3</uiMenuPaddingY>
+	<uiMenuPaddingX>2</uiMenuPaddingX>
+	<uiMenuPaddingY>2</uiMenuPaddingY>
 	<uiMenuItemHeight>18</uiMenuItemHeight>
 	<uiMenuBgImage>standardtheme/menuBg_new.png</uiMenuBgImage>	
 	<uiMenuBgT>1</uiMenuBgT>

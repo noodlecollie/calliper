@@ -1,6 +1,7 @@
 #include "CUITestWindow.h"
 #include "PolycodeUI.h"
 #include "CalliperApp.h"
+#include "CUITextInput.h"
 
 #define OFFSET_X padding
 #define OFFSET_Y (topPadding + titlebarRect->getHeight() + 5)
@@ -41,6 +42,7 @@ CUITestWindow::CUITestWindow(String windowName, Number width, Number height) :
 	
 	m_pHSlider = new UIHSlider(0, 100, 150);
 	m_pHSlider->setPosition(OFFSET_X, OFFSET_Y + (2*28));
+	m_pHSlider->setSliderValue(0);
 	addChild(m_pHSlider);
 	
 	m_pImageButton = new UIImageButton("native/test.png", 5.5);
@@ -59,11 +61,11 @@ CUITestWindow::CUITestWindow(String windowName, Number width, Number height) :
 	m_pScrollContainer->setPosition(OFFSET_X + 170, OFFSET_Y + (3*28));
 	addChild(m_pScrollContainer);
 	
-	m_pTextInput = new UITextInput(false, 150, 16);
+	m_pTextInput = new CUITextInput(false, 150, 16);
 	m_pTextInput->setPosition(OFFSET_X, OFFSET_Y + (9*28) + 10);
 	addChild(m_pTextInput);
 	
-	m_pMultiline = new UITextInput(true, 150, 100);
+	m_pMultiline = new CUITextInput(true, 150, 100);
 	m_pMultiline->setPosition(OFFSET_X + 170, OFFSET_Y + (9*28) + 10);
 	addChild(m_pMultiline);
 }

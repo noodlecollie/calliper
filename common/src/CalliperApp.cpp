@@ -5,6 +5,8 @@ using namespace Polycode;
 
 CalliperApp* globalApp = NULL;
 
+#define MENU_ACTION_QUIT "quit"
+
 CalliperApp::CalliperApp() : EventDispatcher()
 {
 	// No initialisation here any more - this is platform-specfic.
@@ -65,6 +67,8 @@ void CalliperApp::InitialiseResources()
 	Logger::log("Loading standard theme...\n");
 	CoreServices::getInstance()->getResourceManager()->addArchive("standardtheme");
 	CoreServices::getInstance()->getConfig()->loadConfig("Polycode", "standardtheme/theme.xml");
+	//CoreServices::getInstance()->getResourceManager()->addArchive("UIThemes.pak");
+	//CoreServices::getInstance()->getConfig()->loadConfig("Polycode", "UIThemes/dark/theme.xml");
 	Logger::log("Finished loading standard theme.\n");
 
 	// Load Calliper's native content.
@@ -125,15 +129,15 @@ void CalliperApp::InitialiseUI()
 	SceneLabel::defaultSnapToPixels = true;
 	SceneLabel::createMipmapsForLabels = false;
 	
-	//m_pUITestWindow = new CUITestWindow("UI Elements", 350, 450);
-	//m_pScreen->addChild(m_pUITestWindow);
-	
 	m_pMenuBar = new UIMenuBar(640, GetGlobalMenu());
 	UIMenuBarEntry *fileEntry = m_pMenuBar->addMenuBarEntry("File");
-	fileEntry->addItem("Quit", "quit", KEY_q);
+	fileEntry->addItem("Quit", MENU_ACTION_QUIT, KEY_q);
 	
 	m_pMenuBar->addEventListener(this, UIEvent::OK_EVENT);
 	m_pScreen->addChild(m_pMenuBar);
+
+	m_pUITestWindow = new CUITestWindow("UI Elements", 350, 450);
+	m_pScreen->addChild(m_pUITestWindow);
 }
 
 void CalliperApp::InitialiseGlobals()
@@ -167,8 +171,19 @@ void CalliperApp::handleEvent(Event* event)
 {
 	if (event->getDispatcher() == m_pMenuBar)
 	{
-		Logger::log("Menu bar event received\n");
+		handleMenuBarEvent(event);
+		return;
 	}
 	
 	EventDispatcher::handleEvent(event);
+}
+
+void CalliperApp::handleMenuBarEvent(Event* event)
+{
+	String action = m_pMenuBar->getSelectedItem();
+
+	if (action == MENU_ACTION_QUIT)
+	{
+		appCore->Shutdown();
+	}
 }

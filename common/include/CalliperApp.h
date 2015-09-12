@@ -54,6 +54,9 @@ protected:
 	void handleEvent(Event* event);
 
 private:
+	void handleMenuBarEvent(Event* event);
+
+private:
 	void InitialiseResources();
 	void InitialiseGlobals();
 	void InitialiseScreen();

@@ -9,6 +9,9 @@
     <ClCompile Include="..\common\src\CUITestWindow.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\src\CUITextInput.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PolycodeTemplateApp.h" />
@@ -16,6 +19,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\include\CUITestWindow.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\CUITextInput.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

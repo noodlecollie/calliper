@@ -15,8 +15,9 @@ namespace Polycode
 	class UIImageButton;
 	class UIMenu;
 	class UIScrollContainer;
-	class UITextInput;
 }
+
+class CUITextInput;
 
 using namespace Polycode;
 
@@ -40,8 +41,8 @@ private:
 	UIMenu*				m_pMenu;
 	UIImageButton*		m_pScrollContent;
 	UIScrollContainer*	m_pScrollContainer;
-	UITextInput*		m_pTextInput;
-	UITextInput*		m_pMultiline;
+	CUITextInput*		m_pTextInput;
+	CUITextInput*		m_pMultiline;
 };
 
 #endif // CUITESTWINDOW_H
