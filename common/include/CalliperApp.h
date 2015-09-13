@@ -11,6 +11,7 @@ class CalliperApp;
 extern CalliperApp* globalApp;
 
 class CUITestWindow;
+class CVirtualSceneSample;
 
 class CalliperApp : public EventDispatcher
 {
@@ -88,8 +89,11 @@ private:
 
 	UIGlobalMenu* m_pGlobalMenu;
 	UIColorPicker* m_pGlobalColourPicker;
+	UIMenuBarEntry* m_pWindowMenu;
 
-	CUITestWindow* m_pUITestWindow;
+	int m_iMenuFullscreenItem;
+
+	CVirtualSceneSample* sample;
 };
 
 #endif // CALLIPER_APP_H

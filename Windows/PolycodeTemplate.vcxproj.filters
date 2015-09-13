@@ -12,6 +12,9 @@
     <ClCompile Include="..\common\src\CUITextInput.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\src\CVirtualSceneSample.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PolycodeTemplateApp.h" />
@@ -22,6 +25,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\include\CUITextInput.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\CVirtualSceneSample.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,7 @@
 #include "CalliperApp.h"
+
 #include "CUITestWindow.h"
+#include "CVirtualSceneSample.h"
 
 using namespace Polycode;
 
@@ -7,6 +9,9 @@ CalliperApp* globalApp = NULL;
 
 #define MENU_ACTION_QUIT "quit"
 #define MENU_ACTION_FULLSCREEN "fullscreen"
+
+#define LABEL_FULLSCREEN_INACTIVE "Make Fullscreen"
+#define LABEL_FULLSCREEN_ACTIVE "Make Windowed"
 
 CalliperApp::CalliperApp(int xRes, int yRes, bool vSync, int aaLevel, int anisotropyLevel, int framerate, bool retina) : EventDispatcher()
 {
@@ -129,6 +134,12 @@ void CalliperApp::InitialiseScreen()
 
 	// Process input events!
 	m_pScreen->rootEntity.processInputEvents = true;
+
+	String bgcol = CoreServices::getInstance()->getConfig()->getStringValue("Polycode", "uiBgColor");
+	Color c;
+	c.setColorHexFromString(bgcol);
+	m_pScreen->clearColor = c;
+	m_pScreen->useClearColor = true;
 }
 
 void CalliperApp::InitialiseUI()
@@ -144,14 +155,19 @@ void CalliperApp::InitialiseUI()
 	UIMenuBarEntry *fileEntry = m_pMenuBar->addMenuBarEntry("File");
 	fileEntry->addItem("Quit", MENU_ACTION_QUIT);
 
-	UIMenuBarEntry *windowEntry = m_pMenuBar->addMenuBarEntry("Window");
-	windowEntry->addItem("Fullscreen", MENU_ACTION_FULLSCREEN);
+	m_pWindowMenu = m_pMenuBar->addMenuBarEntry("Window");
+	m_pWindowMenu->addItem(LABEL_FULLSCREEN_INACTIVE, MENU_ACTION_FULLSCREEN);
+	m_iMenuFullscreenItem = m_pWindowMenu->items.size() - 1;
 	
 	m_pMenuBar->addEventListener(this, UIEvent::OK_EVENT);
 	m_pScreen->addChild(m_pMenuBar);
 
-	m_pUITestWindow = new CUITestWindow("UI Elements", 350, 450);
-	m_pScreen->addChild(m_pUITestWindow);
+	sample = new CVirtualSceneSample();
+	ScenePrimitive* pr = new ScenePrimitive(ScenePrimitive::TYPE_VPLANE, 256, 256);
+	pr->setAnchorPoint(-1, -1, 0);
+	pr->setPosition(50, 50);
+	pr->setTexture(sample->m_pRenderTexture->getTargetTexture());
+	m_pScreen->addChild(pr);
 }
 
 void CalliperApp::InitialiseGlobals()
@@ -246,12 +262,16 @@ void CalliperApp::setFullscreen(bool fullscreen)
 {
 	if (fullscreen == appCore->isFullscreen()) return;
 
+	// We're going fullscreen.
 	if (fullscreen)
 	{
+		m_pWindowMenu->items[m_iMenuFullscreenItem].name = LABEL_FULLSCREEN_ACTIVE;
 		appCore->setVideoMode(appCore->getScreenWidth(), appCore->getScreenHeight(), true, targetVsync(), targetAALevel(), targetAnisotropyLevel(), targetRetinaSupport());
 	}
+	// We're going back to windowed mode.
 	else
 	{
+		m_pWindowMenu->items[m_iMenuFullscreenItem].name = LABEL_FULLSCREEN_INACTIVE;
 		appCore->setVideoMode(targetXRes(), targetYRes(), false, targetVsync(), targetAALevel(), targetAnisotropyLevel(), targetRetinaSupport());
 	}
 }
