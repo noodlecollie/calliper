@@ -6,11 +6,21 @@ using namespace Polycode;
 CalliperApp* globalApp = NULL;
 
 #define MENU_ACTION_QUIT "quit"
+#define MENU_ACTION_FULLSCREEN "fullscreen"
 
-CalliperApp::CalliperApp() : EventDispatcher()
+CalliperApp::CalliperApp(int xRes, int yRes, bool vSync, int aaLevel, int anisotropyLevel, int framerate, bool retina) : EventDispatcher()
 {
-	// No initialisation here any more - this is platform-specfic.
+	// AppCore is initialised by the platform-specific code.
 	appCore = NULL;
+
+	// These are kept by the app in order to facilitate toggling fullscreen.
+	m_iWindowedXRes = xRes;
+	m_iWindowedYRes = yRes;
+	m_iTargetAALevel = aaLevel;
+	m_iTargetAnisotropyLevel = anisotropyLevel;
+	m_iTargetFramerate = framerate;
+	m_bTargetVsync = vSync;
+	m_bTargetRetinaSupport = retina;
 }
 
 CalliperApp::~CalliperApp()
@@ -130,8 +140,12 @@ void CalliperApp::InitialiseUI()
 	SceneLabel::createMipmapsForLabels = false;
 	
 	m_pMenuBar = new UIMenuBar(640, GetGlobalMenu());
+
 	UIMenuBarEntry *fileEntry = m_pMenuBar->addMenuBarEntry("File");
-	fileEntry->addItem("Quit", MENU_ACTION_QUIT, KEY_q);
+	fileEntry->addItem("Quit", MENU_ACTION_QUIT);
+
+	UIMenuBarEntry *windowEntry = m_pMenuBar->addMenuBarEntry("Window");
+	windowEntry->addItem("Fullscreen", MENU_ACTION_FULLSCREEN);
 	
 	m_pMenuBar->addEventListener(this, UIEvent::OK_EVENT);
 	m_pScreen->addChild(m_pMenuBar);
@@ -186,4 +200,57 @@ void CalliperApp::handleMenuBarEvent(Event* event)
 	{
 		appCore->Shutdown();
 	}
+	else if (action == MENU_ACTION_FULLSCREEN)
+	{
+		setFullscreen(!appCore->isFullscreen());
+	}
+}
+
+void CalliperApp::setFullscreen(bool fullscreen)
+{
+	if (fullscreen == appCore->isFullscreen()) return;
+
+	if (fullscreen)
+	{
+		appCore->setVideoMode(appCore->getScreenWidth(), appCore->getScreenHeight(), true, targetVsync(), targetAALevel(), targetAnisotropyLevel(), targetRetinaSupport());
+	}
+	else
+	{
+		appCore->setVideoMode(targetXRes(), targetYRes(), false, targetVsync(), targetAALevel(), targetAnisotropyLevel(), targetRetinaSupport());
+	}
+}
+
+int CalliperApp::targetXRes() const
+{
+	return m_iWindowedXRes;
+}
+
+int CalliperApp::targetYRes() const
+{
+	return m_iWindowedYRes;
+}
+
+int CalliperApp::targetAALevel() const
+{
+	return m_iTargetAALevel;
+}
+
+int CalliperApp::targetAnisotropyLevel() const
+{
+	return m_iTargetAnisotropyLevel;
+}
+
+int CalliperApp::targetFrameRate() const
+{
+	return m_iTargetFramerate;
+}
+
+bool CalliperApp::targetRetinaSupport() const
+{
+	return m_bTargetRetinaSupport;
+}
+
+bool CalliperApp::targetVsync() const
+{
+	return m_bTargetVsync;
 }

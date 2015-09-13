@@ -29,7 +29,7 @@ public:
 	};
 
 public:
-	CalliperApp();
+	CalliperApp(int xRes, int yRes, bool vSync, int aaLevel, int anisotropyLevel, int framerate, bool retina);
 	
 	// Destructor should be called by deleting the app from the platform-specific destructor.
 	~CalliperApp();
@@ -49,6 +49,16 @@ public:
 	Scene* GetScreen() const;
 	UIGlobalMenu* GetGlobalMenu() const;
 	UIColorPicker* GetGlobalColorPicker() const;
+
+	int targetXRes() const;
+	int targetYRes() const;
+	bool targetVsync() const;
+	int targetAALevel() const;
+	int targetAnisotropyLevel() const;
+	int targetFrameRate() const;
+	bool targetRetinaSupport() const;
+
+	void setFullscreen(bool fullscreen);
 	
 protected:
 	void handleEvent(Event* event);
@@ -63,6 +73,14 @@ private:
 	void InitialiseUI();
 
 private:
+	int m_iWindowedXRes;
+	int m_iWindowedYRes;
+	int m_iTargetAALevel;
+	int m_iTargetAnisotropyLevel;
+	int m_iTargetFramerate;
+	bool m_bTargetVsync;
+	bool m_bTargetRetinaSupport;
+
 	Scene* m_pScreen;		// 2D scene that holds the UI etc.
 	UIMenuBar* m_pMenuBar;	// Application menu bar.
 
