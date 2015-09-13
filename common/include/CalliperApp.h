@@ -65,12 +65,14 @@ protected:
 
 private:
 	void handleMenuBarEvent(Event* event);
+	void handleCoreEvent(Event* event);
 
 private:
 	void InitialiseResources();
 	void InitialiseGlobals();
 	void InitialiseScreen();
 	void InitialiseUI();
+	void updateTargetResFromWindow();
 
 private:
 	int m_iWindowedXRes;

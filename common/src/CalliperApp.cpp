@@ -183,6 +183,12 @@ UIColorPicker* CalliperApp::GetGlobalColorPicker() const
 
 void CalliperApp::handleEvent(Event* event)
 {
+	if (event->getDispatcher() == appCore)
+	{
+		handleCoreEvent(event);
+		return;
+	}
+
 	if (event->getDispatcher() == m_pMenuBar)
 	{
 		handleMenuBarEvent(event);
@@ -204,6 +210,34 @@ void CalliperApp::handleMenuBarEvent(Event* event)
 	{
 		setFullscreen(!appCore->isFullscreen());
 	}
+}
+
+void CalliperApp::handleCoreEvent(Event* event)
+{
+	switch (event->getEventCode())
+	{
+	case Core::EVENT_LOST_FOCUS:
+		appCore->setFramerate(3);
+		break;
+	case Core::EVENT_GAINED_FOCUS:
+		appCore->setFramerate(targetFrameRate());
+		break;
+
+	case Core::EVENT_CORE_RESIZE:
+		if (!appCore->isFullscreen())
+		{
+			updateTargetResFromWindow();
+		}
+
+		m_pMenuBar->Resize(appCore->getXRes(), m_pMenuBar->getHeight());
+		break;
+	}
+}
+
+void CalliperApp::updateTargetResFromWindow()
+{
+	m_iWindowedXRes = appCore->getXRes();
+	m_iWindowedYRes = appCore->getYRes();
 }
 
 void CalliperApp::setFullscreen(bool fullscreen)
