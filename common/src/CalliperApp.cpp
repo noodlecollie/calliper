@@ -169,6 +169,8 @@ void CalliperApp::InitialiseGlobals()
 	m_pGlobalColourPicker = new UIColorPicker();
 	m_pGlobalColourPicker->setPosition(0, 0);
 	m_pScreen->addChild(m_pGlobalColourPicker);
+
+	appCore->addEventListener(this, Core::EVENT_CORE_RESIZE);
 }
 
 UIGlobalMenu* CalliperApp::GetGlobalMenu() const
