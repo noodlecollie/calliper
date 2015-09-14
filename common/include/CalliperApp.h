@@ -95,6 +95,7 @@ private:
 	int m_iMenuFullscreenItem;
 
 	CVirtualSceneSample* sample;
+	ScenePrimitive* pr;
 };
 
 #endif // CALLIPER_APP_H

@@ -163,9 +163,10 @@ void CalliperApp::InitialiseUI()
 	m_pScreen->addChild(m_pMenuBar);
 
 	sample = new CVirtualSceneSample();
-	ScenePrimitive* pr = new ScenePrimitive(ScenePrimitive::TYPE_VPLANE, 256, 256);
+	sample->m_pRenderTexture->resizeRenderTexture(appCore->getXRes(), appCore->getYRes() - 30);
+	pr = new ScenePrimitive(ScenePrimitive::TYPE_VPLANE, appCore->getXRes(), appCore->getYRes() - 30);
 	pr->setAnchorPoint(-1, -1, 0);
-	pr->setPosition(50, 50);
+	pr->setPosition(0, 30);
 	pr->setTexture(sample->m_pRenderTexture->getTargetTexture());
 	m_pScreen->addChild(pr);
 }
@@ -242,21 +243,28 @@ void CalliperApp::handleCoreEvent(Event* event)
 {
 	switch (event->getEventCode())
 	{
-	case Core::EVENT_LOST_FOCUS:
-		appCore->setFramerate(3);
-		break;
-	case Core::EVENT_GAINED_FOCUS:
-		appCore->setFramerate(targetFrameRate());
-		break;
-
-	case Core::EVENT_CORE_RESIZE:
-		if (!appCore->isFullscreen())
+		case Core::EVENT_LOST_FOCUS:
 		{
-			updateTargetResFromWindow();
+			appCore->setFramerate(3);
+			break;
+		}
+			
+		case Core::EVENT_GAINED_FOCUS:
+		{
+			appCore->setFramerate(targetFrameRate());
+			break;
 		}
 
-		m_pMenuBar->Resize(appCore->getXRes(), m_pMenuBar->getHeight());
-		break;
+		case Core::EVENT_CORE_RESIZE:
+		{
+			if (!appCore->isFullscreen())
+			{
+				updateTargetResFromWindow();
+			}
+			
+			m_pMenuBar->Resize(appCore->getXRes(), m_pMenuBar->getHeight());
+			break;
+		}
 	}
 }
 
