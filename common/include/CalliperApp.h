@@ -67,6 +67,7 @@ protected:
 private:
 	void handleMenuBarEvent(Event* event);
 	void handleCoreEvent(Event* event);
+	void handleInputEvent(InputEvent* event);
 
 private:
 	void InitialiseResources();

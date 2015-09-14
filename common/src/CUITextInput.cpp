@@ -1,8 +1,12 @@
 #include "CUITextInput.h"
 #include "Polycode.h"
 
-CUITextInput::CUITextInput(bool multiLine, Number width, Number height, int customFontSize, const String &customFont,
-	int customLineSpacing) : UITextInput(multiLine, width, height, customFontSize, customFont, customLineSpacing)
+CUITextInput::CUITextInput(bool multiLine, Number width, Number height, int customFontSize, const String &customFont, int customLineSpacing) :
+#ifndef OLD_POLYCODE
+UITextInput(multiLine, width, height, customFontSize, customFont, customLineSpacing)
+#else
+UITextInput(multiLine, width, height)
+#endif
 {
 	Config *conf = CoreServices::getInstance()->getConfig();
 

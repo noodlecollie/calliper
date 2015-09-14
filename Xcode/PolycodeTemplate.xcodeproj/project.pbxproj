@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		387519991BA6F8920018BCB8 /* MathUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 387519981BA6F8920018BCB8 /* MathUtil.cpp */; };
 		38861B221BA012780039CD3F /* default.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B1D1BA012780039CD3F /* default.pak */; };
 		38861B231BA012780039CD3F /* hdr.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B1E1BA012780039CD3F /* hdr.pak */; };
 		38861B241BA012780039CD3F /* native.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B1F1BA012780039CD3F /* native.pak */; };
 		38861B251BA012780039CD3F /* standardtheme in Resources */ = {isa = PBXBuildFile; fileRef = 38861B201BA012780039CD3F /* standardtheme */; };
 		38861B261BA012780039CD3F /* UIThemes.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B211BA012780039CD3F /* UIThemes.pak */; };
+		38AE87391BA6B76F00AA5D83 /* CEulerAngle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38AE87381BA6B76F00AA5D83 /* CEulerAngle.cpp */; };
+		38EBDF161BA6A1C20023507A /* CUITextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38EBDF141BA6A1C20023507A /* CUITextInput.cpp */; };
+		38EBDF171BA6A1C20023507A /* CVirtualSceneSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38EBDF151BA6A1C20023507A /* CVirtualSceneSample.cpp */; };
 		38FD34B71B9EE05F00693AB1 /* libPolycodeUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FD34B61B9EE05F00693AB1 /* libPolycodeUI.a */; };
 		38FD34BC1B9EE2A400693AB1 /* CalliperApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38FD34BB1B9EE2A300693AB1 /* CalliperApp.cpp */; };
 		38FD34BF1B9EE49900693AB1 /* CUITestWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38FD34BE1B9EE49900693AB1 /* CUITestWindow.cpp */; };
@@ -38,11 +42,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		387519961BA6F8640018BCB8 /* MathUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathUtil.h; path = ../../common/include/MathUtil.h; sourceTree = "<group>"; };
+		387519981BA6F8920018BCB8 /* MathUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MathUtil.cpp; path = ../../common/src/MathUtil.cpp; sourceTree = "<group>"; };
 		38861B1D1BA012780039CD3F /* default.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = default.pak; path = ../working/default.pak; sourceTree = "<group>"; };
 		38861B1E1BA012780039CD3F /* hdr.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = hdr.pak; path = ../working/hdr.pak; sourceTree = "<group>"; };
 		38861B1F1BA012780039CD3F /* native.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = native.pak; path = ../working/native.pak; sourceTree = "<group>"; };
 		38861B201BA012780039CD3F /* standardtheme */ = {isa = PBXFileReference; lastKnownFileType = folder; name = standardtheme; path = ../working/standardtheme; sourceTree = "<group>"; };
 		38861B211BA012780039CD3F /* UIThemes.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = UIThemes.pak; path = ../working/UIThemes.pak; sourceTree = "<group>"; };
+		38AE87371BA6B65100AA5D83 /* CEulerAngle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CEulerAngle.h; path = ../../common/include/CEulerAngle.h; sourceTree = "<group>"; };
+		38AE87381BA6B76F00AA5D83 /* CEulerAngle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CEulerAngle.cpp; path = ../../common/src/CEulerAngle.cpp; sourceTree = "<group>"; };
+		38EBDF121BA6A1B80023507A /* CUITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CUITextInput.h; path = ../../common/include/CUITextInput.h; sourceTree = "<group>"; };
+		38EBDF131BA6A1B80023507A /* CVirtualSceneSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVirtualSceneSample.h; path = ../../common/include/CVirtualSceneSample.h; sourceTree = "<group>"; };
+		38EBDF141BA6A1C20023507A /* CUITextInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CUITextInput.cpp; path = ../../common/src/CUITextInput.cpp; sourceTree = "<group>"; };
+		38EBDF151BA6A1C20023507A /* CVirtualSceneSample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CVirtualSceneSample.cpp; path = ../../common/src/CVirtualSceneSample.cpp; sourceTree = "<group>"; };
 		38FD34B61B9EE05F00693AB1 /* libPolycodeUI.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPolycodeUI.a; path = ../../Modules/lib/libPolycodeUI.a; sourceTree = "<group>"; };
 		38FD34BA1B9EE29700693AB1 /* CalliperApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CalliperApp.h; path = ../../common/include/CalliperApp.h; sourceTree = "<group>"; };
 		38FD34BB1B9EE2A300693AB1 /* CalliperApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CalliperApp.cpp; path = ../../common/src/CalliperApp.cpp; sourceTree = "<group>"; };
@@ -119,10 +131,18 @@
 		38FD34B81B9EE28C00693AB1 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				387519981BA6F8920018BCB8 /* MathUtil.cpp */,
+				38EBDF141BA6A1C20023507A /* CUITextInput.cpp */,
+				38EBDF151BA6A1C20023507A /* CVirtualSceneSample.cpp */,
+				38EBDF121BA6A1B80023507A /* CUITextInput.h */,
+				38EBDF131BA6A1B80023507A /* CVirtualSceneSample.h */,
 				38FD34BE1B9EE49900693AB1 /* CUITestWindow.cpp */,
 				38FD34BD1B9EE48A00693AB1 /* CUITestWindow.h */,
 				38FD34BA1B9EE29700693AB1 /* CalliperApp.h */,
 				38FD34BB1B9EE2A300693AB1 /* CalliperApp.cpp */,
+				38AE87371BA6B65100AA5D83 /* CEulerAngle.h */,
+				38AE87381BA6B76F00AA5D83 /* CEulerAngle.cpp */,
+				387519961BA6F8640018BCB8 /* MathUtil.h */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -277,8 +297,12 @@
 			files = (
 				6D2800C913760D3E00BD8D0D /* main.m in Sources */,
 				38FD34BF1B9EE49900693AB1 /* CUITestWindow.cpp in Sources */,
+				38EBDF171BA6A1C20023507A /* CVirtualSceneSample.cpp in Sources */,
+				38AE87391BA6B76F00AA5D83 /* CEulerAngle.cpp in Sources */,
 				6D2800CF13760D3E00BD8D0D /* PolycodeTemplateAppDelegate.mm in Sources */,
 				6D2800F913760E7C00BD8D0D /* PolycodeView.mm in Sources */,
+				38EBDF161BA6A1C20023507A /* CUITextInput.cpp in Sources */,
+				387519991BA6F8920018BCB8 /* MathUtil.cpp in Sources */,
 				38FD34BC1B9EE2A400693AB1 /* CalliperApp.cpp in Sources */,
 				6D2800FC13760F2C00BD8D0D /* PolycodeTemplateApp.mm in Sources */,
 			);
@@ -356,6 +380,10 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PolycodeTemplate/PolycodeTemplate-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DEBUG,
+					OLD_POLYCODE,
+				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../Core/include\"",
 					"\"$(SRCROOT)/../../Core/Dependencies/include\"",
@@ -388,6 +416,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PolycodeTemplate/PolycodeTemplate-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = OLD_POLYCODE;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../Core/include\"",
 					"\"$(SRCROOT)/../../Core/Dependencies/include\"",

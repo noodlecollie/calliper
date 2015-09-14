@@ -157,7 +157,7 @@ void CalliperApp::InitialiseUI()
 
 	m_pWindowMenu = m_pMenuBar->addMenuBarEntry("Window");
 	m_pWindowMenu->addItem(LABEL_FULLSCREEN_INACTIVE, MENU_ACTION_FULLSCREEN);
-	m_iMenuFullscreenItem = m_pWindowMenu->items.size() - 1;
+	m_iMenuFullscreenItem = (int)m_pWindowMenu->items.size() - 1;
 	
 	m_pMenuBar->addEventListener(this, UIEvent::OK_EVENT);
 	m_pScreen->addChild(m_pMenuBar);
@@ -187,6 +187,8 @@ void CalliperApp::InitialiseGlobals()
 	m_pScreen->addChild(m_pGlobalColourPicker);
 
 	appCore->addEventListener(this, Core::EVENT_CORE_RESIZE);
+	appCore->getInput()->addEventListener(this, InputEvent::EVENT_KEYDOWN);
+	appCore->getInput()->addEventListener(this, InputEvent::EVENT_KEYUP);
 }
 
 UIGlobalMenu* CalliperApp::GetGlobalMenu() const
@@ -210,6 +212,12 @@ void CalliperApp::handleEvent(Event* event)
 	if (event->getDispatcher() == m_pMenuBar)
 	{
 		handleMenuBarEvent(event);
+		return;
+	}
+	
+	if ( event->getDispatcher() == appCore->getInput() )
+	{
+		handleInputEvent(static_cast<InputEvent*>(event));
 		return;
 	}
 	
@@ -249,6 +257,47 @@ void CalliperApp::handleCoreEvent(Event* event)
 
 		m_pMenuBar->Resize(appCore->getXRes(), m_pMenuBar->getHeight());
 		break;
+	}
+}
+
+void CalliperApp::handleInputEvent(InputEvent* event)
+{
+	
+	switch (event->getEventCode())
+	{
+		case InputEvent::EVENT_KEYDOWN:
+		{
+			switch (event->keyCode())
+			{
+				case KEY_LEFT:
+				{
+					sample->m_pScene->getDefaultCamera()->Translate(-1, 0);
+					break;
+				}
+					
+				case KEY_RIGHT:
+				{
+					sample->m_pScene->getDefaultCamera()->Translate(1, 0);
+					break;
+				}
+					
+				case KEY_UP:
+				{
+					sample->m_pShape->Translate(0, 1);
+					break;
+				}
+					
+				case KEY_DOWN:
+				{
+					sample->m_pShape->Translate(0, -1);
+					break;
+				}
+			}
+			break;
+		}
+			
+		default:
+			break;
 	}
 }
 
