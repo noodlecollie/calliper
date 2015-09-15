@@ -149,18 +149,6 @@ void CalliperApp::InitialiseUI()
 	SceneLabel::defaultPositionAtBaseline = true;
 	SceneLabel::defaultSnapToPixels = true;
 	SceneLabel::createMipmapsForLabels = false;
-	
-	m_pMenuBar = new UIMenuBar(640, GetGlobalMenu());
-
-	UIMenuBarEntry *fileEntry = m_pMenuBar->addMenuBarEntry("File");
-	fileEntry->addItem("Quit", MENU_ACTION_QUIT);
-
-	m_pWindowMenu = m_pMenuBar->addMenuBarEntry("Window");
-	m_pWindowMenu->addItem(LABEL_FULLSCREEN_INACTIVE, MENU_ACTION_FULLSCREEN);
-	m_iMenuFullscreenItem = (int)m_pWindowMenu->items.size() - 1;
-	
-	m_pMenuBar->addEventListener(this, UIEvent::OK_EVENT);
-	m_pScreen->addChild(m_pMenuBar);
 
 	sample = new CVirtualSceneSample();
 	sample->m_pRenderTexture->resizeRenderTexture(appCore->getXRes(), appCore->getYRes() - 30);
@@ -169,6 +157,8 @@ void CalliperApp::InitialiseUI()
 	pr->setPosition(0, 30);
 	pr->setTexture(sample->m_pRenderTexture->getTargetTexture());
 	m_pScreen->addChild(pr);
+
+	InitialiseMenuBar();
 }
 
 void CalliperApp::InitialiseGlobals()
@@ -366,4 +356,19 @@ bool CalliperApp::targetRetinaSupport() const
 bool CalliperApp::targetVsync() const
 {
 	return m_bTargetVsync;
+}
+
+void CalliperApp::InitialiseMenuBar()
+{
+	m_pMenuBar = new UIMenuBar(640, GetGlobalMenu());
+
+	UIMenuBarEntry *fileEntry = m_pMenuBar->addMenuBarEntry("File");
+	fileEntry->addItem("Quit", MENU_ACTION_QUIT);
+
+	m_pWindowMenu = m_pMenuBar->addMenuBarEntry("Window");
+	m_pWindowMenu->addItem(LABEL_FULLSCREEN_INACTIVE, MENU_ACTION_FULLSCREEN);
+	m_iMenuFullscreenItem = (int)m_pWindowMenu->items.size() - 1;
+
+	m_pMenuBar->addEventListener(this, UIEvent::OK_EVENT);
+	m_pScreen->addChild(m_pMenuBar);
 }

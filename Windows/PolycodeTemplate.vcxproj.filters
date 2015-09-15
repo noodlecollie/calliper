@@ -15,6 +15,15 @@
     <ClCompile Include="..\common\src\CVirtualSceneSample.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\src\MathUtil.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\src\CCommandLineArgs.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\src\CCameraController.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PolycodeTemplateApp.h" />
@@ -28,6 +37,15 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\common\include\CVirtualSceneSample.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\MathUtil.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\CCommandLineArgs.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\CCameraController.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

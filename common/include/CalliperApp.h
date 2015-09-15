@@ -74,6 +74,7 @@ private:
 	void InitialiseGlobals();
 	void InitialiseScreen();
 	void InitialiseUI();
+	void InitialiseMenuBar();
 	void updateTargetResFromWindow();
 
 private:

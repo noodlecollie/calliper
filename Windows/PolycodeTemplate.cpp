@@ -2,12 +2,14 @@
 #include "PolycodeTemplateApp.h"
 #include "PolycodeView.h"
 #include "windows.h"
+#include "CCommandLineArgs.h"
 
 using namespace Polycode;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	PolycodeView *view = new PolycodeView(hInstance, nCmdShow, L"Polycode Template", true);
+	globalCommandLineArgs = new CCommandLineArgs(String(lpCmdLine));
+	PolycodeView *view = new PolycodeView(hInstance, nCmdShow, L"Calliper", true, globalCommandLineArgs->showDebugConsole);
 	PolycodeTemplateApp *app = new PolycodeTemplateApp(view);
 
 	MSG Msg;
