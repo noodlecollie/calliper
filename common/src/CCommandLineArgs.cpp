@@ -1,10 +1,6 @@
 #include "CCommandLineArgs.h"
 #include "Polycode.h"
 
-#if PLATFORM == PLATFORM_MAC
-#include "MacCommandLineArgs.h"
-#endif
-
 using namespace Polycode;
 
 CCommandLineArgs* globalCommandLineArgs = NULL;
@@ -43,10 +39,9 @@ CCommandLineArgs::CCommandLineArgs(const String &commandString)
 	parse(*this, list);
 }
 
-CCommandLineArgs::CCommandLineArgs()
+CCommandLineArgs::CCommandLineArgs(int argc, const char** argv)
 {
-	int argc = cmdlArgc;
-	const char** argv = cmdlArgv;
+	Logger::log("argc: %d argv: %p\n", argc, argv);
 	std::vector<String> list;
 	for (int i = 1; i < argc; i++)
 	{

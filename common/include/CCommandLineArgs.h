@@ -13,7 +13,7 @@ class CCommandLineArgs
 {
 public:
 	CCommandLineArgs(const String &commandString);
-	CCommandLineArgs();
+	CCommandLineArgs(int argc, const char** argv);
 
 	bool startFullscreen;
 	bool showDebugConsole;

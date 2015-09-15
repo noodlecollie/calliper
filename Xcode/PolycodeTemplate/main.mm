@@ -7,11 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#include "MacCommandLineArgs.h"
+#include "CCommandLineArgs.h"
 
 int main(int argc, char *argv[])
 {
-	cmdlArgc = argc;
-	cmdlArgv = (const char**)argv;
+	globalCommandLineArgs = new CCommandLineArgs(argc, (const char**)argv);
 	return NSApplicationMain(argc, (const char **)argv);
 }

@@ -23,7 +23,7 @@
 		6D022DEA1598EBF30030B45F /* main_icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6D022DE91598EBF30030B45F /* main_icon.icns */; };
 		6D2800BC13760D3E00BD8D0D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D2800BB13760D3E00BD8D0D /* Cocoa.framework */; };
 		6D2800C613760D3E00BD8D0D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D2800C413760D3E00BD8D0D /* InfoPlist.strings */; };
-		6D2800C913760D3E00BD8D0D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2800C813760D3E00BD8D0D /* main.m */; };
+		6D2800C913760D3E00BD8D0D /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D2800C813760D3E00BD8D0D /* main.mm */; };
 		6D2800CC13760D3E00BD8D0D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6D2800CA13760D3E00BD8D0D /* Credits.rtf */; };
 		6D2800CF13760D3E00BD8D0D /* PolycodeTemplateAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6D2800CE13760D3E00BD8D0D /* PolycodeTemplateAppDelegate.mm */; };
 		6D2800D213760D3E00BD8D0D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D2800D013760D3E00BD8D0D /* MainMenu.xib */; };
@@ -54,7 +54,6 @@
 		38D204591BA807A000BE69A7 /* CCommandLineArgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCommandLineArgs.h; path = ../../common/include/CCommandLineArgs.h; sourceTree = "<group>"; };
 		38D2045A1BA807A900BE69A7 /* CCameraController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCameraController.cpp; path = ../../common/src/CCameraController.cpp; sourceTree = "<group>"; };
 		38D2045B1BA807A900BE69A7 /* CCommandLineArgs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCommandLineArgs.cpp; path = ../../common/src/CCommandLineArgs.cpp; sourceTree = "<group>"; };
-		38D2045E1BA80BD000BE69A7 /* MacCommandLineArgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacCommandLineArgs.h; sourceTree = "<group>"; };
 		38EBDF121BA6A1B80023507A /* CUITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CUITextInput.h; path = ../../common/include/CUITextInput.h; sourceTree = "<group>"; };
 		38EBDF131BA6A1B80023507A /* CVirtualSceneSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVirtualSceneSample.h; path = ../../common/include/CVirtualSceneSample.h; sourceTree = "<group>"; };
 		38EBDF141BA6A1C20023507A /* CUITextInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CUITextInput.cpp; path = ../../common/src/CUITextInput.cpp; sourceTree = "<group>"; };
@@ -73,7 +72,7 @@
 		6D2800C313760D3E00BD8D0D /* PolycodeTemplate-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PolycodeTemplate-Info.plist"; sourceTree = "<group>"; };
 		6D2800C513760D3E00BD8D0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6D2800C713760D3E00BD8D0D /* PolycodeTemplate-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PolycodeTemplate-Prefix.pch"; sourceTree = "<group>"; };
-		6D2800C813760D3E00BD8D0D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6D2800C813760D3E00BD8D0D /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		6D2800CB13760D3E00BD8D0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		6D2800CD13760D3E00BD8D0D /* PolycodeTemplateAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolycodeTemplateAppDelegate.h; sourceTree = "<group>"; };
 		6D2800CE13760D3E00BD8D0D /* PolycodeTemplateAppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PolycodeTemplateAppDelegate.mm; sourceTree = "<group>"; };
@@ -209,7 +208,6 @@
 				6D2800C213760D3E00BD8D0D /* Supporting Files */,
 				6D2800FA13760F2C00BD8D0D /* PolycodeTemplateApp.mm */,
 				6D2800FB13760F2C00BD8D0D /* PolycodeTemplateApp.h */,
-				38D2045E1BA80BD000BE69A7 /* MacCommandLineArgs.h */,
 			);
 			path = PolycodeTemplate;
 			sourceTree = "<group>";
@@ -227,7 +225,7 @@
 				6D2800C313760D3E00BD8D0D /* PolycodeTemplate-Info.plist */,
 				6D2800C413760D3E00BD8D0D /* InfoPlist.strings */,
 				6D2800C713760D3E00BD8D0D /* PolycodeTemplate-Prefix.pch */,
-				6D2800C813760D3E00BD8D0D /* main.m */,
+				6D2800C813760D3E00BD8D0D /* main.mm */,
 				6D2800CA13760D3E00BD8D0D /* Credits.rtf */,
 			);
 			name = "Supporting Files";
@@ -302,7 +300,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D2800C913760D3E00BD8D0D /* main.m in Sources */,
+				6D2800C913760D3E00BD8D0D /* main.mm in Sources */,
 				38FD34BF1B9EE49900693AB1 /* CUITestWindow.cpp in Sources */,
 				38EBDF171BA6A1C20023507A /* CVirtualSceneSample.cpp in Sources */,
 				38D2045D1BA807A900BE69A7 /* CCommandLineArgs.cpp in Sources */,
