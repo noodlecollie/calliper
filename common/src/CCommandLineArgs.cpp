@@ -1,29 +1,56 @@
 #include "CCommandLineArgs.h"
+#include "Polycode.h"
+
+#if PLATFORM == PLATFORM_MAC
+#include "MacCommandLineArgs.h"
+#endif
+
+using namespace Polycode;
 
 CCommandLineArgs* globalCommandLineArgs = NULL;
 
 #define FLAG_SHOW_DEBUG_CONSOLE "-console"
 #define FLAG_START_FULLSCREEN "-fullscreen"
 
-CCommandLineArgs::CCommandLineArgs(const String &commandString)
+void parse(CCommandLineArgs &args, const std::vector<String> &list)
 {
-	showDebugConsole = false;
-	startFullscreen = false;
-
-	std::vector<String> list = commandString.split(" ");
-
 	for (int i = 0; i < list.size(); i++)
 	{
 		String s = list[i];
 		if (s == FLAG_SHOW_DEBUG_CONSOLE)
 		{
-			showDebugConsole = true;
+			args.showDebugConsole = true;
 			continue;
 		}
 		else if (s == FLAG_START_FULLSCREEN)
 		{
-			startFullscreen = true;
+			args.startFullscreen = true;
 			continue;
 		}
 	}
+}
+
+void setDefaults(CCommandLineArgs &args)
+{
+	args.showDebugConsole = false;
+	args.startFullscreen = false;
+}
+
+
+CCommandLineArgs::CCommandLineArgs(const String &commandString)
+{
+	std::vector<String> list = commandString.split(" ");
+	parse(*this, list);
+}
+
+CCommandLineArgs::CCommandLineArgs()
+{
+	int argc = cmdlArgc;
+	const char** argv = cmdlArgv;
+	std::vector<String> list;
+	for (int i = 1; i < argc; i++)
+	{
+		list.push_back(String(argv[i]));
+	}
+	parse(*this, list);
 }

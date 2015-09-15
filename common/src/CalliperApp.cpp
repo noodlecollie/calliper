@@ -2,6 +2,7 @@
 
 #include "CUITestWindow.h"
 #include "CVirtualSceneSample.h"
+#include "CCommandLineArgs.h"
 
 using namespace Polycode;
 
@@ -26,6 +27,11 @@ CalliperApp::CalliperApp(int xRes, int yRes, bool vSync, int aaLevel, int anisot
 	m_iTargetFramerate = framerate;
 	m_bTargetVsync = vSync;
 	m_bTargetRetinaSupport = retina;
+	
+	// We can't initialise this properly from Objective-C, so do so here.
+#if PLATFORM == PLATFORM_MAC
+	globalCommandLineArgs = new CCommandLineArgs();
+#endif
 }
 
 CalliperApp::~CalliperApp()

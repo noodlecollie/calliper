@@ -13,7 +13,8 @@
 		38861B241BA012780039CD3F /* native.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B1F1BA012780039CD3F /* native.pak */; };
 		38861B251BA012780039CD3F /* standardtheme in Resources */ = {isa = PBXBuildFile; fileRef = 38861B201BA012780039CD3F /* standardtheme */; };
 		38861B261BA012780039CD3F /* UIThemes.pak in Resources */ = {isa = PBXBuildFile; fileRef = 38861B211BA012780039CD3F /* UIThemes.pak */; };
-		38AE87391BA6B76F00AA5D83 /* CEulerAngle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38AE87381BA6B76F00AA5D83 /* CEulerAngle.cpp */; };
+		38D2045C1BA807A900BE69A7 /* CCameraController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38D2045A1BA807A900BE69A7 /* CCameraController.cpp */; };
+		38D2045D1BA807A900BE69A7 /* CCommandLineArgs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38D2045B1BA807A900BE69A7 /* CCommandLineArgs.cpp */; };
 		38EBDF161BA6A1C20023507A /* CUITextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38EBDF141BA6A1C20023507A /* CUITextInput.cpp */; };
 		38EBDF171BA6A1C20023507A /* CVirtualSceneSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38EBDF151BA6A1C20023507A /* CVirtualSceneSample.cpp */; };
 		38FD34B71B9EE05F00693AB1 /* libPolycodeUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FD34B61B9EE05F00693AB1 /* libPolycodeUI.a */; };
@@ -49,8 +50,11 @@
 		38861B1F1BA012780039CD3F /* native.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = native.pak; path = ../working/native.pak; sourceTree = "<group>"; };
 		38861B201BA012780039CD3F /* standardtheme */ = {isa = PBXFileReference; lastKnownFileType = folder; name = standardtheme; path = ../working/standardtheme; sourceTree = "<group>"; };
 		38861B211BA012780039CD3F /* UIThemes.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = UIThemes.pak; path = ../working/UIThemes.pak; sourceTree = "<group>"; };
-		38AE87371BA6B65100AA5D83 /* CEulerAngle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CEulerAngle.h; path = ../../common/include/CEulerAngle.h; sourceTree = "<group>"; };
-		38AE87381BA6B76F00AA5D83 /* CEulerAngle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CEulerAngle.cpp; path = ../../common/src/CEulerAngle.cpp; sourceTree = "<group>"; };
+		38D204581BA807A000BE69A7 /* CCameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCameraController.h; path = ../../common/include/CCameraController.h; sourceTree = "<group>"; };
+		38D204591BA807A000BE69A7 /* CCommandLineArgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCommandLineArgs.h; path = ../../common/include/CCommandLineArgs.h; sourceTree = "<group>"; };
+		38D2045A1BA807A900BE69A7 /* CCameraController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCameraController.cpp; path = ../../common/src/CCameraController.cpp; sourceTree = "<group>"; };
+		38D2045B1BA807A900BE69A7 /* CCommandLineArgs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCommandLineArgs.cpp; path = ../../common/src/CCommandLineArgs.cpp; sourceTree = "<group>"; };
+		38D2045E1BA80BD000BE69A7 /* MacCommandLineArgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacCommandLineArgs.h; sourceTree = "<group>"; };
 		38EBDF121BA6A1B80023507A /* CUITextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CUITextInput.h; path = ../../common/include/CUITextInput.h; sourceTree = "<group>"; };
 		38EBDF131BA6A1B80023507A /* CVirtualSceneSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVirtualSceneSample.h; path = ../../common/include/CVirtualSceneSample.h; sourceTree = "<group>"; };
 		38EBDF141BA6A1C20023507A /* CUITextInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CUITextInput.cpp; path = ../../common/src/CUITextInput.cpp; sourceTree = "<group>"; };
@@ -131,6 +135,10 @@
 		38FD34B81B9EE28C00693AB1 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				38D2045A1BA807A900BE69A7 /* CCameraController.cpp */,
+				38D2045B1BA807A900BE69A7 /* CCommandLineArgs.cpp */,
+				38D204581BA807A000BE69A7 /* CCameraController.h */,
+				38D204591BA807A000BE69A7 /* CCommandLineArgs.h */,
 				387519981BA6F8920018BCB8 /* MathUtil.cpp */,
 				38EBDF141BA6A1C20023507A /* CUITextInput.cpp */,
 				38EBDF151BA6A1C20023507A /* CVirtualSceneSample.cpp */,
@@ -140,8 +148,6 @@
 				38FD34BD1B9EE48A00693AB1 /* CUITestWindow.h */,
 				38FD34BA1B9EE29700693AB1 /* CalliperApp.h */,
 				38FD34BB1B9EE2A300693AB1 /* CalliperApp.cpp */,
-				38AE87371BA6B65100AA5D83 /* CEulerAngle.h */,
-				38AE87381BA6B76F00AA5D83 /* CEulerAngle.cpp */,
 				387519961BA6F8640018BCB8 /* MathUtil.h */,
 			);
 			name = common;
@@ -203,6 +209,7 @@
 				6D2800C213760D3E00BD8D0D /* Supporting Files */,
 				6D2800FA13760F2C00BD8D0D /* PolycodeTemplateApp.mm */,
 				6D2800FB13760F2C00BD8D0D /* PolycodeTemplateApp.h */,
+				38D2045E1BA80BD000BE69A7 /* MacCommandLineArgs.h */,
 			);
 			path = PolycodeTemplate;
 			sourceTree = "<group>";
@@ -298,12 +305,13 @@
 				6D2800C913760D3E00BD8D0D /* main.m in Sources */,
 				38FD34BF1B9EE49900693AB1 /* CUITestWindow.cpp in Sources */,
 				38EBDF171BA6A1C20023507A /* CVirtualSceneSample.cpp in Sources */,
-				38AE87391BA6B76F00AA5D83 /* CEulerAngle.cpp in Sources */,
+				38D2045D1BA807A900BE69A7 /* CCommandLineArgs.cpp in Sources */,
 				6D2800CF13760D3E00BD8D0D /* PolycodeTemplateAppDelegate.mm in Sources */,
 				6D2800F913760E7C00BD8D0D /* PolycodeView.mm in Sources */,
 				38EBDF161BA6A1C20023507A /* CUITextInput.cpp in Sources */,
 				387519991BA6F8920018BCB8 /* MathUtil.cpp in Sources */,
 				38FD34BC1B9EE2A400693AB1 /* CalliperApp.cpp in Sources */,
+				38D2045C1BA807A900BE69A7 /* CCameraController.cpp in Sources */,
 				6D2800FC13760F2C00BD8D0D /* PolycodeTemplateApp.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

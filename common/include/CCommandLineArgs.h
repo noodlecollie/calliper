@@ -2,6 +2,7 @@
 #define CCOMMANDLINEARGS_H
 
 #include "Polycode.h"
+#include <vector>
 
 using namespace Polycode;
 
@@ -12,6 +13,7 @@ class CCommandLineArgs
 {
 public:
 	CCommandLineArgs(const String &commandString);
+	CCommandLineArgs();
 
 	bool startFullscreen;
 	bool showDebugConsole;

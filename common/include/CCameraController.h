@@ -40,6 +40,6 @@ private:
 	Number	m_flTimeToMaxSpeed;
 	Vector3	m_vecVelocity;
 	int		m_iPressedKeys;
-}
+};
 
 #endif	// CCAMERACONTROLLER_H
