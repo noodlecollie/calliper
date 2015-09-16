@@ -20,47 +20,50 @@ bool vectorIsNull(const Vector4 &vec)
 	return vec.x == 0.0f && vec.y == 0.0f && vec.z == 0.0f && vec.w == 0.0f;
 }
 
-Vector3 angleToVector(const CEulerAngle &angle)
+namespace HammerCoords
 {
-	// X and Z are dependent on the pitch and yaw; Y is dependent on the pitch only.
-	Number radYaw = TORADIANS * angle.y;
-	Number radPitch = TORADIANS * angle.x;
-	Number sinPitch = sin(radPitch);
-	Number sinYaw = sin(radYaw);
-	Number cosPitch = cos(radPitch);
-	Number cosYaw = cos(radYaw);
-	
-	return Vector3(cosPitch * cosYaw, cosPitch * sinYaw, -sinPitch);
-}
+	CVector3 angleToVector(const CEulerAngle &angle)
+	{
+		// X and Z are dependent on the pitch and yaw; Y is dependent on the pitch only.
+		Number radYaw = TORADIANS * angle.y;
+		Number radPitch = TORADIANS * angle.x;
+		Number sinPitch = sin(radPitch);
+		Number sinYaw = sin(radYaw);
+		Number cosPitch = cos(radPitch);
+		Number cosYaw = cos(radYaw);
+		
+		return CVector3(cosPitch * cosYaw, cosPitch * sinYaw, -sinPitch);
+	}
 
-// Method taken from http://www.gamedev.net/topic/399701-convert-vector-to-euler-cardan-angles/#entry3651854
-CEulerAngle vectorToAngle(const Vector3 &vec)
-{
-	// If the vector is null, return a zeroed angle.
-	if ( vectorIsNull(vec) )
+	// Method taken from http://www.gamedev.net/topic/399701-convert-vector-to-euler-cardan-angles/#entry3651854
+	CEulerAngle vectorToAngle(const CVector3 &vec)
 	{
-		return CEulerAngle();
+		// If the vector is null, return a zeroed angle.
+		if ( vectorIsNull(vec) )
+		{
+			return CEulerAngle();
+		}
+		
+		// If x and y are null, just set the pitch.
+		if ( FUZZY_NULL(vec.x) && FUZZY_NULL(vec.y) )
+		{
+			return CEulerAngle(vec.z > 0.0f ? 270.0f : 90.0f, 0.0f, 0.0f);
+		}
+		
+		Number temp, yaw, pitch;
+		
+		// Yaw depends on the x and y co-ordinates.
+		yaw = TODEGREES * atan2(vec.y, vec.x);
+		if ( yaw < 0.0f ) yaw += 360.0f;
+		
+		// Pitch is found by finding the angle between the xy projection of the vector
+		// and the negative Z axis.
+		temp = sqrt(vec.x * vec.x + vec.y * vec.y);   // Length of projection onto xy plane
+		pitch = TODEGREES * atan(-vec.z / temp);      // Angle between this and -z.
+		if ( pitch < 0.0f ) pitch += 360;
+		
+		return CEulerAngle(pitch, yaw, 0.0f);
 	}
-	
-	// If x and y are null, just set the pitch.
-	if ( FUZZY_NULL(vec.x) && FUZZY_NULL(vec.y) )
-	{
-		return CEulerAngle(vec.z > 0.0f ? 270.0f : 90.0f, 0.0f, 0.0f);
-	}
-	
-	Number temp, yaw, pitch;
-	
-	// Yaw depends on the x and y co-ordinates.
-	yaw = TODEGREES * atan2(vec.y, vec.x);
-	if ( yaw < 0.0f ) yaw += 360.0f;
-	
-	// Pitch is found by finding the angle between the xy projection of the vector
-	// and the negative Z axis.
-	temp = sqrt(vec.x * vec.x + vec.y * vec.y);   // Length of projection onto xy plane
-	pitch = TODEGREES * atan(-vec.z / temp);      // Angle between this and -z.
-	if ( pitch < 0.0f ) pitch += 360;
-	
-	return CEulerAngle(pitch, yaw, 0.0f);
 }
 
 void performClamp(Number &p, Number &y, Number &r)
@@ -136,4 +139,32 @@ bool vectorFuzzyCompare(const Vector4 &v1, const Vector4 &v2)
 {
 	return FUZZY_COMPARE(v1.x, v2.x) && FUZZY_COMPARE(v1.y, v2.y)
 	&& FUZZY_COMPARE(v1.z, v2.z) && FUZZY_COMPARE(v1.w, v2.w);
+}
+
+// http://stackoverflow.com/questions/18404890/how-to-build-perspective-projection-matrix-no-api
+void perspectiveMatrix(Matrix4 &mat, Number fov, Number aspect, Number nearDist, Number farDist, Number leftHanded)
+{
+	// General form of the Projection Matrix
+	//
+	// uh = Cot( fov/2 ) == 1/Tan(fov/2)
+	// uw / uh = 1/aspect
+	//
+	//   uw         0       0       0
+	//    0        uh       0       0
+	//    0         0      f/(f-n)  1
+	//    0         0    -fn/(f-n)  0
+	//
+	// Make result to be identity first
+	
+	assert(fov > 0 && aspect != 0);
+	
+	float frustumDepth = farDist - nearDist;
+	float oneOverDepth = 1 / frustumDepth;
+	
+	mat[1][1] = 1 / tan(0.5f * fov);
+	mat[0][0] = (leftHanded ? 1 : -1 ) * mat[1][1] / aspect;
+	mat[2][2] = farDist * oneOverDepth;
+	mat[3][2] = (-farDist * nearDist) * oneOverDepth;
+	mat[2][3] = 1;
+	mat[3][3] = 0;
 }

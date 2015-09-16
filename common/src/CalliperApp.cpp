@@ -158,6 +158,15 @@ void CalliperApp::InitialiseUI()
 	SceneLabel::createMipmapsForLabels = false;
 
 	sample = new CVirtualSceneSample();
+	//Camera* c = sample->m_pScene->getDefaultCamera();
+	//c->setPosition(Vector3(0,0,0));
+	//Matrix4 persp;
+	//perspectiveMatrix(persp, c->getFOV(), appCore->getYRes()/appCore->getXRes(), c->getNearClippingPlane(),
+	//				  c->getFarClippingPlane());
+	//persp = HAMMER_TO_OPENGL * persp;
+	//c->setProjectionMode(Camera::MANUAL_MATRIX);
+	//c->setProjectionMatrix(persp);
+	
 	sample->m_pRenderTexture->resizeRenderTexture(appCore->getXRes(), appCore->getYRes() - 30);
 	pr = new ScenePrimitive(ScenePrimitive::TYPE_VPLANE, appCore->getXRes(), appCore->getYRes() - 30);
 	pr->setAnchorPoint(-1, -1, 0);
@@ -298,6 +307,60 @@ void CalliperApp::handleInputEvent(InputEvent* event)
 					ctrlr->pressBackward(true);
 					break;
 				}
+				
+				case KEY_q:
+				{
+					ctrlr->pressUp(true);
+					break;
+				}
+					
+				case KEY_z:
+				{
+					ctrlr->pressDown(true);
+					break;
+				}
+					
+				case KEY_UP:
+				{
+					Camera* c = sample->m_pScene->getDefaultCamera();
+					c->setPitch(c->getPitch() - 10);
+					break;
+				}
+					
+				case KEY_DOWN:
+				{
+					Camera* c = sample->m_pScene->getDefaultCamera();
+					c->setPitch(c->getPitch() + 10);
+					break;
+				}
+					
+				case KEY_LEFT:
+				{
+					Camera* c = sample->m_pScene->getDefaultCamera();
+					c->setYaw(c->getYaw() - 10);
+					break;
+				}
+					
+				case KEY_RIGHT:
+				{
+					Camera* c = sample->m_pScene->getDefaultCamera();
+					c->setYaw(c->getYaw() + 10);
+					break;
+				}
+					
+				case KEY_9:
+				{
+					Camera* c = sample->m_pScene->getDefaultCamera();
+					c->setRoll(c->getRoll() - 10);
+					break;
+				}
+					
+				case KEY_0:
+				{
+					Camera* c = sample->m_pScene->getDefaultCamera();
+					c->setRoll(c->getRoll() + 10);
+					break;
+				}
 				default:
 					break;
 			}
@@ -329,6 +392,18 @@ void CalliperApp::handleInputEvent(InputEvent* event)
 				case KEY_s:
 				{
 					ctrlr->pressBackward(false);
+					break;
+				}
+					
+				case KEY_q:
+				{
+					ctrlr->pressUp(false);
+					break;
+				}
+					
+				case KEY_z:
+				{
+					ctrlr->pressDown(false);
 					break;
 				}
 				default:

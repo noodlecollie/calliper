@@ -1,5 +1,6 @@
 #include "CCameraMotion.h"
 #include "Polycode.h"
+#include "CalliperGlobals.h"
 
 #define ACCELERATION (m_flMaxSpeed / m_flTimeToMaxSpeed)
 #define DECELERATION (-m_flMaxSpeed / m_flTimeToStop)
@@ -52,6 +53,16 @@ void CCameraMotion::pressRight(bool pressed)
 	modifyKey(Right, pressed);
 }
 
+void CCameraMotion::pressUp(bool pressed)
+{
+	modifyKey(Up, pressed);
+}
+
+void CCameraMotion::pressDown(bool pressed)
+{
+	modifyKey(Down, pressed);
+}
+
 Number CCameraMotion::calculateMotion(Number dir, Number u, Number acc, Number dec, Number t)
 {
 	if (dir == 0)
@@ -89,15 +100,20 @@ void CCameraMotion::calculateCurrentVelocity(Number secs)
 	// Handle axes independently.
 	m_vecVelocity.x = calculateMotion(dir.x, m_vecVelocity.x, ACCELERATION, DECELERATION, secs);
 	m_vecVelocity.y = calculateMotion(dir.y, m_vecVelocity.y, ACCELERATION, DECELERATION, secs);
+	m_vecVelocity.z = calculateMotion(dir.z, m_vecVelocity.z, ACCELERATION, DECELERATION, secs);
 	
 	// TODO: Clip vector length to max speed? We'll exceed it otherwise by a factor of root 2 (I think)
 	// when we're moving diagonally. May not be worth it.
+	Vector3 p = camera->getPosition();
+	Vector3 a = camera->getRotationEuler();
+	Logger::log("Camera position: " PR_VECTOR3 "\nCamera angles: " PR_VECTOR3 "\n", FM_VECTOR3(p), FM_VECTOR3(a));
 }
 
 Vector3 CCameraMotion::directionFromKeys() const
 {
 	int x = 0;
 	int y = 0;
+	int z = 0;
 
 	if ((m_iPressedKeys & Forward) == Forward)
 		y++;
@@ -108,9 +124,13 @@ Vector3 CCameraMotion::directionFromKeys() const
 		x++;
 	if ((m_iPressedKeys & Left) == Left)
 		x--;
+	
+	if ((m_iPressedKeys & Up) == Up)
+		z++;
+	if ((m_iPressedKeys & Down) == Down)
+		z--;
 
-	Vector3 v(x, y, 0);
-	v.Normalize();
+	Vector3 v(x, y, z);
 	return v;
 }
 

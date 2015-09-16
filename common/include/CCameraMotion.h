@@ -19,6 +19,8 @@ public:
 	void pressBackward(bool pressed);
 	void pressLeft(bool pressed);
 	void pressRight(bool pressed);
+	void pressUp(bool pressed);
+	void pressDown(bool pressed);
 	
 	void stopMovement();
 
@@ -28,7 +30,9 @@ private:
 		Forward = 0x1,
 		Backward = 0x2,
 		Left = 0x4,
-		Right = 0x8
+		Right = 0x8,
+		Up = 0x10,
+		Down = 0x20
 	};
 
 private:

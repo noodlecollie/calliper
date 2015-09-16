@@ -50,6 +50,7 @@
 		38861B1F1BA012780039CD3F /* native.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = native.pak; path = ../working/native.pak; sourceTree = "<group>"; };
 		38861B201BA012780039CD3F /* standardtheme */ = {isa = PBXFileReference; lastKnownFileType = folder; name = standardtheme; path = ../working/standardtheme; sourceTree = "<group>"; };
 		38861B211BA012780039CD3F /* UIThemes.pak */ = {isa = PBXFileReference; lastKnownFileType = file; name = UIThemes.pak; path = ../working/UIThemes.pak; sourceTree = "<group>"; };
+		3897D9471BA9A6C600267998 /* IHammerEquivalent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IHammerEquivalent.h; path = ../../common/include/IHammerEquivalent.h; sourceTree = "<group>"; };
 		38D204581BA807A000BE69A7 /* CCameraMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCameraMotion.h; path = ../../common/include/CCameraMotion.h; sourceTree = "<group>"; };
 		38D204591BA807A000BE69A7 /* CCommandLineArgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCommandLineArgs.h; path = ../../common/include/CCommandLineArgs.h; sourceTree = "<group>"; };
 		38D2045A1BA807A900BE69A7 /* CCameraMotion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCameraMotion.cpp; path = ../../common/src/CCameraMotion.cpp; sourceTree = "<group>"; };
@@ -150,6 +151,7 @@
 				38FD34BE1B9EE49900693AB1 /* CUITestWindow.cpp */,
 				38FD34BA1B9EE29700693AB1 /* CalliperApp.h */,
 				38FD34BB1B9EE2A300693AB1 /* CalliperApp.cpp */,
+				3897D9471BA9A6C600267998 /* IHammerEquivalent.h */,
 			);
 			name = common;
 			sourceTree = "<group>";

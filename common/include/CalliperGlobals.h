@@ -2,7 +2,7 @@
 #define CALLIPERGLOBALS_H
 
 #define PR_VECTOR3 "[%f %f %f]"
-#define FM_VECTOR3(v) v.x, v,y, v,z
+#define FM_VECTOR3(v) v.x, v.y, v.z
 
 #define PR_MATRIX4 "[%f %f %f %f]\n[%f %f %f %f]\n[%f %f %f %f]\n[%f %f %f %f]\n"
 #define FM_MATRIX4(m) \
