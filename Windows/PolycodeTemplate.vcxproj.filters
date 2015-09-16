@@ -21,7 +21,10 @@
     <ClCompile Include="..\common\src\CCommandLineArgs.cpp">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\src\CCameraController.cpp">
+    <ClCompile Include="..\common\src\CCameraMotion.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\src\COriginMarker.cpp">
       <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
@@ -45,7 +48,16 @@
     <ClInclude Include="..\common\include\CCommandLineArgs.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\include\CCameraController.h">
+    <ClInclude Include="..\common\include\CalliperGlobals.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\CCameraMotion.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\IHammerEquivalent.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\COriginMarker.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>

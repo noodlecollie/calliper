@@ -82,8 +82,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\common\src\CalliperApp.cpp" />
-    <ClCompile Include="..\common\src\CCameraController.cpp" />
+    <ClCompile Include="..\common\src\CCameraMotion.cpp" />
     <ClCompile Include="..\common\src\CCommandLineArgs.cpp" />
+    <ClCompile Include="..\common\src\COriginMarker.cpp" />
     <ClCompile Include="..\common\src\CUITestWindow.cpp" />
     <ClCompile Include="..\common\src\CUITextInput.cpp" />
     <ClCompile Include="..\common\src\CVirtualSceneSample.cpp" />
@@ -93,11 +94,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\include\CalliperApp.h" />
-    <ClInclude Include="..\common\include\CCameraController.h" />
+    <ClInclude Include="..\common\include\CalliperGlobals.h" />
+    <ClInclude Include="..\common\include\CCameraMotion.h" />
     <ClInclude Include="..\common\include\CCommandLineArgs.h" />
+    <ClInclude Include="..\common\include\COriginMarker.h" />
     <ClInclude Include="..\common\include\CUITestWindow.h" />
     <ClInclude Include="..\common\include\CUITextInput.h" />
     <ClInclude Include="..\common\include\CVirtualSceneSample.h" />
+    <ClInclude Include="..\common\include\IHammerEquivalent.h" />
     <ClInclude Include="..\common\include\MathUtil.h" />
     <ClInclude Include="PolycodeTemplateApp.h" />
   </ItemGroup>

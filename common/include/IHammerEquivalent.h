@@ -126,6 +126,7 @@ public:
 	virtual Vector3 fromHammerEquivalent() const
 	{
 		// TODO: Rules for converting angles
+		return Vector3();
 	}
 };
 

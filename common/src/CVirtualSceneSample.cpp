@@ -1,5 +1,6 @@
 #include "CVirtualSceneSample.h"
 #include "Polycode.h"
+#include "COriginMarker.h"
 
 CVirtualSceneSample::CVirtualSceneSample()
 {
@@ -21,11 +22,15 @@ CVirtualSceneSample::CVirtualSceneSample()
 
 	m_pShape = new ScenePrimitive(ScenePrimitive::TYPE_TORUS, 0.8, 0.3, 30, 20);
 	m_pShape->setPosition(0.0, 0.0, 0.0);
-	m_pScene->addEntity(m_pShape);
+	m_pScene->addChild(m_pShape);
 	
 	m_pShape2 = new ScenePrimitive(ScenePrimitive::TYPE_BOX, 1, 1);
 	m_pShape2->setPosition(5, 0, 0);
-	m_pScene->addEntity(m_pShape2);
+	m_pScene->addChild(m_pShape2);
+
+	m_pOriginMarker = new COriginMarker();
+	m_pScene->addEntity(m_pOriginMarker);
+	m_pScene->addChild(m_pOriginMarker);
 
 	Camera* c = m_pScene->getDefaultCamera();
 	c->setPosition(0, 0, 10);

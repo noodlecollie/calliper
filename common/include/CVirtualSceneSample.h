@@ -9,6 +9,8 @@ namespace Polycode
 	class ScenePrimitive;
 }
 
+class COriginMarker;
+
 using namespace Polycode;
 
 class CVirtualSceneSample
@@ -22,6 +24,7 @@ public:
 	SceneLight*			m_pLightB;
 	ScenePrimitive*		m_pShape;
 	ScenePrimitive*		m_pShape2;
+	COriginMarker*		m_pOriginMarker;
 };
 
 #endif // CVIRTUALSCENESAMPLE_H
