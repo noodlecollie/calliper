@@ -21,6 +21,7 @@ public:
 	SceneLight*			m_pLightA;
 	SceneLight*			m_pLightB;
 	ScenePrimitive*		m_pShape;
+	ScenePrimitive*		m_pShape2;
 };
 
 #endif // CVIRTUALSCENESAMPLE_H

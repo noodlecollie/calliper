@@ -77,6 +77,33 @@ public:
 	}
 };
 
+/*
+ * (0, 0, 0) points down the positive X axis, with the up vector pointing up the positive vertical Z axis.
+ * (-90, 0, 0) points straight up the positive Z axis, with the up vector pointing down the negative X axis.
+ * (90, 0, 0) points straight down the negative Z axis, with the up vector pointing up the positive X axis.
+ * (0, 90, 0) points up the positive Y axis, with the up vector still pointing up the positive vertical Z axis.
+ * (0, 0, 90) points up the positive X axis with the up vector pointing down the negative Y axis.
+ * (0, 0, -90) points up the positive X axis with the up vector pointing up the positive Y axis.
+ *
+ * Therefore the pitch, yaw and roll can be thought of in the following way:
+ *
+ * Yaw should always be applied around the world Z axis. A yaw of 0 points down the world X axis; increasing the yaw
+ * rotates anticlockwise around the world Z axis.
+ *
+ * Pitch is applied relative to the camera after yaw. Negative pitch values rotate upwards to point up the Z axis; positive values rotate downwards.
+ *
+ * Roll is applied relative to the camera after pitch. Positive roll values rotate clockwise around the vector specified by pitch and yaw;
+ * negative values rotate anticlockwise.
+ * Alternatively, you can think of applying the roll, then pitch, then yaw, around world axes at the point of application.
+ 
+ For Polycode, roll is applied along the Z axis. When looking up the Z axis, positive roll rotates anticlockwise and negative roll
+ rotates clockwise.
+ Yaw is applies along the Y axis. When looking up the Y axis, positive yaw rotates anticlockwise and negative roll rotates
+ clockwise. 0 yaw points down the negative Z axis.
+ Pitch is applies along the X axis. When looking up the X axis, positive pitch rotates clockwise and negative roll rotates
+ anticlockwise.
+ */
+
 // TODO: Further operator overloading
 class CEulerAngle : public Vector3, public IHammerEquivalent<Vector3>
 {
