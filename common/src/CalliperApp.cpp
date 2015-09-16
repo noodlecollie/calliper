@@ -3,6 +3,9 @@
 #include "CUITestWindow.h"
 #include "CVirtualSceneSample.h"
 #include "CCommandLineArgs.h"
+#include "CCameraMotion.h"
+#include "MathUtil.h"
+#include "CalliperGlobals.h"
 
 using namespace Polycode;
 
@@ -27,6 +30,7 @@ CalliperApp::CalliperApp(int xRes, int yRes, bool vSync, int aaLevel, int anisot
 	m_iTargetFramerate = framerate;
 	m_bTargetVsync = vSync;
 	m_bTargetRetinaSupport = retina;
+	ctrlr = NULL;
 }
 
 CalliperApp::~CalliperApp()
@@ -53,6 +57,8 @@ void CalliperApp::Initialise()
 
 bool CalliperApp::Update()
 {
+	Number delta = appCore->getElapsed();
+	if (ctrlr) ctrlr->advance(delta);
 	return appCore->updateAndRender();
 }
 
@@ -158,6 +164,7 @@ void CalliperApp::InitialiseUI()
 	pr->setPosition(0, 30);
 	pr->setTexture(sample->m_pRenderTexture->getTargetTexture());
 	m_pScreen->addChild(pr);
+	ctrlr = new CCameraMotion(sample->m_pScene->getDefaultCamera());
 
 	InitialiseMenuBar();
 }
@@ -268,29 +275,64 @@ void CalliperApp::handleInputEvent(InputEvent* event)
 		{
 			switch (event->keyCode())
 			{
-				case KEY_LEFT:
+				case KEY_a:
 				{
-					sample->m_pScene->getDefaultCamera()->Translate(-1, 0);
+					ctrlr->pressLeft(true);
 					break;
 				}
 					
-				case KEY_RIGHT:
+				case KEY_d:
 				{
-					sample->m_pScene->getDefaultCamera()->Translate(1, 0);
+					ctrlr->pressRight(true);
 					break;
 				}
 					
-				case KEY_UP:
+				case KEY_w:
 				{
-					sample->m_pShape->Translate(0, 1);
+					ctrlr->pressForward(true);
 					break;
 				}
 					
-				case KEY_DOWN:
+				case KEY_s:
 				{
-					sample->m_pShape->Translate(0, -1);
+					ctrlr->pressBackward(true);
 					break;
 				}
+				default:
+					break;
+			}
+			break;
+		}
+			
+		case InputEvent::EVENT_KEYUP:
+		{
+			switch (event->keyCode())
+			{
+				case KEY_a:
+				{
+					ctrlr->pressLeft(false);
+					break;
+				}
+					
+				case KEY_d:
+				{
+					ctrlr->pressRight(false);
+					break;
+				}
+					
+				case KEY_w:
+				{
+					ctrlr->pressForward(false);
+					break;
+				}
+					
+				case KEY_s:
+				{
+					ctrlr->pressBackward(false);
+					break;
+				}
+				default:
+					break;
 			}
 			break;
 		}

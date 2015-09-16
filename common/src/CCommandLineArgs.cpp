@@ -41,7 +41,6 @@ CCommandLineArgs::CCommandLineArgs(const String &commandString)
 
 CCommandLineArgs::CCommandLineArgs(int argc, const char** argv)
 {
-	Logger::log("argc: %d argv: %p\n", argc, argv);
 	std::vector<String> list;
 	for (int i = 1; i < argc; i++)
 	{

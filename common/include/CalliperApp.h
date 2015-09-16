@@ -12,6 +12,7 @@ extern CalliperApp* globalApp;
 
 class CUITestWindow;
 class CVirtualSceneSample;
+class CCameraMotion;
 
 class CalliperApp : public EventDispatcher
 {
@@ -97,6 +98,7 @@ private:
 
 	CVirtualSceneSample* sample;
 	ScenePrimitive* pr;
+	CCameraMotion* ctrlr;
 };
 
 #endif // CALLIPER_APP_H

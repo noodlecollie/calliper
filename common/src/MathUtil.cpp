@@ -121,3 +121,19 @@ CEulerAngle clampAngle(const CEulerAngle &angle)
 	performClamp(pitch, yaw, roll);
 	return CEulerAngle(pitch, yaw, roll);
 }
+
+bool vectorFuzzyCompare(const Vector2 &v1, const Vector2 &v2)
+{
+	return FUZZY_COMPARE(v1.x, v2.x) && FUZZY_COMPARE(v1.y, v2.y);
+}
+
+bool vectorFuzzyCompare(const Vector3 &v1, const Vector3 &v2)
+{
+	return FUZZY_COMPARE(v1.x, v2.x) && FUZZY_COMPARE(v1.y, v2.y) && FUZZY_COMPARE(v1.z, v2.z);
+}
+
+bool vectorFuzzyCompare(const Vector4 &v1, const Vector4 &v2)
+{
+	return FUZZY_COMPARE(v1.x, v2.x) && FUZZY_COMPARE(v1.y, v2.y)
+	&& FUZZY_COMPARE(v1.z, v2.z) && FUZZY_COMPARE(v1.w, v2.w);
+}

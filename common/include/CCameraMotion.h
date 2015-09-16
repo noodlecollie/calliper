@@ -1,24 +1,26 @@
-#ifndef CCAMERACONTROLLER_H
-#define CCAMERACONTROLLER_H
+#ifndef CCAMERAMOTION_H
+#define CCAMERAMOTION_H
 
 #include "Polycode.h"
 
 using namespace Polycode;
 
-class CCameraController
+class CCameraMotion
 {
 public:
-	CCameraController(Camera* camera);
-	CCameraController();
+	CCameraMotion(Camera* camera);
+	CCameraMotion();
 
 	Camera* camera;
 
-	void advance(int msec);
+	void advance(Number secs);
 
 	void pressForward(bool pressed);
 	void pressBackward(bool pressed);
 	void pressLeft(bool pressed);
 	void pressRight(bool pressed);
+	
+	void stopMovement();
 
 private:
 	enum MotionKey
@@ -32,14 +34,16 @@ private:
 private:
 	bool hasKeyPressed() const;
 	void modifyKey(MotionKey key, bool pressed);
-	Number calculateAcceleration() const;
-	void calculateCurrentVelocity(int msec);
+	void calculateCurrentVelocity(Number secs);
 	Vector3 directionFromKeys() const;
+	Number calculateMotion(Number dir, Number u, Number acc, Number dec, Number t);
 
 	Number	m_flMaxSpeed;
 	Number	m_flTimeToMaxSpeed;
-	Vector3	m_vecVelocity;
+	Number	m_flTimeToStop;
+	Vector3	m_vecVelocity;		// In units per second
 	int		m_iPressedKeys;
+	int		m_iLastPressedKeys;
 };
 
-#endif	// CCAMERACONTROLLER_H
+#endif	// CCAMERAMOTION_H
