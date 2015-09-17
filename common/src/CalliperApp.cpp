@@ -6,6 +6,7 @@
 #include "CCameraMotion.h"
 #include "MathUtil.h"
 #include "CalliperGlobals.h"
+#include "CCommonMeshes.h"
 
 using namespace Polycode;
 
@@ -359,6 +360,54 @@ void CalliperApp::handleInputEvent(InputEvent* event)
 				{
 					Camera* c = sample->m_pScene->getDefaultCamera();
 					c->setRoll(c->getRoll() + 10);
+					break;
+				}
+					
+				case KEY_1:
+				{
+					SceneMesh* m = sample->m_pArrow;
+					m->setPitch(m->getPitch() - 10);
+					Logger::log("Set pitch to %f\n", m->getPitch());
+					break;
+				}
+					
+				case KEY_2:
+				{
+					SceneMesh* m = sample->m_pArrow;
+					m->setPitch(m->getPitch() + 10);
+					Logger::log("Set pitch to %f\n", m->getPitch());
+					break;
+				}
+					
+				case KEY_3:
+				{
+					SceneMesh* m = sample->m_pArrow;
+					m->setYaw(m->getYaw() - 10);
+					Logger::log("Set yaw to %f\n", m->getYaw());
+					break;
+				}
+					
+				case KEY_4:
+				{
+					SceneMesh* m = sample->m_pArrow;
+					m->setYaw(m->getYaw() + 10);
+					Logger::log("Set yaw to %f\n", m->getYaw());
+					break;
+				}
+					
+				case KEY_5:
+				{
+					SceneMesh* m = sample->m_pArrow;
+					m->setRoll(m->getRoll() - 10);
+					Logger::log("Set roll to %f\n", m->getRoll());
+					break;
+				}
+					
+				case KEY_6:
+				{
+					SceneMesh* m = sample->m_pArrow;
+					m->setRoll(m->getRoll() + 10);
+					Logger::log("Set roll to %f\n", m->getRoll());
 					break;
 				}
 				default:

@@ -5,9 +5,11 @@
 #include "PolyVector3.h"
 #include "PolyVector4.h"
 #include "PolyMatrix4.h"
-#include "IHammerEquivalent.h"
 
 using namespace Polycode;
+
+class CEulerAngle;
+class CVector3;
 
 static const Number NUM_COMPARE_EPSILON = sizeof(Number) == sizeof(double) ? 1e-8 : 1e-4;
 #define FUZZY_COMPARE(x,y) ((x-y) < NUM_COMPARE_EPSILON)

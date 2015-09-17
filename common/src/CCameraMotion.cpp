@@ -1,6 +1,7 @@
 #include "CCameraMotion.h"
 #include "Polycode.h"
 #include "CalliperGlobals.h"
+#include "IHammerEquivalent.h"
 
 #define ACCELERATION (m_flMaxSpeed / m_flTimeToMaxSpeed)
 #define DECELERATION (-m_flMaxSpeed / m_flTimeToStop)
@@ -106,7 +107,7 @@ void CCameraMotion::calculateCurrentVelocity(Number secs)
 	// when we're moving diagonally. May not be worth it.
 	Vector3 p = camera->getPosition();
 	Vector3 a = camera->getRotationEuler();
-	Logger::log("Camera position: " PR_VECTOR3 "\nCamera angles: " PR_VECTOR3 "\n", FM_VECTOR3(p), FM_VECTOR3(a));
+	//Logger::log("Camera position: " PR_VECTOR3 "\nCamera angles: " PR_VECTOR3 "\n", FM_VECTOR3(p), FM_VECTOR3(a));
 }
 
 Vector3 CCameraMotion::directionFromKeys() const

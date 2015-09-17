@@ -1,6 +1,6 @@
 #include "CVirtualSceneSample.h"
 #include "Polycode.h"
-#include "COriginMarker.h"
+#include "CCommonMeshes.h"
 
 CVirtualSceneSample::CVirtualSceneSample()
 {
@@ -21,16 +21,21 @@ CVirtualSceneSample::CVirtualSceneSample()
 	m_pLightB->setPosition(-9999, -9999, -9999);
 
 	m_pShape = new ScenePrimitive(ScenePrimitive::TYPE_TORUS, 0.8, 0.3, 30, 20);
-	m_pShape->setPosition(0.0, 0.0, 0.0);
+	m_pShape->setPosition(0.0, 5.0, 0.0);
+	ResourcePool *globalPool = Services()->getResourceManager()->getGlobalPool();
+	m_pShape->setMaterialByName("UnlitUntextured", globalPool);
 	m_pScene->addChild(m_pShape);
 	
-	m_pShape2 = new ScenePrimitive(ScenePrimitive::TYPE_BOX, 1, 1);
+	m_pShape2 = new ScenePrimitive(ScenePrimitive::TYPE_BOX, 1,1,1);
+	m_pShape2->loadTexture("native/test.png");
 	m_pShape2->setPosition(5, 0, 0);
 	m_pScene->addChild(m_pShape2);
 
 	m_pOriginMarker = new COriginMarker();
-	m_pScene->addEntity(m_pOriginMarker);
 	m_pScene->addChild(m_pOriginMarker);
+	
+	m_pArrow = new CArrowLineMesh();
+	m_pScene->addChild(m_pArrow);
 
 	Camera* c = m_pScene->getDefaultCamera();
 	c->setPosition(0, 0, 10);

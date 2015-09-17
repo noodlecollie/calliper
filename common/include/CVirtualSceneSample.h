@@ -10,6 +10,7 @@ namespace Polycode
 }
 
 class COriginMarker;
+class CArrowLineMesh;
 
 using namespace Polycode;
 
@@ -25,6 +26,7 @@ public:
 	ScenePrimitive*		m_pShape;
 	ScenePrimitive*		m_pShape2;
 	COriginMarker*		m_pOriginMarker;
+	CArrowLineMesh*		m_pArrow;
 };
 
 #endif // CVIRTUALSCENESAMPLE_H

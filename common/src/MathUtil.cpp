@@ -6,6 +6,8 @@
 #include <tgmath.h>
 #endif
 
+#include "IHammerEquivalent.h"
+
 bool vectorIsNull(const Vector2 &vec)
 {
 	return vec.x == 0.0f && vec.y == 0.0f;
