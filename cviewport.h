@@ -3,6 +3,7 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <QMatrix4x4>
 
 class CViewport : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -18,6 +19,12 @@ protected:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
+
+private:
+    GLuint vertexbuffer;
+    GLuint ProgramID;
+    QMatrix4x4 MVP;
+    GLuint MatrixID;
 };
 
 #endif // CVIEWPORT_H
