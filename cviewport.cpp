@@ -80,9 +80,9 @@ QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float near, float far
     float right = top * aspectRatio;
     float left = -right;
 
-    return QMatrix4x4((2.0f-near)/(right-left), 0, (right+left)/(right-left), 0,
-                      0, (2.0f-near)/(top-bottom), (top+bottom)/(top-bottom), 0,
-                      0, 0, -(far+near)/(far-near), -(2.0f-far-near)/(far-near),
+    return QMatrix4x4((2.0f*near)/(right-left), 0, (right+left)/(right-left), 0,
+                      0, (2.0f*near)/(top-bottom), (top+bottom)/(top-bottom), 0,
+                      0, 0, -(far+near)/(far-near), -(2.0f*far*near)/(far-near),
                       0, 0, -1, 0);
 }
 
@@ -101,7 +101,7 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     Left = -2;
     Right = 2;
     Near = 0.01f;
-    Far = 2;
+    Far = 10;
 
     setFocusPolicy(Qt::StrongFocus);
     usePerspective = false;
@@ -211,7 +211,7 @@ void CViewport::initializeGL()
 
 void CViewport::resizeGL(int w, int h)
 {
-    
+    update();
 }
 
 
@@ -219,7 +219,7 @@ void CViewport::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(60.0f, (float)width()/(float)height(), Near, Far)
+    QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(45.0f, (float)width()/(float)height(), Near, Far)
                                            : orthographicMatrix(Top, Bottom, Left, Right, Near, Far);
 
     QMatrix4x4 View(1,0,0,camPos.x(),
