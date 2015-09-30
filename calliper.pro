@@ -20,3 +20,6 @@ HEADERS  += mainwindow.h \
     cviewport.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    resource.qrc

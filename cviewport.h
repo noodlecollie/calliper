@@ -25,6 +25,9 @@ protected:
 private:
     GLuint vertexbuffer;
     GLuint colorbuffer;
+    GLuint textureID;
+    GLuint uvbuffer;
+    GLuint textureBuffer;
     GLuint ProgramID;
     QMatrix4x4 MVP;
     GLuint MatrixID;

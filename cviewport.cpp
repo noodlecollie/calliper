@@ -1,6 +1,8 @@
 #include "cviewport.h"
 #include <QtMath>
 #include <QKeyEvent>
+#include <QImage>
+#include <QApplication>
 
 const GLfloat cube_vertices[] = {
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
@@ -80,7 +82,47 @@ const GLfloat g_color_buffer_data[] = {
     0.982f,  0.099f,  0.879f
 };
 
+const GLfloat g_uv_buffer_data[] = {
+    0,0,
+    1,0,
+    1,1,
+    0,0,
+    1,1,
+    0,1,
+    0,0,
+    1,0,
+    1,1,
+    0,0,
+    1,1,
+    0,1,
+    0,0,
+    1,0,
+    1,1,
+    0,0,
+    1,1,
+    0,1,
+    0,0,
+    1,0,
+    1,1,
+    0,0,
+    1,1,
+    0,1,
+    0,0,
+    1,0,
+    1,1,
+    0,0,
+    1,1,
+    0,1,
+    0,0,
+    1,0,
+    1,1,
+    0,0,
+    1,1,
+    0,1,
+};
+
 #define CUBE_VERTICES_SIZE (sizeof(GLfloat) * 3 * 3 * 2 * 6)
+#define CUBE_UV_SIZE (sizeof(GLfloat) * 2 * 3 * 2 * 6)
 
 const GLfloat g_vertex_buffer_data[] = {
    -1.0f, -1.0f, 0.0f,
@@ -93,28 +135,21 @@ const GLfloat g_vertex_buffer_data[] = {
 const char* vertexShader =
         "#version 330 core\n"
         "layout(location = 0) in vec3 vertexPosition_modelspace;\n"
-        "layout(location = 1) in vec3 vertexColor;\n"
-        "out vec3 fragmentColor;\n"
+        "layout(location = 1) in vec2 vertexUV;\n"
+        "out vec2 UV;\n"
         "uniform mat4 MVP;\n"
         "void main(){\n"
         "vec4 v = vec4(vertexPosition_modelspace,1);\n"
         "gl_Position = MVP * v;\n"
-        "fragmentColor = vertexColor; }\n";
-
-// Non-matrix
-/*const char* vertexShader =
-        "#version 330 core\n"
-        "layout(location = 0) in vec3 vertexPosition_modelspace;\n"
-        "void main(){\n"
-        "gl_Position.xyz = vertexPosition_modelspace;\n"
-        "gl_Position.w = 1.0; }\n";*/
+        "UV = vertexUV; }\n";
 
 const char* fragmentShader =
         "#version 330 core\n"
-        "in vec3 fragmentColor;\n"
+        "in vec2 UV;\n"
         "out vec3 color;\n"
+        "uniform sampler2D myTextureSampler;\n"
         "void main(){\n"
-        "color = fragmentColor; }\n";
+        "color = texture( myTextureSampler, UV ).rgb; }\n";
 
 QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float near, float far)
 {
@@ -188,6 +223,58 @@ void CViewport::initializeGL()
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
     glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, g_color_buffer_data, GL_STATIC_DRAW);
 
+    QImage image(":/uvsample.png");
+    const uchar* imgData = image.constBits();
+    int numImagePixels = image.width() * image.height();
+
+    /*
+    // Load texture.
+    // The format needs to be RGBA instead of ARGB.
+    // Qt doesn't have this format, so we have to do it ourselves.
+    qDebug() << "Texture image format:" << image.format() << "Number of pixels:" << numImagePixels;
+    uint* rawImage = new uint[numImagePixels];
+    for ( int i = 0; i < numImagePixels; i++ )
+    {
+        // Get a integer representing 4 bytes of image data.
+        uint data = ((const uint*)imgData)[i];
+
+        // Swap the bytes round.
+        uchar* d = (uchar*)&data;
+        uchar alpha = d[3];
+
+        d[3] = d[2];
+        d[2] = d[1];
+        d[1] = d[0];
+        d[0] = alpha;
+
+        // Write the integer to our raw image buffer.
+        qDebug("Original color: 0x%08x Colour written: 0x%08x", ((const uint*)imgData)[i], data);
+        rawImage[i] = data;
+    }
+
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, rawImage);
+    delete rawImage;
+    */
+
+    uchar* img = new uchar[4*3];
+    img[0] = 0x00; img[1] = 0xff; img[2] = 0x00;
+    img[3] = 0xff; img[4] = 0xff; img[5] = 0x00;
+    img[6] = 0x00; img[7] = 0x00; img[8] = 0x00;
+    img[9] = 0xff; img[10] = 0x00; img[11] = 0x00;
+    glGenTextures(1, &textureBuffer);
+    glBindTexture(GL_TEXTURE_2D, textureBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+    delete img;
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glGenBuffers(1, &uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    glBufferData(GL_ARRAY_BUFFER, CUBE_UV_SIZE, g_uv_buffer_data, GL_STATIC_DRAW);
+
     // Record handles to our vertex and fragment shaders.
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -240,25 +327,7 @@ void CViewport::initializeGL()
 
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
-
-    //qDebug() << "Projection:" << Projection << "MVP:" << MVP;
     glUseProgram(ProgramID);
-
-    QMatrix4x4 A(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
-    QMatrix4x4 B(16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
-    qDebug() << "AB =" << (A*B) << "BA =" << (B*A);
-
-//    QVector4D v0(g_vertex_buffer_data[0], g_vertex_buffer_data[1], g_vertex_buffer_data[2], 1);
-//    QVector4D v1(g_vertex_buffer_data[3], g_vertex_buffer_data[4], g_vertex_buffer_data[5], 1);
-//    QVector4D v2(g_vertex_buffer_data[6], g_vertex_buffer_data[7], g_vertex_buffer_data[8], 1);
-
-//    v0 = MVP * v0;
-//    v1 = MVP * v1;
-//    v2 = MVP * v2;
-
-//    qDebug() << "Transformed v0:" << v0 << "clip," << QVector3D(v0.x()/v0.w(), v0.y()/v0.w(), v0.z()/v0.w()) << "device.";
-//    qDebug() << "Transformed v1:" << v1 << "clip," << QVector3D(v1.x()/v1.w(), v1.y()/v1.w(), v1.z()/v1.w()) << "device.";
-//    qDebug() << "Transformed v2:" << v2 << "clip," << QVector3D(v2.x()/v2.w(), v2.y()/v2.w(), v2.z()/v2.w()) << "device.";
 }
 
 void CViewport::resizeGL(int w, int h)
@@ -288,6 +357,10 @@ void CViewport::paintGL()
     QMatrix4x4 model = rotateX * rotateY * scaleDown;
     MVP = Projection * View * model;
     MatrixID = glGetUniformLocation(ProgramID, "MVP");
+    textureID = glGetUniformLocation(ProgramID, "myTextureSampler");
+    glUniform1i(textureID, 0);
+    glActiveTexture(GL_TEXTURE0 + 0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -300,12 +373,25 @@ void CViewport::paintGL()
        (void*)0            // array buffer offset
     );
 
+    /*
     // 2nd attribute buffer : colors
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
     glVertexAttribPointer(
         1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
         3,                                // size
+        GL_FLOAT,                         // type
+        GL_FALSE,                         // normalized?
+        0,                                // stride
+        (void*)0                          // array buffer offset
+    );
+    */
+
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    glVertexAttribPointer(
+        1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+        2,                                // size
         GL_FLOAT,                         // type
         GL_FALSE,                         // normalized?
         0,                                // stride
