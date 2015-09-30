@@ -75,7 +75,7 @@ const char* fragmentShader =
 
 QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float near, float far)
 {
-    float top = near * qTan(qDegreesToRadians(fov/2.0f));
+    float top = near * qTan((M_PI/180.0f) * (fov/2.0f));
     float bottom = -top;
     float right = top * aspectRatio;
     float left = -right;
@@ -101,7 +101,7 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     Left = -2;
     Right = 2;
     Near = 0.01f;
-    Far = 1;
+    Far = 2;
 
     setFocusPolicy(Qt::StrongFocus);
     usePerspective = false;
@@ -219,7 +219,7 @@ void CViewport::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(45.0f, (float)width()/(float)height(), Near, Far)
+    QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(60.0f, (float)width()/(float)height(), Near, Far)
                                            : orthographicMatrix(Top, Bottom, Left, Right, Near, Far);
 
     QMatrix4x4 View(1,0,0,camPos.x(),
