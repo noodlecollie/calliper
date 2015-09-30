@@ -151,28 +151,28 @@ const char* fragmentShader =
         "void main(){\n"
         "color = texture( myTextureSampler, UV ).rgb; }\n";
 
-QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float near, float far)
+QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float nearPlane, float farPlane)
 {
-    float top = near * qTan((M_PI/180.0f) * (fov/2.0f));
+    float top = nearPlane * qTan((M_PI/180.0f) * (fov/2.0f));
     float bottom = -top;
     float right = top * aspectRatio;
     float left = -right;
 
-    return QMatrix4x4((2.0f*near)/(right-left), 0, (right+left)/(right-left), 0,
-                      0, (2.0f*near)/(top-bottom), (top+bottom)/(top-bottom), 0,
-                      0, 0, -(far+near)/(far-near), -(2.0f*far*near)/(far-near),
+    return QMatrix4x4((2.0f*nearPlane)/(right-left), 0, (right+left)/(right-left), 0,
+                      0, (2.0f*nearPlane)/(top-bottom), (top+bottom)/(top-bottom), 0,
+                      0, 0, -(farPlane+nearPlane)/(farPlane-nearPlane), -(2.0f*farPlane*nearPlane)/(farPlane-nearPlane),
                       0, 0, -1, 0);
 }
 
-QMatrix4x4 orthographicMatrix(float top, float bottom, float left, float right, float near, float far)
+QMatrix4x4 orthographicMatrix(float top, float bottom, float left, float right, float nearPlane, float farPlane)
 {
     return QMatrix4x4((2.0f)/(right-left), 0, 0, -(right+left)/(right-left),
                       0, (2.0f)/(top-bottom), 0, -(top+bottom)/(top-bottom),
-                      0, 0, -(2.0f)/(far-near), -(far+near)/(far-near),
+                      0, 0, -(2.0f)/(farPlane-nearPlane), -(farPlane+nearPlane)/(farPlane-nearPlane),
                       0, 0, 0, 1);
 }
 
-CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f), QOpenGLFunctions()
+CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f), QOpenGLFunctions_3_2_Core()
 {
     Top = 2;
     Bottom = -2;

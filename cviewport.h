@@ -2,10 +2,10 @@
 #define CVIEWPORT_H
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_2_Core>
 #include <QMatrix4x4>
 
-class CViewport : public QOpenGLWidget, protected QOpenGLFunctions
+class CViewport : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core
 {
     Q_OBJECT
 public:
