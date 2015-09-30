@@ -1,7 +1,8 @@
 #include "cviewport.h"
 #include <QtMath>
+#include <QKeyEvent>
 
-/*const GLfloat g_vertex_buffer_data[] = {
+const GLfloat cube_vertices[] = {
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
     -1.0f,-1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f, // triangle 1 : end
@@ -38,7 +39,7 @@
     1.0f, 1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f,
     1.0f,-1.0f, 1.0f
-};*/
+};
 
 const GLfloat g_vertex_buffer_data[] = {
    -1.0f, -1.0f, 0.0f,
@@ -67,46 +68,43 @@ const char* vertexShader =
 const char* fragmentShader =
         "#version 330 core\n"
         "out vec3 color;\n"
+        "float remap(float inp){while (inp>200.0){inp-=200.0;} return inp/200.0;}\n"
         "void main(){\n"
-        "color = vec3(1,0,0);}\n";
+        "color = vec3(remap(gl_FragCoord.x), remap(gl_FragCoord.y), 0);}\n"
+        "//color = gl_Normal.xyz;}\n";
 
-void ComputeFOVProjection(QMatrix4x4& result, float fov, float aspect, float nearDist, float farDist, bool leftHanded = true )
+QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float near, float far)
 {
-    //
-    // General form of the Projection Matrix
-    //
-    // uh = Cot( fov/2 ) == 1/Tan(fov/2)
-    // uw / uh = 1/aspect
-    //
-    //   uw         0       0       0
-    //    0        uh       0       0
-    //    0         0      f/(f-n)  1
-    //    0         0    -fn/(f-n)  0
-    //
-    // Make result to be identity first
+    float top = near * qTan(qDegreesToRadians(fov/2.0f));
+    float bottom = -top;
+    float right = top * aspectRatio;
+    float left = -right;
 
-    // check for bad parameters to avoid divide by zero:
-    // if found, assert and return an identity matrix.
-    if ( fov <= 0 || aspect == 0 )
-    {
-        Q_ASSERT( fov > 0 && aspect != 0 );
-        return;
-    }
+    return QMatrix4x4((2.0f-near)/(right-left), 0, (right+left)/(right-left), 0,
+                      0, (2.0f-near)/(top-bottom), (top+bottom)/(top-bottom), 0,
+                      0, 0, -(far+near)/(far-near), -(2.0f-far-near)/(far-near),
+                      0, 0, -1, 0);
+}
 
-    float frustumDepth = farDist - nearDist;
-    float oneOverDepth = 1 / frustumDepth;
-
-    result(1,1) = 1 / qTan(0.5f * fov);
-    result(0,0) = (leftHanded ? 1 : -1 ) * result(1,1) / aspect;
-    result(2,2) = farDist * oneOverDepth;
-    result(3,2) = (-farDist * nearDist) * oneOverDepth;
-    result(2,3) = 1;
-    result(3,3) = 0;
+QMatrix4x4 orthographicMatrix(float top, float bottom, float left, float right, float near, float far)
+{
+    return QMatrix4x4((2.0f)/(right-left), 0, 0, -(right+left)/(right-left),
+                      0, (2.0f)/(top-bottom), 0, -(top+bottom)/(top-bottom),
+                      0, 0, -(2.0f)/(far-near), -(far+near)/(far-near),
+                      0, 0, 0, 1);
 }
 
 CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f), QOpenGLFunctions()
 {
-    
+    Top = 2;
+    Bottom = -2;
+    Left = -2;
+    Right = 2;
+    Near = 0.01f;
+    Far = 1;
+
+    setFocusPolicy(Qt::StrongFocus);
+    usePerspective = false;
 }
 
 void CViewport::initializeGL()
@@ -114,6 +112,8 @@ void CViewport::initializeGL()
     initializeOpenGLFunctions();
     
     glClearColor(0.0f, 0.58f, 1.0f, 1.0f);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     // Generate a Vertex Array Object (VAO).
     // This stores the "state" of the attributes for vertices:
@@ -133,7 +133,8 @@ void CViewport::initializeGL()
     // The size is 9 * sizeof(float), to cater for all 9 vertices, and the data is initialised from
     // the static vertex data for the triangle. The drawing mode hint is set to static because the triangle
     // geometry will not change.
-    glBufferData(GL_ARRAY_BUFFER, VERTEX_DATA_SIZE, g_vertex_buffer_data, GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, VERTEX_DATA_SIZE, g_vertex_buffer_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 3 * 2 * 6, cube_vertices, GL_STATIC_DRAW);
 
     // Record handles to our vertex and fragment shaders.
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -188,18 +189,24 @@ void CViewport::initializeGL()
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
 
-    QMatrix4x4 Projection;
-    ComputeFOVProjection(Projection, 45.0f, 4.0f/3.0f, 0.1f, 100.0f);
-
-    QMatrix4x4 View(1,0,0,4,
-                    0,1,0,3,
-                    0,0,-1,3,
-                    0,0,0,1);
-
-    //MVP = Projection * View;
-    MVP(0,0) = 0.5f;
+    //qDebug() << "Projection:" << Projection << "MVP:" << MVP;
     glUseProgram(ProgramID);
-    MatrixID = glGetUniformLocation(ProgramID, "MVP");
+
+    QMatrix4x4 A(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+    QMatrix4x4 B(16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
+    qDebug() << "AB =" << (A*B) << "BA =" << (B*A);
+
+//    QVector4D v0(g_vertex_buffer_data[0], g_vertex_buffer_data[1], g_vertex_buffer_data[2], 1);
+//    QVector4D v1(g_vertex_buffer_data[3], g_vertex_buffer_data[4], g_vertex_buffer_data[5], 1);
+//    QVector4D v2(g_vertex_buffer_data[6], g_vertex_buffer_data[7], g_vertex_buffer_data[8], 1);
+
+//    v0 = MVP * v0;
+//    v1 = MVP * v1;
+//    v2 = MVP * v2;
+
+//    qDebug() << "Transformed v0:" << v0 << "clip," << QVector3D(v0.x()/v0.w(), v0.y()/v0.w(), v0.z()/v0.w()) << "device.";
+//    qDebug() << "Transformed v1:" << v1 << "clip," << QVector3D(v1.x()/v1.w(), v1.y()/v1.w(), v1.z()/v1.w()) << "device.";
+//    qDebug() << "Transformed v2:" << v2 << "clip," << QVector3D(v2.x()/v2.w(), v2.y()/v2.w(), v2.z()/v2.w()) << "device.";
 }
 
 void CViewport::resizeGL(int w, int h)
@@ -211,6 +218,24 @@ void CViewport::resizeGL(int w, int h)
 void CViewport::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(45.0f, (float)width()/(float)height(), Near, Far)
+                                           : orthographicMatrix(Top, Bottom, Left, Right, Near, Far);
+
+    QMatrix4x4 View(1,0,0,camPos.x(),
+                    0,1,0,camPos.y(),
+                    0,0,1,camPos.z(),
+                    0,0,0,1);
+
+    float deg = 30;
+    float s45 = qSin(qRadiansToDegrees(deg));
+    float c45 = qCos(qRadiansToDegrees(deg));
+    QMatrix4x4 scaleDown(0.5f,0,0,0, 0,0.5f,0,0, 0,0,0.5f,0, 0,0,0,1);
+    QMatrix4x4 rotateY(c45,0,s45,0, 0,1,0,0, -s45,0,c45,0, 0,0,0,1);
+    QMatrix4x4 rotateX(1,0,0,0, 0,c45,-s45,0, 0,s45,c45,0, 0,0,0,1);
+    QMatrix4x4 model = rotateX * rotateY * scaleDown;
+    MVP = Projection * View * model;
+    MatrixID = glGetUniformLocation(ProgramID, "MVP");
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -226,7 +251,60 @@ void CViewport::paintGL()
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, MVP.constData());
 
     // Draw the triangle !
-    glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    //glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_TRIANGLES, 0, 3 * 2 * 6);
 
     glDisableVertexAttribArray(0);
+}
+
+void CViewport::keyPressEvent(QKeyEvent *e)
+{
+    switch ( e->key() )
+    {
+    case Qt::Key_W:
+        camPos.setZ(camPos.z() - 0.1f);
+        qDebug() << camPos;
+        update();
+        return;
+
+    case Qt::Key_S:
+        camPos.setZ(camPos.z() + 0.1f);
+        qDebug() << camPos;
+        update();
+        return;
+
+    case Qt::Key_A:
+        camPos.setX(camPos.x() - 0.1f);
+        qDebug() << camPos;
+        update();
+        return;
+
+    case Qt::Key_D:
+        camPos.setX(camPos.x() + 0.1f);
+        qDebug() << camPos;
+        update();
+        return;
+
+    case Qt::Key_Q:
+        camPos.setY(camPos.y() + 0.1f);
+        qDebug() << camPos;
+        update();
+        return;
+
+    case Qt::Key_Z:
+        camPos.setY(camPos.y() - 0.1f);
+        qDebug() << camPos;
+        update();
+        return;
+
+    case Qt::Key_Space:
+        usePerspective = !usePerspective;
+        qDebug() << "Use perspective:" << usePerspective;
+        update();
+        return;
+
+    default:
+        QOpenGLWidget::keyPressEvent(e);
+        return;
+    }
 }

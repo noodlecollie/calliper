@@ -16,15 +16,27 @@ signals:
 public slots:
     
 protected:
-    void initializeGL();
-    void resizeGL(int w, int h);
-    void paintGL();
+    virtual void initializeGL();
+    virtual void resizeGL(int w, int h);
+    virtual void paintGL();
+
+    virtual void keyPressEvent(QKeyEvent *e);
 
 private:
     GLuint vertexbuffer;
     GLuint ProgramID;
     QMatrix4x4 MVP;
     GLuint MatrixID;
+
+    float Top;
+    float Bottom;
+    float Left;
+    float Right;
+    float Near;
+    float Far;
+
+    QVector3D camPos;
+    bool usePerspective;
 };
 
 #endif // CVIEWPORT_H
