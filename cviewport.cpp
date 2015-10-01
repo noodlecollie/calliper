@@ -8,36 +8,47 @@ const GLfloat cube_vertices[] = {
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
     -1.0f,-1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f, // triangle 1 : end
+    
     1.0f, 1.0f,-1.0f, // triangle 2 : begin
     -1.0f,-1.0f,-1.0f,
     -1.0f, 1.0f,-1.0f, // triangle 2 : end
+    
     1.0f,-1.0f, 1.0f,
     -1.0f,-1.0f,-1.0f,
     1.0f,-1.0f,-1.0f,
+    
     1.0f, 1.0f,-1.0f,
     1.0f,-1.0f,-1.0f,
     -1.0f,-1.0f,-1.0f,
+    
     -1.0f,-1.0f,-1.0f,
     -1.0f, 1.0f, 1.0f,
     -1.0f, 1.0f,-1.0f,
+    
     1.0f,-1.0f, 1.0f,
     -1.0f,-1.0f, 1.0f,
     -1.0f,-1.0f,-1.0f,
+    
     -1.0f, 1.0f, 1.0f,
     -1.0f,-1.0f, 1.0f,
     1.0f,-1.0f, 1.0f,
+    
     1.0f, 1.0f, 1.0f,
     1.0f,-1.0f,-1.0f,
     1.0f, 1.0f,-1.0f,
+    
     1.0f,-1.0f,-1.0f,
     1.0f, 1.0f, 1.0f,
     1.0f,-1.0f, 1.0f,
+    
     1.0f, 1.0f, 1.0f,
     1.0f, 1.0f,-1.0f,
     -1.0f, 1.0f,-1.0f,
+    
     1.0f, 1.0f, 1.0f,
     -1.0f, 1.0f,-1.0f,
     -1.0f, 1.0f, 1.0f,
+    
     1.0f, 1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f,
     1.0f,-1.0f, 1.0f
@@ -86,36 +97,47 @@ const GLfloat g_uv_buffer_data[] = {
     0,0,
     1,0,
     1,1,
-    0,0,
-    1,1,
-    0,1,
+    
     0,0,
     1,0,
     1,1,
-    0,0,
-    1,1,
-    0,1,
+    
     0,0,
     1,0,
     1,1,
+    
     0,0,
     1,1,
     0,1,
-    0,0,
-    1,0,
-    1,1,
+    
     0,0,
     1,1,
     0,1,
-    0,0,
-    1,0,
-    1,1,
+    
     0,0,
     1,1,
     0,1,
+    
     0,0,
     1,0,
     1,1,
+    
+    0,0,
+    1,0,
+    1,1,
+    
+    0,0,
+    1,1,
+    0,1,
+    
+    0,0,
+    1,0,
+    1,1,
+    
+    0,0,
+    1,1,
+    0,1,
+    
     0,0,
     1,1,
     0,1,
@@ -185,6 +207,19 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     usePerspective = false;
 }
 
+CViewport::~CViewport()
+{
+    makeCurrent();
+    
+    glDeleteTextures(1, &textureID);
+    glDeleteProgram(ProgramID);
+    glDeleteShader(VertexShaderID);
+    glDeleteShader(FragmentShaderID);
+    glDeleteBuffers(1, &vertexbuffer);
+    glDeleteBuffers(1, &colorbuffer);
+    glDeleteVertexArrays(1, &VertexArrayID);
+}
+
 void CViewport::initializeGL()
 {
     initializeOpenGLFunctions();
@@ -203,7 +238,6 @@ void CViewport::initializeGL()
     // in the buffers, the VAO remembers this format in order to
     // easily re-apply it later. In this sense it's sort of like
     // a macro.
-    GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
 
@@ -223,11 +257,11 @@ void CViewport::initializeGL()
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
     glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, g_color_buffer_data, GL_STATIC_DRAW);
 
-    QImage image(":/uvsample.png");
+    QImage image(":/test.png");
     const uchar* imgData = image.constBits();
     int numImagePixels = image.width() * image.height();
 
-    /*
+    
     // Load texture.
     // The format needs to be RGBA instead of ARGB.
     // Qt doesn't have this format, so we have to do it ourselves.
@@ -248,7 +282,7 @@ void CViewport::initializeGL()
         d[0] = alpha;
 
         // Write the integer to our raw image buffer.
-        qDebug("Original color: 0x%08x Colour written: 0x%08x", ((const uint*)imgData)[i], data);
+        //qDebug("Original color: 0x%08x Colour written: 0x%08x", ((const uint*)imgData)[i], data);
         rawImage[i] = data;
     }
 
@@ -256,8 +290,8 @@ void CViewport::initializeGL()
     glBindTexture(GL_TEXTURE_2D, textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, rawImage);
     delete rawImage;
-    */
-
+    
+/*
     uchar* img = new uchar[4*3];
     img[0] = 0x00; img[1] = 0xff; img[2] = 0x00;
     img[3] = 0xff; img[4] = 0xff; img[5] = 0x00;
@@ -267,6 +301,7 @@ void CViewport::initializeGL()
     glBindTexture(GL_TEXTURE_2D, textureBuffer);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
     delete img;
+    */
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -276,8 +311,8 @@ void CViewport::initializeGL()
     glBufferData(GL_ARRAY_BUFFER, CUBE_UV_SIZE, g_uv_buffer_data, GL_STATIC_DRAW);
 
     // Record handles to our vertex and fragment shaders.
-    GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-    GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+    VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+    FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
     GLint Result = GL_FALSE;
     int InfoLogLength;
@@ -296,9 +331,12 @@ void CViewport::initializeGL()
     // Get the results of the compilation in case of errors.
     glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    std::vector<char> VertexShaderErrorMessage(InfoLogLength);
-    glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-    qDebug() << "Vertex shader compilation messages:" << &VertexShaderErrorMessage[0];
+    if ( InfoLogLength > 0 )
+    {
+        std::vector<char> VertexShaderErrorMessage(InfoLogLength);
+        glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+        qDebug() << "Vertex shader compilation messages:" << &VertexShaderErrorMessage[0];
+    }
 
     // Same game for fragment shader.
     char const * FragmentSourcePointer = fragmentShader;
@@ -308,9 +346,12 @@ void CViewport::initializeGL()
     // Check results.
     glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
-    glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-    qDebug() << "Fragment shader compilation messages:" << &FragmentShaderErrorMessage[0];
+    if ( InfoLogLength > 0 )
+    {
+        std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
+        glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+        qDebug() << "Fragment shader compilation messages:" << &FragmentShaderErrorMessage[0];
+    }
 
     // Link the program
     ProgramID = glCreateProgram();
@@ -321,9 +362,11 @@ void CViewport::initializeGL()
     // Check the program
     glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    std::vector<char> ProgramErrorMessage( qMax(InfoLogLength, int(1)) );
-    glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-    qDebug() << "Shader program linking messages:" <<  &ProgramErrorMessage[0];
+    {
+        std::vector<char> ProgramErrorMessage( qMax(InfoLogLength, int(1)) );
+        glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+        qDebug() << "Shader program linking messages:" <<  &ProgramErrorMessage[0];
+    }
 
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
@@ -360,6 +403,7 @@ void CViewport::paintGL()
     textureID = glGetUniformLocation(ProgramID, "myTextureSampler");
     glUniform1i(textureID, 0);
     glActiveTexture(GL_TEXTURE0 + 0);
+    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureID);
 
     glEnableVertexAttribArray(0);

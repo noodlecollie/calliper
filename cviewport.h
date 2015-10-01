@@ -10,6 +10,7 @@ class CViewport : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core
     Q_OBJECT
 public:
     explicit CViewport(QWidget * parent = 0, Qt::WindowFlags f = 0);
+    ~CViewport();
     
 signals:
     
@@ -31,6 +32,9 @@ private:
     GLuint ProgramID;
     QMatrix4x4 MVP;
     GLuint MatrixID;
+    GLuint VertexShaderID;
+    GLuint FragmentShaderID;
+    GLuint VertexArrayID;
 
     float Top;
     float Bottom;
