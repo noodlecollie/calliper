@@ -4,6 +4,8 @@
 #include <QImage>
 #include <QApplication>
 
+GLuint gTextureBuffer = 0;
+
 const GLfloat cube_vertices[] = {
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
     -1.0f,-1.0f, 1.0f,
@@ -205,13 +207,14 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
 
     setFocusPolicy(Qt::StrongFocus);
     usePerspective = false;
+    useGlobalTexture = false;
 }
 
 CViewport::~CViewport()
 {
     makeCurrent();
     
-    glDeleteTextures(1, &textureID);
+    glDeleteTextures(1, &texturebuffer);
     glDeleteProgram(ProgramID);
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
@@ -288,7 +291,6 @@ void CViewport::initializeGL()
     }
 
     glGenTextures(1, &texturebuffer);
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, rawImage);
     delete rawImage;

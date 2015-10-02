@@ -5,6 +5,10 @@
 #include <QOpenGLFunctions_3_2_Core>
 #include <QMatrix4x4>
 
+// Testing - upload a texture through the global context and see
+// if it's accessible through the widget.
+extern GLuint gTextureBuffer;
+
 class CViewport : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core
 {
     Q_OBJECT
@@ -45,6 +49,7 @@ private:
 
     QVector3D camPos;
     bool usePerspective;
+    bool useGlobalTexture;
 };
 
 #endif // CVIEWPORT_H
