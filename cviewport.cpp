@@ -171,7 +171,7 @@ const char* fragmentShader =
         "out vec3 color;\n"
         "uniform sampler2D myTextureSampler;\n"
         "void main(){\n"
-        "color = texture( myTextureSampler, UV ).rgb; }\n";
+        "color = texture(myTextureSampler, UV).rgb; }\n";
 
 QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float nearPlane, float farPlane)
 {
@@ -223,6 +223,7 @@ CViewport::~CViewport()
 void CViewport::initializeGL()
 {
     initializeOpenGLFunctions();
+    context()->setShareContext(QOpenGLContext::globalShareContext());
     
     glClearColor(0.0f, 0.58f, 1.0f, 1.0f);
     glEnable(GL_CULL_FACE);
@@ -253,11 +254,11 @@ void CViewport::initializeGL()
     glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, cube_vertices, GL_STATIC_DRAW);
 
     // Colours too.
-    glGenBuffers(1, &colorbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-    glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, g_color_buffer_data, GL_STATIC_DRAW);
+//    glGenBuffers(1, &colorbuffer);
+//    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+//    glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, g_color_buffer_data, GL_STATIC_DRAW);
 
-    QImage image(":/test.png");
+    QImage image(":/uvsample.png");
     const uchar* imgData = image.constBits();
     int numImagePixels = image.width() * image.height();
 
@@ -286,8 +287,9 @@ void CViewport::initializeGL()
         rawImage[i] = data;
     }
 
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    glGenTextures(1, &texturebuffer);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, rawImage);
     delete rawImage;
     
@@ -362,8 +364,9 @@ void CViewport::initializeGL()
     // Check the program
     glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    if ( InfoLogLength > 0 )
     {
-        std::vector<char> ProgramErrorMessage( qMax(InfoLogLength, int(1)) );
+        std::vector<char> ProgramErrorMessage(InfoLogLength);
         glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
         qDebug() << "Shader program linking messages:" <<  &ProgramErrorMessage[0];
     }
@@ -404,7 +407,7 @@ void CViewport::paintGL()
     glUniform1i(textureID, 0);
     glActiveTexture(GL_TEXTURE0 + 0);
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    glBindTexture(GL_TEXTURE_2D, texturebuffer);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
