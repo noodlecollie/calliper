@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    cviewport.cpp
+    cviewport.cpp \
+    cbasiccamera.cpp
 
 HEADERS  += mainwindow.h \
-    cviewport.h
+    cviewport.h \
+    cbasiccamera.h
 
 FORMS    += mainwindow.ui
 

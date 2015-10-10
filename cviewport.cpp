@@ -208,6 +208,8 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     setFocusPolicy(Qt::StrongFocus);
     usePerspective = false;
     useGlobalTexture = false;
+    ctrlPressed = false;
+    useCoordTransform = false;
 }
 
 CViewport::~CViewport()
@@ -391,10 +393,12 @@ void CViewport::paintGL()
     QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(45.0f, (float)width()/(float)height(), Near, Far)
                                            : orthographicMatrix(Top, Bottom, Left, Right, Near, Far);
 
-    QMatrix4x4 View(1,0,0,camPos.x(),
+    /*QMatrix4x4 View(1,0,0,camPos.x(),
                     0,1,0,camPos.y(),
                     0,0,1,camPos.z(),
-                    0,0,0,1);
+                    0,0,0,1);*/
+
+    QMatrix4x4 View = camera.worldToCamera();
 
     float deg = 30;
     float s45 = qSin(qRadiansToDegrees(deg));
@@ -403,7 +407,12 @@ void CViewport::paintGL()
     QMatrix4x4 rotateY(c45,0,s45,0, 0,1,0,0, -s45,0,c45,0, 0,0,0,1);
     QMatrix4x4 rotateX(1,0,0,0, 0,c45,-s45,0, 0,s45,c45,0, 0,0,0,1);
     QMatrix4x4 model = rotateX * rotateY * scaleDown;
-    MVP = Projection * View * model;
+
+    if ( useCoordTransform )
+        MVP = CBasicCamera::coordsHammerToOpenGL() * Projection * View * model;
+    else
+        MVP = Projection * View * model;
+
     MatrixID = glGetUniformLocation(ProgramID, "MVP");
     textureID = glGetUniformLocation(ProgramID, "myTextureSampler");
     glUniform1i(textureID, 0);
@@ -456,49 +465,146 @@ void CViewport::paintGL()
     glDisableVertexAttribArray(0);
 }
 
+void CViewport::keyReleaseEvent(QKeyEvent *e)
+{
+    switch ( e->key() )
+    {
+        case Qt::Key_Control:
+        {
+            ctrlPressed = false;
+            qDebug() << "Control released.";
+            return;
+        }
+
+        default:
+        QOpenGLWidget::keyReleaseEvent(e);
+        return;
+    }
+}
+
 void CViewport::keyPressEvent(QKeyEvent *e)
 {
     switch ( e->key() )
     {
+
+    case Qt::Key_Control:
+    {
+        ctrlPressed = true;
+        qDebug() << "Control pressed";
+        return;
+    }
+
     case Qt::Key_W:
-        camPos.setZ(camPos.z() - 0.1f);
-        qDebug() << camPos;
+    {
+        if ( ctrlPressed )
+        {
+            camera.setPosition(camera.position() + QVector3D(0,0,-0.1f));
+            qDebug() << "POSITION ONLY:" << camera.position();
+        }
+        else
+        {
+            camera.translateLocal(QVector3D(0,0,-0.1f));
+            qDebug() << camera.position();
+        }
+
         update();
         return;
+    }
 
     case Qt::Key_S:
-        camPos.setZ(camPos.z() + 0.1f);
-        qDebug() << camPos;
+    {
+        if ( ctrlPressed )
+        {
+            camera.setPosition(camera.position() + QVector3D(0,0,0.1f));
+            qDebug() << "POSITION ONLY:" << camera.position();
+        }
+        else
+        {
+            camera.translateLocal(QVector3D(0,0,0.1f));
+            qDebug() << camera.position();
+        }
+
         update();
         return;
+    }
 
     case Qt::Key_A:
-        camPos.setX(camPos.x() - 0.1f);
-        qDebug() << camPos;
+    {
+        if ( ctrlPressed )
+        {
+            camera.setPosition(camera.position() + QVector3D(-0.1f,0,0));
+            qDebug() << "POSITION ONLY:" << camera.position();
+        }
+        else
+        {
+            camera.translateLocal(QVector3D(-0.1f,0,0));
+            qDebug() << camera.position();
+        }
+
         update();
         return;
+    }
 
     case Qt::Key_D:
-        camPos.setX(camPos.x() + 0.1f);
-        qDebug() << camPos;
+    {
+        if ( ctrlPressed )
+        {
+            camera.setPosition(camera.position() + QVector3D(0.1f,0,0));
+            qDebug() << "POSITION ONLY:" << camera.position();
+        }
+        else
+        {
+            camera.translateLocal(QVector3D(0.1f,0,0));
+            qDebug() << camera.position();
+        }
+
         update();
         return;
+    }
 
     case Qt::Key_Q:
-        camPos.setY(camPos.y() + 0.1f);
-        qDebug() << camPos;
+    {
+        if ( ctrlPressed )
+        {
+            camera.setPosition(camera.position() + QVector3D(0,-0.1f,0));
+            qDebug() << "POSITION ONLY:" << camera.position();
+        }
+        else
+        {
+            camera.translateLocal(QVector3D(0,-0.1f,0));
+            qDebug() << camera.position();
+        }
+
         update();
         return;
+    }
 
     case Qt::Key_Z:
-        camPos.setY(camPos.y() - 0.1f);
-        qDebug() << camPos;
+    {
+        if ( ctrlPressed )
+        {
+            camera.setPosition(camera.position() + QVector3D(0,0.1f,0));
+            qDebug() << "POSITION ONLY:" << camera.position();
+        }
+        else
+        {
+            camera.translateLocal(QVector3D(0,0.1f,0));
+            qDebug() << camera.position();
+        }
+
         update();
         return;
+    }
 
     case Qt::Key_Space:
         usePerspective = !usePerspective;
         qDebug() << "Use perspective:" << usePerspective;
+        update();
+        return;
+
+    case Qt::Key_P:
+        useCoordTransform = !useCoordTransform;
+        qDebug() << "Using co-ord trandform:" << useCoordTransform;
         update();
         return;
 

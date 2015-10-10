@@ -4,6 +4,7 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_2_Core>
 #include <QMatrix4x4>
+#include "cbasiccamera.h"
 
 // Testing - upload a texture through the global context and see
 // if it's accessible through the widget.
@@ -26,6 +27,7 @@ protected:
     virtual void paintGL();
 
     virtual void keyPressEvent(QKeyEvent *e);
+    virtual void keyReleaseEvent(QKeyEvent *e);
 
 private:
     GLuint vertexbuffer;
@@ -50,6 +52,10 @@ private:
     QVector3D camPos;
     bool usePerspective;
     bool useGlobalTexture;
+    bool ctrlPressed;
+    bool useCoordTransform;
+
+    CBasicCamera camera;
 };
 
 #endif // CVIEWPORT_H
