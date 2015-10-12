@@ -50,7 +50,6 @@ private:
     float Far;
 
     QVector3D camPos;
-    bool usePerspective;
     bool useGlobalTexture;
     bool ctrlPressed;
     bool useCoordTransform;

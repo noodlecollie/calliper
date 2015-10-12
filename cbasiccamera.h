@@ -5,6 +5,8 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 
+class CCameraLens;
+
 class CBasicCamera : public QObject
 {
     Q_OBJECT
@@ -20,14 +22,16 @@ public:
     QVector3D upVector() const;
     void setUpVector(const QVector3D &up);
 
+    // Camera owns the lens.
+    CCameraLens* lens() const;
+    void setLens(CCameraLens* lens);
+
     QMatrix4x4 worldToCamera() const;
     QMatrix4x4 cameraToWorld() const;
 
     void translateWorld(const QVector3D &delta);
     void translateLocal(const QVector3D &delta);
 
-    static QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float nearPlane, float farPlane);
-    static QMatrix4x4 orthographicMatrix(float top, float bottom, float left, float right, float nearPlane, float farPlane);
     static const QMatrix4x4& coordsHammerToOpenGL();
     static const QMatrix4x4& coordsOpenGLToHammer();
 
@@ -35,6 +39,7 @@ signals:
     void positionChanged(const QVector3D&);
     void viewTargetChanged(const QVector3D&);
     void upVectorChanged(const QVector3D&);
+    void lensChanged(CCameraLens*);
 
 public slots:
 
@@ -47,6 +52,7 @@ private:
     mutable bool        m_bMatrixDirty;
     mutable QMatrix4x4  m_matWorldToCamera;
     mutable QMatrix4x4  m_matCameraToWorld;
+    CCameraLens*        m_pLens;
 };
 
 #endif // CBASICCAMERA_H

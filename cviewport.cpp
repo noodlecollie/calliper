@@ -3,6 +3,7 @@
 #include <QKeyEvent>
 #include <QImage>
 #include <QApplication>
+#include "ccameralens.h"
 
 GLuint gTextureBuffer = 0;
 
@@ -206,10 +207,14 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     Far = 10;
 
     setFocusPolicy(Qt::StrongFocus);
-    usePerspective = false;
     useGlobalTexture = false;
     ctrlPressed = false;
     useCoordTransform = false;
+
+    CCameraLens* l = camera.lens();
+    l->setPlanes(Left, Right, Top, Bottom, Near, Far);
+    l->setAspectRatio((float)width()/(float)height());
+    l->setFieldOfView(45);
 }
 
 CViewport::~CViewport()
@@ -382,6 +387,8 @@ void CViewport::initializeGL()
 
 void CViewport::resizeGL(int w, int h)
 {
+    CCameraLens* l = camera.lens();
+    l->setAspectRatio((float)width()/(float)height());
     update();
 }
 
@@ -390,8 +397,9 @@ void CViewport::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(45.0f, (float)width()/(float)height(), Near, Far)
-                                           : orthographicMatrix(Top, Bottom, Left, Right, Near, Far);
+    /*QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(45.0f, (float)width()/(float)height(), Near, Far)
+                                           : orthographicMatrix(Top, Bottom, Left, Right, Near, Far);*/
+    QMatrix4x4 Projection = camera.lens()->projectionMatrix();
 
     /*QMatrix4x4 View(1,0,0,camPos.x(),
                     0,1,0,camPos.y(),
@@ -409,7 +417,7 @@ void CViewport::paintGL()
     QMatrix4x4 model = rotateX * rotateY * scaleDown;
 
     if ( useCoordTransform )
-        MVP = CBasicCamera::coordsHammerToOpenGL() * Projection * View * model;
+        MVP = Projection * CBasicCamera::coordsHammerToOpenGL() * View * model;
     else
         MVP = Projection * View * model;
 
@@ -597,10 +605,22 @@ void CViewport::keyPressEvent(QKeyEvent *e)
     }
 
     case Qt::Key_Space:
-        usePerspective = !usePerspective;
-        qDebug() << "Use perspective:" << usePerspective;
+    {
+        //usePerspective = !usePerspective;
+        //qDebug() << "Use perspective:" << usePerspective;
+        CCameraLens* l = camera.lens();
+        if (l->type() == CCameraLens::Perspective)
+        {
+            l->setType(CCameraLens::Orthographic);
+        }
+        else
+        {
+            l->setType(CCameraLens::Perspective);
+        }
+        qDebug() << "Perspective:" << (l->type() == CCameraLens::Perspective);
         update();
         return;
+    }
 
     case Qt::Key_P:
         useCoordTransform = !useCoordTransform;

@@ -1,5 +1,6 @@
 #include "cbasiccamera.h"
 #include <QtMath>
+#include "ccameralens.h"
 
 const QMatrix4x4 HAMMER_TO_OPENGL(1,0,0,0,
                                   0,0,1,0,
@@ -17,6 +18,7 @@ CBasicCamera::CBasicCamera(QObject *parent) : QObject(parent)
     m_vecViewTarget = QVector3D(0,1,0);
     m_vecUpVector = QVector3D(0,0,1);
     m_bMatrixDirty = true;
+    m_pLens = new CCameraLens(CCameraLens::Orthographic, this);
 }
 
 QVector3D CBasicCamera::position() const
@@ -115,27 +117,6 @@ void CBasicCamera::translateLocal(const QVector3D &delta)
     setViewTarget(viewTarget() + translation);
 }
 
-QMatrix4x4 CBasicCamera::perspectiveMatrix(float fov, float aspectRatio, float nearPlane, float farPlane)
-{
-    float top = nearPlane * qTan((M_PI/180.0f) * (fov/2.0f));
-    float bottom = -top;
-    float right = top * aspectRatio;
-    float left = -right;
-
-    return QMatrix4x4((2.0f*nearPlane)/(right-left), 0, (right+left)/(right-left), 0,
-                      0, (2.0f*nearPlane)/(top-bottom), (top+bottom)/(top-bottom), 0,
-                      0, 0, -(farPlane+nearPlane)/(farPlane-nearPlane), -(2.0f*farPlane*nearPlane)/(farPlane-nearPlane),
-                      0, 0, -1, 0);
-}
-
-QMatrix4x4 CBasicCamera::orthographicMatrix(float top, float bottom, float left, float right, float nearPlane, float farPlane)
-{
-    return QMatrix4x4((2.0f)/(right-left), 0, 0, -(right+left)/(right-left),
-                      0, (2.0f)/(top-bottom), 0, -(top+bottom)/(top-bottom),
-                      0, 0, -(2.0f)/(farPlane-nearPlane), -(farPlane+nearPlane)/(farPlane-nearPlane),
-                      0, 0, 0, 1);
-}
-
 const QMatrix4x4& CBasicCamera::coordsHammerToOpenGL()
 {
     return HAMMER_TO_OPENGL;
@@ -144,4 +125,19 @@ const QMatrix4x4& CBasicCamera::coordsHammerToOpenGL()
 const QMatrix4x4& CBasicCamera::coordsOpenGLToHammer()
 {
     return OPENGL_TO_HAMMER;
+}
+
+CCameraLens* CBasicCamera::lens() const
+{
+    return m_pLens;
+}
+
+void CBasicCamera::setLens(CCameraLens *lens)
+{
+    if ( !lens || lens == m_pLens ) return;
+
+    delete m_pLens;
+    m_pLens = lens;
+    m_pLens->setParent(this);
+    emit lensChanged(m_pLens);
 }
