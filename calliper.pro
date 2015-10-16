@@ -16,12 +16,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     cviewport.cpp \
     cbasiccamera.cpp \
-    ccameralens.cpp
+    ccameralens.cpp \
+    csceneobject.cpp \
+    callipermath.cpp \
+    ceulerangle.cpp
 
 HEADERS  += mainwindow.h \
     cviewport.h \
     cbasiccamera.h \
-    ccameralens.h
+    ccameralens.h \
+    csceneobject.h \
+    callipermath.h \
+    ceulerangle.h
 
 FORMS    += mainwindow.ui
 
