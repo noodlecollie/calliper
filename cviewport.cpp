@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QApplication>
 #include "ccameralens.h"
+#include "cvertexbundle.h"
 
 GLuint gTextureBuffer = 0;
 
@@ -57,6 +58,56 @@ const GLfloat cube_vertices[] = {
     1.0f,-1.0f, 1.0f
 };
 
+const GLfloat cube_vertices_interleaved[] = {
+    -1.0f,-1.0f,-1.0f, 0,0,
+    -1.0f,-1.0f, 1.0f, 1,0,
+    -1.0f, 1.0f, 1.0f, 1,1,
+
+    1.0f, 1.0f,-1.0f,  0,0,
+    -1.0f,-1.0f,-1.0f, 1,0,
+    -1.0f, 1.0f,-1.0f, 1,1,
+
+    1.0f,-1.0f, 1.0f,  0,0,
+    -1.0f,-1.0f,-1.0f, 1,0,
+    1.0f,-1.0f,-1.0f,  1,1,
+
+    1.0f, 1.0f,-1.0f,  0,0,
+    1.0f,-1.0f,-1.0f,  1,1,
+    -1.0f,-1.0f,-1.0f, 0,1,
+
+    -1.0f,-1.0f,-1.0f, 0,0,
+    -1.0f, 1.0f, 1.0f, 1,1,
+    -1.0f, 1.0f,-1.0f, 0,1,
+
+    1.0f,-1.0f, 1.0f,  0,0,
+    -1.0f,-1.0f, 1.0f, 1,1,
+    -1.0f,-1.0f,-1.0f, 0,1,
+
+    -1.0f, 1.0f, 1.0f, 0,0,
+    -1.0f,-1.0f, 1.0f, 1,0,
+    1.0f,-1.0f, 1.0f,  1,1,
+
+    1.0f, 1.0f, 1.0f, 0,0,
+    1.0f,-1.0f,-1.0f, 1,0,
+    1.0f, 1.0f,-1.0f, 1,1,
+
+    1.0f,-1.0f,-1.0f, 0,0,
+    1.0f, 1.0f, 1.0f, 1,1,
+    1.0f,-1.0f, 1.0f, 0,1,
+
+    1.0f, 1.0f, 1.0f,  0,0,
+    1.0f, 1.0f,-1.0f,  1,0,
+    -1.0f, 1.0f,-1.0f, 1,1,
+
+    1.0f, 1.0f, 1.0f,  0,0,
+    -1.0f, 1.0f,-1.0f, 1,1,
+    -1.0f, 1.0f, 1.0f, 0,1,
+
+    1.0f, 1.0f, 1.0f,  0,0,
+    -1.0f, 1.0f, 1.0f, 1,1,
+    1.0f,-1.0f, 1.0f,  0,1,
+};
+
 const GLfloat g_color_buffer_data[] = {
     0.583f,  0.771f,  0.014f,
     0.609f,  0.115f,  0.436f,
@@ -99,51 +150,51 @@ const GLfloat g_color_buffer_data[] = {
 const GLfloat g_uv_buffer_data[] = {
     0,0,
     1,0,
-    1,1,
+    1,1, //
     
     0,0,
     1,0,
-    1,1,
+    1,1, //
     
     0,0,
     1,0,
-    1,1,
+    1,1, //
     
     0,0,
     1,1,
-    0,1,
+    0,1, //
     
     0,0,
     1,1,
-    0,1,
+    0,1, //
     
     0,0,
     1,1,
-    0,1,
-    
-    0,0,
-    1,0,
-    1,1,
+    0,1, //
     
     0,0,
     1,0,
-    1,1,
-    
-    0,0,
-    1,1,
-    0,1,
+    1,1, //
     
     0,0,
     1,0,
-    1,1,
+    1,1, //
     
     0,0,
     1,1,
-    0,1,
+    0,1, //
+    
+    0,0,
+    1,0,
+    1,1, //
     
     0,0,
     1,1,
-    0,1,
+    0,1, //
+    
+    0,0,
+    1,1,
+    0,1, //
 };
 
 #define CUBE_VERTICES_SIZE (sizeof(GLfloat) * 3 * 3 * 2 * 6)
@@ -215,6 +266,7 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     l->setPlanes(Left, Right, Top, Bottom, Near, Far);
     l->setAspectRatio((float)width()/(float)height());
     l->setFieldOfView(45);
+    vertexData = NULL;
 }
 
 CViewport::~CViewport()
@@ -228,10 +280,31 @@ CViewport::~CViewport()
     glDeleteBuffers(1, &vertexbuffer);
     glDeleteBuffers(1, &colorbuffer);
     glDeleteVertexArrays(1, &VertexArrayID);
+    delete vertexData;
+    vertexData = NULL;
+}
+
+CVertexBundle* createTestCube()
+{
+    CVertexBundle* vd = new CVertexBundle();
+    vd->setInterleavingFormat(CVertexBundle::FormatPositionUV);
+
+    for (int i = 0; i < 3*2*6; i++)
+    {
+        vd->appendVertex(
+                    QVector3D(cube_vertices[3*i], cube_vertices[(3*i)+1], cube_vertices[(3*i)+2]),
+                    QVector2D(g_uv_buffer_data[2*i], g_uv_buffer_data[(2*i)+1]));
+    }
+
+    return vd;
 }
 
 void CViewport::initializeGL()
 {
+    Q_ASSERT(!vertexData);
+    vertexData = createTestCube();
+    qDebug() << "Number of vertices:" << vertexData->vertexCount();
+
     initializeOpenGLFunctions();
     context()->setShareContext(QOpenGLContext::globalShareContext());
     
@@ -261,7 +334,9 @@ void CViewport::initializeGL()
     // the static vertex data for the triangle. The drawing mode hint is set to static because the triangle
     // geometry will not change.
     //glBufferData(GL_ARRAY_BUFFER, VERTEX_DATA_SIZE, g_vertex_buffer_data, GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, cube_vertices, GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, cube_vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexData->vertexDataSize(), vertexData->vertexConstData(), GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices_interleaved), cube_vertices_interleaved, GL_STATIC_DRAW);
 
     // Colours too.
 //    glGenBuffers(1, &colorbuffer);
@@ -317,9 +392,12 @@ void CViewport::initializeGL()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
+    // No longer needed!
+    /*
     glGenBuffers(1, &uvbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
     glBufferData(GL_ARRAY_BUFFER, CUBE_UV_SIZE, g_uv_buffer_data, GL_STATIC_DRAW);
+    */
 
     // Record handles to our vertex and fragment shaders.
     VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -431,12 +509,12 @@ void CViewport::paintGL()
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glVertexAttribPointer(
-       0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-       3,                  // size
+       CVertexBundle::Position, // attribute 0. No particular reason for 0, but must match the layout in the shader.
+       CVertexBundle::attributeSize(CVertexBundle::Position)/sizeof(float),   // size
        GL_FLOAT,           // type
        GL_FALSE,           // normalized?
-       0,                  // stride
-       (void*)0            // array buffer offset
+       CVertexBundle::interleavingFormatSize(CVertexBundle::FormatPositionUV),        // stride
+       (void*)CVertexBundle::attributeOffset(CVertexBundle::FormatPositionUV, CVertexBundle::Position)  // array buffer offset
     );
 
     /*
@@ -454,21 +532,21 @@ void CViewport::paintGL()
     */
 
     glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
     glVertexAttribPointer(
-        1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-        2,                                // size
+        CVertexBundle::UV,  // attribute. No particular reason for 1, but must match the layout in the shader.
+        CVertexBundle::attributeSize(CVertexBundle::UV)/sizeof(float),    // size
         GL_FLOAT,                         // type
         GL_FALSE,                         // normalized?
-        0,                                // stride
-        (void*)0                          // array buffer offset
+        CVertexBundle::interleavingFormatSize(CVertexBundle::FormatPositionUV),         // stride
+        (void*)CVertexBundle::attributeOffset(CVertexBundle::FormatPositionUV, CVertexBundle::UV)   // array buffer offset
     );
 
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, MVP.constData());
 
     // Draw the triangle !
     //glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, 3 * 2 * 6);
+    glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount()/*3 * 2 * 6*/);
 
     glDisableVertexAttribArray(0);
 }

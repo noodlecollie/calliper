@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     ccameralens.cpp \
     csceneobject.cpp \
     callipermath.cpp \
-    ceulerangle.cpp
+    ceulerangle.cpp \
+    cdebugcube.cpp \
+    cvertexbundle.cpp
 
 HEADERS  += mainwindow.h \
     cviewport.h \
@@ -27,7 +29,9 @@ HEADERS  += mainwindow.h \
     ccameralens.h \
     csceneobject.h \
     callipermath.h \
-    ceulerangle.h
+    ceulerangle.h \
+    cdebugcube.h \
+    cvertexbundle.h
 
 FORMS    += mainwindow.ui
 

@@ -9,6 +9,7 @@
 // Testing - upload a texture through the global context and see
 // if it's accessible through the widget.
 extern GLuint gTextureBuffer;
+class CVertexBundle;
 
 class CViewport : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core
 {
@@ -41,6 +42,7 @@ private:
     GLuint VertexShaderID;
     GLuint FragmentShaderID;
     GLuint VertexArrayID;
+    GLuint IndexArrayID;
 
     float Top;
     float Bottom;
@@ -55,6 +57,7 @@ private:
     bool useCoordTransform;
 
     CBasicCamera camera;
+    CVertexBundle* vertexData;
 };
 
 #endif // CVIEWPORT_H

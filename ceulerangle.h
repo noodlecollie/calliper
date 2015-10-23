@@ -45,6 +45,11 @@ public:
     float roll() const;
     void setRoll(float r);
 
+    inline bool operator==(const CEulerAngle &other) const
+    {
+        return m_flPitch == other.m_flPitch && m_flYaw == other.m_flYaw && m_flRoll == other.m_flRoll;
+    }
+
 private:
     float   m_flPitch;
     float   m_flYaw;
