@@ -1,5 +1,6 @@
 #include "cdebugcube.h"
 #include "cvertexbundle.h"
+#include <QVector2D>
 
 static const float _unitCube_Position[] = {
     // X plane, positive normal

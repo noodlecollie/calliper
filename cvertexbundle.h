@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QVector3D>
 #include <QList>
+#include "cbaserenderer.h"
 
 class CVertexBundle : public QObject
 {
@@ -12,37 +13,9 @@ class CVertexBundle : public QObject
 public:
     explicit CVertexBundle(QObject *parent = 0);
 
-    // Formats for vertex buffers.
-    // Attributes are interleaved in the order specified.
-    enum InterleavingFormat
-    {
-        FormatPosition = 0,
-        FormatPositionUV
-    };
-
-    // Attribute types.
-    // The value within this enum corresponds to the expected attribute
-    // number used in the shader.
-    enum Attribute
-    {
-        Position     = 0,
-        UV          // 1
-    };
-
-    // These are all IN BYTES.
-    // Offset from the beginning of the buffer for the first instance of the given attribute.
-    static int attributeOffset(InterleavingFormat format, Attribute att);
-
-    // How large a given attribute is.
-    static int attributeSize(Attribute att);
-
-    // How large an entire collection of attributes is.
-    // This is the same as the stride required for the format.
-    static int interleavingFormatSize(InterleavingFormat format);
-
     // Setting the interleaving format does not resize the vector.
-    InterleavingFormat interleavingFormat() const;
-    void setInterleavingFormat(InterleavingFormat format);
+    CBaseRenderer::InterleavingFormat interleavingFormat() const;
+    void setInterleavingFormat(CBaseRenderer::InterleavingFormat format);
 
     void clear();
     void clearVertices();
@@ -84,7 +57,7 @@ private:
 
     QVector<float>          m_VertexData;
     QVector<unsigned int>   m_IndexData;
-    InterleavingFormat      m_iInterleavingFormat;
+    CBaseRenderer::InterleavingFormat      m_iInterleavingFormat;
 };
 
 #endif // CVERTEXBUNDLE_H

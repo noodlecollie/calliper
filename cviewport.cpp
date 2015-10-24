@@ -287,7 +287,7 @@ CViewport::~CViewport()
 CVertexBundle* createTestCube()
 {
     CVertexBundle* vd = new CVertexBundle();
-    vd->setInterleavingFormat(CVertexBundle::FormatPositionUV);
+    vd->setInterleavingFormat(CBaseRenderer::FormatPositionUV);
 
     for (int i = 0; i < 3*2*6; i++)
     {
@@ -509,12 +509,12 @@ void CViewport::paintGL()
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glVertexAttribPointer(
-       CVertexBundle::Position, // attribute 0. No particular reason for 0, but must match the layout in the shader.
-       CVertexBundle::attributeSize(CVertexBundle::Position)/sizeof(float),   // size
+       CBaseRenderer::Position, // attribute 0. No particular reason for 0, but must match the layout in the shader.
+       CBaseRenderer::attributeSize(CBaseRenderer::Position)/sizeof(float),   // size
        GL_FLOAT,           // type
        GL_FALSE,           // normalized?
-       CVertexBundle::interleavingFormatSize(CVertexBundle::FormatPositionUV),        // stride
-       (void*)CVertexBundle::attributeOffset(CVertexBundle::FormatPositionUV, CVertexBundle::Position)  // array buffer offset
+       CBaseRenderer::interleavingFormatSize(CBaseRenderer::FormatPositionUV),        // stride
+       (void*)CBaseRenderer::attributeOffset(CBaseRenderer::FormatPositionUV, CBaseRenderer::Position)  // array buffer offset
     );
 
     /*
@@ -534,12 +534,12 @@ void CViewport::paintGL()
     glEnableVertexAttribArray(1);
     //glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
     glVertexAttribPointer(
-        CVertexBundle::UV,  // attribute. No particular reason for 1, but must match the layout in the shader.
-        CVertexBundle::attributeSize(CVertexBundle::UV)/sizeof(float),    // size
+        CBaseRenderer::UV,  // attribute. No particular reason for 1, but must match the layout in the shader.
+        CBaseRenderer::attributeSize(CBaseRenderer::UV)/sizeof(float),    // size
         GL_FLOAT,                         // type
         GL_FALSE,                         // normalized?
-        CVertexBundle::interleavingFormatSize(CVertexBundle::FormatPositionUV),         // stride
-        (void*)CVertexBundle::attributeOffset(CVertexBundle::FormatPositionUV, CVertexBundle::UV)   // array buffer offset
+        CBaseRenderer::interleavingFormatSize(CBaseRenderer::FormatPositionUV),         // stride
+        (void*)CBaseRenderer::attributeOffset(CBaseRenderer::FormatPositionUV, CBaseRenderer::UV)   // array buffer offset
     );
 
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, MVP.constData());

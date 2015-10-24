@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     callipermath.cpp \
     ceulerangle.cpp \
     cdebugcube.cpp \
-    cvertexbundle.cpp
+    cvertexbundle.cpp \
+    cbaserenderer.cpp
 
 HEADERS  += mainwindow.h \
     cviewport.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     callipermath.h \
     ceulerangle.h \
     cdebugcube.h \
-    cvertexbundle.h
+    cvertexbundle.h \
+    cbaserenderer.h
 
 FORMS    += mainwindow.ui
 

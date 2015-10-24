@@ -1,70 +1,17 @@
 #include "cvertexbundle.h"
 #include <QVector2D>
 
-static const int ATTRIBUTE_SIZE[] = {
-    3 * sizeof(float),      // Position
-    2 * sizeof(float),      // UV
-};
-
-static const int FORMAT_SIZE[] = {
-    ATTRIBUTE_SIZE[CVertexBundle::Position],
-    ATTRIBUTE_SIZE[CVertexBundle::Position] + ATTRIBUTE_SIZE[CVertexBundle::UV],
-};
-
-int CVertexBundle::attributeOffset(InterleavingFormat format, Attribute att)
-{
-    switch (format)
-    {
-        case FormatPosition:
-        {
-            switch (att)
-            {
-            case Position:
-                return 0;
-            default:
-                return 0;
-            }
-        }
-
-        case FormatPositionUV:
-        {
-            switch(att)
-            {
-            case Position:
-                return 0;
-            case UV:
-                return 3 * sizeof(float);
-            default:
-                return 0;
-            }
-        }
-
-    default:
-        return 0;
-    }
-}
-
-int CVertexBundle::attributeSize(Attribute att)
-{
-    return ATTRIBUTE_SIZE[att];
-}
-
-int CVertexBundle::interleavingFormatSize(InterleavingFormat format)
-{
-    return FORMAT_SIZE[format];
-}
-
 CVertexBundle::CVertexBundle(QObject *parent) : QObject(parent)
 {
-    m_iInterleavingFormat = FormatPosition;
+    m_iInterleavingFormat = CBaseRenderer::FormatPosition;
 }
 
-CVertexBundle::InterleavingFormat CVertexBundle::interleavingFormat() const
+CBaseRenderer::InterleavingFormat CVertexBundle::interleavingFormat() const
 {
     return m_iInterleavingFormat;
 }
 
-void CVertexBundle::setInterleavingFormat(InterleavingFormat format)
+void CVertexBundle::setInterleavingFormat(CBaseRenderer::InterleavingFormat format)
 {
     if ( format == m_iInterleavingFormat ) return;
 
@@ -99,7 +46,7 @@ int CVertexBundle::indexCount() const
 
 int CVertexBundle::floatsPerVertex() const
 {
-    return FORMAT_SIZE[m_iInterleavingFormat] / sizeof(float);
+    return CBaseRenderer::interleavingFormatSize(m_iInterleavingFormat) / sizeof(float);
 }
 
 void CVertexBundle::appendVertex(const QVector3D &position)
@@ -134,7 +81,7 @@ void CVertexBundle::setVertexUV(int vertex, const QVector2D &uv)
 {
     int startIndex = vertex * floatsPerVertex();
 
-    startIndex += (attributeOffset(m_iInterleavingFormat, UV) / sizeof(float));
+    startIndex += (CBaseRenderer::attributeOffset(m_iInterleavingFormat, CBaseRenderer::UV) / sizeof(float));
 
     m_VertexData[startIndex] = uv.x();
     m_VertexData[startIndex+1] = uv.y();
