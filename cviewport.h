@@ -10,6 +10,7 @@
 // if it's accessible through the widget.
 extern GLuint gTextureBuffer;
 class CVertexBundle;
+class CDebugCube;
 
 class CViewport : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core
 {
@@ -57,7 +58,7 @@ private:
     bool useCoordTransform;
 
     CBasicCamera camera;
-    CVertexBundle* vertexData;
+    CDebugCube* debugCube;
 };
 
 #endif // CVIEWPORT_H

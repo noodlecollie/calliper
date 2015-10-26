@@ -5,10 +5,11 @@
 #include <QApplication>
 #include "ccameralens.h"
 #include "cvertexbundle.h"
+#include "cdebugcube.h"
 
 GLuint gTextureBuffer = 0;
 
-const GLfloat cube_vertices[] = {
+const static GLfloat cube_vertices[] = {
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
     -1.0f,-1.0f, 1.0f,
     -1.0f, 1.0f, 1.0f, // triangle 1 : end
@@ -58,7 +59,7 @@ const GLfloat cube_vertices[] = {
     1.0f,-1.0f, 1.0f
 };
 
-const GLfloat cube_vertices_interleaved[] = {
+const static GLfloat cube_vertices_interleaved[] = {
     -1.0f,-1.0f,-1.0f, 0,0,
     -1.0f,-1.0f, 1.0f, 1,0,
     -1.0f, 1.0f, 1.0f, 1,1,
@@ -108,7 +109,7 @@ const GLfloat cube_vertices_interleaved[] = {
     1.0f,-1.0f, 1.0f,  0,1,
 };
 
-const GLfloat g_color_buffer_data[] = {
+const static GLfloat g_color_buffer_data[] = {
     0.583f,  0.771f,  0.014f,
     0.609f,  0.115f,  0.436f,
     0.327f,  0.483f,  0.844f,
@@ -147,7 +148,7 @@ const GLfloat g_color_buffer_data[] = {
     0.982f,  0.099f,  0.879f
 };
 
-const GLfloat g_uv_buffer_data[] = {
+const static GLfloat g_uv_buffer_data[] = {
     0,0,
     1,0,
     1,1, //
@@ -200,7 +201,7 @@ const GLfloat g_uv_buffer_data[] = {
 #define CUBE_VERTICES_SIZE (sizeof(GLfloat) * 3 * 3 * 2 * 6)
 #define CUBE_UV_SIZE (sizeof(GLfloat) * 2 * 3 * 2 * 6)
 
-const GLfloat g_vertex_buffer_data[] = {
+const static GLfloat g_vertex_buffer_data[] = {
    -1.0f, -1.0f, 0.0f,
    1.0f, -1.0f, 0.0f,
    0.0f,  1.0f, 0.0f,
@@ -266,7 +267,7 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     l->setPlanes(Left, Right, Top, Bottom, Near, Far);
     l->setAspectRatio((float)width()/(float)height());
     l->setFieldOfView(45);
-    vertexData = NULL;
+    debugCube = NULL;
 }
 
 CViewport::~CViewport()
@@ -280,8 +281,8 @@ CViewport::~CViewport()
     glDeleteBuffers(1, &vertexbuffer);
     glDeleteBuffers(1, &colorbuffer);
     glDeleteVertexArrays(1, &VertexArrayID);
-    delete vertexData;
-    vertexData = NULL;
+    delete debugCube;
+    debugCube = NULL;
 }
 
 CVertexBundle* createTestCube()
@@ -301,9 +302,8 @@ CVertexBundle* createTestCube()
 
 void CViewport::initializeGL()
 {
-    Q_ASSERT(!vertexData);
-    vertexData = createTestCube();
-    qDebug() << "Number of vertices:" << vertexData->vertexCount();
+    debugCube = new CDebugCube();
+    qDebug() << "Number of vertices:" << debugCube->vertexData()->vertexCount();
 
     initializeOpenGLFunctions();
     context()->setShareContext(QOpenGLContext::globalShareContext());
@@ -335,8 +335,13 @@ void CViewport::initializeGL()
     // geometry will not change.
     //glBufferData(GL_ARRAY_BUFFER, VERTEX_DATA_SIZE, g_vertex_buffer_data, GL_STATIC_DRAW);
     //glBufferData(GL_ARRAY_BUFFER, CUBE_VERTICES_SIZE, cube_vertices, GL_STATIC_DRAW);
+    const CVertexBundle* vertexData = debugCube->vertexData();
     glBufferData(GL_ARRAY_BUFFER, vertexData->vertexDataSize(), vertexData->vertexConstData(), GL_STATIC_DRAW);
     //glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices_interleaved), cube_vertices_interleaved, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &IndexArrayID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexArrayID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexData->indexDataSize(), vertexData->indexConstData(), GL_STATIC_DRAW);
 
     // Colours too.
 //    glGenBuffers(1, &colorbuffer);
@@ -546,7 +551,14 @@ void CViewport::paintGL()
 
     // Draw the triangle !
     //glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-    glDrawArrays(GL_TRIANGLES, 0, vertexData->vertexCount()/*3 * 2 * 6*/);
+    //glDrawArrays(GL_TRIANGLES, 0, debugCube->vertexData()->vertexCount()/*3 * 2 * 6*/);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexArrayID);
+    glDrawElements(
+         GL_TRIANGLES,      // mode
+         debugCube->vertexData()->indexCount(),    // count
+         GL_UNSIGNED_INT,   // type
+         (void*)0           // element array buffer offset
+     );
 
     glDisableVertexAttribArray(0);
 }
