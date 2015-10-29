@@ -268,6 +268,7 @@ CViewport::CViewport(QWidget * parent, Qt::WindowFlags f) : QOpenGLWidget(parent
     l->setAspectRatio((float)width()/(float)height());
     l->setFieldOfView(45);
     debugCube = NULL;
+    shaderProgram = NULL;
 }
 
 CViewport::~CViewport()
@@ -275,7 +276,8 @@ CViewport::~CViewport()
     makeCurrent();
     
     glDeleteTextures(1, &texturebuffer);
-    glDeleteProgram(ProgramID);
+    //glDeleteProgram(ProgramID);
+    delete shaderProgram;
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
     glDeleteBuffers(1, &vertexbuffer);
@@ -404,6 +406,7 @@ void CViewport::initializeGL()
     glBufferData(GL_ARRAY_BUFFER, CUBE_UV_SIZE, g_uv_buffer_data, GL_STATIC_DRAW);
     */
 
+    /*
     // Record handles to our vertex and fragment shaders.
     VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -466,6 +469,18 @@ void CViewport::initializeGL()
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
     glUseProgram(ProgramID);
+    */
+
+    shaderProgram = new QOpenGLShaderProgram();
+    shaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShader);
+    shaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShader);
+    shaderProgram->link();
+    shaderProgram->bind();
+    locvVertex = shaderProgram->attributeLocation("vertexPosition_modelspace");
+    locvUV = shaderProgram->attributeLocation("vertexUV");
+    locvMatrix = shaderProgram->attributeLocation("MVP");
+    locfUV = shaderProgram->attributeLocation("UV");
+    locfTexture = shaderProgram->attributeLocation("myTextureSampler");
 }
 
 void CViewport::resizeGL(int w, int h)
@@ -504,13 +519,16 @@ void CViewport::paintGL()
     else
         MVP = Projection * View * model;
 
-    MatrixID = glGetUniformLocation(ProgramID, "MVP");
-    textureID = glGetUniformLocation(ProgramID, "myTextureSampler");
-    glUniform1i(textureID, 0);
+    //MatrixID = glGetUniformLocation(ProgramID, "MVP");
+    //textureID = glGetUniformLocation(ProgramID, "myTextureSampler");
+    //glUniform1i(textureID, 0);
+    glUniform1i(locfTexture, 0);
     glActiveTexture(GL_TEXTURE0 + 0);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
 
+    // TODO: How do we actually set up the attribute info for QOpenGLShaderProgram?
+    // It looks like it needs a pointer to the actual data, but that's already been uploaded.
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glVertexAttribPointer(

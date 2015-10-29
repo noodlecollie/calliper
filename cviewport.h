@@ -5,6 +5,7 @@
 #include <QOpenGLFunctions_3_2_Core>
 #include <QMatrix4x4>
 #include "cbasiccamera.h"
+#include <QOpenGLShaderProgram>
 
 // Testing - upload a texture through the global context and see
 // if it's accessible through the widget.
@@ -59,6 +60,12 @@ private:
 
     CBasicCamera camera;
     CDebugCube* debugCube;
+    QOpenGLShaderProgram* shaderProgram;
+    int locvVertex;
+    int locvUV;
+    int locvMatrix;
+    int locfUV;
+    int locfTexture;
 };
 
 #endif // CVIEWPORT_H

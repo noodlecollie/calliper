@@ -55,7 +55,7 @@ int CBaseRenderer::interleavingFormatSize(InterleavingFormat format)
     return FORMAT_SIZE[format];
 }
 
-CBaseRenderer::CBaseRenderer()
+CBaseRenderer::CBaseRenderer(QObject *parent) : QObject(parent)
 {
 
 }

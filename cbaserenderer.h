@@ -1,10 +1,13 @@
 #ifndef CBASERENDERER_H
 #define CBASERENDERER_H
 
-class CBaseRenderer
+#include <QObject>
+
+class CBaseRenderer : public QObject
 {
+    Q_OBJECT
 public:
-    CBaseRenderer();
+    explicit CBaseRenderer(QObject* parent = 0);
 
     // Formats for vertex buffers.
     // Attributes are interleaved in the order specified.
