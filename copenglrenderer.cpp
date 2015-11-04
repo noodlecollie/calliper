@@ -2,11 +2,11 @@
 #include <QOpenGLContext>
 #include <QSurfaceFormat>
 #include <QGuiApplication>
+#include <QOpenGLShaderProgram>
 
 COpenGLRenderer::COpenGLRenderer(QObject *parent) : CBaseRenderer(parent)
 {
     m_pBackgroundContext = NULL;
-    createBackgroundContext();
 }
 
 bool COpenGLRenderer::createBackgroundContext()
@@ -24,4 +24,23 @@ bool COpenGLRenderer::createBackgroundContext()
 QOpenGLContext* COpenGLRenderer::backgroundContext() const
 {
     return m_pBackgroundContext;
+}
+
+void COpenGLRenderer::initialise()
+{
+    createBackgroundContext();
+    compileShaders();
+}
+
+bool COpenGLRenderer::isValid() const
+{
+    return m_pBackgroundContext && m_pBackgroundContext->isValid();
+}
+
+bool COpenGLRenderer::compileShaders()
+{
+    // Solid colour
+    QOpenGLShaderProgram* p = new QOpenGLShaderProgram();
+    m_ShaderList.append(p);
+    p->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/TODO");
 }

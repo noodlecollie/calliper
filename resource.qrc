@@ -3,4 +3,8 @@
         <file>test.png</file>
         <file>uvsample.png</file>
     </qresource>
+    <qresource prefix="/shaders">
+        <file>plain.vert</file>
+        <file>solidcolor.frag</file>
+    </qresource>
 </RCC>

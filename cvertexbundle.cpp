@@ -4,6 +4,7 @@
 CVertexBundle::CVertexBundle(QObject *parent) : QObject(parent)
 {
     m_iInterleavingFormat = CBaseRenderer::FormatPosition;
+    m_bBufferDirty = true;
 }
 
 CBaseRenderer::InterleavingFormat CVertexBundle::interleavingFormat() const

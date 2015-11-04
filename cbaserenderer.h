@@ -14,7 +14,7 @@ public:
     enum InterleavingFormat
     {
         FormatPosition = 0,
-        FormatPositionUV
+        FormatPositionUV,
     };
 
     // Attribute types.
@@ -23,7 +23,13 @@ public:
     enum Attribute
     {
         Position     = 0,
-        UV          // 1
+        UV,         // 1
+    };
+
+    // Shader types.
+    enum ShaderType
+    {
+        SolidColor = 0,
     };
 
     // These are all IN BYTES.
@@ -36,6 +42,9 @@ public:
     // How large an entire collection of attributes is.
     // This is the same as the stride required for the format.
     static int interleavingFormatSize(InterleavingFormat format);
+
+    virtual void initialise() = 0;
+    virtual bool isValid() const = 0;
 };
 
 #endif // CBASERENDERER_H

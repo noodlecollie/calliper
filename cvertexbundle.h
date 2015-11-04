@@ -6,6 +6,7 @@
 #include <QVector3D>
 #include <QList>
 #include "cbaserenderer.h"
+#include <QOpenGLBuffer>
 
 class CVertexBundle : public QObject
 {
@@ -58,6 +59,8 @@ private:
     QVector<float>          m_VertexData;
     QVector<unsigned int>   m_IndexData;
     CBaseRenderer::InterleavingFormat      m_iInterleavingFormat;
+    QOpenGLBuffer   m_VertexBuffer;
+    bool    m_bBufferDirty;
 };
 
 #endif // CVERTEXBUNDLE_H
