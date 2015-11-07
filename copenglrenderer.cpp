@@ -6,6 +6,13 @@
 #include <QtDebug>
 #include <QMetaEnum>
 
+#include <QOpenGLFunctions_3_2_Core>
+#include "csceneobject.h"
+#include "cbasiccamera.h"
+#include <QMatrix4x4>
+#include "cvertexbundle.h"
+#include "ccameralens.h"
+
 // Size of each attribute in bytes.
 static const int ATTRIBUTE_SIZE[] = {
     3 * sizeof(float),      // Position
@@ -61,22 +68,22 @@ int COpenGLRenderer::interleavingFormatSize(InterleavingFormat format)
     return FORMAT_SIZE[format];
 }
 
-bool attemptCompile(QOpenGLShaderProgram* program, const QString &shaderName, QOpenGLShader::ShaderType type, const QString &path)
+bool attemptCompile(QOpenGLShaderProgram* program, QOpenGLShader::ShaderType type, const QString &path)
 {
     if ( !program->addShaderFromSourceFile(type, path) )
     {
-        qCritical().nospace() << "Compilation failed for " << shaderName << " with shader file " << path << ": " << program->log();
+        qCritical().nospace() << "Compilation failed for " << program->objectName() << " with shader file " << path << ": " << program->log();
         return false;
     }
 
     return true;
 }
 
-bool attemptLink(QOpenGLShaderProgram* program, const QString &shaderName)
+bool attemptLink(QOpenGLShaderProgram* program)
 {
     if ( !program->link() )
     {
-        qCritical().nospace() << "Linking failed for shader " << shaderName << ": " << program->log();
+        qCritical().nospace() << "Linking failed for shader " << program->objectName() << ": " << program->log();
         return false;
     }
 
@@ -139,12 +146,13 @@ bool COpenGLRenderer::compileShaders()
 {
     // Solid colour
     QOpenGLShaderProgram* p = new QOpenGLShaderProgram();
+    p->setObjectName("Solid Colour");
     m_ShaderList.append(p);
 
     bool success = true;
-    success = attemptCompile(p, "Solid Colour", QOpenGLShader::Vertex, ":/shaders/plain.vert") && success;
-    success = attemptCompile(p, "Solid Colour", QOpenGLShader::Fragment, ":/shaders/solidcolor.frag") && success;
-    success = attemptLink(p, "Solid Colour") && success;
+    success = attemptCompile(p, QOpenGLShader::Vertex, ":/shaders/plain.vert") && success;
+    success = attemptCompile(p, QOpenGLShader::Fragment, ":/shaders/solidcolor.frag") && success;
+    success = attemptLink(p) && success;
 
     return success;
 }
@@ -152,4 +160,31 @@ bool COpenGLRenderer::compileShaders()
 bool COpenGLRenderer::initialiseAttempted() const
 {
     return m_bInitialiseAttempted;
+}
+
+void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *root, const CBasicCamera* camera)
+{
+    QMatrix4x4 projection = camera->lens()->projectionMatrix();
+    QMatrix4x4 view = camera->worldToCamera();
+    QMatrix4x4 modelViewProjection = projection * CBasicCamera::coordsHammerToOpenGL() * view;
+
+
+    // Bind the vertex buffer we want to use.
+    CVertexBundle* v = root->vertexData();
+    v->bindVertexBuffer(true);
+    QOpenGLShaderProgram* p = m_ShaderList.first();
+
+    p->bind();
+
+    p->setAttributeBuffer("vec_Position",
+                          GL_FLOAT,
+                          COpenGLRenderer::attributeOffset(COpenGLRenderer::FormatPositionUV, COpenGLRenderer::Position),
+                          COpenGLRenderer::attributeSize(COpenGLRenderer::Position)/sizeof(float),
+                          COpenGLRenderer::interleavingFormatSize(COpenGLRenderer::FormatPositionUV));
+    p->setUniformValue("mat_MVP", modelViewProjection);
+
+    v->bindIndexBuffer(true);
+    f->glDrawElements(GL_TRIANGLES, v->indexCount(), GL_UNSIGNED_INT, (void*)0);
+
+    p->release();
 }

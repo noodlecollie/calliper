@@ -161,7 +161,7 @@ CDebugCube::CDebugCube(CSceneObject *parent) : CSceneObject(parent)
     */
 }
 
-const CVertexBundle* CDebugCube::vertexData() const
+CVertexBundle* CDebugCube::vertexData() const
 {
     return m_pVertexData;
 }

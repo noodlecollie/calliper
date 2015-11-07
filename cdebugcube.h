@@ -11,7 +11,7 @@ class CDebugCube : public CSceneObject
 public:
     CDebugCube(CSceneObject* parent = 0);
 
-    const CVertexBundle* vertexData() const;
+    virtual CVertexBundle* vertexData() const;
 
 private:
     CVertexBundle*  m_pVertexData;

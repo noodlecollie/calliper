@@ -6,6 +6,8 @@
 #include <QMatrix4x4>
 #include "ceulerangle.h"
 
+class CVertexBundle;
+
 class CSceneObject : public QObject
 {
     Q_OBJECT
@@ -20,6 +22,8 @@ public:
 
     QMatrix4x4 matrixParentToLocal() const;
     QMatrix4x4 matrixLocalToParent() const;
+
+    virtual CVertexBundle* vertexData() const;
 
 signals:
 

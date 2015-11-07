@@ -52,3 +52,9 @@ void CSceneObject::setAngles(const CEulerAngle &angle)
 
     m_angAngles = angle;
 }
+
+CVertexBundle* CSceneObject::vertexData() const
+{
+    // By default we have no vertex data (we could just be a grouping node).
+    return NULL;
+}

@@ -6,6 +6,8 @@
 #include "ccameralens.h"
 #include "cvertexbundle.h"
 #include "cdebugcube.h"
+#include "mainwindow.h"
+#include "cscene.h"
 
 GLuint gTextureBuffer = 0;
 
@@ -304,12 +306,9 @@ CVertexBundle* createTestCube()
 
 void CViewport::initializeGL()
 {
-    debugCube = new CDebugCube();
-    qDebug() << "Number of vertices:" << debugCube->vertexData()->vertexCount();
-
     initializeOpenGLFunctions();
-    context()->setShareContext(QOpenGLContext::globalShareContext());
-    
+    context()->setShareContext(QOpenGLContext::globalShareContext());   // Is this needed or is it automatic?
+
     glClearColor(0.0f, 0.58f, 1.0f, 1.0f);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -317,6 +316,10 @@ void CViewport::initializeGL()
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
+
+#if 0
+    debugCube = new CDebugCube();
+    qDebug() << "Number of vertices:" << debugCube->vertexData()->vertexCount();
 
     // Generate a Vertex Array Object (VAO).
     // This stores the "state" of the attributes for vertices:
@@ -481,6 +484,7 @@ void CViewport::initializeGL()
     locvMatrix = shaderProgram->attributeLocation("MVP");
     locfUV = shaderProgram->attributeLocation("UV");
     locfTexture = shaderProgram->attributeLocation("myTextureSampler");
+#endif
 }
 
 void CViewport::resizeGL(int w, int h)
@@ -495,6 +499,7 @@ void CViewport::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+#if 0
     /*QMatrix4x4 Projection = usePerspective ? perspectiveMatrix(45.0f, (float)width()/(float)height(), Near, Far)
                                            : orthographicMatrix(Top, Bottom, Left, Right, Near, Far);*/
     QMatrix4x4 Projection = camera.lens()->projectionMatrix();
@@ -579,6 +584,14 @@ void CViewport::paintGL()
      );
 
     glDisableVertexAttribArray(0);
+#endif
+
+    MainWindow* w = appMainWindow();
+    if ( !w->renderer()->initialiseAttempted() ) return;
+    CSceneObject* r = w->scene()->root();
+    CSceneObject* c = r->findChild<CSceneObject*>("Debug Cube", Qt::FindDirectChildrenOnly);
+    Q_ASSERT(c);
+    appMainWindow()->renderer()->render(this, c, &camera);
 }
 
 void CViewport::keyReleaseEvent(QKeyEvent *e)

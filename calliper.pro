@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     ceulerangle.cpp \
     cdebugcube.cpp \
     cvertexbundle.cpp \
-    copenglrenderer.cpp
+    copenglrenderer.cpp \
+    cscene.cpp
 
 HEADERS  += mainwindow.h \
     cviewport.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     ceulerangle.h \
     cdebugcube.h \
     cvertexbundle.h \
-    copenglrenderer.h
+    copenglrenderer.h \
+    cscene.h
 
 FORMS    += mainwindow.ui
 
