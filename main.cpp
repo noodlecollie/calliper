@@ -7,6 +7,10 @@
 #include <QVector3D>
 #include <QtDebug>
 
+// REMOVE ME
+#include <QOpenGLShader>
+#include <QMetaEnum>
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);

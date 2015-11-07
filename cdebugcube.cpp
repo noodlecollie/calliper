@@ -125,7 +125,7 @@ const static float cube_vertices_interleaved[] = {
 CDebugCube::CDebugCube(CSceneObject *parent) : CSceneObject(parent)
 {
     m_pVertexData = new CVertexBundle(this);
-    m_pVertexData->setInterleavingFormat(CBaseRenderer::FormatPositionUV);
+    m_pVertexData->setInterleavingFormat(COpenGLRenderer::FormatPositionUV);
 
     for ( int i = 0; i < 4*6; i++ )
     {

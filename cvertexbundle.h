@@ -5,7 +5,7 @@
 #include <QVector>
 #include <QVector3D>
 #include <QList>
-#include "cbaserenderer.h"
+#include "copenglrenderer.h"
 #include <QOpenGLBuffer>
 
 class CVertexBundle : public QObject
@@ -13,10 +13,11 @@ class CVertexBundle : public QObject
     Q_OBJECT
 public:
     explicit CVertexBundle(QObject *parent = 0);
+    ~CVertexBundle();
 
     // Setting the interleaving format does not resize the vector.
-    CBaseRenderer::InterleavingFormat interleavingFormat() const;
-    void setInterleavingFormat(CBaseRenderer::InterleavingFormat format);
+    COpenGLRenderer::InterleavingFormat interleavingFormat() const;
+    void setInterleavingFormat(COpenGLRenderer::InterleavingFormat format);
 
     void clear();
     void clearVertices();
@@ -42,11 +43,21 @@ public:
 
     void setIndex(int position, unsigned int value);
 
-    float* vertexData();
+    //float* vertexData();
     const float* vertexConstData() const;
 
-    unsigned int* indexData();
+    //unsigned int* indexData();
     const unsigned int* indexConstData() const;
+
+    // If dirty, data needs to be reuploaded.
+    bool isVertexDataDirty() const;
+    bool isIndexDataDirty() const;
+    void upload(bool force = false);
+
+    // Assumes buffer has been uploaded (which will have created it).
+    // Passing true binds, passing false releases.
+    bool bindVertexBuffer(bool bind);
+    bool bindIndexBuffer(bool bind);
 
 signals:
 
@@ -55,12 +66,16 @@ public slots:
 private:
     int floatsPerVertex() const;
     int incrementSize();
+    void createBuffer(QOpenGLBuffer &buffer);
+    void uploadData(QOpenGLBuffer &buffer, const void* data, int size);
 
     QVector<float>          m_VertexData;
     QVector<unsigned int>   m_IndexData;
-    CBaseRenderer::InterleavingFormat      m_iInterleavingFormat;
+    COpenGLRenderer::InterleavingFormat      m_iInterleavingFormat;
     QOpenGLBuffer   m_VertexBuffer;
-    bool    m_bBufferDirty;
+    QOpenGLBuffer   m_IndexBuffer;
+    bool    m_bVBufferDirty;
+    bool    m_bIBufferDirty;
 };
 
 #endif // CVERTEXBUNDLE_H
