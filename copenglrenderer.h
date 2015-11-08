@@ -2,7 +2,7 @@
 #define COPENGLRENDERER_H
 
 #include <QObject>
-#include <QList>
+#include <QHash>
 #include <QOpenGLShader>
 
 class QOpenGLContext;
@@ -29,8 +29,8 @@ public:
     };
 
     // Attribute types.
-    // The value within this enum corresponds to the expected attribute
-    // number used in the shader.
+    // The value within this enum corresponds to the expected attribute location used in the shader.
+    // When writing new shaders, bind attribute locations that match these values.
     enum Attribute
     {
         Position     = 0,
@@ -72,12 +72,14 @@ signals:
 public slots:
 
 private:
+    typedef QHash<QString, QOpenGLShaderProgram*> ShaderTable;
+    
     bool createBackgroundContext();
     bool compileShaders();
 
     QOpenGLContext* m_pBackgroundContext;
-    QList<QOpenGLShaderProgram*>  m_ShaderList;
     bool    m_bInitialised;
+    ShaderTable m_ShaderTable;
 };
 
 #endif // COPENGLRENDERER_H

@@ -19,8 +19,6 @@ CDebugTriangle::CDebugTriangle(CSceneObject *parent) : CSceneObject(parent)
     m_pVertexData->appendIndex(0);
     m_pVertexData->appendIndex(1);
     m_pVertexData->appendIndex(2);
-    
-    m_pVertexData->upload();
 }
 
 CVertexBundle* CDebugTriangle::vertexData() const

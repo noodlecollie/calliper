@@ -13,10 +13,7 @@
 #include "cvertexbundle.h"
 #include "ccameralens.h"
 #include <QSurface>
-
-// Remove me
-#include "cdebugtriangle.h"
-CDebugTriangle* dbgt = NULL;
+#include <QtMath>
 
 // Size of each attribute in bytes.
 static const int ATTRIBUTE_SIZE[] = {
@@ -30,6 +27,7 @@ static const int FORMAT_SIZE[] = {
     ATTRIBUTE_SIZE[COpenGLRenderer::Position] + ATTRIBUTE_SIZE[COpenGLRenderer::UV],
 };
 
+// If the attribute is not present in the format, return -1.
 int COpenGLRenderer::attributeOffset(InterleavingFormat format, Attribute att)
 {
     switch (format)
@@ -41,7 +39,7 @@ int COpenGLRenderer::attributeOffset(InterleavingFormat format, Attribute att)
             case Position:
                 return 0;
             default:
-                return 0;
+                return -1;
             }
         }
 
@@ -54,12 +52,12 @@ int COpenGLRenderer::attributeOffset(InterleavingFormat format, Attribute att)
             case UV:
                 return 3 * sizeof(float);
             default:
-                return 0;
+                return -1;
             }
         }
 
     default:
-        return 0;
+        return -1;
     }
 }
 
@@ -103,12 +101,9 @@ COpenGLRenderer::COpenGLRenderer(QObject *parent) : QObject(parent)
 
 COpenGLRenderer::~COpenGLRenderer()
 {
-    // Order of deletion:
-    // - Scene objects (buffers etc)
-    // - Shaders
-    // - Background context
-
-    qDeleteAll(m_ShaderList);
+    QList<QOpenGLShaderProgram*> shaders = m_ShaderTable.values();
+    qDeleteAll(shaders);
+    
     delete m_pBackgroundContext;
 }
 
@@ -139,7 +134,6 @@ void COpenGLRenderer::initialise(QSurface* surface)
         m_pBackgroundContext->makeCurrent(surface);
         if ( !compileShaders() ) break;
 
-        dbgt = new CDebugTriangle();
         m_pBackgroundContext->doneCurrent();
         m_bInitialised = true;
         return;
@@ -158,7 +152,7 @@ bool COpenGLRenderer::compileShaders()
     // Solid colour
     QOpenGLShaderProgram* p = new QOpenGLShaderProgram(m_pBackgroundContext);
     p->setObjectName("Solid Colour");
-    m_ShaderList.append(p);
+    m_ShaderTable.insert(p->objectName(), p);
 
     if ( !attemptCompile(p, QOpenGLShader::Vertex, ":/shaders/plain.vert") ) return false;
     if ( !attemptCompile(p, QOpenGLShader::Fragment, ":/shaders/solidcolor.frag") ) return false;
@@ -169,45 +163,36 @@ bool COpenGLRenderer::compileShaders()
 
 void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *root, const CBasicCamera* camera)
 {
-    /*
     QMatrix4x4 projection = camera->lens()->projectionMatrix();
     QMatrix4x4 view = camera->worldToCamera();
-    QMatrix4x4 modelViewProjection = projection * CBasicCamera::coordsHammerToOpenGL() * view;
-
+    float deg = 30;
+    float s45 = qSin(qRadiansToDegrees(deg));
+    float c45 = qCos(qRadiansToDegrees(deg));
+    QMatrix4x4 scaleDown(0.5f,0,0,0, 0,0.5f,0,0, 0,0,0.5f,0, 0,0,0,1);
+    QMatrix4x4 rotateY(c45,0,s45,0, 0,1,0,0, -s45,0,c45,0, 0,0,0,1);
+    QMatrix4x4 rotateX(1,0,0,0, 0,c45,-s45,0, 0,s45,c45,0, 0,0,0,1);
+    QMatrix4x4 model = rotateX * rotateY * scaleDown;
+    QMatrix4x4 modelViewProjection = projection * CBasicCamera::coordsHammerToOpenGL() * view * model;
 
     // Bind the vertex buffer we want to use.
     CVertexBundle* v = root->vertexData();
+    v->upload();
     v->bindVertexBuffer(true);
-    QOpenGLShaderProgram* p = m_ShaderList.first();
+    QOpenGLShaderProgram* p = m_ShaderTable.value("Solid Colour");
 
     p->bind();
 
-    p->setAttributeBuffer("vec_Position",
+    p->setAttributeBuffer(COpenGLRenderer::Position,
                           GL_FLOAT,
                           COpenGLRenderer::attributeOffset(COpenGLRenderer::FormatPositionUV, COpenGLRenderer::Position),
                           COpenGLRenderer::attributeSize(COpenGLRenderer::Position)/sizeof(float),
                           COpenGLRenderer::interleavingFormatSize(COpenGLRenderer::FormatPositionUV));
     p->setUniformValue("mat_MVP", modelViewProjection);
-
-    v->bindIndexBuffer(true);
-    f->glDrawElements(GL_TRIANGLES, v->indexCount(), GL_UNSIGNED_INT, (void*)0);
-
-    p->release();
-    */
-    
-    QOpenGLShaderProgram* p = m_ShaderList.first();
-    CVertexBundle* v = dbgt->vertexData();
-    p->bind();
-    v->bindVertexBuffer(true);
-    p->setAttributeBuffer("vec_Position",
-                          GL_FLOAT,
-                          COpenGLRenderer::attributeOffset(v->interleavingFormat(), COpenGLRenderer::Position),
-                          COpenGLRenderer::attributeSize(COpenGLRenderer::Position)/sizeof(float),
-                          COpenGLRenderer::interleavingFormatSize(v->interleavingFormat()));
-    p->setUniformValue("mat_MVP", QMatrix4x4());
     p->setUniformValue("vec_Color", QVector4D(1,0,0,1));
-    p->enableAttributeArray("vec_Position");
+    p->enableAttributeArray(COpenGLRenderer::Position);
+
     v->bindIndexBuffer(true);
     f->glDrawElements(GL_TRIANGLES, v->indexCount(), GL_UNSIGNED_INT, (void*)0);
+
     p->release();
 }

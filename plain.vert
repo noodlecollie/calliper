@@ -1,5 +1,5 @@
 #version 330 core
-in highp vec3 vec_Position;  // Model space
+layout(location = 0) in highp vec3 vec_Position;  // Model space
 uniform highp mat4 mat_MVP;
 
 void main()
