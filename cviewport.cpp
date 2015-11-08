@@ -587,7 +587,7 @@ void CViewport::paintGL()
 #endif
 
     MainWindow* w = appMainWindow();
-    if ( !w->renderer()->initialiseAttempted() ) return;
+    if ( !w->renderer()->isValid()) return;
     CSceneObject* r = w->scene()->root();
     CSceneObject* c = r->findChild<CSceneObject*>("Debug Cube", Qt::FindDirectChildrenOnly);
     Q_ASSERT(c);

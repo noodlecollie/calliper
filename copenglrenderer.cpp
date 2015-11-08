@@ -12,6 +12,7 @@
 #include <QMatrix4x4>
 #include "cvertexbundle.h"
 #include "ccameralens.h"
+#include <QSurface>
 
 // Size of each attribute in bytes.
 static const int ATTRIBUTE_SIZE[] = {
@@ -93,7 +94,7 @@ bool attemptLink(QOpenGLShaderProgram* program)
 COpenGLRenderer::COpenGLRenderer(QObject *parent) : QObject(parent)
 {
     m_pBackgroundContext = NULL;
-    m_bInitialiseAttempted = false;
+    m_bInitialised = false;
 }
 
 COpenGLRenderer::~COpenGLRenderer()
@@ -124,42 +125,42 @@ QOpenGLContext* COpenGLRenderer::backgroundContext() const
     return m_pBackgroundContext;
 }
 
-void COpenGLRenderer::initialise()
+void COpenGLRenderer::initialise(QSurface* surface)
 {
-    // If anything fails, record that we tried and exit out.
     switch (0)
     {
         default:
         if ( !createBackgroundContext() ) break;
+
+        m_pBackgroundContext->makeCurrent(surface);
         if ( !compileShaders() ) break;
+
+        m_pBackgroundContext->doneCurrent();
+        m_bInitialised = true;
+        return;
     }
 
-    m_bInitialiseAttempted = true;
+    m_bInitialised = false;
+    return;
 }
 
 bool COpenGLRenderer::isValid() const
 {
-    return m_pBackgroundContext && m_pBackgroundContext->isValid();
+    return m_pBackgroundContext && m_bInitialised && m_pBackgroundContext->isValid();
 }
 
 bool COpenGLRenderer::compileShaders()
 {
     // Solid colour
-    QOpenGLShaderProgram* p = new QOpenGLShaderProgram();
+    QOpenGLShaderProgram* p = new QOpenGLShaderProgram(m_pBackgroundContext);
     p->setObjectName("Solid Colour");
     m_ShaderList.append(p);
 
-    bool success = true;
-    success = attemptCompile(p, QOpenGLShader::Vertex, ":/shaders/plain.vert") && success;
-    success = attemptCompile(p, QOpenGLShader::Fragment, ":/shaders/solidcolor.frag") && success;
-    success = attemptLink(p) && success;
+    if ( !attemptCompile(p, QOpenGLShader::Vertex, ":/shaders/plain.vert") ) return false;
+    if ( !attemptCompile(p, QOpenGLShader::Fragment, ":/shaders/solidcolor.frag") ) return false;
+    if ( !attemptLink(p) ) return false;
 
-    return success;
-}
-
-bool COpenGLRenderer::initialiseAttempted() const
-{
-    return m_bInitialiseAttempted;
+    return true;
 }
 
 void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *root, const CBasicCamera* camera)

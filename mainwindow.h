@@ -4,6 +4,7 @@
 #include <QMainWindow>
 class COpenGLRenderer;
 class CScene;
+class QOffscreenSurface;
 
 namespace Ui {
 class MainWindow;
@@ -18,13 +19,14 @@ public:
     ~MainWindow();
     COpenGLRenderer* renderer() const;
     CScene* scene() const;
-
-protected:
-    virtual void showEvent(QShowEvent *e);
     
 private:
+    void initOpenGL();
+
     Ui::MainWindow *ui;
     COpenGLRenderer*    m_pRenderer;
+    QOffscreenSurface*  m_pSurface;
+    bool                m_bRenderInitRun;
     CScene*             m_pScene;
 };
 

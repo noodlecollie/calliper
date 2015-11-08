@@ -10,6 +10,7 @@ class QOpenGLShaderProgram;
 class CSceneObject;
 class QOpenGLFunctions_3_2_Core;
 class CBasicCamera;
+class QSurface;
 
 class COpenGLRenderer : public QObject
 {
@@ -60,9 +61,8 @@ public:
 
     QOpenGLContext* backgroundContext() const;
 
-    void initialise();
+    void initialise(QSurface* surface);
     bool isValid() const;
-    bool initialiseAttempted() const;
 
     // Assumes context is current.
     void render(QOpenGLFunctions_3_2_Core* f, const CSceneObject* root, const CBasicCamera* camera);
@@ -77,7 +77,7 @@ private:
 
     QOpenGLContext* m_pBackgroundContext;
     QList<QOpenGLShaderProgram*>  m_ShaderList;
-    bool    m_bInitialiseAttempted;
+    bool    m_bInitialised;
 };
 
 #endif // COPENGLRENDERER_H

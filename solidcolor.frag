@@ -1,7 +1,7 @@
 #version 330 core
-uniform vec3 vec_Color;	// Colour for all fragments
-out vec3 vec_ColorOut;
+uniform mediump vec4 vec_Color;  // Colour for all fragments
+out vec4 vecColor;
 void main()
 {
-	vec_ColorOut = vec_Color;
-};
+    vecColor = vec_Color;
+}
