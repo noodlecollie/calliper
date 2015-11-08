@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     cvertexbundle.cpp \
     copenglrenderer.cpp \
     cscene.cpp \
-    cdebugtriangle.cpp
+    cdebugtriangle.cpp \
+    cresourcemanager.cpp
 
 HEADERS  += mainwindow.h \
     cviewport.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     cvertexbundle.h \
     copenglrenderer.h \
     cscene.h \
-    cdebugtriangle.h
+    cdebugtriangle.h \
+    cresourcemanager.h
 
 FORMS    += mainwindow.ui
 

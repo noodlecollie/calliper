@@ -3,6 +3,7 @@
 #include "copenglrenderer.h"
 #include "cscene.h"
 #include "cdebugcube.h"
+#include "cresourcemanager.h"
 #include <QOffscreenSurface>
 
 static MainWindow* g_pMainWindow = NULL;
@@ -20,8 +21,13 @@ MainWindow::MainWindow(QWidget *parent) :
     m_bRenderInitRun = false;
 
     ui->setupUi(this);
-    initOpenGL();
-
+    
+    m_pResourceManager = new CResourceManager(this);
+    m_pResourceManager->backgroundContext()->makeCurrent(m_pResourceManager->generalSurface());
+    m_pResourceManager->addShader("SolidColour", ":/shaders/plain.vert", ":/shaders/solidcolor.frag");
+    m_pResourceManager->backgroundContext()->doneCurrent();
+    
+    m_pRenderer = new COpenGLRenderer(m_pResourceManager, this);
     m_pScene = new CScene(this);
 
     // Add a simple debug cube to the root of the scene.
@@ -33,9 +39,7 @@ MainWindow::~MainWindow()
 {
     delete m_pScene;
     delete m_pRenderer;
-
-    m_pSurface->destroy();
-    delete m_pSurface;
+    delete m_pResourceManager;
 
     delete ui;
 }
@@ -50,12 +54,7 @@ CScene* MainWindow::scene() const
     return m_pScene;
 }
 
-void MainWindow::initOpenGL()
+CResourceManager* MainWindow::resourceManager() const
 {
-    m_pSurface = new QOffscreenSurface();
-    m_pSurface->setFormat(QSurfaceFormat::defaultFormat());
-    m_pSurface->create();
-
-    m_pRenderer = new COpenGLRenderer(this);
-    m_pRenderer->initialise(m_pSurface);
+    return m_pResourceManager;
 }

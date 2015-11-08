@@ -4,7 +4,7 @@
 #include <QMainWindow>
 class COpenGLRenderer;
 class CScene;
-class QOffscreenSurface;
+class CResourceManager;
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +18,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     COpenGLRenderer* renderer() const;
+    CResourceManager* resourceManager() const;
     CScene* scene() const;
     
 private:
@@ -25,7 +26,7 @@ private:
 
     Ui::MainWindow *ui;
     COpenGLRenderer*    m_pRenderer;
-    QOffscreenSurface*  m_pSurface;
+    CResourceManager*   m_pResourceManager;
     bool                m_bRenderInitRun;
     CScene*             m_pScene;
 };

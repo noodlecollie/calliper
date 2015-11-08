@@ -14,6 +14,7 @@
 #include "ccameralens.h"
 #include <QSurface>
 #include <QtMath>
+#include "cresourcemanager.h"
 
 // Size of each attribute in bytes.
 static const int ATTRIBUTE_SIZE[] = {
@@ -71,94 +72,13 @@ int COpenGLRenderer::interleavingFormatSize(InterleavingFormat format)
     return FORMAT_SIZE[format];
 }
 
-bool attemptCompile(QOpenGLShaderProgram* program, QOpenGLShader::ShaderType type, const QString &path)
+COpenGLRenderer::COpenGLRenderer(CResourceManager *resourceManager, QObject *parent) : QObject(parent)
 {
-    if ( !program->addShaderFromSourceFile(type, path) )
-    {
-        qCritical().nospace() << "Compilation failed for " << program->objectName() << " with shader file " << path << ": " << program->log();
-        return false;
-    }
-
-    return true;
-}
-
-bool attemptLink(QOpenGLShaderProgram* program)
-{
-    if ( !program->link() )
-    {
-        qCritical().nospace() << "Linking failed for shader " << program->objectName() << ": " << program->log();
-        return false;
-    }
-
-    return true;
-}
-
-COpenGLRenderer::COpenGLRenderer(QObject *parent) : QObject(parent)
-{
-    m_pBackgroundContext = NULL;
-    m_bInitialised = false;
+    m_pResourceManager = resourceManager;
 }
 
 COpenGLRenderer::~COpenGLRenderer()
 {
-    QList<QOpenGLShaderProgram*> shaders = m_ShaderTable.values();
-    qDeleteAll(shaders);
-    
-    delete m_pBackgroundContext;
-}
-
-bool COpenGLRenderer::createBackgroundContext()
-{
-    Q_ASSERT(!m_pBackgroundContext);
-
-    m_pBackgroundContext = new QOpenGLContext(this);
-    m_pBackgroundContext->setFormat(QSurfaceFormat::defaultFormat());
-    m_pBackgroundContext->setScreen(QGuiApplication::screens().at(0));
-    m_pBackgroundContext->setShareContext(QOpenGLContext::globalShareContext());
-
-    return m_pBackgroundContext->create();
-}
-
-QOpenGLContext* COpenGLRenderer::backgroundContext() const
-{
-    return m_pBackgroundContext;
-}
-
-void COpenGLRenderer::initialise(QSurface* surface)
-{
-    switch (0)
-    {
-        default:
-        if ( !createBackgroundContext() ) break;
-
-        m_pBackgroundContext->makeCurrent(surface);
-        if ( !compileShaders() ) break;
-
-        m_pBackgroundContext->doneCurrent();
-        m_bInitialised = true;
-        return;
-    }
-
-    m_bInitialised = false;
-}
-
-bool COpenGLRenderer::isValid() const
-{
-    return m_pBackgroundContext && m_bInitialised && m_pBackgroundContext->isValid();
-}
-
-bool COpenGLRenderer::compileShaders()
-{
-    // Solid colour
-    QOpenGLShaderProgram* p = new QOpenGLShaderProgram(m_pBackgroundContext);
-    p->setObjectName("Solid Colour");
-    m_ShaderTable.insert(p->objectName(), p);
-
-    if ( !attemptCompile(p, QOpenGLShader::Vertex, ":/shaders/plain.vert") ) return false;
-    if ( !attemptCompile(p, QOpenGLShader::Fragment, ":/shaders/solidcolor.frag") ) return false;
-    if ( !attemptLink(p) ) return false;
-
-    return true;
 }
 
 void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *root, const CBasicCamera* camera)
@@ -178,7 +98,8 @@ void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *r
     CVertexBundle* v = root->vertexData();
     v->upload();
     v->bindVertexBuffer(true);
-    QOpenGLShaderProgram* p = m_ShaderTable.value("Solid Colour");
+    QOpenGLShaderProgram* p = m_pResourceManager->shader("SolidColour");
+    Q_ASSERT(p);
 
     p->bind();
 

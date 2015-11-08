@@ -5,12 +5,10 @@
 #include <QHash>
 #include <QOpenGLShader>
 
-class QOpenGLContext;
-class QOpenGLShaderProgram;
 class CSceneObject;
 class QOpenGLFunctions_3_2_Core;
 class CBasicCamera;
-class QSurface;
+class CResourceManager;
 
 class COpenGLRenderer : public QObject
 {
@@ -56,13 +54,8 @@ public:
 
     //////////////////////////////////////////////////////
 
-    explicit COpenGLRenderer(QObject *parent = 0);
+    explicit COpenGLRenderer(CResourceManager* resourceManager, QObject *parent = 0);
     ~COpenGLRenderer();
-
-    QOpenGLContext* backgroundContext() const;
-
-    void initialise(QSurface* surface);
-    bool isValid() const;
 
     // Assumes context is current.
     void render(QOpenGLFunctions_3_2_Core* f, const CSceneObject* root, const CBasicCamera* camera);
@@ -72,14 +65,7 @@ signals:
 public slots:
 
 private:
-    typedef QHash<QString, QOpenGLShaderProgram*> ShaderTable;
-    
-    bool createBackgroundContext();
-    bool compileShaders();
-
-    QOpenGLContext* m_pBackgroundContext;
-    bool    m_bInitialised;
-    ShaderTable m_ShaderTable;
+    CResourceManager*   m_pResourceManager;
 };
 
 #endif // COPENGLRENDERER_H
