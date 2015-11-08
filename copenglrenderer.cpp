@@ -14,6 +14,10 @@
 #include "ccameralens.h"
 #include <QSurface>
 
+// Remove me
+#include "cdebugtriangle.h"
+CDebugTriangle* dbgt = NULL;
+
 // Size of each attribute in bytes.
 static const int ATTRIBUTE_SIZE[] = {
     3 * sizeof(float),      // Position
@@ -135,13 +139,13 @@ void COpenGLRenderer::initialise(QSurface* surface)
         m_pBackgroundContext->makeCurrent(surface);
         if ( !compileShaders() ) break;
 
+        dbgt = new CDebugTriangle();
         m_pBackgroundContext->doneCurrent();
         m_bInitialised = true;
         return;
     }
 
     m_bInitialised = false;
-    return;
 }
 
 bool COpenGLRenderer::isValid() const
@@ -165,6 +169,7 @@ bool COpenGLRenderer::compileShaders()
 
 void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *root, const CBasicCamera* camera)
 {
+    /*
     QMatrix4x4 projection = camera->lens()->projectionMatrix();
     QMatrix4x4 view = camera->worldToCamera();
     QMatrix4x4 modelViewProjection = projection * CBasicCamera::coordsHammerToOpenGL() * view;
@@ -187,5 +192,22 @@ void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *r
     v->bindIndexBuffer(true);
     f->glDrawElements(GL_TRIANGLES, v->indexCount(), GL_UNSIGNED_INT, (void*)0);
 
+    p->release();
+    */
+    
+    QOpenGLShaderProgram* p = m_ShaderList.first();
+    CVertexBundle* v = dbgt->vertexData();
+    p->bind();
+    v->bindVertexBuffer(true);
+    p->setAttributeBuffer("vec_Position",
+                          GL_FLOAT,
+                          COpenGLRenderer::attributeOffset(v->interleavingFormat(), COpenGLRenderer::Position),
+                          COpenGLRenderer::attributeSize(COpenGLRenderer::Position)/sizeof(float),
+                          COpenGLRenderer::interleavingFormatSize(v->interleavingFormat()));
+    p->setUniformValue("mat_MVP", QMatrix4x4());
+    p->setUniformValue("vec_Color", QVector4D(1,0,0,1));
+    p->enableAttributeArray("vec_Position");
+    v->bindIndexBuffer(true);
+    f->glDrawElements(GL_TRIANGLES, v->indexCount(), GL_UNSIGNED_INT, (void*)0);
     p->release();
 }

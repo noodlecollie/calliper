@@ -72,56 +72,6 @@ static const float _unitCube_UV[] = {
     1,0,
 };
 
-const static float cube_vertices_interleaved[] = {
-    -1.0f,-1.0f,-1.0f, 0,0,
-    -1.0f,-1.0f, 1.0f, 1,0,
-    -1.0f, 1.0f, 1.0f, 1,1,
-
-    1.0f, 1.0f,-1.0f,  0,0,
-    -1.0f,-1.0f,-1.0f, 1,0,
-    -1.0f, 1.0f,-1.0f, 1,1,
-
-    1.0f,-1.0f, 1.0f,  0,0,
-    -1.0f,-1.0f,-1.0f, 1,0,
-    1.0f,-1.0f,-1.0f,  1,1,
-
-    1.0f, 1.0f,-1.0f,  0,0,
-    1.0f,-1.0f,-1.0f,  1,1,
-    -1.0f,-1.0f,-1.0f, 0,1,
-
-    -1.0f,-1.0f,-1.0f, 0,0,
-    -1.0f, 1.0f, 1.0f, 1,1,
-    -1.0f, 1.0f,-1.0f, 0,1,
-
-    1.0f,-1.0f, 1.0f,  0,0,
-    -1.0f,-1.0f, 1.0f, 1,1,
-    -1.0f,-1.0f,-1.0f, 0,1,
-
-    -1.0f, 1.0f, 1.0f, 0,0,
-    -1.0f,-1.0f, 1.0f, 1,0,
-    1.0f,-1.0f, 1.0f,  1,1,
-
-    1.0f, 1.0f, 1.0f, 0,0,
-    1.0f,-1.0f,-1.0f, 1,0,
-    1.0f, 1.0f,-1.0f, 1,1,
-
-    1.0f,-1.0f,-1.0f, 0,0,
-    1.0f, 1.0f, 1.0f, 1,1,
-    1.0f,-1.0f, 1.0f, 0,1,
-
-    1.0f, 1.0f, 1.0f,  0,0,
-    1.0f, 1.0f,-1.0f,  1,0,
-    -1.0f, 1.0f,-1.0f, 1,1,
-
-    1.0f, 1.0f, 1.0f,  0,0,
-    -1.0f, 1.0f,-1.0f, 1,1,
-    -1.0f, 1.0f, 1.0f, 0,1,
-
-    1.0f, 1.0f, 1.0f,  0,0,
-    -1.0f, 1.0f, 1.0f, 1,1,
-    1.0f,-1.0f, 1.0f,  0,1,
-};
-
 CDebugCube::CDebugCube(CSceneObject *parent) : CSceneObject(parent)
 {
     m_pVertexData = new CVertexBundle(this);
@@ -148,17 +98,6 @@ CDebugCube::CDebugCube(CSceneObject *parent) : CSceneObject(parent)
         m_pVertexData->appendIndex(base+2);
         m_pVertexData->appendIndex(base+3);
     }
-
-    /*
-    int count = sizeof(cube_vertices_interleaved)/(sizeof(float)*5);
-    const float* arr = cube_vertices_interleaved;
-    for (int i = 0; i < count; i++)
-    {
-        int ind = i*5;
-        m_pVertexData->appendVertex(QVector3D(arr[ind], arr[ind+1], arr[ind+2]), QVector2D(arr[ind+3], arr[ind+4]));
-        m_pVertexData->appendIndex(i);
-    }
-    */
 }
 
 CVertexBundle* CDebugCube::vertexData() const
