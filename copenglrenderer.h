@@ -33,6 +33,12 @@ public:
     {
         Position     = 0,
         UV,         // 1
+        Normal,     // 2
+        Color,      // 3
+
+        // Uniforms
+        UniColor     = 16,
+        UniMVP      // 17
     };
 
     // Shader types.

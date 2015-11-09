@@ -1,5 +1,5 @@
 #version 330 core
-uniform mediump vec4 vec_Color;  // Colour for all fragments
+layout(location = 0) uniform mediump vec4 vec_Color;  // Colour for all fragments
 out vec4 vecColor;
 void main()
 {
