@@ -34,9 +34,21 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pScene = new CScene(this);
 
     // Add a simple debug cube to the root of the scene.
-    CDebugCube* cube = new CDebugCube(m_pScene->root());
-    cube->setObjectName("Debug Cube");
-    cube->setPosition(QVector3D(0,0,0));
+//    CDebugCube* cube = new CDebugCube(m_pScene->root());
+//    cube->setObjectName("Debug Cube");
+//    cube->setPosition(QVector3D(0,0,0));
+    
+    for ( float x = -5.0f; x <= 5.0f; x += 0.5f )
+    {
+        for ( float y = -5.0f; y <= 5.0f; y += 0.5f )
+        {
+            for ( float z = -5.0f; z <= 5.0f; z += 0.5f )
+            {
+                CDebugCube* c = new CDebugCube(m_pScene->root());
+                c->setPosition(QVector3D(x,y,z));
+            }
+        }
+    }
 }
 
 MainWindow::~MainWindow()

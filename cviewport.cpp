@@ -588,9 +588,9 @@ void CViewport::paintGL()
 
     MainWindow* w = appMainWindow();
     CSceneObject* r = w->scene()->root();
-    CSceneObject* c = r->findChild<CSceneObject*>("Debug Cube", Qt::FindDirectChildrenOnly);
-    Q_ASSERT(c);
-    appMainWindow()->renderer()->render(this, c, &camera);
+//    CSceneObject* c = r->findChild<CSceneObject*>("Debug Cube", Qt::FindDirectChildrenOnly);
+//    Q_ASSERT(c);
+    appMainWindow()->renderer()->renderChildren(this, r, &camera);
 }
 
 void CViewport::keyReleaseEvent(QKeyEvent *e)

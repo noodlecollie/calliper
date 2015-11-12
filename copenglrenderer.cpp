@@ -15,6 +15,7 @@
 #include <QSurface>
 #include <QtMath>
 #include "cresourcemanager.h"
+#include "cprofilertimer.h"
 
 // Size of each attribute in bytes.
 static const int ATTRIBUTE_SIZE[] = {
@@ -104,6 +105,7 @@ void COpenGLRenderer::setAttributeLayouts(QOpenGLShaderProgram *p, InterleavingF
                               attributeOffset(format, a),
                               attributeSize(a)/sizeof(float),
                               interleavingFormatSize(format));
+        p->enableAttributeArray(a);
     }
 }
 
@@ -119,6 +121,8 @@ COpenGLRenderer::~COpenGLRenderer()
 
 void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *root, const CBasicCamera* camera)
 {
+    CProfilerTimer timer("COpenGLRenderer::render()");
+    
     QMatrix4x4 projection = camera->lens()->projectionMatrix();
     QMatrix4x4 view = camera->worldToCamera();
     
@@ -151,7 +155,6 @@ void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *r
     setAttributeLayouts(p, v->interleavingFormat());
     p->setUniformValue("mat_MVP", modelViewProjection);
     p->setUniformValue("vec_Color", QVector4D(m_colRenderColour.redF(), m_colRenderColour.greenF(), m_colRenderColour.blueF(), m_colRenderColour.alphaF()));
-    p->enableAttributeArray(COpenGLRenderer::Position);
 
     v->bindIndexBuffer(true);
     QOpenGLTexture* tex = m_pResourceManager->texture(v->textureURI());
@@ -164,6 +167,53 @@ void COpenGLRenderer::render(QOpenGLFunctions_3_2_Core *f, const CSceneObject *r
     f->glDrawElements(GL_TRIANGLES, v->indexCount(), GL_UNSIGNED_INT, (void*)0);
 
     p->release();
+}
+
+void COpenGLRenderer::renderChildren(QOpenGLFunctions_3_2_Core *f, const CSceneObject *root, const CBasicCamera *camera)
+{
+    QMatrix4x4 projection = camera->lens()->projectionMatrix();
+    QMatrix4x4 view = camera->worldToCamera();
+    
+    QList<CSceneObject*> children = root->findChildren<CSceneObject*>(QString(), Qt::FindDirectChildrenOnly);
+    qDebug() << "Number of objects to render:" << children.count();
+    
+    {
+        CProfilerTimer timer("COpenGLRenderer::renderChildren()");
+        foreach ( CSceneObject* o, children )
+        {
+            QMatrix4x4 model = o->matrixLocalToParent();
+            QMatrix4x4 modelViewProjection = projection * CBasicCamera::coordsHammerToOpenGL() * view * model;
+        
+            // Bind the vertex buffer we want to use.
+            CVertexBundle* v = o->vertexData();
+            v->upload();
+            v->bindVertexBuffer(true);
+            
+            QOpenGLShaderProgram* p = m_pResourceManager->shader(v->shader());
+            if ( !p )
+            {
+                p = m_pResourceManager->fallbackShader();
+            }
+        
+            p->bind();
+        
+            setAttributeLayouts(p, v->interleavingFormat());
+            p->setUniformValue("mat_MVP", modelViewProjection);
+            p->setUniformValue("vec_Color", QVector4D(m_colRenderColour.redF(), m_colRenderColour.greenF(), m_colRenderColour.blueF(), m_colRenderColour.alphaF()));
+        
+            v->bindIndexBuffer(true);
+            QOpenGLTexture* tex = m_pResourceManager->texture(v->textureURI());
+            if ( !tex )
+            {
+                tex = m_pResourceManager->fallbackTexture();
+            }
+            tex->bind();
+            
+            f->glDrawElements(GL_TRIANGLES, v->indexCount(), GL_UNSIGNED_INT, (void*)0);
+        
+            p->release();
+        }
+    }
 }
 
 QColor COpenGLRenderer::renderColor() const

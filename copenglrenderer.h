@@ -65,6 +65,7 @@ public:
 
     // Assumes context is current.
     void render(QOpenGLFunctions_3_2_Core* f, const CSceneObject* root, const CBasicCamera* camera);
+    void renderChildren(QOpenGLFunctions_3_2_Core* f, const CSceneObject* root, const CBasicCamera* camera);
     
     QColor renderColor() const;
     void setRenderColor(const QColor &col);

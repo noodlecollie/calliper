@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     copenglrenderer.cpp \
     cscene.cpp \
     cdebugtriangle.cpp \
-    cresourcemanager.cpp
+    cresourcemanager.cpp \
+    cprofilertimer.cpp
 
 HEADERS  += mainwindow.h \
     cviewport.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     copenglrenderer.h \
     cscene.h \
     cdebugtriangle.h \
-    cresourcemanager.h
+    cresourcemanager.h \
+    cprofilertimer.h
 
 FORMS    += mainwindow.ui
 
