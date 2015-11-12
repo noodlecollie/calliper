@@ -7,6 +7,7 @@
 #include <QList>
 #include "copenglrenderer.h"
 #include <QOpenGLBuffer>
+#include <QUrl>
 
 class CVertexBundle : public QObject
 {
@@ -35,11 +36,13 @@ public:
 
     void appendVertex(const QVector3D &position);
     void appendVertex(const QVector3D &position, const QVector2D &uv);
+    void appendVertex(const QVector3D &position, const QVector3D &normal, const QVector2D &uv);
 
     void appendIndex(unsigned int idx);
 
     void setVertexPosition(int vertex, const QVector3D &position);
     void setVertexUV(int vertex, const QVector2D &uv);
+    void setVertexNormal(int vertex, const QVector3D &normal);
 
     void setIndex(int position, unsigned int value);
 
@@ -58,6 +61,12 @@ public:
     // Passing true binds, passing false releases.
     bool bindVertexBuffer(bool bind);
     bool bindIndexBuffer(bool bind);
+    
+    QString shader() const;
+    void setShader(const QString &name);
+    
+    QUrl textureURI() const;
+    void setTextureURI(const QUrl &uri);
 
 signals:
 
@@ -76,6 +85,8 @@ private:
     QOpenGLBuffer   m_IndexBuffer;
     bool    m_bVBufferDirty;
     bool    m_bIBufferDirty;
+    QString m_ShaderName;
+    QUrl    m_TextureUri;
 };
 
 #endif // CVERTEXBUNDLE_H

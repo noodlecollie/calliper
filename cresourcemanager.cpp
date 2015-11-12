@@ -3,6 +3,7 @@
 #include <QGuiApplication>
 #include <QOpenGLContext>
 #include <QOpenGLShaderProgram>
+#include <QFile>
 
 bool attemptCompile(QOpenGLShaderProgram* program, QOpenGLShader::ShaderType type, const QString &path)
 {
@@ -39,10 +40,18 @@ CResourceManager::CResourceManager(QObject *parent) : QObject(parent)
 
     bool success = m_pBackgroundContext->create();
     Q_ASSERT(success);
+    
+    // Load our default resources before anything else.
+    loadFailsafes();
 }
 
 CResourceManager::~CResourceManager()
 {
+    m_pBackgroundContext->makeCurrent(m_pSurface);
+    
+    QList<QOpenGLTexture*> textures = m_TextureTable.values();
+    qDeleteAll(textures);
+    
     QList<QOpenGLShaderProgram*> shaders = m_ShaderTable.values();
     qDeleteAll(shaders);
     
@@ -65,6 +74,8 @@ QOpenGLContext* CResourceManager::backgroundContext() const
 
 bool CResourceManager::addShader(const QString &name, const QString &vertFile, const QString &fragFile, QString *log)
 {
+    if ( name.isEmpty() ) return false;
+    
     QOpenGLShaderProgram* p = new QOpenGLShaderProgram(m_pBackgroundContext);
     p->setObjectName(name);
     
@@ -90,4 +101,111 @@ bool CResourceManager::addShader(const QString &name, const QString &vertFile, c
 QOpenGLShaderProgram* CResourceManager::shader(const QString &name) const
 {
     return m_ShaderTable.value(name, NULL);
+}
+
+bool CResourceManager::shaderExists(const QString &name) const
+{
+    return m_ShaderTable.contains(name);
+}
+
+bool CResourceManager::loadTexture(const QUrl &uri, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max)
+{
+    if ( uri.isEmpty() ) return false;
+    
+    QOpenGLTexture* texture = loadRawTexture(uri, min, max);
+    if ( !texture ) return false;
+    
+    // Delete any existing texture under this URI.
+    QOpenGLTexture* existing = m_TextureTable.value(uri, NULL);
+    if ( existing )
+    {
+        existing->destroy();
+        delete existing;
+    }
+    
+    m_TextureTable.insert(uri, texture);
+    
+    return true;
+}
+
+QOpenGLTexture* CResourceManager::loadRawTexture(const QUrl &uri, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max)
+{
+    QString path;
+    if ( uri.scheme() == "qrc" )
+    {
+        // TODO: Is this the best way? toLocalFile() doesn't work with qrc scheme.
+        QString s = uri.toString();
+        int index = s.indexOf(':');
+        path = index >= 0 ? s.mid(index) : s;
+    }
+    else
+    {
+        path = uri.toLocalFile();
+    }
+    if ( !QFile::exists(path) ) return NULL;
+    
+    QOpenGLTexture* texture = new QOpenGLTexture(QImage(path).mirrored());
+    texture->setMinificationFilter(min);
+    texture->setMagnificationFilter(max);
+    
+    if ( !texture->create() )
+    {
+        delete texture;
+        return NULL;
+    }
+    
+    return texture;
+}
+
+QOpenGLTexture* CResourceManager::texture(const QUrl &uri) const
+{
+    return m_TextureTable.value(uri, NULL);
+}
+
+bool CResourceManager::textureExists(const QUrl &uri) const
+{
+    return m_TextureTable.contains(uri);
+}
+
+QOpenGLTexture* CResourceManager::fetchTexture(const QUrl &uri, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max)
+{
+    if ( uri.isEmpty() ) return NULL;
+    
+    QOpenGLTexture* tex = texture(uri);
+    if ( tex ) return tex;
+    
+    if ( !loadTexture(uri, min, max) ) return NULL;
+    return texture(uri);
+}
+
+void CResourceManager::makeCurrent()
+{
+    m_pBackgroundContext->makeCurrent(m_pSurface);
+}
+
+void CResourceManager::doneCurrent()
+{
+    m_pBackgroundContext->doneCurrent();
+}
+
+void CResourceManager::loadFailsafes()
+{
+    makeCurrent();
+    bool success = false;
+    
+    success = addShader(SHADER_NAME_FALLBACK, SHADER_VERT_FALLBACK, SHADER_FRAG_FALLBACK);
+    Q_ASSERT(success);
+    
+    success = loadTexture(QUrl(TEXTURE_URI_FALLBACK));
+    Q_ASSERT(success);
+}
+
+QOpenGLShaderProgram* CResourceManager::fallbackShader() const
+{
+    return shader(SHADER_NAME_FALLBACK);
+}
+
+QOpenGLTexture* CResourceManager::fallbackTexture() const
+{
+    return texture(QUrl(TEXTURE_URI_FALLBACK));
 }

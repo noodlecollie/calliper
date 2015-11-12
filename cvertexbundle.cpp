@@ -84,6 +84,14 @@ void CVertexBundle::appendVertex(const QVector3D &position, const QVector2D &uv)
     setVertexUV(vertex, uv);
 }
 
+void CVertexBundle::appendVertex(const QVector3D &position, const QVector3D &normal, const QVector2D &uv)
+{
+    int vertex = incrementSize();
+    setVertexPosition(vertex, position);
+    setVertexNormal(vertex, normal);
+    setVertexUV(vertex, uv);
+}
+
 int CVertexBundle::incrementSize()
 {
     int numVertices = vertexCount();
@@ -108,6 +116,18 @@ void CVertexBundle::setVertexUV(int vertex, const QVector2D &uv)
 
     m_VertexData[startIndex] = uv.x();
     m_VertexData[startIndex+1] = uv.y();
+    m_bVBufferDirty = true;
+}
+
+void CVertexBundle::setVertexNormal(int vertex, const QVector3D &normal)
+{
+    int startIndex = vertex * floatsPerVertex();
+
+    startIndex += (COpenGLRenderer::attributeOffset(m_iInterleavingFormat, COpenGLRenderer::Normal) / sizeof(float));
+
+    m_VertexData[startIndex] = normal.x();
+    m_VertexData[startIndex+1] = normal.y();
+    m_VertexData[startIndex+2] = normal.z();
     m_bVBufferDirty = true;
 }
 
@@ -219,4 +239,28 @@ bool CVertexBundle::bindIndexBuffer(bool bind)
         m_IndexBuffer.release();
         return true;
     }
+}
+
+QString CVertexBundle::shader() const
+{
+    return m_ShaderName;
+}
+
+void CVertexBundle::setShader(const QString &name)
+{
+    if ( name == m_ShaderName ) return;
+    
+    m_ShaderName = name;
+}
+
+QUrl CVertexBundle::textureURI() const
+{
+    return m_TextureUri;
+}
+
+void CVertexBundle::setTextureURI(const QUrl &uri)
+{
+    if ( m_TextureUri == uri ) return;
+    
+    m_TextureUri = uri;
 }

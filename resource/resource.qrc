@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>test.png</file>
         <file>uvsample.png</file>
+        <file>test.png</file>
+        <file alias="TEX_ERROR">error.png</file>
     </qresource>
     <qresource prefix="/shaders">
         <file>plain.vert</file>

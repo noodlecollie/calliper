@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QHash>
 #include <QOpenGLShader>
+#include <QColor>
 
 class CSceneObject;
 class QOpenGLFunctions_3_2_Core;
@@ -24,6 +25,7 @@ public:
     {
         FormatPosition = 0,
         FormatPositionUV,
+        FormatPositionNormalUV,
     };
 
     // Attribute types.
@@ -35,10 +37,8 @@ public:
         UV,         // 1
         Normal,     // 2
         Color,      // 3
-
-        // Uniforms
-        UniColor     = 16,
-        UniMVP      // 17
+        
+        AttributeCount
     };
 
     // Shader types.
@@ -65,13 +65,19 @@ public:
 
     // Assumes context is current.
     void render(QOpenGLFunctions_3_2_Core* f, const CSceneObject* root, const CBasicCamera* camera);
+    
+    QColor renderColor() const;
+    void setRenderColor(const QColor &col);
 
 signals:
 
 public slots:
 
 private:
+    static void setAttributeLayouts(QOpenGLShaderProgram* p, InterleavingFormat format);
+    
     CResourceManager*   m_pResourceManager;
+    QColor              m_colRenderColour;
 };
 
 #endif // COPENGLRENDERER_H

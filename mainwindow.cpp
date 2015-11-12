@@ -24,15 +24,19 @@ MainWindow::MainWindow(QWidget *parent) :
     
     m_pResourceManager = new CResourceManager(this);
     m_pResourceManager->backgroundContext()->makeCurrent(m_pResourceManager->generalSurface());
-    m_pResourceManager->addShader("SolidColour", ":/shaders/plain.vert", ":/shaders/solidcolor.frag");
+    m_pResourceManager->addShader("SolidColor", ":/shaders/plain.vert", ":/shaders/solidcolor.frag");
+    m_pResourceManager->loadTexture(QUrl("qrc:/test.png"));
     m_pResourceManager->backgroundContext()->doneCurrent();
     
     m_pRenderer = new COpenGLRenderer(m_pResourceManager, this);
+    m_pRenderer->setRenderColor(QColor(255,128,0));
+    
     m_pScene = new CScene(this);
 
     // Add a simple debug cube to the root of the scene.
     CDebugCube* cube = new CDebugCube(m_pScene->root());
     cube->setObjectName("Debug Cube");
+    cube->setPosition(QVector3D(0,0,0));
 }
 
 MainWindow::~MainWindow()
