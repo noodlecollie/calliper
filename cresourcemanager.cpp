@@ -4,6 +4,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLShaderProgram>
 #include <QFile>
+#include <QtDebug>
 
 bool attemptCompile(QOpenGLShaderProgram* program, QOpenGLShader::ShaderType type, const QString &path)
 {
@@ -40,6 +41,8 @@ CResourceManager::CResourceManager(QObject *parent) : QObject(parent)
 
     bool success = m_pBackgroundContext->create();
     Q_ASSERT(success);
+    
+    qDebug() << "OpenGL format acquired:" << m_pBackgroundContext->format();
     
     // Load our default resources before anything else.
     loadFailsafes();
