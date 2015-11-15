@@ -5,6 +5,7 @@
 #include <QOpenGLShaderProgram>
 #include <QFile>
 #include <QtDebug>
+#include <QMessageBox>
 
 bool attemptCompile(QOpenGLShaderProgram* program, QOpenGLShader::ShaderType type, const QString &path)
 {
@@ -35,7 +36,6 @@ CResourceManager::CResourceManager(QObject *parent) : QObject(parent)
     m_pSurface->create();
     
     m_pBackgroundContext = new QOpenGLContext(this);
-    m_pBackgroundContext->setFormat(QSurfaceFormat::defaultFormat());
     m_pBackgroundContext->setScreen(QGuiApplication::screens().at(0));
     m_pBackgroundContext->setShareContext(QOpenGLContext::globalShareContext());
 
@@ -197,10 +197,22 @@ void CResourceManager::loadFailsafes()
     bool success = false;
     
     success = addShader(SHADER_NAME_FALLBACK, SHADER_VERT_FALLBACK, SHADER_FRAG_FALLBACK);
-    Q_ASSERT(success);
+    if ( !success )
+    {
+        QMessageBox::critical(NULL, "Error Loading Failsafes",
+                              QString("Could not compile %0. This shouldn't happen! See log for details.")
+                              .arg(SHADER_NAME_FALLBACK));
+        qFatal("Could not compile " SHADER_NAME_FALLBACK);
+    }
     
     success = loadTexture(QUrl(TEXTURE_URI_FALLBACK));
-    Q_ASSERT(success);
+    if ( !success )
+    {
+        QMessageBox::critical(NULL, "Error Loading Failsafes",
+                              QString("Could not load '%0'. This shouldn't happen!")
+                              .arg(TEXTURE_URI_FALLBACK));
+        qFatal("Could not compile" TEXTURE_URI_FALLBACK);
+    }
 }
 
 QOpenGLShaderProgram* CResourceManager::fallbackShader() const
