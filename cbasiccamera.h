@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVector3D>
 #include <QMatrix4x4>
+#include "ceulerangle.h"
 
 class CCameraLens;
 
@@ -21,6 +22,9 @@ public:
 
     QVector3D upVector() const;
     void setUpVector(const QVector3D &up);
+
+    CEulerAngle viewAngles() const;
+    void setViewAngles(const CEulerAngle &angles);
 
     // Camera owns the lens.
     CCameraLens* lens() const;

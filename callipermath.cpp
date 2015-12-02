@@ -94,15 +94,30 @@ namespace Math
         return CEulerAngle(pitch, yaw, 0.0f);
     }
 
-    QVector3D angleToVector(const CEulerAngle &angle)
+    QVector3D angleToVector(const CEulerAngle &angle, QVector3D* up)
     {
-        // X and Z are dependent on the pitch and yaw; Y is dependent on the pitch only.
+        // TODO: Take roll into account!
+
+        // X and Y are dependent on the pitch and yaw; Z is dependent on the pitch only.
         float radYaw = qDegreesToRadians(angle.yaw());
         float radPitch = qDegreesToRadians(angle.pitch());
         float sinPitch = qSin(radPitch);
         float sinYaw = qSin(radYaw);
         float cosPitch = qCos(radPitch);
         float cosYaw = qCos(radYaw);
+
+        // TODO: Test this?
+        if ( up )
+        {
+            // If pitch is within -90 to 90 degrees, the up vector will always be >= 0 in Z,
+            // ie. the Z component is related to cos of pitch.
+            up->setZ(cosPitch);
+
+            // The X and Y components depend on pitch and yaw: where abs(pitch) is smaller
+            // between -90 and 90, X and Y vary more. Therefore they vary with the sin of pitch.
+            up->setX(sinPitch * cosYaw);
+            up->setY(sinPitch * sinYaw);
+        }
 
         return QVector3D(cosPitch * cosYaw, cosPitch * sinYaw, -sinPitch);
     }

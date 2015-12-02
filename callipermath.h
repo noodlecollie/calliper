@@ -15,7 +15,7 @@ namespace Math
     QMatrix4x4 matrixScaleUniform(float scale);
     QMatrix4x4 matrixOrientation(const CEulerAngle &angles);
 
-    QVector3D angleToVector(const CEulerAngle &angle);
+    QVector3D angleToVector(const CEulerAngle &angle, QVector3D* up = NULL);
     CEulerAngle vectorToAngle(const QVector3D &vec);
 }
 

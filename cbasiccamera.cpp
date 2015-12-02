@@ -1,6 +1,7 @@
 #include "cbasiccamera.h"
 #include <QtMath>
 #include "ccameralens.h"
+#include "callipermath.h"
 
 const QMatrix4x4 HAMMER_TO_OPENGL(1,0,0,0,
                                   0,0,1,0,
@@ -140,4 +141,18 @@ void CBasicCamera::setLens(CCameraLens *lens)
     m_pLens = lens;
     m_pLens->setParent(this);
     emit lensChanged(m_pLens);
+}
+
+CEulerAngle CBasicCamera::viewAngles() const
+{
+    return Math::vectorToAngle(viewTarget() - position());
+}
+
+void CBasicCamera::setViewAngles(const CEulerAngle &angles)
+{
+    QVector3D up;
+    QVector3D viewDir = Math::angleToVector(angles, &up);
+    QVector3D viewPos = m_vecPosition + ((m_vecViewTarget - m_vecPosition).length() * viewDir);
+    setViewTarget(viewPos);
+    setUpVector(up);
 }
