@@ -11,24 +11,24 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Calliper</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="leftMargin">
-     <number>2</number>
+     <number>3</number>
     </property>
     <property name="topMargin">
-     <number>2</number>
+     <number>3</number>
     </property>
     <property name="rightMargin">
-     <number>2</number>
+     <number>3</number>
     </property>
     <property name="bottomMargin">
-     <number>2</number>
+     <number>3</number>
     </property>
     <item>
-     <widget class="CViewport" name="openGLWidget"/>
+     <widget class="Viewport" name="viewport"/>
     </item>
    </layout>
   </widget>
@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -55,9 +55,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>CViewport</class>
+   <class>Viewport</class>
    <extends>QOpenGLWidget</extends>
-   <header>cviewport.h</header>
+   <header>viewport.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

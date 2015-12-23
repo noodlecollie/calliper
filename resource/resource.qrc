@@ -1,11 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>uvsample.png</file>
-        <file>test.png</file>
-        <file alias="TEX_ERROR">error.png</file>
-    </qresource>
-    <qresource prefix="/shaders">
-        <file>plain.vert</file>
-        <file>solidcolor.frag</file>
+        <file>shaders/minimum.frag</file>
+        <file>shaders/minimum.vert</file>
     </qresource>
 </RCC>

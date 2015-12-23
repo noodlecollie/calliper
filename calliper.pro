@@ -14,34 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    cviewport.cpp \
-    cbasiccamera.cpp \
-    ccameralens.cpp \
-    csceneobject.cpp \
-    callipermath.cpp \
-    ceulerangle.cpp \
-    cdebugcube.cpp \
-    cvertexbundle.cpp \
-    copenglrenderer.cpp \
-    cscene.cpp \
-    cdebugtriangle.cpp \
-    cresourcemanager.cpp \
-    cprofilertimer.cpp
+    viewport.cpp \
+    resourcemanager.cpp \
+    temporaryrender.cpp \
+    shaderprogram.cpp
 
 HEADERS  += mainwindow.h \
-    cviewport.h \
-    cbasiccamera.h \
-    ccameralens.h \
-    csceneobject.h \
-    callipermath.h \
-    ceulerangle.h \
-    cdebugcube.h \
-    cvertexbundle.h \
-    copenglrenderer.h \
-    cscene.h \
-    cdebugtriangle.h \
-    cresourcemanager.h \
-    cprofilertimer.h
+    viewport.h \
+    resourcemanager.h \
+    temporaryrender.h \
+    shaderprogram.h
 
 FORMS    += mainwindow.ui
 

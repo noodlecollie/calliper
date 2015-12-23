@@ -1,9 +1,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QSurfaceFormat>
-#include "cviewport.h"
-#include <QOpenGLFunctions>
 #include <QtDebug>
+#include "resourcemanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,8 +27,17 @@ int main(int argc, char *argv[])
     qDebug() << "Set default OpenGL format:" << format;
 
     QApplication a(argc, argv);
+
+    // Initialise the resource manager.
+    ResourceManager::initialise();
+
     MainWindow w;
     w.show();
     
-    return a.exec();
+    int ret = a.exec();
+
+    // Shut down the resource manager.
+    ResourceManager::shutdown();
+
+    return ret;
 }
