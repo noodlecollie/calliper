@@ -18,7 +18,7 @@ void Viewport::initializeGL()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    temporarySetup(this);
+    temporarySetup(context(), this);
 }
 
 void Viewport::resizeGL(int w, int h)
@@ -31,5 +31,5 @@ void Viewport::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    temporaryRender(this);
+    temporaryRender(context(), this);
 }

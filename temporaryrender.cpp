@@ -1,5 +1,7 @@
 #include "temporaryrender.h"
 #include <QtDebug>
+#include "resourcemanager.h"
+#include "shaderprogram.h"
 
 const float vertices[] = {
     -0.8f, -0.8f, 0.0f,
@@ -36,9 +38,12 @@ GLuint VertexShaderID = 0;
 GLuint FragmentShaderID = 0;
 GLuint ProgramID = 0;
 GLuint locColour = 0;
+ShaderProgram* shader = NULL;
 
-void temporarySetup(QOpenGLFunctions_4_1_Core *f)
+void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
+    resourceManager()->setLiveContext(context);
+
     // =============================================
     // General OpenGL admin
     // =============================================
@@ -56,7 +61,7 @@ void temporarySetup(QOpenGLFunctions_4_1_Core *f)
     // =============================================
     // Set up shaders
     // =============================================
-    VertexShaderID = f->glCreateShader(GL_VERTEX_SHADER);
+    /*VertexShaderID = f->glCreateShader(GL_VERTEX_SHADER);
     FragmentShaderID = f->glCreateShader(GL_FRAGMENT_SHADER);
 
     GLint Result = GL_FALSE;
@@ -102,13 +107,24 @@ void temporarySetup(QOpenGLFunctions_4_1_Core *f)
 
     f->glDeleteShader(VertexShaderID);
     f->glDeleteShader(FragmentShaderID);
-    f->glUseProgram(ProgramID);
+    f->glUseProgram(ProgramID);*/
 
-    locColour = f->glGetUniformLocation(ProgramID, "inCol");
+    shader = new ShaderProgram("Default");
+    shader->create();
+    shader->compileSource(ShaderProgram::VertexShader, vertexShader);
+    shader->compileSource(ShaderProgram::FragmentShader, fragmentShader);
+    shader->link();
+    shader->bind(true);
+
+    locColour = f->glGetUniformLocation(shader->handle(), "inCol");
+
+    resourceManager()->setLiveContext(NULL);
 }
 
-void temporaryRender(QOpenGLFunctions_4_1_Core *f)
+void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
+    resourceManager()->setLiveContext(context);
+
     // =============================================
     // Specify vertex format
     // =============================================
@@ -131,4 +147,6 @@ void temporaryRender(QOpenGLFunctions_4_1_Core *f)
     f->glDrawArrays(GL_TRIANGLES, 0, 6);
 
     f->glDisableVertexAttribArray(0);
+
+    resourceManager()->setLiveContext(NULL);
 }

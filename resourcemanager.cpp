@@ -64,5 +64,15 @@ QOffscreenSurface* ResourceManager::surface() const
 
 QOpenGLFunctions_4_1_Core* ResourceManager::functions() const
 {
-    return m_pBackgroundContext->versionFunctions<QOpenGLFunctions_4_1_Core>();
+    return liveContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
+}
+
+QOpenGLContext* ResourceManager::liveContext() const
+{
+    return m_pLiveContext ? m_pLiveContext : m_pBackgroundContext;
+}
+
+void ResourceManager::setLiveContext(QOpenGLContext *context)
+{
+    m_pLiveContext = context;
 }

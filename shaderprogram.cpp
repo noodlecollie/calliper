@@ -104,3 +104,8 @@ void ShaderProgram::bind(bool b)
     else
         f->glUseProgram(0);
 }
+
+GLuint ShaderProgram::handle() const
+{
+    return m_iShaderProgram;
+}

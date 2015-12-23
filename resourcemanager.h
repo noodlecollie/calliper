@@ -19,9 +19,13 @@ public:
     QOffscreenSurface* surface() const;
     QOpenGLFunctions_4_1_Core* functions() const;
 
+    void setLiveContext(QOpenGLContext* context);
+    QOpenGLContext* liveContext() const;
+
 private:
     QOffscreenSurface*  m_pSurface;
     QOpenGLContext*     m_pBackgroundContext;
+    QOpenGLContext*     m_pLiveContext;
 };
 
 ResourceManager* resourceManager();

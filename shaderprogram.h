@@ -24,6 +24,8 @@ public:
     void link();
     void bind(bool b);
 
+    GLuint handle() const;
+
 signals:
 
 public slots:
