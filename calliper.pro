@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     minimumshader.cpp \
     openglrenderer.cpp \
     geometrydata.cpp \
-    minimumtexturedshader.cpp
+    minimumtexturedshader.cpp \
+    geometryfactory.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     minimumshader.h \
     openglrenderer.h \
     geometrydata.h \
-    minimumtexturedshader.h
+    minimumtexturedshader.h \
+    geometryfactory.h
 
 FORMS    += mainwindow.ui
 

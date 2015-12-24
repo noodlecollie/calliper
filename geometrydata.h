@@ -27,6 +27,8 @@ public:
     int indexBytes() const;
     void bindIndices(bool bind);
 
+    void clear();
+
     void upload(bool force = false);
     void draw();
 

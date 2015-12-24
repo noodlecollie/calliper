@@ -159,3 +159,9 @@ void GeometryData::setTexture(int index, const QString &path)
     if ( index < 0 || index >= MAX_GEOM_TEXTURES ) return;
     m_Textures[index] = path;
 }
+
+void GeometryData::clear()
+{
+    clearVertices();
+    clearIndices();
+}
