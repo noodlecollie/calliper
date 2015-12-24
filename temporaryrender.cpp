@@ -3,6 +3,7 @@
 #include "resourcemanager.h"
 #include "shaderprogram.h"
 #include "openglrenderer.h"
+#include <QOpenGLBuffer>
 
 const float vertices[] = {
     -0.8f, -0.8f, 0.0f,
@@ -46,6 +47,9 @@ GLuint ProgramID = 0;
 GLuint locColour = 0;
 ShaderProgram* shader = NULL;
 
+QOpenGLBuffer* pVertexBuffer = NULL;
+QOpenGLBuffer* pIndexBuffer = NULL;
+
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
     resourceManager()->setLiveContext(context);
@@ -59,13 +63,22 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     // =============================================
     // Set up geometry
     // =============================================
-    f->glGenBuffers(1, &vertexbuffer);
-    f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    f->glBufferData(GL_ARRAY_BUFFER, VERTICES_SIZE, vertices, GL_STATIC_DRAW);
+//    f->glGenBuffers(1, &vertexbuffer);
+//    f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+//    f->glBufferData(GL_ARRAY_BUFFER, VERTICES_SIZE, vertices, GL_STATIC_DRAW);
 
-    f->glGenBuffers(1, &indexbuffer);
-    f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
-    f->glBufferData(GL_ELEMENT_ARRAY_BUFFER, INDICES_SIZE, indices, GL_STATIC_DRAW);
+//    f->glGenBuffers(1, &indexbuffer);
+//    f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+//    f->glBufferData(GL_ELEMENT_ARRAY_BUFFER, INDICES_SIZE, indices, GL_STATIC_DRAW);
+    pVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    pVertexBuffer->create();
+    pVertexBuffer->bind();
+    pVertexBuffer->allocate(vertices, VERTICES_SIZE);
+
+    pIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+    pIndexBuffer->create();
+    pIndexBuffer->bind();
+    pIndexBuffer->allocate(indices, INDICES_SIZE);
 
     // =============================================
     // Set up shaders
@@ -93,7 +106,8 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     // Specify vertex format
     // =============================================
     f->glEnableVertexAttribArray(0);
-    f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    //f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    pVertexBuffer->bind();
     f->glVertexAttribPointer(
        0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
        3,   // size
@@ -103,7 +117,8 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
        (void*)0  // array buffer offset
     );
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+    //f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+    pIndexBuffer->bind();
 
     resourceManager()->minimumShader()->apply();
 
