@@ -105,8 +105,6 @@ QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
 
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
-    resourceManager()->setLiveContext(context);
-
     // Set up geometry to render.
 //    geometry = new GeometryData();
 //    geometry->appendVertex(QVector3D(-0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(0,0));
@@ -132,14 +130,10 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
     renderer()->setShaderIndex(2);
-
-    resourceManager()->setLiveContext(NULL);
 }
 
 void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
-    resourceManager()->setLiveContext(context);
-
     // Bind geometry for rendering
 //    geometry->upload();
 //    geometry->bindVertices(true);
@@ -167,6 +161,4 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     // Release the shader.
     pr->release();
-
-    resourceManager()->setLiveContext(NULL);
 }

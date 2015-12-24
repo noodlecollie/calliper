@@ -21,12 +21,11 @@ public:
 
     QOpenGLContext* backgroundContext() const;
     QOffscreenSurface* surface() const;
-    QOpenGLFunctions_4_1_Core* functions() const;
     void makeCurrent();
     void doneCurrent();
 
-    void setLiveContext(QOpenGLContext* context);
-    QOpenGLContext* liveContext() const;
+    // Acts upon the current context;
+    QOpenGLFunctions_4_1_Core* functions() const;
 
     void setUpOpenGLResources();
 
@@ -44,7 +43,6 @@ private:
 
     QOffscreenSurface*  m_pSurface;
     QOpenGLContext*     m_pBackgroundContext;
-    QOpenGLContext*     m_pLiveContext;
 
     QVector<ShaderProgram*> m_Shaders;
     TextureTable            m_Textures;

@@ -111,12 +111,10 @@ void ResourceManager::makeCurrent()
 {
     bool success = m_pBackgroundContext->makeCurrent(m_pSurface);
     Q_ASSERT(success);
-    setLiveContext(m_pBackgroundContext);
 }
 
 void ResourceManager::doneCurrent()
 {
-    setLiveContext(NULL);
     m_pBackgroundContext->doneCurrent();
 }
 
@@ -147,17 +145,7 @@ QOffscreenSurface* ResourceManager::surface() const
 
 QOpenGLFunctions_4_1_Core* ResourceManager::functions() const
 {
-    return liveContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
-}
-
-QOpenGLContext* ResourceManager::liveContext() const
-{
-    return m_pLiveContext ? m_pLiveContext : m_pBackgroundContext;
-}
-
-void ResourceManager::setLiveContext(QOpenGLContext *context)
-{
-    m_pLiveContext = context;
+    return QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
 }
 
 ShaderProgram* ResourceManager::shader(int index) const
