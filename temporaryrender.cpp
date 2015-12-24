@@ -7,10 +7,11 @@
 #include "geometrydata.h"
 #include <QByteArray>
 #include <QImage>
+#include <QOpenGLTexture>
 
 QByteArray convertImage(const QString &filename, int &width, int &height)
 {
-    QImage image(filename);
+    QImage image = QImage(filename).mirrored();
     const uchar* imgData = image.constBits();
     int numImagePixels = image.width() * image.height();
     width = image.width();
@@ -87,6 +88,7 @@ ShaderProgram* shader = NULL;
 QOpenGLBuffer* pVertexBuffer = NULL;
 QOpenGLBuffer* pIndexBuffer = NULL;
 GeometryData* geometry = NULL;
+QOpenGLTexture* glTex = NULL;
 
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
@@ -106,18 +108,25 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     geometry->appendIndex(3);
     geometry->upload();
 
-    int width = 0, height = 0;
-    QByteArray texture = convertImage(":/textures/error.png", width, height);
+//    int width = 0, height = 0;
+//    QByteArray texture = convertImage(":/textures/test.png", width, height);
 
-    f->glGenTextures(1, &TextureID);
-    f->glActiveTexture(GL_TEXTURE0);
-    f->glBindTexture(GL_TEXTURE_2D, TextureID);
-    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, texture.constData());
-    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);        // Wrapping
-    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);    // Sampling
-    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    f->glGenerateMipmap(GL_TEXTURE_2D);
+//    f->glGenTextures(1, &TextureID);
+//    f->glActiveTexture(GL_TEXTURE0);
+//    f->glBindTexture(GL_TEXTURE_2D, TextureID);
+//    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, texture.constData());
+//    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);        // Wrapping
+//    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);    // Sampling
+//    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//    f->glGenerateMipmap(GL_TEXTURE_2D);
+
+    glTex = new QOpenGLTexture(QImage(":/textures/test.png").mirrored());
+    glTex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    glTex->setMagnificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    glTex->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    glTex->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+    glTex->generateMipMaps();
 
     // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
@@ -137,11 +146,13 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     // Apply the desired shader, setting up vertex format.
     resourceManager()->shader(renderer()->shaderIndex())->apply();
 
-    f->glActiveTexture(GL_TEXTURE0 + 0);
-    f->glEnable(GL_TEXTURE_2D);
-    f->glBindTexture(GL_TEXTURE_2D, TextureID);
-    GLuint i = glGetUniformLocation(resourceManager()->shader(renderer()->shaderIndex())->handle(), "tex");
-    f->glUniform1i(i, 0);
+//    f->glActiveTexture(GL_TEXTURE0 + 0);
+//    f->glEnable(GL_TEXTURE_2D);
+//    f->glBindTexture(GL_TEXTURE_2D, TextureID);
+//    GLuint i = glGetUniformLocation(resourceManager()->shader(renderer()->shaderIndex())->handle(), "tex");
+//    f->glUniform1i(i, 0);
+
+    glTex->bind();
 
     // Draw the geometry.
     geometry->draw();
