@@ -39,27 +39,36 @@ ResourceManager::ResourceManager()
     Q_ASSERT(success);
 
     qDebug() << "OpenGL format acquired:" << m_pBackgroundContext->format();
+}
 
-    m_pBackgroundContext->makeCurrent(m_pSurface);
-    setLiveContext(m_pBackgroundContext);
-
+void ResourceManager::setUpOpenGLResources()
+{
     MinimumShader* minSh = new MinimumShader();
     minSh->construct();
     m_Shaders.append(minSh);
+}
 
+void ResourceManager::makeCurrent()
+{
+    bool success = m_pBackgroundContext->makeCurrent(m_pSurface);
+    Q_ASSERT(success);
+    setLiveContext(m_pBackgroundContext);
+}
+
+void ResourceManager::doneCurrent()
+{
     setLiveContext(NULL);
     m_pBackgroundContext->doneCurrent();
 }
 
 ResourceManager::~ResourceManager()
 {
-    m_pBackgroundContext->makeCurrent(m_pSurface);
-    setLiveContext(m_pBackgroundContext);
+    makeCurrent();
 
     qDeleteAll(m_Shaders);
 
-    setLiveContext(NULL);
-    m_pBackgroundContext->doneCurrent();
+    doneCurrent();
+
     delete m_pBackgroundContext;
 
     m_pSurface->destroy();

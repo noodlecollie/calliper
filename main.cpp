@@ -35,6 +35,12 @@ int main(int argc, char *argv[])
     // Initialise the renderer.
     OpenGLRenderer::initialise();
 
+    // Set up resources.
+    resourceManager()->makeCurrent();
+    resourceManager()->setUpOpenGLResources();
+    renderer()->setUpOpenGLResources();
+    resourceManager()->doneCurrent();
+
     MainWindow w;
     w.show();
     

@@ -2,6 +2,7 @@
 #define OPENGLRENDERER_H
 
 #include <QColor>
+#include <QOpenGLFunctions>
 
 class OpenGLRenderer
 {
@@ -11,6 +12,7 @@ public:
 
     OpenGLRenderer();
     ~OpenGLRenderer();
+    void setUpOpenGLResources();
 
     QColor globalColor() const;
     void setGlobalColor(const QColor &col);

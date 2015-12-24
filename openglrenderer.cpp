@@ -1,4 +1,6 @@
 #include "openglrenderer.h"
+#include <QOpenGLFunctions_4_1_Core>
+#include "resourcemanager.h"
 
 static OpenGLRenderer* g_pRenderer = NULL;
 OpenGLRenderer* renderer()
@@ -13,6 +15,9 @@ OpenGLRenderer::OpenGLRenderer()
 
 OpenGLRenderer::~OpenGLRenderer()
 {
+    QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    // Nothing yet
 }
 
 void OpenGLRenderer::initialise()
@@ -36,4 +41,11 @@ QColor OpenGLRenderer::globalColor() const
 void OpenGLRenderer::setGlobalColor(const QColor &col)
 {
     m_colGlobalColour = col;
+}
+
+void OpenGLRenderer::setUpOpenGLResources()
+{
+    QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    // Nothing yet.
 }

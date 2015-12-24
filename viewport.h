@@ -13,6 +13,9 @@ protected:
     virtual void initializeGL();
     virtual void resizeGL(int w, int h);
     virtual void paintGL();
+
+private:
+    GLuint  m_iVertexArray;
 };
 
 #endif // VIEWPORT_H

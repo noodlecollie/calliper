@@ -18,6 +18,9 @@ void Viewport::initializeGL()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
+    glGenVertexArrays(1, &m_iVertexArray);
+    glBindVertexArray(m_iVertexArray);
+
     temporarySetup(context(), this);
 }
 

@@ -20,11 +20,15 @@ public:
     QOpenGLContext* backgroundContext() const;
     QOffscreenSurface* surface() const;
     QOpenGLFunctions_4_1_Core* functions() const;
+    void makeCurrent();
+    void doneCurrent();
 
     void setLiveContext(QOpenGLContext* context);
     QOpenGLContext* liveContext() const;
 
     ShaderProgram* minimumShader() const;
+
+    void setUpOpenGLResources();
 
 private:
     QOffscreenSurface*  m_pSurface;

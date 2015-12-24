@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     temporaryrender.cpp \
     shaderprogram.cpp \
     minimumshader.cpp \
-    openglrenderer.cpp
+    openglrenderer.cpp \
+    geometrydata.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     temporaryrender.h \
     shaderprogram.h \
     minimumshader.h \
-    openglrenderer.h
+    openglrenderer.h \
+    geometrydata.h
 
 FORMS    += mainwindow.ui
 
