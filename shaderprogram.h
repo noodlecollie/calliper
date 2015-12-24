@@ -27,6 +27,9 @@ public:
     virtual void construct() = 0;
     virtual void apply() const = 0;
     virtual void release() const = 0;
+    virtual void setModelToWorld(const QMatrix4x4 &mat) {}
+    virtual void setWorldToCamera(const QMatrix4x4 &mat) {}
+    virtual void setCameraProjection(const QMatrix4x4 &mat) {}
 
     GLuint handle() const;
 

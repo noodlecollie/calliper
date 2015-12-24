@@ -22,7 +22,11 @@ SOURCES += main.cpp\
     openglrenderer.cpp \
     geometrydata.cpp \
     minimumtexturedshader.cpp \
-    geometryfactory.cpp
+    geometryfactory.cpp \
+    sceneobject.cpp \
+    callipermath.cpp \
+    scene.cpp \
+    unlittextureshader.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -33,7 +37,11 @@ HEADERS  += mainwindow.h \
     openglrenderer.h \
     geometrydata.h \
     minimumtexturedshader.h \
-    geometryfactory.h
+    geometryfactory.h \
+    sceneobject.h \
+    callipermath.h \
+    scene.h \
+    unlittextureshader.h
 
 FORMS    += mainwindow.ui
 

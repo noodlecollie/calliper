@@ -6,6 +6,7 @@
 #include "minimumshader.h"
 #include "minimumtexturedshader.h"
 #include <QOpenGLTexture>
+#include "unlittextureshader.h"
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -58,6 +59,10 @@ void ResourceManager::setUpShaders()
     MinimumTexturedShader* minTSh = new MinimumTexturedShader();
     minTSh->construct();
     m_Shaders.append(minTSh);
+
+    UnlitTextureShader* unlTSh = new UnlitTextureShader();
+    unlTSh->construct();
+    m_Shaders.append(unlTSh);
 }
 
 void ResourceManager::setUpBuiltInTextures()

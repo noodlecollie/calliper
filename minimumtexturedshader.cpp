@@ -4,7 +4,8 @@
 
 MinimumTexturedShader::MinimumTexturedShader() : ShaderProgram("MinimumTexturedShader")
 {
-
+    m_iPositionLocation = 0;
+    m_iUVLocation = 0;
 }
 
 void MinimumTexturedShader::construct()

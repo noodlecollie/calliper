@@ -165,3 +165,8 @@ void GeometryData::clear()
     clearVertices();
     clearIndices();
 }
+
+bool GeometryData::isEmpty() const
+{
+    return vertexCount() < 1 && indexCount() < 1;
+}

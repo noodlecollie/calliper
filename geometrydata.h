@@ -28,6 +28,7 @@ public:
     void bindIndices(bool bind);
 
     void clear();
+    bool isEmpty() const;
 
     void upload(bool force = false);
     void draw();

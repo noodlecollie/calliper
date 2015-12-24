@@ -3,6 +3,7 @@
 
 #include <QColor>
 #include <QOpenGLFunctions>
+#include <QMatrix4x4>
 
 class OpenGLRenderer
 {

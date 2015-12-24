@@ -96,10 +96,10 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     // Set up geometry to render.
     geometry = new GeometryData();
-    geometry->appendVertex(QVector3D(-0.8f, -0.8f, 0.0f), QVector3D(0,0,1), QVector2D(0,0));
-    geometry->appendVertex(QVector3D(0.8f, -0.8f, 0.0f), QVector3D(0,0,1), QVector2D(1,0));
-    geometry->appendVertex(QVector3D(0.8f, 0.8f, 0.0f), QVector3D(0,0,1), QVector2D(1,1));
-    geometry->appendVertex(QVector3D(-0.8f, 0.8f, 0.0f), QVector3D(0,0,1), QVector2D(0,1));
+    geometry->appendVertex(QVector3D(-0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(0,0));
+    geometry->appendVertex(QVector3D(0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(1,0));
+    geometry->appendVertex(QVector3D(0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(1,1));
+    geometry->appendVertex(QVector3D(-0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(0,1));
     geometry->appendIndex(0);
     geometry->appendIndex(1);
     geometry->appendIndex(2);
@@ -111,7 +111,7 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
-    renderer()->setShaderIndex(1);
+    renderer()->setShaderIndex(2);
 
     resourceManager()->setLiveContext(NULL);
 }

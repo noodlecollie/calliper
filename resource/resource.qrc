@@ -7,5 +7,7 @@
         <file>textures/uvsample.png</file>
         <file>shaders/minimum_textured.frag</file>
         <file>shaders/minimum_textured.vert</file>
+        <file>shaders/unlit.frag</file>
+        <file>shaders/unlit.vert</file>
     </qresource>
 </RCC>
