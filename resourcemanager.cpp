@@ -77,11 +77,14 @@ void ResourceManager::setUpBuiltInTextures()
 
     // Other random ones.
     QString path1(":/textures/test.png");
-    QOpenGLTexture* t1 = new QOpenGLTexture(QImage(path1).mirrored());
+//    QOpenGLTexture* t1 = new QOpenGLTexture(QImage(path1).mirrored());
+    QOpenGLTexture* t1 = new QOpenGLTexture(QOpenGLTexture::Target2D);
     t1->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
     t1->setMagnificationFilter(QOpenGLTexture::LinearMipMapLinear);
     t1->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     t1->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+    t1->setMipLevels(2);
+    t1->setData(QImage(path1).mirrored());
     m_Textures.insert(path1.mid(1).remove(".png"), t1);
 
     QString path2(":/textures/uvsample.png");

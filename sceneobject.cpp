@@ -34,7 +34,7 @@ void SceneObject::setPosition(const QVector3D &pos)
 
 void SceneObject::rebuildMatrices() const
 {
-    m_matParentToLocal = Math::matrixTranslate(m_vecPosition);
+    m_matParentToLocal = Math::matrixTranslate(-m_vecPosition);
     m_matLocalToParent = m_matParentToLocal.inverted();
     m_bMatricesStale = false;
 }

@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     sceneobject.cpp \
     callipermath.cpp \
     scene.cpp \
-    unlittextureshader.cpp
+    unlittextureshader.cpp \
+    cameralens.cpp \
+    camera.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -41,7 +43,9 @@ HEADERS  += mainwindow.h \
     sceneobject.h \
     callipermath.h \
     scene.h \
-    unlittextureshader.h
+    unlittextureshader.h \
+    cameralens.h \
+    camera.h
 
 FORMS    += mainwindow.ui
 

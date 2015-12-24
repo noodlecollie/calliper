@@ -47,10 +47,10 @@ namespace GeometryFactory
                 break;
             }
 
-            d->appendVertex((-radius*u) + (-radius*v), normal, QVector2D(0,0));
-            d->appendVertex((radius*u) + (-radius*v), normal, QVector2D(1,0));
-            d->appendVertex((radius*u) + (radius*v), normal, QVector2D(1,1));
-            d->appendVertex((-radius*u) + (radius*v), normal, QVector2D(0,1));
+            d->appendVertex((-radius*u) + (-radius*v) + (radius*normal), normal, QVector2D(0,0));
+            d->appendVertex((radius*u) + (-radius*v) + (radius*normal), normal, QVector2D(1,0));
+            d->appendVertex((radius*u) + (radius*v) + (radius*normal), normal, QVector2D(1,1));
+            d->appendVertex((-radius*u) + (radius*v) + (radius*normal), normal, QVector2D(0,1));
 
             int index = 4*i;
             d->appendIndex(index);

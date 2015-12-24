@@ -8,6 +8,13 @@
 #include <QByteArray>
 #include <QImage>
 #include <QOpenGLTexture>
+#include "scene.h"
+#include "sceneobject.h"
+#include "camera.h"
+#include "geometryfactory.h"
+#include <QMatrix4x4>
+#include "callipermath.h"
+#include <QtMath>
 
 QByteArray convertImage(const QString &filename, int &width, int &height)
 {
@@ -90,24 +97,37 @@ QOpenGLBuffer* pIndexBuffer = NULL;
 GeometryData* geometry = NULL;
 QOpenGLTexture* glTex = NULL;
 
+Scene* scene = NULL;
+SceneObject* block = NULL;
+Camera* camera = NULL;
+
+QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
+
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
     resourceManager()->setLiveContext(context);
 
     // Set up geometry to render.
-    geometry = new GeometryData();
-    geometry->appendVertex(QVector3D(-0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(0,0));
-    geometry->appendVertex(QVector3D(0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(1,0));
-    geometry->appendVertex(QVector3D(0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(1,1));
-    geometry->appendVertex(QVector3D(-0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(0,1));
-    geometry->appendIndex(0);
-    geometry->appendIndex(1);
-    geometry->appendIndex(2);
-    geometry->appendIndex(0);
-    geometry->appendIndex(2);
-    geometry->appendIndex(3);
-    geometry->setTexture(0, "/textures/uvsample");
-    geometry->upload();
+//    geometry = new GeometryData();
+//    geometry->appendVertex(QVector3D(-0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(0,0));
+//    geometry->appendVertex(QVector3D(0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(1,0));
+//    geometry->appendVertex(QVector3D(0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(1,1));
+//    geometry->appendVertex(QVector3D(-0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(0,1));
+//    geometry->appendIndex(0);
+//    geometry->appendIndex(1);
+//    geometry->appendIndex(2);
+//    geometry->appendIndex(0);
+//    geometry->appendIndex(2);
+//    geometry->appendIndex(3);
+//    geometry->setTexture(0, "/textures/uvsample");
+
+    scene = new Scene();
+    block = new SceneObject(scene->root());
+    camera = new Camera(scene->root());
+
+    block->setGeometry(GeometryFactory::cube(0.1f));
+    block->setPosition(QVector3D(0, 0.5f, -0.2f));
+    block->geometry()->setTexture(0, "/textures/test");
 
     // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
@@ -121,21 +141,32 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     resourceManager()->setLiveContext(context);
 
     // Bind geometry for rendering
-    geometry->bindVertices(true);
-    geometry->bindIndices(true);
+//    geometry->upload();
+//    geometry->bindVertices(true);
+//    geometry->bindIndices(true);
+    block->geometry()->upload();
+    block->geometry()->bindVertices(true);
+    block->geometry()->bindIndices(true);
+
+    ShaderProgram* pr = resourceManager()->shader(renderer()->shaderIndex());
+    pr->setModelToWorld(block->localToParent() * blockRot);
+    pr->setWorldToCamera(camera->localToParent());
+    pr->setCameraProjection(camera->lens().projectionMatrix());
 
     // Apply the desired shader, setting up vertex format.
-    resourceManager()->shader(renderer()->shaderIndex())->apply();
+    pr->apply();
 
     // Bind the textures for use.
-    QOpenGLTexture* tex = resourceManager()->texture(geometry->texture(0));
+//    QOpenGLTexture* tex = resourceManager()->texture(geometry->texture(0));
+    QOpenGLTexture* tex = resourceManager()->texture(block->geometry()->texture(0));
     tex->bind(0);
 
     // Draw the geometry.
-    geometry->draw();
+//    geometry->draw();
+    block->geometry()->draw();
 
     // Release the shader.
-    resourceManager()->shader(renderer()->shaderIndex())->apply();
+    pr->release();
 
     resourceManager()->setLiveContext(NULL);
 }
