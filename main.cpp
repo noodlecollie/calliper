@@ -3,6 +3,7 @@
 #include <QSurfaceFormat>
 #include <QtDebug>
 #include "resourcemanager.h"
+#include "openglrenderer.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,10 +32,16 @@ int main(int argc, char *argv[])
     // Initialise the resource manager.
     ResourceManager::initialise();
 
+    // Initialise the renderer.
+    OpenGLRenderer::initialise();
+
     MainWindow w;
     w.show();
     
     int ret = a.exec();
+
+    // Shut down the renderer.
+    OpenGLRenderer::shutdown();
 
     // Shut down the resource manager.
     ResourceManager::shutdown();

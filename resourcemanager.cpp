@@ -3,6 +3,7 @@
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
 #include <QtDebug>
+#include "minimumshader.h"
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -13,7 +14,7 @@ ResourceManager* resourceManager()
 void ResourceManager::initialise()
 {
     Q_ASSERT(!g_pResourceManager);
-    g_pResourceManager = new ResourceManager();
+    new ResourceManager();
 }
 
 void ResourceManager::shutdown()
@@ -25,6 +26,7 @@ void ResourceManager::shutdown()
 
 ResourceManager::ResourceManager()
 {
+    g_pResourceManager = this;
     m_pSurface = new QOffscreenSurface();
     m_pSurface->setFormat(QSurfaceFormat::defaultFormat());
     m_pSurface->create();
@@ -37,14 +39,26 @@ ResourceManager::ResourceManager()
     Q_ASSERT(success);
 
     qDebug() << "OpenGL format acquired:" << m_pBackgroundContext->format();
+
+    m_pBackgroundContext->makeCurrent(m_pSurface);
+    setLiveContext(m_pBackgroundContext);
+
+    MinimumShader* minSh = new MinimumShader();
+    minSh->construct();
+    m_Shaders.append(minSh);
+
+    setLiveContext(NULL);
+    m_pBackgroundContext->doneCurrent();
 }
 
 ResourceManager::~ResourceManager()
 {
     m_pBackgroundContext->makeCurrent(m_pSurface);
+    setLiveContext(m_pBackgroundContext);
 
-    // Clean up any resources that require an active context here.
+    qDeleteAll(m_Shaders);
 
+    setLiveContext(NULL);
     m_pBackgroundContext->doneCurrent();
     delete m_pBackgroundContext;
 
@@ -75,4 +89,10 @@ QOpenGLContext* ResourceManager::liveContext() const
 void ResourceManager::setLiveContext(QOpenGLContext *context)
 {
     m_pLiveContext = context;
+}
+
+ShaderProgram* ResourceManager::minimumShader() const
+{
+    Q_ASSERT(m_Shaders.count() > 0);
+    return m_Shaders.at(0);
 }

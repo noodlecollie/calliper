@@ -24,13 +24,16 @@ public:
     void link();
     void bind(bool b);
 
+    virtual void construct() = 0;
+    virtual void apply() const = 0;
+
     GLuint handle() const;
 
 signals:
 
 public slots:
 
-private:
+protected:
     bool compile(GLuint* shaderHandle, GLuint shaderType, const char* source);
 
     GLuint  m_iShaderProgram;

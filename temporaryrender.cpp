@@ -2,17 +2,22 @@
 #include <QtDebug>
 #include "resourcemanager.h"
 #include "shaderprogram.h"
+#include "openglrenderer.h"
 
 const float vertices[] = {
     -0.8f, -0.8f, 0.0f,
     0.8f, -0.8f, 0.0f,
     0.8f, 0.8f, 0.0f,
-    -0.8f, -0.8f, 0.0f,
-    0.8f, 0.8f, 0.0f,
     -0.8f, 0.8f, 0.0f,
 };
 
-#define VERTICES_SIZE (sizeof(float)*3*6)
+const unsigned int indices[] = {
+    0,1,2,
+    0,2,3,
+};
+
+#define VERTICES_SIZE (sizeof(float)*3*4)
+#define INDICES_SIZE (sizeof(unsigned int)*3*2)
 
 const char* vertexShader =
         "#version 410 core\n"
@@ -34,6 +39,7 @@ const float mainColour[] = {
 
 GLuint VertexArrayID = 0;
 GLuint vertexbuffer = 0;
+GLuint indexbuffer = 0;
 GLuint VertexShaderID = 0;
 GLuint FragmentShaderID = 0;
 GLuint ProgramID = 0;
@@ -55,68 +61,26 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     // =============================================
     f->glGenBuffers(1, &vertexbuffer);
     f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-
     f->glBufferData(GL_ARRAY_BUFFER, VERTICES_SIZE, vertices, GL_STATIC_DRAW);
+
+    f->glGenBuffers(1, &indexbuffer);
+    f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+    f->glBufferData(GL_ELEMENT_ARRAY_BUFFER, INDICES_SIZE, indices, GL_STATIC_DRAW);
 
     // =============================================
     // Set up shaders
     // =============================================
-    /*VertexShaderID = f->glCreateShader(GL_VERTEX_SHADER);
-    FragmentShaderID = f->glCreateShader(GL_FRAGMENT_SHADER);
 
-    GLint Result = GL_FALSE;
-    int InfoLogLength;
-
-    f->glShaderSource(VertexShaderID, 1, &vertexShader , NULL);
-    f->glCompileShader(VertexShaderID);
-
-    f->glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-    f->glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if ( InfoLogLength > 0 )
-    {
-        std::vector<char> VertexShaderErrorMessage(InfoLogLength);
-        f->glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-        qDebug() << "Vertex shader compilation messages:" << &VertexShaderErrorMessage[0];
-    }
-
-    f->glShaderSource(FragmentShaderID, 1, &fragmentShader , NULL);
-    f->glCompileShader(FragmentShaderID);
-
-    f->glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-    f->glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if ( InfoLogLength > 0 )
-    {
-        std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
-        f->glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-        qDebug() << "Fragment shader compilation messages:" << &FragmentShaderErrorMessage[0];
-    }
-
-    ProgramID = f->glCreateProgram();
-    f->glAttachShader(ProgramID, VertexShaderID);
-    f->glAttachShader(ProgramID, FragmentShaderID);
-    f->glLinkProgram(ProgramID);
-
-    f->glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-    f->glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if ( InfoLogLength > 0 )
-    {
-        std::vector<char> ProgramErrorMessage(InfoLogLength);
-        f->glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-        qDebug() << "Shader program linking messages:" <<  &ProgramErrorMessage[0];
-    }
-
-    f->glDeleteShader(VertexShaderID);
-    f->glDeleteShader(FragmentShaderID);
-    f->glUseProgram(ProgramID);*/
-
-    shader = new ShaderProgram("Default");
+    /*shader = new ShaderProgram("Default");
     shader->create();
     shader->compileSource(ShaderProgram::VertexShader, vertexShader);
     shader->compileSource(ShaderProgram::FragmentShader, fragmentShader);
     shader->link();
     shader->bind(true);
 
-    locColour = f->glGetUniformLocation(shader->handle(), "inCol");
+    locColour = f->glGetUniformLocation(shader->handle(), "inCol");*/
+
+    renderer()->setGlobalColor(QColor(255,0,0));
 
     resourceManager()->setLiveContext(NULL);
 }
@@ -139,12 +103,15 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
        (void*)0  // array buffer offset
     );
 
-    f->glUniform3f(locColour, mainColour[0], mainColour[1], mainColour[2]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+
+    resourceManager()->minimumShader()->apply();
 
     // =============================================
     // Draw vertices
     // =============================================
-    f->glDrawArrays(GL_TRIANGLES, 0, 6);
+    //f->glDrawArrays(GL_TRIANGLES, 0, 6);
+    f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     f->glDisableVertexAttribArray(0);
 

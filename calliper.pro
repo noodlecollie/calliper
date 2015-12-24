@@ -17,13 +17,17 @@ SOURCES += main.cpp\
     viewport.cpp \
     resourcemanager.cpp \
     temporaryrender.cpp \
-    shaderprogram.cpp
+    shaderprogram.cpp \
+    minimumshader.cpp \
+    openglrenderer.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
     resourcemanager.h \
     temporaryrender.h \
-    shaderprogram.h
+    shaderprogram.h \
+    minimumshader.h \
+    openglrenderer.h
 
 FORMS    += mainwindow.ui
 
