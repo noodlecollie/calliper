@@ -2,5 +2,10 @@
     <qresource prefix="/">
         <file>shaders/minimum.frag</file>
         <file>shaders/minimum.vert</file>
+        <file>textures/error.png</file>
+        <file>textures/test.png</file>
+        <file>textures/uvsample.png</file>
+        <file>shaders/minimum_textured.frag</file>
+        <file>shaders/minimum_textured.vert</file>
     </qresource>
 </RCC>

@@ -30,7 +30,7 @@ void MinimumShader::apply() const
 
     f->glUseProgram(handle());
 
-    f->glEnableVertexAttribArray(0);
+    f->glEnableVertexAttribArray(m_iPositionLocation);
     f->glVertexAttribPointer(
        m_iPositionLocation,
        3,                   // size
@@ -48,5 +48,5 @@ void MinimumShader::release() const
 {
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
-    f->glDisableVertexAttribArray(0);
+    f->glDisableVertexAttribArray(m_iPositionLocation);
 }

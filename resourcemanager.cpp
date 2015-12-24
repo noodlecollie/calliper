@@ -4,6 +4,7 @@
 #include <QOpenGLContext>
 #include <QtDebug>
 #include "minimumshader.h"
+#include "minimumtexturedshader.h"
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -46,6 +47,10 @@ void ResourceManager::setUpOpenGLResources()
     MinimumShader* minSh = new MinimumShader();
     minSh->construct();
     m_Shaders.append(minSh);
+
+    MinimumTexturedShader* minTSh = new MinimumTexturedShader();
+    minTSh->construct();
+    m_Shaders.append(minTSh);
 }
 
 void ResourceManager::makeCurrent()
@@ -104,4 +109,20 @@ ShaderProgram* ResourceManager::minimumShader() const
 {
     Q_ASSERT(m_Shaders.count() > 0);
     return m_Shaders.at(0);
+}
+
+ShaderProgram* ResourceManager::shader(int index) const
+{
+    return m_Shaders.at(index);
+}
+
+ShaderProgram* ResourceManager::shader(const QString &name) const
+{
+    for ( int i = 0; i < m_Shaders.count(); i++ )
+    {
+        if ( m_Shaders.at(i)->objectName() == name )
+            return m_Shaders.at(i);
+    }
+
+    return NULL;
 }

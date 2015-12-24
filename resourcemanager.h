@@ -30,6 +30,9 @@ public:
 
     void setUpOpenGLResources();
 
+    ShaderProgram* shader(int index) const;
+    ShaderProgram* shader(const QString &name) const;
+
 private:
     QOffscreenSurface*  m_pSurface;
     QOpenGLContext*     m_pBackgroundContext;

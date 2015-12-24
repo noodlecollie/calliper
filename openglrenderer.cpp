@@ -47,5 +47,15 @@ void OpenGLRenderer::setUpOpenGLResources()
 {
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
-    // Nothing yet.
+    setShaderIndex(0);
+}
+
+int OpenGLRenderer::shaderIndex() const
+{
+    return m_iShader;
+}
+
+void OpenGLRenderer::setShaderIndex(int index)
+{
+    m_iShader = index;
 }

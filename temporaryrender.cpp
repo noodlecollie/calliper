@@ -5,6 +5,36 @@
 #include "openglrenderer.h"
 #include <QOpenGLBuffer>
 #include "geometrydata.h"
+#include <QByteArray>
+#include <QImage>
+
+QByteArray convertImage(const QString &filename, int &width, int &height)
+{
+    QImage image(filename);
+    const uchar* imgData = image.constBits();
+    int numImagePixels = image.width() * image.height();
+    width = image.width();
+    height = image.height();
+    QByteArray arr(sizeof(uint) * numImagePixels, 0);
+
+    for ( int i = 0; i < numImagePixels; i++ )
+    {
+        // Get an integer representing 4 bytes of image data.
+        uint data = ((const uint*)imgData)[i];
+
+        // Swap the bytes round.
+        uchar* d = (uchar*)&data;
+        uchar alpha = d[3];
+        d[3] = d[2];
+        d[2] = d[1];
+        d[1] = d[0];
+        d[0] = alpha;
+
+        ((uint*)arr.data())[i] = data;
+    }
+
+    return arr;
+}
 
 const float vertices[] = {
     -0.8f, -0.8f, 0.0f,
@@ -39,6 +69,11 @@ const float mainColour[] = {
     1.0f, 0.4f, 0.6f,
 };
 
+const float texPixels[] = {
+    0.0f, 0.0f, 0.0f, 1.0f,   1.0f, 0.0f, 0.0f, 1.0f,
+    0.0f, 1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f, 1.0f,
+};
+
 GLuint VertexArrayID = 0;
 GLuint vertexbuffer = 0;
 GLuint indexbuffer = 0;
@@ -46,6 +81,7 @@ GLuint VertexShaderID = 0;
 GLuint FragmentShaderID = 0;
 GLuint ProgramID = 0;
 GLuint locColour = 0;
+GLuint TextureID = 0;
 ShaderProgram* shader = NULL;
 
 QOpenGLBuffer* pVertexBuffer = NULL;
@@ -56,16 +92,7 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
     resourceManager()->setLiveContext(context);
 
-    // =============================================
-    // General OpenGL admin
-    // =============================================
-//    f->glGenVertexArrays(1, &VertexArrayID);
-//    f->glBindVertexArray(VertexArrayID);
-
-    // =============================================
-    // Set up geometry
-    // =============================================
-
+    // Set up geometry to render.
     geometry = new GeometryData();
     geometry->appendVertex(QVector3D(-0.8f, -0.8f, 0.0f), QVector3D(0,0,1), QVector2D(0,0));
     geometry->appendVertex(QVector3D(0.8f, -0.8f, 0.0f), QVector3D(0,0,1), QVector2D(1,0));
@@ -79,10 +106,22 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     geometry->appendIndex(3);
     geometry->upload();
 
-    // =============================================
-    // Set up shaders
-    // =============================================
+    int width = 0, height = 0;
+    QByteArray texture = convertImage(":/textures/error.png", width, height);
+
+    f->glGenTextures(1, &TextureID);
+    f->glActiveTexture(GL_TEXTURE0);
+    f->glBindTexture(GL_TEXTURE_2D, TextureID);
+    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, texture.constData());
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);        // Wrapping
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);    // Sampling
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    f->glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
+    renderer()->setShaderIndex(1);
 
     resourceManager()->setLiveContext(NULL);
 }
@@ -91,20 +130,24 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
     resourceManager()->setLiveContext(context);
 
-    // =============================================
-    // Specify vertex format
-    // =============================================
+    // Bind geometry for rendering
     geometry->bindVertices(true);
     geometry->bindIndices(true);
 
-    resourceManager()->minimumShader()->apply();
+    // Apply the desired shader, setting up vertex format.
+    resourceManager()->shader(renderer()->shaderIndex())->apply();
 
-    // =============================================
-    // Draw vertices
-    // =============================================
+    f->glActiveTexture(GL_TEXTURE0 + 0);
+    f->glEnable(GL_TEXTURE_2D);
+    f->glBindTexture(GL_TEXTURE_2D, TextureID);
+    GLuint i = glGetUniformLocation(resourceManager()->shader(renderer()->shaderIndex())->handle(), "tex");
+    f->glUniform1i(i, 0);
+
+    // Draw the geometry.
     geometry->draw();
 
-    resourceManager()->minimumShader()->release();
+    // Release the shader.
+    resourceManager()->shader(renderer()->shaderIndex())->apply();
 
     resourceManager()->setLiveContext(NULL);
 }

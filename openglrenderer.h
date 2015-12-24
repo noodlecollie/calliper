@@ -17,8 +17,12 @@ public:
     QColor globalColor() const;
     void setGlobalColor(const QColor &col);
 
+    int shaderIndex() const;
+    void setShaderIndex(int index);
+
 private:
     QColor  m_colGlobalColour;
+    int     m_iShader;
 };
 
 OpenGLRenderer* renderer();
