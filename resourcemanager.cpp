@@ -41,7 +41,18 @@ ResourceManager::ResourceManager()
     bool success = m_pBackgroundContext->create();
     Q_ASSERT(success);
 
-    qDebug() << "OpenGL format acquired:" << m_pBackgroundContext->format();
+    QSurfaceFormat format = m_pBackgroundContext->format();
+    qDebug() << "OpenGL format acquired:" << format;
+
+    QSurfaceFormat defaultFormat = QSurfaceFormat::defaultFormat();
+    if ( format.majorVersion() != defaultFormat.majorVersion() ||
+         format.minorVersion() != defaultFormat.minorVersion() )
+    {
+        qWarning().nospace() << "WARNING: Expected OpenGL format "
+                             << defaultFormat.majorVersion() << "." << defaultFormat.minorVersion()
+                             << ", got " << format.majorVersion() << "." << format.minorVersion()
+                             << ". Some functionality may not work as intended.";
+    }
 }
 
 void ResourceManager::setUpOpenGLResources()
@@ -69,8 +80,8 @@ void ResourceManager::setUpBuiltInTextures()
 {
     // Default texture - returned if any other texture is not found.
     m_pDefaultTexture = new QOpenGLTexture(QImage(":/textures/error.png").mirrored());
-    m_pDefaultTexture->setMinificationFilter(QOpenGLTexture::NearestMipMapNearest);
-    m_pDefaultTexture->setMagnificationFilter(QOpenGLTexture::NearestMipMapNearest);
+    m_pDefaultTexture->setMinificationFilter(QOpenGLTexture::Nearest/*MipMapNearest*/);
+    m_pDefaultTexture->setMagnificationFilter(QOpenGLTexture::Nearest/*MipMapNearest*/);
     m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
     m_Textures.insert(QString(), m_pDefaultTexture);
@@ -79,8 +90,8 @@ void ResourceManager::setUpBuiltInTextures()
     QString path1(":/textures/test.png");
 //    QOpenGLTexture* t1 = new QOpenGLTexture(QImage(path1).mirrored());
     QOpenGLTexture* t1 = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    t1->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-    t1->setMagnificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    t1->setMinificationFilter(QOpenGLTexture::Linear/*MipMapLinear*/);
+    t1->setMagnificationFilter(QOpenGLTexture::Linear/*MipMapLinear*/);
     t1->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     t1->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
     t1->setMipLevels(2);
