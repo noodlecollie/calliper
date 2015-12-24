@@ -147,3 +147,15 @@ void GeometryData::draw()
 
     f->glDrawElements(GL_TRIANGLES, indexCount(), GL_UNSIGNED_INT, 0);
 }
+
+QString GeometryData::texture(int index) const
+{
+    if ( index < 0 || index >= MAX_GEOM_TEXTURES ) return QString();
+    return m_Textures[index];
+}
+
+void GeometryData::setTexture(int index, const QString &path)
+{
+    if ( index < 0 || index >= MAX_GEOM_TEXTURES ) return;
+    m_Textures[index] = path;
+}

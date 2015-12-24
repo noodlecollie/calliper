@@ -5,6 +5,7 @@
 #include <QtDebug>
 #include "minimumshader.h"
 #include "minimumtexturedshader.h"
+#include <QOpenGLTexture>
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -44,6 +45,12 @@ ResourceManager::ResourceManager()
 
 void ResourceManager::setUpOpenGLResources()
 {
+    setUpShaders();
+    setUpBuiltInTextures();
+}
+
+void ResourceManager::setUpShaders()
+{
     MinimumShader* minSh = new MinimumShader();
     minSh->construct();
     m_Shaders.append(minSh);
@@ -51,6 +58,34 @@ void ResourceManager::setUpOpenGLResources()
     MinimumTexturedShader* minTSh = new MinimumTexturedShader();
     minTSh->construct();
     m_Shaders.append(minTSh);
+}
+
+void ResourceManager::setUpBuiltInTextures()
+{
+    // Default texture - returned if any other texture is not found.
+    m_pDefaultTexture = new QOpenGLTexture(QImage(":/textures/error.png").mirrored());
+    m_pDefaultTexture->setMinificationFilter(QOpenGLTexture::NearestMipMapNearest);
+    m_pDefaultTexture->setMagnificationFilter(QOpenGLTexture::NearestMipMapNearest);
+    m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+    m_Textures.insert(QString(), m_pDefaultTexture);
+
+    // Other random ones.
+    QString path1(":/textures/test.png");
+    QOpenGLTexture* t1 = new QOpenGLTexture(QImage(path1).mirrored());
+    t1->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    t1->setMagnificationFilter(QOpenGLTexture::LinearMipMapLinear);
+    t1->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    t1->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+    m_Textures.insert(path1.mid(1).remove(".png"), t1);
+
+    QString path2(":/textures/uvsample.png");
+    QOpenGLTexture* t2 = new QOpenGLTexture(QImage(path2).mirrored());
+    t2->setMinificationFilter(QOpenGLTexture::Nearest/*MipMapNearest*/);
+    t2->setMagnificationFilter(QOpenGLTexture::Nearest/*MipMapNearest*/);
+    t2->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    t2->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+    m_Textures.insert(path2.mid(1).remove(".png"), t2);
 }
 
 void ResourceManager::makeCurrent()
@@ -70,6 +105,7 @@ ResourceManager::~ResourceManager()
 {
     makeCurrent();
 
+    qDeleteAll(m_Textures);
     qDeleteAll(m_Shaders);
 
     doneCurrent();
@@ -105,12 +141,6 @@ void ResourceManager::setLiveContext(QOpenGLContext *context)
     m_pLiveContext = context;
 }
 
-ShaderProgram* ResourceManager::minimumShader() const
-{
-    Q_ASSERT(m_Shaders.count() > 0);
-    return m_Shaders.at(0);
-}
-
 ShaderProgram* ResourceManager::shader(int index) const
 {
     return m_Shaders.at(index);
@@ -125,4 +155,10 @@ ShaderProgram* ResourceManager::shader(const QString &name) const
     }
 
     return NULL;
+}
+
+QOpenGLTexture* ResourceManager::texture(const QString &path) const
+{
+    QOpenGLTexture* tex = m_Textures.value(path, NULL);
+    return tex ? tex : m_pDefaultTexture;
 }

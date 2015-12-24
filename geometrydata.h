@@ -7,6 +7,8 @@
 
 class QOpenGLBuffer;
 
+#define MAX_GEOM_TEXTURES 4
+
 class GeometryData
 {
 public:
@@ -28,6 +30,9 @@ public:
     void upload(bool force = false);
     void draw();
 
+    QString texture(int index) const;
+    void setTexture(int index, const QString &path);
+
 private:
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;
@@ -37,6 +42,8 @@ private:
 
     QOpenGLBuffer*  m_pVertexBuffer;
     QOpenGLBuffer*  m_pIndexBuffer;
+
+    QString         m_Textures[MAX_GEOM_TEXTURES];
 };
 
 #endif // GEOMETRYDATA_H
