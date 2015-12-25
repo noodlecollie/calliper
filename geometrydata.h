@@ -29,6 +29,7 @@ public:
 
     void clear();
     bool isEmpty() const;
+    void destroy();
 
     void upload(bool force = false);
     void draw();

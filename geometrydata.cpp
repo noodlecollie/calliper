@@ -16,17 +16,9 @@ GeometryData::GeometryData()
 
 GeometryData::~GeometryData()
 {
-    if ( m_pVertexBuffer->isCreated() )
-    {
-        m_pVertexBuffer->destroy();
-        delete m_pVertexBuffer;
-    }
-
-    if ( m_pIndexBuffer->isCreated() )
-    {
-        m_pIndexBuffer->destroy();
-        delete m_pIndexBuffer;
-    }
+    destroy();
+    delete m_pVertexBuffer;
+    delete m_pIndexBuffer;
 }
 
 void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv)
@@ -74,6 +66,9 @@ int GeometryData::indexBytes() const
 
 void GeometryData::upload(bool force)
 {
+    if ( isEmpty() && !force )
+        return;
+
     if ( !m_pVertexBuffer->isCreated() )
     {
         bool success = m_pVertexBuffer->create();
@@ -169,4 +164,13 @@ void GeometryData::clear()
 bool GeometryData::isEmpty() const
 {
     return vertexCount() < 1 && indexCount() < 1;
+}
+
+void GeometryData::destroy()
+{
+    if ( m_pVertexBuffer->isCreated() )
+        m_pVertexBuffer->destroy();
+
+    if ( m_pIndexBuffer->isCreated() )
+        m_pIndexBuffer->destroy();
 }

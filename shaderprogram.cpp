@@ -91,8 +91,8 @@ void ShaderProgram::link()
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     f->glAttachShader(m_iShaderProgram, m_iVertexShader);
-    glAttachShader(m_iShaderProgram, m_iFragmentShader);
-    glLinkProgram(m_iShaderProgram);
+    f->glAttachShader(m_iShaderProgram, m_iFragmentShader);
+    f->glLinkProgram(m_iShaderProgram);
 }
 
 void ShaderProgram::bind(bool b)
