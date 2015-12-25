@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     unlittextureshader.cpp \
     cameralens.cpp \
     camera.cpp \
-    eulerangle.cpp
+    eulerangle.cpp \
+    cameracontroller.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -47,7 +48,8 @@ HEADERS  += mainwindow.h \
     unlittextureshader.h \
     cameralens.h \
     camera.h \
-    eulerangle.h
+    eulerangle.h \
+    cameracontroller.h
 
 FORMS    += mainwindow.ui
 

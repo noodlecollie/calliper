@@ -3,6 +3,7 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_4_1_Core>
+#include <QTimer>
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
@@ -18,6 +19,7 @@ protected:
 
 private:
     GLuint  m_iVertexArray;
+    QTimer  m_Timer;
 };
 
 #endif // VIEWPORT_H

@@ -22,6 +22,10 @@ void Viewport::initializeGL()
     glGenVertexArrays(1, &m_iVertexArray);
     glBindVertexArray(m_iVertexArray);
 
+    m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_Timer.setInterval(0);
+    m_Timer.start();
+
     temporarySetup(context(), this);
 }
 

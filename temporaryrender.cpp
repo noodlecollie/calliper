@@ -16,6 +16,8 @@
 #include "callipermath.h"
 #include <QtMath>
 #include <QKeyEvent>
+#include "cameracontroller.h"
+#include <QTime>
 
 QByteArray convertImage(const QString &filename, int &width, int &height)
 {
@@ -101,6 +103,8 @@ QOpenGLTexture* glTex = NULL;
 Scene* scene = NULL;
 SceneObject* block = NULL;
 Camera* camera = NULL;
+CameraController cameraController;
+QTime cameraDelta;
 
 QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
 
@@ -134,10 +138,18 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
     renderer()->setShaderIndex(2);
+
+    cameraController.setTopSpeed(10.0f);
+    cameraDelta.start();
 }
 
 void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
+    int ms = cameraDelta.restart();
+    cameraController.update(ms);
+    float frac = (float)ms/1000.0f;
+    camera->translate(cameraController.velocity() * frac);
+
     // Bind geometry for rendering
 //    geometry->upload();
 //    geometry->bindVertices(true);
@@ -177,26 +189,26 @@ bool temporaryKeyPress(QKeyEvent *e)
     switch (e->key())
     {
     case Qt::Key_W:
-        //pos.setX(pos.x() + MOVEMENT_DELTA);
-        camera->translate(QVector3D(MOVEMENT_DELTA, 0, 0));
+//        camera->translate(QVector3D(MOVEMENT_DELTA, 0, 0));
+        cameraController.forward(true);
         updated = true;
         break;
 
     case Qt::Key_S:
-        //pos.setX(pos.x() - MOVEMENT_DELTA);
-        camera->translate(QVector3D(-MOVEMENT_DELTA, 0, 0));
+//        camera->translate(QVector3D(-MOVEMENT_DELTA, 0, 0));
+        cameraController.backward(true);
         updated = true;
         break;
 
     case Qt::Key_A:
-        //pos.setY(pos.y() + MOVEMENT_DELTA);
-        camera->translate(QVector3D(0, MOVEMENT_DELTA, 0));
+//        camera->translate(QVector3D(0, MOVEMENT_DELTA, 0));
+        cameraController.left(true);
         updated = true;
         break;
 
     case Qt::Key_D:
-        //pos.setY(pos.y() - MOVEMENT_DELTA);
-        camera->translate(QVector3D(0, -MOVEMENT_DELTA, 0));
+//        camera->translate(QVector3D(0, -MOVEMENT_DELTA, 0));
+        cameraController.right(true);
         updated = true;
         break;
 
@@ -227,5 +239,34 @@ bool temporaryKeyPress(QKeyEvent *e)
 
 bool temporaryKeyRelease(QKeyEvent *e)
 {
-    return false;
+   if (!camera) return false;
+
+   bool updated = false;
+
+   switch (e->key())
+   {
+   case Qt::Key_W:
+//        camera->translate(QVector3D(MOVEMENT_DELTA, 0, 0));
+       cameraController.forward(false);
+       updated = true;
+       break;
+
+   case Qt::Key_S:
+//        camera->translate(QVector3D(-MOVEMENT_DELTA, 0, 0));
+       cameraController.backward(false);
+       updated = true;
+       break;
+
+   case Qt::Key_A:
+//        camera->translate(QVector3D(0, MOVEMENT_DELTA, 0));
+       cameraController.left(false);
+       updated = true;
+       break;
+
+   case Qt::Key_D:
+//        camera->translate(QVector3D(0, -MOVEMENT_DELTA, 0));
+       cameraController.right(false);
+       updated = true;
+       break;
+   }
 }

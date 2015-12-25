@@ -106,3 +106,21 @@ void SceneObject::translate(const QVector3D &trans)
 {
     setPosition(position() + (Math::matrixOrientation(m_angAngles)*trans));
 }
+
+SceneObject* SceneObject::parentObject() const
+{
+    return qobject_cast<SceneObject*>(parent());
+}
+
+QMatrix4x4 SceneObject::rootToLocal() const
+{
+    QMatrix4x4 mat = parentToLocal();
+    SceneObject* obj = parentObject();
+    while (obj)
+    {
+        mat = mat * obj->parentToLocal();
+        obj = obj->parentObject();
+    }
+
+    return mat;
+}

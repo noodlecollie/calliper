@@ -12,6 +12,7 @@ class SceneObject : public QObject
     Q_OBJECT
 public:
     explicit SceneObject(SceneObject *parent = 0);
+    SceneObject* parentObject() const;
 
     // The SceneObject owns its geometry.
     // Any old geometry that is replaced will be deleted.
@@ -27,6 +28,9 @@ public:
     // World -> camera = parent -> local = inverse transforms
     QMatrix4x4 parentToLocal() const;
     QMatrix4x4 localToParent() const;
+
+    // Traverses the tree and calculates the root -> local matrix.
+    QMatrix4x4 rootToLocal() const;
 
     // Local
     QVector3D position() const;

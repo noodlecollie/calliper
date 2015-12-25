@@ -36,14 +36,6 @@ void UnlitTextureShader::construct()
     m_iWorldToCameraLocation = f->glGetUniformLocation(handle(), "worldToCamera");
     m_iHammerToOpenGLLocation = f->glGetUniformLocation(handle(), "hammerToOpenGL");
     m_iProjectionLocation = f->glGetUniformLocation(handle(), "projection");
-
-    qDebug() << "Locations:"
-             << m_iPositionLocation
-             << m_iUVLocation
-             << m_iModelToWorldLocation
-             << m_iWorldToCameraLocation
-             << m_iHammerToOpenGLLocation
-             << m_iProjectionLocation;
 }
 
 void UnlitTextureShader::apply() const
