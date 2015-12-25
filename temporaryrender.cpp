@@ -104,7 +104,8 @@ Camera* camera = NULL;
 
 QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
 
-#define MOVEMENT_DELTA 0.1f
+#define MOVEMENT_DELTA 0.01f
+#define ANGLE_DELTA 10.0f
 
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
@@ -170,29 +171,58 @@ bool temporaryKeyPress(QKeyEvent *e)
 {
     if (!camera) return false;
 
-    QVector3D pos = camera->position();
+    bool updated = false;
+    EulerAngle ang = camera->angles();
 
     switch (e->key())
     {
     case Qt::Key_W:
-        pos.setX(pos.x() + MOVEMENT_DELTA);
+        //pos.setX(pos.x() + MOVEMENT_DELTA);
+        camera->translate(QVector3D(MOVEMENT_DELTA, 0, 0));
+        updated = true;
         break;
 
     case Qt::Key_S:
-        pos.setX(pos.x() - MOVEMENT_DELTA);
+        //pos.setX(pos.x() - MOVEMENT_DELTA);
+        camera->translate(QVector3D(-MOVEMENT_DELTA, 0, 0));
+        updated = true;
         break;
 
     case Qt::Key_A:
-        pos.setY(pos.y() + MOVEMENT_DELTA);
+        //pos.setY(pos.y() + MOVEMENT_DELTA);
+        camera->translate(QVector3D(0, MOVEMENT_DELTA, 0));
+        updated = true;
         break;
 
     case Qt::Key_D:
-        pos.setY(pos.y() - MOVEMENT_DELTA);
+        //pos.setY(pos.y() - MOVEMENT_DELTA);
+        camera->translate(QVector3D(0, -MOVEMENT_DELTA, 0));
+        updated = true;
+        break;
+
+    case Qt::Key_Up:
+        ang.setPitch(ang.pitch() - ANGLE_DELTA);
+        updated = true;
+        break;
+
+    case Qt::Key_Down:
+        ang.setPitch(ang.pitch() + ANGLE_DELTA);
+        updated = true;
+        break;
+
+    case Qt::Key_Left:
+        ang.setYaw(ang.yaw() + ANGLE_DELTA);
+        updated = true;
+        break;
+
+    case Qt::Key_Right:
+        ang.setYaw(ang.yaw() - ANGLE_DELTA);
+        updated = true;
         break;
     }
 
-    camera->setPosition(pos);
-    return true;
+    camera->setAngles(ang);
+    return updated;
 }
 
 bool temporaryKeyRelease(QKeyEvent *e)

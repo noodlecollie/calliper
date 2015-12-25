@@ -1,5 +1,6 @@
 #include "sceneobject.h"
 #include "callipermath.h"
+#include <cmath>
 
 SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
 {
@@ -34,13 +35,19 @@ void SceneObject::setPosition(const QVector3D &pos)
 
 void SceneObject::rebuildMatrices() const
 {
+    rebuildLocalToParent();
+    m_matParentToLocal = m_matLocalToParent.inverted();
+    m_bMatricesStale = false;
+}
+
+void SceneObject::rebuildLocalToParent() const
+{
     // To get from local (model) space to world space,
     // we perform transforms forward.
     // To get from world space to camera space we must
     // perform the camera transforms backward - see Camera class.
-    m_matLocalToParent = Math::matrixTranslate(m_vecPosition);
-    m_matParentToLocal = m_matLocalToParent.inverted();
-    m_bMatricesStale = false;
+    m_matLocalToParent = Math::matrixTranslate(m_vecPosition)
+            * Math::matrixOrientation(m_angAngles);
 }
 
 QMatrix4x4 SceneObject::parentToLocal() const
@@ -62,4 +69,40 @@ QMatrix4x4 SceneObject::localToParent() const
 bool SceneObject::isEmpty() const
 {
     return m_pGeometry->isEmpty();
+}
+
+EulerAngle SceneObject::angles() const
+{
+    return m_angAngles;
+}
+
+void SceneObject::setAngles(const EulerAngle &angle)
+{
+    if ( m_angAngles == angle ) return;
+
+    m_angAngles = angle;
+    clampAngles();
+    m_bMatricesStale = true;
+}
+
+void SceneObject::clampAngles()
+{
+    if ( m_angAngles.pitch() < -90.0f )
+        m_angAngles.setPitch(-90.0f);
+
+    else if ( m_angAngles.pitch() > 90.0f )
+        m_angAngles.setPitch(90.0f);
+
+    if ( m_angAngles.roll() < -180.0f )
+        m_angAngles.setRoll(-180.0f);
+
+    else if ( m_angAngles.roll() > 180.0f )
+        m_angAngles.setRoll(180.0f);
+
+    m_angAngles.setYaw(std::fmod(m_angAngles.yaw(), 360.0f));
+}
+
+void SceneObject::translate(const QVector3D &trans)
+{
+    setPosition(position() + (Math::matrixOrientation(m_angAngles)*trans));
 }

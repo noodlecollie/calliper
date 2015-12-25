@@ -86,5 +86,55 @@ namespace Math
     {
         return OPENGL_TO_HAMMER;
     }
-}
 
+    QVector3D angleToVectorSimple(const EulerAngle &angle)
+    {
+        // X and Y are dependent on the pitch and yaw; Z is dependent on the pitch only.
+        float radYaw = qDegreesToRadians(angle.yaw());
+        float radPitch = qDegreesToRadians(angle.pitch());
+        float sinPitch = qSin(radPitch);
+        float sinYaw = qSin(radYaw);
+        float cosPitch = qCos(radPitch);
+        float cosYaw = qCos(radYaw);
+
+        return QVector3D(cosPitch * cosYaw, cosPitch * sinYaw, -sinPitch);
+    }
+
+    EulerAngle vectorToAngleSimple(const QVector3D &vec)
+    {
+        // http://www.gamedev.net/topic/399701-convert-vector-to-euler-cardan-angles/#entry3651854
+
+        // If the vector is null, return a zeroed angle.
+        if ( vec.isNull() )
+        {
+            return EulerAngle();
+        }
+
+        // If x and y are null, just set the pitch.
+        if ( qFuzzyIsNull(vec.x()) && qFuzzyIsNull(vec.y()) )
+        {
+            return EulerAngle(vec.z() > 0.0f ? 270.0f : 90.0f, 0.0f, 0.0f);
+        }
+
+        float temp, yaw, pitch;
+
+        // Yaw depends on the x and y co-ordinates.
+        yaw = qRadiansToDegrees(qAtan2(vec.y(), vec.x()));
+        if ( yaw < 0.0f ) yaw += 360.0f;
+
+        // Pitch is found by finding the angle between the xy projection of the vector
+        // and the negative Z axis.
+        temp = qSqrt(vec.x()*vec.x() + vec.y()*vec.y());        // Length of projection onto xy plane
+        pitch = qRadiansToDegrees(qAtan(-vec.z() / temp));      // Angle between this and -z.
+        if ( pitch < 0.0f ) pitch += 360;
+
+        return EulerAngle(pitch, yaw, 0.0f);
+    }
+
+    QMatrix4x4 matrixOrientation(const EulerAngle &angle)
+    {
+        return matrixRotateZ(qDegreesToRadians(angle.yaw()))
+                * matrixRotateY(qDegreesToRadians(angle.pitch()))
+                * matrixRotateX(qDegreesToRadians(angle.roll()));
+    }
+}

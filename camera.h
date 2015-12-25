@@ -15,7 +15,8 @@ public:
     // The world -> camera transform is parentToLocal().
 
 protected:
-    virtual void rebuildMatrices() const;
+    virtual void rebuildLocalToParent() const;
+    virtual void clampAngles();
 
 private:
     CameraLens  m_Lens;
