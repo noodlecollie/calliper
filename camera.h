@@ -12,6 +12,11 @@ public:
     CameraLens lens() const;
     void setLens(const CameraLens &lens);
 
+    // The world -> camera transform is parentToLocal().
+
+protected:
+    virtual void rebuildMatrices() const;
+
 private:
     CameraLens  m_Lens;
 };

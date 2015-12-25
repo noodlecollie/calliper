@@ -1,5 +1,6 @@
 #include "viewport.h"
 #include "temporaryrender.h"
+#include <QKeyEvent>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -35,4 +36,16 @@ void Viewport::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     temporaryRender(context(), this);
+}
+
+void Viewport::keyPressEvent(QKeyEvent *e)
+{
+    if ( temporaryKeyPress(e) )
+        update();
+}
+
+void Viewport::keyReleaseEvent(QKeyEvent *e)
+{
+    if ( temporaryKeyRelease(e) )
+        update();
 }

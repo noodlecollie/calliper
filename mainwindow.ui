@@ -28,7 +28,11 @@
      <number>3</number>
     </property>
     <item>
-     <widget class="Viewport" name="viewport"/>
+     <widget class="Viewport" name="viewport">
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

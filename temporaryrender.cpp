@@ -15,6 +15,7 @@
 #include <QMatrix4x4>
 #include "callipermath.h"
 #include <QtMath>
+#include <QKeyEvent>
 
 QByteArray convertImage(const QString &filename, int &width, int &height)
 {
@@ -103,6 +104,8 @@ Camera* camera = NULL;
 
 QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
 
+#define MOVEMENT_DELTA 0.1f
+
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
     // Set up geometry to render.
@@ -124,7 +127,7 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     camera = new Camera(scene->root());
 
     block->setGeometry(GeometryFactory::cube(0.1f));
-    block->setPosition(QVector3D(0, 0.5f, -0.2f));
+    block->setPosition(QVector3D(0.5f, 0, -0.2f));
     block->geometry()->setTexture(0, "/textures/test");
 
     // Set rendering colour.
@@ -144,7 +147,7 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     ShaderProgram* pr = resourceManager()->shader(renderer()->shaderIndex());
     pr->setModelToWorld(block->localToParent() * blockRot);
-    pr->setWorldToCamera(camera->localToParent());
+    pr->setWorldToCamera(camera->parentToLocal());
     pr->setCameraProjection(camera->lens().projectionMatrix());
 
     // Apply the desired shader, setting up vertex format.
@@ -161,4 +164,38 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     // Release the shader.
     pr->release();
+}
+
+bool temporaryKeyPress(QKeyEvent *e)
+{
+    if (!camera) return false;
+
+    QVector3D pos = camera->position();
+
+    switch (e->key())
+    {
+    case Qt::Key_W:
+        pos.setX(pos.x() + MOVEMENT_DELTA);
+        break;
+
+    case Qt::Key_S:
+        pos.setX(pos.x() - MOVEMENT_DELTA);
+        break;
+
+    case Qt::Key_A:
+        pos.setY(pos.y() + MOVEMENT_DELTA);
+        break;
+
+    case Qt::Key_D:
+        pos.setY(pos.y() - MOVEMENT_DELTA);
+        break;
+    }
+
+    camera->setPosition(pos);
+    return true;
+}
+
+bool temporaryKeyRelease(QKeyEvent *e)
+{
+    return false;
 }

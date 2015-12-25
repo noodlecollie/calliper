@@ -22,6 +22,8 @@ public:
     bool isEmpty() const;
 
     // Matrices
+    // Model -> world = local -> parent = standard transforms
+    // World -> camera = parent -> local = inverse transforms
     QMatrix4x4 parentToLocal() const;
     QMatrix4x4 localToParent() const;
 
@@ -33,8 +35,8 @@ signals:
 
 public slots:
 
-private:
-    void rebuildMatrices() const;
+protected:
+    virtual void rebuildMatrices() const;
 
     QScopedPointer<GeometryData>    m_pGeometry;
 

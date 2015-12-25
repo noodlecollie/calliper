@@ -34,8 +34,12 @@ void SceneObject::setPosition(const QVector3D &pos)
 
 void SceneObject::rebuildMatrices() const
 {
-    m_matParentToLocal = Math::matrixTranslate(-m_vecPosition);
-    m_matLocalToParent = m_matParentToLocal.inverted();
+    // To get from local (model) space to world space,
+    // we perform transforms forward.
+    // To get from world space to camera space we must
+    // perform the camera transforms backward - see Camera class.
+    m_matLocalToParent = Math::matrixTranslate(m_vecPosition);
+    m_matParentToLocal = m_matLocalToParent.inverted();
     m_bMatricesStale = false;
 }
 
