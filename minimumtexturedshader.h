@@ -3,6 +3,9 @@
 
 #include "shaderprogram.h"
 
+// Required attributes:
+// - Position
+// - UV
 class MinimumTexturedShader : public ShaderProgram
 {
 public:
@@ -12,8 +15,6 @@ public:
     virtual void release() const;
 
 private:
-    GLuint  m_iPositionLocation;
-    GLuint  m_iUVLocation;
 };
 
 #endif // MINIMUMTEXTUREDSHADER_H

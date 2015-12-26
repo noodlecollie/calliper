@@ -18,6 +18,22 @@ public:
         FragmentShader
     };
 
+    enum Attribute
+    {
+        Position = 0,
+        Normal,
+        Color,
+        UV,
+
+        ColorUniform,
+        ModelToWorldMatrix,
+        WorldToCameraMatrix,
+        CoordinateTransformMatrix,
+        CameraProjectionMatrix,
+
+        AttributeCount
+    };
+
     bool compileSource(ShaderType type, const char* source);
     bool compileFile(ShaderType type, const QString &filename);
     bool create();
@@ -31,6 +47,9 @@ public:
     virtual void setWorldToCamera(const QMatrix4x4 &mat) {}
     virtual void setCameraProjection(const QMatrix4x4 &mat) {}
 
+    void setAttributeFormat(Attribute att, int components, int strideBytes, int offsetBytes);
+    void setUniformMatrix4(Attribute att, const QMatrix4x4 &mat);
+
     GLuint handle() const;
 
 signals:
@@ -43,6 +62,8 @@ protected:
     GLuint  m_iShaderProgram;
     GLuint  m_iVertexShader;
     GLuint  m_iFragmentShader;
+
+    GLuint  m_iAttributeLocations[AttributeCount];
 
     QByteArray  m_LogBuffer;
 };

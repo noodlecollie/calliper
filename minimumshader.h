@@ -3,6 +3,9 @@
 
 #include "shaderprogram.h"
 
+// Required attributes:
+// - Position
+// - Colour uniform
 class MinimumShader : public ShaderProgram
 {
 public:
@@ -12,8 +15,6 @@ public:
     virtual void release() const;
 
 private:
-    GLuint  m_iColourLocation;
-    GLuint  m_iPositionLocation;
 };
 
 #endif // MINIMUMSHADER_H

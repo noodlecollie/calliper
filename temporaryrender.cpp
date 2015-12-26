@@ -158,10 +158,13 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     geometry->bindIndices(true);
 
     ShaderProgram* pr2 = resourceManager()->shader(3);
-    pr2->setModelToWorld(QMatrix4x4());
-    pr2->setWorldToCamera(camera->parentToLocal());
-    pr2->setCameraProjection(camera->lens().projectionMatrix());
     pr2->apply();
+    pr2->setAttributeFormat(ShaderProgram::Position, 3, 7*sizeof(float), 0);
+    pr2->setAttributeFormat(ShaderProgram::Color, 4, 7*sizeof(float), 3*sizeof(float));
+    pr2->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, QMatrix4x4());
+    pr2->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
+    pr2->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
+    pr2->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, camera->lens().projectionMatrix());
     geometry->draw();
     pr2->release();
 
@@ -170,12 +173,16 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     block->geometry()->bindIndices(true);
 
     ShaderProgram* pr = resourceManager()->shader(renderer()->shaderIndex());
-    pr->setModelToWorld(block->localToParent());
-    pr->setWorldToCamera(camera->parentToLocal());
-    pr->setCameraProjection(camera->lens().projectionMatrix());
 
-    // Apply the desired shader, setting up vertex format.
+    // Apply the desired shader.
     pr->apply();
+
+    pr->setAttributeFormat(ShaderProgram::Position, 3, 8*sizeof(float), 0);
+    pr->setAttributeFormat(ShaderProgram::UV, 2, 8*sizeof(float), 6*sizeof(float));
+    pr->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, block->localToParent());
+    pr->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
+    pr->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
+    pr->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, camera->lens().projectionMatrix());
 
     // Bind the textures for use.
 //    QOpenGLTexture* tex = resourceManager()->texture(geometry->texture(0));

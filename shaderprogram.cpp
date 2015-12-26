@@ -2,6 +2,7 @@
 #include "resourcemanager.h"
 #include <QFile>
 #include <QtDebug>
+#include <QMatrix4x4>
 
 ShaderProgram::ShaderProgram(const QString &name) : QObject()
 {
@@ -9,6 +10,8 @@ ShaderProgram::ShaderProgram(const QString &name) : QObject()
     m_iShaderProgram = 0;
     m_iVertexShader = 0;
     m_iFragmentShader = 0;
+
+    memset(m_iAttributeLocations, 0xFF, sizeof(GLuint)*AttributeCount);
 }
 
 ShaderProgram::~ShaderProgram()
@@ -108,4 +111,31 @@ void ShaderProgram::bind(bool b)
 GLuint ShaderProgram::handle() const
 {
     return m_iShaderProgram;
+}
+
+void ShaderProgram::setAttributeFormat(Attribute att, int components, int strideBytes, int offsetBytes)
+{
+    if ( m_iAttributeLocations[att] == 0xFFFFFFFF )
+        return;
+
+    QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    f->glVertexAttribPointer(
+       m_iAttributeLocations[att],
+       components,
+       GL_FLOAT,
+       GL_FALSE,
+       strideBytes,
+       (void*)offsetBytes
+    );
+}
+
+void ShaderProgram::setUniformMatrix4(Attribute att, const QMatrix4x4 &mat)
+{
+    if ( m_iAttributeLocations[att] == 0xFFFFFFFF )
+        return;
+
+    QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    f->glUniformMatrix4fv(m_iAttributeLocations[att], 1, GL_FALSE, mat.constData());
 }
