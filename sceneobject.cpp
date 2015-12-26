@@ -124,3 +124,8 @@ QMatrix4x4 SceneObject::rootToLocal() const
 
     return mat;
 }
+
+QList<SceneObject*> SceneObject::children() const
+{
+    return findChildren<SceneObject*>(QString(), Qt::FindDirectChildrenOnly);
+}

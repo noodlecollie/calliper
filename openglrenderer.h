@@ -4,6 +4,12 @@
 #include <QColor>
 #include <QOpenGLFunctions>
 #include <QMatrix4x4>
+#include "matrixstack.h"
+#include "eulerangle.h"
+
+class Scene;
+class SceneObject;
+class Camera;
 
 class OpenGLRenderer
 {
@@ -21,9 +27,18 @@ public:
     int shaderIndex() const;
     void setShaderIndex(int index);
 
+    QVector3D directionalLight() const;
+    void setDirectionalLight(const QVector3D &dir);
+    void setDirectionalLight(const EulerAngle &ang);
+
+    void renderScene(Scene* scene, const Camera* camera);
+
 private:
-    QColor  m_colGlobalColour;
-    int     m_iShader;
+    void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &worldToCam, const QMatrix4x4 &projection);
+
+    QColor      m_colGlobalColour;
+    int         m_iShader;
+    QVector3D   m_vecDirectionalLight;
 };
 
 OpenGLRenderer* renderer();

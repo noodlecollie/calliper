@@ -13,6 +13,7 @@ class SceneObject : public QObject
 public:
     explicit SceneObject(SceneObject *parent = 0);
     SceneObject* parentObject() const;
+    QList<SceneObject*> children() const;
 
     // The SceneObject owns its geometry.
     // Any old geometry that is replaced will be deleted.

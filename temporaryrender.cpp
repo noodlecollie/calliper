@@ -150,8 +150,6 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     ShaderProgram* pr2 = resourceManager()->shader(3);
     pr2->apply();
-//    pr2->setAttributeFormat(ShaderProgram::Position, 3, 7*sizeof(float), 0);
-//    pr2->setAttributeFormat(ShaderProgram::Color, 4, 7*sizeof(float), 3*sizeof(float));
     geometry->applyDataFormat(pr2);
     pr2->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, QMatrix4x4());
     pr2->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
@@ -164,30 +162,29 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     block->geometry()->bindVertices(true);
     block->geometry()->bindIndices(true);
 
-    ShaderProgram* pr = resourceManager()->shader(renderer()->shaderIndex());
+//    ShaderProgram* pr = resourceManager()->shader(renderer()->shaderIndex());
 
-    // Apply the desired shader.
-    pr->apply();
+//    // Apply the desired shader.
+//    pr->apply();
 
-//    pr->setAttributeFormat(ShaderProgram::Position, 3, 8*sizeof(float), 0);
-//    pr->setAttributeFormat(ShaderProgram::UV, 2, 8*sizeof(float), 6*sizeof(float));
-    block->geometry()->applyDataFormat(pr);
-    pr->setUniformVector3(ShaderProgram::DirectionalLightUniform, QVector3D(1,0,-1).normalized());
-    pr->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, block->localToParent());
-    pr->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
-    pr->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
-    pr->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, camera->lens().projectionMatrix());
+//    block->geometry()->applyDataFormat(pr);
+//    pr->setUniformVector3(ShaderProgram::DirectionalLightUniform, QVector3D(1,0,-1).normalized());
+//    pr->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, block->localToParent());
+//    pr->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
+//    pr->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
+//    pr->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, camera->lens().projectionMatrix());
 
-    // Bind the textures for use.
-//    QOpenGLTexture* tex = resourceManager()->texture(geometry->texture(0));
-    QOpenGLTexture* tex = resourceManager()->texture(block->geometry()->texture(0));
-    tex->bind(0);
+//    // Bind the textures for use.
+//    QOpenGLTexture* tex = resourceManager()->texture(block->geometry()->texture(0));
+//    tex->bind(0);
 
-    // Draw the geometry.
-    block->geometry()->draw();
+//    // Draw the geometry.
+//    block->geometry()->draw();
 
-    // Release the shader.
-    pr->release();
+//    // Release the shader.
+//    pr->release();
+
+    renderer()->renderScene(scene, camera);
 }
 
 void temporaryShutdown()
