@@ -2,8 +2,66 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions_4_1_Core>
 #include "resourcemanager.h"
+#include "shaderprogram.h"
 
-#define VERTEX_ELEMENT_COUNT (3+3+2)
+static int numComponents[] = {
+    3,  // Position
+    3,  // Normal
+    4,  // Color
+    2,  // UV
+};
+
+static const int formatStride[] = {
+    8*sizeof(float),    // PositionNormalUV
+    7*sizeof(float),    // PositionColor
+};
+
+static int formatOffset(GeometryData::DataFormat format, ShaderProgram::Attribute att)
+{
+    switch (format)
+    {
+        case GeometryData::PositionNormalUV:
+        {
+            switch (att)
+            {
+            case ShaderProgram::Position:
+                return 0;
+
+            case ShaderProgram::Normal:
+                return 3*sizeof(float);
+
+            case ShaderProgram::UV:
+                return 6*sizeof(float);
+
+            default:
+                Q_ASSERT(false);
+                return 0;
+            }
+        }
+
+        case GeometryData::PositionColor:
+        {
+            switch (att)
+            {
+            case ShaderProgram::Position:
+                return 0;
+
+            case ShaderProgram::Color:
+                return 3*sizeof(float);
+
+            default:
+                Q_ASSERT(false);
+                return 0;
+            }
+        }
+
+        default:
+        {
+            Q_ASSERT(false);
+            return 0;
+        }
+    }
+}
 
 GeometryData::GeometryData()
 {
@@ -14,6 +72,7 @@ GeometryData::GeometryData()
     m_pIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
 
     m_iDrawMode = GL_TRIANGLES;
+    m_iDataFormat = PositionNormalUV;
 }
 
 GeometryData::~GeometryData()
@@ -25,6 +84,7 @@ GeometryData::~GeometryData()
 
 void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv)
 {
+    m_iDataFormat = PositionNormalUV;
     int size = m_Vertices.size();
     m_Vertices.resize(size + 8);
 
@@ -44,6 +104,7 @@ void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, c
 
 void GeometryData::appendVertex(const QVector3D &pos, const QColor &col)
 {
+    m_iDataFormat = PositionColor;
     int size = m_Vertices.size();
     m_Vertices.resize(size + 7);
 
@@ -61,7 +122,7 @@ void GeometryData::appendVertex(const QVector3D &pos, const QColor &col)
 
 int GeometryData::vertexCount() const
 {
-    return m_Vertices.count() / VERTEX_ELEMENT_COUNT;
+    return m_Vertices.count() / (formatStride[m_iDataFormat]/sizeof(float));
 }
 
 int GeometryData::vertexBytes() const
@@ -205,4 +266,66 @@ GLenum GeometryData::drawMode() const
 void GeometryData::setDrawMode(GLenum mode)
 {
     m_iDrawMode = mode;
+}
+
+GeometryData::DataFormat GeometryData::dataFormat() const
+{
+    return m_iDataFormat;
+}
+
+void GeometryData::setDataFormat(DataFormat format)
+{
+    m_iDataFormat = format;
+}
+
+void GeometryData::applyDataFormat(ShaderProgram *program)
+{
+    switch (m_iDataFormat)
+    {
+        case PositionNormalUV:
+        {
+            program->setAttributeFormat(
+                        ShaderProgram::Position,
+                        numComponents[ShaderProgram::Position],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Position));
+
+            program->setAttributeFormat(
+                        ShaderProgram::Normal,
+                        numComponents[ShaderProgram::Normal],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Normal));
+
+            program->setAttributeFormat(
+                        ShaderProgram::UV,
+                        numComponents[ShaderProgram::UV],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::UV));
+
+            break;
+        }
+
+        case PositionColor:
+        {
+            program->setAttributeFormat(
+                        ShaderProgram::Position,
+                        numComponents[ShaderProgram::Position],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Position));
+
+            program->setAttributeFormat(
+                        ShaderProgram::Color,
+                        numComponents[ShaderProgram::Color],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Color));
+
+            break;
+        }
+
+        default:
+        {
+            Q_ASSERT(false);
+            break;
+        }
+    }
 }

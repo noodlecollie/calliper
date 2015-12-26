@@ -118,7 +118,7 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     camera = new Camera(scene->root());
 
     block->setGeometry(GeometryFactory::cube(16.0f));
-    block->setPosition(QVector3D(0.5f, 0, -0.2f));
+    block->setPosition(QVector3D(64, 0, 0));
     block->setAngles(EulerAngle(0,45,0));
     block->geometry()->setTexture(0, "/textures/test");
 
@@ -159,8 +159,9 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     ShaderProgram* pr2 = resourceManager()->shader(3);
     pr2->apply();
-    pr2->setAttributeFormat(ShaderProgram::Position, 3, 7*sizeof(float), 0);
-    pr2->setAttributeFormat(ShaderProgram::Color, 4, 7*sizeof(float), 3*sizeof(float));
+//    pr2->setAttributeFormat(ShaderProgram::Position, 3, 7*sizeof(float), 0);
+//    pr2->setAttributeFormat(ShaderProgram::Color, 4, 7*sizeof(float), 3*sizeof(float));
+    geometry->applyDataFormat(pr2);
     pr2->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, QMatrix4x4());
     pr2->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
     pr2->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
@@ -177,8 +178,9 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     // Apply the desired shader.
     pr->apply();
 
-    pr->setAttributeFormat(ShaderProgram::Position, 3, 8*sizeof(float), 0);
-    pr->setAttributeFormat(ShaderProgram::UV, 2, 8*sizeof(float), 6*sizeof(float));
+//    pr->setAttributeFormat(ShaderProgram::Position, 3, 8*sizeof(float), 0);
+//    pr->setAttributeFormat(ShaderProgram::UV, 2, 8*sizeof(float), 6*sizeof(float));
+    block->geometry()->applyDataFormat(pr);
     pr->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, block->localToParent());
     pr->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
     pr->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());

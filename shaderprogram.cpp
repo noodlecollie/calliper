@@ -11,6 +11,7 @@ ShaderProgram::ShaderProgram(const QString &name) : QObject()
     m_iVertexShader = 0;
     m_iFragmentShader = 0;
 
+    // 0xFFFFFFFF means a location is not being used.
     memset(m_iAttributeLocations, 0xFF, sizeof(GLuint)*AttributeCount);
 }
 

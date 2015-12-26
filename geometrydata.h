@@ -8,6 +8,7 @@
 #include <QOpenGLFunctions>
 
 class QOpenGLBuffer;
+class ShaderProgram;
 
 #define MAX_GEOM_TEXTURES 4
 
@@ -17,7 +18,14 @@ public:
     GeometryData();
     ~GeometryData();
 
+    enum DataFormat
+    {
+        PositionNormalUV,
+        PositionColor
+    };
+
     // Methods for appending vertices with different formats.
+    // The data format is automatically set.
     // These should not really be mixed - undefined behaviour may result.
     void appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv);
     void appendVertex(const QVector3D &pos, const QColor &col);
@@ -46,6 +54,10 @@ public:
     GLenum drawMode() const;
     void setDrawMode(GLenum mode);
 
+    DataFormat dataFormat() const;
+    void setDataFormat(DataFormat format);
+    void applyDataFormat(ShaderProgram* program);
+
 private:
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;
@@ -58,6 +70,7 @@ private:
 
     QString         m_Textures[MAX_GEOM_TEXTURES];
     GLenum          m_iDrawMode;
+    DataFormat      m_iDataFormat;
 };
 
 #endif // GEOMETRYDATA_H
