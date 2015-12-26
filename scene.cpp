@@ -9,3 +9,8 @@ SceneObject* Scene::root() const
 {
     return m_pRootObject;
 }
+
+Scene::~Scene()
+{
+    delete m_pRootObject;
+}

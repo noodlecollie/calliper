@@ -15,9 +15,12 @@ OpenGLRenderer::OpenGLRenderer()
 
 OpenGLRenderer::~OpenGLRenderer()
 {
+    resourceManager()->makeCurrent();
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     // Nothing yet
+
+    resourceManager()->doneCurrent();
 }
 
 void OpenGLRenderer::initialise()

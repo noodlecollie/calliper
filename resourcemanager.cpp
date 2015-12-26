@@ -155,6 +155,7 @@ QOffscreenSurface* ResourceManager::surface() const
 
 QOpenGLFunctions_4_1_Core* ResourceManager::functions() const
 {
+    Q_ASSERT(QOpenGLContext::currentContext());
     return QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
 }
 

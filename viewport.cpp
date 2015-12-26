@@ -7,6 +7,11 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
 
 }
 
+Viewport::~Viewport()
+{
+
+}
+
 void Viewport::initializeGL()
 {
     initializeOpenGLFunctions();

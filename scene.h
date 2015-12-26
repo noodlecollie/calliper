@@ -7,6 +7,7 @@ class Scene
 {
 public:
     Scene();
+    ~Scene();
 
     SceneObject* root() const;
 

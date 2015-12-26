@@ -8,6 +8,7 @@ class QMouseEvent;
 
 void temporarySetup(QOpenGLContext* context, QOpenGLFunctions_4_1_Core* f);
 void temporaryRender(QOpenGLContext* context, QOpenGLFunctions_4_1_Core* f);
+void temporaryShutdown();
 bool temporaryKeyPress(QKeyEvent* e);
 bool temporaryKeyRelease(QKeyEvent* e);
 bool temporaryMousePress(QMouseEvent* e);

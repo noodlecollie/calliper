@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include "resourcemanager.h"
 #include "openglrenderer.h"
+#include "temporaryrender.h"
 
 int main(int argc, char *argv[])
 {
@@ -41,10 +42,13 @@ int main(int argc, char *argv[])
     renderer()->setUpOpenGLResources();
     resourceManager()->doneCurrent();
 
-    MainWindow w;
-    w.show();
+    MainWindow* w = new MainWindow;
+    w->show();
     
     int ret = a.exec();
+
+    delete w;
+    temporaryShutdown();
 
     // Shut down the renderer.
     OpenGLRenderer::shutdown();

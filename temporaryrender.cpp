@@ -86,20 +86,7 @@ const float texPixels[] = {
     0.0f, 1.0f, 0.0f, 1.0f,   1.0f, 1.0f, 1.0f, 1.0f,
 };
 
-GLuint VertexArrayID = 0;
-GLuint vertexbuffer = 0;
-GLuint indexbuffer = 0;
-GLuint VertexShaderID = 0;
-GLuint FragmentShaderID = 0;
-GLuint ProgramID = 0;
-GLuint locColour = 0;
-GLuint TextureID = 0;
-ShaderProgram* shader = NULL;
-
-QOpenGLBuffer* pVertexBuffer = NULL;
-QOpenGLBuffer* pIndexBuffer = NULL;
 GeometryData* geometry = NULL;
-QOpenGLTexture* glTex = NULL;
 
 Scene* scene = NULL;
 SceneObject* block = NULL;
@@ -201,6 +188,12 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     // Release the shader.
     pr->release();
+}
+
+void temporaryShutdown()
+{
+    delete geometry;
+    delete scene;
 }
 
 bool temporaryKeyPress(QKeyEvent *e)

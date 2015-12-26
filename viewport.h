@@ -8,7 +8,8 @@
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
 public:
-    Viewport(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit Viewport(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    ~Viewport();
 
 protected:
     virtual void initializeGL();
