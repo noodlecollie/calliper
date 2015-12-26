@@ -119,6 +119,7 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     block->setGeometry(GeometryFactory::cube(16.0f));
     block->setPosition(QVector3D(0.5f, 0, -0.2f));
+    block->setAngles(EulerAngle(0,45,0));
     block->geometry()->setTexture(0, "/textures/test");
 
     geometry = new GeometryData();
@@ -149,7 +150,7 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     int ms = cameraDelta.restart();
     cameraController.update(ms);
     float frac = (float)ms/1000.0f;
-    camera->translate(cameraController.velocity() * frac);
+    camera->translate(cameraController.velocity()/* * frac*/);
 
     // Bind geometry for rendering
     geometry->upload();
@@ -169,7 +170,7 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     block->geometry()->bindIndices(true);
 
     ShaderProgram* pr = resourceManager()->shader(renderer()->shaderIndex());
-    pr->setModelToWorld(block->localToParent() * blockRot);
+    pr->setModelToWorld(block->localToParent());
     pr->setWorldToCamera(camera->parentToLocal());
     pr->setCameraProjection(camera->lens().projectionMatrix());
 
