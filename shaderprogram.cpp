@@ -140,3 +140,13 @@ void ShaderProgram::setUniformMatrix4(Attribute att, const QMatrix4x4 &mat)
 
     f->glUniformMatrix4fv(m_iAttributeLocations[att], 1, GL_FALSE, mat.constData());
 }
+
+void ShaderProgram::setUniformVector3(Attribute att, const QVector3D &vec)
+{
+    if ( m_iAttributeLocations[att] == 0xFFFFFFFF )
+        return;
+
+    QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    f->glUniform3f(m_iAttributeLocations[att], vec.x(), vec.y(), vec.z());
+}

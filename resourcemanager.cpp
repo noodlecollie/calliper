@@ -8,6 +8,7 @@
 #include <QOpenGLTexture>
 #include "unlittextureshader.h"
 #include "pervertexcolorshader.h"
+#include "basiclittextureshader.h"
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -79,6 +80,10 @@ void ResourceManager::setUpShaders()
     PerVertexColorShader* pvcSh = new PerVertexColorShader();
     pvcSh->construct();
     m_Shaders.append(pvcSh);
+
+    BasicLitTextureShader* bltSh = new BasicLitTextureShader();
+    bltSh->construct();
+    m_Shaders.append(bltSh);
 }
 
 void ResourceManager::setUpBuiltInTextures()

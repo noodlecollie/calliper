@@ -143,7 +143,7 @@ void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 
     // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
-    renderer()->setShaderIndex(2);
+    renderer()->setShaderIndex(4);
 
     cameraController.setTopSpeed(10.0f);
     cameraDelta.start();
@@ -185,6 +185,7 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 //    pr->setAttributeFormat(ShaderProgram::Position, 3, 8*sizeof(float), 0);
 //    pr->setAttributeFormat(ShaderProgram::UV, 2, 8*sizeof(float), 6*sizeof(float));
     block->geometry()->applyDataFormat(pr);
+    pr->setUniformVector3(ShaderProgram::DirectionalLightUniform, QVector3D(1,0,-1).normalized());
     pr->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, block->localToParent());
     pr->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
     pr->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());

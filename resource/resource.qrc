@@ -11,5 +11,7 @@
         <file>shaders/unlit.vert</file>
         <file>shaders/pervertexcolor.frag</file>
         <file>shaders/pervertexcolor.vert</file>
+        <file>shaders/basiclit.frag</file>
+        <file>shaders/basiclit.vert</file>
     </qresource>
 </RCC>

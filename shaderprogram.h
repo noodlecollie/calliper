@@ -26,6 +26,7 @@ public:
         UV,
 
         ColorUniform,
+        DirectionalLightUniform,
         ModelToWorldMatrix,
         WorldToCameraMatrix,
         CoordinateTransformMatrix,
@@ -49,6 +50,7 @@ public:
 
     void setAttributeFormat(Attribute att, int components, int strideBytes, int offsetBytes);
     void setUniformMatrix4(Attribute att, const QMatrix4x4 &mat);
+    void setUniformVector3(Attribute att, const QVector3D &vec);
 
     GLuint handle() const;
 

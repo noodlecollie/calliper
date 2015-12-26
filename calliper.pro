@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     camera.cpp \
     eulerangle.cpp \
     cameracontroller.cpp \
-    pervertexcolorshader.cpp
+    pervertexcolorshader.cpp \
+    basiclittextureshader.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -51,7 +52,8 @@ HEADERS  += mainwindow.h \
     camera.h \
     eulerangle.h \
     cameracontroller.h \
-    pervertexcolorshader.h
+    pervertexcolorshader.h \
+    basiclittextureshader.h
 
 FORMS    += mainwindow.ui
 

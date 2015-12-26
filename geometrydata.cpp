@@ -3,6 +3,7 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include "resourcemanager.h"
 #include "shaderprogram.h"
+#include <QtDebug>
 
 static int numComponents[] = {
     3,  // Position
