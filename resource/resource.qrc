@@ -9,5 +9,7 @@
         <file>shaders/minimum_textured.vert</file>
         <file>shaders/unlit.frag</file>
         <file>shaders/unlit.vert</file>
+        <file>shaders/pervertexcolor.frag</file>
+        <file>shaders/pervertexcolor.vert</file>
     </qresource>
 </RCC>

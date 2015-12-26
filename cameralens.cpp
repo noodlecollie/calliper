@@ -12,7 +12,7 @@ CameraLens::CameraLens(LensType type)
     m_flTopPlane = 1;
     m_flBottomPlane = -1;
     m_flNearPlane = 0.1f;
-    m_flFarPlane = 100.0f;
+    m_flFarPlane = 1000.0f;
 
     m_bMatrixDirty = true;
 }

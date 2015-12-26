@@ -12,6 +12,8 @@ GeometryData::GeometryData()
 
     m_pVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
     m_pIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+
+    m_iDrawMode = GL_TRIANGLES;
 }
 
 GeometryData::~GeometryData()
@@ -23,16 +25,36 @@ GeometryData::~GeometryData()
 
 void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv)
 {
-    m_Vertices.append(pos.x());
-    m_Vertices.append(pos.y());
-    m_Vertices.append(pos.z());
+    int size = m_Vertices.size();
+    m_Vertices.resize(size + 8);
 
-    m_Vertices.append(normal.x());
-    m_Vertices.append(normal.y());
-    m_Vertices.append(normal.z());
+    m_Vertices[size+0] = pos.x();
+    m_Vertices[size+1] = pos.y();
+    m_Vertices[size+2] = pos.z();
 
-    m_Vertices.append(uv.x());
-    m_Vertices.append(uv.y());
+    m_Vertices[size+3] = normal.x();
+    m_Vertices[size+4] = normal.y();
+    m_Vertices[size+5] = normal.z();
+
+    m_Vertices[size+6] = uv.x();
+    m_Vertices[size+7] = uv.y();
+
+    m_bVerticesStale = true;
+}
+
+void GeometryData::appendVertex(const QVector3D &pos, const QColor &col)
+{
+    int size = m_Vertices.size();
+    m_Vertices.resize(size + 7);
+
+    m_Vertices[size+0] = pos.x();
+    m_Vertices[size+1] = pos.y();
+    m_Vertices[size+2] = pos.z();
+
+    m_Vertices[size+3] = col.redF();
+    m_Vertices[size+4] = col.greenF();
+    m_Vertices[size+5] = col.blueF();
+    m_Vertices[size+6] = col.alphaF();
 
     m_bVerticesStale = true;
 }
@@ -140,7 +162,7 @@ void GeometryData::draw()
 {
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
-    f->glDrawElements(GL_TRIANGLES, indexCount(), GL_UNSIGNED_INT, 0);
+    f->glDrawElements(m_iDrawMode, indexCount(), GL_UNSIGNED_INT, 0);
 }
 
 QString GeometryData::texture(int index) const
@@ -173,4 +195,14 @@ void GeometryData::destroy()
 
     if ( m_pIndexBuffer->isCreated() )
         m_pIndexBuffer->destroy();
+}
+
+GLenum GeometryData::drawMode() const
+{
+    return m_iDrawMode;
+}
+
+void GeometryData::setDrawMode(GLenum mode)
+{
+    m_iDrawMode = mode;
 }

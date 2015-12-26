@@ -7,6 +7,7 @@
 #include "minimumtexturedshader.h"
 #include <QOpenGLTexture>
 #include "unlittextureshader.h"
+#include "pervertexcolorshader.h"
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -74,6 +75,10 @@ void ResourceManager::setUpShaders()
     UnlitTextureShader* unlTSh = new UnlitTextureShader();
     unlTSh->construct();
     m_Shaders.append(unlTSh);
+
+    PerVertexColorShader* pvcSh = new PerVertexColorShader();
+    pvcSh->construct();
+    m_Shaders.append(pvcSh);
 }
 
 void ResourceManager::setUpBuiltInTextures()

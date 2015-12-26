@@ -113,27 +113,28 @@ QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
 
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
-    // Set up geometry to render.
-//    geometry = new GeometryData();
-//    geometry->appendVertex(QVector3D(-0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(0,0));
-//    geometry->appendVertex(QVector3D(0.8f, 0.0f, -0.8f), QVector3D(0,0,1), QVector2D(1,0));
-//    geometry->appendVertex(QVector3D(0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(1,1));
-//    geometry->appendVertex(QVector3D(-0.8f, 0.0f, 0.8f), QVector3D(0,0,1), QVector2D(0,1));
-//    geometry->appendIndex(0);
-//    geometry->appendIndex(1);
-//    geometry->appendIndex(2);
-//    geometry->appendIndex(0);
-//    geometry->appendIndex(2);
-//    geometry->appendIndex(3);
-//    geometry->setTexture(0, "/textures/uvsample");
-
     scene = new Scene();
     block = new SceneObject(scene->root());
     camera = new Camera(scene->root());
 
-    block->setGeometry(GeometryFactory::cube(0.1f));
+    block->setGeometry(GeometryFactory::cube(16.0f));
     block->setPosition(QVector3D(0.5f, 0, -0.2f));
     block->geometry()->setTexture(0, "/textures/test");
+
+    geometry = new GeometryData();
+    geometry->setDrawMode(GL_LINES);
+    geometry->appendVertex(QVector3D(0,0,0), QColor(255,0,0));
+    geometry->appendVertex(QVector3D(64,0,0), QColor(255,0,0));
+    geometry->appendVertex(QVector3D(0,0,0), QColor(0,255,0));
+    geometry->appendVertex(QVector3D(0,64,0), QColor(0,255,0));
+    geometry->appendVertex(QVector3D(0,0,0), QColor(0,0,255));
+    geometry->appendVertex(QVector3D(0,0,64), QColor(0,0,255));
+    geometry->appendIndex(0);
+    geometry->appendIndex(1);
+    geometry->appendIndex(2);
+    geometry->appendIndex(3);
+    geometry->appendIndex(4);
+    geometry->appendIndex(5);
 
     // Set rendering colour.
     renderer()->setGlobalColor(QColor(255,0,0));
@@ -151,9 +152,18 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     camera->translate(cameraController.velocity() * frac);
 
     // Bind geometry for rendering
-//    geometry->upload();
-//    geometry->bindVertices(true);
-//    geometry->bindIndices(true);
+    geometry->upload();
+    geometry->bindVertices(true);
+    geometry->bindIndices(true);
+
+    ShaderProgram* pr2 = resourceManager()->shader(3);
+    pr2->setModelToWorld(QMatrix4x4());
+    pr2->setWorldToCamera(camera->parentToLocal());
+    pr2->setCameraProjection(camera->lens().projectionMatrix());
+    pr2->apply();
+    geometry->draw();
+    pr2->release();
+
     block->geometry()->upload();
     block->geometry()->bindVertices(true);
     block->geometry()->bindIndices(true);
@@ -172,7 +182,6 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     tex->bind(0);
 
     // Draw the geometry.
-//    geometry->draw();
     block->geometry()->draw();
 
     // Release the shader.
@@ -189,25 +198,21 @@ bool temporaryKeyPress(QKeyEvent *e)
     switch (e->key())
     {
     case Qt::Key_W:
-//        camera->translate(QVector3D(MOVEMENT_DELTA, 0, 0));
         cameraController.forward(true);
         updated = true;
         break;
 
     case Qt::Key_S:
-//        camera->translate(QVector3D(-MOVEMENT_DELTA, 0, 0));
         cameraController.backward(true);
         updated = true;
         break;
 
     case Qt::Key_A:
-//        camera->translate(QVector3D(0, MOVEMENT_DELTA, 0));
         cameraController.left(true);
         updated = true;
         break;
 
     case Qt::Key_D:
-//        camera->translate(QVector3D(0, -MOVEMENT_DELTA, 0));
         cameraController.right(true);
         updated = true;
         break;
@@ -246,27 +251,28 @@ bool temporaryKeyRelease(QKeyEvent *e)
    switch (e->key())
    {
    case Qt::Key_W:
-//        camera->translate(QVector3D(MOVEMENT_DELTA, 0, 0));
        cameraController.forward(false);
        updated = true;
        break;
 
    case Qt::Key_S:
-//        camera->translate(QVector3D(-MOVEMENT_DELTA, 0, 0));
        cameraController.backward(false);
        updated = true;
        break;
 
    case Qt::Key_A:
-//        camera->translate(QVector3D(0, MOVEMENT_DELTA, 0));
        cameraController.left(false);
        updated = true;
        break;
 
    case Qt::Key_D:
-//        camera->translate(QVector3D(0, -MOVEMENT_DELTA, 0));
        cameraController.right(false);
        updated = true;
        break;
+
+   default:
+       break;
    }
+
+   return updated;
 }

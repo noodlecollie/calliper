@@ -4,6 +4,8 @@
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
+#include <QColor>
+#include <QOpenGLFunctions>
 
 class QOpenGLBuffer;
 
@@ -15,7 +17,11 @@ public:
     GeometryData();
     ~GeometryData();
 
+    // Methods for appending vertices with different formats.
+    // These should not really be mixed - undefined behaviour may result.
     void appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv);
+    void appendVertex(const QVector3D &pos, const QColor &col);
+
     void clearVertices();
     int vertexCount() const;
     int vertexBytes() const;
@@ -37,6 +43,9 @@ public:
     QString texture(int index) const;
     void setTexture(int index, const QString &path);
 
+    GLenum drawMode() const;
+    void setDrawMode(GLenum mode);
+
 private:
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;
@@ -48,6 +57,7 @@ private:
     QOpenGLBuffer*  m_pIndexBuffer;
 
     QString         m_Textures[MAX_GEOM_TEXTURES];
+    GLenum          m_iDrawMode;
 };
 
 #endif // GEOMETRYDATA_H
