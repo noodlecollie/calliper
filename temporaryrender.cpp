@@ -18,6 +18,7 @@
 #include <QKeyEvent>
 #include "cameracontroller.h"
 #include <QTime>
+#include <QMouseEvent>
 
 QByteArray convertImage(const QString &filename, int &width, int &height)
 {
@@ -105,11 +106,14 @@ SceneObject* block = NULL;
 Camera* camera = NULL;
 CameraController cameraController;
 QTime cameraDelta;
+bool trackingMouse = false;
+QPoint lastMousePos;
 
 QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
 
 #define MOVEMENT_DELTA 0.01f
 #define ANGLE_DELTA 10.0f
+#define MOUSE_SENSITIVITY 2.0f
 
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
@@ -208,21 +212,25 @@ bool temporaryKeyPress(QKeyEvent *e)
     switch (e->key())
     {
     case Qt::Key_W:
+        if ( e->isAutoRepeat() ) return false;
         cameraController.forward(true);
         updated = true;
         break;
 
     case Qt::Key_S:
+        if ( e->isAutoRepeat() ) return false;
         cameraController.backward(true);
         updated = true;
         break;
 
     case Qt::Key_A:
+        if ( e->isAutoRepeat() ) return false;
         cameraController.left(true);
         updated = true;
         break;
 
     case Qt::Key_D:
+        if ( e->isAutoRepeat() ) return false;
         cameraController.right(true);
         updated = true;
         break;
@@ -285,4 +293,37 @@ bool temporaryKeyRelease(QKeyEvent *e)
    }
 
    return updated;
+}
+
+bool temporaryMousePress(QMouseEvent *e)
+{
+    if ( e->button() == Qt::LeftButton )
+    {
+        trackingMouse = true;
+        lastMousePos = e->pos();
+    }
+    return false;
+}
+
+bool temporaryMouseMove(QMouseEvent *e)
+{
+    if ( !trackingMouse )
+        return false;
+
+    QPoint delta = e->pos() - lastMousePos;
+    EulerAngle angles = camera->angles();
+    angles.setPitch(angles.pitch() + ((float)delta.y() * MOUSE_SENSITIVITY));
+    angles.setYaw(angles.yaw() - ((float)delta.x() * MOUSE_SENSITIVITY));
+    camera->setAngles(angles);
+    lastMousePos = e->pos();
+    return true;
+}
+
+bool temporaryMouseRelease(QMouseEvent *e)
+{
+    if ( e->button() == Qt::LeftButton )
+    {
+        trackingMouse = false;
+    }
+    return false;
 }

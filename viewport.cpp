@@ -53,3 +53,21 @@ void Viewport::keyReleaseEvent(QKeyEvent *e)
     if ( temporaryKeyRelease(e) )
         update();
 }
+
+void Viewport::mousePressEvent(QMouseEvent *e)
+{
+    if ( temporaryMousePress(e) )
+        update();
+}
+
+void Viewport::mouseMoveEvent(QMouseEvent *e)
+{
+    if ( temporaryMouseMove(e) )
+        update();
+}
+
+void Viewport::mouseReleaseEvent(QMouseEvent *e)
+{
+    if ( temporaryMouseRelease(e) )
+        update();
+}
