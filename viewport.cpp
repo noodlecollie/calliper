@@ -102,45 +102,51 @@ void Viewport::paintGL()
 
 void Viewport::keyPressEvent(QKeyEvent *e)
 {
-    if ( !e->isAutoRepeat() )
+    if ( e->isAutoRepeat() )
     {
-        switch (e->key())
+        QOpenGLWidget::keyPressEvent(e);
+        return;
+    }
+
+    switch (e->key())
+    {
+        case Qt::Key_W:
         {
-            case Qt::Key_W:
-            {
-                m_CameraController.forward(true);
-                break;
-            }
+            m_CameraController.forward(true);
+            break;
+        }
+        case Qt::Key_A:
+        {
+            m_CameraController.left(true);
+            break;
+        }
+        case Qt::Key_D:
+        {
+            m_CameraController.right(true);
+            break;
+        }
+        case Qt::Key_S:
+        {
+            m_CameraController.backward(true);
+            break;
+        }
 
-            case Qt::Key_S:
-            {
-                m_CameraController.backward(true);
-                break;
-            }
-
-            case Qt::Key_A:
-            {
-                m_CameraController.left(true);
-                break;
-            }
-
-            case Qt::Key_D:
-            {
-                m_CameraController.right(true);
-                break;
-            }
-
-            default:
-            {
-                QOpenGLWidget::keyPressEvent(e);
-                break;
-            }
+        default:
+        {
+            QOpenGLWidget::keyPressEvent(e);
+            break;
         }
     }
 }
 
 void Viewport::keyReleaseEvent(QKeyEvent *e)
 {
+    if ( e->isAutoRepeat() )
+    {
+        QOpenGLWidget::keyPressEvent(e);
+        return;
+    }
+
     switch (e->key())
     {
         case Qt::Key_W:
@@ -148,28 +154,25 @@ void Viewport::keyReleaseEvent(QKeyEvent *e)
             m_CameraController.forward(false);
             break;
         }
-
+        case Qt::Key_A:
+        {
+            m_CameraController.left(false);
+            break;
+        }
+        case Qt::Key_D:
+        {
+            m_CameraController.right(false);
+            break;
+        }
         case Qt::Key_S:
         {
             m_CameraController.backward(false);
             break;
         }
 
-        case Qt::Key_A:
-        {
-            m_CameraController.left(false);
-            break;
-        }
-
-        case Qt::Key_D:
-        {
-            m_CameraController.right(false);
-            break;
-        }
-
         default:
         {
-            QOpenGLWidget::keyReleaseEvent(e);
+            QOpenGLWidget::keyPressEvent(e);
             break;
         }
     }
