@@ -97,6 +97,7 @@ void MainWindow::updateFromActiveDocument()
     if ( cameras.count() > 0 )
     {
         ui->viewport->setCamera(cameras.at(0));
+        ui->viewport->setScene(doc->scene());
     }
 }
 

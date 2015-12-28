@@ -15,6 +15,8 @@ class BasicLitTextureShader : public ShaderProgram
 {
 public:
     BasicLitTextureShader();
+
+    static QString staticName();
     virtual void construct();
     virtual void apply() const;
     virtual void release() const;

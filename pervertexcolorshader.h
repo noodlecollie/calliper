@@ -15,6 +15,8 @@ class PerVertexColorShader : public ShaderProgram
 {
 public:
     PerVertexColorShader();
+
+    static QString staticName();
     virtual void construct();
     virtual void apply() const;
     virtual void release() const;

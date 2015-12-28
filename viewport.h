@@ -8,6 +8,7 @@
 
 class Camera;
 class GeometryData;
+class Scene;
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
@@ -21,6 +22,9 @@ public:
 
     Camera* camera() const;
     void setCamera(Camera* camera);
+
+    Scene* scene() const;
+    void setScene(Scene* scene);
 
 protected:
     virtual void initializeGL();
@@ -42,6 +46,7 @@ private:
     QTimer  m_Timer;
 
     Camera* m_pCamera;
+    Scene*  m_pScene;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
     GeometryData*   m_pEmptyText;

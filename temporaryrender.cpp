@@ -104,7 +104,7 @@ QMatrix4x4 blockRot = Math::matrixRotateZ(qDegreesToRadians(45.0f));
 
 void temporarySetup(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 {
-    scene = new Scene();
+    scene = new Scene(NULL);
     block = new SceneObject(scene->root());
     camera = new Camera(scene->root());
 
@@ -144,23 +144,23 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
     camera->translate(cameraController.velocity()/* * frac*/);
 
     // Bind geometry for rendering
-    geometry->upload();
-    geometry->bindVertices(true);
-    geometry->bindIndices(true);
+//    geometry->upload();
+//    geometry->bindVertices(true);
+//    geometry->bindIndices(true);
 
-    ShaderProgram* pr2 = resourceManager()->shader(3);
-    pr2->apply();
-    geometry->applyDataFormat(pr2);
-    pr2->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, QMatrix4x4());
-    pr2->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
-    pr2->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
-    pr2->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, camera->lens().projectionMatrix());
-    geometry->draw();
-    pr2->release();
+//    ShaderProgram* pr2 = resourceManager()->shader(3);
+//    pr2->apply();
+//    geometry->applyDataFormat(pr2);
+//    pr2->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, QMatrix4x4());
+//    pr2->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera->parentToLocal());
+//    pr2->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
+//    pr2->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, camera->lens().projectionMatrix());
+//    geometry->draw();
+//    pr2->release();
 
-    block->geometry()->upload();
-    block->geometry()->bindVertices(true);
-    block->geometry()->bindIndices(true);
+//    block->geometry()->upload();
+//    block->geometry()->bindVertices(true);
+//    block->geometry()->bindIndices(true);
 
 //    ShaderProgram* pr = resourceManager()->shader(renderer()->shaderIndex());
 
@@ -184,7 +184,9 @@ void temporaryRender(QOpenGLContext *context, QOpenGLFunctions_4_1_Core *f)
 //    // Release the shader.
 //    pr->release();
 
+    renderer()->preRender();
     renderer()->renderScene(scene, camera);
+    renderer()->postRender();
 }
 
 void temporaryShutdown()

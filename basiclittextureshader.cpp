@@ -2,9 +2,14 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include "resourcemanager.h"
 
-BasicLitTextureShader::BasicLitTextureShader() : ShaderProgram("BasicLitTextureShader")
+BasicLitTextureShader::BasicLitTextureShader() : ShaderProgram(BasicLitTextureShader::staticName())
 {
 
+}
+
+QString BasicLitTextureShader::staticName()
+{
+    return QString("BasicLitTextureShader");
 }
 
 void BasicLitTextureShader::construct()

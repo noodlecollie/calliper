@@ -2,8 +2,9 @@
 #include "camera.h"
 #include "sceneobject.h"
 
-Scene::Scene()
+Scene::Scene(MapDocument *document)
 {
+    m_pDocument = document;
     m_pRootObject = new SceneObject(NULL);
     m_pRootObject->m_pScene = this;
 }
@@ -26,4 +27,9 @@ QList<Camera*> Scene::findCameras() const
 QList<SceneObject*> Scene::findByName(const QString &name)
 {
     return m_pRootObject->findChildren<SceneObject*>(name, Qt::FindChildrenRecursively);
+}
+
+MapDocument* Scene::document() const
+{
+    return m_pDocument;
 }

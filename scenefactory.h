@@ -2,10 +2,11 @@
 #define SCENEFACTORY
 
 class Scene;
+class MapDocument;
 
 namespace SceneFactory
 {
-    Scene* defaultScene();
+    Scene* defaultScene(MapDocument* document);
 }
 
 #endif // SCENEFACTORY

@@ -3,8 +3,13 @@
 #include "callipermath.h"
 #include "resourcemanager.h"
 
-PerVertexColorShader::PerVertexColorShader() : ShaderProgram("PerVertexColorShader")
+PerVertexColorShader::PerVertexColorShader() : ShaderProgram(PerVertexColorShader::staticName())
 {
+}
+
+QString PerVertexColorShader::staticName()
+{
+    return QString("PerVertexColorShader");
 }
 
 void PerVertexColorShader::construct()

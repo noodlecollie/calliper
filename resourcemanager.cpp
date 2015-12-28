@@ -180,3 +180,14 @@ QOpenGLTexture* ResourceManager::texture(const QString &path) const
     QOpenGLTexture* tex = m_Textures.value(path, NULL);
     return tex ? tex : m_pDefaultTexture;
 }
+
+int ResourceManager::shaderIndex(const QString &name) const
+{
+    for ( int i = 0; i < m_Shaders.count(); i++ )
+    {
+        if ( m_Shaders.at(i)->objectName() == name )
+            return i;
+    }
+
+    return -1;
+}

@@ -2,8 +2,13 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include "resourcemanager.h"
 
-MinimumTexturedShader::MinimumTexturedShader() : ShaderProgram("MinimumTexturedShader")
+MinimumTexturedShader::MinimumTexturedShader() : ShaderProgram(MinimumTexturedShader::staticName())
 {
+}
+
+QString MinimumTexturedShader::staticName()
+{
+    return QString("MinimumTexturedShader");
 }
 
 void MinimumTexturedShader::construct()

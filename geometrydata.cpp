@@ -346,3 +346,13 @@ bool GeometryData::hasLocalTexture() const
 {
     return !m_pLocalTexture.isNull();
 }
+
+QString GeometryData::shaderOverride() const
+{
+    return m_szShaderOverride;
+}
+
+void GeometryData::setShaderOverride(const QString &shader)
+{
+    m_szShaderOverride = shader;
+}

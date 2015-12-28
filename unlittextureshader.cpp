@@ -5,8 +5,13 @@
 #include "resourcemanager.h"
 #include <QtDebug>
 
-UnlitTextureShader::UnlitTextureShader() : ShaderProgram("UnlitTextureShader")
+UnlitTextureShader::UnlitTextureShader() : ShaderProgram(UnlitTextureShader::staticName())
 {
+}
+
+QString UnlitTextureShader::staticName()
+{
+    return QString("UnlitTextureShader");
 }
 
 void UnlitTextureShader::construct()

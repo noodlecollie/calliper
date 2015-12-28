@@ -1,5 +1,4 @@
 #include "viewport.h"
-#include "temporaryrender.h"
 #include <QKeyEvent>
 #include <QFocusEvent>
 #include "openglrenderer.h"
@@ -8,6 +7,8 @@
 #include "resourcemanager.h"
 #include "shaderprogram.h"
 #include <QMatrix4x4>
+#include "scene.h"
+#include "basiclittextureshader.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -17,6 +18,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_colBackground = Viewport::defaultBackgroundColor();
     m_bBackgroundColorChanged = true;
     m_pCamera = NULL;
+    m_pScene = NULL;
 }
 
 Viewport::~Viewport()
@@ -71,11 +73,20 @@ void Viewport::paintGL()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if ( !m_pCamera )
+    if ( !m_pCamera || !m_pScene )
     {
         drawEmpty();
         return;
     }
+
+    // TODO: Should these calls be somewhere else?
+    int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
+    Q_ASSERT(index >= 0);
+    renderer()->setShaderIndex(index);
+
+    renderer()->preRender();
+    renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->postRender();
 }
 
 void Viewport::keyPressEvent(QKeyEvent *e)
@@ -134,6 +145,8 @@ QColor Viewport::defaultBackgroundColor()
 
 void Viewport::drawEmpty()
 {
+    // TODO: Put this type of thing into the renderer and make it generic.
+
     // We can't use QPainter because there's a bug with Qt
     // where the OpenGL shaders won't compile on Mac due to
     // a missing #version specifier.
@@ -166,4 +179,14 @@ Camera* Viewport::camera() const
 void Viewport::setCamera(Camera *camera)
 {
     m_pCamera = camera;
+}
+
+Scene* Viewport::scene() const
+{
+    return m_pScene;
+}
+
+void Viewport::setScene(Scene *scene)
+{
+    m_pScene = scene;
 }

@@ -11,6 +11,7 @@ class Scene;
 class SceneObject;
 class Camera;
 class GeometryData;
+class ShaderProgram;
 
 class OpenGLRenderer
 {
@@ -32,17 +33,27 @@ public:
     void setDirectionalLight(const QVector3D &dir);
     void setDirectionalLight(const EulerAngle &ang);
 
+    void preRender();
+    void postRender();
+
     void renderScene(Scene* scene, const Camera* camera);
 
     GeometryData* createTextQuad(const QSize &texSize, const QString &text, const QColor &col, const QFont &font,
                                                   Qt::Alignment alignment);
 
 private:
-    void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &worldToCam, const QMatrix4x4 &projection);
+    void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
+    void setCommonUniforms(ShaderProgram* program);
+    void setOneOffUniforms(ShaderProgram* program, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
+    void liveSwitchShader(ShaderProgram* oldShader, ShaderProgram* newShader,
+                          const QMatrix4x4 &camera, const QMatrix4x4 &projection);
 
     QColor      m_colGlobalColour;
     int         m_iShader;
     QVector3D   m_vecDirectionalLight;
+
+    bool            m_bPreparedForRendering;
+    ShaderProgram*  m_pShaderProgram;
 };
 
 OpenGLRenderer* renderer();

@@ -5,13 +5,15 @@
 
 class Camera;
 class SceneObject;
+class MapDocument;
 
 class Scene
 {
 public:
-    Scene();
+    Scene(MapDocument* document);
     ~Scene();
 
+    MapDocument* document() const;
     SceneObject* root() const;
 
     QList<Camera*> findCameras() const;
@@ -19,6 +21,7 @@ public:
 
 private:
     SceneObject*    m_pRootObject;
+    MapDocument*    m_pDocument;
 };
 
 #endif // SCENE_H

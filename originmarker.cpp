@@ -1,7 +1,10 @@
 #include "originmarker.h"
+#include "pervertexcolorshader.h"
 
 OriginMarker::OriginMarker(SceneObject *parent) : SceneObject(parent)
 {
+    m_pGeometry->setShaderOverride(PerVertexColorShader::staticName());
+
     m_pGeometry->setDrawMode(GL_LINES);
     m_pGeometry->appendVertex(QVector3D(0,0,0), QColor(255,0,0));
     m_pGeometry->appendVertex(QVector3D(64,0,0), QColor(255,0,0));

@@ -31,6 +31,7 @@ public:
 
     ShaderProgram* shader(int index) const;
     ShaderProgram* shader(const QString &name) const;
+    int shaderIndex(const QString &name) const;
 
     // Returns the default texture if the path is not found.
     QOpenGLTexture* texture(const QString &path) const;

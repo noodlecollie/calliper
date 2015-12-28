@@ -3,8 +3,13 @@
 #include "resourcemanager.h"
 #include "openglrenderer.h"
 
-MinimumShader::MinimumShader() : ShaderProgram("MinimumShader")
+MinimumShader::MinimumShader() : ShaderProgram(MinimumShader::staticName())
 {
+}
+
+QString MinimumShader::staticName()
+{
+    return QString("MinimumShader");
 }
 
 void MinimumShader::construct()

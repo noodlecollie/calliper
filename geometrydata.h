@@ -64,6 +64,9 @@ public:
     void setLocalTexture(const QSharedPointer<QOpenGLTexture> &tex);
     bool hasLocalTexture() const;
 
+    QString shaderOverride() const;
+    void setShaderOverride(const QString &shader);
+
 private:
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;
@@ -79,6 +82,7 @@ private:
     DataFormat      m_iDataFormat;
 
     QSharedPointer<QOpenGLTexture>  m_pLocalTexture;
+    QString m_szShaderOverride;
 };
 
 #endif // GEOMETRYDATA_H
