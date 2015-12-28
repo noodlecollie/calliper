@@ -138,14 +138,12 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, MatrixStack &stack,
         ShaderProgram* program = m_pShaderProgram;
 
         // If we have a shader override, set up the new shader.
-        bool overriddenShader = false;
         QString override = obj->geometry()->shaderOverride();
         if ( !override.isNull() )
         {
             ShaderProgram* pr = resourceManager()->shader(override);
-            if ( program )
+            if ( pr )
             {
-                overriddenShader = true;
                 program = pr;
                 liveSwitchShader(m_pShaderProgram, program, camera, projection);
             }
@@ -160,8 +158,7 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, MatrixStack &stack,
 
         obj->geometry()->draw();
 
-        // If we overrode the shader, set it back.
-        if ( overriddenShader )
+        if ( m_pShaderProgram != program )
         {
             liveSwitchShader(program, m_pShaderProgram, camera, projection);
         }
@@ -209,8 +206,7 @@ void OpenGLRenderer::renderScene(Scene *scene, const Camera *camera)
 
     QMatrix4x4 cameraMatrix = camera->rootToLocal();
     QMatrix4x4 projectionMatrix = camera->lens().projectionMatrix();
-    m_pShaderProgram->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, cameraMatrix);
-    m_pShaderProgram->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, projectionMatrix);
+    setOneOffUniforms(m_pShaderProgram, cameraMatrix, projectionMatrix);
 
     MatrixStack stack;
     renderSceneRecursive(scene->root(), stack, cameraMatrix, projectionMatrix);

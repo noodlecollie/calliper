@@ -9,6 +9,8 @@
 #include <QMatrix4x4>
 #include "scene.h"
 #include "basiclittextureshader.h"
+#include "pervertexcolorshader.h"
+#include "camera.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -19,6 +21,8 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bBackgroundColorChanged = true;
     m_pCamera = NULL;
     m_pScene = NULL;
+
+    m_CameraController.setTopSpeed(10.0f);
 }
 
 Viewport::~Viewport()
@@ -59,6 +63,8 @@ void Viewport::initializeGL()
                                               QColor::fromRgb(0xffd9d9d9),
                                               QFont("Arial", 25),
                                               Qt::AlignCenter);
+
+    m_TimeElapsed.start();
 }
 
 void Viewport::resizeGL(int w, int h)
@@ -69,6 +75,9 @@ void Viewport::resizeGL(int w, int h)
 
 void Viewport::paintGL()
 {
+    int msec = m_TimeElapsed.restart();
+    m_CameraController.update(msec);
+
     updateBackgroundColor();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -78,6 +87,8 @@ void Viewport::paintGL()
         drawEmpty();
         return;
     }
+
+    m_pCamera->translate(m_CameraController.velocity());
 
     // TODO: Should these calls be somewhere else?
     int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
@@ -91,12 +102,77 @@ void Viewport::paintGL()
 
 void Viewport::keyPressEvent(QKeyEvent *e)
 {
-    Q_UNUSED(e);
+    if ( !e->isAutoRepeat() )
+    {
+        switch (e->key())
+        {
+            case Qt::Key_W:
+            {
+                m_CameraController.forward(true);
+                break;
+            }
+
+            case Qt::Key_S:
+            {
+                m_CameraController.backward(true);
+                break;
+            }
+
+            case Qt::Key_A:
+            {
+                m_CameraController.left(true);
+                break;
+            }
+
+            case Qt::Key_D:
+            {
+                m_CameraController.right(true);
+                break;
+            }
+
+            default:
+            {
+                QOpenGLWidget::keyPressEvent(e);
+                break;
+            }
+        }
+    }
 }
 
 void Viewport::keyReleaseEvent(QKeyEvent *e)
 {
-    Q_UNUSED(e);
+    switch (e->key())
+    {
+        case Qt::Key_W:
+        {
+            m_CameraController.forward(false);
+            break;
+        }
+
+        case Qt::Key_S:
+        {
+            m_CameraController.backward(false);
+            break;
+        }
+
+        case Qt::Key_A:
+        {
+            m_CameraController.left(false);
+            break;
+        }
+
+        case Qt::Key_D:
+        {
+            m_CameraController.right(false);
+            break;
+        }
+
+        default:
+        {
+            QOpenGLWidget::keyReleaseEvent(e);
+            break;
+        }
+    }
 }
 
 void Viewport::mousePressEvent(QMouseEvent *e)
@@ -124,6 +200,7 @@ void Viewport::focusOutEvent(QFocusEvent *e)
 {
     Q_UNUSED(e);
     m_Timer.stop();
+    m_CameraController.reset();
 }
 
 QColor Viewport::backgroundColor() const

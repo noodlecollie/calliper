@@ -36,6 +36,7 @@ public:
     void clearMovementFlags();
 
     void update(int ms);
+    void reset();
 
 private:
     QVector3D vectorFromMovementFlags();

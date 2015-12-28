@@ -193,3 +193,9 @@ QVector3D CameraController::velocity() const
 {
     return m_vecVelocity;
 }
+
+void CameraController::reset()
+{
+    clearMovementFlags();
+    m_vecVelocity = QVector3D(0,0,0);
+}

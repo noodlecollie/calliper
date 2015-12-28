@@ -5,6 +5,8 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include <QTimer>
 #include <QColor>
+#include "cameracontroller.h"
+#include <QTime>
 
 class Camera;
 class GeometryData;
@@ -49,7 +51,9 @@ private:
     Scene*  m_pScene;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
-    GeometryData*   m_pEmptyText;
+    GeometryData*       m_pEmptyText;
+    CameraController    m_CameraController;
+    QTime               m_TimeElapsed;
 };
 
 #endif // VIEWPORT_H
