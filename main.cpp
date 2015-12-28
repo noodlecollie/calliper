@@ -35,14 +35,14 @@ int main(int argc, char *argv[])
     a.setOrganizationName("Infra");
     a.setOrganizationName("Infra");
 
-    // Initialise the over-arching application.
-    Application::initialise(new MainWindow());
-
     // Initialise the resource manager.
     ResourceManager::initialise();
 
     // Initialise the renderer.
     OpenGLRenderer::initialise();
+
+    // Initialise the over-arching application.
+    Application::initialise(new MainWindow());
 
     // Set up resources.
     resourceManager()->makeCurrent();
@@ -54,16 +54,14 @@ int main(int argc, char *argv[])
     
     int ret = a.exec();
 
-    temporaryShutdown();
+    // Shut down the application.
+    Application::shutdown();
 
     // Shut down the renderer.
     OpenGLRenderer::shutdown();
 
     // Shut down the resource manager.
     ResourceManager::shutdown();
-
-    // Shut down the application.
-    Application::shutdown();
 
     return ret;
 }

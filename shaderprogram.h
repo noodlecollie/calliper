@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QOpenGLFunctions>
 #include <QByteArray>
+#include <QMatrix4x4>
 
 class ShaderProgram : public QObject
 {
