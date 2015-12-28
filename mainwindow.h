@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QList>
+#include "mapdocument.h"
 
 namespace Ui {
 class MainWindow;
@@ -14,8 +16,18 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void quit();
+    void updateDocumentList(const QList<MapDocument*> &docs);
+    void createNewDocument();
+    void makeDocumentActiveFromMenu();
+    void closeActiveDocument();
+
 private:
     Ui::MainWindow *ui;
+
+    int m_iActiveDocument;
 };
 
 MainWindow* appMainWindow();

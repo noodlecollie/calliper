@@ -44,6 +44,8 @@ public:
     EulerAngle angles() const;
     void setAngles(const EulerAngle &angle);
 
+    void lookAt(const QVector3D &pos);
+
 signals:
 
 public slots:

@@ -44,9 +44,9 @@ public:
     virtual void construct() = 0;
     virtual void apply() const = 0;
     virtual void release() const = 0;
-    virtual void setModelToWorld(const QMatrix4x4 &mat) {}
-    virtual void setWorldToCamera(const QMatrix4x4 &mat) {}
-    virtual void setCameraProjection(const QMatrix4x4 &mat) {}
+    virtual void setModelToWorld(const QMatrix4x4 &mat) { Q_UNUSED(mat); }
+    virtual void setWorldToCamera(const QMatrix4x4 &mat) { Q_UNUSED(mat); }
+    virtual void setCameraProjection(const QMatrix4x4 &mat) { Q_UNUSED(mat); }
 
     void setAttributeFormat(Attribute att, int components, int strideBytes, int offsetBytes);
     void setUniformMatrix4(Attribute att, const QMatrix4x4 &mat);

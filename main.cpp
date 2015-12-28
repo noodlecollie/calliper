@@ -5,6 +5,7 @@
 #include "resourcemanager.h"
 #include "openglrenderer.h"
 #include "temporaryrender.h"
+#include "application.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +30,13 @@ int main(int argc, char *argv[])
     qDebug() << "Set default OpenGL format:" << format;
 
     QApplication a(argc, argv);
+    a.setApplicationName("Calliper");
+    a.setApplicationDisplayName("Calliper");
+    a.setOrganizationName("Infra");
+    a.setOrganizationName("Infra");
+
+    // Initialise the over-arching application.
+    Application::initialise(new MainWindow());
 
     // Initialise the resource manager.
     ResourceManager::initialise();
@@ -42,12 +50,10 @@ int main(int argc, char *argv[])
     renderer()->setUpOpenGLResources();
     resourceManager()->doneCurrent();
 
-    MainWindow* w = new MainWindow;
-    w->show();
+    application()->mainWindow()->show();
     
     int ret = a.exec();
 
-    delete w;
     temporaryShutdown();
 
     // Shut down the renderer.
@@ -55,6 +61,9 @@ int main(int argc, char *argv[])
 
     // Shut down the resource manager.
     ResourceManager::shutdown();
+
+    // Shut down the application.
+    Application::shutdown();
 
     return ret;
 }

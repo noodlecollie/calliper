@@ -127,7 +127,7 @@ void ShaderProgram::setAttributeFormat(Attribute att, int components, int stride
        GL_FLOAT,
        GL_FALSE,
        strideBytes,
-       (void*)offsetBytes
+       reinterpret_cast<void*>(offsetBytes)
     );
 }
 

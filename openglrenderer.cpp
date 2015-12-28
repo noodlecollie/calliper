@@ -26,6 +26,7 @@ OpenGLRenderer::~OpenGLRenderer()
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     // Nothing yet
+    Q_UNUSED(f);
 
     resourceManager()->doneCurrent();
 }
@@ -56,6 +57,9 @@ void OpenGLRenderer::setGlobalColor(const QColor &col)
 void OpenGLRenderer::setUpOpenGLResources()
 {
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    // Nothing yet.
+    Q_UNUSED(f);
 
     setShaderIndex(0);
 }

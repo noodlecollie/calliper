@@ -1,10 +1,15 @@
 #include "viewport.h"
 #include "temporaryrender.h"
 #include <QKeyEvent>
+#include <QFocusEvent>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
+    m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_Timer.setInterval(0);
 
+    m_colBackground = QColor::fromRgb(0xFF66CCFF);
+    m_bBackgroundColorChanged = true;
 }
 
 Viewport::~Viewport()
@@ -12,11 +17,20 @@ Viewport::~Viewport()
 
 }
 
+void Viewport::updateBackgroundColor()
+{
+    if ( m_bBackgroundColorChanged )
+    {
+        glClearColor(m_colBackground.redF(), m_colBackground.greenF(), m_colBackground.blueF(), m_colBackground.alphaF());
+        m_bBackgroundColorChanged = false;
+    }
+}
+
 void Viewport::initializeGL()
 {
     initializeOpenGLFunctions();
 
-    glClearColor(0.0f, 0.58f, 1.0f, 1.0f);
+    updateBackgroundColor();
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -26,12 +40,6 @@ void Viewport::initializeGL()
 
     glGenVertexArrays(1, &m_iVertexArray);
     glBindVertexArray(m_iVertexArray);
-
-    m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
-    m_Timer.setInterval(0);
-    m_Timer.start();
-
-    temporarySetup(context(), this);
 }
 
 void Viewport::resizeGL(int w, int h)
@@ -42,37 +50,56 @@ void Viewport::resizeGL(int w, int h)
 
 void Viewport::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    updateBackgroundColor();
 
-    temporaryRender(context(), this);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Viewport::keyPressEvent(QKeyEvent *e)
 {
-    if ( temporaryKeyPress(e) )
-        update();
+    Q_UNUSED(e);
 }
 
 void Viewport::keyReleaseEvent(QKeyEvent *e)
 {
-    if ( temporaryKeyRelease(e) )
-        update();
+    Q_UNUSED(e);
 }
 
 void Viewport::mousePressEvent(QMouseEvent *e)
 {
-    if ( temporaryMousePress(e) )
-        update();
+    Q_UNUSED(e);
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent *e)
 {
-    if ( temporaryMouseMove(e) )
-        update();
+    Q_UNUSED(e);
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *e)
 {
-    if ( temporaryMouseRelease(e) )
-        update();
+    Q_UNUSED(e);
+}
+
+void Viewport::focusInEvent(QFocusEvent *e)
+{
+    Q_UNUSED(e);
+    m_Timer.start();
+}
+
+void Viewport::focusOutEvent(QFocusEvent *e)
+{
+    Q_UNUSED(e);
+    m_Timer.stop();
+}
+
+QColor Viewport::backgroundColor() const
+{
+    return m_colBackground;
+}
+
+void Viewport::setBackgroundColor(const QColor &col)
+{
+    m_colBackground = col;
+    m_colBackground.setAlpha(255);
+    m_bBackgroundColorChanged = true;
 }

@@ -33,7 +33,11 @@ SOURCES += main.cpp\
     cameracontroller.cpp \
     pervertexcolorshader.cpp \
     basiclittextureshader.cpp \
-    matrixstack.cpp
+    matrixstack.cpp \
+    mapdocument.cpp \
+    scenefactory.cpp \
+    originmarker.cpp \
+    application.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -55,7 +59,12 @@ HEADERS  += mainwindow.h \
     cameracontroller.h \
     pervertexcolorshader.h \
     basiclittextureshader.h \
-    matrixstack.h
+    matrixstack.h \
+    mapdocument.h \
+    factories.h \
+    scenefactory.h \
+    originmarker.h \
+    application.h
 
 FORMS    += mainwindow.ui
 

@@ -129,3 +129,8 @@ QList<SceneObject*> SceneObject::children() const
 {
     return findChildren<SceneObject*>(QString(), Qt::FindDirectChildrenOnly);
 }
+
+void SceneObject::lookAt(const QVector3D &pos)
+{
+    setAngles(Math::vectorToAngleSimple(pos - m_vecPosition));
+}

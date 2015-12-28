@@ -1,4 +1,6 @@
 #include "scene.h"
+#include "camera.h"
+#include "sceneobject.h"
 
 Scene::Scene()
 {
@@ -13,4 +15,14 @@ SceneObject* Scene::root() const
 Scene::~Scene()
 {
     delete m_pRootObject;
+}
+
+QList<Camera*> Scene::findCameras() const
+{
+    return m_pRootObject->findChildren<Camera*>(QString(), Qt::FindChildrenRecursively);
+}
+
+QList<SceneObject*> Scene::findByName(const QString &name)
+{
+    return m_pRootObject->findChildren<SceneObject*>(name, Qt::FindChildrenRecursively);
 }

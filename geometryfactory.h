@@ -1,7 +1,7 @@
 #ifndef GEOMETRYFACTORY_H
 #define GEOMETRYFACTORY_H
 
-#include "geometrydata.h"
+class GeometryData;
 
 namespace GeometryFactory
 {

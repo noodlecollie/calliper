@@ -1,6 +1,7 @@
 #include "geometryfactory.h"
 #include <QVector3D>
 #include <QVector2D>
+#include "geometrydata.h"
 
 namespace GeometryFactory
 {
