@@ -246,7 +246,7 @@ void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRe
     Q_ASSERT(m_bPreparedForRendering);
 
     // We transform the quad as follows:
-    // - Translate by (1,-1,0). This makes the top left of the quad at (0,0) (eg. for top left).
+    // - Translate by (transX,transY,0). transX and transY depend on the alignment passed in, but will be one of -1, 0 or 1.
     // - Scale by (0.5,-0,5,1). This makes the bottom right of the quad at (1,1).
     // - Scale by (width, height, 1). This makes the quad our desired size.
     // - Translate by (x,y). This puts the top left of the quad at our desired co-ordinates.
@@ -274,11 +274,19 @@ void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRe
         transY++;
     }
 
-    QMatrix4x4 transformation = Math::windowToDevice(screen.width(), screen.height())
-            * Math::matrixTranslate(QVector3D(subrect.x(), subrect.y(), 0))
-            * Math::matrixScale(QVector3D(subrect.width(),subrect.height(),1))
-            * Math::matrixScale(QVector3D(0.5f,-0.5f,1))
-            * Math::matrixTranslate(QVector3D(transX,transY,0));
+//    QMatrix4x4 transformation = Math::windowToDevice(screen.width(), screen.height())
+//            * Math::matrixTranslate(QVector3D(subrect.x(), subrect.y(), 0))
+//            * Math::matrixScale(QVector3D(subrect.width(),subrect.height(),1))
+//            * Math::matrixScale(QVector3D(0.5f,-0.5f,1))
+//            * Math::matrixTranslate(QVector3D(transX,transY,0));
+
+    float x = subrect.x(), y = subrect.y(), w = subrect.width(), h = subrect.height();
+    QMatrix4x4 transformation(0.5f*w, 0, 0, (0.5f*w*transX)+x,
+                              0, -0.5f*h, 0, (-0.5f*h*transY)+y,
+                              0, 0, 1, 0,
+                              0, 0, 0, 1);
+
+    transformation = Math::windowToDevice(screen.width(), screen.height()) * transformation;
 
     quad->upload();
     quad->bindVertices(true);
