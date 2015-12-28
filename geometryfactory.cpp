@@ -64,4 +64,20 @@ namespace GeometryFactory
 
         return d;
     }
+
+    GeometryData* fullScreenQuad()
+    {
+        GeometryData* geometry = new GeometryData();
+        geometry->appendVertex(QVector3D(-1,-1,0), QVector3D(0,0,1), QVector2D(0,0));
+        geometry->appendVertex(QVector3D(1,-1,0), QVector3D(0,0,1), QVector2D(1,0));
+        geometry->appendVertex(QVector3D(1,1,0), QVector3D(0,0,1), QVector2D(1,1));
+        geometry->appendVertex(QVector3D(-1,1,0), QVector3D(0,0,1), QVector2D(0,1));
+        geometry->appendIndex(0);
+        geometry->appendIndex(1);
+        geometry->appendIndex(2);
+        geometry->appendIndex(0);
+        geometry->appendIndex(2);
+        geometry->appendIndex(3);
+        return geometry;
+    }
 }

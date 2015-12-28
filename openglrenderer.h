@@ -10,6 +10,7 @@
 class Scene;
 class SceneObject;
 class Camera;
+class GeometryData;
 
 class OpenGLRenderer
 {
@@ -32,6 +33,9 @@ public:
     void setDirectionalLight(const EulerAngle &ang);
 
     void renderScene(Scene* scene, const Camera* camera);
+
+    GeometryData* createTextQuad(const QSize &texSize, const QString &text, const QColor &col, const QFont &font,
+                                                  Qt::Alignment alignment);
 
 private:
     void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &worldToCam, const QMatrix4x4 &projection);

@@ -6,9 +6,11 @@
 #include <QVector3D>
 #include <QColor>
 #include <QOpenGLFunctions>
+#include <QSharedPointer>
 
 class QOpenGLBuffer;
 class ShaderProgram;
+class QOpenGLTexture;
 
 #define MAX_GEOM_TEXTURES 4
 
@@ -58,6 +60,10 @@ public:
     void setDataFormat(DataFormat format);
     void applyDataFormat(ShaderProgram* program);
 
+    QSharedPointer<QOpenGLTexture> localTexture() const;
+    void setLocalTexture(const QSharedPointer<QOpenGLTexture> &tex);
+    bool hasLocalTexture() const;
+
 private:
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;
@@ -71,6 +77,8 @@ private:
     QString         m_Textures[MAX_GEOM_TEXTURES];
     GLenum          m_iDrawMode;
     DataFormat      m_iDataFormat;
+
+    QSharedPointer<QOpenGLTexture>  m_pLocalTexture;
 };
 
 #endif // GEOMETRYDATA_H

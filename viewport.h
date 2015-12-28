@@ -7,6 +7,7 @@
 #include <QColor>
 
 class Camera;
+class GeometryData;
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
@@ -43,6 +44,7 @@ private:
     Camera* m_pCamera;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
+    GeometryData*   m_pEmptyText;
 };
 
 #endif // VIEWPORT_H

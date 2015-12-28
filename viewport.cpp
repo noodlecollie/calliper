@@ -2,8 +2,12 @@
 #include "temporaryrender.h"
 #include <QKeyEvent>
 #include <QFocusEvent>
-#include <QPainter>
-#include <QStyle>
+#include "openglrenderer.h"
+#include "geometrydata.h"
+#include <QOpenGLTexture>
+#include "resourcemanager.h"
+#include "shaderprogram.h"
+#include <QMatrix4x4>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -17,7 +21,8 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
 
 Viewport::~Viewport()
 {
-
+    makeCurrent();
+    delete m_pEmptyText;
 }
 
 void Viewport::updateBackgroundColor()
@@ -41,8 +46,17 @@ void Viewport::initializeGL()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glGenVertexArrays(1, &m_iVertexArray);
     glBindVertexArray(m_iVertexArray);
+
+    m_pEmptyText = renderer()->createTextQuad(QSize(256,256),
+                                              "No active document",
+                                              QColor::fromRgb(0xffd9d9d9),
+                                              QFont("Arial", 25),
+                                              Qt::AlignCenter);
 }
 
 void Viewport::resizeGL(int w, int h)
@@ -120,10 +134,28 @@ QColor Viewport::defaultBackgroundColor()
 
 void Viewport::drawEmpty()
 {
-    // TODO: Draw text.
     // We can't use QPainter because there's a bug with Qt
     // where the OpenGL shaders won't compile on Mac due to
     // a missing #version specifier.
+    Q_ASSERT(m_pEmptyText);
+
+    m_pEmptyText->upload();
+    m_pEmptyText->bindVertices(true);
+    m_pEmptyText->bindIndices(true);
+
+    ShaderProgram* program = resourceManager()->shader("UnlitTextureShader");
+    program->apply();
+
+    m_pEmptyText->applyDataFormat(program);
+    program->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, QMatrix4x4());
+    program->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, QMatrix4x4());
+    program->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, QMatrix4x4());
+    program->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, QMatrix4x4());
+
+    m_pEmptyText->localTexture()->bind(0);
+    m_pEmptyText->draw();
+
+    program->release();
 }
 
 Camera* Viewport::camera() const

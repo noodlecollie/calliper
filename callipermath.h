@@ -21,6 +21,12 @@ namespace Math
     // These ignore roll.
     QVector3D angleToVectorSimple(const EulerAngle &angle);
     EulerAngle vectorToAngleSimple(const QVector3D &vec);
+
+    // Positive values of x only!
+    inline bool isPowerOfTwo (int x)
+    {
+      return ((x != 0) && !(x & (x - 1)));
+    }
 }
 
 #endif // MATH_H

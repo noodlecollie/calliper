@@ -4,6 +4,7 @@
 #include "resourcemanager.h"
 #include "shaderprogram.h"
 #include <QtDebug>
+#include <QOpenGLTexture>
 
 static int numComponents[] = {
     3,  // Position
@@ -329,4 +330,19 @@ void GeometryData::applyDataFormat(ShaderProgram *program)
             break;
         }
     }
+}
+
+QSharedPointer<QOpenGLTexture> GeometryData::localTexture() const
+{
+    return m_pLocalTexture;
+}
+
+void GeometryData::setLocalTexture(const QSharedPointer<QOpenGLTexture> &tex)
+{
+    m_pLocalTexture = tex;
+}
+
+bool GeometryData::hasLocalTexture() const
+{
+    return !m_pLocalTexture.isNull();
 }

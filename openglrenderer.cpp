@@ -7,6 +7,9 @@
 #include "camera.h"
 #include <QOpenGLTexture>
 #include "scene.h"
+#include <QPainter>
+#include "geometrydata.h"
+#include "geometryfactory.h"
 
 static OpenGLRenderer* g_pRenderer = NULL;
 OpenGLRenderer* renderer()
@@ -88,6 +91,8 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, MatrixStack &stack,
         obj->geometry()->bindVertices(true);
         obj->geometry()->bindIndices(true);
 
+        // TODO: This probably doesn't need to be here.
+        // We should set up shaders properly beforehand.
         ShaderProgram* program = resourceManager()->shader(shaderIndex());
         program->apply();
 
@@ -137,4 +142,38 @@ void OpenGLRenderer::renderScene(Scene *scene, const Camera *camera)
 {
     MatrixStack stack;
     renderSceneRecursive(scene->root(), stack, camera->rootToLocal(), camera->lens().projectionMatrix());
+}
+
+GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString &text, const QColor &col,
+                                                              const QFont &font, Qt::Alignment alignment)
+{
+    Q_ASSERT(texSize.width() > 0 && Math::isPowerOfTwo(texSize.width()));
+    Q_ASSERT(texSize.height() > 0 && Math::isPowerOfTwo(texSize.height()));
+
+    QImage image(texSize, QImage::Format_ARGB32);
+
+    // Make the image transparent.
+    image.fill(0x00000000);
+
+    // Draw on the image.
+    {
+        QPainter painter(&image);
+        painter.setPen(col);
+        painter.setFont(font);
+        painter.drawText(image.rect(), alignment, text);
+    }
+
+    // Create a texture with the image.
+    QOpenGLTexture* tex = new QOpenGLTexture(image.mirrored(), QOpenGLTexture::DontGenerateMipMaps);
+    tex->setMagnificationFilter(QOpenGLTexture::Nearest);
+    tex->setMinificationFilter(QOpenGLTexture::Nearest);
+    tex->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::ClampToEdge);
+    tex->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::ClampToEdge);
+
+    // Create the actual quad.
+    // The vertices are specified in OpenGL co-ordinates.
+    GeometryData* geometry = GeometryFactory::fullScreenQuad();
+    geometry->setLocalTexture(QSharedPointer<QOpenGLTexture>(tex));
+
+    return geometry;
 }
