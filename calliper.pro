@@ -64,7 +64,8 @@ HEADERS  += mainwindow.h \
     factories.h \
     scenefactory.h \
     originmarker.h \
-    application.h
+    application.h \
+    shaders.h
 
 FORMS    += mainwindow.ui
 

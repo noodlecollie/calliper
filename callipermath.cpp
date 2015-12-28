@@ -137,4 +137,13 @@ namespace Math
                 * matrixRotateY(qDegreesToRadians(angle.pitch()))
                 * matrixRotateX(qDegreesToRadians(angle.roll()));
     }
+
+    QMatrix4x4 windowToDevice(int width, int height)
+    {
+        float w = width, h = height;
+        return QMatrix4x4(2/w, 0, 0, (1-w)/w,
+                          0, -2/h, 0, (h-1)/h,
+                          0, 0, 1, 0,
+                          0, 0, 0, 1);
+    }
 }

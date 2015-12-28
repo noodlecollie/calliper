@@ -8,8 +8,7 @@
 #include "shaderprogram.h"
 #include <QMatrix4x4>
 #include "scene.h"
-#include "basiclittextureshader.h"
-#include "pervertexcolorshader.h"
+#include "shaders.h"
 #include "camera.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
@@ -59,7 +58,7 @@ void Viewport::initializeGL()
     glBindVertexArray(m_iVertexArray);
 
     m_pEmptyText = renderer()->createTextQuad(QSize(256,256),
-                                              "No active document",
+                                              "No active\ndocument",
                                               QColor::fromRgb(0xffd9d9d9),
                                               QFont("Arial", 25),
                                               Qt::AlignCenter);
@@ -95,9 +94,9 @@ void Viewport::paintGL()
     Q_ASSERT(index >= 0);
     renderer()->setShaderIndex(index);
 
-    renderer()->preRender();
+    renderer()->begin();
     renderer()->renderScene(m_pScene, m_pCamera);
-    renderer()->postRender();
+    renderer()->end();
 }
 
 void Viewport::keyPressEvent(QKeyEvent *e)
@@ -225,30 +224,22 @@ QColor Viewport::defaultBackgroundColor()
 
 void Viewport::drawEmpty()
 {
-    // TODO: Put this type of thing into the renderer and make it generic.
+    int index = resourceManager()->shaderIndex(UnlitTextureShader::staticName());
+    Q_ASSERT(index >= 0);
+    renderer()->setShaderIndex(index);
 
-    // We can't use QPainter because there's a bug with Qt
-    // where the OpenGL shaders won't compile on Mac due to
-    // a missing #version specifier.
-    Q_ASSERT(m_pEmptyText);
+    QSize s = size();
+    int shortestWin = qMin(s.width(), s.height());
+    int shortestTex = qMin(m_pEmptyText->localTexture()->width(), m_pEmptyText->localTexture()->height());
+    int dimension = qMin(shortestTex, shortestWin);
+    if ( dimension < 1 ) return;
 
-    m_pEmptyText->upload();
-    m_pEmptyText->bindVertices(true);
-    m_pEmptyText->bindIndices(true);
+    int x = s.width()/2;
+    int y = s.height()/2;
 
-    ShaderProgram* program = resourceManager()->shader("UnlitTextureShader");
-    program->apply();
-
-    m_pEmptyText->applyDataFormat(program);
-    program->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, QMatrix4x4());
-    program->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, QMatrix4x4());
-    program->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, QMatrix4x4());
-    program->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, QMatrix4x4());
-
-    m_pEmptyText->localTexture()->bind(0);
-    m_pEmptyText->draw();
-
-    program->release();
+    renderer()->begin();
+    renderer()->drawQuad(m_pEmptyText, s, QRect(x, y, dimension, dimension));
+    renderer()->end();
 }
 
 Camera* Viewport::camera() const

@@ -79,7 +79,7 @@ void OpenGLRenderer::setShaderIndex(int index)
     m_iShader = index;
 }
 
-void OpenGLRenderer::preRender()
+void OpenGLRenderer::begin()
 {
     m_pShaderProgram = resourceManager()->shader(shaderIndex());
     m_pShaderProgram->apply();
@@ -113,7 +113,7 @@ void OpenGLRenderer::setOneOffUniforms(ShaderProgram *program, const QMatrix4x4 
     program->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, projection);
 }
 
-void OpenGLRenderer::postRender()
+void OpenGLRenderer::end()
 {
     m_pShaderProgram->release();
     m_pShaderProgram = NULL;
@@ -239,4 +239,61 @@ GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString
     geometry->setLocalTexture(QSharedPointer<QOpenGLTexture>(tex));
 
     return geometry;
+}
+
+void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment)
+{
+    Q_ASSERT(m_bPreparedForRendering);
+
+    // We transform the quad as follows:
+    // - Translate by (1,-1,0). This makes the top left of the quad at (0,0) (eg. for top left).
+    // - Scale by (0.5,-0,5,1). This makes the bottom right of the quad at (1,1).
+    // - Scale by (width, height, 1). This makes the quad our desired size.
+    // - Translate by (x,y). This puts the top left of the quad at our desired co-ordinates.
+    // - Convert from window to device co-ordinates.
+
+    float transX = 0, transY = 0;
+
+    if ( alignment.testFlag(Qt::AlignLeft) )
+    {
+        transX++;
+    }
+
+    if ( alignment.testFlag(Qt::AlignRight) )
+    {
+        transX--;
+    }
+
+    if ( alignment.testFlag(Qt::AlignTop) )
+    {
+        transY--;
+    }
+
+    if ( alignment.testFlag(Qt::AlignBottom) )
+    {
+        transY++;
+    }
+
+    QMatrix4x4 transformation = Math::windowToDevice(screen.width(), screen.height())
+            * Math::matrixTranslate(QVector3D(subrect.x(), subrect.y(), 0))
+            * Math::matrixScale(QVector3D(subrect.width(),subrect.height(),1))
+            * Math::matrixScale(QVector3D(0.5f,-0.5f,1))
+            * Math::matrixTranslate(QVector3D(transX,transY,0));
+
+    quad->upload();
+    quad->bindVertices(true);
+    quad->bindIndices(true);
+
+    m_pShaderProgram->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, transformation);
+    m_pShaderProgram->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, QMatrix4x4());
+    m_pShaderProgram->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, QMatrix4x4());
+    m_pShaderProgram->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, QMatrix4x4());
+
+    quad->applyDataFormat(m_pShaderProgram);
+
+    QOpenGLTexture* tex = quad->hasLocalTexture() ? quad->localTexture().data()
+                                                  : resourceManager()->texture(quad->texture(0));
+    tex->bind(0);
+
+    quad->draw();
 }

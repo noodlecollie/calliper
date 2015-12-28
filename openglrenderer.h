@@ -33,10 +33,13 @@ public:
     void setDirectionalLight(const QVector3D &dir);
     void setDirectionalLight(const EulerAngle &ang);
 
-    void preRender();
-    void postRender();
+    void begin();
+    void end();
 
     void renderScene(Scene* scene, const Camera* camera);
+
+    // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
+    void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter);
 
     GeometryData* createTextQuad(const QSize &texSize, const QString &text, const QColor &col, const QFont &font,
                                                   Qt::Alignment alignment);

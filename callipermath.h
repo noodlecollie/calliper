@@ -18,6 +18,10 @@ namespace Math
     const QMatrix4x4& hammerToOpenGL();
     const QMatrix4x4& openGLToHammer();
 
+    // Window: pixels, (0,0) is top left.
+    // Device: (-1,-1) LL to (1,1) UR, (0,0) is centre.
+    QMatrix4x4 windowToDevice(int width, int height);
+
     // These ignore roll.
     QVector3D angleToVectorSimple(const EulerAngle &angle);
     EulerAngle vectorToAngleSimple(const QVector3D &vec);
