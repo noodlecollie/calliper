@@ -86,6 +86,9 @@
    <property name="toolTip">
     <string>Close document</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+Q</string>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

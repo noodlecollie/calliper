@@ -25,6 +25,9 @@ public slots:
     void closeActiveDocument();
 
 private:
+    void updateFromActiveDocument();
+    MapDocument* activeDocument() const;
+
     Ui::MainWindow *ui;
 
     int m_iActiveDocument;

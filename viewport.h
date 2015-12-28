@@ -14,6 +14,7 @@ public:
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &col);
+    static QColor defaultBackgroundColor();
 
 protected:
     virtual void initializeGL();

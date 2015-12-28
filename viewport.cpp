@@ -8,7 +8,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
     m_Timer.setInterval(0);
 
-    m_colBackground = QColor::fromRgb(0xFF66CCFF);
+    m_colBackground = QColor::fromRgb(0xFF000000);
     m_bBackgroundColorChanged = true;
 }
 
@@ -102,4 +102,9 @@ void Viewport::setBackgroundColor(const QColor &col)
     m_colBackground = col;
     m_colBackground.setAlpha(255);
     m_bBackgroundColorChanged = true;
+}
+
+QColor Viewport::defaultBackgroundColor()
+{
+    return QColor::fromRgb(0xFF000000);
 }

@@ -47,6 +47,7 @@ void MainWindow::createNewDocument()
 {
     m_iActiveDocument = application()->documentCount();
     application()->newDocument();
+    updateFromActiveDocument();
 }
 
 void MainWindow::makeDocumentActiveFromMenu()
@@ -60,6 +61,7 @@ void MainWindow::makeDocumentActiveFromMenu()
 
     m_iActiveDocument = index;
     updateDocumentList(application()->documents());
+    updateFromActiveDocument();
 }
 
 void MainWindow::closeActiveDocument()
@@ -73,4 +75,25 @@ void MainWindow::closeActiveDocument()
     }
 
     application()->closeDocument(old);
+    updateFromActiveDocument();
+}
+
+void MainWindow::updateFromActiveDocument()
+{
+    MapDocument* doc = activeDocument();
+
+    if ( !doc )
+    {
+        ui->viewport->setBackgroundColor(Viewport::defaultBackgroundColor());
+        return;
+    }
+
+    ui->viewport->setBackgroundColor(doc->backgroundColor());
+}
+
+MapDocument* MainWindow::activeDocument() const
+{
+    Q_ASSERT(m_iActiveDocument < application()->documentCount());
+
+    return m_iActiveDocument < 0 ? NULL : application()->document(m_iActiveDocument);
 }
