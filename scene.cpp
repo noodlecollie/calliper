@@ -7,6 +7,7 @@ Scene::Scene(MapDocument *document)
     m_pDocument = document;
     m_pRootObject = new SceneObject(NULL);
     m_pRootObject->m_pScene = this;
+    m_pRootObject->setObjectName("root");
 }
 
 SceneObject* Scene::root() const
@@ -21,6 +22,7 @@ Scene::~Scene()
 
 QList<Camera*> Scene::findCameras() const
 {
+    Q_ASSERT(!qobject_cast<Camera*>(m_pRootObject));
     return m_pRootObject->findChildren<Camera*>(QString(), Qt::FindChildrenRecursively);
 }
 

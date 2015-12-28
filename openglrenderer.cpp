@@ -124,13 +124,11 @@ void OpenGLRenderer::postRender()
 void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, MatrixStack &stack,
                                           const QMatrix4x4 &camera, const QMatrix4x4 &projection)
 {
-    bool pushed = false;
+    stack.push();
+    stack.top() = stack.top() * obj->localToParent();
+
     if ( !obj->geometry()->isEmpty() )
     {
-        pushed = true;
-        stack.push();
-        stack.top() = stack.top() * obj->localToParent();
-
         obj->geometry()->upload();
         obj->geometry()->bindVertices(true);
         obj->geometry()->bindIndices(true);
@@ -170,10 +168,7 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, MatrixStack &stack,
         renderSceneRecursive(o, stack, camera, projection);
     }
 
-    if (pushed)
-    {
-        stack.pop();
-    }
+    stack.pop();
 }
 
 void OpenGLRenderer::liveSwitchShader(ShaderProgram *oldShader, ShaderProgram *newShader,

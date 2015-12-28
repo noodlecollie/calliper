@@ -6,6 +6,7 @@
 
 class Camera : public SceneObject
 {
+    Q_OBJECT
 public:
     Camera(SceneObject* parent = 0);
 

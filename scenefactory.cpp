@@ -13,8 +13,8 @@ namespace SceneFactory
     {
         Scene* scene = new Scene(document);
 
-//        OriginMarker* o = new OriginMarker(scene->root());
-//        o->setObjectName("origin");
+        OriginMarker* o = new OriginMarker(scene->root());
+        o->setObjectName("origin");
 
         Camera* c = new Camera(scene->root());
         c->setObjectName("camera");

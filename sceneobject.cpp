@@ -7,6 +7,8 @@ SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
 {
     m_pScene = parent ? parent->m_pScene : NULL;
     m_pGeometry.reset(new GeometryData());
+    m_vecPosition = QVector3D(0,0,0);
+    m_angAngles = EulerAngle(0,0,0);
     m_bMatricesStale = true;
 }
 
