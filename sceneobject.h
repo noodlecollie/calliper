@@ -7,13 +7,18 @@
 #include <QMatrix4x4>
 #include "eulerangle.h"
 
+class Scene;
+
 class SceneObject : public QObject
 {
     Q_OBJECT
+    friend class Scene;
 public:
     explicit SceneObject(SceneObject *parent = 0);
+
     SceneObject* parentObject() const;
     QList<SceneObject*> children() const;
+    Scene* scene() const;
 
     // The SceneObject owns its geometry.
     // Any old geometry that is replaced will be deleted.
@@ -63,6 +68,8 @@ protected:
 
     mutable QMatrix4x4  m_matParentToLocal;
     mutable QMatrix4x4  m_matLocalToParent;
+
+    Scene*  m_pScene;
 };
 
 #endif // SCENEOBJECT_H

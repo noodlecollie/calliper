@@ -25,6 +25,7 @@ Application::Application(MainWindow* win)
 {
     g_pApplication = this;
 
+    m_iDocumentsCreated = 0;
     m_pMainWindow = win;
 }
 
@@ -47,7 +48,7 @@ int Application::documentCount() const
 MapDocument* Application::newDocument()
 {
     MapDocument* doc = new MapDocument();
-    doc->setObjectName(QString("Untitled %0").arg(m_Documents.count()+1));
+    doc->setObjectName(QString("Untitled %0").arg(m_iDocumentsCreated++));
     m_Documents.append(doc);
     m_pMainWindow->updateDocumentList(m_Documents);
     return doc;

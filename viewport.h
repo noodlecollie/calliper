@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QColor>
 
+class Camera;
+
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
 public:
@@ -15,6 +17,9 @@ public:
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &col);
     static QColor defaultBackgroundColor();
+
+    Camera* camera() const;
+    void setCamera(Camera* camera);
 
 protected:
     virtual void initializeGL();
@@ -30,10 +35,12 @@ protected:
 
 private:
     void updateBackgroundColor();
+    void drawEmpty();
 
     GLuint  m_iVertexArray;
     QTimer  m_Timer;
 
+    Camera* m_pCamera;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
 };

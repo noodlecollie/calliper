@@ -2,14 +2,17 @@
 #include "temporaryrender.h"
 #include <QKeyEvent>
 #include <QFocusEvent>
+#include <QPainter>
+#include <QStyle>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
     m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
     m_Timer.setInterval(0);
 
-    m_colBackground = QColor::fromRgb(0xFF000000);
+    m_colBackground = Viewport::defaultBackgroundColor();
     m_bBackgroundColorChanged = true;
+    m_pCamera = NULL;
 }
 
 Viewport::~Viewport()
@@ -53,6 +56,12 @@ void Viewport::paintGL()
     updateBackgroundColor();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if ( !m_pCamera )
+    {
+        drawEmpty();
+        return;
+    }
 }
 
 void Viewport::keyPressEvent(QKeyEvent *e)
@@ -106,5 +115,23 @@ void Viewport::setBackgroundColor(const QColor &col)
 
 QColor Viewport::defaultBackgroundColor()
 {
-    return QColor::fromRgb(0xFF000000);
+    return QColor::fromRgb(0xff33001a);
+}
+
+void Viewport::drawEmpty()
+{
+    // TODO: Draw text.
+    // We can't use QPainter because there's a bug with Qt
+    // where the OpenGL shaders won't compile on Mac due to
+    // a missing #version specifier.
+}
+
+Camera* Viewport::camera() const
+{
+    return m_pCamera;
+}
+
+void Viewport::setCamera(Camera *camera)
+{
+    m_pCamera = camera;
 }

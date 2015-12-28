@@ -1,9 +1,11 @@
 #include "sceneobject.h"
 #include "callipermath.h"
 #include <cmath>
+#include "scene.h"
 
 SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
 {
+    m_pScene = parent ? parent->m_pScene : NULL;
     m_pGeometry.reset(new GeometryData());
     m_bMatricesStale = true;
 }
@@ -133,4 +135,9 @@ QList<SceneObject*> SceneObject::children() const
 void SceneObject::lookAt(const QVector3D &pos)
 {
     setAngles(Math::vectorToAngleSimple(pos - m_vecPosition));
+}
+
+Scene* SceneObject::scene() const
+{
+    return m_pScene;
 }

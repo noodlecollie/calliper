@@ -3,6 +3,8 @@
 #include <QGuiApplication>
 #include "application.h"
 #include <QtDebug>
+#include "scene.h"
+#include "camera.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -84,11 +86,18 @@ void MainWindow::updateFromActiveDocument()
 
     if ( !doc )
     {
+        ui->viewport->setCamera(NULL);
         ui->viewport->setBackgroundColor(Viewport::defaultBackgroundColor());
         return;
     }
 
     ui->viewport->setBackgroundColor(doc->backgroundColor());
+
+    QList<Camera*> cameras = doc->scene()->findCameras();
+    if ( cameras.count() > 0 )
+    {
+        ui->viewport->setCamera(cameras.at(0));
+    }
 }
 
 MapDocument* MainWindow::activeDocument() const

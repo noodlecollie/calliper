@@ -5,6 +5,7 @@
 Scene::Scene()
 {
     m_pRootObject = new SceneObject(NULL);
+    m_pRootObject->m_pScene = this;
 }
 
 SceneObject* Scene::root() const

@@ -27,6 +27,8 @@ public:
 
 private:
     QList<MapDocument*>     m_Documents;
+    int m_iDocumentsCreated;
+
     QPointer<MainWindow>    m_pMainWindow;
 };
 
