@@ -1,6 +1,8 @@
 #ifndef EULERANGLE_H
 #define EULERANGLE_H
 
+#include <QtDebug>
+
 /*
  * The following specification is written to imitate how Euler angles work in Hammer.
  * The left-handed Hammer co-ordinate system is used: X points right, Z points up, Y points away.
@@ -55,5 +57,7 @@ private:
     float   m_flYaw;
     float   m_flRoll;
 };
+
+QDebug& operator <<(QDebug &debug, const EulerAngle &angle);
 
 #endif // EULERANGLE_H

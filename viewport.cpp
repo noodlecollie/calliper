@@ -10,6 +10,7 @@
 #include "scene.h"
 #include "shaders.h"
 #include "camera.h"
+#include <QCursor>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -20,6 +21,8 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bBackgroundColorChanged = true;
     m_pCamera = NULL;
     m_pScene = NULL;
+    m_bMouseTracking = false;
+    m_flMouseSensitivity = 1.5f;
 
     m_CameraController.setTopSpeed(10.0f);
 }
@@ -130,6 +133,14 @@ void Viewport::keyPressEvent(QKeyEvent *e)
             break;
         }
 
+        case Qt::Key_Z:
+        {
+            if ( !m_pCamera )
+                break;
+
+            setCameraMouseControl(!m_bMouseTracking);
+        }
+
         default:
         {
             QOpenGLWidget::keyPressEvent(e);
@@ -184,7 +195,23 @@ void Viewport::mousePressEvent(QMouseEvent *e)
 
 void Viewport::mouseMoveEvent(QMouseEvent *e)
 {
-    Q_UNUSED(e);
+    if ( !m_bMouseTracking || !m_pCamera )
+    {
+        QOpenGLWidget::mouseMoveEvent(e);
+        return;
+    }
+
+    QPoint p = e->pos();
+    QPoint delta = p - viewCentre();
+
+    EulerAngle angles = m_pCamera->angles();
+    angles.setPitch(angles.pitch() + (m_flMouseSensitivity * delta.y()));
+    angles.setYaw(angles.yaw() - (m_flMouseSensitivity * delta.x()));
+    m_pCamera->setAngles(angles);
+
+    QCursor::setPos(mapToGlobal(viewCentre()));
+
+    update();
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *e)
@@ -203,6 +230,7 @@ void Viewport::focusOutEvent(QFocusEvent *e)
     Q_UNUSED(e);
     m_Timer.stop();
     m_CameraController.reset();
+    setCameraMouseControl(false);
 }
 
 QColor Viewport::backgroundColor() const
@@ -260,4 +288,25 @@ Scene* Viewport::scene() const
 void Viewport::setScene(Scene *scene)
 {
     m_pScene = scene;
+}
+
+QPoint Viewport::viewCentre() const
+{
+    return QPoint(size().width()/2, size().height()/2);
+}
+
+void Viewport::setCameraMouseControl(bool enabled)
+{
+    m_bMouseTracking = enabled;
+    if ( m_bMouseTracking )
+    {
+        QCursor::setPos(mapToGlobal(viewCentre()));
+        setMouseTracking(true);
+        setCursor(Qt::BlankCursor);
+    }
+    else
+    {
+        setMouseTracking(false);
+        setCursor(Qt::ArrowCursor);
+    }
 }

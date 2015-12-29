@@ -43,6 +43,8 @@ protected:
 private:
     void updateBackgroundColor();
     void drawEmpty();
+    QPoint viewCentre() const;
+    void setCameraMouseControl(bool enabled);
 
     GLuint  m_iVertexArray;
     QTimer  m_Timer;
@@ -54,6 +56,9 @@ private:
     GeometryData*       m_pEmptyText;
     CameraController    m_CameraController;
     QTime               m_TimeElapsed;
+
+    bool    m_bMouseTracking;
+    float   m_flMouseSensitivity;
 };
 
 #endif // VIEWPORT_H
