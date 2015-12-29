@@ -28,6 +28,10 @@ public:
 
         ColorUniform,
         DirectionalLightUniform,
+        FogColorUniform,
+        FogBeginUniform,
+        FogEndUniform,
+
         ModelToWorldMatrix,
         WorldToCameraMatrix,
         CoordinateTransformMatrix,
@@ -45,13 +49,11 @@ public:
     virtual void construct() = 0;
     virtual void apply() const = 0;
     virtual void release() const = 0;
-    virtual void setModelToWorld(const QMatrix4x4 &mat) { Q_UNUSED(mat); }
-    virtual void setWorldToCamera(const QMatrix4x4 &mat) { Q_UNUSED(mat); }
-    virtual void setCameraProjection(const QMatrix4x4 &mat) { Q_UNUSED(mat); }
 
     void setAttributeFormat(Attribute att, int components, int strideBytes, int offsetBytes);
     void setUniformMatrix4(Attribute att, const QMatrix4x4 &mat);
     void setUniformVector3(Attribute att, const QVector3D &vec);
+    void setUniformFloat(Attribute att, float val);
 
     GLuint handle() const;
 

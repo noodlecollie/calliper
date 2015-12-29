@@ -6,6 +6,5 @@ out vec4 color;
 
 void main()
 {
-	// Just pass the colour through.
-	color = fColor;
+        color = fColor;
 }

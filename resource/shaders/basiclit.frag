@@ -2,6 +2,7 @@
 
 in vec2 fUV;
 in vec3 fNormal;
+in vec3 fViewSpace;
 
 out vec4 colour;
 
@@ -17,8 +18,8 @@ void main()
 	// We rescale this to make sure that the faces don't get too dark.
 	// The rescaling is [0.5 1]
 	float dp = dot(fNormal, directionalLight);
-	dp = 0.5 + (0.5 * ((0.5*dp) + 0.5));
+        dp = 0.5 + (0.5 * ((0.5*dp) + 0.5));
 
 	// Multiply the texture colour value with the dot product.
-	colour = vec4((dp * col.xyz), col.w);
+        colour = vec4((dp * col.xyz), col.w);
 }

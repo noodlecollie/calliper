@@ -23,6 +23,9 @@ OpenGLRenderer::OpenGLRenderer()
     m_pShaderProgram = NULL;
     m_bPreparedForRendering = false;
     m_vecDirectionalLight = QVector3D(1,0,0);
+    m_colFogColour = QColor::fromRgb(0xff999999);
+    m_flFogBegin = 100;
+    m_flFogEnd = 1000;
 }
 
 OpenGLRenderer::~OpenGLRenderer()
@@ -104,6 +107,7 @@ void OpenGLRenderer::begin()
 void OpenGLRenderer::setCommonUniforms(ShaderProgram *program)
 {
     program->setUniformVector3(ShaderProgram::DirectionalLightUniform, m_vecDirectionalLight);
+    program->setUniformVector3(ShaderProgram::FogColorUniform, QVector3D(m_colFogColour.redF(), m_colFogColour.greenF(), m_colFogColour.blueF()));
     program->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
 }
 
@@ -305,4 +309,34 @@ void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRe
     tex->bind(0);
 
     quad->draw(offset, count);
+}
+
+QColor OpenGLRenderer::fogColor() const
+{
+    return m_colFogColour;
+}
+
+void OpenGLRenderer::setFogColor(const QColor &col)
+{
+    m_colFogColour = col;
+}
+
+float OpenGLRenderer::fogBeginDistance() const
+{
+    return m_flFogBegin;
+}
+
+void OpenGLRenderer::setFogBeginDistance(float dist)
+{
+    m_flFogBegin = dist;
+}
+
+float OpenGLRenderer::fogEndDistance() const
+{
+    return m_flFogEnd;
+}
+
+void OpenGLRenderer::setFogEndDistance(float dist)
+{
+    m_flFogEnd = dist;
 }

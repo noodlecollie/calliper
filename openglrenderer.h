@@ -33,6 +33,15 @@ public:
     void setDirectionalLight(const QVector3D &dir);
     void setDirectionalLight(const EulerAngle &ang);
 
+    QColor fogColor() const;
+    void setFogColor(const QColor &col);
+
+    float fogBeginDistance() const;
+    void setFogBeginDistance(float dist);
+
+    float fogEndDistance() const;
+    void setFogEndDistance(float dist);
+
     void begin();
     void end();
 
@@ -55,6 +64,9 @@ private:
     QColor      m_colGlobalColour;
     int         m_iShader;
     QVector3D   m_vecDirectionalLight;
+    QColor      m_colFogColour;
+    float       m_flFogBegin;
+    float       m_flFogEnd;
 
     bool            m_bPreparedForRendering;
     ShaderProgram*  m_pShaderProgram;

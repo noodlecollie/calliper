@@ -14,8 +14,8 @@ uniform mat4 projection;
 
 void main()
 {
-	mat4 mat = projection * hammerToOpenGL * worldToCamera * modelToWorld;
-	gl_Position = mat * vec4(vPositionModelSpace, 1);
+        mat4 mat = projection * hammerToOpenGL * worldToCamera * modelToWorld;
+        gl_Position = mat * vec4(vPositionModelSpace, 1);
 
 	fColor = vColor;
 }

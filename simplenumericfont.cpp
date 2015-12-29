@@ -36,9 +36,6 @@ void SimpleNumericFont::addQuad(GeometryData *data, int number)
     static const QVector2D yDim(0, 0.5f);
     int baseIndex = data->vertexCount();
 
-    qDebug() << "UVs for" << number << "are"
-             << blUV << (blUV + xDim) << (blUV + xDim + yDim) << (blUV + yDim);
-
     data->appendVertex(QVector3D(-1,-1,0), QVector3D(0,0,1), blUV);
     data->appendVertex(QVector3D(1,-1,0), QVector3D(0,0,1), blUV + xDim);
     data->appendVertex(QVector3D(1,1,0), QVector3D(0,0,1), blUV + xDim + yDim);

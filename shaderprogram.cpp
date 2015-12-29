@@ -150,3 +150,13 @@ void ShaderProgram::setUniformVector3(Attribute att, const QVector3D &vec)
 
     f->glUniform3f(m_iAttributeLocations[att], vec.x(), vec.y(), vec.z());
 }
+
+void ShaderProgram::setUniformFloat(Attribute att, float val)
+{
+    if ( m_iAttributeLocations[att] == 0xFFFFFFFF )
+        return;
+
+    QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    f->glUniform1f(m_iAttributeLocations[att], val);
+}
