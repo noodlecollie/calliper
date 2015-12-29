@@ -14,9 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     m_iActiveDocument = -1;
 
-    // TODO: Move this somewhere more appropriate - settings?
-    ui->viewport->setDrawFocusHighlight(true);
-
     setUpConnections();
 
     updateDocumentList(QList<MapDocument*>());

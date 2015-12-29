@@ -13,12 +13,11 @@
 #include <QCursor>
 #include "geometryfactory.h"
 #include <QWheelEvent>
+#include "viewportuseroptions.h"
+#include <QPushButton>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
-    m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
-    m_Timer.setInterval(0);
-
     m_colBackground = Viewport::defaultBackgroundColor();
     m_bBackgroundColorChanged = true;
     m_pCamera = NULL;
@@ -26,6 +25,19 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bMouseTracking = false;
     m_flMouseSensitivity = 1.5f;
     m_bDrawFocusHighlight = false;
+
+    m_pToggleOptions = new QPushButton(QIcon(QPixmap::fromImage(QImage(":/icons/viewport_options.png"))), QString(), this);
+    m_pToggleOptions->resize(18,14);
+
+    m_pUserOptions = new ViewportUserOptions(this);
+    m_pUserOptions->move(2,16);
+    m_pUserOptions->setVisible(false);
+
+    connect(m_pToggleOptions, &QPushButton::clicked, m_pUserOptions, &ViewportUserOptions::toggleVisibility);
+    connect(m_pUserOptions, &ViewportUserOptions::focusHighlightStatusChanged, this, &Viewport::setDrawFocusHighlight);
+
+    m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_Timer.setInterval(0);
 
     m_CameraController.setTopSpeed(10.0f);
 }
@@ -105,7 +117,7 @@ void Viewport::paintGL()
 
     m_pCamera->translate(m_CameraController.velocity());
 
-    if ( hasFocus() )
+    if ( hasFocus() && m_bDrawFocusHighlight )
         drawHighlight();
 
     int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
@@ -348,6 +360,8 @@ bool Viewport::drawFocusHighlight() const
 
 void Viewport::setDrawFocusHighlight(bool enabled)
 {
+    if ( m_bDrawFocusHighlight == enabled ) return;
+
     m_bDrawFocusHighlight = enabled;
 }
 

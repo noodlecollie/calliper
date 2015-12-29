@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     mapdocument.cpp \
     scenefactory.cpp \
     originmarker.cpp \
-    application.cpp
+    application.cpp \
+    viewportuseroptions.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -65,9 +66,11 @@ HEADERS  += mainwindow.h \
     scenefactory.h \
     originmarker.h \
     application.h \
-    shaders.h
+    shaders.h \
+    viewportuseroptions.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    viewportuseroptions.ui
 
 RESOURCES += \
     resource/resource.qrc

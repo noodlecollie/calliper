@@ -11,9 +11,12 @@
 class Camera;
 class GeometryData;
 class Scene;
+class ViewportUserOptions;
+class QPushButton;
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
+    Q_OBJECT
 public:
     explicit Viewport(QWidget* parent = 0, Qt::WindowFlags f = 0);
     ~Viewport();
@@ -29,6 +32,8 @@ public:
     void setScene(Scene* scene);
 
     bool drawFocusHighlight() const;
+
+public slots:
     void setDrawFocusHighlight(bool enabled);
 
 protected:
@@ -60,6 +65,9 @@ private:
     bool    m_bBackgroundColorChanged;
     CameraController    m_CameraController;
     QTime               m_TimeElapsed;
+
+    ViewportUserOptions*    m_pUserOptions;
+    QPushButton*            m_pToggleOptions;
 
     GeometryData*       m_pEmptyText;
     GeometryData*       m_pHighlightOutline;
