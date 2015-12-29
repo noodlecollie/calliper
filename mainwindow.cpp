@@ -184,3 +184,28 @@ void MainWindow::populateSceneTreeRecursive(SceneObject *object, QTreeWidgetItem
         populateSceneTreeRecursive(o, i, items);
     }
 }
+
+void MainWindow::sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column)
+{
+    if ( !ui->viewport->scene() || !ui->viewport->camera() )
+        return;
+
+    QVariant v = item->data(column, Qt::UserRole);
+    if ( v.isNull() )
+        return;
+
+    QObject* object = v.value<QObject*>();
+    Q_ASSERT(object);
+
+    SceneObject* sceneObject = qobject_cast<SceneObject*>(object);
+    Q_ASSERT(sceneObject);
+
+    QVector3D pos = sceneObject->position();
+    Camera* c = ui->viewport->camera();
+    if ( qobject_cast<Camera*>(sceneObject) == c )
+        return;
+
+    c->setPosition(pos + QVector3D(64,0,0));
+    c->lookAt(pos);
+    ui->viewport->update();
+}

@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -104,6 +104,9 @@
        </property>
        <property name="animated">
         <bool>true</bool>
+       </property>
+       <property name="expandsOnDoubleClick">
+        <bool>false</bool>
        </property>
        <attribute name="headerVisible">
         <bool>false</bool>
@@ -250,11 +253,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>sceneTreeWidget</sender>
+   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>sceneTreeItemDoubleClicked(QTreeWidgetItem*,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>509</x>
+     <y>251</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>quit()</slot>
   <slot>createNewDocument()</slot>
   <slot>closeActiveDocument()</slot>
   <slot>changeDockWidgetVisibility(bool)</slot>
+  <slot>sceneTreeItemDoubleClicked(QTreeWidgetItem*,int)</slot>
  </slots>
 </ui>

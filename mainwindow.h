@@ -28,6 +28,7 @@ public slots:
     void makeDocumentActiveFromMenu();
     void closeActiveDocument();
     void changeDockWidgetVisibility(bool visible);
+    void sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column);
 
 private:
     void updateFromActiveDocument();
