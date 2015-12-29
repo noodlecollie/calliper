@@ -9,6 +9,10 @@ namespace Ui {
 class MainWindow;
 }
 
+class Scene;
+class SceneObject;
+class QTreeWidgetItem;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -23,10 +27,14 @@ public slots:
     void createNewDocument();
     void makeDocumentActiveFromMenu();
     void closeActiveDocument();
+    void changeDockWidgetVisibility(bool visible);
 
 private:
     void updateFromActiveDocument();
     MapDocument* activeDocument() const;
+    void setUpConnections();
+    void populateSceneTree(Scene* scene);
+    void populateSceneTreeRecursive(SceneObject* object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items);
 
     Ui::MainWindow *ui;
 

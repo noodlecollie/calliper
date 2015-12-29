@@ -5,6 +5,7 @@
 #include <QtDebug>
 #include "scene.h"
 #include "camera.h"
+#include "originmarker.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     m_iActiveDocument = -1;
+
+    setUpConnections();
+
     updateDocumentList(QList<MapDocument*>());
 }
 
@@ -27,11 +31,11 @@ void MainWindow::quit()
 
 void MainWindow::updateDocumentList(const QList<MapDocument *> &docs)
 {
-    ui->menuWindow->clear();
+    ui->menuDocuments->clear();
 
     if ( docs.count() < 1 )
     {
-        ui->menuWindow->addAction("No documents")->setEnabled(false);
+        ui->menuDocuments->addAction("No documents")->setEnabled(false);
         return;
     }
 
@@ -39,7 +43,7 @@ void MainWindow::updateDocumentList(const QList<MapDocument *> &docs)
     {
         MapDocument* doc = docs.at(i);
         QString text = QString("%0%1").arg(doc->objectName()).arg(i == m_iActiveDocument ? " [Active]" : "");
-        QAction* a = ui->menuWindow->addAction(text);
+        QAction* a = ui->menuDocuments->addAction(text);
         a->setProperty("documentIndex", QVariant(i));
         a->connect(a, SIGNAL(triggered(bool)), this, SLOT(makeDocumentActiveFromMenu()));
     }
@@ -88,6 +92,9 @@ void MainWindow::updateFromActiveDocument()
     {
         ui->viewport->setCamera(NULL);
         ui->viewport->setBackgroundColor(Viewport::defaultBackgroundColor());
+
+        ui->sceneTreeWidget->clear();
+
         return;
     }
 
@@ -99,6 +106,8 @@ void MainWindow::updateFromActiveDocument()
         ui->viewport->setCamera(cameras.at(0));
         ui->viewport->setScene(doc->scene());
     }
+
+    populateSceneTree(doc->scene());
 }
 
 MapDocument* MainWindow::activeDocument() const
@@ -106,4 +115,72 @@ MapDocument* MainWindow::activeDocument() const
     Q_ASSERT(m_iActiveDocument < application()->documentCount());
 
     return m_iActiveDocument < 0 ? NULL : application()->document(m_iActiveDocument);
+}
+
+void MainWindow::setUpConnections()
+{
+    ui->actionScene_Tree->setProperty("linkedDockWidget", QVariant::fromValue<QObject*>(ui->dockSceneTree));
+}
+
+void MainWindow::changeDockWidgetVisibility(bool visible)
+{
+    QAction* action = qobject_cast<QAction*>(sender());
+    Q_ASSERT(action);
+
+    QDockWidget* widget = qobject_cast<QDockWidget*>(action->property("linkedDockWidget").value<QObject*>());
+    Q_ASSERT(widget);
+
+    widget->blockSignals(true);
+    widget->setVisible(visible);
+    widget->blockSignals(false);
+}
+
+void MainWindow::populateSceneTree(Scene *scene)
+{
+    ui->sceneTreeWidget->clear();
+    QList<QTreeWidgetItem*> items;
+    populateSceneTreeRecursive(scene->root(), NULL, items);
+
+    foreach ( QTreeWidgetItem* item, items )
+    {
+        if ( !item->parent() )
+        {
+            ui->sceneTreeWidget->addTopLevelItem(item);
+        }
+
+        item->setExpanded(true);
+    }
+}
+
+void MainWindow::populateSceneTreeRecursive(SceneObject *object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items)
+{
+    QStringList strings;
+    QString name = object->objectName().trimmed();
+    if ( name.isNull() || name.isEmpty() )
+        name = QString("Unnamed node");
+
+    strings.append(object->objectName());
+    QTreeWidgetItem* i = new QTreeWidgetItem(parent, strings);
+    i->setData(0, Qt::UserRole, QVariant::fromValue<QObject*>(object));
+    if ( !object->editable() )
+        i->setDisabled(true);
+
+    QString iconPath(":/icons/tree_object.png");
+    if ( qobject_cast<Camera*>(object) )
+    {
+        iconPath = QString(":/icons/tree_camera.png");
+    }
+    else if ( qobject_cast<OriginMarker*>(object) )
+    {
+        iconPath = QString(":/icons/tree_origin.png");
+    }
+
+    i->setIcon(0, QIcon(QPixmap::fromImage(QImage(iconPath))));
+    items.append(i);
+
+    QList<SceneObject*> children = object->children();
+    foreach ( SceneObject* o, children )
+    {
+        populateSceneTreeRecursive(o, i, items);
+    }
 }

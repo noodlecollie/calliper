@@ -51,6 +51,8 @@ public:
 
     void lookAt(const QVector3D &pos);
 
+    virtual bool editable() const;
+
 signals:
 
 public slots:

@@ -143,3 +143,8 @@ Scene* SceneObject::scene() const
 {
     return m_pScene;
 }
+
+bool SceneObject::editable() const
+{
+    return true;
+}

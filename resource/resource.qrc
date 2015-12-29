@@ -13,5 +13,8 @@
         <file>shaders/pervertexcolor.vert</file>
         <file>shaders/basiclit.frag</file>
         <file>shaders/basiclit.vert</file>
+        <file>icons/tree_camera.png</file>
+        <file>icons/tree_origin.png</file>
+        <file>icons/tree_object.png</file>
     </qresource>
 </RCC>

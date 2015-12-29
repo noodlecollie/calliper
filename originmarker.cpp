@@ -20,3 +20,7 @@ OriginMarker::OriginMarker(SceneObject *parent) : SceneObject(parent)
     m_pGeometry->appendIndex(5);
 }
 
+bool OriginMarker::editable() const
+{
+    return false;
+}
