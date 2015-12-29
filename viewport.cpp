@@ -71,8 +71,16 @@ void Viewport::initializeGL()
 
 void Viewport::resizeGL(int w, int h)
 {
-    Q_UNUSED(w);
-    Q_UNUSED(h);
+    if ( m_pCamera )
+    {
+        CameraLens lens = m_pCamera->lens();
+        lens.setAspectRatio((float)w/(float)h);
+        m_pCamera->setLens(lens);
+        update();
+        return;
+    }
+
+    QOpenGLWidget::resizeGL(w,h);
 }
 
 void Viewport::paintGL()
@@ -278,6 +286,9 @@ Camera* Viewport::camera() const
 void Viewport::setCamera(Camera *camera)
 {
     m_pCamera = camera;
+    CameraLens lens = m_pCamera->lens();
+    lens.setAspectRatio((float)size().width()/(float)size().height());
+    m_pCamera->setLens(lens);
 }
 
 Scene* Viewport::scene() const
