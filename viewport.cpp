@@ -15,6 +15,7 @@
 #include <QWheelEvent>
 #include "viewportuseroptions.h"
 #include <QPushButton>
+#include "simplenumericfont.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -25,6 +26,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bMouseTracking = false;
     m_flMouseSensitivity = 1.5f;
     m_bDrawFocusHighlight = false;
+    m_bDrawFPS = false;
 
     m_pToggleOptions = new QPushButton(QIcon(QPixmap::fromImage(QImage(":/icons/viewport_options.png"))), QString(), this);
     m_pToggleOptions->resize(18,14);
@@ -35,6 +37,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
 
     connect(m_pToggleOptions, &QPushButton::clicked, m_pUserOptions, &ViewportUserOptions::toggleVisibility);
     connect(m_pUserOptions, &ViewportUserOptions::focusHighlightStatusChanged, this, &Viewport::setDrawFocusHighlight);
+    connect(m_pUserOptions, &ViewportUserOptions::fpsStatusChanged, this, &Viewport::setDrawFPS);
 
     m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
     m_Timer.setInterval(0);
@@ -119,6 +122,9 @@ void Viewport::paintGL()
 
     if ( hasFocus() && m_bDrawFocusHighlight )
         drawHighlight();
+
+    if ( m_bDrawFPS )
+        drawFPSText(msec);
 
     int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
     Q_ASSERT(index >= 0);
@@ -365,6 +371,18 @@ void Viewport::setDrawFocusHighlight(bool enabled)
     m_bDrawFocusHighlight = enabled;
 }
 
+bool Viewport::drawFPS() const
+{
+    return m_bDrawFPS;
+}
+
+void Viewport::setDrawFPS(bool enabled)
+{
+    if ( m_bDrawFPS == enabled ) return;
+
+    m_bDrawFPS = enabled;
+}
+
 void Viewport::wheelEvent(QWheelEvent *e)
 {
     if ( !m_pCamera )
@@ -376,4 +394,17 @@ void Viewport::wheelEvent(QWheelEvent *e)
     int delta = e->delta();
     m_pCamera->translate(QVector3D(delta,0,0));
     update();
+}
+
+void Viewport::drawFPSText(int msec)
+{
+    float framesPerSecond = 1.0f/((float)msec/1000.0f);
+
+    int index;
+    index = resourceManager()->shaderIndex(UnlitTextureShader::staticName());
+    Q_ASSERT(index >= 0);
+    renderer()->setShaderIndex(index);
+    renderer()->begin();
+    resourceManager()->numericFont()->draw(QString("%0").arg(framesPerSecond).toLatin1(), size(), QSize(16,16), QPoint(20,0));
+    renderer()->end();
 }

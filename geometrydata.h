@@ -36,19 +36,21 @@ public:
     int vertexCount() const;
     int vertexBytes() const;
     void bindVertices(bool bind);
+    float* vertexAt(int i);
 
     void appendIndex(unsigned int i);
     void clearIndices();
     int indexCount() const;
     int indexBytes() const;
     void bindIndices(bool bind);
+    unsigned int* indexAt(int i);
 
     void clear();
     bool isEmpty() const;
     void destroy();
 
     void upload(bool force = false);
-    void draw();
+    void draw(int offset = 0, int count = -1);
 
     QString texture(int index) const;
     void setTexture(int index, const QString &path);

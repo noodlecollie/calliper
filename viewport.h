@@ -32,9 +32,11 @@ public:
     void setScene(Scene* scene);
 
     bool drawFocusHighlight() const;
+    bool drawFPS() const;
 
 public slots:
     void setDrawFocusHighlight(bool enabled);
+    void setDrawFPS(bool enabled);
 
 protected:
     virtual void initializeGL();
@@ -55,6 +57,7 @@ private:
     QPoint viewCentre() const;
     void setCameraMouseControl(bool enabled);
     void drawHighlight();
+    void drawFPSText(int msec);
 
     GLuint  m_iVertexArray;
     QTimer  m_Timer;
@@ -75,6 +78,7 @@ private:
     bool    m_bMouseTracking;
     float   m_flMouseSensitivity;
     bool    m_bDrawFocusHighlight;
+    bool    m_bDrawFPS;
 };
 
 #endif // VIEWPORT_H

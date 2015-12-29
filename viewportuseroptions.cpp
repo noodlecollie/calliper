@@ -13,8 +13,10 @@ ViewportUserOptions::ViewportUserOptions(QWidget *parent) :
     Q_ASSERT(v);
 
     ui->cbFocusHighlight->setChecked(v->drawFocusHighlight());
+    ui->cbDrawFPS->setChecked(v->drawFPS());
 
     connect(ui->cbFocusHighlight, SIGNAL(clicked(bool)), this, SIGNAL(focusHighlightStatusChanged(bool)));
+    connect(ui->cbDrawFPS, SIGNAL(clicked(bool)), this, SIGNAL(fpsStatusChanged(bool)));
 }
 
 ViewportUserOptions::~ViewportUserOptions()

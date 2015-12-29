@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>114</width>
-    <height>22</height>
+    <width>141</width>
+    <height>46</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -39,6 +39,13 @@
     <widget class="QCheckBox" name="cbFocusHighlight">
      <property name="text">
       <string>Highlight on focus</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cbDrawFPS">
+     <property name="text">
+      <string>Show FPS</string>
      </property>
     </widget>
    </item>

@@ -17,5 +17,6 @@
         <file>icons/tree_origin.png</file>
         <file>icons/tree_object.png</file>
         <file>icons/viewport_options.png</file>
+        <file>fonts/numbers_small.png</file>
     </qresource>
 </RCC>

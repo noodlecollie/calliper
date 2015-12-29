@@ -17,6 +17,7 @@ public:
 
 signals:
     void focusHighlightStatusChanged(bool);
+    void fpsStatusChanged(bool);
 
 public slots:
     void toggleVisibility();

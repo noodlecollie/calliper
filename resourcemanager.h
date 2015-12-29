@@ -9,6 +9,7 @@ class QOffscreenSurface;
 class QOpenGLContext;
 class ShaderProgram;
 class QOpenGLTexture;
+class SimpleNumericFont;
 
 class ResourceManager
 {
@@ -36,6 +37,8 @@ public:
     // Returns the default texture if the path is not found.
     QOpenGLTexture* texture(const QString &path) const;
 
+    SimpleNumericFont* numericFont() const;
+
 private:
     typedef QHash<QString, QOpenGLTexture*> TextureTable;
 
@@ -48,7 +51,8 @@ private:
     QVector<ShaderProgram*> m_Shaders;
     TextureTable            m_Textures;
 
-    QOpenGLTexture* m_pDefaultTexture;
+    QOpenGLTexture*     m_pDefaultTexture;
+    SimpleNumericFont*  m_pNumericFont;
 };
 
 ResourceManager* resourceManager();

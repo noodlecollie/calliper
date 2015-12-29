@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     scenefactory.cpp \
     originmarker.cpp \
     application.cpp \
-    viewportuseroptions.cpp
+    viewportuseroptions.cpp \
+    simplenumericfont.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -67,7 +68,8 @@ HEADERS  += mainwindow.h \
     originmarker.h \
     application.h \
     shaders.h \
-    viewportuseroptions.h
+    viewportuseroptions.h \
+    simplenumericfont.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

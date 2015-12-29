@@ -9,6 +9,7 @@
 #include "unlittextureshader.h"
 #include "pervertexcolorshader.h"
 #include "basiclittextureshader.h"
+#include "simplenumericfont.h"
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -61,6 +62,8 @@ void ResourceManager::setUpOpenGLResources()
 {
     setUpShaders();
     setUpBuiltInTextures();
+
+    m_pNumericFont = new SimpleNumericFont();
 }
 
 void ResourceManager::setUpShaders()
@@ -132,6 +135,9 @@ ResourceManager::~ResourceManager()
 {
     makeCurrent();
 
+    delete m_pNumericFont;
+    m_pNumericFont = NULL;
+
     qDeleteAll(m_Textures);
     qDeleteAll(m_Shaders);
 
@@ -190,4 +196,9 @@ int ResourceManager::shaderIndex(const QString &name) const
     }
 
     return -1;
+}
+
+SimpleNumericFont* ResourceManager::numericFont() const
+{
+    return m_pNumericFont;
 }

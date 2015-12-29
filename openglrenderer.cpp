@@ -241,7 +241,8 @@ GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString
     return geometry;
 }
 
-void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment)
+void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment,
+                              int offset, int count)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
@@ -303,5 +304,5 @@ void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRe
                                                   : resourceManager()->texture(quad->texture(0));
     tex->bind(0);
 
-    quad->draw();
+    quad->draw(offset, count);
 }

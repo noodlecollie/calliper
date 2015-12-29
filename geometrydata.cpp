@@ -222,12 +222,12 @@ void GeometryData::bindIndices(bool bind)
     }
 }
 
-void GeometryData::draw()
+void GeometryData::draw(int offset, int count)
 {
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     f->glLineWidth(m_flLineWidth);
-    f->glDrawElements(m_iDrawMode, indexCount(), GL_UNSIGNED_INT, 0);
+    f->glDrawElements(m_iDrawMode, count < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset));
 }
 
 QString GeometryData::texture(int index) const
@@ -367,4 +367,14 @@ float GeometryData::lineWidth() const
 void GeometryData::setLineWidth(float width)
 {
     m_flLineWidth = width;
+}
+
+float* GeometryData::vertexAt(int i)
+{
+    return m_Vertices.data() + (i * formatStride[m_iDataFormat]);
+}
+
+unsigned int* GeometryData::indexAt(int i)
+{
+    return &(m_Indices.data()[i]);
 }
