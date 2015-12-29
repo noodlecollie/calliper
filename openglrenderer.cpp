@@ -235,7 +235,7 @@ GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString
 
     // Create the actual quad.
     // The vertices are specified in OpenGL co-ordinates.
-    GeometryData* geometry = GeometryFactory::fullScreenQuad();
+    GeometryData* geometry = GeometryFactory::triangleQuad(1);
     geometry->setLocalTexture(QSharedPointer<QOpenGLTexture>(tex));
 
     return geometry;

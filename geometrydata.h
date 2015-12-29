@@ -55,6 +55,8 @@ public:
 
     GLenum drawMode() const;
     void setDrawMode(GLenum mode);
+    float lineWidth() const;
+    void setLineWidth(float width);
 
     DataFormat dataFormat() const;
     void setDataFormat(DataFormat format);
@@ -79,6 +81,7 @@ private:
 
     QString         m_Textures[MAX_GEOM_TEXTURES];
     GLenum          m_iDrawMode;
+    float           m_flLineWidth;
     DataFormat      m_iDataFormat;
 
     QSharedPointer<QOpenGLTexture>  m_pLocalTexture;

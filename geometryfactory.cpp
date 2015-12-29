@@ -65,17 +65,32 @@ namespace GeometryFactory
         return d;
     }
 
-    GeometryData* fullScreenQuad()
+    GeometryData* triangleQuad(float radius)
     {
         GeometryData* geometry = new GeometryData();
-        geometry->appendVertex(QVector3D(-1,-1,0), QVector3D(0,0,1), QVector2D(0,0));
-        geometry->appendVertex(QVector3D(1,-1,0), QVector3D(0,0,1), QVector2D(1,0));
-        geometry->appendVertex(QVector3D(1,1,0), QVector3D(0,0,1), QVector2D(1,1));
-        geometry->appendVertex(QVector3D(-1,1,0), QVector3D(0,0,1), QVector2D(0,1));
+        geometry->appendVertex(QVector3D(-radius,-radius,0), QVector3D(0,0,1), QVector2D(0,0));
+        geometry->appendVertex(QVector3D(radius,-radius,0), QVector3D(0,0,1), QVector2D(1,0));
+        geometry->appendVertex(QVector3D(radius,radius,0), QVector3D(0,0,1), QVector2D(1,1));
+        geometry->appendVertex(QVector3D(-radius,radius,0), QVector3D(0,0,1), QVector2D(0,1));
         geometry->appendIndex(0);
         geometry->appendIndex(1);
         geometry->appendIndex(2);
         geometry->appendIndex(0);
+        geometry->appendIndex(2);
+        geometry->appendIndex(3);
+        return geometry;
+    }
+
+    GeometryData* lineRect(float radius, const QColor &col)
+    {
+        GeometryData* geometry = new GeometryData();
+        geometry->setDrawMode(GL_LINE_LOOP);
+        geometry->appendVertex(QVector3D(-radius, -radius, 0), col);
+        geometry->appendVertex(QVector3D(radius, -radius, 0), col);
+        geometry->appendVertex(QVector3D(radius, radius, 0), col);
+        geometry->appendVertex(QVector3D(-radius, radius, 0), col);
+        geometry->appendIndex(0);
+        geometry->appendIndex(1);
         geometry->appendIndex(2);
         geometry->appendIndex(3);
         return geometry;

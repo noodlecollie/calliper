@@ -11,6 +11,8 @@
 #include "shaders.h"
 #include "camera.h"
 #include <QCursor>
+#include "geometryfactory.h"
+#include <QWheelEvent>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -23,6 +25,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_pScene = NULL;
     m_bMouseTracking = false;
     m_flMouseSensitivity = 1.5f;
+    m_bDrawFocusHighlight = false;
 
     m_CameraController.setTopSpeed(10.0f);
 }
@@ -66,6 +69,8 @@ void Viewport::initializeGL()
                                               QFont("Arial", 25),
                                               Qt::AlignCenter);
 
+    m_pHighlightOutline = GeometryFactory::lineRect(1.0f, QColor::fromRgb(0xffff0000));
+
     m_TimeElapsed.start();
 }
 
@@ -100,13 +105,26 @@ void Viewport::paintGL()
 
     m_pCamera->translate(m_CameraController.velocity());
 
-    // TODO: Should these calls be somewhere else?
+    if ( hasFocus() )
+        drawHighlight();
+
     int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
     Q_ASSERT(index >= 0);
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
     renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->end();
+}
+
+void Viewport::drawHighlight()
+{
+    int index;
+    index = resourceManager()->shaderIndex(PerVertexColorShader::staticName());
+    Q_ASSERT(index >= 0);
+    renderer()->setShaderIndex(index);
+    renderer()->begin();
+    renderer()->drawQuad(m_pHighlightOutline, size(), QRect(0, 0, width()-1, height()-1), Qt::AlignLeft | Qt::AlignTop);
     renderer()->end();
 }
 
@@ -308,8 +326,7 @@ QPoint Viewport::viewCentre() const
 
 void Viewport::setCameraMouseControl(bool enabled)
 {
-    m_bMouseTracking = enabled;
-    if ( m_bMouseTracking )
+    if ( enabled )
     {
         QCursor::setPos(mapToGlobal(viewCentre()));
         setMouseTracking(true);
@@ -320,4 +337,29 @@ void Viewport::setCameraMouseControl(bool enabled)
         setMouseTracking(false);
         setCursor(Qt::ArrowCursor);
     }
+
+    m_bMouseTracking = enabled;
+}
+
+bool Viewport::drawFocusHighlight() const
+{
+    return m_bDrawFocusHighlight;
+}
+
+void Viewport::setDrawFocusHighlight(bool enabled)
+{
+    m_bDrawFocusHighlight = enabled;
+}
+
+void Viewport::wheelEvent(QWheelEvent *e)
+{
+    if ( !m_pCamera )
+    {
+        QOpenGLWidget::wheelEvent(e);
+        return;
+    }
+
+    int delta = e->delta();
+    m_pCamera->translate(QVector3D(delta,0,0));
+    update();
 }

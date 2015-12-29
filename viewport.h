@@ -28,6 +28,9 @@ public:
     Scene* scene() const;
     void setScene(Scene* scene);
 
+    bool drawFocusHighlight() const;
+    void setDrawFocusHighlight(bool enabled);
+
 protected:
     virtual void initializeGL();
     virtual void resizeGL(int w, int h);
@@ -39,12 +42,14 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent *e);
     virtual void focusInEvent(QFocusEvent *e);
     virtual void focusOutEvent(QFocusEvent *e);
+    virtual void wheelEvent(QWheelEvent *e);
 
 private:
     void updateBackgroundColor();
     void drawEmpty();
     QPoint viewCentre() const;
     void setCameraMouseControl(bool enabled);
+    void drawHighlight();
 
     GLuint  m_iVertexArray;
     QTimer  m_Timer;
@@ -53,12 +58,15 @@ private:
     Scene*  m_pScene;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
-    GeometryData*       m_pEmptyText;
     CameraController    m_CameraController;
     QTime               m_TimeElapsed;
 
+    GeometryData*       m_pEmptyText;
+    GeometryData*       m_pHighlightOutline;
+
     bool    m_bMouseTracking;
     float   m_flMouseSensitivity;
+    bool    m_bDrawFocusHighlight;
 };
 
 #endif // VIEWPORT_H

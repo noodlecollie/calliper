@@ -74,6 +74,7 @@ GeometryData::GeometryData()
     m_pIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
 
     m_iDrawMode = GL_TRIANGLES;
+    m_flLineWidth = 1.0f;
     m_iDataFormat = PositionNormalUV;
 }
 
@@ -225,6 +226,7 @@ void GeometryData::draw()
 {
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
+    f->glLineWidth(m_flLineWidth);
     f->glDrawElements(m_iDrawMode, indexCount(), GL_UNSIGNED_INT, 0);
 }
 
@@ -355,4 +357,14 @@ QString GeometryData::shaderOverride() const
 void GeometryData::setShaderOverride(const QString &shader)
 {
     m_szShaderOverride = shader;
+}
+
+float GeometryData::lineWidth() const
+{
+    return m_flLineWidth;
+}
+
+void GeometryData::setLineWidth(float width)
+{
+    m_flLineWidth = width;
 }
