@@ -5,6 +5,7 @@
 #include <QOpenGLFunctions>
 #include <QByteArray>
 #include <QMatrix4x4>
+#include <QColor>
 
 class ShaderProgram : public QObject
 {
@@ -53,6 +54,7 @@ public:
     void setAttributeFormat(Attribute att, int components, int strideBytes, int offsetBytes);
     void setUniformMatrix4(Attribute att, const QMatrix4x4 &mat);
     void setUniformVector3(Attribute att, const QVector3D &vec);
+    void setUniformColor4(Attribute att, const QColor &col);
     void setUniformFloat(Attribute att, float val);
 
     GLuint handle() const;

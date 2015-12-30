@@ -160,3 +160,13 @@ void ShaderProgram::setUniformFloat(Attribute att, float val)
 
     f->glUniform1f(m_iAttributeLocations[att], val);
 }
+
+void ShaderProgram::setUniformColor4(Attribute att, const QColor &col)
+{
+    if ( m_iAttributeLocations[att] == 0xFFFFFFFF )
+        return;
+
+    QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
+
+    f->glUniform4f(m_iAttributeLocations[att], col.redF(), col.greenF(), col.blueF(), col.alphaF());
+}

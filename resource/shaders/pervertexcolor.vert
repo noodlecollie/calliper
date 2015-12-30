@@ -6,6 +6,7 @@ in vec4 vColor;
 
 // Attributes to be passed on to the fragment shader.
 out vec4 fColor;
+out vec3 fViewSpace;
 
 uniform mat4 modelToWorld;
 uniform mat4 worldToCamera;
@@ -14,8 +15,9 @@ uniform mat4 projection;
 
 void main()
 {
-        mat4 mat = projection * hammerToOpenGL * worldToCamera * modelToWorld;
-        gl_Position = mat * vec4(vPositionModelSpace, 1);
+        vec4 intermediate = hammerToOpenGL * worldToCamera * modelToWorld * vec4(vPositionModelSpace, 1);
+        fViewSpace = intermediate.xyz;
+        gl_Position = projection * intermediate;
 
 	fColor = vColor;
 }

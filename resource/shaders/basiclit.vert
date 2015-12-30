@@ -8,6 +8,7 @@ in vec2 vUV;
 // Outgoing attributes to the fragment shader.
 out vec2 fUV;
 out vec3 fNormal;
+out vec3 fViewSpace;
 
 // Uniforms
 uniform mat4 modelToWorld;
@@ -17,8 +18,9 @@ uniform mat4 projection;
 
 void main()
 {
-        mat4 mat = projection * hammerToOpenGL * worldToCamera * modelToWorld;
-        gl_Position = mat * vec4(vPositionModelSpace, 1);
+        vec4 intermediate = hammerToOpenGL * worldToCamera * modelToWorld * vec4(vPositionModelSpace, 1);
+        fViewSpace = intermediate.xyz;
+        gl_Position = projection * intermediate;
 
 	// Pass on the rest of the attributes.
 

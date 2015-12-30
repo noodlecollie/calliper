@@ -29,6 +29,9 @@ void PerVertexColorShader::construct()
 
     m_iAttributeLocations[Position] = f->glGetAttribLocation(handle(), "vPositionModelSpace");
     m_iAttributeLocations[Color] = f->glGetAttribLocation(handle(), "vColor");
+    m_iAttributeLocations[FogColorUniform] = f->glGetUniformLocation(handle(), "fFogColor");
+    m_iAttributeLocations[FogBeginUniform] = f->glGetUniformLocation(handle(), "fFogBegin");
+    m_iAttributeLocations[FogEndUniform] = f->glGetUniformLocation(handle(), "fFogEnd");
     m_iAttributeLocations[ModelToWorldMatrix] = f->glGetUniformLocation(handle(), "modelToWorld");
     m_iAttributeLocations[WorldToCameraMatrix] = f->glGetUniformLocation(handle(), "worldToCamera");
     m_iAttributeLocations[CoordinateTransformMatrix] = f->glGetUniformLocation(handle(), "hammerToOpenGL");

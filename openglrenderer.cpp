@@ -107,7 +107,9 @@ void OpenGLRenderer::begin()
 void OpenGLRenderer::setCommonUniforms(ShaderProgram *program)
 {
     program->setUniformVector3(ShaderProgram::DirectionalLightUniform, m_vecDirectionalLight);
-    program->setUniformVector3(ShaderProgram::FogColorUniform, QVector3D(m_colFogColour.redF(), m_colFogColour.greenF(), m_colFogColour.blueF()));
+    program->setUniformColor4(ShaderProgram::FogColorUniform, m_colFogColour);
+    program->setUniformFloat(ShaderProgram::FogBeginUniform, m_flFogBegin);
+    program->setUniformFloat(ShaderProgram::FogEndUniform, m_flFogEnd);
     program->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
 }
 

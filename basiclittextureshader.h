@@ -7,6 +7,9 @@
 // - Position
 // - Normal
 // - UV
+// - Fog colour
+// - Fog begin
+// - Fog end
 // - Model to world matrix
 // - World to camera matrix
 // - Co-ordinate system matrix
