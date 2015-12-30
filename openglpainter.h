@@ -3,6 +3,8 @@
 
 #include <QStack>
 #include <QMatrix4x4>
+#include <QColor>
+#include <QVector3D>
 #include "shaderprogram.h"
 
 class OpenGLPainter
@@ -47,10 +49,49 @@ public:
     const QMatrix4x4& cameraProjectionTop() const;
     int cameraProjectionCount() const;
 
+    void fogColorSetTop(const QColor &col);
+    void fogColorPush();
+    void fogColorPop();
+    const QColor& fogColorTop() const;
+    int fogColorCount() const;
+
+    void fogBeginSetTop(float val);
+    void fogBeginPush();
+    void fogBeginPop();
+    const float& fogBeginTop() const;
+    int fogBeginCount() const;
+
+    void fogEndSetTop(float val);
+    void fogEndPush();
+    void fogEndPop();
+    const float& fogEndTop() const;
+    int fogEndCount() const;
+
+    void directionalLightSetTop(const QVector3D &val);
+    void directionalLightPush();
+    void directionalLightPop();
+    const QVector3D& directionalLightTop() const;
+    int directionalLightCount() const;
+
+    void globalColorSetTop(const QColor &col);
+    void globalColorPush();
+    void globalColorPop();
+    const QColor& globalColorTop() const;
+    int globalColorCount() const;
+
 private:
     void preMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat);
     void postMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat);
     void pop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att);
+
+    void setTop(QStack<QColor> &stack, ShaderProgram::Attribute att, const QColor &col);
+    void pop(QStack<QColor> &stack, ShaderProgram::Attribute att);
+
+    void setTop(QStack<float> &stack, ShaderProgram::Attribute att, float value);
+    void pop(QStack<float> &stack, ShaderProgram::Attribute att);
+
+    void setTop(QStack<QVector3D> &stack, ShaderProgram::Attribute att, const QVector3D &value);
+    void pop(QStack<QVector3D> &stack, ShaderProgram::Attribute att);
 
     bool    m_bAutoUpdate;
 
@@ -59,6 +100,11 @@ private:
     QStack<QMatrix4x4>      m_WorldToCamera;
     QStack<QMatrix4x4>      m_CoordinateTransform;
     QStack<QMatrix4x4>      m_CameraProjection;
+    QStack<QColor>          m_FogColor;
+    QStack<float>           m_FogBegin;
+    QStack<float>           m_FogEnd;
+    QStack<QVector3D>       m_DirectionalLight;
+    QStack<QColor>          m_GlobalColor;
 };
 
 #endif // OPENGLPAINTER_H

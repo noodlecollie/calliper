@@ -9,6 +9,11 @@ OpenGLPainter::OpenGLPainter(ShaderProgram* initial, bool autoUpdate)
     m_WorldToCamera.push(QMatrix4x4());
     m_CoordinateTransform.push(QMatrix4x4());
     m_CameraProjection.push(QMatrix4x4());
+    m_FogColor.push(QColor::fromRgb(0xffffffff));
+    m_FogBegin.push(0);
+    m_FogEnd.push(0);
+    m_DirectionalLight.push(QVector3D(1,0,0));
+    m_GlobalColor.push(QColor::fromRgb(0xffffffff));
 
     applyAll();
 }
@@ -31,6 +36,11 @@ void OpenGLPainter::applyAll()
     p->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, m_WorldToCamera.top());
     p->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, m_CoordinateTransform.top());
     p->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, m_CameraProjection.top());
+    p->setUniformColor4(ShaderProgram::FogColorUniform, m_FogColor.top());
+    p->setUniformFloat(ShaderProgram::FogBeginUniform, m_FogBegin.top());
+    p->setUniformFloat(ShaderProgram::FogEndUniform, m_FogEnd.top());
+    p->setUniformVector3(ShaderProgram::DirectionalLightUniform, m_DirectionalLight.top());
+    p->setUniformColor4(ShaderProgram::ColorUniform, m_GlobalColor.top());
 }
 
 void OpenGLPainter::shaderPush(ShaderProgram *program)
@@ -202,4 +212,179 @@ const QMatrix4x4& OpenGLPainter::cameraProjectionTop() const
 int OpenGLPainter::cameraProjectionCount() const
 {
     return m_CameraProjection.count();
+}
+
+void OpenGLPainter::pop(QStack<QColor> &stack, ShaderProgram::Attribute att)
+{
+    stack.pop();
+    Q_ASSERT(stack.count() >= 1);
+    if ( m_bAutoUpdate )
+        m_Shaders.top()->setUniformColor4(att, stack.top());
+}
+
+void OpenGLPainter::setTop(QStack<QColor> &stack, ShaderProgram::Attribute att, const QColor &col)
+{
+    if ( col == stack.top() ) return;
+
+    stack.top() = col;
+    if ( m_bAutoUpdate )
+        m_Shaders.top()->setUniformColor4(att, stack.top());
+}
+
+void OpenGLPainter::fogColorSetTop(const QColor &col)
+{
+    setTop(m_FogColor, ShaderProgram::FogColorUniform, col);
+}
+
+void OpenGLPainter::fogColorPush()
+{
+    m_FogColor.push(m_FogColor.top());
+}
+
+void OpenGLPainter::fogColorPop()
+{
+    pop(m_FogColor, ShaderProgram::FogColorUniform);
+}
+const QColor& OpenGLPainter::fogColorTop() const
+{
+    return m_FogColor.top();
+}
+
+int OpenGLPainter::fogColorCount() const
+{
+    return m_FogColor.count();
+}
+
+void OpenGLPainter::setTop(QStack<float> &stack, ShaderProgram::Attribute att, float value)
+{
+    if ( value == stack.top() ) return;
+
+    stack.top() = value;
+    if ( m_bAutoUpdate )
+        m_Shaders.top()->setUniformFloat(att, stack.top());
+}
+
+void OpenGLPainter::pop(QStack<float> &stack, ShaderProgram::Attribute att)
+{
+    stack.pop();
+    Q_ASSERT(stack.count() >= 1);
+    if ( m_bAutoUpdate )
+        m_Shaders.top()->setUniformFloat(att, stack.top());
+}
+
+void OpenGLPainter::fogBeginSetTop(float val)
+{
+    setTop(m_FogBegin, ShaderProgram::FogBeginUniform, val);
+}
+
+void OpenGLPainter::fogBeginPush()
+{
+    m_FogBegin.push(m_FogBegin.top());
+}
+
+void OpenGLPainter::fogBeginPop()
+{
+    pop(m_FogBegin, ShaderProgram::FogBeginUniform);
+}
+
+const float& OpenGLPainter::fogBeginTop() const
+{
+    return m_FogBegin.top();
+}
+
+int OpenGLPainter::fogBeginCount() const
+{
+    return m_FogBegin.count();
+}
+
+void OpenGLPainter::fogEndSetTop(float val)
+{
+    setTop(m_FogEnd, ShaderProgram::FogEndUniform, val);
+}
+
+void OpenGLPainter::fogEndPush()
+{
+    m_FogEnd.push(m_FogEnd.top());
+}
+
+void OpenGLPainter::fogEndPop()
+{
+    pop(m_FogEnd, ShaderProgram::FogEndUniform);
+}
+
+const float& OpenGLPainter::fogEndTop() const
+{
+    return m_FogEnd.top();
+}
+
+int OpenGLPainter::fogEndCount() const
+{
+    return m_FogEnd.count();
+}
+
+void OpenGLPainter::setTop(QStack<QVector3D> &stack, ShaderProgram::Attribute att, const QVector3D &value)
+{
+    if ( value == stack.top() ) return;
+
+    stack.top() = value;
+    if ( m_bAutoUpdate )
+        m_Shaders.top()->setUniformVector3(att, stack.top());
+}
+
+void OpenGLPainter::pop(QStack<QVector3D> &stack, ShaderProgram::Attribute att)
+{
+    stack.pop();
+    Q_ASSERT(stack.count() >= 1);
+    if ( m_bAutoUpdate )
+        m_Shaders.top()->setUniformVector3(att, stack.top());
+}
+
+void OpenGLPainter::directionalLightSetTop(const QVector3D &val)
+{
+    setTop(m_DirectionalLight, ShaderProgram::DirectionalLightUniform, val);
+}
+
+void OpenGLPainter::directionalLightPush()
+{
+    m_DirectionalLight.push(m_DirectionalLight.top());
+}
+
+void OpenGLPainter::directionalLightPop()
+{
+    pop(m_DirectionalLight, ShaderProgram::DirectionalLightUniform);
+}
+
+const QVector3D& OpenGLPainter::directionalLightTop() const
+{
+    return m_DirectionalLight.top();
+}
+
+int OpenGLPainter::directionalLightCount() const
+{
+    return m_DirectionalLight.count();
+}
+
+void OpenGLPainter::globalColorSetTop(const QColor &col)
+{
+    setTop(m_GlobalColor, ShaderProgram::ColorUniform, col);
+}
+
+void OpenGLPainter::globalColorPush()
+{
+    m_GlobalColor.push(m_GlobalColor.top());
+}
+
+void OpenGLPainter::globalColorPop()
+{
+    pop(m_GlobalColor, ShaderProgram::ColorUniform);
+}
+
+const QColor& OpenGLPainter::globalColorTop() const
+{
+    return m_GlobalColor.top();
+}
+
+int OpenGLPainter::globalColorCount() const
+{
+    return m_GlobalColor.count();
 }

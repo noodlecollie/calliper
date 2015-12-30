@@ -239,6 +239,11 @@ void OpenGLRenderer::renderScene2(Scene *scene, const Camera *camera)
     painter.worldToCameraPostMultiply(camera->rootToLocal());
     painter.cameraProjectionPostMultiply(camera->lens().projectionMatrix());
     painter.coordinateTransformPostMultiply(Math::hammerToOpenGL());
+    painter.fogColorSetTop(fogColor());
+    painter.fogBeginSetTop(fogBeginDistance());
+    painter.fogEndSetTop(fogEndDistance());
+    painter.directionalLightSetTop(directionalLight());
+    painter.globalColorSetTop(globalColor());
 
     // Apply them all.
     painter.applyAll();

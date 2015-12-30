@@ -16,7 +16,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     viewport.cpp \
     resourcemanager.cpp \
-    temporaryrender.cpp \
     shaderprogram.cpp \
     minimumshader.cpp \
     openglrenderer.cpp \
@@ -45,7 +44,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     viewport.h \
     resourcemanager.h \
-    temporaryrender.h \
     shaderprogram.h \
     minimumshader.h \
     openglrenderer.h \

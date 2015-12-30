@@ -4,7 +4,6 @@
 #include <QtDebug>
 #include "resourcemanager.h"
 #include "openglrenderer.h"
-#include "temporaryrender.h"
 #include "application.h"
 
 int main(int argc, char *argv[])
