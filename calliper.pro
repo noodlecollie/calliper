@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     originmarker.cpp \
     application.cpp \
     viewportuseroptions.cpp \
-    simplenumericfont.cpp
+    simplenumericfont.cpp \
+    openglpainter.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -69,7 +70,8 @@ HEADERS  += mainwindow.h \
     application.h \
     shaders.h \
     viewportuseroptions.h \
-    simplenumericfont.h
+    simplenumericfont.h \
+    openglpainter.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

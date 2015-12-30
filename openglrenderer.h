@@ -6,6 +6,7 @@
 #include <QMatrix4x4>
 #include "matrixstack.h"
 #include "eulerangle.h"
+#include "openglpainter.h"
 
 class Scene;
 class SceneObject;
@@ -46,6 +47,7 @@ public:
     void end();
 
     void renderScene(Scene* scene, const Camera* camera);
+    void renderScene2(Scene* scene, const Camera* camera);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
     void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter,
@@ -56,6 +58,7 @@ public:
 
 private:
     void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
+    void renderSceneRecursive(SceneObject* obj, OpenGLPainter &painter);
     void setCommonUniforms(ShaderProgram* program);
     void setOneOffUniforms(ShaderProgram* program, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
     void liveSwitchShader(ShaderProgram* oldShader, ShaderProgram* newShader,

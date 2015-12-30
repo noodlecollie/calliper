@@ -8,6 +8,7 @@
 #include "eulerangle.h"
 
 class Scene;
+class OpenGLPainter;
 
 class SceneObject : public QObject
 {
@@ -52,6 +53,7 @@ public:
     void lookAt(const QVector3D &pos);
 
     virtual bool editable() const;
+    virtual void draw(OpenGLPainter* painter);
 
 signals:
 

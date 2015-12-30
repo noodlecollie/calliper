@@ -177,6 +177,21 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, MatrixStack &stack,
     stack.pop();
 }
 
+void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, OpenGLPainter &painter)
+{
+    painter.modelToWorldPush();
+
+    obj->draw(&painter);
+
+    QList<SceneObject*> children = obj->children();
+    foreach ( SceneObject* o, children )
+    {
+        renderSceneRecursive(o, painter);
+    }
+
+    painter.modelToWorldPop();
+}
+
 void OpenGLRenderer::liveSwitchShader(ShaderProgram *oldShader, ShaderProgram *newShader,
                                       const QMatrix4x4 &camera, const QMatrix4x4 &projection)
 {
@@ -211,6 +226,26 @@ void OpenGLRenderer::renderScene(Scene *scene, const Camera *camera)
 
     MatrixStack stack;
     renderSceneRecursive(scene->root(), stack, cameraMatrix, projectionMatrix);
+}
+
+void OpenGLRenderer::renderScene2(Scene *scene, const Camera *camera)
+{
+    Q_ASSERT(m_bPreparedForRendering);
+
+    // Start with autoupdate false so that we can apply things in a batch.
+    OpenGLPainter painter(m_pShaderProgram, false);
+
+    // Set up initial things.
+    painter.worldToCameraPostMultiply(camera->rootToLocal());
+    painter.cameraProjectionPostMultiply(camera->lens().projectionMatrix());
+    painter.coordinateTransformPostMultiply(Math::hammerToOpenGL());
+
+    // Apply them all.
+    painter.applyAll();
+    painter.setAutoUpdate(true);
+
+    // Render the scene.
+    renderSceneRecursive(scene->root(), painter);
 }
 
 GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString &text, const QColor &col,

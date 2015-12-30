@@ -2,6 +2,9 @@
 #include "callipermath.h"
 #include <cmath>
 #include "scene.h"
+#include "openglpainter.h"
+#include "resourcemanager.h"
+#include <QOpenGLTexture>
 
 SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
 {
@@ -147,4 +150,55 @@ Scene* SceneObject::scene() const
 bool SceneObject::editable() const
 {
     return true;
+}
+
+void SceneObject::draw(OpenGLPainter *painter)
+{
+    bool shaderOverridden = false;
+    if ( !geometry()->isEmpty() )
+    {
+        // If we have a shader override, push the override.
+        QString shaderOverrideName = geometry()->shaderOverride();
+        if ( !shaderOverrideName.isNull() )
+        {
+            ShaderProgram* program = resourceManager()->shader(shaderOverrideName);
+            if ( program )
+            {
+                shaderOverridden = true;
+                painter->shaderPush(program);
+            }
+        }
+    }
+
+    // Multiply the modelWorld matrix by our current one.
+    // This updates the shader uniform too.
+    // We do this even if the geometry is empty, so that the
+    // transformation will apply recursively.
+    // It is the caller's responsibility to manage pushing
+    // and popping of the m2w matrix.
+    painter->modelToWorldPostMultiply(localToParent());
+
+    if ( !geometry()->isEmpty() )
+    {
+        // Upload and bind the geometry.
+        geometry()->upload();
+        geometry()->bindVertices(true);
+        geometry()->bindIndices(true);
+
+        // Apply the data format.
+        geometry()->applyDataFormat(painter->shaderTop());
+
+        // Apply the texture.
+        QOpenGLTexture* tex = resourceManager()->texture(geometry()->texture(0));
+        tex->bind(0);
+
+        // Draw.
+        geometry()->draw();
+
+        // Pop the shader if we pushed one earlier.
+        if ( shaderOverridden )
+        {
+            painter->shaderPop();
+        }
+    }
 }

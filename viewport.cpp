@@ -131,7 +131,8 @@ void Viewport::paintGL()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pScene, m_pCamera);
+    //renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->renderScene2(m_pScene, m_pCamera);
     renderer()->end();
 }
 
