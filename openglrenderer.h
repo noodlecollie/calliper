@@ -46,7 +46,7 @@ public:
     void begin();
     void end();
 
-    void renderScene(Scene* scene, const Camera* camera);
+    //void renderScene(Scene* scene, const Camera* camera);
     void renderScene2(Scene* scene, const Camera* camera);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
@@ -57,12 +57,8 @@ public:
                                                   Qt::Alignment alignment);
 
 private:
-    void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
-    void renderSceneRecursive(SceneObject* obj, OpenGLPainter &painter);
-    void setCommonUniforms(ShaderProgram* program);
-    void setOneOffUniforms(ShaderProgram* program, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
-    void liveSwitchShader(ShaderProgram* oldShader, ShaderProgram* newShader,
-                          const QMatrix4x4 &camera, const QMatrix4x4 &projection);
+    //void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
+    void renderSceneRecursive(SceneObject* obj, OpenGLPainter* painter);
 
     QColor      m_colGlobalColour;
     int         m_iShader;
@@ -71,8 +67,8 @@ private:
     float       m_flFogBegin;
     float       m_flFogEnd;
 
+    OpenGLPainter*  m_pPainter;
     bool            m_bPreparedForRendering;
-    ShaderProgram*  m_pShaderProgram;
 };
 
 OpenGLRenderer* renderer();

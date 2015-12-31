@@ -20,7 +20,7 @@ OpenGLRenderer* renderer()
 OpenGLRenderer::OpenGLRenderer()
 {
     g_pRenderer = this;
-    m_pShaderProgram = NULL;
+    m_pPainter = NULL;
     m_bPreparedForRendering = false;
     m_vecDirectionalLight = QVector3D(1,0,0);
     m_colFogColour = QColor::fromRgb(0xff999999);
@@ -84,104 +84,43 @@ void OpenGLRenderer::setShaderIndex(int index)
 
 void OpenGLRenderer::begin()
 {
-    m_pShaderProgram = resourceManager()->shader(shaderIndex());
-    m_pShaderProgram->apply();
+    ShaderProgram* program = resourceManager()->shader(shaderIndex());
+    Q_ASSERT(program);
 
-    // Uniforms:
-    // ==== Set here:
-    // - Co-ordinate transform
-    // - Directional light
-    //
-    // ==== Set once by rendering function:
-    // - World to camera matrix
-    // - Camera projection matrix
-    //
-    // ==== Set many times throughout rendering:
-    // - Model to world matrix
+    // Start with autoupdate false so that we can apply things in a batch.
+    m_pPainter = new OpenGLPainter(program, false);
 
-    setCommonUniforms(m_pShaderProgram);
+    // Set up initial things.
+    m_pPainter->coordinateTransformPostMultiply(Math::hammerToOpenGL());
+    m_pPainter->fogColorSetTop(fogColor());
+    m_pPainter->fogBeginSetTop(fogBeginDistance());
+    m_pPainter->fogEndSetTop(fogEndDistance());
+    m_pPainter->directionalLightSetTop(directionalLight());
+    m_pPainter->globalColorSetTop(globalColor());
+
+    // Apply them all.
+    m_pPainter->applyAll();
+    m_pPainter->setAutoUpdate(true);
 
     m_bPreparedForRendering = true;
 }
 
-void OpenGLRenderer::setCommonUniforms(ShaderProgram *program)
-{
-    program->setUniformVector3(ShaderProgram::DirectionalLightUniform, m_vecDirectionalLight);
-    program->setUniformColor4(ShaderProgram::FogColorUniform, m_colFogColour);
-    program->setUniformFloat(ShaderProgram::FogBeginUniform, m_flFogBegin);
-    program->setUniformFloat(ShaderProgram::FogEndUniform, m_flFogEnd);
-    program->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, Math::hammerToOpenGL());
-}
-
-void OpenGLRenderer::setOneOffUniforms(ShaderProgram *program, const QMatrix4x4 &camera, const QMatrix4x4 &projection)
-{
-    program->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, camera);
-    program->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, projection);
-}
-
 void OpenGLRenderer::end()
 {
-    m_pShaderProgram->release();
-    m_pShaderProgram = NULL;
+    Q_ASSERT(m_bPreparedForRendering);
+
+    Q_ASSERT(m_pPainter->inInitialState());
+    delete m_pPainter;
+    m_pPainter = NULL;
 
     m_bPreparedForRendering = false;
 }
 
-void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, MatrixStack &stack,
-                                          const QMatrix4x4 &camera, const QMatrix4x4 &projection)
+void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, OpenGLPainter* painter)
 {
-    stack.push();
-    stack.top() = stack.top() * obj->localToParent();
+    painter->modelToWorldPush();
 
-    if ( !obj->geometry()->isEmpty() )
-    {
-        obj->geometry()->upload();
-        obj->geometry()->bindVertices(true);
-        obj->geometry()->bindIndices(true);
-
-        ShaderProgram* program = m_pShaderProgram;
-
-        // If we have a shader override, set up the new shader.
-        QString override = obj->geometry()->shaderOverride();
-        if ( !override.isNull() )
-        {
-            ShaderProgram* pr = resourceManager()->shader(override);
-            if ( pr )
-            {
-                program = pr;
-                liveSwitchShader(m_pShaderProgram, program, camera, projection);
-            }
-        }
-
-        // Render the actual object with our chosen shader.
-        obj->geometry()->applyDataFormat(program);
-        program->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, stack.top());
-
-        QOpenGLTexture* tex = resourceManager()->texture(obj->geometry()->texture(0));
-        tex->bind(0);
-
-        obj->geometry()->draw();
-
-        if ( m_pShaderProgram != program )
-        {
-            liveSwitchShader(program, m_pShaderProgram, camera, projection);
-        }
-    }
-
-    QList<SceneObject*> children = obj->children();
-    foreach ( SceneObject* o, children )
-    {
-        renderSceneRecursive(o, stack, camera, projection);
-    }
-
-    stack.pop();
-}
-
-void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, OpenGLPainter &painter)
-{
-    painter.modelToWorldPush();
-
-    obj->draw(&painter);
+    obj->draw(painter);
 
     QList<SceneObject*> children = obj->children();
     foreach ( SceneObject* o, children )
@@ -189,16 +128,7 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, OpenGLPainter &paint
         renderSceneRecursive(o, painter);
     }
 
-    painter.modelToWorldPop();
-}
-
-void OpenGLRenderer::liveSwitchShader(ShaderProgram *oldShader, ShaderProgram *newShader,
-                                      const QMatrix4x4 &camera, const QMatrix4x4 &projection)
-{
-    oldShader->release();
-    newShader->apply();
-    setCommonUniforms(newShader);
-    setOneOffUniforms(newShader, camera, projection);
+    painter->modelToWorldPop();
 }
 
 QVector3D OpenGLRenderer::directionalLight() const
@@ -216,41 +146,16 @@ void OpenGLRenderer::setDirectionalLight(const EulerAngle &ang)
     m_vecDirectionalLight = Math::angleToVectorSimple(ang);
 }
 
-void OpenGLRenderer::renderScene(Scene *scene, const Camera *camera)
-{
-    Q_ASSERT(m_bPreparedForRendering);
-
-    QMatrix4x4 cameraMatrix = camera->rootToLocal();
-    QMatrix4x4 projectionMatrix = camera->lens().projectionMatrix();
-    setOneOffUniforms(m_pShaderProgram, cameraMatrix, projectionMatrix);
-
-    MatrixStack stack;
-    renderSceneRecursive(scene->root(), stack, cameraMatrix, projectionMatrix);
-}
-
 void OpenGLRenderer::renderScene2(Scene *scene, const Camera *camera)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
-    // Start with autoupdate false so that we can apply things in a batch.
-    OpenGLPainter painter(m_pShaderProgram, false);
-
-    // Set up initial things.
-    painter.worldToCameraPostMultiply(camera->rootToLocal());
-    painter.cameraProjectionPostMultiply(camera->lens().projectionMatrix());
-    painter.coordinateTransformPostMultiply(Math::hammerToOpenGL());
-    painter.fogColorSetTop(fogColor());
-    painter.fogBeginSetTop(fogBeginDistance());
-    painter.fogEndSetTop(fogEndDistance());
-    painter.directionalLightSetTop(directionalLight());
-    painter.globalColorSetTop(globalColor());
-
-    // Apply them all.
-    painter.applyAll();
-    painter.setAutoUpdate(true);
+    m_pPainter->setCamera(camera);
+    m_pPainter->worldToCameraPostMultiply(camera->rootToLocal());
+    m_pPainter->cameraProjectionPostMultiply(camera->lens().projectionMatrix());
 
     // Render the scene.
-    renderSceneRecursive(scene->root(), painter);
+    renderSceneRecursive(scene->root(), m_pPainter);
 }
 
 GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString &text, const QColor &col,
@@ -339,12 +244,11 @@ void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRe
     quad->bindVertices(true);
     quad->bindIndices(true);
 
-    m_pShaderProgram->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, transformation);
-    m_pShaderProgram->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, QMatrix4x4());
-    m_pShaderProgram->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, QMatrix4x4());
-    m_pShaderProgram->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, QMatrix4x4());
-
-    quad->applyDataFormat(m_pShaderProgram);
+    m_pPainter->modelToWorldPostMultiply(transformation);
+    m_pPainter->worldToCameraSetToIdentity();
+    m_pPainter->coordinateTransformSetToIdentity();
+    m_pPainter->cameraProjectionSetToIdentity();
+    quad->applyDataFormat(m_pPainter->shaderTop());
 
     QOpenGLTexture* tex = quad->hasLocalTexture() ? quad->localTexture().data()
                                                   : resourceManager()->texture(quad->texture(0));

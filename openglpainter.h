@@ -7,11 +7,19 @@
 #include <QVector3D>
 #include "shaderprogram.h"
 
+class Camera;
+
 class OpenGLPainter
 {
 public:
     OpenGLPainter(ShaderProgram* initial, bool autoUpdate = true);
+    ~OpenGLPainter();
+
     void applyAll();
+    bool inInitialState() const;
+
+    const Camera* camera() const;
+    void setCamera(const Camera* camera);
 
     bool autoUpdate() const;
     void setAutoUpdate(bool enabled);
@@ -23,6 +31,7 @@ public:
 
     void modelToWorldPreMultiply(const QMatrix4x4 &mat);
     void modelToWorldPostMultiply(const QMatrix4x4 &mat);
+    void modelToWorldSetToIdentity();
     void modelToWorldPush();
     void modelToWorldPop();
     const QMatrix4x4& modelToWorldTop() const;
@@ -30,6 +39,7 @@ public:
 
     void worldToCameraPreMultiply(const QMatrix4x4 &mat);
     void worldToCameraPostMultiply(const QMatrix4x4 &mat);
+    void worldToCameraSetToIdentity();
     void worldToCameraPush();
     void worldToCameraPop();
     const QMatrix4x4& worldToCameraTop() const;
@@ -37,6 +47,7 @@ public:
 
     void coordinateTransformPreMultiply(const QMatrix4x4 &mat);
     void coordinateTransformPostMultiply(const QMatrix4x4 &mat);
+    void coordinateTransformSetToIdentity();
     void coordinateTransformPush();
     void coordinateTransformPop();
     const QMatrix4x4& coordinateTransformTop() const;
@@ -44,6 +55,7 @@ public:
 
     void cameraProjectionPreMultiply(const QMatrix4x4 &mat);
     void cameraProjectionPostMultiply(const QMatrix4x4 &mat);
+    void cameraProjectionSetToIdentity();
     void cameraProjectionPush();
     void cameraProjectionPop();
     const QMatrix4x4& cameraProjectionTop() const;
@@ -82,6 +94,7 @@ public:
 private:
     void preMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat);
     void postMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat);
+    void setToIdentity(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att);
     void pop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att);
 
     void setTop(QStack<QColor> &stack, ShaderProgram::Attribute att, const QColor &col);
@@ -94,6 +107,7 @@ private:
     void pop(QStack<QVector3D> &stack, ShaderProgram::Attribute att);
 
     bool    m_bAutoUpdate;
+    const Camera*   m_pCamera;
 
     QStack<ShaderProgram*>  m_Shaders;
     QStack<QMatrix4x4>      m_ModelToWorld;

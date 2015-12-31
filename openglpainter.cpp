@@ -4,7 +4,10 @@
 OpenGLPainter::OpenGLPainter(ShaderProgram* initial, bool autoUpdate)
 {
     m_bAutoUpdate = autoUpdate;
+    m_pCamera = NULL;
     m_Shaders.push(initial);
+    m_Shaders.top()->apply();
+
     m_ModelToWorld.push(QMatrix4x4());
     m_WorldToCamera.push(QMatrix4x4());
     m_CoordinateTransform.push(QMatrix4x4());
@@ -15,7 +18,25 @@ OpenGLPainter::OpenGLPainter(ShaderProgram* initial, bool autoUpdate)
     m_DirectionalLight.push(QVector3D(1,0,0));
     m_GlobalColor.push(QColor::fromRgb(0xffffffff));
 
-    applyAll();
+    if ( m_bAutoUpdate )
+        applyAll();
+}
+
+OpenGLPainter::~OpenGLPainter()
+{
+    ShaderProgram* p = m_Shaders.top();
+    if ( p )
+        p->release();
+}
+
+const Camera* OpenGLPainter::camera() const
+{
+    return m_pCamera;
+}
+
+void OpenGLPainter::setCamera(const Camera *camera)
+{
+    m_pCamera = camera;
 }
 
 bool OpenGLPainter::autoUpdate() const
@@ -26,6 +47,20 @@ bool OpenGLPainter::autoUpdate() const
 void OpenGLPainter::setAutoUpdate(bool enabled)
 {
     m_bAutoUpdate = enabled;
+}
+
+bool OpenGLPainter::inInitialState() const
+{
+    return m_Shaders.count() == 1 &&
+            m_ModelToWorld.count() == 1 &&
+            m_WorldToCamera.count() == 1 &&
+            m_CoordinateTransform.count() == 1 &&
+            m_CameraProjection.count() == 1 &&
+            m_FogColor.count() == 1 &&
+            m_FogBegin.count() == 1 &&
+            m_FogEnd.count() == 1 &&
+            m_DirectionalLight.count() == 1 &&
+            m_GlobalColor.count() == 1;
 }
 
 // Should be called whenever a new shader is applied.
@@ -387,4 +422,35 @@ const QColor& OpenGLPainter::globalColorTop() const
 int OpenGLPainter::globalColorCount() const
 {
     return m_GlobalColor.count();
+}
+
+void OpenGLPainter::setToIdentity(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att)
+{
+    stack.top().setToIdentity();
+    if ( m_bAutoUpdate )
+        m_Shaders.top()->setUniformMatrix4(att, stack.top());
+}
+
+void OpenGLPainter::modelToWorldSetToIdentity()
+{
+    if ( m_ModelToWorld.top().isIdentity() ) return;
+    setToIdentity(m_ModelToWorld, ShaderProgram::ModelToWorldMatrix);
+}
+
+void OpenGLPainter::worldToCameraSetToIdentity()
+{
+    if ( m_WorldToCamera.top().isIdentity() ) return;
+    setToIdentity(m_WorldToCamera, ShaderProgram::WorldToCameraMatrix);
+}
+
+void OpenGLPainter::coordinateTransformSetToIdentity()
+{
+    if ( m_CoordinateTransform.top().isIdentity() ) return;
+    setToIdentity(m_CoordinateTransform, ShaderProgram::CoordinateTransformMatrix);
+}
+
+void OpenGLPainter::cameraProjectionSetToIdentity()
+{
+    if ( m_CameraProjection.top().isIdentity() ) return;
+    setToIdentity(m_CameraProjection, ShaderProgram::CameraProjectionMatrix);
 }
