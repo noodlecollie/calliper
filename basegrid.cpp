@@ -367,5 +367,29 @@ void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
     }
     stack->setAutoUpdate(true);
 
+    // Y
+    stack->modelToWorldSetToIdentity();
+    stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(0,centroid.y(),0))
+                                    * Math::matrixScale(QVector3D(512,extent.y()/2.0f,1)));
+    stack->setAutoUpdate(false);
+    for ( qint64 i = Math::previousMultiple(min.x(), 512); i <= max.x(); i += 512 )
+    {
+        // If we would draw over a previously coloured line, modify how many lines we draw.
+        int localCount = count;
+        int localOffset = offsets.first + 16;
+        if ( (i-512) % 1024 == 0 )
+        {
+            localCount -= 2;
+            localOffset += 2;
+        }
+
+        stack->modelToWorldPush();
+        stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D((float)i,0,0)));
+        stack->modelToWorldApply();
+        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        stack->modelToWorldPop();
+    }
+    stack->setAutoUpdate(true);
+
     stack->modelToWorldApply();
 }
