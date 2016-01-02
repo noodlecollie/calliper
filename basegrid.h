@@ -23,6 +23,7 @@ private:
     void setUpGeometry();
     void drawOriginLines(ShaderStack* stack, const BoundingBox &bbox);
     void drawMajorLines(ShaderStack* stack, const BoundingBox &bbox);
+    void drawMinorLines(ShaderStack* stack, const BoundingBox &bbox);
 
     QColor  m_colMajor;
     QColor  m_colMinor;

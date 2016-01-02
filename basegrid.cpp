@@ -7,6 +7,18 @@
 #include "scene.h"
 #include "mapdocument.h"
 
+#define POWER2_1024 10
+#define POWER2_512  9
+#define POWER2_256  8
+#define POWER2_128  7
+#define POWER2_64   6
+#define POWER2_32   5
+#define POWER2_16   4
+#define POWER2_8    3
+#define POWER2_4    2
+#define POWER2_2    1
+#define POWER2_1    0
+
 BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
 {
     // Standard Hammer colours
@@ -14,6 +26,7 @@ BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
     m_colMinor = QColor(119,119,119);
     m_colOrigin = QColor(64,119,119);
     m_colStd = QColor(65,65,65);
+    m_iPowerTwo = 6;    // 64 units
 
     setUpGeometry();
 }
@@ -26,6 +39,10 @@ int BaseGrid::powerTwo() const
 void BaseGrid::setPowerTwo(int power)
 {
     m_iPowerTwo = power;
+    if ( m_iPowerTwo < POWER2_1 )
+        m_iPowerTwo = 1;
+    else if ( m_iPowerTwo > POWER2_1024 )
+        m_iPowerTwo = 10;
 }
 
 bool BaseGrid::editable() const
@@ -68,31 +85,65 @@ void BaseGrid::setUpGeometry()
     m_DrawOffsets.append(QPair<int,int>(baseVertex, offset));
 
     baseVertex = m_pGeometry->vertexCount();
+    offset = 0;
 
     // Minor lines - every 512 units to every 64 units, depending on density
     // Here we do all of the X lines before the Y lines.
     // First two vertices at Y=1 define the 512 unit gridlines;
     // the next two at Y=0.5 define the 256 unit gridlines;
-    // and so on until Y=0.125 for 64 unit gridlines.
+    // and so on until 64 unit gridlines.
+    // There is 1 512-unit line, 1 256-unit line, 2 128-unit lines and 4 64-unit lines.
     // Depending on the grid density, a subset of this collection
     // of lines may be drawn.
 
     // X
-    for (int i = 1; i <= 8; i *= 2)
     {
-        m_pGeometry->appendVertex(QVector3D(-1, 1.0f/(float)i, 0), m_colMinor);
-        m_pGeometry->appendVertex(QVector3D(1, 1.0f/(float)i, 0), m_colMinor);
-        m_pGeometry->appendIndex(baseVertex+offset++);
-        m_pGeometry->appendIndex(baseVertex+offset++);
+        bool slotsUsed[8] = { false, false, false, false, false, false, false, false };
+        for (int i = 0; i < 4; i++)
+        {
+            float intDelta = 8 >> i;
+            int acc = 8;
+
+            while (acc > 0)
+            {
+                if ( !slotsUsed[acc-1] )
+                {
+                    float f = (float)acc/8.0f;
+                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), m_colMinor);
+                    m_pGeometry->appendVertex(QVector3D(1, f, 0), m_colMinor);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    slotsUsed[acc-1] = true;
+                }
+
+                acc -= intDelta;
+            }
+        }
     }
 
     // Y
-    for (int i = 1; i <= 8; i *= 2)
     {
-        m_pGeometry->appendVertex(QVector3D(1.0f/(float)i, -1, 0), m_colMinor);
-        m_pGeometry->appendVertex(QVector3D(1.0f/(float)i, 1, 0), m_colMinor);
-        m_pGeometry->appendIndex(baseVertex+offset++);
-        m_pGeometry->appendIndex(baseVertex+offset++);
+        bool slotsUsed[8] = { false, false, false, false, false, false, false, false };
+        for (int i = 0; i < 4; i++)
+        {
+            float intDelta = 8 >> i;
+            int acc = 8;
+
+            while (acc > 0)
+            {
+                if ( !slotsUsed[acc-1] )
+                {
+                    float f = (float)acc/8.0f;
+                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), m_colMinor);
+                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), m_colMinor);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    slotsUsed[acc-1] = true;
+                }
+
+                acc -= intDelta;
+            }
+        }
     }
 
     m_DrawOffsets.append(QPair<int,int>(baseVertex, offset));
@@ -106,8 +157,8 @@ void BaseGrid::setUpGeometry()
     // X
     for ( int i = 1; i <= 32; i *= 2 )
     {
-        m_pGeometry->appendVertex(QVector3D(-1, 1.0f/(float)i, 0), m_colMinor);
-        m_pGeometry->appendVertex(QVector3D(1, 1.0f/(float)i, 0), m_colMinor);
+        m_pGeometry->appendVertex(QVector3D(-1, 1.0f - (1.0f/(float)i), 0), m_colMinor);
+        m_pGeometry->appendVertex(QVector3D(1, 1.0f - (1.0f/(float)i), 0), m_colMinor);
         m_pGeometry->appendIndex(baseVertex+offset++);
         m_pGeometry->appendIndex(baseVertex+offset++);
     }
@@ -115,8 +166,8 @@ void BaseGrid::setUpGeometry()
     // Y
     for ( int i = 1; i <= 32; i *= 2 )
     {
-        m_pGeometry->appendVertex(QVector3D(1.0f/(float)i, -1, 0), m_colMinor);
-        m_pGeometry->appendVertex(QVector3D(1.0f/(float)i, 1, 0), m_colMinor);
+        m_pGeometry->appendVertex(QVector3D(1.0f - (1.0f/(float)i), -1, 0), m_colMinor);
+        m_pGeometry->appendVertex(QVector3D(1.0f - (1.0f/(float)i), 1, 0), m_colMinor);
         m_pGeometry->appendIndex(baseVertex+offset++);
         m_pGeometry->appendIndex(baseVertex+offset++);
     }
@@ -158,6 +209,7 @@ void BaseGrid::draw(ShaderStack *stack)
 
     drawOriginLines(stack, bbox);
     drawMajorLines(stack, bbox);
+    drawMinorLines(stack, bbox);
 
     stack->fogEndPop();
     stack->fogBeginPop();
@@ -247,4 +299,73 @@ void BaseGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldPop();
     }
     stack->setAutoUpdate(true);
+    stack->modelToWorldApply();
+}
+
+void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
+{
+    // Minor lines begin at 0 (for a 512 unit gridline) and end at
+    // (1-0.125) = 0.875 (for a 64 unit gridline).
+    // Taking X as an example, firstly we want to scale the lines up by 512
+    // on Y and enough to fill the bbox extent on x.
+    // Then, for each 512-unit section, we want to draw as many lines as our
+    // grid density will allow.
+    // TODO: At some point in the future we should do a cutoff test so as to
+    // not draw very small gridlines if they'd be too close together pixel-wise.
+
+    // Don't draw if we don't have a high enough grid density.
+    if ( m_iPowerTwo >= POWER2_1024 )
+        return;
+
+    QVector3D min = bbox.min(), max = bbox.max();
+    QVector3D centroid = bbox.centroid();
+    QVector3D extent = bbox.max() - bbox.min();
+    QPair<int,int> offsets = m_DrawOffsets.at(Minor);
+
+    int verts = 0;
+    switch (m_iPowerTwo)
+    {
+        case POWER2_64:
+            verts += 8;
+
+        case POWER2_128:
+            verts += 4;
+
+        case POWER2_256:
+            verts += 2;
+
+        case POWER2_512:
+            verts += 2;
+
+        default:
+            break;
+    }
+
+    int count = qMin(offsets.second, verts);
+
+    // X
+    stack->modelToWorldSetToIdentity();
+    stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(centroid.x(),0,0))
+                                    * Math::matrixScale(QVector3D(extent.x()/2.0f,512,1)));
+    stack->setAutoUpdate(false);
+    for ( qint64 i = Math::previousMultiple(min.y(), 512); i <= max.y(); i += 512 )
+    {
+        // If we would draw over a previously coloured line, modify how many lines we draw.
+        int localCount = count;
+        int localOffset = offsets.first;
+        if ( (i-512) % 1024 == 0 )
+        {
+            localCount -= 2;
+            localOffset += 2;
+        }
+
+        stack->modelToWorldPush();
+        stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D(0,(float)i,0)));
+        stack->modelToWorldApply();
+        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        stack->modelToWorldPop();
+    }
+    stack->setAutoUpdate(true);
+
+    stack->modelToWorldApply();
 }
