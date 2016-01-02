@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QList>
 #include <QPair>
+#include "boundingbox.h"
 
 class BaseGrid : public SceneObject
 {
@@ -17,6 +18,7 @@ public:
 
 private:
     void setUpGeometry();
+    void drawOriginLines(ShaderStack* stack, const BoundingBox &bbox);
 
     QColor  m_colMajor;
     QColor  m_colMinor;

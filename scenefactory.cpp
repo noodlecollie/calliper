@@ -24,6 +24,15 @@ namespace SceneFactory
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAt(QVector3D(0,0,0));
+
+        c = new Camera(scene->root());
+        c->setObjectName("camera2");
+        c->setPosition(QVector3D(128,0,0));
+        CameraLens lens = c->lens();
+        lens.setFieldOfView(45);
+        lens.setNearPlane(1);
+        lens.setFarPlane(100);
+        c->setLens(lens);
         c->setDrawBounds(true);
 
         SceneObject* block = new SceneObject(scene->root());

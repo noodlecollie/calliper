@@ -20,6 +20,8 @@ public:
     QVector3D max() const;
     void setMax(const QVector3D &vec);
 
+    QVector3D centroid() const;
+
     QList<QVector3D> corners() const;
     BoundingBox transformed(const QMatrix4x4 &transform) const;
 

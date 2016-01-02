@@ -131,3 +131,8 @@ bool BoundingBox::operator !=(const BoundingBox &other) const
 {
     return !(*this == other);
 }
+
+QVector3D BoundingBox::centroid() const
+{
+    return m_vecMin + ((m_vecMax-m_vecMin)/2.0f);
+}

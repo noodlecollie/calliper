@@ -125,30 +125,44 @@ void BaseGrid::draw(ShaderStack *stack)
     if ( bbox.min().z() > 0 || bbox.max().z() < 0 )
         return;
 
-//    static GeometryData* cameraBounds = GeometryFactory::lineCube(bbox.min(), bbox.max(), QColor::fromRgb(0xffff0000));
-
     stack->shaderPush(resourceManager()->shader(m_pGeometry->shaderOverride()));
-
-    // TODO: Proper drawing. This is a test.
-    stack->modelToWorldPush();
-    stack->modelToWorldSetToIdentity();
-
-//    cameraBounds->upload();
-//    cameraBounds->bindVertices(true);
-//    cameraBounds->bindIndices(true);
-//    cameraBounds->applyDataFormat(stack->shaderTop());
-//    cameraBounds->draw();
-
-    stack->modelToWorldPostMultiply(Math::matrixScale(QVector3D(128,128,1)));
 
     m_pGeometry->upload();
     m_pGeometry->bindVertices(true);
     m_pGeometry->bindIndices(true);
     m_pGeometry->applyDataFormat(stack->shaderTop());
-    m_pGeometry->draw(m_DrawOffsets.at(0).first * m_pGeometry->vertexFormatBytes(),
-                      m_DrawOffsets.at(1).second);
 
-    stack->modelToWorldPop();
+    drawOriginLines(stack, bbox);
 
     stack->shaderPop();
+}
+
+void BaseGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
+{
+    // Draw x and y separately.
+    // Taking x as an example, we want to translate the line on x
+    // so that it's level with the centre of the view volume, and then
+    // scale it up so that it is wide enough to be drawn right across the volume.
+
+    QVector3D centroid = bbox.centroid();
+    QVector3D extent = bbox.max() - bbox.min();
+    QPair<int,int> offsets = m_DrawOffsets.at(0);
+
+    if ( bbox.min().y() <= 0 && bbox.max().y() >= 0 )
+    {
+        // X
+        stack->modelToWorldSetToIdentity();
+        stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(centroid.x(),0,0))
+                                        * Math::matrixScale(QVector3D(extent.x()/2.0f,1,1)));
+        m_pGeometry->draw(offsets.first * sizeof(unsigned int), 2);
+    }
+
+    if ( bbox.min().x() <= 0 && bbox.max().x() >= 0 )
+    {
+        // Y
+        stack->modelToWorldSetToIdentity();
+        stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(0,centroid.y(),0))
+                                        * Math::matrixScale(QVector3D(1,extent.y()/2.0f,1)));
+        m_pGeometry->draw((offsets.first+2)*sizeof(unsigned int), 2);
+    }
 }
