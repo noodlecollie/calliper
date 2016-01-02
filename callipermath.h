@@ -31,6 +31,9 @@ namespace Math
     {
       return ((x != 0) && !(x & (x - 1)));
     }
+
+    qint64 previousMultiple(float value, qint64 multiple);
+    qint64 nextMultiple(float value, qint64 multiple);
 }
 
 #endif // MATH_H

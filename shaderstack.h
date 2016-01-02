@@ -36,6 +36,7 @@ public:
     void modelToWorldPop();
     const QMatrix4x4& modelToWorldTop() const;
     int modelToWorldCount() const;
+    void modelToWorldApply();
 
     void worldToCameraPreMultiply(const QMatrix4x4 &mat);
     void worldToCameraPostMultiply(const QMatrix4x4 &mat);
@@ -44,6 +45,7 @@ public:
     void worldToCameraPop();
     const QMatrix4x4& worldToCameraTop() const;
     int worldToCameraCount() const;
+    void worldToCameraApply();
 
     void coordinateTransformPreMultiply(const QMatrix4x4 &mat);
     void coordinateTransformPostMultiply(const QMatrix4x4 &mat);
@@ -52,6 +54,7 @@ public:
     void coordinateTransformPop();
     const QMatrix4x4& coordinateTransformTop() const;
     int coordinateTransformCount() const;
+    void coordinateTransformApply();
 
     void cameraProjectionPreMultiply(const QMatrix4x4 &mat);
     void cameraProjectionPostMultiply(const QMatrix4x4 &mat);
@@ -60,36 +63,42 @@ public:
     void cameraProjectionPop();
     const QMatrix4x4& cameraProjectionTop() const;
     int cameraProjectionCount() const;
+    void cameraProjectionApply();
 
     void fogColorSetTop(const QColor &col);
     void fogColorPush();
     void fogColorPop();
     const QColor& fogColorTop() const;
     int fogColorCount() const;
+    void fogColorApply();
 
     void fogBeginSetTop(float val);
     void fogBeginPush();
     void fogBeginPop();
     const float& fogBeginTop() const;
     int fogBeginCount() const;
+    void fogBeginApply();
 
     void fogEndSetTop(float val);
     void fogEndPush();
     void fogEndPop();
     const float& fogEndTop() const;
     int fogEndCount() const;
+    void fogEndApply();
 
     void directionalLightSetTop(const QVector3D &val);
     void directionalLightPush();
     void directionalLightPop();
     const QVector3D& directionalLightTop() const;
     int directionalLightCount() const;
+    void directionalLightApply();
 
     void globalColorSetTop(const QColor &col);
     void globalColorPush();
     void globalColorPop();
     const QColor& globalColorTop() const;
     int globalColorCount() const;
+    void globalColorApply();
 
 private:
     void preMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat);

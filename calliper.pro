@@ -39,9 +39,9 @@ SOURCES += main.cpp\
     application.cpp \
     viewportuseroptions.cpp \
     simplenumericfont.cpp \
-    openglpainter.cpp \
     basegrid.cpp \
-    boundingbox.cpp
+    boundingbox.cpp \
+    shaderstack.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \

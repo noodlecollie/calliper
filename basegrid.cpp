@@ -4,6 +4,8 @@
 #include "camera.h"
 #include "callipermath.h"
 #include "resourcemanager.h"
+#include "scene.h"
+#include "mapdocument.h"
 
 BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
 {
@@ -14,6 +16,16 @@ BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
     m_colStd = QColor(65,65,65);
 
     setUpGeometry();
+}
+
+int BaseGrid::powerTwo() const
+{
+    return m_iPowerTwo;
+}
+
+void BaseGrid::setPowerTwo(int power)
+{
+    m_iPowerTwo = power;
 }
 
 bool BaseGrid::editable() const
@@ -125,7 +137,19 @@ void BaseGrid::draw(ShaderStack *stack)
     if ( bbox.min().z() > 0 || bbox.max().z() < 0 )
         return;
 
+    MapDocument* doc = scene()->document();
+    Q_ASSERT(doc);
+
     stack->shaderPush(resourceManager()->shader(m_pGeometry->shaderOverride()));
+    stack->fogColorPush();
+    stack->fogBeginPush();
+    stack->fogEndPush();
+
+    // Set up the fog to fade the grid out.
+    stack->fogColorSetTop(doc->backgroundColor());
+    stack->fogEndSetTop(stack->camera()->lens().farPlane());
+    stack->fogBeginSetTop(stack->fogEndTop() -
+                          (0.5f * (stack->camera()->lens().farPlane() - stack->camera()->lens().nearPlane())));
 
     m_pGeometry->upload();
     m_pGeometry->bindVertices(true);
@@ -133,7 +157,11 @@ void BaseGrid::draw(ShaderStack *stack)
     m_pGeometry->applyDataFormat(stack->shaderTop());
 
     drawOriginLines(stack, bbox);
+    drawMajorLines(stack, bbox);
 
+    stack->fogEndPop();
+    stack->fogBeginPop();
+    stack->fogColorPop();
     stack->shaderPop();
 }
 
@@ -146,7 +174,7 @@ void BaseGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
 
     QVector3D centroid = bbox.centroid();
     QVector3D extent = bbox.max() - bbox.min();
-    QPair<int,int> offsets = m_DrawOffsets.at(0);
+    QPair<int,int> offsets = m_DrawOffsets.at(Origin);
 
     if ( bbox.min().y() <= 0 && bbox.max().y() >= 0 )
     {
@@ -163,6 +191,60 @@ void BaseGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldSetToIdentity();
         stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(0,centroid.y(),0))
                                         * Math::matrixScale(QVector3D(1,extent.y()/2.0f,1)));
-        m_pGeometry->draw((offsets.first+2)*sizeof(unsigned int), 2);
+        m_pGeometry->draw((offsets.first+2) * sizeof(unsigned int), 2);
     }
+}
+
+void BaseGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
+{
+    // Draw X and Y separately.
+    // Taking X as an example, firstly we want to scale the line up to cover
+    // the extent of the bounding box, and translate it to be level with the centroid.
+    // After this, we want to draw it as many times as there are non-origin 1024-unit
+    // gridlines within the given bounding box.
+
+    QVector3D min = bbox.min(), max = bbox.max();
+    QVector3D centroid = bbox.centroid();
+    QVector3D extent = bbox.max() - bbox.min();
+    QPair<int,int> offsets = m_DrawOffsets.at(Major);
+
+    // X
+    stack->modelToWorldSetToIdentity();
+    stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(centroid.x(),0,0))
+                                    * Math::matrixScale(QVector3D(extent.x()/2.0f,1,1)));
+
+    stack->setAutoUpdate(false);
+    for ( qint64 i = Math::nextMultiple(min.y(), 1024); (float)i <= max.y(); i += 1024 )
+    {
+        // Don't draw on origin lines.
+        if ( i == 0 )
+            continue;
+
+        stack->modelToWorldPush();
+        stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D(0,(float)i,0)));
+        stack->modelToWorldApply();
+        m_pGeometry->draw(offsets.first * sizeof(unsigned int), 2);
+        stack->modelToWorldPop();
+    }
+    stack->setAutoUpdate(true);
+
+    // Y
+    stack->modelToWorldSetToIdentity();
+    stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(0,centroid.y(),0))
+                                    * Math::matrixScale(QVector3D(1,extent.y()/2.0f,1)));
+
+    stack->setAutoUpdate(false);
+    for ( qint64 i = Math::nextMultiple(min.x(), 1024); (float)i <= max.x(); i += 1024 )
+    {
+        // Don't draw on origin lines.
+        if ( i == 0 )
+            continue;
+
+        stack->modelToWorldPush();
+        stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D((float)i,0,0)));
+        stack->modelToWorldApply();
+        m_pGeometry->draw((offsets.first+2) * sizeof(unsigned int), 2);
+        stack->modelToWorldPop();
+    }
+    stack->setAutoUpdate(true);
 }

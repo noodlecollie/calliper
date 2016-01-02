@@ -146,4 +146,14 @@ namespace Math
                           0, 0, 1, 0,
                           0, 0, 0, 1);
     }
+
+    qint64 previousMultiple(float value, qint64 multiple)
+    {
+        return qFloor(value/multiple) * multiple;
+    }
+
+    qint64 nextMultiple(float value, qint64 multiple)
+    {
+        return previousMultiple(value, multiple) + multiple;
+    }
 }

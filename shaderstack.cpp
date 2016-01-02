@@ -66,16 +66,60 @@ bool ShaderStack::inInitialState() const
 // Should be called whenever a new shader is applied.
 void ShaderStack::applyAll()
 {
-    ShaderProgram* p = m_Shaders.top();
-    p->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, m_ModelToWorld.top());
-    p->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, m_WorldToCamera.top());
-    p->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, m_CoordinateTransform.top());
-    p->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, m_CameraProjection.top());
-    p->setUniformColor4(ShaderProgram::FogColorUniform, m_FogColor.top());
-    p->setUniformFloat(ShaderProgram::FogBeginUniform, m_FogBegin.top());
-    p->setUniformFloat(ShaderProgram::FogEndUniform, m_FogEnd.top());
-    p->setUniformVector3(ShaderProgram::DirectionalLightUniform, m_DirectionalLight.top());
-    p->setUniformColor4(ShaderProgram::ColorUniform, m_GlobalColor.top());
+    modelToWorldApply();
+    worldToCameraApply();
+    coordinateTransformApply();
+    cameraProjectionApply();
+    fogColorApply();
+    fogBeginApply();
+    fogEndApply();
+    directionalLightApply();
+    globalColorApply();
+}
+
+void ShaderStack::modelToWorldApply()
+{
+    shaderTop()->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, m_ModelToWorld.top());
+}
+
+void ShaderStack::worldToCameraApply()
+{
+    shaderTop()->setUniformMatrix4(ShaderProgram::WorldToCameraMatrix, m_WorldToCamera.top());
+}
+
+void ShaderStack::coordinateTransformApply()
+{
+    shaderTop()->setUniformMatrix4(ShaderProgram::CoordinateTransformMatrix, m_CoordinateTransform.top());
+}
+
+void ShaderStack::cameraProjectionApply()
+{
+    shaderTop()->setUniformMatrix4(ShaderProgram::CameraProjectionMatrix, m_CameraProjection.top());
+}
+
+void ShaderStack::fogColorApply()
+{
+    shaderTop()->setUniformColor4(ShaderProgram::FogColorUniform, m_FogColor.top());
+}
+
+void ShaderStack::fogBeginApply()
+{
+    shaderTop()->setUniformFloat(ShaderProgram::FogBeginUniform, m_FogBegin.top());
+}
+
+void ShaderStack::fogEndApply()
+{
+    shaderTop()->setUniformFloat(ShaderProgram::FogEndUniform, m_FogEnd.top());
+}
+
+void ShaderStack::directionalLightApply()
+{
+    shaderTop()->setUniformVector3(ShaderProgram::DirectionalLightUniform, m_DirectionalLight.top());
+}
+
+void ShaderStack::globalColorApply()
+{
+    shaderTop()->setUniformColor4(ShaderProgram::ColorUniform, m_GlobalColor.top());
 }
 
 void ShaderStack::shaderPush(ShaderProgram *program)

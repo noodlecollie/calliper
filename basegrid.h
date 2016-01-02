@@ -16,9 +16,13 @@ public:
     virtual bool editable() const;
     virtual void draw(ShaderStack *stack);
 
+    int powerTwo() const;
+    void setPowerTwo(int power);
+
 private:
     void setUpGeometry();
     void drawOriginLines(ShaderStack* stack, const BoundingBox &bbox);
+    void drawMajorLines(ShaderStack* stack, const BoundingBox &bbox);
 
     QColor  m_colMajor;
     QColor  m_colMinor;
@@ -34,6 +38,7 @@ private:
     };
 
     QList<QPair<int,int> >  m_DrawOffsets;  // First = offset (in vertices), Second = count
+    int m_iPowerTwo;
 };
 
 #endif // BASEGRID_H
