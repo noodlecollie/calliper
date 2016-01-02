@@ -193,3 +193,31 @@ void CameraLens::regenerateMatrix() const
 
     m_bMatrixDirty = false;
 }
+
+BoundingBox CameraLens::localViewVolumeBounds() const
+{
+    switch (m_iType)
+    {
+        case Orthographic:
+        {
+            // Return bounds in camera space.
+            return BoundingBox(QVector3D(m_flLeftPlane, m_flBottomPlane, m_flFarPlane),
+                               QVector3D(m_flRightPlane, m_flTopPlane, m_flNearPlane));
+        }
+
+        case Perspective:
+        {
+            float top = m_flFarPlane * qTan(qDegreesToRadians(m_flPFOV/2.0f));
+            float bottom = -top;
+            float right = top*m_flPAspectRatio;
+            float left = -right;
+            return BoundingBox(QVector3D(right, top, -m_flNearPlane),
+                               QVector3D(left, bottom, -m_flFarPlane));
+        }
+
+        default:
+        {
+            return BoundingBox();
+        }
+    }
+}

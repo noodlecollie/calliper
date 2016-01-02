@@ -2,6 +2,7 @@
 #include <QVector3D>
 #include <QVector2D>
 #include "geometrydata.h"
+#include "boundingbox.h"
 
 namespace GeometryFactory
 {
@@ -94,5 +95,50 @@ namespace GeometryFactory
         geometry->appendIndex(2);
         geometry->appendIndex(3);
         return geometry;
+    }
+
+    GeometryData* lineCuboid(const QVector3D &min, const QVector3D &max, const QColor &col)
+    {
+        QList<QVector3D> corners = BoundingBox::corners(min,max);
+        GeometryData* geometry = new GeometryData();
+        geometry->setDrawMode(GL_LINES);
+        for ( int i = 0; i < corners.count(); i++ )
+        {
+            geometry->appendVertex(corners.at(i), col);
+        }
+
+        geometry->appendIndex(0);
+        geometry->appendIndex(1);
+        geometry->appendIndex(1);
+        geometry->appendIndex(3);
+        geometry->appendIndex(3);
+        geometry->appendIndex(2);
+        geometry->appendIndex(2);
+        geometry->appendIndex(0);
+
+        geometry->appendIndex(4);
+        geometry->appendIndex(5);
+        geometry->appendIndex(5);
+        geometry->appendIndex(7);
+        geometry->appendIndex(7);
+        geometry->appendIndex(6);
+        geometry->appendIndex(6);
+        geometry->appendIndex(4);
+
+        geometry->appendIndex(0);
+        geometry->appendIndex(4);
+        geometry->appendIndex(1);
+        geometry->appendIndex(5);
+        geometry->appendIndex(2);
+        geometry->appendIndex(6);
+        geometry->appendIndex(3);
+        geometry->appendIndex(7);
+
+        return geometry;
+    }
+
+    GeometryData* lineCuboid(const BoundingBox &bbox, const QColor &col)
+    {
+        return lineCuboid(bbox.min(), bbox.max(), col);
     }
 }

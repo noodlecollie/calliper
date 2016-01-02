@@ -8,7 +8,7 @@
 #include "eulerangle.h"
 
 class Scene;
-class OpenGLPainter;
+class ShaderStack;
 
 class SceneObject : public QObject
 {
@@ -16,6 +16,7 @@ class SceneObject : public QObject
     friend class Scene;
 public:
     explicit SceneObject(SceneObject *parent = 0);
+    virtual ~SceneObject();
 
     SceneObject* parentObject() const;
     QList<SceneObject*> children() const;
@@ -53,7 +54,7 @@ public:
     void lookAt(const QVector3D &pos);
 
     virtual bool editable() const;
-    virtual void draw(OpenGLPainter* painter);
+    virtual void draw(ShaderStack* stack);
 
 signals:
 

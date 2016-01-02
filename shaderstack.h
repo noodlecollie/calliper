@@ -1,5 +1,5 @@
-#ifndef OPENGLPAINTER_H
-#define OPENGLPAINTER_H
+#ifndef SHADERSTACK_H
+#define SHADERSTACK_H
 
 #include <QStack>
 #include <QMatrix4x4>
@@ -9,11 +9,11 @@
 
 class Camera;
 
-class OpenGLPainter
+class ShaderStack
 {
 public:
-    OpenGLPainter(ShaderProgram* initial, bool autoUpdate = true);
-    ~OpenGLPainter();
+    ShaderStack(ShaderProgram* initial, bool autoUpdate = true);
+    ~ShaderStack();
 
     void applyAll();
     bool inInitialState() const;
@@ -121,4 +121,4 @@ private:
     QStack<QColor>          m_GlobalColor;
 };
 
-#endif // OPENGLPAINTER_H
+#endif // SHADERSTACK_H

@@ -71,6 +71,8 @@ public:
     QString shaderOverride() const;
     void setShaderOverride(const QString &shader);
 
+    int vertexFormatBytes() const;
+
 private:
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;

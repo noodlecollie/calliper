@@ -1,14 +1,33 @@
 #include "camera.h"
 #include "callipermath.h"
 #include <QtMath>
+#include "geometryfactory.h"
+#include "shaderstack.h"
+#include "pervertexcolorshader.h"
+#include "resourcemanager.h"
 
 #define MAX_PITCH_DELTA 89.0f
 #define MAX_ROLL_DELTA 180.0f
 
 Camera::Camera(SceneObject *parent) : SceneObject(parent),
-    m_Lens(CameraLens::Perspective)
+    m_Lens(CameraLens::Perspective), m_pBoundsGeom(new GeometryData())
 {
+    m_LocalLensBounds = m_Lens.localViewVolumeBounds();
+    rebuildViewBoundsGeometry();
+}
 
+Camera::~Camera()
+{
+}
+
+bool Camera::drawBounds() const
+{
+    return m_bDrawBounds;
+}
+
+void Camera::setDrawBounds(bool enabled)
+{
+    m_bDrawBounds = enabled;
 }
 
 CameraLens Camera::lens() const
@@ -56,4 +75,41 @@ void Camera::clampAngles()
         m_angAngles.setRoll(MAX_ROLL_DELTA);
 
     m_angAngles.setYaw(std::fmod(m_angAngles.yaw(), 360.0f));
+}
+
+void Camera::rebuildViewBoundsGeometry()
+{
+    m_pBoundsGeom->clear();
+    if ( m_LocalLensBounds.isNull() ) return;
+
+    m_pBoundsGeom.reset(GeometryFactory::lineCuboid(m_LocalLensBounds, QColor::fromRgb(0xffff0000)));
+    m_pBoundsGeom->setShaderOverride(PerVertexColorShader::staticName());
+}
+
+void Camera::draw(ShaderStack *stack)
+{
+    BoundingBox bounds = lens().localViewVolumeBounds();
+    if ( bounds != m_LocalLensBounds )
+    {
+        m_LocalLensBounds = bounds;
+        rebuildViewBoundsGeometry();
+    }
+
+    stack->modelToWorldPostMultiply(localToParent());
+
+    if ( stack->camera() != this && m_bDrawBounds && !m_pBoundsGeom->isEmpty() )
+    {
+        stack->shaderPush(resourceManager()->shader(m_pBoundsGeom->shaderOverride()));
+        stack->modelToWorldPush();
+        stack->modelToWorldPostMultiply(Math::openGLToHammer());
+
+        m_pBoundsGeom->upload();
+        m_pBoundsGeom->bindVertices(true);
+        m_pBoundsGeom->bindIndices(true);
+        m_pBoundsGeom->applyDataFormat(stack->shaderTop());
+        m_pBoundsGeom->draw();
+
+        stack->modelToWorldPop();
+        stack->shaderPop();
+    }
 }

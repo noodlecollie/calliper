@@ -2,7 +2,7 @@
 #include "callipermath.h"
 #include <cmath>
 #include "scene.h"
-#include "openglpainter.h"
+#include "shaderstack.h"
 #include "resourcemanager.h"
 #include <QOpenGLTexture>
 
@@ -13,6 +13,10 @@ SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
     m_vecPosition = QVector3D(0,0,0);
     m_angAngles = EulerAngle(0,0,0);
     m_bMatricesStale = true;
+}
+
+SceneObject::~SceneObject()
+{
 }
 
 GeometryData* SceneObject::geometry() const
@@ -152,7 +156,7 @@ bool SceneObject::editable() const
     return true;
 }
 
-void SceneObject::draw(OpenGLPainter *painter)
+void SceneObject::draw(ShaderStack *stack)
 {
     bool shaderOverridden = false;
     if ( !geometry()->isEmpty() )
@@ -165,7 +169,7 @@ void SceneObject::draw(OpenGLPainter *painter)
             if ( program )
             {
                 shaderOverridden = true;
-                painter->shaderPush(program);
+                stack->shaderPush(program);
             }
         }
     }
@@ -176,7 +180,7 @@ void SceneObject::draw(OpenGLPainter *painter)
     // transformation will apply recursively.
     // It is the caller's responsibility to manage pushing
     // and popping of the m2w matrix.
-    painter->modelToWorldPostMultiply(localToParent());
+    stack->modelToWorldPostMultiply(localToParent());
 
     if ( !geometry()->isEmpty() )
     {
@@ -186,7 +190,7 @@ void SceneObject::draw(OpenGLPainter *painter)
         geometry()->bindIndices(true);
 
         // Apply the data format.
-        geometry()->applyDataFormat(painter->shaderTop());
+        geometry()->applyDataFormat(stack->shaderTop());
 
         // Apply the texture.
         QOpenGLTexture* tex = resourceManager()->texture(geometry()->texture(0));
@@ -198,7 +202,7 @@ void SceneObject::draw(OpenGLPainter *painter)
         // Pop the shader if we pushed one earlier.
         if ( shaderOverridden )
         {
-            painter->shaderPop();
+            stack->shaderPop();
         }
     }
 }

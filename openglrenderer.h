@@ -6,7 +6,7 @@
 #include <QMatrix4x4>
 #include "matrixstack.h"
 #include "eulerangle.h"
-#include "openglpainter.h"
+#include "shaderstack.h"
 
 class Scene;
 class SceneObject;
@@ -58,7 +58,7 @@ public:
 
 private:
     //void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
-    void renderSceneRecursive(SceneObject* obj, OpenGLPainter* painter);
+    void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
 
     QColor      m_colGlobalColour;
     int         m_iShader;
@@ -67,7 +67,7 @@ private:
     float       m_flFogBegin;
     float       m_flFogEnd;
 
-    OpenGLPainter*  m_pPainter;
+    ShaderStack*    m_pStack;
     bool            m_bPreparedForRendering;
 };
 

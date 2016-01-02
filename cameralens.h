@@ -2,6 +2,7 @@
 #define CAMERALENS_H
 
 #include <QMatrix4x4>
+#include "boundingbox.h"
 
 class CameraLens
 {
@@ -46,6 +47,8 @@ public:
 
     static QMatrix4x4 perspectiveMatrix(float fov, float aspectRatio, float nearPlane, float farPlane);
     static QMatrix4x4 orthographicMatrix(float top, float bottom, float left, float right, float nearPlane, float farPlane);
+
+    BoundingBox localViewVolumeBounds() const;
 
 private:
     LensType    m_iType;

@@ -20,12 +20,12 @@ OpenGLRenderer* renderer()
 OpenGLRenderer::OpenGLRenderer()
 {
     g_pRenderer = this;
-    m_pPainter = NULL;
+    m_pStack = NULL;
     m_bPreparedForRendering = false;
     m_vecDirectionalLight = QVector3D(1,0,0);
     m_colFogColour = QColor::fromRgb(0xff999999);
-    m_flFogBegin = 100;
-    m_flFogEnd = 1000;
+    m_flFogBegin = 0;
+    m_flFogEnd = 0;
 }
 
 OpenGLRenderer::~OpenGLRenderer()
@@ -88,19 +88,19 @@ void OpenGLRenderer::begin()
     Q_ASSERT(program);
 
     // Start with autoupdate false so that we can apply things in a batch.
-    m_pPainter = new OpenGLPainter(program, false);
+    m_pStack = new ShaderStack(program, false);
 
     // Set up initial things.
-    m_pPainter->coordinateTransformPostMultiply(Math::hammerToOpenGL());
-    m_pPainter->fogColorSetTop(fogColor());
-    m_pPainter->fogBeginSetTop(fogBeginDistance());
-    m_pPainter->fogEndSetTop(fogEndDistance());
-    m_pPainter->directionalLightSetTop(directionalLight());
-    m_pPainter->globalColorSetTop(globalColor());
+    m_pStack->coordinateTransformPostMultiply(Math::hammerToOpenGL());
+    m_pStack->fogColorSetTop(fogColor());
+    m_pStack->fogBeginSetTop(fogBeginDistance());
+    m_pStack->fogEndSetTop(fogEndDistance());
+    m_pStack->directionalLightSetTop(directionalLight());
+    m_pStack->globalColorSetTop(globalColor());
 
     // Apply them all.
-    m_pPainter->applyAll();
-    m_pPainter->setAutoUpdate(true);
+    m_pStack->applyAll();
+    m_pStack->setAutoUpdate(true);
 
     m_bPreparedForRendering = true;
 }
@@ -109,26 +109,26 @@ void OpenGLRenderer::end()
 {
     Q_ASSERT(m_bPreparedForRendering);
 
-    Q_ASSERT(m_pPainter->inInitialState());
-    delete m_pPainter;
-    m_pPainter = NULL;
+    Q_ASSERT(m_pStack->inInitialState());
+    delete m_pStack;
+    m_pStack = NULL;
 
     m_bPreparedForRendering = false;
 }
 
-void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, OpenGLPainter* painter)
+void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack* stack)
 {
-    painter->modelToWorldPush();
+    stack->modelToWorldPush();
 
-    obj->draw(painter);
+    obj->draw(stack);
 
     QList<SceneObject*> children = obj->children();
     foreach ( SceneObject* o, children )
     {
-        renderSceneRecursive(o, painter);
+        renderSceneRecursive(o, stack);
     }
 
-    painter->modelToWorldPop();
+    stack->modelToWorldPop();
 }
 
 QVector3D OpenGLRenderer::directionalLight() const
@@ -150,12 +150,12 @@ void OpenGLRenderer::renderScene2(Scene *scene, const Camera *camera)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
-    m_pPainter->setCamera(camera);
-    m_pPainter->worldToCameraPostMultiply(camera->rootToLocal());
-    m_pPainter->cameraProjectionPostMultiply(camera->lens().projectionMatrix());
+    m_pStack->setCamera(camera);
+    m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
+    m_pStack->cameraProjectionPostMultiply(camera->lens().projectionMatrix());
 
     // Render the scene.
-    renderSceneRecursive(scene->root(), m_pPainter);
+    renderSceneRecursive(scene->root(), m_pStack);
 }
 
 GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString &text, const QColor &col,
@@ -244,11 +244,11 @@ void OpenGLRenderer::drawQuad(GeometryData *quad, const QSize &screen, const QRe
     quad->bindVertices(true);
     quad->bindIndices(true);
 
-    m_pPainter->modelToWorldPostMultiply(transformation);
-    m_pPainter->worldToCameraSetToIdentity();
-    m_pPainter->coordinateTransformSetToIdentity();
-    m_pPainter->cameraProjectionSetToIdentity();
-    quad->applyDataFormat(m_pPainter->shaderTop());
+    m_pStack->modelToWorldPostMultiply(transformation);
+    m_pStack->worldToCameraSetToIdentity();
+    m_pStack->coordinateTransformSetToIdentity();
+    m_pStack->cameraProjectionSetToIdentity();
+    quad->applyDataFormat(m_pStack->shaderTop());
 
     QOpenGLTexture* tex = quad->hasLocalTexture() ? quad->localTexture().data()
                                                   : resourceManager()->texture(quad->texture(0));

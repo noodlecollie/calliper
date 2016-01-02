@@ -1,7 +1,7 @@
-#include "openglpainter.h"
+#include "shaderstack.h"
 #include "shaderprogram.h"
 
-OpenGLPainter::OpenGLPainter(ShaderProgram* initial, bool autoUpdate)
+ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
 {
     m_bAutoUpdate = autoUpdate;
     m_pCamera = NULL;
@@ -22,34 +22,34 @@ OpenGLPainter::OpenGLPainter(ShaderProgram* initial, bool autoUpdate)
         applyAll();
 }
 
-OpenGLPainter::~OpenGLPainter()
+ShaderStack::~ShaderStack()
 {
     ShaderProgram* p = m_Shaders.top();
     if ( p )
         p->release();
 }
 
-const Camera* OpenGLPainter::camera() const
+const Camera* ShaderStack::camera() const
 {
     return m_pCamera;
 }
 
-void OpenGLPainter::setCamera(const Camera *camera)
+void ShaderStack::setCamera(const Camera *camera)
 {
     m_pCamera = camera;
 }
 
-bool OpenGLPainter::autoUpdate() const
+bool ShaderStack::autoUpdate() const
 {
     return m_bAutoUpdate;
 }
 
-void OpenGLPainter::setAutoUpdate(bool enabled)
+void ShaderStack::setAutoUpdate(bool enabled)
 {
     m_bAutoUpdate = enabled;
 }
 
-bool OpenGLPainter::inInitialState() const
+bool ShaderStack::inInitialState() const
 {
     return m_Shaders.count() == 1 &&
             m_ModelToWorld.count() == 1 &&
@@ -64,7 +64,7 @@ bool OpenGLPainter::inInitialState() const
 }
 
 // Should be called whenever a new shader is applied.
-void OpenGLPainter::applyAll()
+void ShaderStack::applyAll()
 {
     ShaderProgram* p = m_Shaders.top();
     p->setUniformMatrix4(ShaderProgram::ModelToWorldMatrix, m_ModelToWorld.top());
@@ -78,7 +78,7 @@ void OpenGLPainter::applyAll()
     p->setUniformColor4(ShaderProgram::ColorUniform, m_GlobalColor.top());
 }
 
-void OpenGLPainter::shaderPush(ShaderProgram *program)
+void ShaderStack::shaderPush(ShaderProgram *program)
 {
     m_Shaders.top()->release();
     m_Shaders.push(program);
@@ -87,7 +87,7 @@ void OpenGLPainter::shaderPush(ShaderProgram *program)
         applyAll();
 }
 
-void OpenGLPainter::shaderPop()
+void ShaderStack::shaderPop()
 {
     m_Shaders.top()->release();
     m_Shaders.pop();
@@ -97,61 +97,61 @@ void OpenGLPainter::shaderPop()
         applyAll();
 }
 
-ShaderProgram* OpenGLPainter::shaderTop() const
+ShaderProgram* ShaderStack::shaderTop() const
 {
     return m_Shaders.top();
 }
 
-int OpenGLPainter::shaderCount() const
+int ShaderStack::shaderCount() const
 {
     return m_Shaders.count();
 }
 
-void OpenGLPainter::modelToWorldPostMultiply(const QMatrix4x4 &mat)
+void ShaderStack::modelToWorldPostMultiply(const QMatrix4x4 &mat)
 {
     postMultiplyTop(m_ModelToWorld, ShaderProgram::ModelToWorldMatrix, mat);
 }
 
-void OpenGLPainter::modelToWorldPush()
+void ShaderStack::modelToWorldPush()
 {
     m_ModelToWorld.push(m_ModelToWorld.top());
 }
 
-void OpenGLPainter::modelToWorldPop()
+void ShaderStack::modelToWorldPop()
 {
     pop(m_ModelToWorld, ShaderProgram::ModelToWorldMatrix);
 }
 
-void OpenGLPainter::modelToWorldPreMultiply(const QMatrix4x4 &mat)
+void ShaderStack::modelToWorldPreMultiply(const QMatrix4x4 &mat)
 {
     preMultiplyTop(m_ModelToWorld, ShaderProgram::ModelToWorldMatrix, mat);
 }
 
-const QMatrix4x4& OpenGLPainter::modelToWorldTop() const
+const QMatrix4x4& ShaderStack::modelToWorldTop() const
 {
     return m_ModelToWorld.top();
 }
 
-int OpenGLPainter::modelToWorldCount() const
+int ShaderStack::modelToWorldCount() const
 {
     return m_ModelToWorld.count();
 }
 
-void OpenGLPainter::preMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat)
+void ShaderStack::preMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat)
 {
     stack.top() = mat * stack.top();
     if ( m_bAutoUpdate )
         m_Shaders.top()->setUniformMatrix4(att, stack.top());
 }
 
-void OpenGLPainter::postMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat)
+void ShaderStack::postMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat)
 {
     stack.top() = stack.top() * mat;
     if ( m_bAutoUpdate )
         m_Shaders.top()->setUniformMatrix4(att, stack.top());
 }
 
-void OpenGLPainter::pop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att)
+void ShaderStack::pop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att)
 {
     stack.pop();
     Q_ASSERT(stack.count() >= 1);
@@ -159,97 +159,97 @@ void OpenGLPainter::pop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att)
         m_Shaders.top()->setUniformMatrix4(att, stack.top());
 }
 
-void OpenGLPainter::worldToCameraPreMultiply(const QMatrix4x4 &mat)
+void ShaderStack::worldToCameraPreMultiply(const QMatrix4x4 &mat)
 {
     preMultiplyTop(m_WorldToCamera, ShaderProgram::WorldToCameraMatrix, mat);
 }
 
-void OpenGLPainter::worldToCameraPostMultiply(const QMatrix4x4 &mat)
+void ShaderStack::worldToCameraPostMultiply(const QMatrix4x4 &mat)
 {
     postMultiplyTop(m_WorldToCamera, ShaderProgram::WorldToCameraMatrix, mat);
 }
 
-void OpenGLPainter::worldToCameraPush()
+void ShaderStack::worldToCameraPush()
 {
     m_WorldToCamera.push(m_WorldToCamera.top());
 }
 
-void OpenGLPainter::worldToCameraPop()
+void ShaderStack::worldToCameraPop()
 {
     pop(m_WorldToCamera, ShaderProgram::WorldToCameraMatrix);
 }
 
-const QMatrix4x4& OpenGLPainter::worldToCameraTop() const
+const QMatrix4x4& ShaderStack::worldToCameraTop() const
 {
     return m_WorldToCamera.top();
 }
 
-int OpenGLPainter::worldToCameraCount() const
+int ShaderStack::worldToCameraCount() const
 {
     return m_WorldToCamera.count();
 }
 
-void OpenGLPainter::coordinateTransformPreMultiply(const QMatrix4x4 &mat)
+void ShaderStack::coordinateTransformPreMultiply(const QMatrix4x4 &mat)
 {
     preMultiplyTop(m_CoordinateTransform, ShaderProgram::CoordinateTransformMatrix, mat);
 }
 
-void OpenGLPainter::coordinateTransformPostMultiply(const QMatrix4x4 &mat)
+void ShaderStack::coordinateTransformPostMultiply(const QMatrix4x4 &mat)
 {
     postMultiplyTop(m_CoordinateTransform, ShaderProgram::CoordinateTransformMatrix, mat);
 }
 
-void OpenGLPainter::coordinateTransformPush()
+void ShaderStack::coordinateTransformPush()
 {
     m_CoordinateTransform.push(m_CoordinateTransform.top());
 }
 
-void OpenGLPainter::coordinateTransformPop()
+void ShaderStack::coordinateTransformPop()
 {
     pop(m_CoordinateTransform, ShaderProgram::CoordinateTransformMatrix);
 }
 
-const QMatrix4x4& OpenGLPainter::coordinateTransformTop() const
+const QMatrix4x4& ShaderStack::coordinateTransformTop() const
 {
     return m_CoordinateTransform.top();
 }
 
-int OpenGLPainter::coordinateTransformCount() const
+int ShaderStack::coordinateTransformCount() const
 {
     return m_CoordinateTransform.count();
 }
 
-void OpenGLPainter::cameraProjectionPreMultiply(const QMatrix4x4 &mat)
+void ShaderStack::cameraProjectionPreMultiply(const QMatrix4x4 &mat)
 {
     preMultiplyTop(m_CameraProjection, ShaderProgram::CameraProjectionMatrix, mat);
 }
 
-void OpenGLPainter::cameraProjectionPostMultiply(const QMatrix4x4 &mat)
+void ShaderStack::cameraProjectionPostMultiply(const QMatrix4x4 &mat)
 {
     postMultiplyTop(m_CameraProjection, ShaderProgram::CameraProjectionMatrix, mat);
 }
 
-void OpenGLPainter::cameraProjectionPush()
+void ShaderStack::cameraProjectionPush()
 {
     m_CameraProjection.push(m_CameraProjection.top());
 }
 
-void OpenGLPainter::cameraProjectionPop()
+void ShaderStack::cameraProjectionPop()
 {
     pop(m_CameraProjection, ShaderProgram::CameraProjectionMatrix);
 }
 
-const QMatrix4x4& OpenGLPainter::cameraProjectionTop() const
+const QMatrix4x4& ShaderStack::cameraProjectionTop() const
 {
     return m_CameraProjection.top();
 }
 
-int OpenGLPainter::cameraProjectionCount() const
+int ShaderStack::cameraProjectionCount() const
 {
     return m_CameraProjection.count();
 }
 
-void OpenGLPainter::pop(QStack<QColor> &stack, ShaderProgram::Attribute att)
+void ShaderStack::pop(QStack<QColor> &stack, ShaderProgram::Attribute att)
 {
     stack.pop();
     Q_ASSERT(stack.count() >= 1);
@@ -257,7 +257,7 @@ void OpenGLPainter::pop(QStack<QColor> &stack, ShaderProgram::Attribute att)
         m_Shaders.top()->setUniformColor4(att, stack.top());
 }
 
-void OpenGLPainter::setTop(QStack<QColor> &stack, ShaderProgram::Attribute att, const QColor &col)
+void ShaderStack::setTop(QStack<QColor> &stack, ShaderProgram::Attribute att, const QColor &col)
 {
     if ( col == stack.top() ) return;
 
@@ -266,31 +266,31 @@ void OpenGLPainter::setTop(QStack<QColor> &stack, ShaderProgram::Attribute att, 
         m_Shaders.top()->setUniformColor4(att, stack.top());
 }
 
-void OpenGLPainter::fogColorSetTop(const QColor &col)
+void ShaderStack::fogColorSetTop(const QColor &col)
 {
     setTop(m_FogColor, ShaderProgram::FogColorUniform, col);
 }
 
-void OpenGLPainter::fogColorPush()
+void ShaderStack::fogColorPush()
 {
     m_FogColor.push(m_FogColor.top());
 }
 
-void OpenGLPainter::fogColorPop()
+void ShaderStack::fogColorPop()
 {
     pop(m_FogColor, ShaderProgram::FogColorUniform);
 }
-const QColor& OpenGLPainter::fogColorTop() const
+const QColor& ShaderStack::fogColorTop() const
 {
     return m_FogColor.top();
 }
 
-int OpenGLPainter::fogColorCount() const
+int ShaderStack::fogColorCount() const
 {
     return m_FogColor.count();
 }
 
-void OpenGLPainter::setTop(QStack<float> &stack, ShaderProgram::Attribute att, float value)
+void ShaderStack::setTop(QStack<float> &stack, ShaderProgram::Attribute att, float value)
 {
     if ( value == stack.top() ) return;
 
@@ -299,7 +299,7 @@ void OpenGLPainter::setTop(QStack<float> &stack, ShaderProgram::Attribute att, f
         m_Shaders.top()->setUniformFloat(att, stack.top());
 }
 
-void OpenGLPainter::pop(QStack<float> &stack, ShaderProgram::Attribute att)
+void ShaderStack::pop(QStack<float> &stack, ShaderProgram::Attribute att)
 {
     stack.pop();
     Q_ASSERT(stack.count() >= 1);
@@ -307,57 +307,57 @@ void OpenGLPainter::pop(QStack<float> &stack, ShaderProgram::Attribute att)
         m_Shaders.top()->setUniformFloat(att, stack.top());
 }
 
-void OpenGLPainter::fogBeginSetTop(float val)
+void ShaderStack::fogBeginSetTop(float val)
 {
     setTop(m_FogBegin, ShaderProgram::FogBeginUniform, val);
 }
 
-void OpenGLPainter::fogBeginPush()
+void ShaderStack::fogBeginPush()
 {
     m_FogBegin.push(m_FogBegin.top());
 }
 
-void OpenGLPainter::fogBeginPop()
+void ShaderStack::fogBeginPop()
 {
     pop(m_FogBegin, ShaderProgram::FogBeginUniform);
 }
 
-const float& OpenGLPainter::fogBeginTop() const
+const float& ShaderStack::fogBeginTop() const
 {
     return m_FogBegin.top();
 }
 
-int OpenGLPainter::fogBeginCount() const
+int ShaderStack::fogBeginCount() const
 {
     return m_FogBegin.count();
 }
 
-void OpenGLPainter::fogEndSetTop(float val)
+void ShaderStack::fogEndSetTop(float val)
 {
     setTop(m_FogEnd, ShaderProgram::FogEndUniform, val);
 }
 
-void OpenGLPainter::fogEndPush()
+void ShaderStack::fogEndPush()
 {
     m_FogEnd.push(m_FogEnd.top());
 }
 
-void OpenGLPainter::fogEndPop()
+void ShaderStack::fogEndPop()
 {
     pop(m_FogEnd, ShaderProgram::FogEndUniform);
 }
 
-const float& OpenGLPainter::fogEndTop() const
+const float& ShaderStack::fogEndTop() const
 {
     return m_FogEnd.top();
 }
 
-int OpenGLPainter::fogEndCount() const
+int ShaderStack::fogEndCount() const
 {
     return m_FogEnd.count();
 }
 
-void OpenGLPainter::setTop(QStack<QVector3D> &stack, ShaderProgram::Attribute att, const QVector3D &value)
+void ShaderStack::setTop(QStack<QVector3D> &stack, ShaderProgram::Attribute att, const QVector3D &value)
 {
     if ( value == stack.top() ) return;
 
@@ -366,7 +366,7 @@ void OpenGLPainter::setTop(QStack<QVector3D> &stack, ShaderProgram::Attribute at
         m_Shaders.top()->setUniformVector3(att, stack.top());
 }
 
-void OpenGLPainter::pop(QStack<QVector3D> &stack, ShaderProgram::Attribute att)
+void ShaderStack::pop(QStack<QVector3D> &stack, ShaderProgram::Attribute att)
 {
     stack.pop();
     Q_ASSERT(stack.count() >= 1);
@@ -374,82 +374,82 @@ void OpenGLPainter::pop(QStack<QVector3D> &stack, ShaderProgram::Attribute att)
         m_Shaders.top()->setUniformVector3(att, stack.top());
 }
 
-void OpenGLPainter::directionalLightSetTop(const QVector3D &val)
+void ShaderStack::directionalLightSetTop(const QVector3D &val)
 {
     setTop(m_DirectionalLight, ShaderProgram::DirectionalLightUniform, val);
 }
 
-void OpenGLPainter::directionalLightPush()
+void ShaderStack::directionalLightPush()
 {
     m_DirectionalLight.push(m_DirectionalLight.top());
 }
 
-void OpenGLPainter::directionalLightPop()
+void ShaderStack::directionalLightPop()
 {
     pop(m_DirectionalLight, ShaderProgram::DirectionalLightUniform);
 }
 
-const QVector3D& OpenGLPainter::directionalLightTop() const
+const QVector3D& ShaderStack::directionalLightTop() const
 {
     return m_DirectionalLight.top();
 }
 
-int OpenGLPainter::directionalLightCount() const
+int ShaderStack::directionalLightCount() const
 {
     return m_DirectionalLight.count();
 }
 
-void OpenGLPainter::globalColorSetTop(const QColor &col)
+void ShaderStack::globalColorSetTop(const QColor &col)
 {
     setTop(m_GlobalColor, ShaderProgram::ColorUniform, col);
 }
 
-void OpenGLPainter::globalColorPush()
+void ShaderStack::globalColorPush()
 {
     m_GlobalColor.push(m_GlobalColor.top());
 }
 
-void OpenGLPainter::globalColorPop()
+void ShaderStack::globalColorPop()
 {
     pop(m_GlobalColor, ShaderProgram::ColorUniform);
 }
 
-const QColor& OpenGLPainter::globalColorTop() const
+const QColor& ShaderStack::globalColorTop() const
 {
     return m_GlobalColor.top();
 }
 
-int OpenGLPainter::globalColorCount() const
+int ShaderStack::globalColorCount() const
 {
     return m_GlobalColor.count();
 }
 
-void OpenGLPainter::setToIdentity(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att)
+void ShaderStack::setToIdentity(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att)
 {
     stack.top().setToIdentity();
     if ( m_bAutoUpdate )
         m_Shaders.top()->setUniformMatrix4(att, stack.top());
 }
 
-void OpenGLPainter::modelToWorldSetToIdentity()
+void ShaderStack::modelToWorldSetToIdentity()
 {
     if ( m_ModelToWorld.top().isIdentity() ) return;
     setToIdentity(m_ModelToWorld, ShaderProgram::ModelToWorldMatrix);
 }
 
-void OpenGLPainter::worldToCameraSetToIdentity()
+void ShaderStack::worldToCameraSetToIdentity()
 {
     if ( m_WorldToCamera.top().isIdentity() ) return;
     setToIdentity(m_WorldToCamera, ShaderProgram::WorldToCameraMatrix);
 }
 
-void OpenGLPainter::coordinateTransformSetToIdentity()
+void ShaderStack::coordinateTransformSetToIdentity()
 {
     if ( m_CoordinateTransform.top().isIdentity() ) return;
     setToIdentity(m_CoordinateTransform, ShaderProgram::CoordinateTransformMatrix);
 }
 
-void OpenGLPainter::cameraProjectionSetToIdentity()
+void ShaderStack::cameraProjectionSetToIdentity()
 {
     if ( m_CameraProjection.top().isIdentity() ) return;
     setToIdentity(m_CameraProjection, ShaderProgram::CameraProjectionMatrix);

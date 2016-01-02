@@ -65,6 +65,11 @@ static int formatOffset(GeometryData::DataFormat format, ShaderProgram::Attribut
     }
 }
 
+int GeometryData::vertexFormatBytes() const
+{
+    return formatStride[m_iDataFormat];
+}
+
 GeometryData::GeometryData()
 {
     m_bVerticesStale = true;
