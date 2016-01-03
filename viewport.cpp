@@ -16,6 +16,8 @@
 #include "viewportuseroptions.h"
 #include <QPushButton>
 #include "simplenumericfont.h"
+#include "mapdocument.h"
+#include "basegrid.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -184,6 +186,29 @@ void Viewport::keyPressEvent(QKeyEvent *e)
                 break;
 
             setCameraMouseControl(!m_bMouseTracking);
+            break;
+        }
+
+        case Qt::Key_BracketLeft:
+        {
+            if ( !m_pCamera )
+                break;
+
+            m_pCamera->scene()->grid()->incrementGridPower();
+            qDebug() << "Grid power:" << m_pCamera->scene()->grid()->gridPower();
+            update();
+            break;
+        }
+
+        case Qt::Key_BracketRight:
+        {
+            if ( !m_pCamera )
+                break;
+
+            m_pCamera->scene()->grid()->decrementGridPower();
+            qDebug() << "Grid power:" << m_pCamera->scene()->grid()->gridPower();
+            update();
+            break;
         }
 
         default:

@@ -16,8 +16,10 @@ public:
     virtual bool editable() const;
     virtual void draw(ShaderStack *stack);
 
-    int powerTwo() const;
-    void setPowerTwo(int power);
+    int gridPower() const;
+    void setGridPower(int power);
+    void incrementGridPower();
+    void decrementGridPower();
 
 private:
     void setUpGeometry();

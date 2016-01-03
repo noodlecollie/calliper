@@ -6,15 +6,18 @@
 class Camera;
 class SceneObject;
 class MapDocument;
+class BaseGrid;
 
 class Scene
 {
+    friend class BaseGrid;
 public:
     Scene(MapDocument* document);
     ~Scene();
 
     MapDocument* document() const;
     SceneObject* root() const;
+    BaseGrid* grid() const;
 
     QList<Camera*> findCameras() const;
     QList<SceneObject*> findByName(const QString &name);
@@ -22,6 +25,7 @@ public:
 private:
     SceneObject*    m_pRootObject;
     MapDocument*    m_pDocument;
+    BaseGrid*       m_pGrid;
 };
 
 #endif // SCENE_H

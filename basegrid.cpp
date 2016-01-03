@@ -21,6 +21,12 @@
 
 BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
 {
+    if ( m_pScene )
+    {
+        Q_ASSERT(!m_pScene->m_pGrid);
+        m_pScene->m_pGrid = this;
+    }
+
     // Standard Hammer colours
     m_colMajor = QColor(100, 46, 0);
     m_colMinor = QColor(119,119,119);
@@ -31,18 +37,28 @@ BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
     setUpGeometry();
 }
 
-int BaseGrid::powerTwo() const
+int BaseGrid::gridPower() const
 {
     return m_iPowerTwo;
 }
 
-void BaseGrid::setPowerTwo(int power)
+void BaseGrid::setGridPower(int power)
 {
     m_iPowerTwo = power;
     if ( m_iPowerTwo < POWER2_1 )
-        m_iPowerTwo = 1;
+        m_iPowerTwo = 0;
     else if ( m_iPowerTwo > POWER2_1024 )
         m_iPowerTwo = 10;
+}
+
+void BaseGrid::incrementGridPower()
+{
+    setGridPower(m_iPowerTwo+1);
+}
+
+void BaseGrid::decrementGridPower()
+{
+    setGridPower(m_iPowerTwo-1);
 }
 
 bool BaseGrid::editable() const
@@ -325,19 +341,20 @@ void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
     int verts = 0;
     switch (m_iPowerTwo)
     {
-        case POWER2_64:
-            verts += 8;
-
-        case POWER2_128:
-            verts += 4;
+        case POWER2_512:
+            verts = 2;
+            break;
 
         case POWER2_256:
-            verts += 2;
+            verts = 4;
+            break;
 
-        case POWER2_512:
-            verts += 2;
+        case POWER2_128:
+            verts = 8;
+            break;
 
         default:
+            verts = 16;
             break;
     }
 
