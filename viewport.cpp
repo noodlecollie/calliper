@@ -194,8 +194,8 @@ void Viewport::keyPressEvent(QKeyEvent *e)
             if ( !m_pCamera )
                 break;
 
-            m_pCamera->scene()->grid()->incrementGridPower();
-            qDebug() << "Grid power:" << m_pCamera->scene()->grid()->gridPower();
+            m_pCamera->scene()->grid()->decrementGridPower();
+            qDebug() << "Grid power:" << (1 << m_pCamera->scene()->grid()->gridPower());
             update();
             break;
         }
@@ -205,8 +205,8 @@ void Viewport::keyPressEvent(QKeyEvent *e)
             if ( !m_pCamera )
                 break;
 
-            m_pCamera->scene()->grid()->decrementGridPower();
-            qDebug() << "Grid power:" << m_pCamera->scene()->grid()->gridPower();
+            m_pCamera->scene()->grid()->incrementGridPower();
+            qDebug() << "Grid power:" << (1 << m_pCamera->scene()->grid()->gridPower());
             update();
             break;
         }

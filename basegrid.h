@@ -7,6 +7,8 @@
 #include <QPair>
 #include "boundingbox.h"
 
+class Camera;
+
 class BaseGrid : public SceneObject
 {
     Q_OBJECT
@@ -26,6 +28,8 @@ private:
     void drawOriginLines(ShaderStack* stack, const BoundingBox &bbox);
     void drawMajorLines(ShaderStack* stack, const BoundingBox &bbox);
     void drawMinorLines(ShaderStack* stack, const BoundingBox &bbox);
+    void drawStandardLines(ShaderStack* stack, const BoundingBox &bbox);
+    int limitGridPower(const Camera* camera) const;
 
     QColor  m_colMajor;
     QColor  m_colMinor;

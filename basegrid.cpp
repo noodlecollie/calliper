@@ -117,7 +117,7 @@ void BaseGrid::setUpGeometry()
         bool slotsUsed[8] = { false, false, false, false, false, false, false, false };
         for (int i = 0; i < 4; i++)
         {
-            float intDelta = 8 >> i;
+            int intDelta = 8 >> i;
             int acc = 8;
 
             while (acc > 0)
@@ -142,7 +142,7 @@ void BaseGrid::setUpGeometry()
         bool slotsUsed[8] = { false, false, false, false, false, false, false, false };
         for (int i = 0; i < 4; i++)
         {
-            float intDelta = 8 >> i;
+            int intDelta = 8 >> i;
             int acc = 8;
 
             while (acc > 0)
@@ -171,21 +171,59 @@ void BaseGrid::setUpGeometry()
     // Same rules as above apply.
 
     // X
-    for ( int i = 1; i <= 32; i *= 2 )
     {
-        m_pGeometry->appendVertex(QVector3D(-1, 1.0f - (1.0f/(float)i), 0), m_colMinor);
-        m_pGeometry->appendVertex(QVector3D(1, 1.0f - (1.0f/(float)i), 0), m_colMinor);
-        m_pGeometry->appendIndex(baseVertex+offset++);
-        m_pGeometry->appendIndex(baseVertex+offset++);
+        bool slotsUsed[32];
+        for (int i = 0; i < 32; i++)
+            slotsUsed[i] = false;
+
+        for ( int i = 0; i < 6; i++ )
+        {
+            int intDelta = 32 >> i;
+            int acc = 32;
+
+            while (acc > 0)
+            {
+                if ( !slotsUsed[acc-1] )
+                {
+                    float f = (float)acc/32.0f;
+                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), m_colStd);
+                    m_pGeometry->appendVertex(QVector3D(1, f, 0), m_colStd);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    slotsUsed[acc-1] = true;
+                }
+
+                acc -= intDelta;
+            }
+        }
     }
 
     // Y
-    for ( int i = 1; i <= 32; i *= 2 )
     {
-        m_pGeometry->appendVertex(QVector3D(1.0f - (1.0f/(float)i), -1, 0), m_colMinor);
-        m_pGeometry->appendVertex(QVector3D(1.0f - (1.0f/(float)i), 1, 0), m_colMinor);
-        m_pGeometry->appendIndex(baseVertex+offset++);
-        m_pGeometry->appendIndex(baseVertex+offset++);
+        bool slotsUsed[32];
+        for (int i = 0; i < 32; i++)
+            slotsUsed[i] = false;
+
+        for ( int i = 0; i < 6; i++ )
+        {
+            int intDelta = 32 >> i;
+            int acc = 32;
+
+            while (acc > 0)
+            {
+                if ( !slotsUsed[acc-1] )
+                {
+                    float f = (float)acc/32.0f;
+                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), m_colStd);
+                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), m_colStd);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    slotsUsed[acc-1] = true;
+                }
+
+                acc -= intDelta;
+            }
+        }
     }
 
     m_DrawOffsets.append(QPair<int,int>(baseVertex, offset));
@@ -226,6 +264,7 @@ void BaseGrid::draw(ShaderStack *stack)
     drawOriginLines(stack, bbox);
     drawMajorLines(stack, bbox);
     drawMinorLines(stack, bbox);
+    drawStandardLines(stack, bbox);
 
     stack->fogEndPop();
     stack->fogBeginPop();
@@ -320,17 +359,19 @@ void BaseGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
 
 void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
 {
-    // Minor lines begin at 0 (for a 512 unit gridline) and end at
-    // (1-0.125) = 0.875 (for a 64 unit gridline).
+    // Minor lines begin at 1 (for a 512 unit gridline) and end at
+    // 0.125 (for a 64 unit gridline).
     // Taking X as an example, firstly we want to scale the lines up by 512
     // on Y and enough to fill the bbox extent on x.
     // Then, for each 512-unit section, we want to draw as many lines as our
     // grid density will allow.
-    // TODO: At some point in the future we should do a cutoff test so as to
-    // not draw very small gridlines if they'd be too close together pixel-wise.
+
+    // Do a cheap Z test to see whether we should limit the density
+    // of the grid for performance purposes.
+    int power = limitGridPower(stack->camera());
 
     // Don't draw if we don't have a high enough grid density.
-    if ( m_iPowerTwo >= POWER2_1024 )
+    if ( power >= POWER2_1024 )
         return;
 
     QVector3D min = bbox.min(), max = bbox.max();
@@ -339,7 +380,7 @@ void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
     QPair<int,int> offsets = m_DrawOffsets.at(Minor);
 
     int verts = 0;
-    switch (m_iPowerTwo)
+    switch (power)
     {
         case POWER2_512:
             verts = 2;
@@ -409,4 +450,115 @@ void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->setAutoUpdate(true);
 
     stack->modelToWorldApply();
+}
+
+void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
+{
+    // Standard lines begin at 1 (for a 32 unit gridline) and end at
+    // 1/32 (for a 1 unit gridline).
+    // Taking X as an example, firstly we want to scale the lines up by 32
+    // on Y and enough to fill the bbox extent on x.
+    // Then, for each 32-unit section, we want to draw as many lines as our
+    // grid density will allow.
+
+    // Do a cheap Z test to see whether we should limit the density
+    // of the grid for performance purposes.
+    int power = limitGridPower(stack->camera());
+
+    // Don't draw if we don't have a high enough grid density.
+    if ( power >= POWER2_64 )
+        return;
+
+    QVector3D min = bbox.min(), max = bbox.max();
+    QVector3D centroid = bbox.centroid();
+    QVector3D extent = bbox.max() - bbox.min();
+    QPair<int,int> offsets = m_DrawOffsets.at(Std);
+
+    int verts = 0;
+    switch (power)
+    {
+        case POWER2_32:
+            verts = 2;
+            break;
+
+        case POWER2_16:
+            verts = 4;
+            break;
+
+        case POWER2_8:
+            verts = 8;
+            break;
+
+        case POWER2_4:
+            verts = 16;
+            break;
+
+        case POWER2_2:
+            verts = 32;
+            break;
+
+        default:
+            verts = 64;
+            break;
+    }
+
+    int count = qMin(offsets.second, verts);
+
+    // X
+    stack->modelToWorldSetToIdentity();
+    stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(centroid.x(),0,0))
+                                    * Math::matrixScale(QVector3D(extent.x()/2.0f,32,1)));
+    stack->setAutoUpdate(false);
+    for ( qint64 i = Math::previousMultiple(min.y(), 32); i <= max.y(); i += 32 )
+    {
+        // If we would draw over a previously coloured line, modify how many lines we draw.
+        int localCount = count;
+        int localOffset = offsets.first;
+        if ( (i-32) % 64 == 0 )
+        {
+            localCount -= 2;
+            localOffset += 2;
+        }
+
+        stack->modelToWorldPush();
+        stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D(0,(float)i,0)));
+        stack->modelToWorldApply();
+        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        stack->modelToWorldPop();
+    }
+    stack->setAutoUpdate(true);
+
+    // Y
+    stack->modelToWorldSetToIdentity();
+    stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(0,centroid.y(),0))
+                                    * Math::matrixScale(QVector3D(32,extent.y()/2.0f,1)));
+    stack->setAutoUpdate(false);
+    for ( qint64 i = Math::previousMultiple(min.x(), 32); i <= max.x(); i += 32 )
+    {
+        // If we would draw over a previously coloured line, modify how many lines we draw.
+        int localCount = count;
+        int localOffset = offsets.first + 64;
+        if ( (i-32) % 64 == 0 )
+        {
+            localCount -= 2;
+            localOffset += 2;
+        }
+
+        stack->modelToWorldPush();
+        stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D((float)i,0,0)));
+        stack->modelToWorldApply();
+        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        stack->modelToWorldPop();
+    }
+    stack->setAutoUpdate(true);
+
+    stack->modelToWorldApply();
+}
+
+int BaseGrid::limitGridPower(const Camera *camera) const
+{
+    // Return a LOD'ed grid power depending on how many multiples of 64 we are away on Z.
+    float z = qAbs(camera->position().z());
+    int lod = Math::previousMultiple(z, 64)/64;
+    return qMax(m_iPowerTwo, qMin(POWER2_1 + lod, POWER2_128));
 }
