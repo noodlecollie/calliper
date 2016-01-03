@@ -10,6 +10,7 @@ class QOpenGLContext;
 class ShaderProgram;
 class QOpenGLTexture;
 class SimpleNumericFont;
+class QOpenGLFramebufferObject;
 
 class ResourceManager
 {
@@ -38,6 +39,7 @@ public:
     QOpenGLTexture* texture(const QString &path) const;
 
     SimpleNumericFont* numericFont() const;
+    QOpenGLFramebufferObject* frameBuffer(const QSize &size);
 
 private:
     typedef QHash<QString, QOpenGLTexture*> TextureTable;
@@ -53,6 +55,7 @@ private:
 
     QOpenGLTexture*     m_pDefaultTexture;
     SimpleNumericFont*  m_pNumericFont;
+    QOpenGLFramebufferObject*   m_pFramebuffer;
 };
 
 ResourceManager* resourceManager();

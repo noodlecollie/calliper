@@ -13,6 +13,7 @@ class SceneObject;
 class Camera;
 class GeometryData;
 class ShaderProgram;
+class QOpenGLFunctions_4_1_Core;
 
 class OpenGLRenderer
 {
@@ -47,6 +48,7 @@ public:
     void end();
 
     void renderScene(Scene* scene, const Camera* camera);
+    SceneObject* selectFromDepthBuffer(Scene* scene, const Camera* camera, const QPoint &pos);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
     void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter,
@@ -56,8 +58,9 @@ public:
                                                   Qt::Alignment alignment);
 
 private:
-    //void renderSceneRecursive(SceneObject* obj, MatrixStack &stack, const QMatrix4x4 &camera, const QMatrix4x4 &projection);
     void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
+    void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
+                                 const QPoint &selPos, SceneObject** selected, float nearestDepth = 1.0f);
 
     QColor      m_colGlobalColour;
     int         m_iShader;

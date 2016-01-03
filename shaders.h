@@ -6,6 +6,7 @@
 #include "unlittextureshader.h"
 #include "pervertexcolorshader.h"
 #include "basiclittextureshader.h"
+#include "selectionmaskshader.h"
 
 #endif // SHADERS_H
 

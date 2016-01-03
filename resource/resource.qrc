@@ -18,5 +18,8 @@
         <file>icons/tree_object.png</file>
         <file>icons/viewport_options.png</file>
         <file>fonts/numbers_small.png</file>
+        <file>shaders/selectionmask.frag</file>
+        <file>shaders/selectionmask.vert</file>
+        <file>textures/debug_crosshair.png</file>
     </qresource>
 </RCC>

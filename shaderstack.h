@@ -8,9 +8,11 @@
 #include "shaderprogram.h"
 
 class Camera;
+class OpenGLRenderer;
 
 class ShaderStack
 {
+    friend class OpenGLRenderer;
 public:
     ShaderStack(ShaderProgram* initial, bool autoUpdate = true);
     ~ShaderStack();
@@ -100,6 +102,8 @@ public:
     int globalColorCount() const;
     void globalColorApply();
 
+    bool lockShader() const;
+
 private:
     void preMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat);
     void postMultiplyTop(QStack<QMatrix4x4> &stack, ShaderProgram::Attribute att, const QMatrix4x4 &mat);
@@ -116,6 +120,7 @@ private:
     void pop(QStack<QVector3D> &stack, ShaderProgram::Attribute att);
 
     bool    m_bAutoUpdate;
+    bool    m_bLockShader;
     const Camera*   m_pCamera;
 
     QStack<ShaderProgram*>  m_Shaders;

@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     simplenumericfont.cpp \
     basegrid.cpp \
     boundingbox.cpp \
-    shaderstack.cpp
+    shaderstack.cpp \
+    selectionmaskshader.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -73,7 +74,8 @@ HEADERS  += mainwindow.h \
     simplenumericfont.h \
     basegrid.h \
     boundingbox.h \
-    shaderstack.h
+    shaderstack.h \
+    selectionmaskshader.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

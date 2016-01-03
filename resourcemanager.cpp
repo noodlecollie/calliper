@@ -3,13 +3,10 @@
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
 #include <QtDebug>
-#include "minimumshader.h"
-#include "minimumtexturedshader.h"
+#include "shaders.h"
 #include <QOpenGLTexture>
-#include "unlittextureshader.h"
-#include "pervertexcolorshader.h"
-#include "basiclittextureshader.h"
 #include "simplenumericfont.h"
+#include <QOpenGLFramebufferObject>
 
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
@@ -33,6 +30,7 @@ void ResourceManager::shutdown()
 ResourceManager::ResourceManager()
 {
     g_pResourceManager = this;
+    m_pFramebuffer = NULL;
     m_pSurface = new QOffscreenSurface();
     m_pSurface->setFormat(QSurfaceFormat::defaultFormat());
     m_pSurface->create();
@@ -87,6 +85,10 @@ void ResourceManager::setUpShaders()
     BasicLitTextureShader* bltSh = new BasicLitTextureShader();
     bltSh->construct();
     m_Shaders.append(bltSh);
+
+    SelectionMaskShader* selmSh = new SelectionMaskShader();
+    selmSh->construct();
+    m_Shaders.append(selmSh);
 }
 
 void ResourceManager::setUpBuiltInTextures()
@@ -118,6 +120,14 @@ void ResourceManager::setUpBuiltInTextures()
     t2->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     t2->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
     m_Textures.insert(path2.mid(1).remove(".png"), t2);
+
+    QString path3(":/textures/debug_crosshair.png");
+    QOpenGLTexture* t3 = new QOpenGLTexture(QImage(path3).mirrored());
+    t3->setMinificationFilter(QOpenGLTexture::Nearest/*MipMapNearest*/);
+    t3->setMagnificationFilter(QOpenGLTexture::Nearest/*MipMapNearest*/);
+    t3->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
+    t3->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
+    m_Textures.insert(path3.mid(1).remove(".png"), t3);
 }
 
 void ResourceManager::makeCurrent()
@@ -137,6 +147,9 @@ ResourceManager::~ResourceManager()
 
     delete m_pNumericFont;
     m_pNumericFont = NULL;
+
+    delete m_pFramebuffer;
+    m_pFramebuffer = NULL;
 
     qDeleteAll(m_Textures);
     qDeleteAll(m_Shaders);
@@ -201,4 +214,18 @@ int ResourceManager::shaderIndex(const QString &name) const
 SimpleNumericFont* ResourceManager::numericFont() const
 {
     return m_pNumericFont;
+}
+
+QOpenGLFramebufferObject* ResourceManager::frameBuffer(const QSize &size)
+{
+    if ( m_pFramebuffer )
+    {
+        if ( m_pFramebuffer->width() == size.width() && m_pFramebuffer->height() == size.height() )
+            return m_pFramebuffer;
+        else
+            delete m_pFramebuffer;
+    }
+
+    m_pFramebuffer = new QOpenGLFramebufferObject(size);
+    return m_pFramebuffer;
 }

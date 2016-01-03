@@ -18,6 +18,7 @@
 #include "simplenumericfont.h"
 #include "mapdocument.h"
 #include "basegrid.h"
+#include <QOpenGLFramebufferObject>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -257,6 +258,28 @@ void Viewport::keyReleaseEvent(QKeyEvent *e)
 
 void Viewport::mousePressEvent(QMouseEvent *e)
 {
+    if ( !m_pScene || !m_pCamera || m_bMouseTracking )
+    {
+        QOpenGLWidget::mousePressEvent(e);
+        return;
+    }
+
+    GeometryData* temp = GeometryFactory::triangleQuad(1);
+    temp->setTexture(0, "/textures/debug_crosshair");
+
+    resourceManager()->makeCurrent();
+    QOpenGLFramebufferObject* fbo = resourceManager()->frameBuffer(size());
+    bool success = fbo->bind();
+    Q_ASSERT(success);
+    renderer()->begin();
+    SceneObject* selected = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, e->pos());
+    renderer()->end();
+    fbo->release();
+    resourceManager()->doneCurrent();
+    qDebug() << "Picked object:" << selected;
+    delete temp;
+    update();
+
     Q_UNUSED(e);
 }
 

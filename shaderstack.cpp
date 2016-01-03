@@ -4,6 +4,7 @@
 ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
 {
     m_bAutoUpdate = autoUpdate;
+    m_bLockShader = false;
     m_pCamera = NULL;
     m_Shaders.push(initial);
     m_Shaders.top()->apply();
@@ -124,6 +125,9 @@ void ShaderStack::globalColorApply()
 
 void ShaderStack::shaderPush(ShaderProgram *program)
 {
+    if ( m_bLockShader )
+        return;
+
     m_Shaders.top()->release();
     m_Shaders.push(program);
     m_Shaders.top()->apply();
@@ -133,6 +137,9 @@ void ShaderStack::shaderPush(ShaderProgram *program)
 
 void ShaderStack::shaderPop()
 {
+    if ( m_bLockShader )
+        return;
+
     m_Shaders.top()->release();
     m_Shaders.pop();
     Q_ASSERT(m_Shaders.count() >= 1);
@@ -497,4 +504,9 @@ void ShaderStack::cameraProjectionSetToIdentity()
 {
     if ( m_CameraProjection.top().isIdentity() ) return;
     setToIdentity(m_CameraProjection, ShaderProgram::CameraProjectionMatrix);
+}
+
+bool ShaderStack::lockShader() const
+{
+    return m_bLockShader;
 }
