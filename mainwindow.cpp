@@ -209,3 +209,24 @@ void MainWindow::sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column)
     c->lookAt(pos);
     ui->viewport->update();
 }
+
+void MainWindow::sceneTreeItemClicked(QTreeWidgetItem *item, int column)
+{
+    MapDocument* doc = activeDocument();
+    if ( !doc )
+        return;
+
+    QVariant v = item->data(column, Qt::UserRole);
+    if ( v.isNull() )
+        return;
+
+    QObject* object = v.value<QObject*>();
+    Q_ASSERT(object);
+
+    SceneObject* sceneObject = qobject_cast<SceneObject*>(object);
+    Q_ASSERT(sceneObject);
+
+    doc->selectedSetClear();
+    doc->selectedSetInsert(sceneObject);
+    ui->viewport->update();
+}

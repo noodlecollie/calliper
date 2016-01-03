@@ -7,6 +7,7 @@ in vec3 fViewSpace;
 out vec4 colour;
 
 uniform sampler2D sTexture0;
+uniform vec4 fColor;
 uniform vec3 directionalLight;	// Should be normalised!
 uniform vec4 fFogColor;
 uniform float fFogBegin;
@@ -16,6 +17,9 @@ void main()
 {
 	// Get our colour from the texture.
 	vec4 col = texture(sTexture0, fUV);
+
+        // Blend in the colour.
+        col *= fColor;
 
 	// Get the dot product of the normal with the light.
 	// We rescale this to make sure that the faces don't get too dark.

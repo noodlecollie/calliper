@@ -5,6 +5,7 @@
 #include "shaderstack.h"
 #include "resourcemanager.h"
 #include <QOpenGLTexture>
+#include "mapdocument.h"
 
 SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
 {
@@ -192,12 +193,27 @@ void SceneObject::draw(ShaderStack *stack)
         // Apply the data format.
         geometry()->applyDataFormat(stack->shaderTop());
 
+        // If we're selected, set the global colour.
+        bool pushedColor = false;
+        MapDocument* doc = m_pScene->document();
+        if ( doc->selectedSet().contains(this) )
+        {
+            pushedColor = true;
+            stack->globalColorPush();
+            stack->globalColorSetTop(doc->selectedColor());
+        }
+
         // Apply the texture.
         QOpenGLTexture* tex = resourceManager()->texture(geometry()->texture(0));
         tex->bind(0);
 
         // Draw.
         geometry()->draw();
+
+        if ( pushedColor )
+        {
+            stack->globalColorPop();
+        }
 
         // Pop the shader if we pushed one earlier.
         if ( shaderOverridden )

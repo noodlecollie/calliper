@@ -30,6 +30,7 @@ void BasicLitTextureShader::construct()
     m_iAttributeLocations[Position] = f->glGetAttribLocation(handle(), "vPositionModelSpace");
     m_iAttributeLocations[Normal] = f->glGetAttribLocation(handle(), "vNormal");
     m_iAttributeLocations[UV] = f->glGetAttribLocation(handle(), "vUV");
+    m_iAttributeLocations[ColorUniform] = f->glGetUniformLocation(handle(), "fColor");
     m_iAttributeLocations[FogColorUniform] = f->glGetUniformLocation(handle(), "fFogColor");
     m_iAttributeLocations[FogBeginUniform] = f->glGetUniformLocation(handle(), "fFogBegin");
     m_iAttributeLocations[FogEndUniform] = f->glGetUniformLocation(handle(), "fFogEnd");

@@ -146,13 +146,14 @@ void OpenGLRenderer::setDirectionalLight(const EulerAngle &ang)
     m_vecDirectionalLight = Math::angleToVectorSimple(ang);
 }
 
-void OpenGLRenderer::renderScene2(Scene *scene, const Camera *camera)
+void OpenGLRenderer::renderScene(Scene *scene, const Camera *camera)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
     m_pStack->setCamera(camera);
     m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
     m_pStack->cameraProjectionPostMultiply(camera->lens().projectionMatrix());
+    m_pStack->globalColorSetTop(QColor::fromRgb(0xffffffff));
 
     // Render the scene.
     renderSceneRecursive(scene->root(), m_pStack);

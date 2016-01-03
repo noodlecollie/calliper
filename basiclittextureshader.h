@@ -7,6 +7,7 @@
 // - Position
 // - Normal
 // - UV
+// - Colour
 // - Fog colour
 // - Fog begin
 // - Fog end

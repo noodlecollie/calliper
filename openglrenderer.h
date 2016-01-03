@@ -46,8 +46,7 @@ public:
     void begin();
     void end();
 
-    //void renderScene(Scene* scene, const Camera* camera);
-    void renderScene2(Scene* scene, const Camera* camera);
+    void renderScene(Scene* scene, const Camera* camera);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
     void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter,
