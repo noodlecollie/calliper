@@ -34,6 +34,7 @@ namespace Math
 
     qint64 previousMultiple(float value, qint64 multiple);
     qint64 nextMultiple(float value, qint64 multiple);
+    qint64 nearestMultiple(float value, qint64 multiple);
 }
 
 #endif // MATH_H

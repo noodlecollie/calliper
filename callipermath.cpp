@@ -156,4 +156,14 @@ namespace Math
     {
         return previousMultiple(value, multiple) + multiple;
     }
+
+    qint64 nearestMultiple(float value, qint64 multiple)
+    {
+        qint64 prev = previousMultiple(value, multiple);
+        qint64 next = nextMultiple(value, multiple);
+
+        float dPrev = value - (float)prev;
+        float dNext = (float)next - value;
+        return dPrev < dNext ? prev : next;
+    }
 }
