@@ -19,9 +19,17 @@
 #include "mapdocument.h"
 #include "basegrid.h"
 #include <QOpenGLFramebufferObject>
+#include <QOpenGLFramebufferObjectFormat>
+#include <QApplication>
+#include <QSurface>
+#include "mainwindow.h"
+#include <QStandardPaths>
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
+    // Don't discard buffers between frames!
+    setUpdateBehavior(QOpenGLWidget::PartialUpdate);
+
     m_colBackground = Viewport::defaultBackgroundColor();
     m_bBackgroundColorChanged = true;
     m_pCamera = NULL;
@@ -30,6 +38,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_flMouseSensitivity = 1.5f;
     m_bDrawFocusHighlight = false;
     m_bDrawFPS = false;
+    m_iRenderTasks = 0;
 
     m_pToggleOptions = new QPushButton(QIcon(QPixmap::fromImage(QImage(":/icons/viewport_options.png"))), QString(), this);
     m_pToggleOptions->resize(18,14);
@@ -92,6 +101,8 @@ void Viewport::initializeGL()
     m_TimeElapsed.start();
 }
 
+// Don't set any sizes using the width and height here!
+// These won't be actual per-pixel dimensions!
 void Viewport::resizeGL(int w, int h)
 {
     if ( m_pCamera )
@@ -106,8 +117,11 @@ void Viewport::resizeGL(int w, int h)
 
 void Viewport::paintGL()
 {
-    int msec = m_TimeElapsed.restart();
-    m_CameraController.update(msec);
+    if ( m_iRenderTasks != 0 )
+    {
+        processRenderTasks();
+        return;
+    }
 
     updateBackgroundColor();
 
@@ -119,7 +133,7 @@ void Viewport::paintGL()
         return;
     }
 
-    m_pCamera->translate(m_CameraController.velocity());
+    int msec = m_TimeElapsed.restart();
 
     if ( hasFocus() && m_bDrawFocusHighlight )
         drawHighlight();
@@ -127,13 +141,9 @@ void Viewport::paintGL()
     if ( m_bDrawFPS )
         drawFPSText(msec);
 
-    int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
-    Q_ASSERT(index >= 0);
-    renderer()->setShaderIndex(index);
-
-    renderer()->begin();
-    renderer()->renderScene(m_pScene, m_pCamera);
-    renderer()->end();
+    m_CameraController.update(msec);
+    m_pCamera->translate(m_CameraController.velocity());
+    drawScene();
 }
 
 void Viewport::drawHighlight()
@@ -264,23 +274,10 @@ void Viewport::mousePressEvent(QMouseEvent *e)
         return;
     }
 
-    GeometryData* temp = GeometryFactory::triangleQuad(1);
-    temp->setTexture(0, "/textures/debug_crosshair");
-
-    resourceManager()->makeCurrent();
-    QOpenGLFramebufferObject* fbo = resourceManager()->frameBuffer(size());
-    bool success = fbo->bind();
-    Q_ASSERT(success);
-    renderer()->begin();
-    SceneObject* selected = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, e->pos());
-    renderer()->end();
-    fbo->release();
-    resourceManager()->doneCurrent();
-    qDebug() << "Picked object:" << selected;
-    delete temp;
+    m_DepthSelectPos = e->pos();
+    m_iRenderTasks |= DepthBufferSelect;
     update();
-
-    Q_UNUSED(e);
+    return;
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent *e)
@@ -453,4 +450,87 @@ void Viewport::drawFPSText(int msec)
     renderer()->begin();
     resourceManager()->numericFont()->draw(QString("%0").arg(framesPerSecond).toLatin1(), size(), QSize(16,16), QPoint(20,0));
     renderer()->end();
+}
+
+void Viewport::debugSaveCurrentFrame()
+{
+    QOpenGLFramebufferObjectFormat fboFormat;
+    fboFormat.setSamples(0);
+    fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+
+    QOpenGLFramebufferObject fbo(sizeInPixels(), fboFormat);
+    fbo.bind();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_pCamera->translate(m_CameraController.velocity());
+
+    int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
+    Q_ASSERT(index >= 0);
+    renderer()->setShaderIndex(index);
+
+    renderer()->begin();
+    renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->end();
+
+    GLfloat f = -1;
+    glReadPixels(0,0,1,1,GL_DEPTH_COMPONENT,GL_FLOAT,&f);
+    qDebug() << "Depth at (0,0) =" << f;
+
+    fbo.release();
+    QImage image = fbo.toImage(true);
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + QString("/framebuffer.png");
+    qDebug() << "Saving framebuffer to:" << path;
+    image.save(path);
+}
+
+QSize Viewport::sizeInPixels() const
+{
+    return appMainWindow()->devicePixelRatio() * size();
+}
+
+void Viewport::drawScene()
+{
+    int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
+    Q_ASSERT(index >= 0);
+    renderer()->setShaderIndex(index);
+
+    renderer()->begin();
+    renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->end();
+}
+
+void Viewport::processRenderTasks()
+{
+    if ( (m_iRenderTasks & DepthBufferSelect) == DepthBufferSelect )
+    {
+        selectFromDepthBuffer(m_DepthSelectPos);
+        m_iRenderTasks &= ~DepthBufferSelect;
+    }
+}
+
+void Viewport::selectFromDepthBuffer(const QPoint &pos)
+{
+    QPoint oglPos(pos.x(), size().height() - pos.y() - 1);
+    oglPos *= appMainWindow()->devicePixelRatio();
+
+    QOpenGLFramebufferObjectFormat fboFormat;
+    fboFormat.setSamples(0);
+    fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+
+    QOpenGLFramebufferObject fbo(sizeInPixels(), fboFormat);
+    fbo.bind();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    renderer()->begin();
+    SceneObject* selected = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos);
+    renderer()->end();
+    qDebug() << "Selected object:" << selected;
+
+    fbo.release();
+    QImage image = fbo.toImage(true);
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + QString("/framebuffer.png");
+    qDebug() << "Saving framebuffer to:" << path;
+    image.save(path);
 }

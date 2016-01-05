@@ -21,6 +21,9 @@ public:
     explicit Viewport(QWidget* parent = 0, Qt::WindowFlags f = 0);
     ~Viewport();
 
+    // On high DPI displays, size() doesn't return the correct size for the OpenGL canvas.
+    virtual QSize sizeInPixels() const;
+
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &col);
     static QColor defaultBackgroundColor();
@@ -52,12 +55,21 @@ protected:
     virtual void wheelEvent(QWheelEvent *e);
 
 private:
+    enum RenderTask
+    {
+        DepthBufferSelect = 0x1
+    };
+
     void updateBackgroundColor();
     void drawEmpty();
     QPoint viewCentre() const;
     void setCameraMouseControl(bool enabled);
     void drawHighlight();
     void drawFPSText(int msec);
+    void debugSaveCurrentFrame();
+    void drawScene();
+    void processRenderTasks();
+    void selectFromDepthBuffer(const QPoint &pos);
 
     GLuint  m_iVertexArray;
     QTimer  m_Timer;
@@ -79,6 +91,8 @@ private:
     float   m_flMouseSensitivity;
     bool    m_bDrawFocusHighlight;
     bool    m_bDrawFPS;
+    int     m_iRenderTasks;
+    QPoint  m_DepthSelectPos;
 };
 
 #endif // VIEWPORT_H

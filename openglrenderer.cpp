@@ -292,17 +292,12 @@ void OpenGLRenderer::setFogEndDistance(float dist)
     m_flFogEnd = dist;
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *camera, const QPoint &pos)
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *camera, const QPoint &oglPos)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
     QOpenGLContext* context = QOpenGLContext::currentContext();
     Q_ASSERT(context);
-
-    QSize viewSize = context->surface()->size();
-
-    // Flip the Y axis for the selection point, as OpenGL's origin is the bottom left.
-    QPoint flippedPos(pos.x(), viewSize.height() - pos.y() - 1);
 
     SceneObject* selected = NULL;
 
@@ -317,7 +312,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
 //    f->glEnable(GL_SCISSOR_TEST);
 //    f->glScissor(flippedPos.x(), flippedPos.y(), 1, 1);
 
-    renderSceneForSelection(f, scene->root(), m_pStack, flippedPos, &selected);
+    renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected);
 
 //    f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
