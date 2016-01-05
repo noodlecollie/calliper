@@ -300,6 +300,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
     Q_ASSERT(context);
 
     SceneObject* selected = NULL;
+    float nearest = 1.0f;
 
     m_pStack->setCamera(camera);
     m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
@@ -312,7 +313,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
 //    f->glEnable(GL_SCISSOR_TEST);
 //    f->glScissor(flippedPos.x(), flippedPos.y(), 1, 1);
 
-    renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected);
+    renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected, nearest);
 
 //    f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
@@ -323,7 +324,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
 
 void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *functions, SceneObject *obj,
                                              ShaderStack *stack, const QPoint &selPos, SceneObject **selected,
-                                             float nearestDepth)
+                                             float &nearestDepth)
 {
     stack->modelToWorldPush();
 

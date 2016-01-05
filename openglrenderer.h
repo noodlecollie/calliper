@@ -60,7 +60,7 @@ public:
 private:
     void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
     void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
-                                 const QPoint &selPos, SceneObject** selected, float nearestDepth = 1.0f);
+                                 const QPoint &selPos, SceneObject** selected, float &nearestDepth);
 
     QColor      m_colGlobalColour;
     int         m_iShader;

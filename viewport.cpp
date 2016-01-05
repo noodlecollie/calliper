@@ -529,8 +529,8 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     qDebug() << "Selected object:" << selected;
 
     fbo.release();
-    QImage image = fbo.toImage(true);
-    QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + QString("/framebuffer.png");
-    qDebug() << "Saving framebuffer to:" << path;
-    image.save(path);
+//    QImage image = fbo.toImage(true);
+//    QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + QString("/framebuffer.png");
+//    qDebug() << "Saving framebuffer to:" << path;
+//    image.save(path);
 }
