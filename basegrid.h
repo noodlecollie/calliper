@@ -30,6 +30,7 @@ private:
     void drawMinorLines(ShaderStack* stack, const BoundingBox &bbox);
     void drawStandardLines(ShaderStack* stack, const BoundingBox &bbox);
     int limitGridPower(const Camera* camera) const;
+    static int stdLineVertCount(int power);
 
     QColor  m_colMajor;
     QColor  m_colMinor;

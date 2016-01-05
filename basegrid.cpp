@@ -6,6 +6,7 @@
 #include "resourcemanager.h"
 #include "scene.h"
 #include "mapdocument.h"
+#include <QtMath>
 
 #define POWER2_1024 10
 #define POWER2_512  9
@@ -18,6 +19,8 @@
 #define POWER2_4    2
 #define POWER2_2    1
 #define POWER2_1    0
+
+#define STDLINE_LOD_DELTA 128.0f
 
 BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
 {
@@ -511,13 +514,22 @@ void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->setAutoUpdate(false);
     for ( qint64 i = Math::previousMultiple(min.y(), 32); i <= max.y(); i += 32 )
     {
+        float dist = qAbs(stack->camera()->position().y() - (float)(i+16));
+        int m = qFloor(dist/STDLINE_LOD_DELTA);
+        int localPower = power + m;
+
         // If we would draw over a previously coloured line, modify how many lines we draw.
-        int localCount = count;
+        int localCount = stdLineVertCount(localPower);
         int localOffset = offsets.first;
         if ( (i-32) % 64 == 0 )
         {
             localCount -= 2;
             localOffset += 2;
+        }
+
+        if ( localCount <= 0 )
+        {
+            continue;
         }
 
         stack->modelToWorldPush();
@@ -535,13 +547,22 @@ void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->setAutoUpdate(false);
     for ( qint64 i = Math::previousMultiple(min.x(), 32); i <= max.x(); i += 32 )
     {
+        float dist = qAbs(stack->camera()->position().x() - (float)(i+16));
+        int m = qFloor(dist/STDLINE_LOD_DELTA);
+        int localPower = power + m;
+
         // If we would draw over a previously coloured line, modify how many lines we draw.
-        int localCount = count;
+        int localCount = stdLineVertCount(localPower);
         int localOffset = offsets.first + 64;
         if ( (i-32) % 64 == 0 )
         {
             localCount -= 2;
             localOffset += 2;
+        }
+
+        if ( localCount <= 0 )
+        {
+            continue;
         }
 
         stack->modelToWorldPush();
@@ -561,4 +582,12 @@ int BaseGrid::limitGridPower(const Camera *camera) const
     float z = qAbs(camera->position().z());
     int lod = Math::previousMultiple(z, 64)/64;
     return qMax(m_iPowerTwo, qMin(POWER2_1 + lod, POWER2_128));
+}
+
+int BaseGrid::stdLineVertCount(int power)
+{
+    if ( power > 5 || power < 0 )
+        return 0;
+
+    return 1 << (6 - power);
 }
