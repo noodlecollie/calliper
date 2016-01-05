@@ -526,11 +526,12 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     renderer()->begin();
     SceneObject* selected = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos);
     renderer()->end();
-    qDebug() << "Selected object:" << selected;
 
     fbo.release();
-//    QImage image = fbo.toImage(true);
-//    QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + QString("/framebuffer.png");
-//    qDebug() << "Saving framebuffer to:" << path;
-//    image.save(path);
+
+    MapDocument* doc = m_pScene->document();
+    doc->selectedSetClear();
+
+    if ( selected )
+        doc->selectedSetInsert(selected);
 }

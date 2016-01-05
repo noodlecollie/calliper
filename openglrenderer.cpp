@@ -328,19 +328,22 @@ void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *function
 {
     stack->modelToWorldPush();
 
-    obj->draw(stack);
-
-    // Get the depth component and see if it's nearer than our current.
-    float newDepth = 1.0f;
-    functions->glReadPixels(selPos.x(), selPos.y(), 1, 1,
-                            GL_DEPTH_COMPONENT,
-                            GL_FLOAT,
-                            &newDepth);
-
-    if ( newDepth < nearestDepth )
+    if ( obj->editable() )
     {
-        nearestDepth = newDepth;
-        *selected = obj;
+        obj->draw(stack);
+
+        // Get the depth component and see if it's nearer than our current.
+        float newDepth = 1.0f;
+        functions->glReadPixels(selPos.x(), selPos.y(), 1, 1,
+                                GL_DEPTH_COMPONENT,
+                                GL_FLOAT,
+                                &newDepth);
+
+        if ( newDepth < nearestDepth )
+        {
+            nearestDepth = newDepth;
+            *selected = obj;
+        }
     }
 
     QList<SceneObject*> children = obj->children();
