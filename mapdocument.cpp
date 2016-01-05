@@ -5,7 +5,7 @@
 
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {
-    m_pScene = SceneFactory::defaultScene(this);
+    m_pScene = SceneFactory::debugScene(this);
     m_colBackground = QColor::fromRgb(0xff262626);
     m_colSelected = QColor::fromRgb(0xffff0000);
 }

@@ -14,6 +14,7 @@ SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
     m_vecPosition = QVector3D(0,0,0);
     m_angAngles = EulerAngle(0,0,0);
     m_bMatricesStale = true;
+    m_vecScale = QVector3D(1,1,1);
 }
 
 SceneObject::~SceneObject()
@@ -59,7 +60,8 @@ void SceneObject::rebuildLocalToParent() const
     // To get from world space to camera space we must
     // perform the camera transforms backward - see Camera class.
     m_matLocalToParent = Math::matrixTranslate(m_vecPosition)
-            * Math::matrixOrientation(m_angAngles);
+            * Math::matrixOrientation(m_angAngles)
+            * Math::matrixScale(m_vecScale);
 }
 
 QMatrix4x4 SceneObject::parentToLocal() const
@@ -221,4 +223,22 @@ void SceneObject::draw(ShaderStack *stack)
             stack->shaderPop();
         }
     }
+}
+
+bool SceneObject::scalable() const
+{
+    return true;
+}
+
+QVector3D SceneObject::scale() const
+{
+    return m_vecScale;
+}
+
+void SceneObject::setScale(const QVector3D &vec)
+{
+    if ( !scalable() || m_vecScale == vec || m_vecScale.isNull() ) return;
+
+    m_vecScale = vec;
+    m_bMatricesStale = true;
 }

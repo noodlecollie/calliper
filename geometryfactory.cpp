@@ -3,6 +3,8 @@
 #include <QVector2D>
 #include "geometrydata.h"
 #include "boundingbox.h"
+#include "shaders.h"
+#include <QtMath>
 
 namespace GeometryFactory
 {
@@ -140,5 +142,58 @@ namespace GeometryFactory
     GeometryData* lineCuboid(const BoundingBox &bbox, const QColor &col)
     {
         return lineCuboid(bbox.min(), bbox.max(), col);
+    }
+
+    GeometryData* translationHandle(const QColor &col)
+    {
+        GeometryData* geometry = new GeometryData;
+        geometry->setShaderOverride(PerVertexColorShader::staticName());
+
+        // Firstly generate the arrow head.
+        for ( int i = 0; i < 12; i++ )
+        {
+            float radians = ((float)i * M_PI)/6.0f;
+            geometry->appendVertex(QVector3D(0.85f, 0.1f * qSin(radians), 0.1f * qCos(radians)), col);
+        }
+
+        int arrowPointIndex = geometry->vertexCount();
+        geometry->appendVertex(QVector3D(1,0,0), col);
+
+        // Make the appropriate triangles for the arrow head.
+        for ( int i = 0; i < 12; i++ )
+        {
+            int j = i == 11 ? 0 : i+1;
+            geometry->appendIndexTriangle(i, arrowPointIndex, j);
+        }
+
+        // Make triangles for the base of the head.
+        for ( int i = 1; i < 12; i++ )
+        {
+            int j = i == 11 ? 0 : i+1;
+            geometry->appendIndexTriangle(0, i, j);
+        }
+
+        int firstShaftVertex = geometry->vertexCount();
+
+        // Generate the arrow shaft.
+        for ( int i = 0; i < 12; i++ )
+        {
+            float radians = ((float)i * M_PI)/6.0f;
+            float s = 0.05f * qSin(radians);
+            float c = 0.05f * qCos(radians);
+            geometry->appendVertex(QVector3D(0, s, c), col);
+            geometry->appendVertex(QVector3D(0.85, s, c), col);
+        }
+
+        // Create appropriate triangles.
+        for ( int i = 0; i < 12; i++ )
+        {
+            int index = firstShaftVertex + (2*i);
+            int nextIndex = (i == 11) ? firstShaftVertex : (index + 2);
+            geometry->appendIndexTriangle(index, index+1, nextIndex+1);
+            geometry->appendIndexTriangle(index, nextIndex+1, nextIndex);
+        }
+
+        return geometry;
     }
 }

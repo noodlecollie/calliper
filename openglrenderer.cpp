@@ -310,12 +310,12 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
     m_pStack->m_bLockShader = true;
 
     QOpenGLFunctions_4_1_Core* f = context->versionFunctions<QOpenGLFunctions_4_1_Core>();
-//    f->glEnable(GL_SCISSOR_TEST);
-//    f->glScissor(flippedPos.x(), flippedPos.y(), 1, 1);
+    f->glEnable(GL_SCISSOR_TEST);
+    f->glScissor(oglPos.x(), oglPos.y(), 1, 1);
 
     renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected, nearest);
 
-//    f->glDisable(GL_SCISSOR_TEST);
+    f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
     m_pStack->shaderPop();
 

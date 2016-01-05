@@ -51,9 +51,13 @@ public:
     EulerAngle angles() const;
     void setAngles(const EulerAngle &angle);
 
+    QVector3D scale() const;
+    void setScale(const QVector3D &vec);
+
     void lookAt(const QVector3D &pos);
 
     virtual bool editable() const;
+    virtual bool scalable() const;
     virtual void draw(ShaderStack* stack);
 
 signals:
@@ -70,6 +74,7 @@ protected:
     mutable bool    m_bMatricesStale;
     QVector3D       m_vecPosition;
     EulerAngle      m_angAngles;
+    QVector3D       m_vecScale;
 
     mutable QMatrix4x4  m_matParentToLocal;
     mutable QMatrix4x4  m_matLocalToParent;

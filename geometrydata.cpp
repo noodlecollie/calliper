@@ -383,3 +383,14 @@ unsigned int* GeometryData::indexAt(int i)
 {
     return &(m_Indices.data()[i]);
 }
+
+void GeometryData::appendIndexTriangle(unsigned int i0, unsigned int i1, unsigned int i2)
+{
+    int currentSize = m_Indices.size();
+    m_Indices.resize(currentSize + 3);
+    m_Indices[currentSize] = i0;
+    m_Indices[currentSize+1] = i1;
+    m_Indices[currentSize+2] = i2;
+
+    m_bIndicesStale = true;
+}
