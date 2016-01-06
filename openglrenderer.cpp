@@ -292,7 +292,7 @@ void OpenGLRenderer::setFogEndDistance(float dist)
     m_flFogEnd = dist;
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *camera, const QPoint &oglPos)
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *camera, const QPoint &oglPos, QRgb *pickColor)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
@@ -313,7 +313,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
     f->glEnable(GL_SCISSOR_TEST);
     f->glScissor(oglPos.x(), oglPos.y(), 1, 1);
 
-    renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected, nearest);
+    renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected, nearest, pickColor);
 
     f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
@@ -324,7 +324,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
 
 void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *functions, SceneObject *obj,
                                              ShaderStack *stack, const QPoint &selPos, SceneObject **selected,
-                                             float &nearestDepth)
+                                             float &nearestDepth, QRgb* pickColor)
 {
     stack->modelToWorldPush();
 
@@ -343,13 +343,27 @@ void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *function
         {
             nearestDepth = newDepth;
             *selected = obj;
+
+            if ( pickColor )
+            {
+                unsigned int rgba;
+                functions->glReadPixels(selPos.x(), selPos.y(), 1, 1,
+                                        GL_RGBA,
+                                        GL_UNSIGNED_BYTE,
+                                        &rgba);
+
+                // Convert to ARGB with full opacity.
+                rgba >>= 8;
+                rgba |= 0xff000000;
+                *pickColor = rgba;
+            }
         }
     }
 
     QList<SceneObject*> children = obj->children();
     foreach ( SceneObject* o, children )
     {
-        renderSceneForSelection(functions, o, stack, selPos, selected, nearestDepth);
+        renderSceneForSelection(functions, o, stack, selPos, selected, nearestDepth, pickColor);
     }
 
     stack->modelToWorldPop();

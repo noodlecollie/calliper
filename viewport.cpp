@@ -521,10 +521,12 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     QOpenGLFramebufferObject fbo(sizeInPixels(), fboFormat);
     fbo.bind();
 
+    QRgb pickColor = 0xffffffff;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     renderer()->begin();
-    SceneObject* selected = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos);
+    SceneObject* selected = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos, &pickColor);
     renderer()->end();
 
     fbo.release();
@@ -533,5 +535,7 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     doc->selectedSetClear();
 
     if ( selected )
+    {
         doc->selectedSetInsert(selected);
+    }
 }
