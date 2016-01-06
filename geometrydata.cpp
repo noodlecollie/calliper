@@ -394,3 +394,42 @@ void GeometryData::appendIndexTriangle(unsigned int i0, unsigned int i1, unsigne
 
     m_bIndicesStale = true;
 }
+
+BoundingBox GeometryData::localBounds() const
+{
+    QVector3D max, min;
+
+    for (int i = 0; i < vertexCount(); i++)
+    {
+        float* pos = vertexAt(i);
+
+        if ( pos[0] < min.x() )
+        {
+            min.setX(pos[0]);
+        }
+        else if ( pos[0] > max.x() )
+        {
+            max.setX(pos[0]);
+        }
+
+        if ( pos[1] < min.y() )
+        {
+            min.setY(pos[1]);
+        }
+        else if ( pos[1] > max.Y() )
+        {
+            max.setY(pos[1]);
+        }
+
+        if ( pos[2] < min.z() )
+        {
+            min.setZ(pos[2]);
+        }
+        else if ( pos[2] > max.z() )
+        {
+            max.setZ(pos[2]);
+        }
+    }
+
+    return BoundingBox(min,max);
+}

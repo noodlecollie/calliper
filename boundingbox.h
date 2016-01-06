@@ -27,6 +27,9 @@ public:
 
     bool isNull() const;
 
+    BoundingBox unionCopy(const BoundingBox &other) const;  // Does not modify
+    BoundingBox& unionOf(const BoundingBox &other);         // Does modify
+
     // X alternates between min and max most frequently,
     // then Y and then Z. The list begins at min and ends at max.
     static QList<QVector3D> corners(const QVector3D &min, const QVector3D &max);

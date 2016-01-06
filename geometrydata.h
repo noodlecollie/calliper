@@ -7,6 +7,7 @@
 #include <QColor>
 #include <QOpenGLFunctions>
 #include <QSharedPointer>
+#include "boundingbox.h"
 
 class QOpenGLBuffer;
 class ShaderProgram;
@@ -20,6 +21,7 @@ public:
     GeometryData();
     ~GeometryData();
 
+    // Position must always be the first attribute!
     enum DataFormat
     {
         PositionNormalUV,
@@ -73,6 +75,10 @@ public:
     void setShaderOverride(const QString &shader);
 
     int vertexFormatBytes() const;
+
+    // This is generated on demand.
+    // Always includes the origin.
+    BoundingBox localBounds() const;
 
 private:
     QVector<float>          m_Vertices;

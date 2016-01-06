@@ -136,3 +136,35 @@ QVector3D BoundingBox::centroid() const
 {
     return m_vecMin + ((m_vecMax-m_vecMin)/2.0f);
 }
+
+BoundingBox& BoundingBox::unionOf(const BoundingBox &other)
+{
+    QVector3D mn = other.min(), mx = other.max();
+
+    if ( mn.x() < m_vecMin.x() )
+        m_vecMin.setX(mn.x());
+    if ( mn.y() < m_vecMin.y() )
+        m_vecMin.setY(mn.y());
+    if ( mn.z() < m_vecMin.z() )
+        m_vecMin.setZ(mn.z());
+
+    if ( mx.x() > m_vecMax.x() )
+        m_vecMax.setX(mx.x());
+    if ( mx.y() > m_vecMax.y() )
+        m_vecMax.setY(mx.y());
+    if ( mx.z() > m_vecMax.z() )
+        m_vecMax.setZ(mx.z());
+
+    return *this;
+}
+
+BoundingBox BoundingBox::unionCopy(const BoundingBox &other) const
+{
+    QVector3D mn = other.min(), mx = other.max();
+    return BoundingBox(QVector3D(qMin(m_vecMin.x(), mn.x()),
+                                 qMin(m_vecMin.y(), mn.y()),
+                                 qMin(m_vecMin.z(), mn.z())),
+                       QVector3D(qMax(m_vecMax.x(), mx.x()),
+                                 qMax(m_vecMax.y(), mx.y()),
+                                 qMax(m_vecMax.z(), mx.z())));
+}
