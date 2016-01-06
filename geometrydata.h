@@ -39,6 +39,7 @@ public:
     int vertexBytes() const;
     void bindVertices(bool bind);
     float* vertexAt(int i);
+    const float* vertexAt(int i) const;
 
     void appendIndex(unsigned int i);
     void appendIndexTriangle(unsigned int i0, unsigned int i1, unsigned int i2);
@@ -47,6 +48,7 @@ public:
     int indexBytes() const;
     void bindIndices(bool bind);
     unsigned int* indexAt(int i);
+    const unsigned int* indexAt(int i) const;
 
     void clear();
     bool isEmpty() const;

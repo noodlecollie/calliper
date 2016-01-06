@@ -42,7 +42,9 @@ SOURCES += main.cpp\
     basegrid.cpp \
     boundingbox.cpp \
     shaderstack.cpp \
-    selectionmaskshader.cpp
+    selectionmaskshader.cpp \
+    basetool.cpp \
+    sceneobjectmanipulator.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -75,7 +77,9 @@ HEADERS  += mainwindow.h \
     basegrid.h \
     boundingbox.h \
     shaderstack.h \
-    selectionmaskshader.h
+    selectionmaskshader.h \
+    basetool.h \
+    sceneobjectmanipulator.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

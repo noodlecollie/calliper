@@ -401,7 +401,7 @@ BoundingBox GeometryData::localBounds() const
 
     for (int i = 0; i < vertexCount(); i++)
     {
-        float* pos = vertexAt(i);
+        const float* pos = vertexAt(i);
 
         if ( pos[0] < min.x() )
         {
@@ -416,7 +416,7 @@ BoundingBox GeometryData::localBounds() const
         {
             min.setY(pos[1]);
         }
-        else if ( pos[1] > max.Y() )
+        else if ( pos[1] > max.y() )
         {
             max.setY(pos[1]);
         }
@@ -432,4 +432,14 @@ BoundingBox GeometryData::localBounds() const
     }
 
     return BoundingBox(min,max);
+}
+
+const float* GeometryData::vertexAt(int i) const
+{
+    return m_Vertices.constData() + (i * formatStride[m_iDataFormat]);
+}
+
+const unsigned int* GeometryData::indexAt(int i) const
+{
+    return &(m_Indices.constData()[i]);
 }

@@ -52,6 +52,16 @@ public:
         return m_flPitch == other.m_flPitch && m_flYaw == other.m_flYaw && m_flRoll == other.m_flRoll;
     }
 
+    inline EulerAngle operator+(const EulerAngle &other) const
+    {
+        return EulerAngle(m_flPitch + other.m_flPitch, m_flYaw + other.m_flYaw, m_flRoll + other.m_flRoll);
+    }
+
+    inline EulerAngle operator-(const EulerAngle &other) const
+    {
+        return EulerAngle(m_flPitch - other.m_flPitch, m_flYaw - other.m_flYaw, m_flRoll - other.m_flRoll);
+    }
+
 private:
     float   m_flPitch;
     float   m_flYaw;

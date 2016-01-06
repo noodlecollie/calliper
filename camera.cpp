@@ -5,6 +5,8 @@
 #include "shaderstack.h"
 #include "pervertexcolorshader.h"
 #include "resourcemanager.h"
+#include <QPoint>
+#include <QSize>
 
 #define MAX_PITCH_DELTA 89.0f
 #define MAX_ROLL_DELTA 180.0f
@@ -112,4 +114,27 @@ void Camera::draw(ShaderStack *stack)
         stack->modelToWorldPop();
         stack->shaderPop();
     }
+}
+
+QVector3D Camera::mapPoint(const QPoint &pos, const QSize &viewSize) const
+{
+    // Firstly translate the point from window co-ordinates to device co-ordinates.
+    QVector4D deviceCoords = Math::windowToDevice(viewSize.width(), viewSize.height()) * QVector4D(pos.x(), pos.y(), 0, 1);
+
+    // Now un-project the point.
+    // TODO: Will this work? We set (2,2) and (3,3) to 1 so that the matrix should be invertible.
+    // Z and W don't really matter because we reset them anyway.
+    QMatrix4x4 unprojection = lens().projectionMatrix();
+    unprojection(2,2) = 1;
+    unprojection(3,3) = 1;
+
+    bool success = false;
+    unprojection = unprojection.inverted(&success);
+    Q_ASSERT(success);
+
+    QVector4D cameraCoords = unprojection * deviceCoords;
+    cameraCoords.setZ(lens().nearPlane());
+    cameraCoords.setW(1);
+
+    return (rootToLocal().inverted() * cameraCoords).toVector3D();
 }

@@ -477,36 +477,6 @@ void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     QVector3D extent = bbox.max() - bbox.min();
     QPair<int,int> offsets = m_DrawOffsets.at(Std);
 
-    int verts = 0;
-    switch (power)
-    {
-        case POWER2_32:
-            verts = 2;
-            break;
-
-        case POWER2_16:
-            verts = 4;
-            break;
-
-        case POWER2_8:
-            verts = 8;
-            break;
-
-        case POWER2_4:
-            verts = 16;
-            break;
-
-        case POWER2_2:
-            verts = 32;
-            break;
-
-        default:
-            verts = 64;
-            break;
-    }
-
-    int count = qMin(offsets.second, verts);
-
     // X
     stack->modelToWorldSetToIdentity();
     stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(centroid.x(),0,0))

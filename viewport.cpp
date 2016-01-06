@@ -143,6 +143,7 @@ void Viewport::paintGL()
 
     m_CameraController.update(msec);
     m_pCamera->translate(m_CameraController.velocity());
+
     drawScene();
 }
 
@@ -215,6 +216,24 @@ void Viewport::keyPressEvent(QKeyEvent *e)
 
             m_pCamera->scene()->grid()->incrementGridPower();
             qDebug() << "Grid power:" << (1 << m_pCamera->scene()->grid()->gridPower());
+            update();
+            break;
+        }
+
+        case Qt::Key_Left:
+        {
+            Camera* c = m_pScene->root()->findChild<Camera*>("camera2");
+            Q_ASSERT(c);
+            c->setAngles(c->angles() + EulerAngle(0,45,0));
+            update();
+            break;
+        }
+
+        case Qt::Key_Right:
+        {
+            Camera* c = m_pScene->root()->findChild<Camera*>("camera2");
+            Q_ASSERT(c);
+            c->setAngles(c->angles() + EulerAngle(0,-45,0));
             update();
             break;
         }
