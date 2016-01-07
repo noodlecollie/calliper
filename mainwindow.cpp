@@ -7,18 +7,10 @@
 #include "camera.h"
 #include "originmarker.h"
 
-MainWindow* g_pMainWindow = NULL;
-MainWindow* appMainWindow()
-{
-    return g_pMainWindow;
-}
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    Q_ASSERT(!g_pMainWindow);
-    g_pMainWindow = this;
     ui->setupUi(this);
     m_iActiveDocument = -1;
 
@@ -30,8 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    Q_ASSERT(g_pMainWindow == this);
-    g_pMainWindow = NULL;
 }
 
 void MainWindow::quit()

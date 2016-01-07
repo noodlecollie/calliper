@@ -21,6 +21,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    MapDocument* activeDocument() const;
+
 public slots:
     void quit();
     void updateDocumentList(const QList<MapDocument*> &docs);
@@ -33,7 +35,6 @@ public slots:
 
 private:
     void updateFromActiveDocument();
-    MapDocument* activeDocument() const;
     void setUpConnections();
     void populateSceneTree(Scene* scene);
     void populateSceneTreeRecursive(SceneObject* object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items);
@@ -42,7 +43,5 @@ private:
 
     int m_iActiveDocument;
 };
-
-MainWindow* appMainWindow();
 
 #endif // MAINWINDOW_H

@@ -144,7 +144,7 @@ namespace GeometryFactory
         return lineCuboid(bbox.min(), bbox.max(), col);
     }
 
-    GeometryData* translationHandle(const QColor &col)
+    GeometryData* translationHandle(float scale, const QColor &col, const QMatrix4x4 &transform)
     {
         GeometryData* geometry = new GeometryData;
         geometry->setShaderOverride(PerVertexColorShader::staticName());
@@ -153,11 +153,11 @@ namespace GeometryFactory
         for ( int i = 0; i < 12; i++ )
         {
             float radians = ((float)i * M_PI)/6.0f;
-            geometry->appendVertex(QVector3D(0.85f, 0.1f * qSin(radians), 0.1f * qCos(radians)), col);
+            geometry->appendVertex(QVector3D(0.85f * scale, 0.1f * scale * qSin(radians), 0.1f * scale * qCos(radians)), col);
         }
 
         int arrowPointIndex = geometry->vertexCount();
-        geometry->appendVertex(QVector3D(1,0,0), col);
+        geometry->appendVertex(QVector3D(scale,0,0), col);
 
         // Make the appropriate triangles for the arrow head.
         for ( int i = 0; i < 12; i++ )
@@ -179,10 +179,10 @@ namespace GeometryFactory
         for ( int i = 0; i < 12; i++ )
         {
             float radians = ((float)i * M_PI)/6.0f;
-            float s = 0.05f * qSin(radians);
-            float c = 0.05f * qCos(radians);
+            float s = 0.05f * scale * qSin(radians);
+            float c = 0.05f * scale * qCos(radians);
             geometry->appendVertex(QVector3D(0, s, c), col);
-            geometry->appendVertex(QVector3D(0.85, s, c), col);
+            geometry->appendVertex(QVector3D(0.85 * scale, s, c), col);
         }
 
         // Create appropriate triangles.
@@ -192,6 +192,11 @@ namespace GeometryFactory
             int nextIndex = (i == 11) ? firstShaftVertex : (index + 2);
             geometry->appendIndexTriangle(index, index+1, nextIndex+1);
             geometry->appendIndexTriangle(index, nextIndex+1, nextIndex);
+        }
+
+        if ( !transform.isIdentity() )
+        {
+            geometry->transform(transform);
         }
 
         return geometry;

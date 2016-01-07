@@ -3,11 +3,13 @@
 
 #include <QObject>
 #include <QString>
+#include <QSet>
 
 class MapDocument;
 class QMouseEvent;
 class QKeyEvent;
 class QWheelEvent;
+class SceneObject;
 
 class BaseTool : public QObject
 {
@@ -15,23 +17,45 @@ class BaseTool : public QObject
 public:
     explicit BaseTool(const QString &name);
     virtual ~BaseTool();
+    virtual QString toolName() const;
 
     // Activation
-    virtual void activate();
-    virtual void deactivate();
+    void activate(MapDocument* doc);
+    void deactivate();
+    bool isActive() const;
 
     // Mouse input
-    virtual void mousePressEvent(QMouseEvent*) {}
-    virtual void mouseMoveEvent(QMouseEvent*) {}
-    virtual void mouseReleaseEvent(QMouseEvent*) {}
-    virtual void wheelEvent(QWheelEvent*) {}
+    void mousePressEvent(QMouseEvent* e);
+    void mouseMoveEvent(QMouseEvent* e);
+    void mouseReleaseEvent(QMouseEvent* e);
+    void wheelEvent(QWheelEvent* e);
 
     // Keyboard input
-    virtual void keyPressEvent(QKeyEvent*) {}
-    virtual void keyReleaseEvent(QKeyEvent*) {}
+    void keyPressEvent(QKeyEvent* e);
+    void keyReleaseEvent(QKeyEvent* e);
+
+    // SceneObject management
+    void addSceneObject(SceneObject* obj);
+    void removeSceneObject(SceneObject* obj);
+    void clearSceneObjects();
+    bool containsSceneObject(SceneObject* obj) const;
 
 protected:
+    virtual void vActivate() {}
+    virtual void vDeactivate() {}
+    virtual void vMousePress(QMouseEvent*) {}
+    virtual void vMouseMove(QMouseEvent*) {}
+    virtual void vMouseRelease(QMouseEvent*) {}
+    virtual void vWheel(QWheelEvent*) {}
+    virtual void vKeyPress(QKeyEvent*) {}
+    virtual void vKeyRelease(QKeyEvent*) {}
+    virtual void vSceneObjectAdded(SceneObject*) {}
+    virtual void vSceneObjectRemoved(SceneObject*) {}
+    virtual void vSceneObjectsCleared() {}
 
+    MapDocument*    m_pDocument;
+    bool            m_bActive;
+    QSet<SceneObject*>  m_SceneObjects;
 };
 
 #endif // BASETOOL_H

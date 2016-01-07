@@ -7,6 +7,8 @@
 #include "sceneobject.h"
 #include "geometryfactory.h"
 #include "basegrid.h"
+#include "callipermath.h"
+#include <QtMath>
 
 namespace SceneFactory
 {
@@ -61,9 +63,17 @@ namespace SceneFactory
 
         SceneObject* trHandle = new SceneObject(scene->root());
         trHandle->setObjectName("translationHandle");
-        trHandle->setGeometry(GeometryFactory::translationHandle(QColor::fromRgb(0xff00ff00)));
+        trHandle->setGeometry(GeometryFactory::translationHandle(64, QColor::fromRgb(0xffff0000)));
+        GeometryData* g  = GeometryFactory::translationHandle(64, QColor::fromRgb(0xff00ff00),
+                                                              Math::matrixRotateZ(qDegreesToRadians(90.0f)));
+        trHandle->geometry()->append(*g);
+        delete g;
+        g  = GeometryFactory::translationHandle(64, QColor::fromRgb(0xff0000ff),
+                                                                      Math::matrixRotateY(qDegreesToRadians(-90.0f)));
+        trHandle->geometry()->append(*g);
+        delete g;
+
         trHandle->setPosition(QVector3D(64,64,0));
-        trHandle->setScale(QVector3D(64,64,64));
 
         return scene;
     }

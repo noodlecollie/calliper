@@ -1,10 +1,11 @@
 #include "sceneobjectmanipulator.h"
 #include "sceneobject.h"
 
-SceneObjectManipulator::SceneObjectManipulator(SceneObject *obj)
+SceneObjectManipulator::SceneObjectManipulator(SceneObject *obj, bool updateOnDestroy)
 {
     m_pSceneObject = obj;
     Q_ASSERT(m_pSceneObject);
+    m_bUpdateOnDestroy = updateOnDestroy;
 
     updateCachedProperties();
     resetAll();
@@ -12,7 +13,10 @@ SceneObjectManipulator::SceneObjectManipulator(SceneObject *obj)
 
 SceneObjectManipulator::~SceneObjectManipulator()
 {
-
+    if ( m_bUpdateOnDestroy )
+    {
+        updateObjectSoft();
+    }
 }
 
 void SceneObjectManipulator::updateCachedProperties()
@@ -97,5 +101,7 @@ void SceneObjectManipulator::apply()
 {
     updateObjectSoft();
     updateCachedProperties();
-    resetAll();
+    m_vecTranslation = QVector3D(0,0,0);
+    m_vecScale = QVector3D(1,1,1);
+    m_angAngles = EulerAngle(0,0,0);
 }

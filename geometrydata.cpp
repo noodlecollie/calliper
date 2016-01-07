@@ -83,6 +83,29 @@ GeometryData::GeometryData()
     m_iDataFormat = PositionNormalUV;
 }
 
+GeometryData::GeometryData(const GeometryData &other)
+{
+    m_bVerticesStale = true;
+    m_bIndicesStale = true;
+
+    m_pVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    m_pIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+
+    m_Vertices = other.m_Vertices;
+    m_Indices = other.m_Indices;
+
+    for ( int i = 0; i < MAX_GEOM_TEXTURES; i++ )
+    {
+        m_Textures[i] = other.m_Textures[i];
+    }
+
+    m_iDrawMode = other.m_iDrawMode;
+    m_flLineWidth = other.m_flLineWidth;
+    m_iDataFormat = other.m_iDataFormat;
+    m_pLocalTexture = other.m_pLocalTexture;
+    m_szShaderOverride = other.m_szShaderOverride;
+}
+
 GeometryData::~GeometryData()
 {
     destroy();
@@ -376,7 +399,7 @@ void GeometryData::setLineWidth(float width)
 
 float* GeometryData::vertexAt(int i)
 {
-    return m_Vertices.data() + (i * formatStride[m_iDataFormat]);
+    return m_Vertices.data() + (i * (formatStride[m_iDataFormat]/sizeof(float)));
 }
 
 unsigned int* GeometryData::indexAt(int i)
@@ -436,10 +459,71 @@ BoundingBox GeometryData::localBounds() const
 
 const float* GeometryData::vertexAt(int i) const
 {
-    return m_Vertices.constData() + (i * formatStride[m_iDataFormat]);
+    return m_Vertices.constData() + (i * (formatStride[m_iDataFormat]/sizeof(float)));
 }
 
 const unsigned int* GeometryData::indexAt(int i) const
 {
     return &(m_Indices.constData()[i]);
+}
+
+bool GeometryData::append(const GeometryData &other)
+{
+    // We can't merge if we have different formats.
+    if ( dataFormat() != other.dataFormat() )
+        return false;
+
+    // This is where our new vertices start in the list.
+    int baseVertex = vertexCount();
+
+    // How many new vertices we need to append.
+    int newVertexCount = other.vertexCount();
+
+    // How many floats these new vertices take up.
+    int newVertexFloatCount = (formatStride[other.dataFormat()]/sizeof(float)) * newVertexCount;
+
+    // How many bytes these new vertices take up.
+    int newVertexByteCount = other.vertexBytes();
+
+    // Resize the vertex list to accommodate the new vertices.
+    m_Vertices.resize(m_Vertices.count() + newVertexFloatCount);
+
+    // Copy the new vertices in.
+    memcpy(vertexAt(baseVertex), other.vertexAt(0), newVertexByteCount);
+
+    // This is where our new indices start in the list.
+    int baseIndex = m_Indices.count();
+
+    // How many new indices we have to append.
+    int newIndexCount = other.indexCount();
+
+    // Resize our vector to make space for the new indices.
+    m_Indices.resize(m_Indices.count() + newIndexCount);
+
+    // Copy each index in.
+    const unsigned int* idxData = other.indexAt(0);
+    for ( int i = 0; i < newIndexCount; i++ )
+    {
+        // Each index must be offset by the baseVertex value.
+        m_Indices[baseIndex + i] = idxData[i] + baseVertex;
+    }
+
+    m_bVerticesStale = true;
+    m_bIndicesStale = true;
+
+    return true;
+}
+
+void GeometryData::transform(const QMatrix4x4 &mat)
+{
+    int floatStride = formatStride[dataFormat()]/sizeof(float);
+
+    for ( int i = 0; i < vertexCount(); i++ )
+    {
+        int index = i * floatStride;
+        QVector4D vec = mat * QVector4D(m_Vertices[index], m_Vertices[index+1], m_Vertices[index+2], 1);
+        m_Vertices[index] = vec.x();
+        m_Vertices[index+1] = vec.y();
+        m_Vertices[index+2] = vec.z();
+    }
 }

@@ -8,6 +8,7 @@
 #include <QOpenGLFunctions>
 #include <QSharedPointer>
 #include "boundingbox.h"
+#include <QMatrix4x4>
 
 class QOpenGLBuffer;
 class ShaderProgram;
@@ -19,6 +20,7 @@ class GeometryData
 {
 public:
     GeometryData();
+    GeometryData(const GeometryData &other);
     ~GeometryData();
 
     // Position must always be the first attribute!
@@ -81,6 +83,9 @@ public:
     // This is generated on demand.
     // Always includes the origin.
     BoundingBox localBounds() const;
+
+    bool append(const GeometryData &other);
+    void transform(const QMatrix4x4 &mat);
 
 private:
     QVector<float>          m_Vertices;

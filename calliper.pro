@@ -79,7 +79,8 @@ HEADERS  += mainwindow.h \
     shaderstack.h \
     selectionmaskshader.h \
     basetool.h \
-    sceneobjectmanipulator.h
+    sceneobjectmanipulator.h \
+    tools.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

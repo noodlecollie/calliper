@@ -9,7 +9,7 @@ class SceneObject;
 class SceneObjectManipulator
 {
 public:
-    SceneObjectManipulator(SceneObject* obj);
+    SceneObjectManipulator(SceneObject* obj, bool updateOnDestroy = true);
     ~SceneObjectManipulator();
 
     SceneObject* sceneObject() const;
@@ -35,6 +35,7 @@ private:
     void updateObjectSoft();
 
     SceneObject*    m_pSceneObject;
+    bool            m_bUpdateOnDestroy;
 
     QVector3D       m_vecCachedPosition;
     EulerAngle      m_angCachedAngles;

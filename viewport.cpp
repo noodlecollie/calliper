@@ -24,11 +24,11 @@
 #include <QSurface>
 #include "mainwindow.h"
 #include <QStandardPaths>
+#include "application.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
-    // Don't discard buffers between frames!
-    setUpdateBehavior(QOpenGLWidget::PartialUpdate);
+    //setUpdateBehavior(QOpenGLWidget::PartialUpdate);
 
     m_colBackground = Viewport::defaultBackgroundColor();
     m_bBackgroundColorChanged = true;
@@ -54,7 +54,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
     m_Timer.setInterval(0);
 
-    m_CameraController.setTopSpeed(10.0f);
+    m_CameraController.setTopSpeed(768.0f);
 }
 
 Viewport::~Viewport()
@@ -142,7 +142,7 @@ void Viewport::paintGL()
         drawFPSText(msec);
 
     m_CameraController.update(msec);
-    m_pCamera->translate(m_CameraController.velocity());
+    m_pCamera->translate(m_CameraController.velocity()*((float)msec/1000.0f));
 
     drawScene();
 }
@@ -221,23 +221,7 @@ void Viewport::keyPressEvent(QKeyEvent *e)
         }
 
         case Qt::Key_Left:
-        {
-            Camera* c = m_pScene->root()->findChild<Camera*>("camera2");
-            Q_ASSERT(c);
-            c->setAngles(c->angles() + EulerAngle(0,45,0));
-            update();
-            break;
-        }
-
         case Qt::Key_Right:
-        {
-            Camera* c = m_pScene->root()->findChild<Camera*>("camera2");
-            Q_ASSERT(c);
-            c->setAngles(c->angles() + EulerAngle(0,-45,0));
-            update();
-            break;
-        }
-
         default:
         {
             QOpenGLWidget::keyPressEvent(e);
@@ -505,7 +489,7 @@ void Viewport::debugSaveCurrentFrame()
 
 QSize Viewport::sizeInPixels() const
 {
-    return appMainWindow()->devicePixelRatio() * size();
+    return application()->mainWindow()->devicePixelRatio() * size();
 }
 
 void Viewport::drawScene()
@@ -531,7 +515,7 @@ void Viewport::processRenderTasks()
 void Viewport::selectFromDepthBuffer(const QPoint &pos)
 {
     QPoint oglPos(pos.x(), size().height() - pos.y() - 1);
-    oglPos *= appMainWindow()->devicePixelRatio();
+    oglPos *= application()->mainWindow()->devicePixelRatio();
 
     QOpenGLFramebufferObjectFormat fboFormat;
     fboFormat.setSamples(0);
