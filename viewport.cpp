@@ -25,6 +25,7 @@
 #include "mainwindow.h"
 #include <QStandardPaths>
 #include "application.h"
+#include "tools.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -120,7 +121,6 @@ void Viewport::paintGL()
     if ( m_iRenderTasks != 0 )
     {
         processRenderTasks();
-        return;
     }
 
     updateBackgroundColor();
@@ -143,6 +143,9 @@ void Viewport::paintGL()
 
     m_CameraController.update(msec);
     m_pCamera->translate(m_CameraController.velocity()*((float)msec/1000.0f));
+
+    // TODO: REMOVE ME
+    m_pScene->document()->setActiveToolIndex(0);
 
     drawScene();
 }
@@ -220,8 +223,17 @@ void Viewport::keyPressEvent(QKeyEvent *e)
             break;
         }
 
+        // TODO: REMOVE ME
         case Qt::Key_Left:
         case Qt::Key_Right:
+        case Qt::Key_Enter:
+        {
+            BaseTool* activeTool = m_pScene->document()->activeTool();
+            if ( activeTool )
+                activeTool->keyPressEvent(e);
+            break;
+        }
+
         default:
         {
             QOpenGLWidget::keyPressEvent(e);

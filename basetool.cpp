@@ -18,14 +18,18 @@ BaseTool::~BaseTool()
 
 void BaseTool::activate()
 {
-    Q_ASSERT(!m_bActive);
+    if ( m_bActive )
+        return;
+
     vActivate();
     m_bActive = true;
 }
 
 void BaseTool::deactivate()
 {
-    Q_ASSERT(m_bActive);
+    if ( !m_bActive )
+        return;
+
     vDeactivate();
     m_bActive = false;
 }

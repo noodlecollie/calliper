@@ -33,8 +33,9 @@ public:
     BaseTool* tool(const QString &name) const;
     int toolCount() const;
 
-    int activeTool() const;
-    void setActiveTool(int index);
+    int activeToolIndex() const;
+    void setActiveToolIndex(int index);
+    BaseTool* activeTool() const;
 
 private:
     void createTools();

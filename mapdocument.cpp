@@ -101,19 +101,19 @@ void MapDocument::createTools()
     m_Tools.append(new DebugTestTool(this));
 }
 
-int MapDocument::activeTool() const
+int MapDocument::activeToolIndex() const
 {
     return m_iActiveTool;
 }
 
-void MapDocument::setActiveTool(int index)
+void MapDocument::setActiveToolIndex(int index)
 {
     if ( index == m_iActiveTool )
         return;
 
-    BaseTool* oldTool = tool(m_iActiveTool);
+    BaseTool* oldTool = activeTool();
     m_iActiveTool = index;
-    switchTool(oldTool, tool(m_iActiveTool));
+    switchTool(oldTool, activeTool());
 }
 
 void MapDocument::switchTool(BaseTool *oldTool, BaseTool *newTool)
@@ -127,4 +127,9 @@ void MapDocument::switchTool(BaseTool *oldTool, BaseTool *newTool)
     {
         newTool->activate();
     }
+}
+
+BaseTool* MapDocument::activeTool() const
+{
+    return tool(m_iActiveTool);
 }
