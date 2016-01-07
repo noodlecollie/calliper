@@ -67,8 +67,8 @@ void DebugTestTool::updateTableFromSet()
     QList<SceneObject*> toRemove;
     for ( ManipTable::const_iterator it = m_ManipTable.constBegin(); it != m_ManipTable.constEnd(); ++it )
     {
-        if ( !set.contains(*it) )
-            toRemove.append(*it);
+        if ( !set.contains(it.key()) )
+            toRemove.append(it.key());
     }
 
     foreach ( SceneObject* o, toRemove )
@@ -77,7 +77,7 @@ void DebugTestTool::updateTableFromSet()
     }
 
     // Add new items that are not present in our table.
-    for ( SOSet::const_iterator it = set.constBegin(); it != set.constEnd; ++it )
+    for ( SOSet::const_iterator it = set.constBegin(); it != set.constEnd(); ++it )
     {
         if ( !m_ManipTable.contains(*it) )
         {
