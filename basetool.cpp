@@ -3,11 +3,12 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 
-BaseTool::BaseTool(const QString &name) : QObject(NULL)
+BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
 {
     setObjectName(name);
     m_bActive = false;
-    m_pDocument = NULL;
+    m_pDocument = document;
+    Q_ASSERT(m_pDocument);
 }
 
 BaseTool::~BaseTool()
@@ -15,23 +16,17 @@ BaseTool::~BaseTool()
     Q_ASSERT(!m_bActive);
 }
 
-void BaseTool::activate(MapDocument *doc)
+void BaseTool::activate()
 {
     Q_ASSERT(!m_bActive);
-    m_pDocument = doc;
-
     vActivate();
-
     m_bActive = true;
 }
 
 void BaseTool::deactivate()
 {
     Q_ASSERT(m_bActive);
-    m_pDocument = NULL;
-
     vDeactivate();
-
     m_bActive = false;
 }
 
@@ -81,28 +76,13 @@ QString BaseTool::toolName() const
     return QString("INVALID_TOOL_NAME");
 }
 
-void BaseTool::addSceneObject(SceneObject *obj)
+MapDocument* BaseTool::document() const
 {
-    Q_ASSERT(m_bActive);
-    m_SceneObjects.insert(obj);
-    vSceneObjectAdded(obj);
+    return m_pDocument;
 }
 
-void BaseTool::removeSceneObject(SceneObject *obj)
+void BaseTool::selectedSetChanged()
 {
     Q_ASSERT(m_bActive);
-    vSceneObjectRemoved(obj);
-    m_SceneObjects.remove(obj);
-}
-
-void BaseTool::clearSceneObjects()
-{
-    Q_ASSERT(m_bActive);
-    m_SceneObjects.clear();
-    vSceneObjectsCleared();
-}
-
-bool BaseTool::containsSceneObject(SceneObject *obj) const
-{
-    return m_SceneObjects.contains(obj);
+    vSelectedSetChanged();
 }

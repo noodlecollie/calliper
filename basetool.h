@@ -15,12 +15,13 @@ class BaseTool : public QObject
 {
     Q_OBJECT
 public:
-    explicit BaseTool(const QString &name);
-    virtual ~BaseTool();
+    explicit BaseTool(const QString &name, MapDocument* document);
+    virtual ~BaseTool();    // Subclasses MUST handle deactivation here.
     virtual QString toolName() const;
+    MapDocument* document() const;
 
     // Activation
-    void activate(MapDocument* doc);
+    void activate();
     void deactivate();
     bool isActive() const;
 
@@ -34,11 +35,8 @@ public:
     void keyPressEvent(QKeyEvent* e);
     void keyReleaseEvent(QKeyEvent* e);
 
-    // SceneObject management
-    void addSceneObject(SceneObject* obj);
-    void removeSceneObject(SceneObject* obj);
-    void clearSceneObjects();
-    bool containsSceneObject(SceneObject* obj) const;
+public slots:
+    void selectedSetChanged();
 
 protected:
     virtual void vActivate() {}
@@ -49,13 +47,10 @@ protected:
     virtual void vWheel(QWheelEvent*) {}
     virtual void vKeyPress(QKeyEvent*) {}
     virtual void vKeyRelease(QKeyEvent*) {}
-    virtual void vSceneObjectAdded(SceneObject*) {}
-    virtual void vSceneObjectRemoved(SceneObject*) {}
-    virtual void vSceneObjectsCleared() {}
+    virtual void vSelectedSetChanged() {}
 
     MapDocument*    m_pDocument;
     bool            m_bActive;
-    QSet<SceneObject*>  m_SceneObjects;
 };
 
 #endif // BASETOOL_H
