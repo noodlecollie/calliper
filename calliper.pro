@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     selectionmaskshader.cpp \
     basetool.cpp \
     sceneobjectmanipulator.cpp \
-    debugtesttool.cpp
+    debugtesttool.cpp \
+    objfileparser.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -82,7 +83,8 @@ HEADERS  += mainwindow.h \
     basetool.h \
     sceneobjectmanipulator.h \
     tools.h \
-    debugtesttool.h
+    debugtesttool.h \
+    objfileparser.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui
