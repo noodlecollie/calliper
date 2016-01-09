@@ -21,5 +21,6 @@
         <file>shaders/selectionmask.frag</file>
         <file>shaders/selectionmask.vert</file>
         <file>textures/debug_crosshair.png</file>
+        <file>models/camera.obj</file>
     </qresource>
 </RCC>

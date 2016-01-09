@@ -1,3 +1,4 @@
+#if 0
 #include "mainwindow.h"
 #include <QApplication>
 #include <QSurfaceFormat>
@@ -64,3 +65,33 @@ int main(int argc, char *argv[])
 
     return ret;
 }
+
+#else
+
+#include <QFile>
+#include <QByteArray>
+#include "objfileparser.h"
+#include <QtDebug>
+#include <QList>
+#include <QVector3D>
+#include <QVector2D>
+
+int main(int argc, char *argv[])
+{
+    QFile camera(":/models/camera.obj");
+    if ( !camera.open(QIODevice::ReadOnly) )
+    {
+        qDebug() << "Unable to open file.";
+        return 1;
+    }
+
+    QByteArray arr = camera.readAll();
+    QList<QVector3D> positions;
+    QList<QVector3D> normals;
+    QList<QVector2D> uvs;
+    QList<unsigned int> indices;
+    ObjFileParser::fillAttributes(arr, positions, normals, uvs, indices);
+    camera.close();
+}
+
+#endif

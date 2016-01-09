@@ -22,7 +22,7 @@ namespace ObjFileParser
     };
 
     ParseResult fillAttributes(const QByteArray &arr, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
-                       QList<unsigned int> indices);
+                       QList<unsigned int> &indices);
 }
 
 #endif // OBJFILEPARSER_H

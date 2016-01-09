@@ -147,7 +147,7 @@ namespace ObjFileParser
                     break;
                 }
 
-                xyz[j][i] = *c;
+                xyz[i][j] = *c;
                 c++;
             }
 
@@ -191,7 +191,7 @@ namespace ObjFileParser
     }
 
     ParseResult fillAttributes(const QByteArray &arr, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
-                        QList<unsigned int> indices)
+                        QList<unsigned int> &indices)
     {
         const char* base = arr.constData();
         const char* final = base + (arr.count()-1);
