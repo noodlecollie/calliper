@@ -18,7 +18,7 @@ namespace GeometryFactory
     GeometryData* lineCuboid(const BoundingBox &bbox, const QColor &col);
 
     GeometryData* translationHandle(float scale, const QColor &col, const QMatrix4x4 &transform = QMatrix4x4());
-    GeometryData* fromObjFile(const QString &filename);
+    GeometryData* fromObjFile(const QString &filename, float scale = 1.0f);
 }
 
 #endif // GEOMETRYFACTORY_H

@@ -205,7 +205,7 @@ namespace GeometryFactory
         return geometry;
     }
 
-    GeometryData* fromObjFile(const QString &filename)
+    GeometryData* fromObjFile(const QString &filename, float scale)
     {
         QFile file(filename);
         if ( !file.open(QIODevice::ReadOnly) )
@@ -237,7 +237,14 @@ namespace GeometryFactory
             geometry->appendIndex(indices.at(i));
         }
 
-        geometry->transform(Math::openGLToHammer());
+        if ( scale != 1.0f )
+        {
+            geometry->transform(Math::matrixScaleUniform(scale) * Math::openGLToHammer());
+        }
+        else
+        {
+            geometry->transform(Math::openGLToHammer());
+        }
 
         return geometry;
     }

@@ -380,6 +380,9 @@ Camera* Viewport::camera() const
 void Viewport::setCamera(Camera *camera)
 {
     m_pCamera = camera;
+    if ( !m_pCamera )
+        return;
+
     CameraLens lens = m_pCamera->lens();
     lens.setAspectRatio((float)size().width()/(float)size().height());
     m_pCamera->setLens(lens);
