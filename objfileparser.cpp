@@ -1,240 +1,298 @@
 #include "objfileparser.h"
 
-namespace ObjFileParser
+enum IdentifierToken
 {
-    enum IdentifierToken
+    Position = 0,
+    Normal,
+    UV,
+    Face,
+    Comment,
+
+    Other = -1
+};
+
+#define IDSHORT_POSITION    (('v' << 8) | 0)
+#define IDSHORT_NORMAL      (('v' << 8) | 'n')
+#define IDSHORT_UV          (('v' << 8) | 't')
+#define IDSHORT_FACE        (('f' << 8) | 0)
+#define IDSHORT_COMMENT     (('#' << 8) | 0)
+#define MAX_IDENTIFIER_LENGTH   2
+
+// Potentially faster? Assumes an array of length at least 2,
+// and where any chars after the last valid char are 0.
+static IdentifierToken shortIdentifier(const char* id)
+{
+    unsigned short num = ((*id) << 8) | *(id+1);
+    switch (num)
     {
-        Position = 0,
-        Normal,
-        UV,
-        Face,
-        Comment,
+        case IDSHORT_POSITION:
+            return Position;
 
-        Other = -1
-    };
+        case IDSHORT_NORMAL:
+            return Normal;
 
-    #define IDSHORT_POSITION    (('v' << 8) | 0)
-    #define IDSHORT_NORMAL      (('v' << 8) | 'n')
-    #define IDSHORT_UV          (('v' << 8) | 't')
-    #define IDSHORT_FACE        (('f' << 8) | 0)
-    #define IDSHORT_COMMENT     (('#' << 8) | 0)
-    #define MAX_IDENTIFIER_LENGTH   2
+        case IDSHORT_UV:
+            return UV;
 
-    // Potentially faster? Assumes an array of length at least 2,
-    // and where any chars after the last valid char are 0.
-    static IdentifierToken shortIdentifier(const char* id)
+        case IDSHORT_FACE:
+            return Face;
+
+        case IDSHORT_COMMENT:
+            return Comment;
+
+        default:
+            return Other;
+    }
+}
+
+static bool isWhiteSpace(const char* c)
+{
+    switch (*c)
     {
-        unsigned short num = ((*id) << 8) | *(id+1);
-        switch (num)
-        {
-            case IDSHORT_POSITION:
-                return Position;
+        case ' ':
+        case '\t':
+            return true;
 
-            case IDSHORT_NORMAL:
-                return Normal;
+        default:
+            return false;
+    }
+}
 
-            case IDSHORT_UV:
-                return UV;
+// Assumes begin points to a non-whitespace character.
+static IdentifierToken getNextIdentifierToken(const char* begin, const char* final)
+{
+    const int idLen = MAX_IDENTIFIER_LENGTH + 1;
+    char identifier[idLen];
+    memset(identifier, 0, idLen*sizeof(char));
 
-            case IDSHORT_FACE:
-                return Face;
+    for (int i = 0; i < idLen-1 && (begin+i) <= final; i++)
+    {
+        if ( isWhiteSpace(begin+i) )
+            break;
 
-            case IDSHORT_COMMENT:
-                return Comment;
-
-            default:
-                return Other;
-        }
+        identifier[i] = *(begin+i);
     }
 
-    static bool isWhiteSpace(const char* c)
-    {
-        switch (*c)
-        {
-            case ' ':
-            case '\t':
-                return true;
+    return shortIdentifier(identifier);
+}
 
-            default:
-                return false;
+// We are given the final character so that we don't go over it.
+// This must be >= begin!
+static int nextNewline(const char* begin, const char* final)
+{
+    int advance = 0;
+    while ( true )
+    {
+        if ( *begin == '\n' )
+        {
+            return advance;
         }
+
+        if ( begin == final )
+        {
+            return -1;
+        }
+
+        advance++;
+        begin++;
+    }
+}
+
+template<typename T>
+static int parseFloats(const QByteArray &line, QList<T> &list, int floatCount, ObjFileParser::ParseError &error)
+{
+    const char* begin = line.constData();
+    int count = line.count();
+    int startIndex = 0;
+
+    // Wind past the first token.
+    while ( startIndex < count && !isWhiteSpace(begin+startIndex) )
+        startIndex++;
+
+    // If we reached count, there was no whitespace.
+    if ( startIndex >= count )
+    {
+        error = ObjFileParser::InvalidLineFormat;
+        return 0;
     }
 
-    // Assumes begin points to a non-whitespace character.
-    static IdentifierToken getNextIdentifierToken(const char* begin, const char* final)
+    int cur = startIndex;
+    T listItem;
+    for ( int i = 0; i < floatCount; i++ )
     {
-        const int idLen = MAX_IDENTIFIER_LENGTH + 1;
-        char identifier[idLen];
-        memset(identifier, 0, idLen*sizeof(char));
+        // Wind past any whitespace.
+        while ( cur < count && isWhiteSpace(begin+cur) )
+            cur++;
 
-        for (int i = 0; i < idLen-1 && (begin+i) <= final; i++)
+        // If we reached count, there was no other value to read.
+        if ( cur >= count )
         {
-            if ( isWhiteSpace(begin+i) )
+            error = ObjFileParser::InvalidLineFormat;
+            return 0;
+        }
+
+        int tokenStart = cur;
+
+        // Wind past non-whitespace.
+        while ( cur < count && !isWhiteSpace(begin+cur) )
+            cur++;
+
+        if ( cur >= count )
+        {
+            // If we reached count and this was not the last iteration,
+            // there were not enough positional values on this line.
+            if ( i < floatCount-1 )
+            {
+                error = ObjFileParser::InvalidLineFormat;
+                return 0;
+            }
+        }
+
+        // Parse the value.
+        bool ok = false;
+        float value = QString(QByteArray(begin+tokenStart, cur-tokenStart)).toFloat(&ok);
+        if ( !ok )
+        {
+            error = ObjFileParser::InvalidNumber;
+            return tokenStart;
+        }
+
+        listItem[i] = value;
+
+        // Advance the current index.
+        cur++;
+    }
+
+    list.append(listItem);
+
+    error = ObjFileParser::NoError;
+    return -1;
+}
+
+ObjFileParser::ObjFileParser()
+{
+}
+
+ObjFileParser::ParseResult ObjFileParser::fillAttributes(const QByteArray &arr, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
+                    QList<unsigned int> &indices)
+{
+    const char* base = arr.constData();
+    const char* final = base + (arr.count()-1);
+    memset(&m_Result, 0, sizeof(ObjFileParser::ParseResult));
+
+    for ( int i = 0; i < arr.count(); i++ )
+    {
+        const char* c = base + i;
+
+        // Find the first non-whitespace character.
+        if ( isWhiteSpace(c) || *c == '\n' )
+            continue;
+
+        // Get an identifier for the token.
+        IdentifierToken idt = getNextIdentifierToken(c, final);
+
+        // If the identifier is a comment, or something else we don't handle:
+        if ( idt == Comment || idt == Other )
+        {
+            // Skip to the next line.
+            i += nextNewline(c, final);
+
+            // If i is -1, we've reached the end of the data.
+            if ( i < 0 )
                 break;
 
-            identifier[i] = *begin;
+            // Otherwise, i will be incremented to point to the first character of the next line.
         }
 
-        return shortIdentifier(identifier);
+        // TODO: Make the stuff below tidier?? Lots of duplication.
+
+        else if ( idt == Position )
+        {
+            // This should never be 0 because a newline is not a position token!
+            int newlineOffset = nextNewline(c, final);
+            if ( newlineOffset < 0 )
+            {
+                newlineOffset = arr.length()-1;
+            }
+
+            // We don't pass in the newline character itself.
+            int advance = parseFloats<QVector3D>(QByteArray(c, newlineOffset), positions, 3, m_Result.error);
+
+            if ( m_Result.error != ObjFileParser::NoError )
+            {
+                m_Result.errorPosition = i + advance;
+                return m_Result;
+            }
+
+            // If the return value was < 0, that means we can progress to the next line.
+            if ( advance < 0 )
+            {
+                i += newlineOffset;
+            }
+            else
+            {
+                i += advance;
+            }
+        }
+        else if ( idt == Normal )
+        {
+            // This should never be 0 because a newline is not a position token!
+            int newlineOffset = nextNewline(c, final);
+            if ( newlineOffset < 0 )
+            {
+                newlineOffset = arr.length()-1;
+            }
+
+            // We don't pass in the newline character itself.
+            int advance = parseFloats<QVector3D>(QByteArray(c, newlineOffset), normals, 3, m_Result.error);
+
+            if ( m_Result.error != ObjFileParser::NoError )
+            {
+                m_Result.errorPosition = i + advance;
+                return m_Result;
+            }
+
+            // If the return value was < 0, that means we can progress to the next line.
+            if ( advance < 0 )
+            {
+                i += newlineOffset;
+            }
+            else
+            {
+                i += advance;
+            }
+        }
+        else if ( idt == UV )
+        {
+            // This should never be 0 because a newline is not a position token!
+            int newlineOffset = nextNewline(c, final);
+            if ( newlineOffset < 0 )
+            {
+                newlineOffset = arr.length()-1;
+            }
+
+            // We don't pass in the newline character itself.
+            int advance = parseFloats<QVector2D>(QByteArray(c, newlineOffset), uvs, 2, m_Result.error);
+
+            if ( m_Result.error != ObjFileParser::NoError )
+            {
+                m_Result.errorPosition = i + advance;
+                return m_Result;
+            }
+
+            // If the return value was < 0, that means we can progress to the next line.
+            if ( advance < 0 )
+            {
+                i += newlineOffset;
+            }
+            else
+            {
+                i += advance;
+            }
+        }
     }
 
-    // We are given the final character so that we don't go over it.
-    static int nextNewline(const char* begin, const char* final)
-    {
-        int advance = 0;
-        while ( begin != final )
-        {
-            if ( *begin == '\n' )
-            {
-                // If the next character is \r, return that instead.
-                // Otherwise, return this character.
-                return *(begin+1) == '\r' ? (advance+1) : advance;
-            }
-
-            advance++;
-            begin++;
-        }
-
-        // We've reached the final character - return whether or not this is a newline.
-        return (*final == '\n') ? advance : -1;
-    }
-
-    static int parsePosition(const char* begin, const char* final, QList<QVector3D> &positions, ObjFileParser::ParseError &error)
-    {
-        const char* c = begin;
-
-        // Wind past the current token.
-        while ( !isWhiteSpace(c) && c < final )
-        {
-            c++;
-        }
-
-        if ( c == final )
-        {
-            error = UnexpectedEOF;
-            return final - begin;
-        }
-
-        // Parse the float values.
-        char buffer[3*16];
-        QVector3D pos;
-        char* xyz[3] = { &(buffer[0*16]), &(buffer[1*16]), &(buffer[2*16]) };
-        memset(buffer, 0, 3*16);
-
-        // For each axis:
-        for ( int i = 0; i < 3; i++ )
-        {
-            // Find the start of the number.
-            while ( isWhiteSpace(c) && c <= final )
-            {
-                c++;
-            }
-
-            // If there is no number, return an error.
-            if ( c > final )
-            {
-                error = UnexpectedEOF;
-                return final - begin;
-            }
-
-            const char* start = c;
-
-            // Copy the string into the appropriate buffer.
-            for ( int j = 0; j < 15; j++ )
-            {
-                if ( c > final || isWhiteSpace(c) || *c == '\n' )
-                {
-                    break;
-                }
-
-                xyz[i][j] = *c;
-                c++;
-            }
-
-            // If we passed the final pointer before completing all of the copying, return an error.
-            if ( i < 2 && c > final )
-            {
-                error = UnexpectedEOF;
-                return final - begin;
-            }
-
-            QString str(xyz[i]);
-            bool ok = false;
-            float value = str.toFloat(&ok);
-            if ( !ok )
-            {
-                error = InvalidNumber;
-                return start - begin;
-            }
-
-            switch (i)
-            {
-                case 0:
-                    pos.setX(value);
-                    break;
-
-                case 1:
-                    pos.setY(value);
-                    break;
-
-                case 2:
-                    pos.setZ(value);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        positions.append(pos);
-        return c <= final ? (c - begin) : (final - begin);
-    }
-
-    ParseResult fillAttributes(const QByteArray &arr, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
-                        QList<unsigned int> &indices)
-    {
-        const char* base = arr.constData();
-        const char* final = base + (arr.count()-1);
-        ParseResult result;
-        memset(&result, 0, sizeof(ParseResult));
-
-        for ( int i = 0; i < arr.count(); i++ )
-        {
-            const char* c = base + i;
-
-            // Find the first non-whitespace character.
-            if ( isWhiteSpace(c) || *c == '\n' )
-                continue;
-
-            // Get an identifier for the token.
-            IdentifierToken idt = getNextIdentifierToken(c, final);
-
-            // If the identifier is a comment, or something else we don't handle:
-            if ( idt == Comment || idt == Other )
-            {
-                // Skip to the next line.
-                i += nextNewline(c, final);
-
-                // If i is -1, we've reached the end of the data.
-                if ( i < 0 )
-                    break;
-
-                // Otherwise, i will be incremented to point to the first character of the next line.
-            }
-            else if ( idt == Position )
-            {
-                i += parsePosition(c, final, positions, result.error);
-                if ( result.error != NoError )
-                {
-                    result.errorPosition = i;
-                    return result;
-                }
-            }
-
-        }
-
-        // Reaching here means everything was OK.
-        return result;
-    }
+    // Reaching here means everything was OK.
+    return m_Result;
 }
 

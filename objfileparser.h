@@ -6,13 +6,17 @@
 #include <QVector2D>
 #include <QByteArray>
 
-namespace ObjFileParser
+class ObjFileParser
 {
+public:
+    ObjFileParser();
+
     enum ParseError
     {
         NoError = 0,
-        UnexpectedEOF,
-        InvalidNumber,
+        UnexpectedEOF,      // The file ended unexpectedly.
+        InvalidNumber,      // A number could not be interpreted from a string.
+        InvalidLineFormat,  // A line did not contain the correct information to be interpreted.
     };
 
     struct ParseResult
@@ -21,8 +25,12 @@ namespace ObjFileParser
         int errorPosition;
     };
 
+    // Any \r characters must be removed.
     ParseResult fillAttributes(const QByteArray &arr, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
                        QList<unsigned int> &indices);
-}
+
+private:
+    ParseResult m_Result;
+};
 
 #endif // OBJFILEPARSER_H

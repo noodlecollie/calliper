@@ -90,7 +90,8 @@ int main(int argc, char *argv[])
     QList<QVector3D> normals;
     QList<QVector2D> uvs;
     QList<unsigned int> indices;
-    ObjFileParser::fillAttributes(arr, positions, normals, uvs, indices);
+    ObjFileParser parser;
+    ObjFileParser::ParseResult result =  parser.fillAttributes(arr, positions, normals, uvs, indices);
     camera.close();
 }
 
