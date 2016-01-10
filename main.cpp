@@ -1,4 +1,5 @@
-#if 0
+#if 1
+
 #include "mainwindow.h"
 #include <QApplication>
 #include <QSurfaceFormat>

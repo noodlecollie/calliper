@@ -9,6 +9,7 @@
 #include "basegrid.h"
 #include "callipermath.h"
 #include <QtMath>
+#include <QtDebug>
 
 namespace SceneFactory
 {
@@ -74,6 +75,12 @@ namespace SceneFactory
         delete g;
 
         trHandle->setPosition(QVector3D(64,64,0));
+
+        SceneObject* camModel = new SceneObject(scene->root());
+        camModel->setObjectName("camModel");
+        camModel->setGeometry(GeometryFactory::fromObjFile(":/models/camera.obj"));
+        camModel->setPosition(QVector3D(0,128,0));
+        camModel->geometry()->transform(Math::matrixScaleUniform(64));
 
         return scene;
     }

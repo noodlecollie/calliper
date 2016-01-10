@@ -6,6 +6,12 @@
 #include <QtDebug>
 #include <QOpenGLTexture>
 
+QDebug operator<<(QDebug debug, const GeometryData &data)
+{
+    debug.nospace() << "GeometryData(V: " << data.vertexCount() << " I: " << data.indexCount() << ")";
+    return debug;
+}
+
 static int numComponents[] = {
     3,  // Position
     3,  // Normal

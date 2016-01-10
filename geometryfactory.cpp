@@ -5,6 +5,9 @@
 #include "boundingbox.h"
 #include "shaders.h"
 #include <QtMath>
+#include "objfileparser.h"
+#include <QFile>
+#include "callipermath.h"
 
 namespace GeometryFactory
 {
@@ -198,6 +201,43 @@ namespace GeometryFactory
         {
             geometry->transform(transform);
         }
+
+        return geometry;
+    }
+
+    GeometryData* fromObjFile(const QString &filename)
+    {
+        QFile file(filename);
+        if ( !file.open(QIODevice::ReadOnly) )
+        {
+            return NULL;
+        }
+
+        QByteArray arr = file.readAll();
+        file.close();
+
+        GeometryData* geometry = new GeometryData();
+
+        QList<QVector3D> positions;
+        QList<QVector3D> normals;
+        QList<QVector2D> uvs;
+        QList<unsigned int> indices;
+
+        ObjFileParser parser;
+        parser.fillAttributes(arr, positions, normals, uvs, indices);
+        Q_ASSERT(positions.count() == normals.count() && normals.count() == uvs.count());
+
+        for ( int i = 0; i < positions.count(); i++ )
+        {
+            geometry->appendVertex(positions.at(i), normals.at(i), uvs.at(i));
+        }
+
+        for ( int i = 0; i < indices.count(); i++ )
+        {
+            geometry->appendIndex(indices.at(i));
+        }
+
+        geometry->transform(Math::openGLToHammer());
 
         return geometry;
     }

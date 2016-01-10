@@ -9,6 +9,7 @@
 #include <QSharedPointer>
 #include "boundingbox.h"
 #include <QMatrix4x4>
+#include <QtDebug>
 
 class QOpenGLBuffer;
 class ShaderProgram;
@@ -105,5 +106,7 @@ private:
     QSharedPointer<QOpenGLTexture>  m_pLocalTexture;
     QString m_szShaderOverride;
 };
+
+QDebug operator<<(QDebug debug, const GeometryData &data);
 
 #endif // GEOMETRYDATA_H

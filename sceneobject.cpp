@@ -28,6 +28,7 @@ GeometryData* SceneObject::geometry() const
 
 void SceneObject::setGeometry(GeometryData *data)
 {
+    Q_ASSERT(data);
     if ( !data || m_pGeometry.data() == data ) return;
 
     m_pGeometry.reset(data);
