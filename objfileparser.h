@@ -30,7 +30,28 @@ public:
                        QList<unsigned int> &indices);
 
 private:
+    enum IdentifierToken
+    {
+        Position = 0,
+        Normal,
+        UV,
+        Face,
+        Comment,
+
+        Other = -1
+    };
+
+    template<typename T>
+    bool process(QList<T> &list, int floatCount);
+
+    static IdentifierToken shortIdentifier(const char* id);
+    static IdentifierToken getNextIdentifierToken(const char* begin, const char* final);
+
+    int m_iPos;
     ParseResult m_Result;
+    const char* m_pCur;
+    const char* m_pFinal;
+    const QByteArray* m_pArray;
 };
 
 #endif // OBJFILEPARSER_H
