@@ -213,9 +213,10 @@ namespace GeometryFactory
         QList<QVector3D> normals;
         QList<QVector2D> uvs;
         QList<unsigned int> indices;
+        QString texturePath;
 
         ObjFileParser parser;
-        ObjFileParser::ParseResult result = parser.fillAttributes(filename, positions, normals, uvs, indices);
+        ObjFileParser::ParseResult result = parser.fillAttributes(filename, positions, normals, uvs, indices, texturePath);
         if ( result.error != ObjFileParser::NoError )
         {
             qWarning() << "Error parsing obj file" << filename

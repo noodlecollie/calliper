@@ -26,6 +26,7 @@ public:
     {
         ParseError error;
         int errorPosition;
+        QString filename;
     };
 
     class FaceVertex
@@ -55,7 +56,7 @@ public:
 
     // Any \r characters must be removed.
     ParseResult fillAttributes(const QString &filename, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
-                       QList<unsigned int> &indices);
+                       QList<unsigned int> &indices, QString &texturePath);
 
     static QString errorString(const ParseResult &result);
 
@@ -67,6 +68,7 @@ private:
         UV,
         Face,
         Comment,
+        MtlLib,
 
         Other = -1
     };
@@ -76,6 +78,7 @@ private:
     bool processFace();
 
     static IdentifierToken shortIdentifier(const char* id);
+    static IdentifierToken longIdentifier(const char* id);
     static IdentifierToken getNextIdentifierToken(const char* begin, const char* final);
     static void parseFaceVertex(const QByteArray &token, ObjFileParser::FaceVertex &fv);
     static int parseFace(const QByteArray &line, QList<FaceVertex> &fvList, ObjFileParser::ParseError &error);

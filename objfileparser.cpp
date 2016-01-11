@@ -6,7 +6,7 @@
 #define IDSHORT_UV          (('v' << 8) | 't')
 #define IDSHORT_FACE        (('f' << 8) | 0)
 #define IDSHORT_COMMENT     (('#' << 8) | 0)
-#define MAX_IDENTIFIER_LENGTH   2
+#define MAX_IDENTIFIER_LENGTH   6
 
 #define FACEATT_POSITION    0
 #define FACEATT_UV          1
@@ -16,6 +16,16 @@
 uint qHash(const ObjFileParser::FaceVertex &key, uint seed = 0)
 {
     return (uint)(key.atts[0] + (key.atts[1] * key.atts[1]) + (key.atts[2]  * key.atts[2] * key.atts[2])) ^ seed;
+}
+
+ObjFileParser::IdentifierToken ObjFileParser::longIdentifier(const char* id)
+{
+    QString str(id);
+
+    if ( str == "mtllib" )
+        return MtlLib;
+
+    return Other;
 }
 
 // Potentially faster? Assumes an array of length at least 2,
@@ -41,7 +51,7 @@ ObjFileParser::IdentifierToken ObjFileParser::shortIdentifier(const char* id)
             return Comment;
 
         default:
-            return Other;
+            return longIdentifier(id);
     }
 }
 
@@ -301,10 +311,13 @@ ObjFileParser::ObjFileParser()
 {
 }
 
-ObjFileParser::ParseResult ObjFileParser::fillAttributes(const QString &filename, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
-                    QList<unsigned int> &indices)
+ObjFileParser::ParseResult ObjFileParser::fillAttributes(const QString &filename, QList<QVector3D> &positions,
+                                                         QList<QVector3D> &normals, QList<QVector2D> &uvs,
+                                                         QList<unsigned int> &indices, QString &texturePath)
 {
-    memset(&m_Result, 0, sizeof(ObjFileParser::ParseResult));
+    m_Result.error = NoError;
+    m_Result.errorPosition = 0;
+    m_Result.filename = filename;
 
     QFile file(filename);
     if ( !file.open(QIODevice::ReadOnly) )
@@ -335,19 +348,7 @@ ObjFileParser::ParseResult ObjFileParser::fillAttributes(const QString &filename
         // Get an identifier for the token.
         IdentifierToken idt = getNextIdentifierToken(m_pCur, m_pFinal);
 
-        // If the identifier is a comment, or something else we don't handle:
-        if ( idt == Comment || idt == Other )
-        {
-            // Skip to the next line.
-            m_iPos += nextNewline(m_pCur, m_pFinal);
-
-            // If i is -1, we've reached the end of the data.
-            if ( m_iPos < 0 )
-                break;
-
-            // Otherwise, i will be incremented to point to the first character of the next line.
-        }
-        else if ( idt == Position )
+        if ( idt == Position )
         {
             if ( !process<QVector3D>(m_LocalPositions, 3) )
                 return m_Result;
@@ -366,6 +367,17 @@ ObjFileParser::ParseResult ObjFileParser::fillAttributes(const QString &filename
         {
             if ( !processFace() )
                 return m_Result;
+        }
+        else    // Unrecognised
+        {
+            // Skip to the next line.
+            m_iPos += nextNewline(m_pCur, m_pFinal);
+
+            // If i is -1, we've reached the end of the data.
+            if ( m_iPos < 0 )
+                break;
+
+            // Otherwise, i will be incremented to point to the first character of the next line.
         }
     }
 
