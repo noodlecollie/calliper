@@ -207,15 +207,6 @@ namespace GeometryFactory
 
     GeometryData* fromObjFile(const QString &filename, float scale)
     {
-        QFile file(filename);
-        if ( !file.open(QIODevice::ReadOnly) )
-        {
-            return NULL;
-        }
-
-        QByteArray arr = file.readAll();
-        file.close();
-
         GeometryData* geometry = new GeometryData();
 
         QList<QVector3D> positions;
@@ -224,7 +215,13 @@ namespace GeometryFactory
         QList<unsigned int> indices;
 
         ObjFileParser parser;
-        parser.fillAttributes(arr, positions, normals, uvs, indices);
+        ObjFileParser::ParseResult result = parser.fillAttributes(filename, positions, normals, uvs, indices);
+        if ( result.error != ObjFileParser::NoError )
+        {
+            qWarning() << "Error parsing obj file" << filename
+                       << "-" << ObjFileParser::errorString(result);
+        }
+
         Q_ASSERT(positions.count() == normals.count() && normals.count() == uvs.count());
 
         for ( int i = 0; i < positions.count(); i++ )

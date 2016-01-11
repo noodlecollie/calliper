@@ -1,4 +1,5 @@
 #include "objfileparser.h"
+#include <QFile>
 
 #define IDSHORT_POSITION    (('v' << 8) | 0)
 #define IDSHORT_NORMAL      (('v' << 8) | 'n')
@@ -300,20 +301,30 @@ ObjFileParser::ObjFileParser()
 {
 }
 
-ObjFileParser::ParseResult ObjFileParser::fillAttributes(const QByteArray &arr, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
+ObjFileParser::ParseResult ObjFileParser::fillAttributes(const QString &filename, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
                     QList<unsigned int> &indices)
 {
-    m_pArray = &arr;
-    m_IndexTable.clear();
-    const char* base = arr.constData();
-    m_pFinal = base + (arr.count()-1);
     memset(&m_Result, 0, sizeof(ObjFileParser::ParseResult));
+
+    QFile file(filename);
+    if ( !file.open(QIODevice::ReadOnly) )
+    {
+        m_Result.error = FileAccessError;
+        return m_Result;
+    }
+
+    m_Array = file.readAll();
+    file.close();
+
+    m_IndexTable.clear();
+    const char* base = m_Array.constData();
+    m_pFinal = base + (m_Array.count()-1);
 
     m_LocalPositions.clear();
     m_LocalNormals.clear();
     m_LocalUVs.clear();
 
-    for ( m_iPos = 0; m_iPos < arr.count(); m_iPos++ )
+    for ( m_iPos = 0; m_iPos < m_Array.count(); m_iPos++ )
     {
         m_pCur = base + m_iPos;
 
@@ -371,7 +382,7 @@ bool ObjFileParser::process(QList<T> &list, int floatCount)
     int newlineOffset = nextNewline(m_pCur, m_pFinal);
     if ( newlineOffset < 0 )
     {
-        newlineOffset = m_pArray->length()-1;
+        newlineOffset = m_Array.length()-1;
     }
 
     // We don't pass in the newline character itself.
@@ -402,7 +413,7 @@ bool ObjFileParser::processFace()
     int newlineOffset = nextNewline(m_pCur, m_pFinal);
     if ( newlineOffset < 0 )
     {
-        newlineOffset = m_pArray->length()-1;
+        newlineOffset = m_Array.length()-1;
     }
 
     QList<FaceVertex> list;
@@ -473,5 +484,46 @@ void ObjFileParser::consolidate(QList<QVector3D> &positions, QList<QVector3D> &n
 
         Q_ASSERT(index >= 0);
         indices.append(index);
+    }
+}
+
+QString ObjFileParser::errorString(const ParseResult &result)
+{
+    switch (result.error)
+    {
+        case NoError:
+        {
+            return QString("No error.");
+        }
+
+        case FileAccessError:
+        {
+            return QString("Error opening file for reading.");
+        }
+
+        case InvalidNumber:
+        {
+            return QString("The number at position %0 could not be parsed").arg(result.errorPosition);
+        }
+
+        case InvalidLineFormat:
+        {
+            return QString("The line beginning at position %0 is not formatted correctly.").arg(result.errorPosition);
+        }
+
+        case InvalidFace:
+        {
+            return QString("The face at position %0 is invalid.").arg(result.errorPosition);
+        }
+
+        case InvalidVertexRef:
+        {
+            return QString("The vertex reference at position %0 is invalid.").arg(result.errorPosition);
+        }
+
+        default:
+        {
+            return QString("Unknown error at position %0.").arg(result.errorPosition);
+        }
     }
 }

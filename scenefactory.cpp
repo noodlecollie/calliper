@@ -78,7 +78,7 @@ namespace SceneFactory
 
         SceneObject* camModel = new SceneObject(scene->root());
         camModel->setObjectName("camModel");
-        camModel->setGeometry(GeometryFactory::fromObjFile(":/models/camera.obj", 32));
+        camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
 
         return scene;

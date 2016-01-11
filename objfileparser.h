@@ -15,7 +15,7 @@ public:
     enum ParseError
     {
         NoError = 0,
-        UnexpectedEOF,      // The file ended unexpectedly.
+        FileAccessError,     // Could not read one or more input files.
         InvalidNumber,      // A number could not be interpreted from a string.
         InvalidLineFormat,  // A line did not contain the correct information to be interpreted.
         InvalidFace,        // A face did not contain enough vertices to be valid.
@@ -54,8 +54,10 @@ public:
     };
 
     // Any \r characters must be removed.
-    ParseResult fillAttributes(const QByteArray &arr, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
+    ParseResult fillAttributes(const QString &filename, QList<QVector3D> &positions, QList<QVector3D> &normals, QList<QVector2D> &uvs,
                        QList<unsigned int> &indices);
+
+    static QString errorString(const ParseResult &result);
 
 private:
     enum IdentifierToken
@@ -83,7 +85,7 @@ private:
     ParseResult m_Result;
     const char* m_pCur;
     const char* m_pFinal;
-    const QByteArray* m_pArray;
+    QByteArray m_Array;
     QHash<FaceVertex,int>  m_IndexTable;
 
     QList<QVector3D>    m_LocalPositions;
