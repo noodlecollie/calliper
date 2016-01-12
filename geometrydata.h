@@ -66,11 +66,6 @@ public:
     void destroy();
 
     void upload(bool force = false);
-
-    // If there are no draw segments present, the offset and count apply to physical indices.
-    // If there are draw segments, they apply to the segments themselves.
-    // Eg. (2,5) would start from index 2 and draw 5 indices, or from segment 2 and draw
-    // 5 segments (sets of indices). A count of -1 means draw all indices or segments in the list.
     void draw(int offset = 0, int count = -1);
 
     QString texture(int index) const;
@@ -84,13 +79,6 @@ public:
     DataFormat dataFormat() const;
     void setDataFormat(DataFormat format);
     void applyDataFormat(ShaderProgram* program);
-
-    // Each pair is the offset and count, in indices.
-    QPair<int,int> drawSegmentAt(int index);
-    void appendDrawSegment(const QPair<int,int> &segment);
-    void removeDrawSegment(int index);
-    int drawSegmentCount() const;
-    void clearDrawSegments();
 
     QSharedPointer<QOpenGLTexture> localTexture() const;
     void setLocalTexture(const QSharedPointer<QOpenGLTexture> &tex);
@@ -125,7 +113,6 @@ private:
 
     QSharedPointer<QOpenGLTexture>  m_pLocalTexture;
     QString m_szShaderOverride;
-    QList<QPair<int,int> >  m_DrawSegments;
 };
 
 QDebug operator<<(QDebug debug, const GeometryData &data);

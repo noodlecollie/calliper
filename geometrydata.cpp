@@ -313,21 +313,7 @@ void GeometryData::draw(int offset, int count)
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     f->glLineWidth(m_flLineWidth);
-
-    // Draw segments if we have any.
-    if ( m_DrawSegments.count() > 0 )
-    {
-        int segCount = (count < 0 ? m_DrawSegments.count() : count);
-        for ( int i = offset; i < segCount && i < m_DrawSegments.count(); i++ )
-        {
-            const QPair<int,int> &seg = m_DrawSegments.at(i);
-            f->glDrawElements(m_iDrawMode, seg.second < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(seg.first * sizeof(unsigned int)));
-        }
-    }
-    else
-    {
-        f->glDrawElements(m_iDrawMode, count < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset * sizeof(unsigned int)));
-    }
+    f->glDrawElements(m_iDrawMode, count < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset * sizeof(unsigned int)));
 }
 
 QString GeometryData::texture(int index) const
@@ -598,29 +584,4 @@ void GeometryData::transform(const QMatrix4x4 &mat)
         m_Vertices[index+1] = vec.y();
         m_Vertices[index+2] = vec.z();
     }
-}
-
-QPair<int,int> GeometryData::drawSegmentAt(int index)
-{
-    return m_DrawSegments.at(index);
-}
-
-void GeometryData::appendDrawSegment(const QPair<int, int> &segment)
-{
-    m_DrawSegments.append(segment);
-}
-
-void GeometryData::removeDrawSegment(int index)
-{
-    m_DrawSegments.removeAt(index);
-}
-
-int GeometryData::drawSegmentCount() const
-{
-    return m_DrawSegments.count();
-}
-
-void GeometryData::clearDrawSegments()
-{
-    m_DrawSegments.clear();
 }
