@@ -56,6 +56,9 @@ public:
 
     void lookAt(const QVector3D &pos);
 
+    bool ignoreDepth() const;
+    void setIgnoreDepth(bool ignore);
+
     virtual bool editable() const;
     virtual bool scalable() const;
     virtual void draw(ShaderStack* stack);
@@ -78,6 +81,8 @@ protected:
 
     mutable QMatrix4x4  m_matParentToLocal;
     mutable QMatrix4x4  m_matLocalToParent;
+
+    bool    m_bIgnoreDepth;
 
     Scene*  m_pScene;
 };

@@ -58,10 +58,24 @@ public:
                                                   Qt::Alignment alignment);
 
 private:
+    class DeferredObject
+    {
+    public:
+        DeferredObject(SceneObject* obj, const QMatrix4x4 &mat) :
+            object(obj), matrix(mat)
+        {
+        }
+
+        SceneObject* object;
+        QMatrix4x4 matrix;
+    };
+
     void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
     void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
                                  const QPoint &selPos, SceneObject** selected, float &nearestDepth,
                                  QRgb* pickColor);
+    void renderDeferred();
+    void renderIgnoreDepth();
 
     QColor      m_colGlobalColour;
     int         m_iShader;
@@ -72,6 +86,8 @@ private:
 
     ShaderStack*    m_pStack;
     bool            m_bPreparedForRendering;
+
+    QList<DeferredObject>   m_IgnoreDepthList;
 };
 
 OpenGLRenderer* renderer();

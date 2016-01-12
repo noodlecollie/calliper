@@ -106,12 +106,18 @@ void OpenGLRenderer::begin()
     m_pStack->applyAll();
     m_pStack->setAutoUpdate(true);
 
+    m_IgnoreDepthList.clear();
+
     m_bPreparedForRendering = true;
 }
 
 void OpenGLRenderer::end()
 {
     Q_ASSERT(m_bPreparedForRendering);
+    Q_ASSERT(m_pStack->inInitialState());
+
+    // Render any deferred objects that are waiting.
+    renderDeferred();
 
     Q_ASSERT(m_pStack->inInitialState());
     delete m_pStack;
@@ -120,11 +126,53 @@ void OpenGLRenderer::end()
     m_bPreparedForRendering = false;
 }
 
+void OpenGLRenderer::renderDeferred()
+{
+    renderIgnoreDepth();
+}
+
+void OpenGLRenderer::renderIgnoreDepth()
+{
+    QOpenGLContext* context = QOpenGLContext::currentContext();
+    Q_ASSERT(context);
+
+    QOpenGLFunctions_4_1_Core* f = context->versionFunctions<QOpenGLFunctions_4_1_Core>();
+    bool depthWasEnabled = f->glIsEnabled(GL_DEPTH_TEST);
+
+    if ( depthWasEnabled )
+        f->glDisable(GL_DEPTH_TEST);
+
+    for ( int i = 0; i < m_IgnoreDepthList.count(); i++ )
+    {
+        const DeferredObject &dfo = m_IgnoreDepthList.at(i);
+
+        m_pStack->modelToWorldPush();
+
+        m_pStack->modelToWorldSetToIdentity();
+        m_pStack->modelToWorldPreMultiply(dfo.matrix);
+        dfo.object->draw(m_pStack);
+
+        m_pStack->modelToWorldPop();
+    }
+
+    if ( depthWasEnabled )
+        f->glEnable(GL_DEPTH_TEST);
+}
+
 void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack* stack)
 {
     stack->modelToWorldPush();
 
-    obj->draw(stack);
+    // Check if we need to defer this object.
+    bool deferred = false;
+    if ( obj->ignoreDepth() )
+    {
+        deferred = true;
+        m_IgnoreDepthList.append(DeferredObject(obj, stack->modelToWorldTop()));
+    }
+
+    if ( !deferred )
+        obj->draw(stack);
 
     QList<SceneObject*> children = obj->children();
     foreach ( SceneObject* o, children )

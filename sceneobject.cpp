@@ -15,6 +15,7 @@ SceneObject::SceneObject(SceneObject *parent) : QObject(parent)
     m_angAngles = EulerAngle(0,0,0);
     m_bMatricesStale = true;
     m_vecScale = QVector3D(1,1,1);
+    m_bIgnoreDepth = false;
 }
 
 SceneObject::~SceneObject()
@@ -242,4 +243,14 @@ void SceneObject::setScale(const QVector3D &vec)
 
     m_vecScale = vec;
     m_bMatricesStale = true;
+}
+
+bool SceneObject::ignoreDepth() const
+{
+    return m_bIgnoreDepth;
+}
+
+void SceneObject::setIgnoreDepth(bool ignore)
+{
+    m_bIgnoreDepth = ignore;
 }
