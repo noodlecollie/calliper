@@ -133,3 +133,9 @@ QVector3D SceneCamera::mapPoint(const QPoint &pos, const QSize &viewSize) const
 
     return (rootToLocal().inverted() * cameraCoords).toVector3D();
 }
+
+bool SceneCamera::scalable() const
+{
+    // Scaling a camera doesn't make any sense, silly.
+    return false;
+}
