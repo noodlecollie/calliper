@@ -238,7 +238,7 @@ void BaseGrid::draw(ShaderStack *stack)
     const SceneCamera* camera = stack->camera();
 
     // Determine the bounds of the camera viewing volume.
-    BoundingBox bbox = camera->lens().localViewVolumeBounds()
+    BoundingBox bbox = camera->lens()->localViewVolumeBounds()
             .transformed(camera->rootToLocal().inverted() * Math::openGLToHammer());
 
     // If the Z=0 plane is not within this volume, don't draw anything.
@@ -255,9 +255,9 @@ void BaseGrid::draw(ShaderStack *stack)
 
     // Set up the fog to fade the grid out.
     stack->fogColorSetTop(doc->backgroundColor());
-    stack->fogEndSetTop(stack->camera()->lens().farPlane());
+    stack->fogEndSetTop(stack->camera()->lens()->farPlane());
     stack->fogBeginSetTop(stack->fogEndTop() -
-                          (0.5f * (stack->camera()->lens().farPlane() - stack->camera()->lens().nearPlane())));
+                          (0.5f * (stack->camera()->lens()->farPlane() - stack->camera()->lens()->nearPlane())));
 
     m_pGeometry->upload();
     m_pGeometry->bindVertices(true);

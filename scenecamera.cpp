@@ -12,9 +12,9 @@
 #define MAX_ROLL_DELTA 180.0f
 
 SceneCamera::SceneCamera(SceneObject *parent) : SceneObject(parent),
-    m_Lens(CameraLens::Perspective), m_pBoundsGeom(new GeometryData())
+    m_pLens(new CameraLens(CameraLens::Perspective)), m_pBoundsGeom(new GeometryData())
 {
-    m_LocalLensBounds = m_Lens.localViewVolumeBounds();
+    m_LocalLensBounds = m_pLens->localViewVolumeBounds();
     rebuildViewBoundsGeometry();
 }
 
@@ -32,14 +32,9 @@ void SceneCamera::setDrawBounds(bool enabled)
     m_bDrawBounds = enabled;
 }
 
-CameraLens SceneCamera::lens() const
+CameraLens* SceneCamera::lens() const
 {
-    return m_Lens;
-}
-
-void SceneCamera::setLens(const CameraLens &lens)
-{
-    m_Lens = lens;
+    return m_pLens.data();
 }
 
 void SceneCamera::rebuildLocalToParent() const
@@ -90,7 +85,7 @@ void SceneCamera::rebuildViewBoundsGeometry()
 
 void SceneCamera::draw(ShaderStack *stack)
 {
-    BoundingBox bounds = lens().localViewVolumeBounds();
+    BoundingBox bounds = lens()->localViewVolumeBounds();
     if ( bounds != m_LocalLensBounds )
     {
         m_LocalLensBounds = bounds;
@@ -124,7 +119,7 @@ QVector3D SceneCamera::mapPoint(const QPoint &pos, const QSize &viewSize) const
     // Now un-project the point.
     // TODO: Will this work? We set (2,2) and (3,3) to 1 so that the matrix should be invertible.
     // Z and W don't really matter because we reset them anyway.
-    QMatrix4x4 unprojection = lens().projectionMatrix();
+    QMatrix4x4 unprojection = lens()->projectionMatrix();
     unprojection(2,2) = 1;
     unprojection(3,3) = 1;
 
@@ -133,7 +128,7 @@ QVector3D SceneCamera::mapPoint(const QPoint &pos, const QSize &viewSize) const
     Q_ASSERT(success);
 
     QVector4D cameraCoords = unprojection * deviceCoords;
-    cameraCoords.setZ(lens().nearPlane());
+    cameraCoords.setZ(lens()->nearPlane());
     cameraCoords.setW(1);
 
     return (rootToLocal().inverted() * cameraCoords).toVector3D();

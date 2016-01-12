@@ -12,8 +12,7 @@ public:
     SceneCamera(SceneObject* parent = 0);
     virtual ~SceneCamera();
 
-    CameraLens lens() const;
-    void setLens(const CameraLens &lens);
+    CameraLens* lens() const;
 
     bool drawBounds() const;
     void setDrawBounds(bool enabled);
@@ -32,7 +31,7 @@ protected:
 private:
     void rebuildViewBoundsGeometry();
 
-    CameraLens  m_Lens;
+    QScopedPointer<CameraLens>  m_pLens;
     BoundingBox m_LocalLensBounds;
     QScopedPointer<GeometryData>   m_pBoundsGeom;
     bool        m_bDrawBounds;

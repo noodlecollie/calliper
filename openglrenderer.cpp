@@ -200,7 +200,7 @@ void OpenGLRenderer::renderScene(Scene *scene, const SceneCamera *camera)
 
     m_pStack->setCamera(camera);
     m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
-    m_pStack->cameraProjectionPostMultiply(camera->lens().projectionMatrix());
+    m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
     m_pStack->globalColorSetTop(globalColor());
 
     // Render the scene.
@@ -351,7 +351,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCame
 
     m_pStack->setCamera(camera);
     m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
-    m_pStack->cameraProjectionPostMultiply(camera->lens().projectionMatrix());
+    m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
 
     m_pStack->shaderPush(resourceManager()->shader(SelectionMaskShader::staticName()));
     m_pStack->m_bLockShader = true;
