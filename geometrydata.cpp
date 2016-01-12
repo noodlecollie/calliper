@@ -313,7 +313,7 @@ void GeometryData::draw(int offset, int count)
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     f->glLineWidth(m_flLineWidth);
-    f->glDrawElements(m_iDrawMode, count < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset * sizeof(unsigned int)));
+    f->glDrawElements(m_iDrawMode, count < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset));
 }
 
 QString GeometryData::texture(int index) const

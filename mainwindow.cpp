@@ -6,6 +6,7 @@
 #include "scene.h"
 #include "camera.h"
 #include "originmarker.h"
+#include "inputprocessor.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -51,9 +52,10 @@ void MainWindow::updateDocumentList(const QList<MapDocument *> &docs)
 
 void MainWindow::createNewDocument()
 {
+    MapDocument* oldDoc = activeDocument();
     m_iActiveDocument = application()->documentCount();
     application()->newDocument();
-    updateFromActiveDocument();
+    changeActiveDocument(oldDoc, activeDocument());
 }
 
 void MainWindow::makeDocumentActiveFromMenu()
@@ -65,14 +67,17 @@ void MainWindow::makeDocumentActiveFromMenu()
     int index = action->property("documentIndex").toInt(&ok);
     Q_ASSERT(ok);
 
+    MapDocument* oldDoc = activeDocument();
     m_iActiveDocument = index;
     updateDocumentList(application()->documents());
-    updateFromActiveDocument();
+    changeActiveDocument(oldDoc, activeDocument());
 }
 
 void MainWindow::closeActiveDocument()
 {
     if ( m_iActiveDocument < 0 ) return;
+
+    MapDocument* oldDoc = activeDocument();
 
     int old = m_iActiveDocument;
     if ( m_iActiveDocument == application()->documentCount() - 1 )
@@ -80,34 +85,39 @@ void MainWindow::closeActiveDocument()
         m_iActiveDocument--;
     }
 
+    changeActiveDocument(oldDoc, activeDocument());
     application()->closeDocument(old);
-    updateFromActiveDocument();
 }
 
-void MainWindow::updateFromActiveDocument()
+void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
 {
-    MapDocument* doc = activeDocument();
+    if ( oldDoc )
+    {
+        ui->viewport->removeEventFilter(oldDoc->inputProcessor());
+    }
 
-    if ( !doc )
+    if ( newDoc )
+    {
+        ui->viewport->setBackgroundColor(newDoc->backgroundColor());
+
+        QList<Camera*> cameras = newDoc->scene()->findCameras();
+        if ( cameras.count() > 0 )
+        {
+            ui->viewport->setCamera(cameras.at(0));
+            ui->viewport->setScene(newDoc->scene());
+        }
+
+        ui->viewport->installEventFilter(newDoc->inputProcessor());
+
+        populateSceneTree(newDoc->scene());
+    }
+    else
     {
         ui->viewport->setCamera(NULL);
         ui->viewport->setBackgroundColor(Viewport::defaultBackgroundColor());
 
         ui->sceneTreeWidget->clear();
-
-        return;
     }
-
-    ui->viewport->setBackgroundColor(doc->backgroundColor());
-
-    QList<Camera*> cameras = doc->scene()->findCameras();
-    if ( cameras.count() > 0 )
-    {
-        ui->viewport->setCamera(cameras.at(0));
-        ui->viewport->setScene(doc->scene());
-    }
-
-    populateSceneTree(doc->scene());
 }
 
 MapDocument* MainWindow::activeDocument() const

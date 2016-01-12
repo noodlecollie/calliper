@@ -201,28 +201,6 @@ void Viewport::keyPressEvent(QKeyEvent *e)
             break;
         }
 
-        case Qt::Key_BracketLeft:
-        {
-            if ( !m_pCamera )
-                break;
-
-            m_pCamera->scene()->grid()->decrementGridPower();
-            qDebug() << "Grid power:" << (1 << m_pCamera->scene()->grid()->gridPower());
-            update();
-            break;
-        }
-
-        case Qt::Key_BracketRight:
-        {
-            if ( !m_pCamera )
-                break;
-
-            m_pCamera->scene()->grid()->incrementGridPower();
-            qDebug() << "Grid power:" << (1 << m_pCamera->scene()->grid()->gridPower());
-            update();
-            break;
-        }
-
         // TODO: REMOVE ME
         case Qt::Key_Left:
         case Qt::Key_Right:

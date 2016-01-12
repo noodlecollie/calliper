@@ -34,10 +34,10 @@ public slots:
     void sceneTreeItemClicked(QTreeWidgetItem* item, int column);
 
 private:
-    void updateFromActiveDocument();
     void setUpConnections();
     void populateSceneTree(Scene* scene);
     void populateSceneTreeRecursive(SceneObject* object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items);
+    void changeActiveDocument(MapDocument* oldDoc, MapDocument* newDoc);
 
     Ui::MainWindow *ui;
 

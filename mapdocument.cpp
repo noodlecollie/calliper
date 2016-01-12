@@ -3,12 +3,15 @@
 #include "scenefactory.h"
 #include "sceneobject.h"
 #include "tools.h"
+#include "inputprocessor.h"
 
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {
     m_pScene = SceneFactory::debugScene(this);
     m_colBackground = QColor::fromRgb(0xff262626);
     m_colSelected = QColor::fromRgb(0xffff0000);
+
+    m_pInputProcessor = new InputProcessor(this);
 
     m_iActiveTool = -1;
     createTools();
@@ -132,4 +135,9 @@ void MapDocument::switchTool(BaseTool *oldTool, BaseTool *newTool)
 BaseTool* MapDocument::activeTool() const
 {
     return tool(m_iActiveTool);
+}
+
+InputProcessor* MapDocument::inputProcessor() const
+{
+    return m_pInputProcessor;
 }

@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     basetool.cpp \
     sceneobjectmanipulator.cpp \
     debugtesttool.cpp \
-    objfileparser.cpp
+    objfileparser.cpp \
+    inputprocessor.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -84,7 +85,8 @@ HEADERS  += mainwindow.h \
     sceneobjectmanipulator.h \
     tools.h \
     debugtesttool.h \
-    objfileparser.h
+    objfileparser.h \
+    inputprocessor.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

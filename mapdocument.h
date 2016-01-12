@@ -8,6 +8,7 @@
 class Scene;
 class SceneObject;
 class BaseTool;
+class InputProcessor;
 
 class MapDocument : public QObject
 {
@@ -37,6 +38,8 @@ public:
     void setActiveToolIndex(int index);
     BaseTool* activeTool() const;
 
+    InputProcessor* inputProcessor() const;
+
 private:
     void createTools();
     void switchTool(BaseTool* oldTool, BaseTool* newTool);
@@ -47,6 +50,8 @@ private:
     QColor  m_colSelected;
     QList<BaseTool*>    m_Tools;
     int m_iActiveTool;
+
+    InputProcessor* m_pInputProcessor;
 };
 
 #endif // MAPDOCUMENT_H
