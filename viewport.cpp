@@ -40,6 +40,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bDrawFocusHighlight = false;
     m_bDrawFPS = false;
     m_iRenderTasks = 0;
+    m_pPickedObject = NULL;
 
     m_pToggleOptions = new QPushButton(QIcon(QPixmap::fromImage(QImage(":/icons/viewport_options.png"))), QString(), this);
     m_pToggleOptions->resize(18,14);
@@ -144,9 +145,6 @@ void Viewport::paintGL()
     m_CameraController.update(msec);
     m_pCamera->translate(m_CameraController.velocity()*((float)msec/1000.0f));
 
-    // TODO: REMOVE ME
-    m_pScene->document()->setActiveToolIndex(0);
-
     drawScene();
 }
 
@@ -163,154 +161,43 @@ void Viewport::drawHighlight()
 
 void Viewport::keyPressEvent(QKeyEvent *e)
 {
-    if ( e->isAutoRepeat() )
-    {
-        QOpenGLWidget::keyPressEvent(e);
-        return;
-    }
-
-    switch (e->key())
-    {
-        case Qt::Key_W:
-        {
-            m_CameraController.forward(true);
-            break;
-        }
-        case Qt::Key_A:
-        {
-            m_CameraController.left(true);
-            break;
-        }
-        case Qt::Key_D:
-        {
-            m_CameraController.right(true);
-            break;
-        }
-        case Qt::Key_S:
-        {
-            m_CameraController.backward(true);
-            break;
-        }
-
-        case Qt::Key_Z:
-        {
-            if ( !m_pCamera )
-                break;
-
-            setCameraMouseControl(!m_bMouseTracking);
-            break;
-        }
-
-        // TODO: REMOVE ME
-        case Qt::Key_Left:
-        case Qt::Key_Right:
-        case Qt::Key_Enter:
-        {
-            BaseTool* activeTool = m_pScene->document()->activeTool();
-            if ( activeTool )
-                activeTool->keyPressEvent(e);
-            break;
-        }
-
-        default:
-        {
-            QOpenGLWidget::keyPressEvent(e);
-            break;
-        }
-    }
+    QOpenGLWidget::keyPressEvent(e);
 }
 
 void Viewport::keyReleaseEvent(QKeyEvent *e)
 {
-    if ( e->isAutoRepeat() )
-    {
-        QOpenGLWidget::keyPressEvent(e);
-        return;
-    }
-
-    switch (e->key())
-    {
-        case Qt::Key_W:
-        {
-            m_CameraController.forward(false);
-            break;
-        }
-        case Qt::Key_A:
-        {
-            m_CameraController.left(false);
-            break;
-        }
-        case Qt::Key_D:
-        {
-            m_CameraController.right(false);
-            break;
-        }
-        case Qt::Key_S:
-        {
-            m_CameraController.backward(false);
-            break;
-        }
-
-        default:
-        {
-            QOpenGLWidget::keyPressEvent(e);
-            break;
-        }
-    }
+    QOpenGLWidget::keyReleaseEvent(e);
 }
 
 void Viewport::mousePressEvent(QMouseEvent *e)
 {
-    if ( !m_pScene || !m_pCamera || m_bMouseTracking )
-    {
-        QOpenGLWidget::mousePressEvent(e);
-        return;
-    }
-
-    m_DepthSelectPos = e->pos();
-    m_iRenderTasks |= DepthBufferSelect;
-    update();
-    return;
+    QOpenGLWidget::mousePressEvent(e);
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent *e)
 {
-    if ( !m_bMouseTracking || !m_pCamera )
-    {
-        QOpenGLWidget::mouseMoveEvent(e);
-        return;
-    }
-
-    QPoint p = e->pos();
-    QPoint delta = p - viewCentre();
-
-    EulerAngle angles = m_pCamera->angles();
-    angles.setPitch(angles.pitch() + (m_flMouseSensitivity * delta.y()));
-    angles.setYaw(angles.yaw() - (m_flMouseSensitivity * delta.x()));
-    m_pCamera->setAngles(angles);
-
-    QCursor::setPos(mapToGlobal(viewCentre()));
-
-    update();
+    QOpenGLWidget::mouseMoveEvent(e);
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *e)
 {
-    Q_UNUSED(e);
+    QOpenGLWidget::mouseReleaseEvent(e);
 }
 
 void Viewport::focusInEvent(QFocusEvent *e)
 {
-    Q_UNUSED(e);
     m_Timer.start();
+
+    QOpenGLWidget::focusInEvent(e);
 }
 
 void Viewport::focusOutEvent(QFocusEvent *e)
 {
-    Q_UNUSED(e);
     m_Timer.stop();
     m_CameraController.reset();
     setCameraMouseControl(false);
+
+    QOpenGLWidget::focusOutEvent(e);
 }
 
 QColor Viewport::backgroundColor() const
@@ -424,15 +311,7 @@ void Viewport::setDrawFPS(bool enabled)
 
 void Viewport::wheelEvent(QWheelEvent *e)
 {
-    if ( !m_pCamera )
-    {
-        QOpenGLWidget::wheelEvent(e);
-        return;
-    }
-
-    int delta = e->delta();
-    m_pCamera->translate(QVector3D(delta,0,0));
-    update();
+    QOpenGLWidget::wheelEvent(e);
 }
 
 void Viewport::drawFPSText(int msec)
@@ -517,21 +396,26 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     QOpenGLFramebufferObject fbo(sizeInPixels(), fboFormat);
     fbo.bind();
 
-    QRgb pickColor = 0xffffffff;
+    m_PickColour = 0xffffffff;
+    m_pPickedObject = NULL;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     renderer()->begin();
-    SceneObject* selected = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos, &pickColor);
+    m_pPickedObject = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos, &m_PickColour);
     renderer()->end();
 
     fbo.release();
+}
 
-    MapDocument* doc = m_pScene->document();
-    doc->selectedSetClear();
+SceneObject* Viewport::pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickColor)
+{
+    m_iRenderTasks |= DepthBufferSelect;
+    m_DepthSelectPos = pos;
+    repaint();
 
-    if ( selected )
-    {
-        doc->selectedSetInsert(selected);
-    }
+    if ( pickColor )
+        *pickColor = m_PickColour;
+
+    return m_pPickedObject;
 }

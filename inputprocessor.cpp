@@ -2,8 +2,11 @@
 #include "mapdocument.h"
 #include <QEvent>
 #include <QKeyEvent>
+#include <QMouseEvent>
+#include <QWheelEvent>
 #include "scene.h"
 #include "basegrid.h"
+#include "viewport.h"
 
 InputProcessor::InputProcessor(MapDocument *document) : QObject(document)
 {
@@ -21,18 +24,32 @@ bool InputProcessor::eventFilter(QObject *watched, QEvent *event)
     switch (event->type())
     {
         case QEvent::KeyPress:
-            return filterKeyPress(dynamic_cast<QKeyEvent*>(event));
+            return filterKeyPress(watched, dynamic_cast<QKeyEvent*>(event));
 
         case QEvent::KeyRelease:
-            return filterKeyRelease(dynamic_cast<QKeyEvent*>(event));
+            return filterKeyRelease(watched, dynamic_cast<QKeyEvent*>(event));
+
+        case QEvent::MouseButtonPress:
+            return filterMousePress(watched, dynamic_cast<QMouseEvent*>(event));
+
+        case QEvent::MouseMove:
+            return filterMouseMove(watched, dynamic_cast<QMouseEvent*>(event));
+
+        case QEvent::MouseButtonRelease:
+            return filterMouseRelease(watched, dynamic_cast<QMouseEvent*>(event));
+
+        case QEvent::Wheel:
+            return filterWheel(watched, dynamic_cast<QWheelEvent*>(event));
 
         default:
             return false;
     }
 }
 
-bool InputProcessor::filterKeyPress(QKeyEvent *e)
+bool InputProcessor::filterKeyPress(QObject* watched, QKeyEvent *e)
 {
+    Q_UNUSED(watched);
+
     if ( e->isAutoRepeat() )
         return true;
 
@@ -57,8 +74,52 @@ bool InputProcessor::filterKeyPress(QKeyEvent *e)
     }
 }
 
-bool InputProcessor::filterKeyRelease(QKeyEvent *e)
+bool InputProcessor::filterKeyRelease(QObject* watched, QKeyEvent *e)
 {
     Q_UNUSED(e);
+    Q_UNUSED(watched);
     return true;
+}
+
+bool InputProcessor::filterMousePress(QObject* watched, QMouseEvent *e)
+{
+    if ( e->button() == Qt::LeftButton )
+    {
+        setSelectionToObjectAtPixel(qobject_cast<Viewport*>(watched), e->pos());
+        return true;
+    }
+
+    return true;
+}
+
+bool InputProcessor::filterMouseMove(QObject* watched, QMouseEvent *e)
+{
+    Q_UNUSED(e);
+    Q_UNUSED(watched);
+    return true;
+}
+
+bool InputProcessor::filterMouseRelease(QObject* watched, QMouseEvent *e)
+{
+    Q_UNUSED(e);
+    Q_UNUSED(watched);
+    return true;
+}
+
+bool InputProcessor::filterWheel(QObject* watched, QWheelEvent *e)
+{
+    Q_UNUSED(e);
+    Q_UNUSED(watched);
+    return true;
+}
+
+void InputProcessor::setSelectionToObjectAtPixel(Viewport *viewport, const QPoint &pos)
+{
+    Q_ASSERT(viewport);
+    SceneObject* picked = viewport->pickObjectFromDepthBuffer(pos);
+    MapDocument* doc = document();
+    doc->selectedSetClear();
+
+    if ( picked )
+        doc->selectedSetInsert(picked);
 }

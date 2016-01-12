@@ -13,6 +13,7 @@ class GeometryData;
 class Scene;
 class ViewportUserOptions;
 class QPushButton;
+class SceneObject;
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
@@ -36,6 +37,8 @@ public:
 
     bool drawFocusHighlight() const;
     bool drawFPS() const;
+
+    SceneObject* pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickColor = NULL);
 
 public slots:
     void setDrawFocusHighlight(bool enabled);
@@ -92,7 +95,10 @@ private:
     bool    m_bDrawFocusHighlight;
     bool    m_bDrawFPS;
     int     m_iRenderTasks;
-    QPoint  m_DepthSelectPos;
+
+    QPoint          m_DepthSelectPos;
+    SceneObject*    m_pPickedObject;
+    QRgb            m_PickColour;
 };
 
 #endif // VIEWPORT_H
