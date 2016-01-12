@@ -3,7 +3,7 @@
 
 #include <QList>
 
-class Camera;
+class SceneCamera;
 class SceneObject;
 class MapDocument;
 class BaseGrid;
@@ -19,7 +19,7 @@ public:
     SceneObject* root() const;
     BaseGrid* grid() const;
 
-    QList<Camera*> findCameras() const;
+    QList<SceneCamera*> findCameras() const;
     QList<SceneObject*> findByName(const QString &name);
 
 private:

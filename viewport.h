@@ -8,7 +8,7 @@
 #include "cameracontroller.h"
 #include <QTime>
 
-class Camera;
+class SceneCamera;
 class GeometryData;
 class Scene;
 class ViewportUserOptions;
@@ -29,8 +29,8 @@ public:
     void setBackgroundColor(const QColor &col);
     static QColor defaultBackgroundColor();
 
-    Camera* camera() const;
-    void setCamera(Camera* camera);
+    SceneCamera* camera() const;
+    void setCamera(SceneCamera* camera);
 
     Scene* scene() const;
     void setScene(Scene* scene);
@@ -77,7 +77,7 @@ private:
     GLuint  m_iVertexArray;
     QTimer  m_Timer;
 
-    Camera* m_pCamera;
+    SceneCamera* m_pCamera;
     Scene*  m_pScene;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;

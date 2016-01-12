@@ -7,7 +7,7 @@
 #include <QVector3D>
 #include "shaderprogram.h"
 
-class Camera;
+class SceneCamera;
 class OpenGLRenderer;
 
 class ShaderStack
@@ -20,8 +20,8 @@ public:
     void applyAll();
     bool inInitialState() const;
 
-    const Camera* camera() const;
-    void setCamera(const Camera* camera);
+    const SceneCamera* camera() const;
+    void setCamera(const SceneCamera* camera);
 
     bool autoUpdate() const;
     void setAutoUpdate(bool enabled);
@@ -121,7 +121,7 @@ private:
 
     bool    m_bAutoUpdate;
     bool    m_bLockShader;
-    const Camera*   m_pCamera;
+    const SceneCamera*   m_pCamera;
 
     QStack<ShaderProgram*>  m_Shaders;
     QStack<QMatrix4x4>      m_ModelToWorld;

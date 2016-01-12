@@ -1,7 +1,7 @@
 #include "scenefactory.h"
 #include "scene.h"
 #include "originmarker.h"
-#include "camera.h"
+#include "scenecamera.h"
 #include <QVector3D>
 #include "mapdocument.h"
 #include "sceneobject.h"
@@ -23,7 +23,7 @@ namespace SceneFactory
         BaseGrid* grid = new BaseGrid(scene->root());
         grid->setObjectName("baseGrid");
 
-        Camera* c = new Camera(scene->root());
+        SceneCamera* c = new SceneCamera(scene->root());
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAt(QVector3D(0,0,0));
@@ -41,12 +41,12 @@ namespace SceneFactory
         BaseGrid* grid = new BaseGrid(scene->root());
         grid->setObjectName("baseGrid");
 
-        Camera* c = new Camera(scene->root());
+        SceneCamera* c = new SceneCamera(scene->root());
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAt(QVector3D(0,0,0));
 
-        c = new Camera(scene->root());
+        c = new SceneCamera(scene->root());
         c->setObjectName("camera2");
         c->setPosition(QVector3D(128,0,0));
         CameraLens lens = c->lens();

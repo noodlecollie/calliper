@@ -10,7 +10,7 @@
 
 class Scene;
 class SceneObject;
-class Camera;
+class SceneCamera;
 class GeometryData;
 class ShaderProgram;
 class QOpenGLFunctions_4_1_Core;
@@ -47,8 +47,8 @@ public:
     void begin();
     void end();
 
-    void renderScene(Scene* scene, const Camera* camera);
-    SceneObject* selectFromDepthBuffer(Scene* scene, const Camera* camera, const QPoint &oglPos, QRgb* pickColor = NULL);
+    void renderScene(Scene* scene, const SceneCamera* camera);
+    SceneObject* selectFromDepthBuffer(Scene* scene, const SceneCamera* camera, const QPoint &oglPos, QRgb* pickColor = NULL);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
     void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter,

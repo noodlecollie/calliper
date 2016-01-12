@@ -9,7 +9,7 @@
 #include <QMatrix4x4>
 #include "scene.h"
 #include "shaders.h"
-#include "camera.h"
+#include "scenecamera.h"
 #include <QCursor>
 #include "geometryfactory.h"
 #include <QWheelEvent>
@@ -237,12 +237,12 @@ void Viewport::drawEmpty()
     renderer()->end();
 }
 
-Camera* Viewport::camera() const
+SceneCamera* Viewport::camera() const
 {
     return m_pCamera;
 }
 
-void Viewport::setCamera(Camera *camera)
+void Viewport::setCamera(SceneCamera *camera)
 {
     m_pCamera = camera;
     if ( !m_pCamera )

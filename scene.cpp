@@ -1,5 +1,5 @@
 #include "scene.h"
-#include "camera.h"
+#include "scenecamera.h"
 #include "sceneobject.h"
 #include "basegrid.h"
 
@@ -22,10 +22,9 @@ Scene::~Scene()
     delete m_pRootObject;
 }
 
-QList<Camera*> Scene::findCameras() const
+QList<SceneCamera*> Scene::findCameras() const
 {
-    Q_ASSERT(!qobject_cast<Camera*>(m_pRootObject));
-    return m_pRootObject->findChildren<Camera*>(QString(), Qt::FindChildrenRecursively);
+    return m_pRootObject->findChildren<SceneCamera*>(QString(), Qt::FindChildrenRecursively);
 }
 
 QList<SceneObject*> Scene::findByName(const QString &name)

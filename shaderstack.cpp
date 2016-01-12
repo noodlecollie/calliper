@@ -1,5 +1,6 @@
 #include "shaderstack.h"
 #include "shaderprogram.h"
+#include "scenecamera.h"
 
 ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
 {
@@ -30,12 +31,12 @@ ShaderStack::~ShaderStack()
         p->release();
 }
 
-const Camera* ShaderStack::camera() const
+const SceneCamera* ShaderStack::camera() const
 {
     return m_pCamera;
 }
 
-void ShaderStack::setCamera(const Camera *camera)
+void ShaderStack::setCamera(const SceneCamera *camera)
 {
     m_pCamera = camera;
 }

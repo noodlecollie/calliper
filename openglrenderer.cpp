@@ -4,7 +4,7 @@
 #include "sceneobject.h"
 #include "shaderprogram.h"
 #include "callipermath.h"
-#include "camera.h"
+#include "scenecamera.h"
 #include <QOpenGLTexture>
 #include "scene.h"
 #include <QPainter>
@@ -194,7 +194,7 @@ void OpenGLRenderer::setDirectionalLight(const EulerAngle &ang)
     m_vecDirectionalLight = Math::angleToVectorSimple(ang);
 }
 
-void OpenGLRenderer::renderScene(Scene *scene, const Camera *camera)
+void OpenGLRenderer::renderScene(Scene *scene, const SceneCamera *camera)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
@@ -339,7 +339,7 @@ void OpenGLRenderer::setFogEndDistance(float dist)
     m_flFogEnd = dist;
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *camera, const QPoint &oglPos, QRgb *pickColor)
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCamera *camera, const QPoint &oglPos, QRgb *pickColor)
 {
     Q_ASSERT(m_bPreparedForRendering);
 

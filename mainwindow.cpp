@@ -4,7 +4,7 @@
 #include "application.h"
 #include <QtDebug>
 #include "scene.h"
-#include "camera.h"
+#include "scenecamera.h"
 #include "originmarker.h"
 #include "inputprocessor.h"
 
@@ -100,7 +100,7 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
     {
         ui->viewport->setBackgroundColor(newDoc->backgroundColor());
 
-        QList<Camera*> cameras = newDoc->scene()->findCameras();
+        QList<SceneCamera*> cameras = newDoc->scene()->findCameras();
         if ( cameras.count() > 0 )
         {
             ui->viewport->setCamera(cameras.at(0));
@@ -176,7 +176,7 @@ void MainWindow::populateSceneTreeRecursive(SceneObject *object, QTreeWidgetItem
         i->setDisabled(true);
 
     QString iconPath(":/icons/tree_object.png");
-    if ( qobject_cast<Camera*>(object) )
+    if ( qobject_cast<SceneCamera*>(object) )
     {
         iconPath = QString(":/icons/tree_camera.png");
     }
@@ -211,8 +211,8 @@ void MainWindow::sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column)
     Q_ASSERT(sceneObject);
 
     QVector3D pos = sceneObject->position();
-    Camera* c = ui->viewport->camera();
-    if ( qobject_cast<Camera*>(sceneObject) == c )
+    SceneCamera* c = ui->viewport->camera();
+    if ( qobject_cast<SceneCamera*>(sceneObject) == c )
         return;
 
     c->setPosition(pos + QVector3D(64,0,0));

@@ -27,7 +27,6 @@ SOURCES += main.cpp\
     scene.cpp \
     unlittextureshader.cpp \
     cameralens.cpp \
-    camera.cpp \
     eulerangle.cpp \
     cameracontroller.cpp \
     pervertexcolorshader.cpp \
@@ -47,7 +46,8 @@ SOURCES += main.cpp\
     sceneobjectmanipulator.cpp \
     debugtesttool.cpp \
     objfileparser.cpp \
-    inputprocessor.cpp
+    inputprocessor.cpp \
+    scenecamera.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -63,7 +63,6 @@ HEADERS  += mainwindow.h \
     scene.h \
     unlittextureshader.h \
     cameralens.h \
-    camera.h \
     eulerangle.h \
     cameracontroller.h \
     pervertexcolorshader.h \
@@ -86,7 +85,8 @@ HEADERS  += mainwindow.h \
     tools.h \
     debugtesttool.h \
     objfileparser.h \
-    inputprocessor.h
+    inputprocessor.h \
+    scenecamera.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

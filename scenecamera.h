@@ -1,16 +1,16 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef SCENECAMERA_H
+#define SCENECAMERA_H
 
 #include "sceneobject.h"
 #include "cameralens.h"
 #include <QScopedPointer>
 
-class Camera : public SceneObject
+class SceneCamera : public SceneObject
 {
     Q_OBJECT
 public:
-    Camera(SceneObject* parent = 0);
-    virtual ~Camera();
+    SceneCamera(SceneObject* parent = 0);
+    virtual ~SceneCamera();
 
     CameraLens lens() const;
     void setLens(const CameraLens &lens);
@@ -38,4 +38,4 @@ private:
     bool        m_bDrawBounds;
 };
 
-#endif // CAMERA_H
+#endif // SCENECAMERA_H

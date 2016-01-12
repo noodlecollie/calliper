@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "scenecamera.h"
 #include "callipermath.h"
 #include <QtMath>
 #include "geometryfactory.h"
@@ -11,38 +11,38 @@
 #define MAX_PITCH_DELTA 89.0f
 #define MAX_ROLL_DELTA 180.0f
 
-Camera::Camera(SceneObject *parent) : SceneObject(parent),
+SceneCamera::SceneCamera(SceneObject *parent) : SceneObject(parent),
     m_Lens(CameraLens::Perspective), m_pBoundsGeom(new GeometryData())
 {
     m_LocalLensBounds = m_Lens.localViewVolumeBounds();
     rebuildViewBoundsGeometry();
 }
 
-Camera::~Camera()
+SceneCamera::~SceneCamera()
 {
 }
 
-bool Camera::drawBounds() const
+bool SceneCamera::drawBounds() const
 {
     return m_bDrawBounds;
 }
 
-void Camera::setDrawBounds(bool enabled)
+void SceneCamera::setDrawBounds(bool enabled)
 {
     m_bDrawBounds = enabled;
 }
 
-CameraLens Camera::lens() const
+CameraLens SceneCamera::lens() const
 {
     return m_Lens;
 }
 
-void Camera::setLens(const CameraLens &lens)
+void SceneCamera::setLens(const CameraLens &lens)
 {
     m_Lens = lens;
 }
 
-void Camera::rebuildLocalToParent() const
+void SceneCamera::rebuildLocalToParent() const
 {
     // To get from local (model) space to world space,
     // we perform transforms forward.
@@ -59,7 +59,7 @@ void Camera::rebuildLocalToParent() const
     m_matLocalToParent = m_matLocalToParent * defaultRot;
 }
 
-void Camera::clampAngles()
+void SceneCamera::clampAngles()
 {
     // These are slightly different to normal because the camera
     // needs to avoid the pitch singularities.
@@ -79,7 +79,7 @@ void Camera::clampAngles()
     m_angAngles.setYaw(std::fmod(m_angAngles.yaw(), 360.0f));
 }
 
-void Camera::rebuildViewBoundsGeometry()
+void SceneCamera::rebuildViewBoundsGeometry()
 {
     m_pBoundsGeom->clear();
     if ( m_LocalLensBounds.isNull() ) return;
@@ -88,7 +88,7 @@ void Camera::rebuildViewBoundsGeometry()
     m_pBoundsGeom->setShaderOverride(PerVertexColorShader::staticName());
 }
 
-void Camera::draw(ShaderStack *stack)
+void SceneCamera::draw(ShaderStack *stack)
 {
     BoundingBox bounds = lens().localViewVolumeBounds();
     if ( bounds != m_LocalLensBounds )
@@ -116,7 +116,7 @@ void Camera::draw(ShaderStack *stack)
     }
 }
 
-QVector3D Camera::mapPoint(const QPoint &pos, const QSize &viewSize) const
+QVector3D SceneCamera::mapPoint(const QPoint &pos, const QSize &viewSize) const
 {
     // Firstly translate the point from window co-ordinates to device co-ordinates.
     QVector4D deviceCoords = Math::windowToDevice(viewSize.width(), viewSize.height()) * QVector4D(pos.x(), pos.y(), 0, 1);

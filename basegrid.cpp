@@ -1,7 +1,7 @@
 #include "basegrid.h"
 #include "pervertexcolorshader.h"
 #include "shaderstack.h"
-#include "camera.h"
+#include "scenecamera.h"
 #include "callipermath.h"
 #include "resourcemanager.h"
 #include "scene.h"
@@ -235,7 +235,7 @@ void BaseGrid::setUpGeometry()
 void BaseGrid::draw(ShaderStack *stack)
 {
     // Get the current camera.
-    const Camera* camera = stack->camera();
+    const SceneCamera* camera = stack->camera();
 
     // Determine the bounds of the camera viewing volume.
     BoundingBox bbox = camera->lens().localViewVolumeBounds()
@@ -546,7 +546,7 @@ void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-int BaseGrid::limitGridPower(const Camera *camera) const
+int BaseGrid::limitGridPower(const SceneCamera *camera) const
 {
     // Return a LOD'ed grid power depending on how many multiples of 64 we are away on Z.
     float z = qAbs(camera->position().z());
