@@ -106,7 +106,7 @@ void OpenGLRenderer::begin()
     m_pStack->applyAll();
     m_pStack->setAutoUpdate(true);
 
-    m_IgnoreDepthList.clear();
+    clearDeferred();
 
     m_bPreparedForRendering = true;
 }
@@ -114,10 +114,6 @@ void OpenGLRenderer::begin()
 void OpenGLRenderer::end()
 {
     Q_ASSERT(m_bPreparedForRendering);
-    Q_ASSERT(m_pStack->inInitialState());
-
-    // Render any deferred objects that are waiting.
-    renderDeferred();
 
     Q_ASSERT(m_pStack->inInitialState());
     delete m_pStack;
@@ -209,6 +205,9 @@ void OpenGLRenderer::renderScene(Scene *scene, const Camera *camera)
 
     // Render the scene.
     renderSceneRecursive(scene->root(), m_pStack);
+
+    // Render any deferred things we have left.
+    renderDeferred();
 }
 
 GeometryData* OpenGLRenderer::createTextQuad(const QSize &texSize, const QString &text, const QColor &col,
@@ -362,6 +361,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const Camera *c
     f->glScissor(oglPos.x(), oglPos.y(), 1, 1);
 
     renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected, nearest, pickColor);
+    renderDeferred();
 
     f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
@@ -415,4 +415,9 @@ void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *function
     }
 
     stack->modelToWorldPop();
+}
+
+void OpenGLRenderer::clearDeferred()
+{
+    m_IgnoreDepthList.clear();
 }

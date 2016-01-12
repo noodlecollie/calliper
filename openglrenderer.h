@@ -74,6 +74,7 @@ private:
     void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
                                  const QPoint &selPos, SceneObject** selected, float &nearestDepth,
                                  QRgb* pickColor);
+    void clearDeferred();
     void renderDeferred();
     void renderIgnoreDepth();
 
