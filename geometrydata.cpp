@@ -22,6 +22,7 @@ static int numComponents[] = {
 static const int formatStride[] = {
     8*sizeof(float),    // PositionNormalUV
     7*sizeof(float),    // PositionColor
+    11*sizeof(float),   // PositionNormalUVColor
 };
 
 static int formatOffset(GeometryData::DataFormat format, ShaderProgram::Attribute att)
@@ -63,6 +64,28 @@ static int formatOffset(GeometryData::DataFormat format, ShaderProgram::Attribut
             }
         }
 
+        case GeometryData::PositionNormalUVColor:
+        {
+            switch (att)
+            {
+            case ShaderProgram::Position:
+                return 0;
+
+            case ShaderProgram::Normal:
+                return 3*sizeof(float);
+
+            case ShaderProgram::UV:
+                return 6*sizeof(float);
+
+            case ShaderProgram::Color:
+                return 8*sizeof(float);
+
+            default:
+                Q_ASSERT(false);
+                return 0;
+            }
+        }
+
         default:
         {
             Q_ASSERT(false);
@@ -86,6 +109,7 @@ GeometryData::GeometryData()
 
     m_iDrawMode = GL_TRIANGLES;
     m_flLineWidth = 1.0f;
+
     m_iDataFormat = PositionNormalUV;
 }
 
@@ -123,7 +147,8 @@ void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, c
 {
     m_iDataFormat = PositionNormalUV;
     int size = m_Vertices.size();
-    m_Vertices.resize(size + 8);
+    int increment = formatStride[m_iDataFormat]/sizeof(float);
+    m_Vertices.resize(size + increment);
 
     m_Vertices[size+0] = pos.x();
     m_Vertices[size+1] = pos.y();
@@ -143,7 +168,8 @@ void GeometryData::appendVertex(const QVector3D &pos, const QColor &col)
 {
     m_iDataFormat = PositionColor;
     int size = m_Vertices.size();
-    m_Vertices.resize(size + 7);
+    int increment = formatStride[m_iDataFormat]/sizeof(float);
+    m_Vertices.resize(size + increment);
 
     m_Vertices[size+0] = pos.x();
     m_Vertices[size+1] = pos.y();
@@ -153,6 +179,32 @@ void GeometryData::appendVertex(const QVector3D &pos, const QColor &col)
     m_Vertices[size+4] = col.greenF();
     m_Vertices[size+5] = col.blueF();
     m_Vertices[size+6] = col.alphaF();
+
+    m_bVerticesStale = true;
+}
+
+void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv, const QColor &col)
+{
+    m_iDataFormat = PositionNormalUVColor;
+    int size = m_Vertices.size();
+    int increment = formatStride[m_iDataFormat]/sizeof(float);
+    m_Vertices.resize(size + increment);
+
+    m_Vertices[size+0] = pos.x();
+    m_Vertices[size+1] = pos.y();
+    m_Vertices[size+2] = pos.z();
+
+    m_Vertices[size+3] = normal.x();
+    m_Vertices[size+4] = normal.y();
+    m_Vertices[size+5] = normal.z();
+
+    m_Vertices[size+6] = uv.x();
+    m_Vertices[size+7] = uv.y();
+
+    m_Vertices[size+8] = col.redF();
+    m_Vertices[size+9] = col.greenF();
+    m_Vertices[size+10] = col.blueF();
+    m_Vertices[size+11] = col.alphaF();
 
     m_bVerticesStale = true;
 }
@@ -261,7 +313,21 @@ void GeometryData::draw(int offset, int count)
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     f->glLineWidth(m_flLineWidth);
-    f->glDrawElements(m_iDrawMode, count < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset));
+
+    // Draw segments if we have any.
+    if ( m_DrawSegments.count() > 0 )
+    {
+        int segCount = (count < 0 ? m_DrawSegments.count() : count);
+        for ( int i = offset; i < segCount && i < m_DrawSegments.count(); i++ )
+        {
+            const QPair<int,int> &seg = m_DrawSegments.at(i);
+            f->glDrawElements(m_iDrawMode, seg.second < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(seg.first * sizeof(unsigned int)));
+        }
+    }
+    else
+    {
+        f->glDrawElements(m_iDrawMode, count < 0 ? indexCount() : count, GL_UNSIGNED_INT, reinterpret_cast<void*>(offset * sizeof(unsigned int)));
+    }
 }
 
 QString GeometryData::texture(int index) const
@@ -532,4 +598,29 @@ void GeometryData::transform(const QMatrix4x4 &mat)
         m_Vertices[index+1] = vec.y();
         m_Vertices[index+2] = vec.z();
     }
+}
+
+QPair<int,int> GeometryData::drawSegmentAt(int index)
+{
+    return m_DrawSegments.at(index);
+}
+
+void GeometryData::appendDrawSegment(const QPair<int, int> &segment)
+{
+    m_DrawSegments.append(segment);
+}
+
+void GeometryData::removeDrawSegment(int index)
+{
+    m_DrawSegments.removeAt(index);
+}
+
+int GeometryData::drawSegmentCount() const
+{
+    return m_DrawSegments.count();
+}
+
+void GeometryData::clearDrawSegments()
+{
+    m_DrawSegments.clear();
 }

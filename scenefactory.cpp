@@ -63,15 +63,15 @@ namespace SceneFactory
         block->setPosition(QVector3D(64,0,0));
 
         SceneObject* trHandle = new SceneObject(scene->root());
-        trHandle->setIgnoreDepth(true);
         trHandle->setObjectName("translationHandle");
+        trHandle->setIgnoreDepth(true);
         trHandle->setGeometry(GeometryFactory::translationHandle(64, QColor::fromRgb(0xffff0000)));
         GeometryData* g  = GeometryFactory::translationHandle(64, QColor::fromRgb(0xff00ff00),
                                                               Math::matrixRotateZ(qDegreesToRadians(90.0f)));
         trHandle->geometry()->append(*g);
         delete g;
         g  = GeometryFactory::translationHandle(64, QColor::fromRgb(0xff0000ff),
-                                                                      Math::matrixRotateY(qDegreesToRadians(-90.0f)));
+                                                Math::matrixRotateY(qDegreesToRadians(-90.0f)));
         trHandle->geometry()->append(*g);
         delete g;
 
