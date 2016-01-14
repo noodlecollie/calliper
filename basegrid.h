@@ -29,7 +29,7 @@ private:
     void drawMajorLines(ShaderStack* stack, const BoundingBox &bbox);
     void drawMinorLines(ShaderStack* stack, const BoundingBox &bbox);
     void drawStandardLines(ShaderStack* stack, const BoundingBox &bbox);
-    int limitGridPower(const SceneCamera* camera) const;
+    int limitGridPower(const HierarchicalObject* camera) const;
     static int stdLineVertCount(int power);
 
     QColor  m_colMajor;

@@ -7,8 +7,9 @@
 #include <QVector3D>
 #include "shaderprogram.h"
 
-class SceneCamera;
+class HierarchicalObject;
 class OpenGLRenderer;
+class CameraLens;
 
 class ShaderStack
 {
@@ -20,8 +21,11 @@ public:
     void applyAll();
     bool inInitialState() const;
 
-    const SceneCamera* camera() const;
-    void setCamera(const SceneCamera* camera);
+    const HierarchicalObject* camera() const;
+    void setCamera(const HierarchicalObject* camera);
+
+    const CameraLens* cameraLens() const;
+    void setCameraLens(const CameraLens* lens);
 
     bool autoUpdate() const;
     void setAutoUpdate(bool enabled);
@@ -121,7 +125,9 @@ private:
 
     bool    m_bAutoUpdate;
     bool    m_bLockShader;
-    const SceneCamera*   m_pCamera;
+
+    const HierarchicalObject*   m_pCamera;
+    const CameraLens*           m_pCameraLens;
 
     QStack<ShaderProgram*>  m_Shaders;
     QStack<QMatrix4x4>      m_ModelToWorld;

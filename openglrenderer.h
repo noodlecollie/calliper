@@ -10,10 +10,11 @@
 
 class Scene;
 class SceneObject;
-class SceneCamera;
+class HierarchicalObject;
 class GeometryData;
 class ShaderProgram;
 class QOpenGLFunctions_4_1_Core;
+class CameraLens;
 
 class OpenGLRenderer
 {
@@ -47,8 +48,9 @@ public:
     void begin();
     void end();
 
-    void renderScene(Scene* scene, const SceneCamera* camera);
-    SceneObject* selectFromDepthBuffer(Scene* scene, const SceneCamera* camera, const QPoint &oglPos, QRgb* pickColor = NULL);
+    void renderScene(Scene* scene, const HierarchicalObject* camera, const CameraLens* lens);
+    SceneObject* selectFromDepthBuffer(Scene* scene, const HierarchicalObject* camera, const CameraLens* lens,
+                                       const QPoint &oglPos, QRgb* pickColor = NULL);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
     void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter,

@@ -69,31 +69,24 @@ int main(int argc, char *argv[])
 
 #else
 
-#include <QFile>
-#include <QByteArray>
-#include "objfileparser.h"
 #include <QtDebug>
-#include <QList>
-#include <QVector3D>
-#include <QVector2D>
+
+class A { public: A(){} virtual ~A(){} };
+class B : public A { public: B() : A() {} virtual ~B(){} };
+class C { public: C(){} virtual ~C(){} };
+class AC : public A, public C { public: AC() : A(), C() {} virtual ~AC(){} };
+class D : public B, public C { public: D() : B(), C() {} virtual ~D(){} };
 
 int main(int argc, char *argv[])
 {
-    QFile camera(":/models/camera.obj");
-    if ( !camera.open(QIODevice::ReadOnly) )
-    {
-        qDebug() << "Unable to open file.";
-        return 1;
-    }
-
-    QByteArray arr = camera.readAll();
-    QList<QVector3D> positions;
-    QList<QVector3D> normals;
-    QList<QVector2D> uvs;
-    QList<unsigned int> indices;
-    ObjFileParser parser;
-    ObjFileParser::ParseResult result =  parser.fillAttributes(arr, positions, normals, uvs, indices);
-    camera.close();
+    D classD;
+    AC* pClassAC = dynamic_cast<AC*>(&classD);
+    A* pClassA = dynamic_cast<A*>(&classD);
+    C* pClassC = dynamic_cast<C*>(&classD);
+    qDebug() << "pClassAC =" << pClassAC
+             << "pClassA =" << pClassA
+             << "pClassC =" << pClassC;
+    return 0;
 }
 
 #endif

@@ -234,11 +234,12 @@ void BaseGrid::setUpGeometry()
 
 void BaseGrid::draw(ShaderStack *stack)
 {
-    // Get the current camera.
-    const SceneCamera* camera = stack->camera();
+    // Get the current camera and lens.
+    const HierarchicalObject* camera = stack->camera();
+    const CameraLens* lens = stack->cameraLens();
 
     // Determine the bounds of the camera viewing volume.
-    BoundingBox bbox = camera->lens()->localViewVolumeBounds()
+    BoundingBox bbox = lens->localViewVolumeBounds()
             .transformed(camera->rootToLocal().inverted() * Math::openGLToHammer());
 
     // If the Z=0 plane is not within this volume, don't draw anything.
@@ -255,9 +256,9 @@ void BaseGrid::draw(ShaderStack *stack)
 
     // Set up the fog to fade the grid out.
     stack->fogColorSetTop(doc->backgroundColor());
-    stack->fogEndSetTop(stack->camera()->lens()->farPlane());
+    stack->fogEndSetTop(lens->farPlane());
     stack->fogBeginSetTop(stack->fogEndTop() -
-                          (0.5f * (stack->camera()->lens()->farPlane() - stack->camera()->lens()->nearPlane())));
+                          (0.5f * (lens->farPlane() - lens->nearPlane())));
 
     m_pGeometry->upload();
     m_pGeometry->bindVertices(true);
@@ -546,7 +547,7 @@ void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-int BaseGrid::limitGridPower(const SceneCamera *camera) const
+int BaseGrid::limitGridPower(const HierarchicalObject *camera) const
 {
     // Return a LOD'ed grid power depending on how many multiples of 64 we are away on Z.
     float z = qAbs(camera->position().z());

@@ -341,7 +341,7 @@ void Viewport::debugSaveCurrentFrame()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->renderScene(m_pScene, m_pCamera, m_pCamera->lens());
     renderer()->end();
 
     GLfloat f = -1;
@@ -367,7 +367,7 @@ void Viewport::drawScene()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->renderScene(m_pScene, m_pCamera, m_pCamera->lens());
     renderer()->end();
 }
 
@@ -398,7 +398,7 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     renderer()->begin();
-    m_pPickedObject = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos, &m_PickColour);
+    m_pPickedObject = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, m_pCamera->lens(), oglPos, &m_PickColour);
     renderer()->end();
 
     fbo.release();
