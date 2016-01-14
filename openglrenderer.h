@@ -7,6 +7,7 @@
 #include "matrixstack.h"
 #include "eulerangle.h"
 #include "shaderstack.h"
+#include "camerawrapper.h"
 
 class Scene;
 class SceneObject;
@@ -48,8 +49,8 @@ public:
     void begin();
     void end();
 
-    void renderScene(Scene* scene, const HierarchicalObject* camera, const CameraLens* lens);
-    SceneObject* selectFromDepthBuffer(Scene* scene, const HierarchicalObject* camera, const CameraLens* lens,
+    void renderScene(Scene* scene, const CameraWrapper &camera);
+    SceneObject* selectFromDepthBuffer(Scene* scene, const CameraWrapper &camera,
                                        const QPoint &oglPos, QRgb* pickColor = NULL);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
