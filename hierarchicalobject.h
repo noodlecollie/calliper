@@ -43,7 +43,7 @@ signals:
 
 public slots:
 
-private:
+protected:
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();
     void rebuildMatrices() const;
