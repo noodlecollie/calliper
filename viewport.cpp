@@ -28,6 +28,8 @@
 #include "tools.h"
 #include "scenecamera.h"
 
+static const QColor NO_CAMERA_COLOUR = QColor::fromRgb(0xff00394d);
+
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
     //setUpdateBehavior(QOpenGLWidget::PartialUpdate);
@@ -42,6 +44,9 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bDrawFPS = false;
     m_iRenderTasks = 0;
     m_pPickedObject = NULL;
+
+    m_pEmptyText = NULL;
+    m_pNoCameraText = NULL;
 
     m_pToggleOptions = new QPushButton(QIcon(QPixmap::fromImage(QImage(":/icons/viewport_options.png"))), QString(), this);
     m_pToggleOptions->resize(18,14);
@@ -99,6 +104,12 @@ void Viewport::initializeGL()
                                               QFont("Arial", 25),
                                               Qt::AlignCenter);
 
+    m_pNoCameraText = renderer()->createTextQuad(QSize(256,256),
+                                              "No active\ncamera",
+                                              QColor::fromRgb(0xffd9d9d9),
+                                              QFont("Arial", 25),
+                                              Qt::AlignCenter);
+
     m_pHighlightOutline = GeometryFactory::lineRect(1.0f, QColor::fromRgb(0xffff0000));
 
     m_TimeElapsed.start();
@@ -123,15 +134,20 @@ void Viewport::paintGL()
         processRenderTasks();
     }
 
-    updateBackgroundColor();
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    if ( !m_pCamera || !m_pScene )
+    if ( !m_pScene )
     {
         drawEmpty();
         return;
     }
+
+    if ( !m_pCamera )
+    {
+        drawNoActiveCamera();
+        return;
+    }
+
+    updateBackgroundColor();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     int msec = m_TimeElapsed.restart();
 
@@ -216,8 +232,11 @@ QColor Viewport::defaultBackgroundColor()
     return QColor::fromRgb(0xff33001a);
 }
 
+// TODO: Merge common pieces of these functions?
 void Viewport::drawEmpty()
 {
+    updateBackgroundColor();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     int index = resourceManager()->shaderIndex(UnlitTextureShader::staticName());
     Q_ASSERT(index >= 0);
     renderer()->setShaderIndex(index);
@@ -236,6 +255,28 @@ void Viewport::drawEmpty()
     renderer()->end();
 }
 
+void Viewport::drawNoActiveCamera()
+{
+    glClearColor(NO_CAMERA_COLOUR.redF(), NO_CAMERA_COLOUR.greenF(), NO_CAMERA_COLOUR.blueF(), NO_CAMERA_COLOUR.alphaF());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    int index = resourceManager()->shaderIndex(UnlitTextureShader::staticName());
+    Q_ASSERT(index >= 0);
+    renderer()->setShaderIndex(index);
+
+    QSize s = size();
+    int shortestWin = qMin(s.width(), s.height());
+    int shortestTex = qMin(m_pEmptyText->localTexture()->width(), m_pEmptyText->localTexture()->height());
+    int dimension = qMin(shortestTex, shortestWin);
+    if ( dimension < 1 ) return;
+
+    int x = s.width()/2;
+    int y = s.height()/2;
+
+    renderer()->begin();
+    renderer()->drawQuad(m_pNoCameraText, s, QRect(x, y, dimension, dimension));
+    renderer()->end();
+}
+
 SceneCamera* Viewport::camera() const
 {
     return m_pCamera;
@@ -245,7 +286,10 @@ void Viewport::setCamera(SceneCamera *camera)
 {
     m_pCamera = camera;
     if ( !m_pCamera )
+    {
+        setBackgroundColor(defaultBackgroundColor());
         return;
+    }
 
     m_pCamera->lens()->setAspectRatio((float)size().width()/(float)size().height());
 }

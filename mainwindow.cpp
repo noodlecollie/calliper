@@ -114,7 +114,6 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
     else
     {
         ui->viewport->setCamera(NULL);
-        ui->viewport->setBackgroundColor(Viewport::defaultBackgroundColor());
 
         ui->sceneTreeWidget->clear();
     }

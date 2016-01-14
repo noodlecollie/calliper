@@ -65,6 +65,7 @@ private:
 
     void updateBackgroundColor();
     void drawEmpty();
+    void drawNoActiveCamera();
     QPoint viewCentre() const;
     void setCameraMouseControl(bool enabled);
     void drawHighlight();
@@ -88,6 +89,7 @@ private:
     QPushButton*            m_pToggleOptions;
 
     GeometryData*       m_pEmptyText;
+    GeometryData*       m_pNoCameraText;
     GeometryData*       m_pHighlightOutline;
 
     bool    m_bMouseTracking;
