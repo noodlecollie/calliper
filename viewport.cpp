@@ -26,7 +26,7 @@
 #include <QStandardPaths>
 #include "application.h"
 #include "tools.h"
-#include "camerawrapper.h"
+#include "scenecamera.h"
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
 {
@@ -342,7 +342,7 @@ void Viewport::debugSaveCurrentFrame()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pScene, CameraWrapper(m_pCamera));
+    renderer()->renderScene(m_pScene, m_pCamera);
     renderer()->end();
 
     GLfloat f = -1;
@@ -368,7 +368,7 @@ void Viewport::drawScene()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pScene, CameraWrapper(m_pCamera));
+    renderer()->renderScene(m_pScene, m_pCamera);
     renderer()->end();
 }
 
@@ -399,7 +399,7 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     renderer()->begin();
-    m_pPickedObject = renderer()->selectFromDepthBuffer(m_pScene, CameraWrapper(m_pCamera), oglPos, &m_PickColour);
+    m_pPickedObject = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos, &m_PickColour);
     renderer()->end();
 
     fbo.release();

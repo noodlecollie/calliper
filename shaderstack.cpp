@@ -1,14 +1,12 @@
 #include "shaderstack.h"
 #include "shaderprogram.h"
-#include "hierarchicalobject.h"
-#include "cameralens.h"
+#include "scenecamera.h"
 
 ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
 {
     m_bAutoUpdate = autoUpdate;
     m_bLockShader = false;
     m_pCamera = NULL;
-    m_pCameraLens = NULL;
     m_Shaders.push(initial);
     m_Shaders.top()->apply();
 
@@ -33,24 +31,14 @@ ShaderStack::~ShaderStack()
         p->release();
 }
 
-const HierarchicalObject* ShaderStack::camera() const
+const SceneCamera* ShaderStack::camera() const
 {
     return m_pCamera;
 }
 
-void ShaderStack::setCamera(const HierarchicalObject *camera)
+void ShaderStack::setCamera(const SceneCamera *camera)
 {
     m_pCamera = camera;
-}
-
-const CameraLens* ShaderStack::cameraLens() const
-{
-    return m_pCameraLens;
-}
-
-void ShaderStack::setCameraLens(const CameraLens *lens)
-{
-    m_pCameraLens = lens;
 }
 
 bool ShaderStack::autoUpdate() const

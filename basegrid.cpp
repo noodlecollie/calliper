@@ -235,8 +235,8 @@ void BaseGrid::setUpGeometry()
 void BaseGrid::draw(ShaderStack *stack)
 {
     // Get the current camera and lens.
-    const HierarchicalObject* camera = stack->camera();
-    const CameraLens* lens = stack->cameraLens();
+    const SceneCamera* camera = stack->camera();
+    const CameraLens* lens = camera->lens();
 
     // Determine the bounds of the camera viewing volume.
     BoundingBox bbox = lens->localViewVolumeBounds()
@@ -547,7 +547,7 @@ void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-int BaseGrid::limitGridPower(const HierarchicalObject *camera) const
+int BaseGrid::limitGridPower(const SceneCamera *camera) const
 {
     // Return a LOD'ed grid power depending on how many multiples of 64 we are away on Z.
     float z = qAbs(camera->position().z());

@@ -194,14 +194,13 @@ void OpenGLRenderer::setDirectionalLight(const EulerAngle &ang)
     m_vecDirectionalLight = Math::angleToVectorSimple(ang);
 }
 
-void OpenGLRenderer::renderScene(Scene *scene, const CameraWrapper &camera)
+void OpenGLRenderer::renderScene(Scene *scene, const SceneCamera* camera)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
-    m_pStack->setCamera(camera.camera());
-    m_pStack->setCameraLens(camera.cameraLens());
-    m_pStack->worldToCameraPostMultiply(camera.camera()->rootToLocal());
-    m_pStack->cameraProjectionPostMultiply(camera.cameraLens()->projectionMatrix());
+    m_pStack->setCamera(camera);
+    m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
+    m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
     m_pStack->globalColorSetTop(globalColor());
 
     // Render the scene.
@@ -340,7 +339,7 @@ void OpenGLRenderer::setFogEndDistance(float dist)
     m_flFogEnd = dist;
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const CameraWrapper &camera,
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCamera* camera,
                                                    const QPoint &oglPos, QRgb *pickColor)
 {
     Q_ASSERT(m_bPreparedForRendering);
@@ -351,10 +350,9 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const CameraWra
     SceneObject* selected = NULL;
     float nearest = 1.0f;
 
-    m_pStack->setCamera(camera.camera());
-    m_pStack->setCameraLens(camera.cameraLens());
-    m_pStack->worldToCameraPostMultiply(camera.camera()->rootToLocal());
-    m_pStack->cameraProjectionPostMultiply(camera.cameraLens()->projectionMatrix());
+    m_pStack->setCamera(camera);
+    m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
+    m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
 
     m_pStack->shaderPush(resourceManager()->shader(SelectionMaskShader::staticName()));
     m_pStack->m_bLockShader = true;
