@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     debugtesttool.cpp \
     objfileparser.cpp \
     inputprocessor.cpp \
-    scenecamera.cpp
+    scenecamera.cpp \
+    hierarchicalobject.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -86,7 +87,8 @@ HEADERS  += mainwindow.h \
     debugtesttool.h \
     objfileparser.h \
     inputprocessor.h \
-    scenecamera.h
+    scenecamera.h \
+    hierarchicalobject.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui
