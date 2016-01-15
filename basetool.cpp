@@ -15,6 +15,8 @@ BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
     m_bActive = false;
     m_pDocument = document;
     Q_ASSERT(m_pDocument);
+
+    m_bCtrlPressed = false;
 }
 
 BaseTool::~BaseTool()
@@ -103,10 +105,22 @@ void BaseTool::vActivate()
 
 void BaseTool::vDeactivate()
 {
+    m_bCtrlPressed = false;
 }
 
-void BaseTool::vMousePress(QMouseEvent *)
+void BaseTool::vMousePress(QMouseEvent *e)
 {
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v )
+        return;
+
+    SceneObject* obj = v->pickObjectFromDepthBuffer(e->pos());
+
+    if ( !m_bCtrlPressed )
+        m_pDocument->selectedSetClear();
+
+    if ( obj )
+        m_pDocument->selectedSetInsert(obj);
 }
 
 void BaseTool::vMouseMove(QMouseEvent *)
@@ -140,13 +154,30 @@ void BaseTool::vKeyPress(QKeyEvent *e)
             return;
         }
 
+        case Qt::Key_Control:
+        {
+            m_bCtrlPressed = true;
+            return;
+        }
+
         default:
             return;
     }
 }
 
-void BaseTool::vKeyRelease(QKeyEvent *)
+void BaseTool::vKeyRelease(QKeyEvent *e)
 {
+    if ( e->isAutoRepeat() )
+        return;
+
+    switch (e->key())
+    {
+        case Qt::Key_Control:
+        {
+            m_bCtrlPressed = false;
+            return;
+        }
+    }
 }
 
 void BaseTool::vSelectedSetChanged()

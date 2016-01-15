@@ -58,6 +58,9 @@ protected:
 
     MapDocument*    m_pDocument;
     bool            m_bActive;
+
+private:
+    bool    m_bCtrlPressed;
 };
 
 #endif // BASETOOL_H
