@@ -16,7 +16,7 @@ BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
     m_pDocument = document;
     Q_ASSERT(m_pDocument);
 
-    m_bCtrlPressed = false;
+    m_flKBModifiers = 0;
 }
 
 BaseTool::~BaseTool()
@@ -105,7 +105,7 @@ void BaseTool::vActivate()
 
 void BaseTool::vDeactivate()
 {
-    m_bCtrlPressed = false;
+    m_flKBModifiers = 0;
 }
 
 void BaseTool::vMousePress(QMouseEvent *e)
@@ -116,11 +116,26 @@ void BaseTool::vMousePress(QMouseEvent *e)
 
     SceneObject* obj = v->pickObjectFromDepthBuffer(e->pos());
 
-    if ( !m_bCtrlPressed )
+    if ( !m_flKBModifiers.testFlag(Qt::ControlModifier) )
+    {
         m_pDocument->selectedSetClear();
+        if ( obj )
+            m_pDocument->selectedSetInsert(obj);
+    }
+    else
+    {
+        if ( !obj )
+            return;
 
-    if ( obj )
-        m_pDocument->selectedSetInsert(obj);
+        if ( m_pDocument->selectedSet().contains(obj) )
+        {
+            m_pDocument->selectedSetRemove(obj);
+        }
+        else
+        {
+            m_pDocument->selectedSetInsert(obj);
+        }
+    }
 }
 
 void BaseTool::vMouseMove(QMouseEvent *)
@@ -156,7 +171,7 @@ void BaseTool::vKeyPress(QKeyEvent *e)
 
         case Qt::Key_Control:
         {
-            m_bCtrlPressed = true;
+            m_flKBModifiers |= Qt::ControlModifier;
             return;
         }
 
@@ -174,7 +189,7 @@ void BaseTool::vKeyRelease(QKeyEvent *e)
     {
         case Qt::Key_Control:
         {
-            m_bCtrlPressed = false;
+            m_flKBModifiers &= ~Qt::ControlModifier;
             return;
         }
     }
@@ -182,4 +197,14 @@ void BaseTool::vKeyRelease(QKeyEvent *e)
 
 void BaseTool::vSelectedSetChanged()
 {
+}
+
+Qt::KeyboardModifiers BaseTool::keyboardModifiers() const
+{
+    return m_flKBModifiers;
+}
+
+bool BaseTool::keyboardModifierActive(Qt::KeyboardModifier mod) const
+{
+    return m_flKBModifiers.testFlag(mod);
 }

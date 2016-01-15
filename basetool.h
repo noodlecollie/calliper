@@ -20,6 +20,9 @@ public:
     virtual QString toolName() const;
     MapDocument* document() const;
 
+    Qt::KeyboardModifiers keyboardModifiers() const;
+    bool keyboardModifierActive(Qt::KeyboardModifier mod) const;
+
     // The functions below are not virtual, as they contain code that should always
     // be run regardless of what the tool is. The virtual functions are called
     // from these functions and can be re-implemented by subclasses.
@@ -59,8 +62,7 @@ protected:
     MapDocument*    m_pDocument;
     bool            m_bActive;
 
-private:
-    bool    m_bCtrlPressed;
+    Qt::KeyboardModifiers   m_flKBModifiers;
 };
 
 #endif // BASETOOL_H
