@@ -201,13 +201,18 @@ void Viewport::mouseReleaseEvent(QMouseEvent *e)
 
 void Viewport::focusInEvent(QFocusEvent *e)
 {
+    Q_ASSERT(!application()->mainWindow()->m_pActiveViewport);
+    application()->mainWindow()->m_pActiveViewport = this;
+
     m_Timer.start();
 
     QOpenGLWidget::focusInEvent(e);
 }
-
 void Viewport::focusOutEvent(QFocusEvent *e)
 {
+    Q_ASSERT(application()->mainWindow()->m_pActiveViewport == this);
+    application()->mainWindow()->m_pActiveViewport = NULL;
+
     m_Timer.stop();
     m_CameraController.reset();
     setCameraMouseControl(false);
@@ -459,4 +464,14 @@ SceneObject* Viewport::pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickCo
         *pickColor = m_PickColour;
 
     return m_pPickedObject;
+}
+
+bool Viewport::cameraMouseControl() const
+{
+    return m_bMouseTracking;
+}
+
+void Viewport::toggleCameraMouseControl()
+{
+    setCameraMouseControl(!m_bMouseTracking);
 }

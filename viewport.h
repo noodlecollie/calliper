@@ -31,6 +31,9 @@ public:
 
     SceneCamera* camera() const;
     void setCamera(SceneCamera* camera);
+    bool cameraMouseControl() const;
+    void setCameraMouseControl(bool enabled);
+    void toggleCameraMouseControl();
 
     Scene* scene() const;
     void setScene(Scene* scene);
@@ -67,7 +70,6 @@ private:
     void drawEmpty();
     void drawNoActiveCamera();
     QPoint viewCentre() const;
-    void setCameraMouseControl(bool enabled);
     void drawHighlight();
     void drawFPSText(int msec);
     void debugSaveCurrentFrame();

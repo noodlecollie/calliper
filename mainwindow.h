@@ -12,16 +12,18 @@ class MainWindow;
 class Scene;
 class SceneObject;
 class QTreeWidgetItem;
+class Viewport;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+    friend class Viewport;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
     MapDocument* activeDocument() const;
+    Viewport* activeViewport() const;
 
 public slots:
     void quit();
@@ -42,6 +44,7 @@ private:
     Ui::MainWindow *ui;
 
     int m_iActiveDocument;
+    Viewport* m_pActiveViewport;
 };
 
 #endif // MAINWINDOW_H

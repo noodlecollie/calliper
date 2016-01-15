@@ -20,6 +20,10 @@ public:
     virtual QString toolName() const;
     MapDocument* document() const;
 
+    // The functions below are not virtual, as they contain code that should always
+    // be run regardless of what the tool is. The virtual functions are called
+    // from these functions and can be re-implemented by subclasses.
+
     // Activation
     void activate();
     void deactivate();
@@ -39,15 +43,18 @@ public slots:
     void selectedSetChanged();
 
 protected:
-    virtual void vActivate() {}
-    virtual void vDeactivate() {}
-    virtual void vMousePress(QMouseEvent*) {}
-    virtual void vMouseMove(QMouseEvent*) {}
-    virtual void vMouseRelease(QMouseEvent*) {}
-    virtual void vWheel(QWheelEvent*) {}
-    virtual void vKeyPress(QKeyEvent*) {}
-    virtual void vKeyRelease(QKeyEvent*) {}
-    virtual void vSelectedSetChanged() {}
+    // These are the basic actions that should be taken if the subclass tool does not override them.
+    // This lets us default to things like toggling camera movement, changing grid size, etc.
+    // and allows subclass tools to restrict these actions if required, but allow them otherwise.
+    virtual void vActivate();
+    virtual void vDeactivate();
+    virtual void vMousePress(QMouseEvent*);
+    virtual void vMouseMove(QMouseEvent*);
+    virtual void vMouseRelease(QMouseEvent*);
+    virtual void vWheel(QWheelEvent*);
+    virtual void vKeyPress(QKeyEvent*);
+    virtual void vKeyRelease(QKeyEvent*);
+    virtual void vSelectedSetChanged();
 
     MapDocument*    m_pDocument;
     bool            m_bActive;

@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     m_iActiveDocument = -1;
+    m_pActiveViewport = NULL;
 
     setUpConnections();
 
@@ -238,4 +239,9 @@ void MainWindow::sceneTreeItemClicked(QTreeWidgetItem *item, int column)
     doc->selectedSetClear();
     doc->selectedSetInsert(sceneObject);
     ui->viewport->update();
+}
+
+Viewport* MainWindow::activeViewport() const
+{
+    return m_pActiveViewport;
 }

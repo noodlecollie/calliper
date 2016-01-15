@@ -5,8 +5,8 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include "scene.h"
-#include "basegrid.h"
 #include "viewport.h"
+#include "basetool.h"
 
 InputProcessor::InputProcessor(MapDocument *document) : QObject(document)
 {
@@ -20,26 +20,39 @@ MapDocument* InputProcessor::document() const
 bool InputProcessor::eventFilter(QObject *watched, QEvent *event)
 {
     Q_UNUSED(watched);
+    BaseTool* tool = document()->activeTool();
 
     switch (event->type())
     {
         case QEvent::KeyPress:
-            return filterKeyPress(watched, dynamic_cast<QKeyEvent*>(event));
+            if ( tool )
+                tool->keyPressEvent(dynamic_cast<QKeyEvent*>(event));
+            return true;
 
         case QEvent::KeyRelease:
-            return filterKeyRelease(watched, dynamic_cast<QKeyEvent*>(event));
+            if ( tool )
+                tool->keyReleaseEvent(dynamic_cast<QKeyEvent*>(event));
+            return true;
 
         case QEvent::MouseButtonPress:
-            return filterMousePress(watched, dynamic_cast<QMouseEvent*>(event));
+            if ( tool )
+                tool->mousePressEvent(dynamic_cast<QMouseEvent*>(event));
+            return true;
 
         case QEvent::MouseMove:
-            return filterMouseMove(watched, dynamic_cast<QMouseEvent*>(event));
+            if ( tool )
+                tool->mouseMoveEvent(dynamic_cast<QMouseEvent*>(event));
+            return true;
 
         case QEvent::MouseButtonRelease:
-            return filterMouseRelease(watched, dynamic_cast<QMouseEvent*>(event));
+            if ( tool )
+                tool->mouseReleaseEvent(dynamic_cast<QMouseEvent*>(event));
+            return true;
 
         case QEvent::Wheel:
-            return filterWheel(watched, dynamic_cast<QWheelEvent*>(event));
+            if ( tool )
+                tool->wheelEvent(dynamic_cast<QWheelEvent*>(event));
+            return true;
 
         default:
             return false;
@@ -49,29 +62,8 @@ bool InputProcessor::eventFilter(QObject *watched, QEvent *event)
 bool InputProcessor::filterKeyPress(QObject* watched, QKeyEvent *e)
 {
     Q_UNUSED(watched);
-
-    if ( e->isAutoRepeat() )
-        return true;
-
-    MapDocument* doc = document();
-
-    switch (e->key())
-    {
-        case Qt::Key_BracketLeft:
-        {
-            doc->scene()->grid()->decrementGridPower();
-            return true;
-        }
-
-        case Qt::Key_BracketRight:
-        {
-            doc->scene()->grid()->incrementGridPower();
-            return true;
-        }
-
-        default:
-            return true;
-    }
+    Q_UNUSED(e);
+    return true;
 }
 
 bool InputProcessor::filterKeyRelease(QObject* watched, QKeyEvent *e)
@@ -83,11 +75,11 @@ bool InputProcessor::filterKeyRelease(QObject* watched, QKeyEvent *e)
 
 bool InputProcessor::filterMousePress(QObject* watched, QMouseEvent *e)
 {
-    if ( e->button() == Qt::LeftButton )
+    /*if ( e->button() == Qt::LeftButton )
     {
         setSelectionToObjectAtPixel(qobject_cast<Viewport*>(watched), e->pos());
         return true;
-    }
+    }*/
 
     return true;
 }

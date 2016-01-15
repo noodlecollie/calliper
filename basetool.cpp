@@ -1,7 +1,13 @@
 #include "basetool.h"
+#include "mapdocument.h"
+#include "scene.h"
+#include "basegrid.h"
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include "viewport.h"
+#include "application.h"
+#include "mainwindow.h"
 
 BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
 {
@@ -89,4 +95,60 @@ void BaseTool::selectedSetChanged()
 {
     Q_ASSERT(m_bActive);
     vSelectedSetChanged();
+}
+
+void BaseTool::vActivate()
+{
+}
+
+void BaseTool::vDeactivate()
+{
+}
+
+void BaseTool::vMousePress(QMouseEvent *)
+{
+}
+
+void BaseTool::vMouseMove(QMouseEvent *)
+{
+}
+
+void BaseTool::vMouseRelease(QMouseEvent *)
+{
+}
+
+void BaseTool::vWheel(QWheelEvent *)
+{
+}
+
+void BaseTool::vKeyPress(QKeyEvent *e)
+{
+    if ( e->isAutoRepeat() )
+        return;
+
+    switch (e->key())
+    {
+        case Qt::Key_BracketLeft:
+        {
+            m_pDocument->scene()->grid()->decrementGridPower();
+            return;
+        }
+
+        case Qt::Key_BracketRight:
+        {
+            m_pDocument->scene()->grid()->incrementGridPower();
+            return;
+        }
+
+        default:
+            return;
+    }
+}
+
+void BaseTool::vKeyRelease(QKeyEvent *)
+{
+}
+
+void BaseTool::vSelectedSetChanged()
+{
 }

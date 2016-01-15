@@ -15,6 +15,9 @@ MapDocument::MapDocument(QObject *parent) : QObject(parent)
 
     m_iActiveTool = -1;
     createTools();
+
+    // REMOVE ME
+    setActiveToolIndex(0);
 }
 
 MapDocument::~MapDocument()

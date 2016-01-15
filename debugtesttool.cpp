@@ -2,6 +2,9 @@
 #include <QKeyEvent>
 #include "mapdocument.h"
 #include "sceneobjectmanipulator.h"
+#include "application.h"
+#include "mainwindow.h"
+#include "viewport.h"
 
 DebugTestTool::DebugTestTool(MapDocument *document) : BaseTool(DebugTestTool::staticName(), document)
 {
@@ -48,7 +51,13 @@ void DebugTestTool::vKeyPress(QKeyEvent *e)
             break;
         }
 
+        case Qt::Key_Z:
+            if ( application()->mainWindow()->activeViewport() )
+                application()->mainWindow()->activeViewport()->toggleCameraMouseControl();
+            break;
+
         default:
+            BaseTool::vKeyPress(e);
             break;
     }
 }
@@ -56,6 +65,7 @@ void DebugTestTool::vKeyPress(QKeyEvent *e)
 void DebugTestTool::vSelectedSetChanged()
 {
     updateTableFromSet();
+    BaseTool::vSelectedSetChanged();
 }
 
 void DebugTestTool::updateTableFromSet()
@@ -106,4 +116,5 @@ void DebugTestTool::vDeactivate()
 {
     m_ManipTable.clear();
     m_vecTranslation = QVector3D(0,0,0);
+    BaseTool::vDeactivate();
 }
