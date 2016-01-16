@@ -8,6 +8,8 @@
 #include "viewport.h"
 #include "application.h"
 #include "mainwindow.h"
+#include "scenecamera.h"
+#include "callipermath.h"
 
 BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
 {
@@ -146,8 +148,20 @@ void BaseTool::vMouseRelease(QMouseEvent *)
 {
 }
 
-void BaseTool::vWheel(QWheelEvent *)
+void BaseTool::vWheel(QWheelEvent *e)
 {
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v )
+        return;
+
+    if (  e->orientation() == Qt::Vertical )
+    {
+        v->camera()->translate(QVector3D(e->delta(), 0, 0));
+    }
+    else
+    {
+        v->camera()->translate(QVector3D(0, e->delta(), 0));
+    }
 }
 
 void BaseTool::vKeyPress(QKeyEvent *e)

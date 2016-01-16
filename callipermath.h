@@ -35,6 +35,8 @@ namespace Math
     qint64 previousMultiple(float value, qint64 multiple);
     qint64 nextMultiple(float value, qint64 multiple);
     qint64 nearestMultiple(float value, qint64 multiple);
+
+    void cameraOrientationVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up);
 }
 
 #endif // MATH_H

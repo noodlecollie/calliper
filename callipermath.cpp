@@ -166,4 +166,24 @@ namespace Math
         float dNext = (float)next - value;
         return dPrev < dNext ? prev : next;
     }
+
+    void cameraOrientationVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up)
+    {
+        // Convert the angle to a vector.
+        fwd = angleToVectorSimple(angle);
+
+        // TODO: Correctly handle roll.
+        // Right now we just set the right vector to be the projection onto the XY plane.
+        right = (matrixRotateZ(qDegreesToRadians(-90.0f)) * QVector4D(fwd.x(), fwd.y(), 0, 0)).toVector3D();
+        if ( right.isNull() )
+        {
+            up = QVector3D();
+            return;
+        }
+
+        right.normalize();
+
+        // The up vector is a cross product between the other two.
+        up = QVector3D::crossProduct(right, fwd);
+    }
 }
