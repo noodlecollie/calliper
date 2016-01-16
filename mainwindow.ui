@@ -169,6 +169,9 @@
    <class>Viewport</class>
    <extends>QOpenGLWidget</extends>
    <header>viewport.h</header>
+   <slots>
+    <signal>preFrame(int)</signal>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -285,6 +288,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>viewport</sender>
+   <signal>preFrame(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>viewportPreFrame(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>240</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>quit()</slot>
@@ -293,5 +312,6 @@
   <slot>changeDockWidgetVisibility(bool)</slot>
   <slot>sceneTreeItemDoubleClicked(QTreeWidgetItem*,int)</slot>
   <slot>sceneTreeItemClicked(QTreeWidgetItem*,int)</slot>
+  <slot>viewportPreFrame(int)</slot>
  </slots>
 </ui>

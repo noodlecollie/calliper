@@ -7,6 +7,7 @@
 #include "scenecamera.h"
 #include "originmarker.h"
 #include "inputprocessor.h"
+#include "basetool.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -244,4 +245,17 @@ void MainWindow::sceneTreeItemClicked(QTreeWidgetItem *item, int column)
 Viewport* MainWindow::activeViewport() const
 {
     return m_pActiveViewport;
+}
+
+void MainWindow::viewportPreFrame(int msec)
+{
+    MapDocument* doc = activeDocument();
+    if ( !doc )
+        return;
+
+    BaseTool* t = doc->activeTool();
+    if ( !t )
+        return;
+
+    t->update(msec);
 }

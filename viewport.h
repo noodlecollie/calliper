@@ -43,6 +43,9 @@ public:
 
     SceneObject* pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickColor = NULL);
 
+signals:
+    void preFrame(int);
+
 public slots:
     void setDrawFocusHighlight(bool enabled);
     void setDrawFPS(bool enabled);

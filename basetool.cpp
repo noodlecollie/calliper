@@ -19,6 +19,9 @@ BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
     Q_ASSERT(m_pDocument);
 
     m_flKBModifiers = 0;
+    m_CameraController.setAccelTime(0.1f);
+    m_CameraController.setDecelTime(0.1f);
+    m_CameraController.setTopSpeed(1200.0f);
 }
 
 BaseTool::~BaseTool()
@@ -108,6 +111,7 @@ void BaseTool::vActivate()
 void BaseTool::vDeactivate()
 {
     m_flKBModifiers = 0;
+    m_CameraController.clearMovementFlags();
 }
 
 void BaseTool::vMousePress(QMouseEvent *e)
@@ -189,6 +193,30 @@ void BaseTool::vKeyPress(QKeyEvent *e)
             return;
         }
 
+        case Qt::Key_W:
+        {
+            m_CameraController.forward(true);
+            return;
+        }
+
+        case Qt::Key_S:
+        {
+            m_CameraController.backward(true);
+            return;
+        }
+
+        case Qt::Key_A:
+        {
+            m_CameraController.left(true);
+            return;
+        }
+
+        case Qt::Key_D:
+        {
+            m_CameraController.right(true);
+            return;
+        }
+
         default:
             return;
     }
@@ -206,6 +234,30 @@ void BaseTool::vKeyRelease(QKeyEvent *e)
             m_flKBModifiers &= ~Qt::ControlModifier;
             return;
         }
+
+        case Qt::Key_W:
+        {
+            m_CameraController.forward(false);
+            return;
+        }
+
+        case Qt::Key_S:
+        {
+            m_CameraController.backward(false);
+            return;
+        }
+
+        case Qt::Key_A:
+        {
+            m_CameraController.left(false);
+            return;
+        }
+
+        case Qt::Key_D:
+        {
+            m_CameraController.right(false);
+            return;
+        }
     }
 }
 
@@ -221,4 +273,28 @@ Qt::KeyboardModifiers BaseTool::keyboardModifiers() const
 bool BaseTool::keyboardModifierActive(Qt::KeyboardModifier mod) const
 {
     return m_flKBModifiers.testFlag(mod);
+}
+
+void BaseTool::update(int msec)
+{
+    Q_ASSERT(m_bActive);
+    vUpdate(msec);
+}
+
+void BaseTool::vUpdate(int msec)
+{
+    m_CameraController.update(msec);
+
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v )
+        return;
+
+    QVector3D localMovement = m_CameraController.velocity();
+    float frac = (float)msec/1000.0f;
+    localMovement *= frac;
+    QVector3D globalMovement(0, 0, localMovement.z());
+    localMovement.setZ(0);
+
+    v->camera()->translate(localMovement);
+    v->camera()->setPosition(v->camera()->position() + globalMovement);
 }

@@ -34,6 +34,7 @@ public slots:
     void changeDockWidgetVisibility(bool visible);
     void sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column);
     void sceneTreeItemClicked(QTreeWidgetItem* item, int column);
+    void viewportPreFrame(int msec);
 
 private:
     void setUpConnections();

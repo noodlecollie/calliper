@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QSet>
+#include "cameracontroller.h"
 
 class MapDocument;
 class QMouseEvent;
@@ -42,8 +43,10 @@ public:
     void keyPressEvent(QKeyEvent* e);
     void keyReleaseEvent(QKeyEvent* e);
 
+
 public slots:
     void selectedSetChanged();
+    void update(int msec);
 
 protected:
     // These are the basic actions that should be taken if the subclass tool does not override them.
@@ -58,11 +61,13 @@ protected:
     virtual void vKeyPress(QKeyEvent*);
     virtual void vKeyRelease(QKeyEvent*);
     virtual void vSelectedSetChanged();
+    virtual void vUpdate(int msec);
 
     MapDocument*    m_pDocument;
     bool            m_bActive;
 
     Qt::KeyboardModifiers   m_flKBModifiers;
+    CameraController        m_CameraController;
 };
 
 #endif // BASETOOL_H

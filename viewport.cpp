@@ -146,10 +146,11 @@ void Viewport::paintGL()
         return;
     }
 
+    int msec = m_TimeElapsed.restart();
+    emit preFrame(msec);
+
     updateBackgroundColor();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    int msec = m_TimeElapsed.restart();
 
     if ( hasFocus() && m_bDrawFocusHighlight )
         drawHighlight();
