@@ -51,11 +51,6 @@ void DebugTestTool::vKeyPress(QKeyEvent *e)
             break;
         }
 
-        case Qt::Key_Z:
-            if ( application()->mainWindow()->activeViewport() )
-                application()->mainWindow()->activeViewport()->toggleCameraMouseControl();
-            break;
-
         default:
             BaseTool::vKeyPress(e);
             break;

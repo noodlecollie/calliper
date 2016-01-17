@@ -63,11 +63,16 @@ protected:
     virtual void vSelectedSetChanged();
     virtual void vUpdate(int msec);
 
+    void setMouseLookEnabled(bool enabled);
+    void toggleMouseLookEnabled();
+
     MapDocument*    m_pDocument;
     bool            m_bActive;
 
     Qt::KeyboardModifiers   m_flKBModifiers;
     CameraController        m_CameraController;
+    bool                    m_bMouseLookEnabled;
+    QPoint                  m_LastMousePos;
 };
 
 #endif // BASETOOL_H

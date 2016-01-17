@@ -24,6 +24,7 @@ public:
 
     // On high DPI displays, size() doesn't return the correct size for the OpenGL canvas.
     virtual QSize sizeInPixels() const;
+    QPoint viewCentre() const;
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &col);
@@ -31,9 +32,6 @@ public:
 
     SceneCamera* camera() const;
     void setCamera(SceneCamera* camera);
-    bool cameraMouseControl() const;
-    void setCameraMouseControl(bool enabled);
-    void toggleCameraMouseControl();
 
     Scene* scene() const;
     void setScene(Scene* scene);
@@ -72,7 +70,6 @@ private:
     void updateBackgroundColor();
     void drawEmpty();
     void drawNoActiveCamera();
-    QPoint viewCentre() const;
     void drawHighlight();
     void drawFPSText(int msec);
     void debugSaveCurrentFrame();
@@ -87,8 +84,7 @@ private:
     Scene*  m_pScene;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
-    CameraController    m_CameraController;
-    QTime               m_TimeElapsed;
+    QTime   m_TimeElapsed;
 
     ViewportUserOptions*    m_pUserOptions;
     QPushButton*            m_pToggleOptions;
@@ -97,8 +93,6 @@ private:
     GeometryData*       m_pNoCameraText;
     GeometryData*       m_pHighlightOutline;
 
-    bool    m_bMouseTracking;
-    float   m_flMouseSensitivity;
     bool    m_bDrawFocusHighlight;
     bool    m_bDrawFPS;
     int     m_iRenderTasks;

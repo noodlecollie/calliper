@@ -38,8 +38,6 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bBackgroundColorChanged = true;
     m_pCamera = NULL;
     m_pScene = NULL;
-    m_bMouseTracking = false;
-    m_flMouseSensitivity = 1.5f;
     m_bDrawFocusHighlight = false;
     m_bDrawFPS = false;
     m_iRenderTasks = 0;
@@ -61,8 +59,6 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
 
     m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
     m_Timer.setInterval(0);
-
-    m_CameraController.setTopSpeed(768.0f);
 }
 
 Viewport::~Viewport()
@@ -158,9 +154,6 @@ void Viewport::paintGL()
     if ( m_bDrawFPS )
         drawFPSText(msec);
 
-    m_CameraController.update(msec);
-    m_pCamera->translate(m_CameraController.velocity()*((float)msec/1000.0f));
-
     drawScene();
 }
 
@@ -215,8 +208,6 @@ void Viewport::focusOutEvent(QFocusEvent *e)
     application()->mainWindow()->m_pActiveViewport = NULL;
 
     m_Timer.stop();
-    m_CameraController.reset();
-    setCameraMouseControl(false);
 
     QOpenGLWidget::focusOutEvent(e);
 }
@@ -315,23 +306,6 @@ QPoint Viewport::viewCentre() const
     return QPoint(size().width()/2, size().height()/2);
 }
 
-void Viewport::setCameraMouseControl(bool enabled)
-{
-    if ( enabled )
-    {
-        QCursor::setPos(mapToGlobal(viewCentre()));
-        setMouseTracking(true);
-        setCursor(Qt::BlankCursor);
-    }
-    else
-    {
-        setMouseTracking(false);
-        setCursor(Qt::ArrowCursor);
-    }
-
-    m_bMouseTracking = enabled;
-}
-
 bool Viewport::drawFocusHighlight() const
 {
     return m_bDrawFocusHighlight;
@@ -384,8 +358,6 @@ void Viewport::debugSaveCurrentFrame()
     fbo.bind();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    m_pCamera->translate(m_CameraController.velocity());
 
     int index = resourceManager()->shaderIndex(BasicLitTextureShader::staticName());
     Q_ASSERT(index >= 0);
@@ -465,14 +437,4 @@ SceneObject* Viewport::pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickCo
         *pickColor = m_PickColour;
 
     return m_pPickedObject;
-}
-
-bool Viewport::cameraMouseControl() const
-{
-    return m_bMouseTracking;
-}
-
-void Viewport::toggleCameraMouseControl()
-{
-    setCameraMouseControl(!m_bMouseTracking);
 }

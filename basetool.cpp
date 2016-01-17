@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 #include "scenecamera.h"
 #include "callipermath.h"
+#include <QCursor>
 
 BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
 {
@@ -22,6 +23,7 @@ BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
     m_CameraController.setAccelTime(0.1f);
     m_CameraController.setDecelTime(0.1f);
     m_CameraController.setTopSpeed(1200.0f);
+    m_bMouseLookEnabled = false;
 }
 
 BaseTool::~BaseTool()
@@ -112,6 +114,7 @@ void BaseTool::vDeactivate()
 {
     m_flKBModifiers = 0;
     m_CameraController.clearMovementFlags();
+    setMouseLookEnabled(false);
 }
 
 void BaseTool::vMousePress(QMouseEvent *e)
@@ -144,8 +147,30 @@ void BaseTool::vMousePress(QMouseEvent *e)
     }
 }
 
-void BaseTool::vMouseMove(QMouseEvent *)
+void BaseTool::vMouseMove(QMouseEvent *e)
 {
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v )
+        return;
+
+    SceneCamera* camera = v->camera();
+    if ( !camera )
+        return;
+
+    if ( m_bMouseLookEnabled )
+    {
+        // Determine how far the cursor has moved.
+        QPoint delta = e->globalPos() - m_LastMousePos;
+
+        // Change the camera angles.
+        EulerAngle angles = camera->angles();
+        angles.setPitch(angles.pitch() + delta.y());
+        angles.setYaw(angles.yaw() - delta.x());
+        camera->setAngles(angles);
+
+        // Cache the new position.
+        m_LastMousePos = e->globalPos();
+    }
 }
 
 void BaseTool::vMouseRelease(QMouseEvent *)
@@ -214,6 +239,12 @@ void BaseTool::vKeyPress(QKeyEvent *e)
         case Qt::Key_D:
         {
             m_CameraController.right(true);
+            return;
+        }
+
+        case Qt::Key_Z:
+        {
+            toggleMouseLookEnabled();
             return;
         }
 
@@ -297,4 +328,35 @@ void BaseTool::vUpdate(int msec)
 
     v->camera()->translate(localMovement);
     v->camera()->setPosition(v->camera()->position() + globalMovement);
+}
+
+void BaseTool::setMouseLookEnabled(bool enabled)
+{
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v )
+        m_bMouseLookEnabled = false;
+
+    if ( enabled == m_bMouseLookEnabled )
+        return;
+
+    m_bMouseLookEnabled = enabled;
+
+    if ( m_bMouseLookEnabled )
+    {
+        v->setMouseTracking(true);
+        v->setCursor(Qt::BlankCursor);
+        QPoint p = v->mapToGlobal(v->viewCentre());
+        m_LastMousePos = p;
+        QCursor::setPos(p);
+    }
+    else
+    {
+        v->setMouseTracking(false);
+        v->setCursor(Qt::ArrowCursor);
+    }
+}
+
+void BaseTool::toggleMouseLookEnabled()
+{
+    setMouseLookEnabled(!m_bMouseLookEnabled);
 }
