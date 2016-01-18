@@ -37,7 +37,7 @@ void TranslationHandle::buildGeometry()
         delete data;
     }
 
-    m_pGeometry->setLineWidth(2);
+    m_pGeometry->setLineWidth(12);
 }
 
 void TranslationHandle::draw(ShaderStack *stack)

@@ -223,14 +223,14 @@ namespace GeometryFactory
             geometry->appendVertex(QVector3D((1.0f - HEAD_LENGTH) * scale,
                                              HEAD_RADIUS * scale * qSin(radians),
                                              HEAD_RADIUS * scale * qCos(radians)),
-                                   QVector3D(),
-                                   QVector2D(),
+                                   //QVector3D(),
+                                   //QVector2D(),
                                    col);
         }
 
         // Arrow head point
         int arrowPointIndex = geometry->vertexCount();
-        geometry->appendVertex(QVector3D(scale,0,0), QVector3D(), QVector2D(), col);
+        geometry->appendVertex(QVector3D(scale,0,0), /*QVector3D(), QVector2D(),*/ col);
 
         // Arrow head circumference triangles
         for ( int i = 0; i < 8; i++ )
@@ -247,12 +247,12 @@ namespace GeometryFactory
 
         // Arrow shaft (line)
         geometry->appendVertex(QVector3D(0,0,0),
-                               QVector3D(),
-                               QVector2D(),
+                               //QVector3D(),
+                               //QVector2D(),
                                col);
         geometry->appendVertex(QVector3D(0.85f * scale, 0, 0),
-                               QVector3D(),
-                               QVector2D(),
+                               //QVector3D(),
+                               //QVector2D(),
                                col);
         geometry->appendIndex(9);
         geometry->appendIndex(10);
