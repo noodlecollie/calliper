@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     objfileparser.cpp \
     inputprocessor.cpp \
     scenecamera.cpp \
-    hierarchicalobject.cpp
+    hierarchicalobject.cpp \
+    translationhandle.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -88,7 +89,8 @@ HEADERS  += mainwindow.h \
     objfileparser.h \
     inputprocessor.h \
     scenecamera.h \
-    hierarchicalobject.h
+    hierarchicalobject.h \
+    translationhandle.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

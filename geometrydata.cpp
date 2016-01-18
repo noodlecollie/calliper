@@ -22,7 +22,7 @@ static int numComponents[] = {
 static const int formatStride[] = {
     8*sizeof(float),    // PositionNormalUV
     7*sizeof(float),    // PositionColor
-    11*sizeof(float),   // PositionNormalUVColor
+    12*sizeof(float),   // PositionNormalUVColor
 };
 
 static int formatOffset(GeometryData::DataFormat format, ShaderProgram::Attribute att)
@@ -402,6 +402,35 @@ void GeometryData::applyDataFormat(ShaderProgram *program)
                         numComponents[ShaderProgram::Position],
                         formatStride[m_iDataFormat],
                         formatOffset(m_iDataFormat, ShaderProgram::Position));
+
+            program->setAttributeFormat(
+                        ShaderProgram::Color,
+                        numComponents[ShaderProgram::Color],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Color));
+
+            break;
+        }
+
+        case PositionNormalUVColor:
+        {
+            program->setAttributeFormat(
+                        ShaderProgram::Position,
+                        numComponents[ShaderProgram::Position],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Position));
+
+            program->setAttributeFormat(
+                        ShaderProgram::Normal,
+                        numComponents[ShaderProgram::Normal],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Normal));
+
+            program->setAttributeFormat(
+                        ShaderProgram::UV,
+                        numComponents[ShaderProgram::UV],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::UV));
 
             program->setAttributeFormat(
                         ShaderProgram::Color,

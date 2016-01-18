@@ -12,6 +12,7 @@ namespace GeometryFactory
 {
     // Shader overrides are not set by any of these functions.
     GeometryData* cube(float radius);
+    GeometryData* cubeFullAtts(float radius);
     GeometryData* triangleQuad(float radius);
     GeometryData* lineRect(float radius, const QColor &col);
     GeometryData* lineCuboid(const QVector3D &min, const QVector3D &max, const QColor &col);

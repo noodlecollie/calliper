@@ -10,6 +10,7 @@
 #include "callipermath.h"
 #include <QtMath>
 #include <QtDebug>
+#include "translationhandle.h"
 
 namespace SceneFactory
 {
@@ -60,25 +61,14 @@ namespace SceneFactory
         block->geometry()->setTexture(0, "/textures/test");
         block->setPosition(QVector3D(64,0,0));
 
-        SceneObject* trHandle = new SceneObject(scene->root());
-        trHandle->setObjectName("translationHandle");
-        trHandle->setIgnoreDepth(true);
-        trHandle->setGeometry(GeometryFactory::translationHandle(64, QColor::fromRgb(0xffff0000)));
-        GeometryData* g  = GeometryFactory::translationHandle(64, QColor::fromRgb(0xff00ff00),
-                                                              Math::matrixRotateZ(qDegreesToRadians(90.0f)));
-        trHandle->geometry()->append(*g);
-        delete g;
-        g  = GeometryFactory::translationHandle(64, QColor::fromRgb(0xff0000ff),
-                                                Math::matrixRotateY(qDegreesToRadians(-90.0f)));
-        trHandle->geometry()->append(*g);
-        delete g;
-
-        trHandle->setPosition(QVector3D(64,64,0));
-
         SceneObject* camModel = new SceneObject(scene->root());
         camModel->setObjectName("camModel");
         camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
+
+        TranslationHandle* transHandle = new TranslationHandle(scene->root());
+        transHandle->setObjectName("transHandle");
+        transHandle->setPosition(QVector3D(128,128,0));
 
         return scene;
     }

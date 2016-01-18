@@ -71,6 +71,67 @@ namespace GeometryFactory
         return d;
     }
 
+    GeometryData* cubeFullAtts(float radius)
+    {
+        GeometryData* d = new GeometryData();
+        QColor col = QColor::fromRgb(0xffff0000);
+
+        for (int i = 0; i < 6; i++)
+        {
+            QVector3D normal, u, v;
+            switch (i)
+            {
+            case 0: // X
+                normal = QVector3D(1,0,0);
+                u = QVector3D(0,1,0);
+                v = QVector3D(0,0,1);
+                break;
+            case 1: // -X
+                normal = QVector3D(-1,0,0);
+                u = QVector3D(0,-1,0);
+                v = QVector3D(0,0,1);
+                break;
+            case 2: // Y:
+                normal = QVector3D(0,1,0);
+                u = QVector3D(-1,0,0);
+                v = QVector3D(0,0,1);
+                break;
+            case 3: // -Y:
+                normal = QVector3D(0,-1,0);
+                u = QVector3D(1,0,0);
+                v = QVector3D(0,0,1);
+                break;
+            case 4: // Z:
+                normal = QVector3D(0,0,1);
+                u = QVector3D(1,0,0);
+                v = QVector3D(0,1,0);
+                break;
+            case 5: // -Z:
+                normal = QVector3D(0,0,-1);
+                u = QVector3D(-1,0,0);
+                v = QVector3D(0,1,0);
+                break;
+            default:
+                break;
+            }
+
+            d->appendVertex((-radius*u) + (-radius*v) + (radius*normal), normal, QVector2D(0,0), col);
+            d->appendVertex((radius*u) + (-radius*v) + (radius*normal), normal, QVector2D(1,0), col);
+            d->appendVertex((radius*u) + (radius*v) + (radius*normal), normal, QVector2D(1,1), col);
+            d->appendVertex((-radius*u) + (radius*v) + (radius*normal), normal, QVector2D(0,1), col);
+
+            int index = 4*i;
+            d->appendIndex(index);
+            d->appendIndex(index+1);
+            d->appendIndex(index+2);
+            d->appendIndex(index);
+            d->appendIndex(index+2);
+            d->appendIndex(index+3);
+        }
+
+        return d;
+    }
+
     GeometryData* triangleQuad(float radius)
     {
         GeometryData* geometry = new GeometryData();
@@ -149,53 +210,52 @@ namespace GeometryFactory
 
     GeometryData* translationHandle(float scale, const QColor &col, const QMatrix4x4 &transform)
     {
+        static const float HEAD_RADIUS = 0.05f;
+        static const float HEAD_LENGTH = 0.15f;
+
         GeometryData* geometry = new GeometryData;
         geometry->setShaderOverride(PerVertexColorShader::staticName());
 
-        // Firstly generate the arrow head.
-        for ( int i = 0; i < 12; i++ )
+        // Arrow head base circle
+        for ( int i = 0; i < 8; i++ )
         {
-            float radians = ((float)i * M_PI)/6.0f;
-            geometry->appendVertex(QVector3D(0.85f * scale, 0.1f * scale * qSin(radians), 0.1f * scale * qCos(radians)), col);
+            float radians = ((float)i * M_PI)/4.0f;
+            geometry->appendVertex(QVector3D((1.0f - HEAD_LENGTH) * scale,
+                                             HEAD_RADIUS * scale * qSin(radians),
+                                             HEAD_RADIUS * scale * qCos(radians)),
+                                   QVector3D(),
+                                   QVector2D(),
+                                   col);
         }
 
+        // Arrow head point
         int arrowPointIndex = geometry->vertexCount();
-        geometry->appendVertex(QVector3D(scale,0,0), col);
+        geometry->appendVertex(QVector3D(scale,0,0), QVector3D(), QVector2D(), col);
 
-        // Make the appropriate triangles for the arrow head.
-        for ( int i = 0; i < 12; i++ )
+        // Arrow head circumference triangles
+        for ( int i = 0; i < 8; i++ )
         {
-            int j = i == 11 ? 0 : i+1;
+            int j = i == 7 ? 0 : i+1;
             geometry->appendIndexTriangle(i, arrowPointIndex, j);
         }
 
-        // Make triangles for the base of the head.
-        for ( int i = 1; i < 12; i++ )
+        // Arrow head base triangles
+        for ( int i = 1; i < 7; i++ )
         {
-            int j = i == 11 ? 0 : i+1;
-            geometry->appendIndexTriangle(0, i, j);
+            geometry->appendIndexTriangle(0, i, i+1);
         }
 
-        int firstShaftVertex = geometry->vertexCount();
-
-        // Generate the arrow shaft.
-        for ( int i = 0; i < 12; i++ )
-        {
-            float radians = ((float)i * M_PI)/6.0f;
-            float s = 0.05f * scale * qSin(radians);
-            float c = 0.05f * scale * qCos(radians);
-            geometry->appendVertex(QVector3D(0, s, c), col);
-            geometry->appendVertex(QVector3D(0.85 * scale, s, c), col);
-        }
-
-        // Create appropriate triangles.
-        for ( int i = 0; i < 12; i++ )
-        {
-            int index = firstShaftVertex + (2*i);
-            int nextIndex = (i == 11) ? firstShaftVertex : (index + 2);
-            geometry->appendIndexTriangle(index, index+1, nextIndex+1);
-            geometry->appendIndexTriangle(index, nextIndex+1, nextIndex);
-        }
+        // Arrow shaft (line)
+        geometry->appendVertex(QVector3D(0,0,0),
+                               QVector3D(),
+                               QVector2D(),
+                               col);
+        geometry->appendVertex(QVector3D(0.85f * scale, 0, 0),
+                               QVector3D(),
+                               QVector2D(),
+                               col);
+        geometry->appendIndex(9);
+        geometry->appendIndex(10);
 
         if ( !transform.isIdentity() )
         {
