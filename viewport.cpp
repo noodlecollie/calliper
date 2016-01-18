@@ -80,6 +80,11 @@ void Viewport::initializeGL()
 {
     initializeOpenGLFunctions();
 
+    GLint range[2];
+    glGetIntegerv(GL_ALIASED_LINE_WIDTH_RANGE, range);
+    glGetIntegerv(GL_SMOOTH_LINE_WIDTH_RANGE, range);
+    qDebug() << "Line width range:" << range[0] << range[1];
+
     updateBackgroundColor();
 
     glEnable(GL_CULL_FACE);

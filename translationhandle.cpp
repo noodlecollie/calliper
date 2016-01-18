@@ -37,7 +37,7 @@ void TranslationHandle::buildGeometry()
         delete data;
     }
 
-    m_pGeometry->setLineWidth(12);
+    m_pGeometry->setLineWidth(2);
 }
 
 void TranslationHandle::draw(ShaderStack *stack)
@@ -64,4 +64,9 @@ void TranslationHandle::draw(ShaderStack *stack)
     }
 
     stack->shaderPop();
+}
+
+bool TranslationHandle::editable() const
+{
+    return false;
 }

@@ -160,7 +160,8 @@ void BaseTool::vMouseMove(QMouseEvent *e)
     if ( m_bMouseLookEnabled )
     {
         // Determine how far the cursor has moved.
-        QPoint delta = e->globalPos() - m_LastMousePos;
+        QPoint globalCentre = v->mapToGlobal(v->viewCentre());
+        QPoint delta = e->globalPos() - globalCentre;
 
         // Change the camera angles.
         EulerAngle angles = camera->angles();
@@ -169,7 +170,7 @@ void BaseTool::vMouseMove(QMouseEvent *e)
         camera->setAngles(angles);
 
         // Cache the new position.
-        m_LastMousePos = e->globalPos();
+        QCursor::setPos(v->mapToGlobal(v->viewCentre()));
     }
 }
 
@@ -334,26 +335,25 @@ void BaseTool::setMouseLookEnabled(bool enabled)
 {
     Viewport* v = application()->mainWindow()->activeViewport();
     if ( !v )
-        m_bMouseLookEnabled = false;
+        enabled = false;
 
     if ( enabled == m_bMouseLookEnabled )
         return;
 
-    m_bMouseLookEnabled = enabled;
-
-    if ( m_bMouseLookEnabled )
+    if ( enabled )
     {
+        QPoint p = v->mapToGlobal(v->viewCentre());
+        QCursor::setPos(p);
         v->setMouseTracking(true);
         v->setCursor(Qt::BlankCursor);
-        QPoint p = v->mapToGlobal(v->viewCentre());
-        m_LastMousePos = p;
-        QCursor::setPos(p);
     }
     else
     {
         v->setMouseTracking(false);
         v->setCursor(Qt::ArrowCursor);
     }
+
+    m_bMouseLookEnabled = enabled;
 }
 
 void BaseTool::toggleMouseLookEnabled()

@@ -167,6 +167,11 @@ void CameraLens::setPlanes(float left, float right, float top, float bottom, flo
     m_bMatrixDirty = true;
 }
 
+void CameraLens::setPlanes(const PlaneSet &planes)
+{
+    setPlanes(planes.left, planes.right, planes.top, planes.bottom, planes.near, planes.far);
+}
+
 QMatrix4x4 CameraLens::projectionMatrix() const
 {
     if ( m_bMatrixDirty ) regenerateMatrix();
@@ -207,17 +212,37 @@ BoundingBox CameraLens::localViewVolumeBounds() const
 
         case Perspective:
         {
-            float top = m_flFarPlane * qTan(qDegreesToRadians(m_flPFOV/2.0f));
-            float bottom = -top;
-            float right = top*m_flPAspectRatio;
-            float left = -right;
-            return BoundingBox(QVector3D(right, top, -m_flNearPlane),
-                               QVector3D(left, bottom, -m_flFarPlane));
+            PlaneSet pl = planes();
+            return BoundingBox(QVector3D(pl.right, pl.top, -pl.near),
+                               QVector3D(pl.left, pl.bottom, -pl.far));
+
+//            float top = m_flFarPlane * qTan(qDegreesToRadians(m_flPFOV/2.0f));
+//            float bottom = -top;
+//            float right = top*m_flPAspectRatio;
+//            float left = -right;
+//            return BoundingBox(QVector3D(right, top, -m_flNearPlane),
+//                               QVector3D(left, bottom, -m_flFarPlane));
         }
 
         default:
         {
             return BoundingBox();
         }
+    }
+}
+
+CameraLens::PlaneSet CameraLens::planes() const
+{
+    if ( m_iType == Perspective )
+    {
+        float top = m_flFarPlane * qTan(qDegreesToRadians(m_flPFOV/2.0f));
+        float bottom = -top;
+        float right = top*m_flPAspectRatio;
+        float left = -right;
+        return PlaneSet(left, right, top, bottom, m_flNearPlane, m_flFarPlane);
+    }
+    else
+    {
+        return PlaneSet(m_flLeftPlane, m_flRightPlane, m_flTopPlane, m_flBottomPlane, m_flNearPlane, m_flFarPlane);
     }
 }

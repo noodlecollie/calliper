@@ -72,7 +72,6 @@ protected:
     Qt::KeyboardModifiers   m_flKBModifiers;
     CameraController        m_CameraController;
     bool                    m_bMouseLookEnabled;
-    QPoint                  m_LastMousePos;
 };
 
 #endif // BASETOOL_H

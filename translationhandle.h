@@ -11,6 +11,7 @@ public:
     virtual ~TranslationHandle();
 
     virtual void draw(ShaderStack *stack);
+    virtual bool editable() const;
 
 private:
     void buildGeometry();
