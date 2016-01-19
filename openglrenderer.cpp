@@ -138,9 +138,10 @@ void OpenGLRenderer::renderIgnoreDepth()
     if ( depthWasEnabled )
         f->glDisable(GL_DEPTH_TEST);
 
-    for ( int i = 0; i < m_IgnoreDepthList.count(); i++ )
+    for ( QMap<float,DeferredObject>::const_iterator it = m_IgnoreDepthList.constBegin();
+          it != m_IgnoreDepthList.constEnd(); ++it )
     {
-        const DeferredObject &dfo = m_IgnoreDepthList.at(i);
+        const DeferredObject &dfo = *it;
 
         m_pStack->modelToWorldPush();
 
@@ -164,7 +165,11 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack* stack)
     if ( obj->ignoreDepth() )
     {
         deferred = true;
-        m_IgnoreDepthList.append(DeferredObject(obj, stack->modelToWorldTop()));
+
+        // Order objects within the map by depth.
+        // We order by Y because this would be converted to Z by the coordinate transform matrix.
+        float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
+        m_IgnoreDepthList.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
     }
 
     if ( !deferred )

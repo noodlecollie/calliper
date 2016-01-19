@@ -7,6 +7,7 @@
 #include "matrixstack.h"
 #include "eulerangle.h"
 #include "shaderstack.h"
+#include <QMap>
 
 class Scene;
 class SceneObject;
@@ -90,7 +91,7 @@ private:
     ShaderStack*    m_pStack;
     bool            m_bPreparedForRendering;
 
-    QList<DeferredObject>   m_IgnoreDepthList;
+    QMap<float, DeferredObject>   m_IgnoreDepthList;
 };
 
 OpenGLRenderer* renderer();
