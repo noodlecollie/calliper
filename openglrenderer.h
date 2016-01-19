@@ -77,10 +77,12 @@ private:
     void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
                                  const QPoint &selPos, SceneObject** selected, float &nearestDepth,
                                  QRgb* pickColor);
+
     void clearDeferred();
     void renderDeferred();
+    void renderDeferred(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb* pickColor);
     void renderIgnoreDepth();
-    void renderScreenSpace();
+    void renderIgnoreDepth(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb* pickColor);
 
     QColor      m_colGlobalColour;
     int         m_iShader;
@@ -93,7 +95,6 @@ private:
     bool            m_bPreparedForRendering;
 
     QMap<float, DeferredObject> m_IgnoreDepthList;
-    QList<DeferredObject>       m_ScreenSpaceList;
 };
 
 OpenGLRenderer* renderer();

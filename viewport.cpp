@@ -58,7 +58,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     connect(m_pUserOptions, &ViewportUserOptions::fpsStatusChanged, this, &Viewport::setDrawFPS);
 
     m_Timer.connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
-    m_Timer.setInterval(0);
+    m_Timer.setInterval(1000/60);
 }
 
 Viewport::~Viewport()
@@ -79,11 +79,6 @@ void Viewport::updateBackgroundColor()
 void Viewport::initializeGL()
 {
     initializeOpenGLFunctions();
-
-    GLint range[2];
-    glGetIntegerv(GL_ALIASED_LINE_WIDTH_RANGE, range);
-    glGetIntegerv(GL_SMOOTH_LINE_WIDTH_RANGE, range);
-    qDebug() << "Line width range:" << range[0] << range[1];
 
     updateBackgroundColor();
 
@@ -342,7 +337,7 @@ void Viewport::wheelEvent(QWheelEvent *e)
 
 void Viewport::drawFPSText(int msec)
 {
-    float framesPerSecond = 1.0f/((float)msec/1000.0f);
+    float framesPerSecond = 1000.0f/(float)msec;
 
     int index;
     index = resourceManager()->shaderIndex(UnlitTextureShader::staticName());

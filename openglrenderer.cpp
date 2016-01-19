@@ -125,7 +125,11 @@ void OpenGLRenderer::end()
 void OpenGLRenderer::renderDeferred()
 {
     renderIgnoreDepth();
-    renderScreenSpace();
+}
+
+void OpenGLRenderer::renderDeferred(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb *pickColor)
+{
+    renderIgnoreDepth(selPos, selected, nearestDepth, pickColor);
 }
 
 void OpenGLRenderer::renderIgnoreDepth()
@@ -157,7 +161,7 @@ void OpenGLRenderer::renderIgnoreDepth()
         f->glEnable(GL_DEPTH_TEST);
 }
 
-void OpenGLRenderer::renderScreenSpace()
+void OpenGLRenderer::renderIgnoreDepth(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb* pickColor)
 {
     QOpenGLContext* context = QOpenGLContext::currentContext();
     Q_ASSERT(context);
@@ -168,15 +172,46 @@ void OpenGLRenderer::renderScreenSpace()
     if ( depthWasEnabled )
         f->glDisable(GL_DEPTH_TEST);
 
-    for ( int i = 0; i < m_ScreenSpaceList.count(); i++ )
+    for ( QMap<float,DeferredObject>::const_iterator it = m_IgnoreDepthList.constBegin();
+          it != m_IgnoreDepthList.constEnd(); ++it )
     {
-        const DeferredObject &dfo = m_ScreenSpaceList.at(i);
+        const DeferredObject &dfo = *it;
+        if ( !dfo.object->editable() )
+            continue;
 
         m_pStack->modelToWorldPush();
 
         m_pStack->modelToWorldSetToIdentity();
         m_pStack->modelToWorldPreMultiply(dfo.matrix);
         dfo.object->draw(m_pStack);
+
+        // Get the depth component and see if it's nearer than our current.
+        float newDepth = 1.0f;
+        f->glReadPixels(selPos.x(), selPos.y(), 1, 1,
+                                GL_DEPTH_COMPONENT,
+                                GL_FLOAT,
+                                &newDepth);
+
+        // Have to do a != comparison here, since we're drawing while ignoring the depth buffer.
+        if ( newDepth != nearestDepth )
+        {
+            nearestDepth = newDepth;
+            *selected = dfo.object;
+
+            if ( pickColor )
+            {
+                unsigned int rgba;
+                f->glReadPixels(selPos.x(), selPos.y(), 1, 1,
+                                        GL_RGBA,
+                                        GL_UNSIGNED_BYTE,
+                                        &rgba);
+
+                // Convert to ARGB with full opacity.
+                rgba >>= 8;
+                rgba |= 0xff000000;
+                *pickColor = rgba;
+            }
+        }
 
         m_pStack->modelToWorldPop();
     }
@@ -398,7 +433,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCame
     f->glScissor(oglPos.x(), oglPos.y(), 1, 1);
 
     renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected, nearest, pickColor);
-    renderDeferred();
+    renderDeferred(oglPos, &selected, nearest, pickColor);
 
     f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
@@ -461,5 +496,4 @@ void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *function
 void OpenGLRenderer::clearDeferred()
 {
     m_IgnoreDepthList.clear();
-    m_ScreenSpaceList.clear();
 }

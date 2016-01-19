@@ -124,6 +124,7 @@ void BaseTool::vMousePress(QMouseEvent *e)
         return;
 
     SceneObject* obj = v->pickObjectFromDepthBuffer(e->pos());
+    qDebug() << "Picked object:" << obj;
 
     if ( !m_flKBModifiers.testFlag(Qt::ControlModifier) )
     {

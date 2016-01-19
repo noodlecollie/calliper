@@ -10,7 +10,6 @@
 #include "callipermath.h"
 #include <QtMath>
 #include <QtDebug>
-#include "translationhandle.h"
 
 namespace SceneFactory
 {
@@ -65,10 +64,6 @@ namespace SceneFactory
         camModel->setObjectName("camModel");
         camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
-
-        TranslationHandle* transHandle = new TranslationHandle(scene->root());
-        transHandle->setObjectName("transHandle");
-        transHandle->setPosition(QVector3D(128,128,0));
 
         return scene;
     }
