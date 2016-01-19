@@ -23,5 +23,6 @@
         <file>textures/debug_crosshair.png</file>
         <file>models/editor/camera.mtl</file>
         <file>models/editor/camera.obj</file>
+        <file>shaders/pervertexcolor_screenspace.vert</file>
     </qresource>
 </RCC>

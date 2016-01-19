@@ -7,6 +7,7 @@
 #include "pervertexcolorshader.h"
 #include "basiclittextureshader.h"
 #include "selectionmaskshader.h"
+#include "screenspacepvcshader.h"
 
 #endif // SHADERS_H
 

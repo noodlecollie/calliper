@@ -12,6 +12,7 @@ public:
 
     virtual void draw(ShaderStack *stack);
     virtual bool editable() const;
+    virtual bool screenSpace() const;
 
 private:
     void buildGeometry();

@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     inputprocessor.cpp \
     scenecamera.cpp \
     hierarchicalobject.cpp \
-    translationhandle.cpp
+    translationhandle.cpp \
+    screenspacepvcshader.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -90,7 +91,8 @@ HEADERS  += mainwindow.h \
     inputprocessor.h \
     scenecamera.h \
     hierarchicalobject.h \
-    translationhandle.h
+    translationhandle.h \
+    screenspacepvcshader.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

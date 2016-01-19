@@ -125,6 +125,7 @@ void OpenGLRenderer::end()
 void OpenGLRenderer::renderDeferred()
 {
     renderIgnoreDepth();
+    renderScreenSpace();
 }
 
 void OpenGLRenderer::renderIgnoreDepth()
@@ -156,6 +157,34 @@ void OpenGLRenderer::renderIgnoreDepth()
         f->glEnable(GL_DEPTH_TEST);
 }
 
+void OpenGLRenderer::renderScreenSpace()
+{
+    QOpenGLContext* context = QOpenGLContext::currentContext();
+    Q_ASSERT(context);
+
+    QOpenGLFunctions_4_1_Core* f = context->versionFunctions<QOpenGLFunctions_4_1_Core>();
+    bool depthWasEnabled = f->glIsEnabled(GL_DEPTH_TEST);
+
+    if ( depthWasEnabled )
+        f->glDisable(GL_DEPTH_TEST);
+
+    for ( int i = 0; i < m_ScreenSpaceList.count(); i++ )
+    {
+        const DeferredObject &dfo = m_ScreenSpaceList.at(i);
+
+        m_pStack->modelToWorldPush();
+
+        m_pStack->modelToWorldSetToIdentity();
+        m_pStack->modelToWorldPreMultiply(dfo.matrix);
+        dfo.object->draw(m_pStack);
+
+        m_pStack->modelToWorldPop();
+    }
+
+    if ( depthWasEnabled )
+        f->glEnable(GL_DEPTH_TEST);
+}
+
 void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack* stack)
 {
     stack->modelToWorldPush();
@@ -171,9 +200,16 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack* stack)
         float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
         m_IgnoreDepthList.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
     }
+    else if ( obj->screenSpace() )
+    {
+        deferred = true;
+        m_ScreenSpaceList.append(DeferredObject(obj, stack->modelToWorldTop()));
+    }
 
     if ( !deferred )
         obj->draw(stack);
+    else
+        stack->modelToWorldPostMultiply(obj->localToParent());
 
     QList<SceneObject*> children = obj->children();
     foreach ( SceneObject* o, children )
@@ -413,6 +449,10 @@ void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *function
             }
         }
     }
+    else
+    {
+        stack->modelToWorldPostMultiply(obj->localToParent());
+    }
 
     QList<SceneObject*> children = obj->children();
     foreach ( SceneObject* o, children )
@@ -426,4 +466,5 @@ void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *function
 void OpenGLRenderer::clearDeferred()
 {
     m_IgnoreDepthList.clear();
+    m_ScreenSpaceList.clear();
 }

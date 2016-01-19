@@ -80,6 +80,7 @@ private:
     void clearDeferred();
     void renderDeferred();
     void renderIgnoreDepth();
+    void renderScreenSpace();
 
     QColor      m_colGlobalColour;
     int         m_iShader;
@@ -91,7 +92,8 @@ private:
     ShaderStack*    m_pStack;
     bool            m_bPreparedForRendering;
 
-    QMap<float, DeferredObject>   m_IgnoreDepthList;
+    QMap<float, DeferredObject> m_IgnoreDepthList;
+    QList<DeferredObject>       m_ScreenSpaceList;
 };
 
 OpenGLRenderer* renderer();

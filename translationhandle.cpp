@@ -6,11 +6,12 @@
 #include "shaderstack.h"
 #include "resourcemanager.h"
 #include "shaders.h"
+#include "scenecamera.h"
+#include <QtDebug>
 
 TranslationHandle::TranslationHandle(SceneObject *parent) : SceneObject(parent)
 {
     buildGeometry();
-    setIgnoreDepth(true);
 }
 
 TranslationHandle::~TranslationHandle()
@@ -20,18 +21,20 @@ TranslationHandle::~TranslationHandle()
 
 void TranslationHandle::buildGeometry()
 {
-    setGeometry(GeometryFactory::translationHandle(64.0f, QColor::fromRgb(0xffff0000)));
+    static const float arrowScale = 0.5f;
+
+    setGeometry(GeometryFactory::translationHandle(arrowScale, QColor::fromRgb(0xffff0000)));
     m_iSegmentSize = m_pGeometry->indexCount();
 
     {
-        GeometryData* data = GeometryFactory::translationHandle(64.0f, QColor::fromRgb(0xff00ff00),
+        GeometryData* data = GeometryFactory::translationHandle(arrowScale, QColor::fromRgb(0xff00ff00),
                                                                 Math::matrixRotateZ(qDegreesToRadians(90.0f)));
         m_pGeometry->append(*data);
         delete data;
     }
 
     {
-        GeometryData* data = GeometryFactory::translationHandle(64.0f, QColor::fromRgb(0xff0000ff),
+        GeometryData* data = GeometryFactory::translationHandle(arrowScale, QColor::fromRgb(0xff0000ff),
                                                                 Math::matrixRotateY(qDegreesToRadians(-90.0f)));
         m_pGeometry->append(*data);
         delete data;
@@ -42,7 +45,7 @@ void TranslationHandle::buildGeometry()
 
 void TranslationHandle::draw(ShaderStack *stack)
 {
-    stack->shaderPush(resourceManager()->shader(PerVertexColorShader::staticName()));
+    stack->shaderPush(resourceManager()->shader(ScreenSpacePVCShader::staticName()));
     stack->modelToWorldPostMultiply(localToParent());
 
     m_pGeometry->upload();
@@ -69,4 +72,9 @@ void TranslationHandle::draw(ShaderStack *stack)
 bool TranslationHandle::editable() const
 {
     return false;
+}
+
+bool TranslationHandle::screenSpace() const
+{
+    return true;
 }
