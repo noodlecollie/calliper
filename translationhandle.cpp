@@ -11,6 +11,7 @@
 
 TranslationHandle::TranslationHandle(SceneObject *parent) : SceneObject(parent)
 {
+    setIgnoreDepth(true);
     buildGeometry();
 }
 
@@ -72,9 +73,4 @@ void TranslationHandle::draw(ShaderStack *stack)
 bool TranslationHandle::editable() const
 {
     return false;
-}
-
-bool TranslationHandle::screenSpace() const
-{
-    return true;
 }

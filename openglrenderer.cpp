@@ -200,11 +200,6 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack* stack)
         float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
         m_IgnoreDepthList.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
     }
-    else if ( obj->screenSpace() )
-    {
-        deferred = true;
-        m_ScreenSpaceList.append(DeferredObject(obj, stack->modelToWorldTop()));
-    }
 
     if ( !deferred )
         obj->draw(stack);

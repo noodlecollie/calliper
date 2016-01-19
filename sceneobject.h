@@ -36,7 +36,6 @@ public:
 
     virtual bool editable() const;
     virtual void draw(ShaderStack* stack);
-    virtual bool screenSpace() const;
 
 signals:
 

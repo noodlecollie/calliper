@@ -131,8 +131,3 @@ void SceneObject::setIgnoreDepth(bool ignore)
 {
     m_bIgnoreDepth = ignore;
 }
-
-bool SceneObject::screenSpace() const
-{
-    return false;
-}
