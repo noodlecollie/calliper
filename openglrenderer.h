@@ -60,6 +60,8 @@ public:
     GeometryData* createTextQuad(const QSize &texSize, const QString &text, const QColor &col, const QFont &font,
                                                   Qt::Alignment alignment);
 
+    static QVector2D deviceCoordinates(const QVector3D &worldPos, const SceneCamera* camera);
+
 private:
     class DeferredObject
     {
@@ -73,10 +75,36 @@ private:
         QMatrix4x4 matrix;
     };
 
-    void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
-    void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
-                                 const QPoint &selPos, SceneObject** selected, float &nearestDepth,
-                                 QRgb* pickColor);
+    class ObjectPicker
+    {
+    public:
+        ObjectPicker() :
+            functions(NULL), selectionPos(), selectedObject(NULL), selectedColour(0xffffffff),
+            nearestDepth(1.0f), getPickColour(false)
+        {
+        }
+
+        ObjectPicker(QOpenGLFunctions_4_1_Core* f, const QPoint &p, bool getCol = false) :
+            functions(f), selectionPos(p), selectedObject(NULL), selectedColour(0xffffffff),
+            nearestDepth(1.0f), getPickColour(getCol)
+        {
+        }
+
+        void checkDrawnObject(SceneObject* obj);
+
+        QOpenGLFunctions_4_1_Core* functions;
+        QPoint          selectionPos;
+        SceneObject*    selectedObject;
+        QRgb            selectedColour;
+        float           nearestDepth;
+        bool            getPickColour;
+    };
+
+    void newRenderSceneRecursive(SceneObject* obj, ShaderStack* stack);
+//    void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
+//    void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
+//                                 const QPoint &selPos, SceneObject** selected, float &nearestDepth,
+//                                 QRgb* pickColor);
 
     void clearDeferred();
     void renderDeferred();
@@ -95,6 +123,9 @@ private:
     bool            m_bPreparedForRendering;
 
     QMap<float, DeferredObject> m_IgnoreDepthList;
+
+    ObjectPicker m_ObjectPicker;
+    bool m_bPicking;
 };
 
 OpenGLRenderer* renderer();
