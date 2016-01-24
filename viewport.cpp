@@ -27,6 +27,7 @@
 #include "application.h"
 #include "tools.h"
 #include "scenecamera.h"
+#include "uiscene.h"
 
 static const QColor NO_CAMERA_COLOUR = QColor::fromRgb(0xff00394d);
 
@@ -42,6 +43,8 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bDrawFPS = false;
     m_iRenderTasks = 0;
     m_pPickedObject = NULL;
+
+    m_pUIScene = new UIScene();
 
     m_pEmptyText = NULL;
     m_pNoCameraText = NULL;
@@ -65,6 +68,8 @@ Viewport::~Viewport()
 {
     makeCurrent();
     delete m_pEmptyText;
+    delete m_pNoCameraText;
+    delete m_pUIScene;
 }
 
 void Viewport::updateBackgroundColor()
@@ -391,6 +396,13 @@ void Viewport::drawScene()
 
     renderer()->begin();
     renderer()->renderScene(m_pScene, m_pCamera);
+
+    if ( m_pUIScene->hasUIElements() )
+    {
+        glClear(GL_DEPTH_BUFFER_BIT);
+        renderer()->renderScene(m_pUIScene, m_pUIScene->camera());
+    }
+
     renderer()->end();
 }
 
@@ -437,4 +449,9 @@ SceneObject* Viewport::pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickCo
         *pickColor = m_PickColour;
 
     return m_pPickedObject;
+}
+
+UIScene* Viewport::uiScene() const
+{
+    return m_pUIScene;
 }

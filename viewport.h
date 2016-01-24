@@ -14,6 +14,7 @@ class MapScene;
 class ViewportUserOptions;
 class QPushButton;
 class SceneObject;
+class UIScene;
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
@@ -38,6 +39,8 @@ public:
 
     bool drawFocusHighlight() const;
     bool drawFPS() const;
+
+    UIScene* uiScene() const;
 
     SceneObject* pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickColor = NULL);
 
@@ -85,6 +88,8 @@ private:
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
     QTime   m_TimeElapsed;
+
+    UIScene* m_pUIScene;
 
     ViewportUserOptions*    m_pUserOptions;
     QPushButton*            m_pToggleOptions;

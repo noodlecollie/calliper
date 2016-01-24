@@ -33,3 +33,8 @@ BaseScene::SceneType BaseScene::sceneType() const
 {
     return TypeBase;
 }
+
+bool BaseScene::isEmpty() const
+{
+    return m_pRootObject->findChild<SceneObject*>() == NULL;
+}

@@ -20,6 +20,8 @@ public:
     virtual ~BaseScene();
     virtual SceneType sceneType() const;
 
+    bool isEmpty() const;
+
     SceneObject* root() const;
 
     QList<SceneCamera*> findCameras() const;
