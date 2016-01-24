@@ -1,29 +1,23 @@
 #ifndef MAPSCENE_H
 #define MAPSCENE_H
 
-#include <QList>
+#include "basescene.h"
 
-class SceneCamera;
-class SceneObject;
 class MapDocument;
 class BaseGrid;
 
-class MapScene
+class MapScene : public BaseScene
 {
     friend class BaseGrid;
 public:
     MapScene(MapDocument* document);
-    ~MapScene();
+    virtual ~MapScene();
+    virtual SceneType sceneType() const;
 
     MapDocument* document() const;
-    SceneObject* root() const;
     BaseGrid* grid() const;
 
-    QList<SceneCamera*> findCameras() const;
-    QList<SceneObject*> findByName(const QString &name);
-
 private:
-    SceneObject*    m_pRootObject;
     MapDocument*    m_pDocument;
     BaseGrid*       m_pGrid;
 };

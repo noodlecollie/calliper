@@ -49,7 +49,9 @@ SOURCES += main.cpp\
     scenecamera.cpp \
     hierarchicalobject.cpp \
     screenspacepvcshader.cpp \
-    mapscene.cpp
+    mapscene.cpp \
+    basescene.cpp \
+    uiscene.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -90,7 +92,9 @@ HEADERS  += mainwindow.h \
     scenecamera.h \
     hierarchicalobject.h \
     screenspacepvcshader.h \
-    mapscene.h
+    mapscene.h \
+    basescene.h \
+    uiscene.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

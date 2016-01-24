@@ -1,11 +1,13 @@
 #include "sceneobject.h"
 #include "callipermath.h"
 #include <cmath>
-#include "mapscene.h"
+#include "basescene.h"
 #include "shaderstack.h"
 #include "resourcemanager.h"
 #include <QOpenGLTexture>
 #include "mapdocument.h"
+#include "mapscene.h"
+#include "uiscene.h"
 
 SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
 {
@@ -46,7 +48,7 @@ QList<SceneObject*> SceneObject::children() const
     return findChildren<SceneObject*>(QString(), Qt::FindDirectChildrenOnly);
 }
 
-MapScene* SceneObject::scene() const
+BaseScene* SceneObject::baseScene() const
 {
     return m_pScene;
 }
@@ -94,12 +96,15 @@ void SceneObject::draw(ShaderStack *stack)
 
         // If we're selected, set the global colour.
         bool pushedColor = false;
-        MapDocument* doc = m_pScene->document();
-        if ( doc->selectedSet().contains(this) )
+        if ( m_pScene->sceneType() == BaseScene::TypeMap )
         {
-            pushedColor = true;
-            stack->globalColorPush();
-            stack->globalColorSetTop(doc->selectedColor());
+            MapDocument* doc = mapScene()->document();
+            if ( doc->selectedSet().contains(this) )
+            {
+                pushedColor = true;
+                stack->globalColorPush();
+                stack->globalColorSetTop(doc->selectedColor());
+            }
         }
 
         // Apply the texture.
@@ -130,4 +135,14 @@ int SceneObject::renderFlags() const
 void SceneObject::setRenderFlags(int flags)
 {
     m_iRenderFlags = flags;
+}
+
+MapScene* SceneObject::mapScene() const
+{
+    return dynamic_cast<MapScene*>(m_pScene);
+}
+
+UIScene* SceneObject::uiScene() const
+{
+    return dynamic_cast<UIScene*>(m_pScene);
 }

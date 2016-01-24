@@ -14,6 +14,7 @@
 SceneCamera::SceneCamera(SceneObject *parent) : SceneObject(parent),
     m_pLens(new CameraLens(CameraLens::Perspective)), m_pBoundsGeom(new GeometryData())
 {
+    Q_ASSERT(mapScene());
     m_LocalLensBounds = m_pLens->localViewVolumeBounds();
     rebuildViewBoundsGeometry();
 }

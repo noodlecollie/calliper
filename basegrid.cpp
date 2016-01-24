@@ -26,8 +26,10 @@ BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
 {
     if ( m_pScene )
     {
-        Q_ASSERT(!m_pScene->m_pGrid);
-        m_pScene->m_pGrid = this;
+        MapScene* s = mapScene();
+        Q_ASSERT(s);
+        Q_ASSERT(!s->m_pGrid);
+        s->m_pGrid = this;
     }
 
     // Standard Hammer colours
@@ -246,7 +248,7 @@ void BaseGrid::draw(ShaderStack *stack)
     if ( bbox.min().z() > 0 || bbox.max().z() < 0 )
         return;
 
-    MapDocument* doc = scene()->document();
+    MapDocument* doc = mapScene()->document();
     Q_ASSERT(doc);
 
     stack->shaderPush(resourceManager()->shader(m_pGeometry->shaderOverride()));
