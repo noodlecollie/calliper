@@ -11,7 +11,7 @@ SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
 {
     m_pScene = parent ? parent->m_pScene : NULL;
     m_pGeometry.reset(new GeometryData());
-    m_bIgnoreDepth = false;
+    m_iRenderFlags = 0;
 }
 
 SceneObject::~SceneObject()
@@ -122,12 +122,12 @@ void SceneObject::draw(ShaderStack *stack)
     }
 }
 
-bool SceneObject::ignoreDepth() const
+int SceneObject::renderFlags() const
 {
-    return m_bIgnoreDepth;
+    return m_iRenderFlags;
 }
 
-void SceneObject::setIgnoreDepth(bool ignore)
+void SceneObject::setRenderFlags(int flags)
 {
-    m_bIgnoreDepth = ignore;
+    m_iRenderFlags = flags;
 }

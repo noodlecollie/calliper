@@ -15,6 +15,11 @@ class SceneObject : public HierarchicalObject
     Q_OBJECT
     friend class Scene;
 public:
+    enum RenderFlag
+    {
+        IgnoreDepth = 0x1,
+    };
+
     explicit SceneObject(SceneObject *parent = 0);
     virtual ~SceneObject();
 
@@ -31,11 +36,11 @@ public:
     // (=> it's just for grouping children)
     bool isEmpty() const;
 
-    bool ignoreDepth() const;
-    void setIgnoreDepth(bool ignore);
-
     virtual bool editable() const;
     virtual void draw(ShaderStack* stack);
+
+    int renderFlags() const;
+    void setRenderFlags(int flags);
 
 signals:
 
@@ -43,9 +48,8 @@ public slots:
 
 protected:
     QScopedPointer<GeometryData>    m_pGeometry;
-
-    bool    m_bIgnoreDepth;
     Scene*  m_pScene;
+    int m_iRenderFlags;
 };
 
 #endif // SCENEOBJECT_H

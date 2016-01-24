@@ -156,11 +156,6 @@ void OpenGLRenderer::renderDeferred()
     renderIgnoreDepth();
 }
 
-void OpenGLRenderer::renderDeferred(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb *pickColor)
-{
-    renderIgnoreDepth(selPos, selected, nearestDepth, pickColor);
-}
-
 void OpenGLRenderer::renderIgnoreDepth()
 {
     QOpenGLContext* context = QOpenGLContext::currentContext();
@@ -190,72 +185,13 @@ void OpenGLRenderer::renderIgnoreDepth()
         f->glEnable(GL_DEPTH_TEST);
 }
 
-void OpenGLRenderer::renderIgnoreDepth(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb* pickColor)
-{
-    QOpenGLContext* context = QOpenGLContext::currentContext();
-    Q_ASSERT(context);
-
-    QOpenGLFunctions_4_1_Core* f = context->versionFunctions<QOpenGLFunctions_4_1_Core>();
-    bool depthWasEnabled = f->glIsEnabled(GL_DEPTH_TEST);
-
-    if ( depthWasEnabled )
-        f->glDisable(GL_DEPTH_TEST);
-
-    for ( QMap<float,DeferredObject>::const_iterator it = m_IgnoreDepthList.constBegin();
-          it != m_IgnoreDepthList.constEnd(); ++it )
-    {
-        const DeferredObject &dfo = *it;
-        if ( !dfo.object->editable() )
-            continue;
-
-        m_pStack->modelToWorldPush();
-
-        m_pStack->modelToWorldSetToIdentity();
-        m_pStack->modelToWorldPreMultiply(dfo.matrix);
-        dfo.object->draw(m_pStack);
-
-        // Get the depth component and see if it's nearer than our current.
-        float newDepth = 1.0f;
-        f->glReadPixels(selPos.x(), selPos.y(), 1, 1,
-                                GL_DEPTH_COMPONENT,
-                                GL_FLOAT,
-                                &newDepth);
-
-        // Have to do a != comparison here, since we're drawing while ignoring the depth buffer.
-        if ( newDepth != nearestDepth )
-        {
-            nearestDepth = newDepth;
-            *selected = dfo.object;
-
-            if ( pickColor )
-            {
-                unsigned int rgba;
-                f->glReadPixels(selPos.x(), selPos.y(), 1, 1,
-                                        GL_RGBA,
-                                        GL_UNSIGNED_BYTE,
-                                        &rgba);
-
-                // Convert to ARGB with full opacity.
-                rgba >>= 8;
-                rgba |= 0xff000000;
-                *pickColor = rgba;
-            }
-        }
-
-        m_pStack->modelToWorldPop();
-    }
-
-    if ( depthWasEnabled )
-        f->glEnable(GL_DEPTH_TEST);
-}
-
-void OpenGLRenderer::newRenderSceneRecursive(SceneObject *obj, ShaderStack *stack)
+void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 {
     stack->modelToWorldPush();
 
     // Check if we need to defer this object.
     bool deferred = false;
-    if ( obj->ignoreDepth() )
+    if ( (obj->renderFlags() & SceneObject::IgnoreDepth) == SceneObject::IgnoreDepth )
     {
         deferred = true;
 
@@ -279,92 +215,11 @@ void OpenGLRenderer::newRenderSceneRecursive(SceneObject *obj, ShaderStack *stac
     QList<SceneObject*> children = obj->children();
     foreach ( SceneObject* o, children )
     {
-        newRenderSceneRecursive(o, stack);
+        renderSceneRecursive(o, stack);
     }
 
     stack->modelToWorldPop();
 }
-
-//void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack* stack)
-//{
-//    stack->modelToWorldPush();
-
-//    // Check if we need to defer this object.
-//    bool deferred = false;
-//    if ( obj->ignoreDepth() )
-//    {
-//        deferred = true;
-
-//        // Order objects within the map by depth.
-//        // We order by Y because this would be converted to Z by the coordinate transform matrix.
-//        float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
-//        m_IgnoreDepthList.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
-//    }
-
-//    if ( !deferred )
-//        obj->draw(stack);
-//    else
-//        stack->modelToWorldPostMultiply(obj->localToParent());
-
-//    QList<SceneObject*> children = obj->children();
-//    foreach ( SceneObject* o, children )
-//    {
-//        renderSceneRecursive(o, stack);
-//    }
-
-//    stack->modelToWorldPop();
-//}
-
-//void OpenGLRenderer::renderSceneForSelection(QOpenGLFunctions_4_1_Core *functions, SceneObject *obj,
-//                                             ShaderStack *stack, const QPoint &selPos, SceneObject **selected,
-//                                             float &nearestDepth, QRgb* pickColor)
-//{
-//    stack->modelToWorldPush();
-
-//    if ( obj->editable() )
-//    {
-//        obj->draw(stack);
-
-//        // Get the depth component and see if it's nearer than our current.
-//        float newDepth = 1.0f;
-//        functions->glReadPixels(selPos.x(), selPos.y(), 1, 1,
-//                                GL_DEPTH_COMPONENT,
-//                                GL_FLOAT,
-//                                &newDepth);
-
-//        if ( newDepth < nearestDepth )
-//        {
-//            nearestDepth = newDepth;
-//            *selected = obj;
-
-//            if ( pickColor )
-//            {
-//                unsigned int rgba;
-//                functions->glReadPixels(selPos.x(), selPos.y(), 1, 1,
-//                                        GL_RGBA,
-//                                        GL_UNSIGNED_BYTE,
-//                                        &rgba);
-
-//                // Convert to ARGB with full opacity.
-//                rgba >>= 8;
-//                rgba |= 0xff000000;
-//                *pickColor = rgba;
-//            }
-//        }
-//    }
-//    else
-//    {
-//        stack->modelToWorldPostMultiply(obj->localToParent());
-//    }
-
-//    QList<SceneObject*> children = obj->children();
-//    foreach ( SceneObject* o, children )
-//    {
-//        renderSceneForSelection(functions, o, stack, selPos, selected, nearestDepth, pickColor);
-//    }
-
-//    stack->modelToWorldPop();
-//}
 
 QVector3D OpenGLRenderer::directionalLight() const
 {
@@ -391,7 +246,7 @@ void OpenGLRenderer::renderScene(Scene *scene, const SceneCamera* camera)
     m_pStack->globalColorSetTop(globalColor());
 
     // Render the scene.
-    newRenderSceneRecursive(scene->root(), m_pStack);
+    renderSceneRecursive(scene->root(), m_pStack);
 
     // Render any deferred things we have left.
     renderDeferred();
@@ -422,9 +277,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCame
     f->glEnable(GL_SCISSOR_TEST);
     f->glScissor(oglPos.x(), oglPos.y(), 1, 1);
 
-//    renderSceneForSelection(f, scene->root(), m_pStack, oglPos, &selected, nearest, pickColor);
-//    renderDeferred(oglPos, &selected, nearest, pickColor);
-    newRenderSceneRecursive(scene->root(), m_pStack);
+    renderSceneRecursive(scene->root(), m_pStack);
     renderDeferred();
 
     f->glDisable(GL_SCISSOR_TEST);

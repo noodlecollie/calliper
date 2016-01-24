@@ -100,17 +100,11 @@ private:
         bool            getPickColour;
     };
 
-    void newRenderSceneRecursive(SceneObject* obj, ShaderStack* stack);
-//    void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
-//    void renderSceneForSelection(QOpenGLFunctions_4_1_Core* functions, SceneObject* obj, ShaderStack* stack,
-//                                 const QPoint &selPos, SceneObject** selected, float &nearestDepth,
-//                                 QRgb* pickColor);
+    void renderSceneRecursive(SceneObject* obj, ShaderStack* stack);
 
     void clearDeferred();
     void renderDeferred();
-    void renderDeferred(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb* pickColor);
     void renderIgnoreDepth();
-    void renderIgnoreDepth(const QPoint &selPos, SceneObject **selected, float &nearestDepth, QRgb* pickColor);
 
     QColor      m_colGlobalColour;
     int         m_iShader;
