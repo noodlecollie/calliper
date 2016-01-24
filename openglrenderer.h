@@ -9,7 +9,7 @@
 #include "shaderstack.h"
 #include <QMap>
 
-class Scene;
+class MapScene;
 class SceneObject;
 class GeometryData;
 class ShaderProgram;
@@ -49,8 +49,8 @@ public:
     void begin();
     void end();
 
-    void renderScene(Scene* scene, const SceneCamera* camera);
-    SceneObject* selectFromDepthBuffer(Scene* scene, const SceneCamera* camera,
+    void renderScene(MapScene* scene, const SceneCamera* camera);
+    SceneObject* selectFromDepthBuffer(MapScene* scene, const SceneCamera* camera,
                                        const QPoint &oglPos, QRgb* pickColor = NULL);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.

@@ -10,7 +10,7 @@
 
 class SceneCamera;
 class GeometryData;
-class Scene;
+class MapScene;
 class ViewportUserOptions;
 class QPushButton;
 class SceneObject;
@@ -33,8 +33,8 @@ public:
     SceneCamera* camera() const;
     void setCamera(SceneCamera* camera);
 
-    Scene* scene() const;
-    void setScene(Scene* scene);
+    MapScene* scene() const;
+    void setScene(MapScene* scene);
 
     bool drawFocusHighlight() const;
     bool drawFPS() const;
@@ -81,7 +81,7 @@ private:
     QTimer  m_Timer;
 
     SceneCamera* m_pCamera;
-    Scene*  m_pScene;
+    MapScene*  m_pScene;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
     QTime   m_TimeElapsed;

@@ -1,7 +1,7 @@
 #include "sceneobject.h"
 #include "callipermath.h"
 #include <cmath>
-#include "scene.h"
+#include "mapscene.h"
 #include "shaderstack.h"
 #include "resourcemanager.h"
 #include <QOpenGLTexture>
@@ -46,7 +46,7 @@ QList<SceneObject*> SceneObject::children() const
     return findChildren<SceneObject*>(QString(), Qt::FindDirectChildrenOnly);
 }
 
-Scene* SceneObject::scene() const
+MapScene* SceneObject::scene() const
 {
     return m_pScene;
 }

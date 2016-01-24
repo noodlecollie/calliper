@@ -1,5 +1,5 @@
 #include "mapdocument.h"
-#include "scene.h"
+#include "mapscene.h"
 #include "scenefactory.h"
 #include "sceneobject.h"
 #include "tools.h"
@@ -26,7 +26,7 @@ MapDocument::~MapDocument()
     delete m_pScene;
 }
 
-Scene* MapDocument::scene() const
+MapScene* MapDocument::scene() const
 {
     return m_pScene;
 }

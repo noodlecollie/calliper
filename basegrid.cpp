@@ -4,7 +4,7 @@
 #include "scenecamera.h"
 #include "callipermath.h"
 #include "resourcemanager.h"
-#include "scene.h"
+#include "mapscene.h"
 #include "mapdocument.h"
 #include <QtMath>
 

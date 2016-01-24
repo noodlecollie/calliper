@@ -7,7 +7,7 @@
 #include "resourcemanager.h"
 #include "shaderprogram.h"
 #include <QMatrix4x4>
-#include "scene.h"
+#include "mapscene.h"
 #include "shaders.h"
 #include "scenecamera.h"
 #include <QCursor>
@@ -291,12 +291,12 @@ void Viewport::setCamera(SceneCamera *camera)
     m_pCamera->lens()->setAspectRatio((float)size().width()/(float)size().height());
 }
 
-Scene* Viewport::scene() const
+MapScene* Viewport::scene() const
 {
     return m_pScene;
 }
 
-void Viewport::setScene(Scene *scene)
+void Viewport::setScene(MapScene *scene)
 {
     m_pScene = scene;
 }

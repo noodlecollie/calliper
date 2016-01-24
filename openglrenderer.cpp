@@ -6,7 +6,7 @@
 #include "callipermath.h"
 #include "scenecamera.h"
 #include <QOpenGLTexture>
-#include "scene.h"
+#include "mapscene.h"
 #include <QPainter>
 #include "geometrydata.h"
 #include "geometryfactory.h"
@@ -236,7 +236,7 @@ void OpenGLRenderer::setDirectionalLight(const EulerAngle &ang)
     m_vecDirectionalLight = Math::angleToVectorSimple(ang);
 }
 
-void OpenGLRenderer::renderScene(Scene *scene, const SceneCamera* camera)
+void OpenGLRenderer::renderScene(MapScene *scene, const SceneCamera* camera)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
@@ -252,7 +252,7 @@ void OpenGLRenderer::renderScene(Scene *scene, const SceneCamera* camera)
     renderDeferred();
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCamera* camera,
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(MapScene *scene, const SceneCamera* camera,
                                                    const QPoint &oglPos, QRgb *pickColor)
 {
     Q_ASSERT(m_bPreparedForRendering);

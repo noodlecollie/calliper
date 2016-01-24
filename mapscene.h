@@ -1,5 +1,5 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef MAPSCENE_H
+#define MAPSCENE_H
 
 #include <QList>
 
@@ -8,12 +8,12 @@ class SceneObject;
 class MapDocument;
 class BaseGrid;
 
-class Scene
+class MapScene
 {
     friend class BaseGrid;
 public:
-    Scene(MapDocument* document);
-    ~Scene();
+    MapScene(MapDocument* document);
+    ~MapScene();
 
     MapDocument* document() const;
     SceneObject* root() const;
@@ -28,4 +28,4 @@ private:
     BaseGrid*       m_pGrid;
 };
 
-#endif // SCENE_H
+#endif // MAPSCENE_H
