@@ -4,6 +4,7 @@
 #include "sceneobject.h"
 #include "tools.h"
 #include "inputprocessor.h"
+#include "openglrenderer.h"
 
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {

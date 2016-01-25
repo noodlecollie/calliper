@@ -289,7 +289,11 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCame
     m_bPicking = true;
 
     m_pStack->setCamera(camera);
+
+    m_pStack->worldToCameraPush();
     m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
+
+    m_pStack->cameraProjectionPush();
     m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
 
     m_pStack->shaderPush(resourceManager()->shader(SelectionMaskShader::staticName()));
@@ -304,6 +308,8 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCame
     f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
     m_pStack->shaderPop();
+    m_pStack->cameraProjectionPop();
+    m_pStack->worldToCameraPop();
     m_bPicking = false;
 
     if ( pickColor )

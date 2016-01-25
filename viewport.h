@@ -40,7 +40,7 @@ public:
     bool drawFocusHighlight() const;
     bool drawFPS() const;
 
-    SceneObject* pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickColor = NULL);
+    SceneObject* pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, QRgb* pickColor = NULL);
 
 signals:
     void preFrame(int);
@@ -101,6 +101,7 @@ private:
     QPoint          m_DepthSelectPos;
     SceneObject*    m_pPickedObject;
     QRgb            m_PickColour;
+    int             m_fScenePickFlags;
 };
 
 #endif // VIEWPORT_H
