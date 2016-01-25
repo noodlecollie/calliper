@@ -5,7 +5,7 @@
 #include <QColor>
 #include <QSet>
 
-class MapScene;
+class Scene;
 class SceneObject;
 class BaseTool;
 class InputProcessor;
@@ -17,7 +17,8 @@ public:
     explicit MapDocument(QObject* parent = 0);
     ~MapDocument();
 
-    MapScene* scene() const;
+    Scene* scene() const;
+    Scene* uiScene() const;
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &col);
@@ -44,7 +45,8 @@ private:
     void createTools();
     void switchTool(BaseTool* oldTool, BaseTool* newTool);
 
-    MapScene*  m_pScene;
+    Scene*  m_pScene;
+    Scene*  m_pUIScene;
     QColor  m_colBackground;
     QSet<SceneObject*>  m_SelectedSet;
     QColor  m_colSelected;

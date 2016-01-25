@@ -1,5 +1,5 @@
 #include "scenefactory.h"
-#include "mapscene.h"
+#include "scene.h"
 #include "originmarker.h"
 #include "scenecamera.h"
 #include <QVector3D>
@@ -13,9 +13,9 @@
 
 namespace SceneFactory
 {
-    MapScene* defaultScene(MapDocument* document)
+    Scene* defaultScene(MapDocument* document)
     {
-        MapScene* scene = new MapScene(document);
+        Scene* scene = new Scene(document);
 
         OriginMarker* o = new OriginMarker(scene->root());
         o->setObjectName("origin");
@@ -31,9 +31,9 @@ namespace SceneFactory
         return scene;
     }
 
-    MapScene* debugScene(MapDocument *document)
+    Scene* debugScene(MapDocument *document)
     {
-        MapScene* scene = new MapScene(document);
+        Scene* scene = new Scene(document);
 
         OriginMarker* o = new OriginMarker(scene->root());
         o->setObjectName("origin");
@@ -64,6 +64,19 @@ namespace SceneFactory
         camModel->setObjectName("camModel");
         camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
+
+        return scene;
+    }
+
+    Scene* debugUIScene(MapDocument *document)
+    {
+        Scene* scene = new Scene(document);
+
+        SceneObject* block = new SceneObject(scene->root());
+        block->setObjectName("block");
+        block->setGeometry(GeometryFactory::cube(32.0f));
+        block->geometry()->setTexture(0, "/textures/test");
+        block->setPosition(QVector3D(-64,0,0));
 
         return scene;
     }

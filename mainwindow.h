@@ -9,7 +9,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MapScene;
+class Scene;
 class SceneObject;
 class QTreeWidgetItem;
 class Viewport;
@@ -38,7 +38,7 @@ public slots:
 
 private:
     void setUpConnections();
-    void populateSceneTree(MapScene* scene);
+    void populateSceneTree(Scene* scene);
     void populateSceneTreeRecursive(SceneObject* object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items);
     void changeActiveDocument(MapDocument* oldDoc, MapDocument* newDoc);
 

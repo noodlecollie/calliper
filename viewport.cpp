@@ -7,7 +7,7 @@
 #include "resourcemanager.h"
 #include "shaderprogram.h"
 #include <QMatrix4x4>
-#include "mapscene.h"
+#include "scene.h"
 #include "shaders.h"
 #include "scenecamera.h"
 #include <QCursor>
@@ -27,7 +27,6 @@
 #include "application.h"
 #include "tools.h"
 #include "scenecamera.h"
-#include "uiscene.h"
 
 static const QColor NO_CAMERA_COLOUR = QColor::fromRgb(0xff00394d);
 
@@ -38,13 +37,11 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_colBackground = Viewport::defaultBackgroundColor();
     m_bBackgroundColorChanged = true;
     m_pCamera = NULL;
-    m_pScene = NULL;
+    m_pDocument = NULL;
     m_bDrawFocusHighlight = false;
     m_bDrawFPS = false;
     m_iRenderTasks = 0;
     m_pPickedObject = NULL;
-
-    m_pUIScene = new UIScene();
 
     m_pEmptyText = NULL;
     m_pNoCameraText = NULL;
@@ -68,8 +65,6 @@ Viewport::~Viewport()
 {
     makeCurrent();
     delete m_pEmptyText;
-    delete m_pNoCameraText;
-    delete m_pUIScene;
 }
 
 void Viewport::updateBackgroundColor()
@@ -135,7 +130,7 @@ void Viewport::paintGL()
         processRenderTasks();
     }
 
-    if ( !m_pScene )
+    if ( !m_pDocument )
     {
         drawEmpty();
         return;
@@ -296,14 +291,14 @@ void Viewport::setCamera(SceneCamera *camera)
     m_pCamera->lens()->setAspectRatio((float)size().width()/(float)size().height());
 }
 
-MapScene* Viewport::scene() const
+MapDocument* Viewport::document() const
 {
-    return m_pScene;
+    return m_pDocument;
 }
 
-void Viewport::setScene(MapScene *scene)
+void Viewport::setDocument(MapDocument *doc)
 {
-    m_pScene = scene;
+    m_pDocument = doc;
 }
 
 QPoint Viewport::viewCentre() const
@@ -369,7 +364,7 @@ void Viewport::debugSaveCurrentFrame()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->renderScene(m_pDocument->scene(), m_pCamera);
     renderer()->end();
 
     GLfloat f = -1;
@@ -395,13 +390,10 @@ void Viewport::drawScene()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pScene, m_pCamera);
+    renderer()->renderScene(m_pDocument->scene(), m_pCamera);
 
-    if ( m_pUIScene->hasUIElements() )
-    {
-        glClear(GL_DEPTH_BUFFER_BIT);
-        renderer()->renderScene(m_pUIScene, m_pUIScene->camera());
-    }
+    glClear(GL_DEPTH_BUFFER_BIT);
+    renderer()->renderScene(m_pDocument->uiScene(), m_pCamera);
 
     renderer()->end();
 }
@@ -433,7 +425,7 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     renderer()->begin();
-    m_pPickedObject = renderer()->selectFromDepthBuffer(m_pScene, m_pCamera, oglPos, &m_PickColour);
+    m_pPickedObject = renderer()->selectFromDepthBuffer(m_pDocument->scene(), m_pCamera, oglPos, &m_PickColour);
     renderer()->end();
 
     fbo.release();
@@ -449,9 +441,4 @@ SceneObject* Viewport::pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickCo
         *pickColor = m_PickColour;
 
     return m_pPickedObject;
-}
-
-UIScene* Viewport::uiScene() const
-{
-    return m_pUIScene;
 }

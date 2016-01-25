@@ -1,5 +1,5 @@
 #include "mapdocument.h"
-#include "mapscene.h"
+#include "scene.h"
 #include "scenefactory.h"
 #include "sceneobject.h"
 #include "tools.h"
@@ -8,6 +8,7 @@
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {
     m_pScene = SceneFactory::debugScene(this);
+    m_pUIScene = SceneFactory::debugUIScene(this);
     m_colBackground = QColor::fromRgb(0xff262626);
     m_colSelected = QColor::fromRgb(0xffff0000);
 
@@ -15,9 +16,6 @@ MapDocument::MapDocument(QObject *parent) : QObject(parent)
 
     m_iActiveTool = -1;
     createTools();
-
-    // REMOVE ME
-    setActiveToolIndex(0);
 }
 
 MapDocument::~MapDocument()
@@ -26,7 +24,7 @@ MapDocument::~MapDocument()
     delete m_pScene;
 }
 
-MapScene* MapDocument::scene() const
+Scene* MapDocument::scene() const
 {
     return m_pScene;
 }
@@ -143,4 +141,9 @@ BaseTool* MapDocument::activeTool() const
 InputProcessor* MapDocument::inputProcessor() const
 {
     return m_pInputProcessor;
+}
+
+Scene* MapDocument::uiScene() const
+{
+    return m_pUIScene;
 }

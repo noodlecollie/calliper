@@ -24,6 +24,7 @@ SOURCES += main.cpp\
     geometryfactory.cpp \
     sceneobject.cpp \
     callipermath.cpp \
+    scene.cpp \
     unlittextureshader.cpp \
     cameralens.cpp \
     eulerangle.cpp \
@@ -48,10 +49,7 @@ SOURCES += main.cpp\
     inputprocessor.cpp \
     scenecamera.cpp \
     hierarchicalobject.cpp \
-    screenspacepvcshader.cpp \
-    mapscene.cpp \
-    basescene.cpp \
-    uiscene.cpp
+    screenspacepvcshader.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -64,6 +62,7 @@ HEADERS  += mainwindow.h \
     geometryfactory.h \
     sceneobject.h \
     callipermath.h \
+    scene.h \
     unlittextureshader.h \
     cameralens.h \
     eulerangle.h \
@@ -91,10 +90,7 @@ HEADERS  += mainwindow.h \
     inputprocessor.h \
     scenecamera.h \
     hierarchicalobject.h \
-    screenspacepvcshader.h \
-    mapscene.h \
-    basescene.h \
-    uiscene.h
+    screenspacepvcshader.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

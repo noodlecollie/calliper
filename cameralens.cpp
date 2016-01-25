@@ -206,8 +206,8 @@ BoundingBox CameraLens::localViewVolumeBounds() const
         case Orthographic:
         {
             // Return bounds in camera space.
-            return BoundingBox(QVector3D(m_flLeftPlane, m_flBottomPlane, m_flFarPlane),
-                               QVector3D(m_flRightPlane, m_flTopPlane, m_flNearPlane));
+            return BoundingBox(QVector3D(m_flLeftPlane, m_flBottomPlane, -m_flFarPlane),
+                               QVector3D(m_flRightPlane, m_flTopPlane, -m_flNearPlane));
         }
 
         case Perspective:

@@ -6,7 +6,7 @@
 #include "callipermath.h"
 #include "scenecamera.h"
 #include <QOpenGLTexture>
-#include "basescene.h"
+#include "scene.h"
 #include <QPainter>
 #include "geometrydata.h"
 #include "geometryfactory.h"
@@ -189,23 +189,32 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 {
     stack->modelToWorldPush();
 
-    // Check if we need to defer this object.
-    bool deferred = false;
-    if ( (obj->renderFlags() & SceneObject::IgnoreDepth) == SceneObject::IgnoreDepth )
+    // TODO: Really we should change this so that the renderer always applies the modelToWorld matrix.
+    // The object inside can then un-apply it if necessary.
+    if ( !obj->isEmpty() )
     {
-        deferred = true;
+        // Check if we need to defer this object.
+        bool deferred = false;
+        if ( (obj->renderFlags() & SceneObject::IgnoreDepth) == SceneObject::IgnoreDepth )
+        {
+            deferred = true;
 
-        // Order objects within the map by depth.
-        // We order by Y because this would be converted to Z by the coordinate transform matrix.
-        float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
-        m_IgnoreDepthList.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
-    }
+            // Order objects within the map by depth.
+            // We order by Y because this would be converted to Z by the coordinate transform matrix.
+            float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
+            m_IgnoreDepthList.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
+        }
 
-    if ( !deferred )
-    {
-        obj->draw(stack);
-        if ( m_bPicking )
-            m_ObjectPicker.checkDrawnObject(obj);
+        if ( !deferred )
+        {
+            obj->draw(stack);
+            if ( m_bPicking )
+                m_ObjectPicker.checkDrawnObject(obj);
+        }
+        else
+        {
+            stack->modelToWorldPostMultiply(obj->localToParent());
+        }
     }
     else
     {
@@ -236,13 +245,21 @@ void OpenGLRenderer::setDirectionalLight(const EulerAngle &ang)
     m_vecDirectionalLight = Math::angleToVectorSimple(ang);
 }
 
-void OpenGLRenderer::renderScene(BaseScene *scene, const SceneCamera* camera)
+void OpenGLRenderer::renderScene(Scene *scene, const SceneCamera* camera)
 {
     Q_ASSERT(m_bPreparedForRendering);
+    Q_ASSERT(m_pStack->worldToCameraTop().isIdentity());
+    Q_ASSERT(m_pStack->cameraProjectionTop().isIdentity());
 
     m_pStack->setCamera(camera);
+
+    m_pStack->worldToCameraPush();
     m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
+
+    m_pStack->cameraProjectionPush();
     m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
+
+    m_pStack->globalColorPush();
     m_pStack->globalColorSetTop(globalColor());
 
     // Render the scene.
@@ -250,9 +267,13 @@ void OpenGLRenderer::renderScene(BaseScene *scene, const SceneCamera* camera)
 
     // Render any deferred things we have left.
     renderDeferred();
+
+    m_pStack->globalColorPop();
+    m_pStack->cameraProjectionPop();
+    m_pStack->worldToCameraPop();
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const SceneCamera* camera,
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(Scene *scene, const SceneCamera* camera,
                                                    const QPoint &oglPos, QRgb *pickColor)
 {
     Q_ASSERT(m_bPreparedForRendering);

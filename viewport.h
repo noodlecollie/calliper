@@ -10,11 +10,11 @@
 
 class SceneCamera;
 class GeometryData;
-class MapScene;
+class Scene;
 class ViewportUserOptions;
 class QPushButton;
 class SceneObject;
-class UIScene;
+class MapDocument;
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
 {
@@ -34,13 +34,11 @@ public:
     SceneCamera* camera() const;
     void setCamera(SceneCamera* camera);
 
-    MapScene* scene() const;
-    void setScene(MapScene* scene);
+    MapDocument* document() const;
+    void setDocument(MapDocument* doc);
 
     bool drawFocusHighlight() const;
     bool drawFPS() const;
-
-    UIScene* uiScene() const;
 
     SceneObject* pickObjectFromDepthBuffer(const QPoint &pos, QRgb* pickColor = NULL);
 
@@ -84,12 +82,10 @@ private:
     QTimer  m_Timer;
 
     SceneCamera* m_pCamera;
-    MapScene*  m_pScene;
+    MapDocument* m_pDocument;
     QColor  m_colBackground;
     bool    m_bBackgroundColorChanged;
     QTime   m_TimeElapsed;
-
-    UIScene* m_pUIScene;
 
     ViewportUserOptions*    m_pUserOptions;
     QPushButton*            m_pToggleOptions;

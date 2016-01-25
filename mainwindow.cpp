@@ -3,7 +3,7 @@
 #include <QGuiApplication>
 #include "application.h"
 #include <QtDebug>
-#include "mapscene.h"
+#include "scene.h"
 #include "scenecamera.h"
 #include "originmarker.h"
 #include "inputprocessor.h"
@@ -100,13 +100,16 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
 
     if ( newDoc )
     {
+        if ( newDoc->activeToolIndex() < 0 )
+            newDoc->setActiveToolIndex(0);
+
         ui->viewport->setBackgroundColor(newDoc->backgroundColor());
+        ui->viewport->setDocument(newDoc);
 
         QList<SceneCamera*> cameras = newDoc->scene()->findCameras();
         if ( cameras.count() > 0 )
         {
             ui->viewport->setCamera(cameras.at(0));
-            ui->viewport->setScene(newDoc->scene());
         }
 
         ui->viewport->installEventFilter(newDoc->inputProcessor());
@@ -115,6 +118,7 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
     }
     else
     {
+        ui->viewport->setDocument(NULL);
         ui->viewport->setCamera(NULL);
 
         ui->sceneTreeWidget->clear();
@@ -146,7 +150,7 @@ void MainWindow::changeDockWidgetVisibility(bool visible)
     widget->blockSignals(false);
 }
 
-void MainWindow::populateSceneTree(MapScene *scene)
+void MainWindow::populateSceneTree(Scene *scene)
 {
     ui->sceneTreeWidget->clear();
     QList<QTreeWidgetItem*> items;
@@ -198,7 +202,7 @@ void MainWindow::populateSceneTreeRecursive(SceneObject *object, QTreeWidgetItem
 
 void MainWindow::sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column)
 {
-    if ( !ui->viewport->scene() || !ui->viewport->camera() )
+    if ( !ui->viewport->document() || !ui->viewport->camera() )
         return;
 
     QVariant v = item->data(column, Qt::UserRole);
