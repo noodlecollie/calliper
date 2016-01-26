@@ -1,10 +1,18 @@
 #include "cameraparams.h"
 #include "hierarchicalobject.h"
 #include "cameralens.h"
+#include "scenecamera.h"
 
 CameraParams::CameraParams(const QMatrix4x4 w2c, const QMatrix4x4 proj,
                            const HierarchicalObject *obj, const CameraLens *lens) :
     m_matWorldToCameraMatrix(w2c), m_matProjectionMatrix(proj), m_pObject(obj), m_pLens(lens)
+{
+
+}
+
+CameraParams::CameraParams(const SceneCamera *camera) :
+    m_matWorldToCameraMatrix(camera->rootToLocal()), m_matProjectionMatrix(camera->lens()->projectionMatrix()),
+    m_pObject(camera), m_pLens(camera->lens())
 {
 
 }
