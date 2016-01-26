@@ -51,7 +51,8 @@ SOURCES += main.cpp\
     mapscene.cpp \
     basescene.cpp \
     uiscene.cpp \
-    mapgrid.cpp
+    mapgrid.cpp \
+    cameraparams.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -94,7 +95,8 @@ HEADERS  += mainwindow.h \
     mapscene.h \
     basescene.h \
     uiscene.h \
-    mapgrid.h
+    mapgrid.h \
+    cameraparams.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui
