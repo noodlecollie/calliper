@@ -85,29 +85,35 @@ void SceneCamera::rebuildViewBoundsGeometry()
 
 void SceneCamera::draw(ShaderStack *stack)
 {
-    BoundingBox bounds = lens()->localViewVolumeBounds();
-    if ( bounds != m_LocalLensBounds )
-    {
-        m_LocalLensBounds = bounds;
-        rebuildViewBoundsGeometry();
-    }
-
     stack->modelToWorldPostMultiply(localToParent());
 
-    if ( stack->camera() != this && m_bDrawBounds && !m_pBoundsGeom->isEmpty() )
+    if ( stack->cameraParams().hierarchicalObject() != this )
     {
-        stack->shaderPush(resourceManager()->shader(m_pBoundsGeom->shaderOverride()));
-        stack->modelToWorldPush();
-        stack->modelToWorldPostMultiply(Math::openGLToHammer());
+        if ( m_bDrawBounds )
+        {
+            BoundingBox bounds = lens()->localViewVolumeBounds();
+            if ( bounds != m_LocalLensBounds )
+            {
+                m_LocalLensBounds = bounds;
+                rebuildViewBoundsGeometry();
+            }
 
-        m_pBoundsGeom->upload();
-        m_pBoundsGeom->bindVertices(true);
-        m_pBoundsGeom->bindIndices(true);
-        m_pBoundsGeom->applyDataFormat(stack->shaderTop());
-        m_pBoundsGeom->draw();
+            if ( !m_pBoundsGeom->isEmpty() )
+            {
+                stack->shaderPush(resourceManager()->shader(m_pBoundsGeom->shaderOverride()));
+                stack->modelToWorldPush();
+                stack->modelToWorldPostMultiply(Math::openGLToHammer());
 
-        stack->modelToWorldPop();
-        stack->shaderPop();
+                m_pBoundsGeom->upload();
+                m_pBoundsGeom->bindVertices(true);
+                m_pBoundsGeom->bindIndices(true);
+                m_pBoundsGeom->applyDataFormat(stack->shaderTop());
+                m_pBoundsGeom->draw();
+
+                stack->modelToWorldPop();
+                stack->shaderPop();
+            }
+        }
     }
 }
 

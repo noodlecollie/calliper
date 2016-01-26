@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QVector3D>
 #include "shaderprogram.h"
+#include "cameraparams.h"
 
 class SceneCamera;
 class OpenGLRenderer;
@@ -21,8 +22,8 @@ public:
     void applyAll();
     bool inInitialState() const;
 
-    const SceneCamera* camera() const;
-    void setCamera(const SceneCamera* camera);
+    const CameraParams& cameraParams() const;
+    void setCameraParams(const CameraParams &params);
 
     bool autoUpdate() const;
     void setAutoUpdate(bool enabled);
@@ -123,7 +124,7 @@ private:
     bool    m_bAutoUpdate;
     bool    m_bLockShader;
 
-    const SceneCamera*   m_pCamera;
+    CameraParams            m_CameraParams;
 
     QStack<ShaderProgram*>  m_Shaders;
     QStack<QMatrix4x4>      m_ModelToWorld;

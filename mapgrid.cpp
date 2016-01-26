@@ -235,12 +235,14 @@ void MapGrid::setUpGeometry()
 void MapGrid::draw(ShaderStack *stack)
 {
     // Get the current camera and lens.
-    const SceneCamera* camera = stack->camera();
-    const CameraLens* lens = camera->lens();
+    const HierarchicalObject* hCamera = stack->cameraParams().hierarchicalObject();
+    Q_ASSERT(hCamera);
+    const CameraLens* lens = stack->cameraParams().lens();
+    Q_ASSERT(lens);
 
     // Determine the bounds of the camera viewing volume.
     BoundingBox bbox = lens->localViewVolumeBounds()
-            .transformed(camera->rootToLocal().inverted() * Math::openGLToHammer());
+            .transformed(hCamera->rootToLocal().inverted() * Math::openGLToHammer());
 
     // If the Z=0 plane is not within this volume, don't draw anything.
     if ( bbox.min().z() > 0 || bbox.max().z() < 0 )
@@ -372,7 +374,9 @@ void MapGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
 
     // Do a cheap Z test to see whether we should limit the density
     // of the grid for performance purposes.
-    int power = limitGridPower(stack->camera());
+    const HierarchicalObject* hCamera = stack->cameraParams().hierarchicalObject();
+    Q_ASSERT(hCamera);
+    int power = limitGridPower((hCamera->rootToLocal().inverted() * QVector4D(0,0,0,1)).z());
 
     // Don't draw if we don't have a high enough grid density.
     if ( power >= POWER2_1024 )
@@ -467,7 +471,11 @@ void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
 
     // Do a cheap Z test to see whether we should limit the density
     // of the grid for performance purposes.
-    int power = limitGridPower(stack->camera());
+    const HierarchicalObject* hCamera = stack->cameraParams().hierarchicalObject();
+    QMatrix4x4 camToWorld = hCamera->rootToLocal().inverted();
+    QVector3D camWorldPos = (camToWorld * QVector4D(0,0,0,1)).toVector3D();
+    Q_ASSERT(hCamera);
+    int power = limitGridPower(camWorldPos.z());
 
     // Don't draw if we don't have a high enough grid density.
     if ( power >= POWER2_64 )
@@ -485,7 +493,7 @@ void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->setAutoUpdate(false);
     for ( qint64 i = Math::previousMultiple(min.y(), 32); i <= max.y(); i += 32 )
     {
-        float dist = qAbs(stack->camera()->position().y() - (float)(i+16));
+        float dist = qAbs(camWorldPos.y() - (float)(i+16));
         int m = qFloor(dist/STDLINE_LOD_DELTA);
         int localPower = power + m;
 
@@ -518,7 +526,7 @@ void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->setAutoUpdate(false);
     for ( qint64 i = Math::previousMultiple(min.x(), 32); i <= max.x(); i += 32 )
     {
-        float dist = qAbs(stack->camera()->position().x() - (float)(i+16));
+        float dist = qAbs(camWorldPos.x() - (float)(i+16));
         int m = qFloor(dist/STDLINE_LOD_DELTA);
         int localPower = power + m;
 
@@ -547,11 +555,10 @@ void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-int MapGrid::limitGridPower(const SceneCamera *camera) const
+int MapGrid::limitGridPower(float camWorldZ) const
 {
     // Return a LOD'ed grid power depending on how many multiples of 64 we are away on Z.
-    float z = qAbs(camera->position().z());
-    int lod = Math::previousMultiple(z, 64)/64;
+    int lod = Math::previousMultiple(qAbs(camWorldZ), 64)/64;
     return qMax(m_iPowerTwo, qMin(POWER2_1 + lod, POWER2_128));
 }
 

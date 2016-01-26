@@ -366,7 +366,7 @@ void Viewport::debugSaveCurrentFrame()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pDocument->scene(), m_pCamera);
+    renderer()->renderScene(m_pDocument->scene(), CameraParams(m_pCamera));
     renderer()->end();
 
     GLfloat f = -1;
@@ -392,10 +392,10 @@ void Viewport::drawScene()
     renderer()->setShaderIndex(index);
 
     renderer()->begin();
-    renderer()->renderScene(m_pDocument->scene(), m_pCamera);
+    renderer()->renderScene(m_pDocument->scene(), CameraParams(m_pCamera));
 
     glClear(GL_DEPTH_BUFFER_BIT);
-    renderer()->renderScene(m_pDocument->uiScene(), m_pCamera);
+    renderer()->renderScene(m_pDocument->uiScene(), CameraParams(m_pCamera->rootToLocal(), m_pCamera->lens()->projectionMatrix()));
 
     renderer()->end();
 }
@@ -430,7 +430,7 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         QRgb pickCol = 0xffffffff;
-        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->scene(), m_pCamera, oglPos, &pickCol);
+        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->scene(), CameraParams(m_pCamera), oglPos, &pickCol);
         if ( obj )
         {
             m_PickColour = pickCol;
@@ -442,7 +442,7 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         QRgb pickCol = 0xffffffff;
-        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->uiScene(), m_pCamera, oglPos, &pickCol);
+        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->uiScene(), CameraParams(m_pCamera->rootToLocal(), m_pCamera->lens()->projectionMatrix()), oglPos, &pickCol);
         if ( obj )
         {
             m_PickColour = pickCol;

@@ -245,19 +245,19 @@ void OpenGLRenderer::setDirectionalLight(const EulerAngle &ang)
     m_vecDirectionalLight = Math::angleToVectorSimple(ang);
 }
 
-void OpenGLRenderer::renderScene(BaseScene *scene, const SceneCamera* camera)
+void OpenGLRenderer::renderScene(BaseScene *scene, const CameraParams &params)
 {
     Q_ASSERT(m_bPreparedForRendering);
     Q_ASSERT(m_pStack->worldToCameraTop().isIdentity());
     Q_ASSERT(m_pStack->cameraProjectionTop().isIdentity());
 
-    m_pStack->setCamera(camera);
+    m_pStack->setCameraParams(params);
 
     m_pStack->worldToCameraPush();
-    m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
+    m_pStack->worldToCameraPostMultiply(params.worldToCameraMatrix());
 
     m_pStack->cameraProjectionPush();
-    m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
+    m_pStack->cameraProjectionPostMultiply(params.projectionMatrix());
 
     m_pStack->globalColorPush();
     m_pStack->globalColorSetTop(globalColor());
@@ -273,7 +273,7 @@ void OpenGLRenderer::renderScene(BaseScene *scene, const SceneCamera* camera)
     m_pStack->worldToCameraPop();
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const SceneCamera* camera,
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const CameraParams &params,
                                                    const QPoint &oglPos, QRgb *pickColor)
 {
     Q_ASSERT(m_bPreparedForRendering);
@@ -288,13 +288,13 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const Scene
     m_ObjectPicker = ObjectPicker(f, oglPos, pickColor != NULL);
     m_bPicking = true;
 
-    m_pStack->setCamera(camera);
+    m_pStack->setCameraParams(params);
 
     m_pStack->worldToCameraPush();
-    m_pStack->worldToCameraPostMultiply(camera->rootToLocal());
+    m_pStack->worldToCameraPostMultiply(params.worldToCameraMatrix());
 
     m_pStack->cameraProjectionPush();
-    m_pStack->cameraProjectionPostMultiply(camera->lens()->projectionMatrix());
+    m_pStack->cameraProjectionPostMultiply(params.projectionMatrix());
 
     m_pStack->shaderPush(resourceManager()->shader(SelectionMaskShader::staticName()));
     m_pStack->m_bLockShader = true;

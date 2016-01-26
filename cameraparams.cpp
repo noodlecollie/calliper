@@ -3,6 +3,12 @@
 #include "cameralens.h"
 #include "scenecamera.h"
 
+CameraParams::CameraParams() :
+    m_matWorldToCameraMatrix(), m_matProjectionMatrix(), m_pObject(NULL), m_pLens(NULL)
+{
+
+}
+
 CameraParams::CameraParams(const QMatrix4x4 w2c, const QMatrix4x4 proj,
                            const HierarchicalObject *obj, const CameraLens *lens) :
     m_matWorldToCameraMatrix(w2c), m_matProjectionMatrix(proj), m_pObject(obj), m_pLens(lens)

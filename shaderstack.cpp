@@ -6,7 +6,6 @@ ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
 {
     m_bAutoUpdate = autoUpdate;
     m_bLockShader = false;
-    m_pCamera = NULL;
     m_Shaders.push(initial);
     m_Shaders.top()->apply();
 
@@ -31,14 +30,14 @@ ShaderStack::~ShaderStack()
         p->release();
 }
 
-const SceneCamera* ShaderStack::camera() const
+const CameraParams& ShaderStack::cameraParams() const
 {
-    return m_pCamera;
+    return m_CameraParams;
 }
 
-void ShaderStack::setCamera(const SceneCamera *camera)
+void ShaderStack::setCameraParams(const CameraParams &params)
 {
-    m_pCamera = camera;
+    m_CameraParams = params;
 }
 
 bool ShaderStack::autoUpdate() const
