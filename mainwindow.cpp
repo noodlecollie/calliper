@@ -3,7 +3,7 @@
 #include <QGuiApplication>
 #include "application.h"
 #include <QtDebug>
-#include "scene.h"
+#include "mapscene.h"
 #include "scenecamera.h"
 #include "originmarker.h"
 #include "inputprocessor.h"
@@ -150,7 +150,7 @@ void MainWindow::changeDockWidgetVisibility(bool visible)
     widget->blockSignals(false);
 }
 
-void MainWindow::populateSceneTree(Scene *scene)
+void MainWindow::populateSceneTree(MapScene *scene)
 {
     ui->sceneTreeWidget->clear();
     QList<QTreeWidgetItem*> items;

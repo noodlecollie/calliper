@@ -4,7 +4,7 @@
 #include "scenecamera.h"
 #include "callipermath.h"
 #include "resourcemanager.h"
-#include "scene.h"
+#include "mapscene.h"
 #include "mapdocument.h"
 #include <QtMath>
 
@@ -24,11 +24,11 @@
 
 BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
 {
-    if ( m_pScene )
-    {
-        Q_ASSERT(!m_pScene->m_pGrid);
-        m_pScene->m_pGrid = this;
-    }
+    Q_ASSERT(m_pScene);
+    MapScene* scene = m_pScene->mapScene();
+    Q_ASSERT(scene);
+    Q_ASSERT(!scene->m_pGrid);
+    scene->m_pGrid = this;
 
     // Standard Hammer colours
     m_colMajor = QColor(100, 46, 0);

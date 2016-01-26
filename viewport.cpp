@@ -7,7 +7,7 @@
 #include "resourcemanager.h"
 #include "shaderprogram.h"
 #include <QMatrix4x4>
-#include "scene.h"
+#include "mapscene.h"
 #include "shaders.h"
 #include "scenecamera.h"
 #include <QCursor>
@@ -27,6 +27,7 @@
 #include "application.h"
 #include "tools.h"
 #include "scenecamera.h"
+#include "uiscene.h"
 
 static const QColor NO_CAMERA_COLOUR = QColor::fromRgb(0xff00394d);
 

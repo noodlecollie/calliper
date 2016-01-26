@@ -1,5 +1,5 @@
 #include "scenefactory.h"
-#include "scene.h"
+#include "mapscene.h"
 #include "originmarker.h"
 #include "scenecamera.h"
 #include <QVector3D>
@@ -10,12 +10,13 @@
 #include "callipermath.h"
 #include <QtMath>
 #include <QtDebug>
+#include "uiscene.h"
 
 namespace SceneFactory
 {
-    Scene* defaultScene(MapDocument* document)
+    MapScene* defaultScene(MapDocument* document)
     {
-        Scene* scene = new Scene(document);
+        MapScene* scene = new MapScene(document);
 
         OriginMarker* o = new OriginMarker(scene->root());
         o->setObjectName("origin");
@@ -31,9 +32,9 @@ namespace SceneFactory
         return scene;
     }
 
-    Scene* debugScene(MapDocument *document)
+    MapScene* debugScene(MapDocument *document)
     {
-        Scene* scene = new Scene(document);
+        MapScene* scene = new MapScene(document);
 
         OriginMarker* o = new OriginMarker(scene->root());
         o->setObjectName("origin");
@@ -68,9 +69,9 @@ namespace SceneFactory
         return scene;
     }
 
-    Scene* debugUIScene(MapDocument *document)
+    UIScene* debugUIScene(MapDocument *document)
     {
-        Scene* scene = new Scene(document);
+        UIScene* scene = new UIScene(document);
 
         SceneObject* block = new SceneObject(scene->root());
         block->setObjectName("block");

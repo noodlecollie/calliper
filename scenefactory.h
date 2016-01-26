@@ -1,15 +1,16 @@
 #ifndef SCENEFACTORY
 #define SCENEFACTORY
 
-class Scene;
+class MapScene;
+class UIScene;
 class MapDocument;
 
 namespace SceneFactory
 {
-    Scene* defaultScene(MapDocument* document);
-    Scene* debugScene(MapDocument* document);
+    MapScene* defaultScene(MapDocument* document);
+    MapScene* debugScene(MapDocument* document);
 
-    Scene* debugUIScene(MapDocument* document);
+    UIScene* debugUIScene(MapDocument* document);
 }
 
 #endif // SCENEFACTORY

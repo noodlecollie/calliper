@@ -4,7 +4,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QWheelEvent>
-#include "scene.h"
+#include "mapscene.h"
 #include "viewport.h"
 #include "basetool.h"
 

@@ -1,6 +1,6 @@
 #include "basetool.h"
 #include "mapdocument.h"
-#include "scene.h"
+#include "mapscene.h"
 #include "basegrid.h"
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -11,6 +11,7 @@
 #include "scenecamera.h"
 #include "callipermath.h"
 #include <QCursor>
+#include "uiscene.h"
 
 BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
 {

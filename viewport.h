@@ -10,7 +10,6 @@
 
 class SceneCamera;
 class GeometryData;
-class Scene;
 class ViewportUserOptions;
 class QPushButton;
 class SceneObject;

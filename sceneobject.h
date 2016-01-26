@@ -7,13 +7,13 @@
 #include <QMatrix4x4>
 #include "eulerangle.h"
 
-class Scene;
+class BaseScene;
 class ShaderStack;
 
 class SceneObject : public HierarchicalObject
 {
     Q_OBJECT
-    friend class Scene;
+    friend class BaseScene;
 public:
     enum RenderFlag
     {
@@ -25,7 +25,7 @@ public:
 
     SceneObject* parentObject() const;
     QList<SceneObject*> children() const;
-    Scene* scene() const;
+    BaseScene* scene() const;
 
     // The SceneObject owns its geometry.
     // Any old geometry that is replaced will be deleted.
@@ -48,7 +48,7 @@ public slots:
 
 protected:
     QScopedPointer<GeometryData>    m_pGeometry;
-    Scene*  m_pScene;
+    BaseScene*  m_pScene;
     int m_iRenderFlags;
 };
 
