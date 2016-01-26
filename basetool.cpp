@@ -1,7 +1,7 @@
 #include "basetool.h"
 #include "mapdocument.h"
 #include "mapscene.h"
-#include "basegrid.h"
+#include "mapgrid.h"
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QWheelEvent>

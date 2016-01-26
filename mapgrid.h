@@ -9,11 +9,11 @@
 
 class SceneCamera;
 
-class BaseGrid : public SceneObject
+class MapGrid : public SceneObject
 {
     Q_OBJECT
 public:
-    explicit BaseGrid(SceneObject* parent = 0);
+    explicit MapGrid(SceneObject* parent = 0);
 
     virtual bool editable() const;
     virtual void draw(ShaderStack *stack);

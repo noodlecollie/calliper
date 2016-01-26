@@ -17,7 +17,7 @@
 #include <QPushButton>
 #include "simplenumericfont.h"
 #include "mapdocument.h"
-#include "basegrid.h"
+#include "mapgrid.h"
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLFramebufferObjectFormat>
 #include <QApplication>

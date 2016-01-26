@@ -1,7 +1,7 @@
 #include "mapscene.h"
 #include "scenecamera.h"
 #include "sceneobject.h"
-#include "basegrid.h"
+#include "mapgrid.h"
 
 MapScene::MapScene(MapDocument *document) : BaseScene(document)
 {
@@ -17,7 +17,7 @@ BaseScene::SceneType MapScene::type() const
     return TypeMapScene;
 }
 
-BaseGrid* MapScene::grid() const
+MapGrid* MapScene::grid() const
 {
     return m_pGrid;
 }

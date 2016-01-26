@@ -37,7 +37,6 @@ SOURCES += main.cpp\
     application.cpp \
     viewportuseroptions.cpp \
     simplenumericfont.cpp \
-    basegrid.cpp \
     boundingbox.cpp \
     shaderstack.cpp \
     selectionmaskshader.cpp \
@@ -51,7 +50,8 @@ SOURCES += main.cpp\
     screenspacepvcshader.cpp \
     mapscene.cpp \
     basescene.cpp \
-    uiscene.cpp
+    uiscene.cpp \
+    mapgrid.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -79,7 +79,6 @@ HEADERS  += mainwindow.h \
     shaders.h \
     viewportuseroptions.h \
     simplenumericfont.h \
-    basegrid.h \
     boundingbox.h \
     shaderstack.h \
     selectionmaskshader.h \
@@ -94,7 +93,8 @@ HEADERS  += mainwindow.h \
     screenspacepvcshader.h \
     mapscene.h \
     basescene.h \
-    uiscene.h
+    uiscene.h \
+    mapgrid.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

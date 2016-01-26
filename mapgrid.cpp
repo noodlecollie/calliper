@@ -1,4 +1,4 @@
-#include "basegrid.h"
+#include "mapgrid.h"
 #include "pervertexcolorshader.h"
 #include "shaderstack.h"
 #include "scenecamera.h"
@@ -22,7 +22,7 @@
 
 #define STDLINE_LOD_DELTA 128.0f
 
-BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
+MapGrid::MapGrid(SceneObject *parent) : SceneObject(parent)
 {
     Q_ASSERT(m_pScene);
     MapScene* scene = m_pScene->mapScene();
@@ -40,12 +40,12 @@ BaseGrid::BaseGrid(SceneObject *parent) : SceneObject(parent)
     setUpGeometry();
 }
 
-int BaseGrid::gridPower() const
+int MapGrid::gridPower() const
 {
     return m_iPowerTwo;
 }
 
-void BaseGrid::setGridPower(int power)
+void MapGrid::setGridPower(int power)
 {
     m_iPowerTwo = power;
     if ( m_iPowerTwo < POWER2_1 )
@@ -54,22 +54,22 @@ void BaseGrid::setGridPower(int power)
         m_iPowerTwo = 10;
 }
 
-void BaseGrid::incrementGridPower()
+void MapGrid::incrementGridPower()
 {
     setGridPower(m_iPowerTwo+1);
 }
 
-void BaseGrid::decrementGridPower()
+void MapGrid::decrementGridPower()
 {
     setGridPower(m_iPowerTwo-1);
 }
 
-bool BaseGrid::editable() const
+bool MapGrid::editable() const
 {
     return false;
 }
 
-void BaseGrid::setUpGeometry()
+void MapGrid::setUpGeometry()
 {
     m_pGeometry->clear();
     m_pGeometry->setShaderOverride(PerVertexColorShader::staticName());
@@ -232,7 +232,7 @@ void BaseGrid::setUpGeometry()
     m_DrawOffsets.append(QPair<int,int>(baseVertex, offset));
 }
 
-void BaseGrid::draw(ShaderStack *stack)
+void MapGrid::draw(ShaderStack *stack)
 {
     // Get the current camera and lens.
     const SceneCamera* camera = stack->camera();
@@ -276,7 +276,7 @@ void BaseGrid::draw(ShaderStack *stack)
     stack->shaderPop();
 }
 
-void BaseGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
 {
     // Draw x and y separately.
     // Taking x as an example, we want to translate the line on x
@@ -306,7 +306,7 @@ void BaseGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
     }
 }
 
-void BaseGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
 {
     // Draw X and Y separately.
     // Taking X as an example, firstly we want to scale the line up to cover
@@ -361,7 +361,7 @@ void BaseGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
 {
     // Minor lines begin at 1 (for a 512 unit gridline) and end at
     // 0.125 (for a 64 unit gridline).
@@ -456,7 +456,7 @@ void BaseGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
 {
     // Standard lines begin at 1 (for a 32 unit gridline) and end at
     // 1/32 (for a 1 unit gridline).
@@ -547,7 +547,7 @@ void BaseGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-int BaseGrid::limitGridPower(const SceneCamera *camera) const
+int MapGrid::limitGridPower(const SceneCamera *camera) const
 {
     // Return a LOD'ed grid power depending on how many multiples of 64 we are away on Z.
     float z = qAbs(camera->position().z());
@@ -555,7 +555,7 @@ int BaseGrid::limitGridPower(const SceneCamera *camera) const
     return qMax(m_iPowerTwo, qMin(POWER2_1 + lod, POWER2_128));
 }
 
-int BaseGrid::stdLineVertCount(int power)
+int MapGrid::stdLineVertCount(int power)
 {
     if ( power > 5 || power < 0 )
         return 0;

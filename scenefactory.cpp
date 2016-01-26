@@ -6,7 +6,7 @@
 #include "mapdocument.h"
 #include "sceneobject.h"
 #include "geometryfactory.h"
-#include "basegrid.h"
+#include "mapgrid.h"
 #include "callipermath.h"
 #include <QtMath>
 #include <QtDebug>
@@ -21,8 +21,8 @@ namespace SceneFactory
         OriginMarker* o = new OriginMarker(scene->root());
         o->setObjectName("origin");
 
-        BaseGrid* grid = new BaseGrid(scene->root());
-        grid->setObjectName("baseGrid");
+        MapGrid* grid = new MapGrid(scene->root());
+        grid->setObjectName("grid");
 
         SceneCamera* c = new SceneCamera(scene->root());
         c->setObjectName("camera");
@@ -39,8 +39,8 @@ namespace SceneFactory
         OriginMarker* o = new OriginMarker(scene->root());
         o->setObjectName("origin");
 
-        BaseGrid* grid = new BaseGrid(scene->root());
-        grid->setObjectName("baseGrid");
+        MapGrid* grid = new MapGrid(scene->root());
+        grid->setObjectName("grid");
 
         SceneCamera* c = new SceneCamera(scene->root());
         c->setObjectName("camera");

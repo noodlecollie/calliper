@@ -4,20 +4,20 @@
 #include "basescene.h"
 
 class MapDocument;
-class BaseGrid;
+class MapGrid;
 
 class MapScene : public BaseScene
 {
-    friend class BaseGrid;
+    friend class MapGrid;
 public:
     MapScene(MapDocument* document);
     virtual ~MapScene();
     virtual SceneType type() const;
 
-    BaseGrid* grid() const;
+    MapGrid* grid() const;
 
 private:
-    BaseGrid*       m_pGrid;
+    MapGrid*       m_pGrid;
 };
 
 #endif // SCENE_H
