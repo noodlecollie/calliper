@@ -11,6 +11,7 @@
 #include <QtMath>
 #include <QtDebug>
 #include "uiscene.h"
+#include "translationhandle.h"
 
 namespace SceneFactory
 {
@@ -73,11 +74,10 @@ namespace SceneFactory
     {
         UIScene* scene = new UIScene(document);
 
-        SceneObject* block = new SceneObject(scene->root());
-        block->setObjectName("block");
-        block->setGeometry(GeometryFactory::cube(32.0f));
-        block->geometry()->setTexture(0, "/textures/test");
-        block->setPosition(QVector3D(-64,0,0));
+        TranslationHandle* handle = new TranslationHandle(scene->root());
+        handle->setObjectName("translationHandle");
+        handle->setGeometry(GeometryFactory::translationHandle(0.5f));
+        handle->setPosition(QVector3D(-64,0,0));
 
         return scene;
     }
