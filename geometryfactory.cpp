@@ -276,7 +276,7 @@ namespace GeometryFactory
     {
         GeometryData* geometry = new GeometryData;
         geometry->setDataFormat(GeometryData::PositionColor);
-        geometry->setShaderOverride(ScreenSpacePVCShader::staticName());
+        geometry->setShaderOverride(PerVertexColorShader::staticName());
         geometry->setDrawMode(GL_TRIANGLES);
 
         addTranslationHead(scale, QColor::fromRgb(0xffff0000), QMatrix4x4(), *geometry);

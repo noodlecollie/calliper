@@ -32,6 +32,7 @@ public:
         FogColorUniform,
         FogBeginUniform,
         FogEndUniform,
+        CounterScaleUniform,
 
         ModelToWorldMatrix,
         WorldToCameraMatrix,

@@ -47,7 +47,6 @@ SOURCES += main.cpp\
     inputprocessor.cpp \
     scenecamera.cpp \
     hierarchicalobject.cpp \
-    screenspacepvcshader.cpp \
     mapscene.cpp \
     basescene.cpp \
     uiscene.cpp \
@@ -92,7 +91,6 @@ HEADERS  += mainwindow.h \
     inputprocessor.h \
     scenecamera.h \
     hierarchicalobject.h \
-    screenspacepvcshader.h \
     mapscene.h \
     basescene.h \
     uiscene.h \

@@ -12,10 +12,11 @@ uniform mat4 modelToWorld;
 uniform mat4 worldToCamera;
 uniform mat4 hammerToOpenGL;
 uniform mat4 projection;
+uniform float counterScale;
 
 void main()
 {
-        vec4 intermediate = hammerToOpenGL * worldToCamera * modelToWorld * vec4(vPositionModelSpace, 1);
+        vec4 intermediate = hammerToOpenGL * worldToCamera * modelToWorld * vec4(counterScale * vPositionModelSpace, 1);
         fViewSpace = intermediate.xyz;
         gl_Position = projection * intermediate;
 

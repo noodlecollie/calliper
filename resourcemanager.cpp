@@ -89,10 +89,6 @@ void ResourceManager::setUpShaders()
     SelectionMaskShader* selmSh = new SelectionMaskShader();
     selmSh->construct();
     m_Shaders.append(selmSh);
-
-    ScreenSpacePVCShader* sspvcSh = new ScreenSpacePVCShader();
-    sspvcSh->construct();
-    m_Shaders.append(sspvcSh);
 }
 
 void ResourceManager::setUpBuiltInTextures()

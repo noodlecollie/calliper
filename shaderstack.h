@@ -104,6 +104,13 @@ public:
     int globalColorCount() const;
     void globalColorApply();
 
+    void counterScaleSetTop(float val);
+    void counterScalePush();
+    void counterScalePop();
+    const float& counterScaleTop() const;
+    int counterScaleCount() const;
+    void counterScaleApply();
+
     bool lockShader() const;
 
 private:
@@ -136,6 +143,7 @@ private:
     QStack<float>           m_FogEnd;
     QStack<QVector3D>       m_DirectionalLight;
     QStack<QColor>          m_GlobalColor;
+    QStack<float>           m_CounterScale;
 };
 
 #endif // SHADERSTACK_H

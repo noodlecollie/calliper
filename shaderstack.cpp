@@ -18,6 +18,7 @@ ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
     m_FogEnd.push(0);
     m_DirectionalLight.push(QVector3D(1,0,0));
     m_GlobalColor.push(QColor::fromRgb(0xffffffff));
+    m_CounterScale.push(1.0f);
 
     if ( m_bAutoUpdate )
         applyAll();
@@ -61,7 +62,8 @@ bool ShaderStack::inInitialState() const
             m_FogBegin.count() == 1 &&
             m_FogEnd.count() == 1 &&
             m_DirectionalLight.count() == 1 &&
-            m_GlobalColor.count() == 1;
+            m_GlobalColor.count() == 1 &&
+            m_CounterScale.count() == 1;
 }
 
 // Should be called whenever a new shader is applied.
@@ -76,6 +78,7 @@ void ShaderStack::applyAll()
     fogEndApply();
     directionalLightApply();
     globalColorApply();
+    counterScaleApply();
 }
 
 void ShaderStack::modelToWorldApply()
@@ -121,6 +124,11 @@ void ShaderStack::directionalLightApply()
 void ShaderStack::globalColorApply()
 {
     shaderTop()->setUniformColor4(ShaderProgram::ColorUniform, m_GlobalColor.top());
+}
+
+void ShaderStack::counterScaleApply()
+{
+    shaderTop()->setUniformFloat(ShaderProgram::CounterScaleUniform, m_CounterScale.top());
 }
 
 void ShaderStack::shaderPush(ShaderProgram *program)
@@ -504,6 +512,31 @@ void ShaderStack::cameraProjectionSetToIdentity()
 {
     if ( m_CameraProjection.top().isIdentity() ) return;
     setToIdentity(m_CameraProjection, ShaderProgram::CameraProjectionMatrix);
+}
+
+int ShaderStack::counterScaleCount() const
+{
+    return m_CounterScale.count();
+}
+
+void ShaderStack::counterScalePop()
+{
+    pop(m_CounterScale, ShaderProgram::CounterScaleUniform);
+}
+
+void ShaderStack::counterScalePush()
+{
+    m_CounterScale.push(m_CounterScale.top());
+}
+
+void ShaderStack::counterScaleSetTop(float val)
+{
+    setTop(m_CounterScale, ShaderProgram::CounterScaleUniform, val);
+}
+
+const float& ShaderStack::counterScaleTop() const
+{
+    return m_CounterScale.top();
 }
 
 bool ShaderStack::lockShader() const

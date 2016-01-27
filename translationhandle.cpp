@@ -24,6 +24,12 @@ void TranslationHandle::draw(ShaderStack *stack)
 
     stack->modelToWorldPostMultiply(localToParent());
 
+    QVector4D testVec = stack->cameraProjectionTop() * stack->coordinateTransformTop() * stack->worldToCameraTop()
+            * stack->modelToWorldTop() * QVector4D(0,0,0,1);
+
+    stack->counterScalePush();
+    stack->counterScaleSetTop(testVec.z());
+
     // Upload and bind the geometry.
     geometry()->upload();
     geometry()->bindVertices(true);
@@ -42,5 +48,6 @@ void TranslationHandle::draw(ShaderStack *stack)
     geometry()->setDrawMode(GL_LINES);
     geometry()->draw(m_iShaftOffset * sizeof(unsigned int), secondBatch);
 
+    stack->counterScalePop();
     stack->shaderPop();
 }
