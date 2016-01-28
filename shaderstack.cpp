@@ -6,6 +6,7 @@ ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
 {
     m_bAutoUpdate = autoUpdate;
     m_bLockShader = false;
+    m_bPicking = false;
     m_Shaders.push(initial);
     m_Shaders.top()->apply();
 
@@ -542,4 +543,9 @@ const float& ShaderStack::counterScaleTop() const
 bool ShaderStack::lockShader() const
 {
     return m_bLockShader;
+}
+
+bool ShaderStack::isPicking() const
+{
+    return m_bPicking;
 }

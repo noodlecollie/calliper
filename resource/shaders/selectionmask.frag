@@ -2,7 +2,9 @@
 
 out vec4 colour;
 
+uniform vec4 inCol;
+
 void main()
 {
-	colour = vec4(1,1,1,1);
+    colour = inCol;
 }

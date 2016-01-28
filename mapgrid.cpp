@@ -49,9 +49,9 @@ void MapGrid::setGridPower(int power)
 {
     m_iPowerTwo = power;
     if ( m_iPowerTwo < POWER2_1 )
-        m_iPowerTwo = 0;
+        m_iPowerTwo = POWER2_1;
     else if ( m_iPowerTwo > POWER2_1024 )
-        m_iPowerTwo = 10;
+        m_iPowerTwo = POWER2_1024;
 }
 
 void MapGrid::incrementGridPower()
@@ -568,4 +568,9 @@ int MapGrid::stdLineVertCount(int power)
         return 0;
 
     return 1 << (6 - power);
+}
+
+float MapGrid::gridMultiple() const
+{
+    return (float)(1 << m_iPowerTwo);
 }

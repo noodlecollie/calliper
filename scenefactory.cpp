@@ -74,11 +74,6 @@ namespace SceneFactory
     {
         UIScene* scene = new UIScene(document);
 
-        TranslationHandle* handle = new TranslationHandle(scene->root());
-        handle->setObjectName("translationHandle");
-        handle->setGeometry(GeometryFactory::translationHandle(0.5f));
-        handle->setPosition(QVector3D(-64,0,0));
-
         return scene;
     }
 }

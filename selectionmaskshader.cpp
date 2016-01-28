@@ -33,6 +33,7 @@ void SelectionMaskShader::construct()
     m_iAttributeLocations[CoordinateTransformMatrix] = f->glGetUniformLocation(handle(), "hammerToOpenGL");
     m_iAttributeLocations[CameraProjectionMatrix] = f->glGetUniformLocation(handle(), "projection");
     m_iAttributeLocations[CounterScaleUniform] = f->glGetUniformLocation(handle(), "counterScale");
+    m_iAttributeLocations[ColorUniform] = f->glGetUniformLocation(handle(), "inCol");
 }
 
 void SelectionMaskShader::apply() const

@@ -124,11 +124,7 @@ void BaseTool::vMousePress(QMouseEvent *e)
     if ( !v )
         return;
 
-    SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::MapSceneFlag | MapDocument::UISceneFlag, e->pos());
-    qDebug() << "Picked object:" << obj;
-
-    if (obj && obj->scene() == m_pDocument->uiScene() )
-        return;
+    SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::MapSceneFlag, e->pos());
 
     if ( !m_flKBModifiers.testFlag(Qt::ControlModifier) )
     {

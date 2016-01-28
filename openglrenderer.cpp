@@ -298,6 +298,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const Camer
 
     m_pStack->shaderPush(resourceManager()->shader(SelectionMaskShader::staticName()));
     m_pStack->m_bLockShader = true;
+    m_pStack->m_bPicking = true;
 
     f->glEnable(GL_SCISSOR_TEST);
     f->glScissor(oglPos.x(), oglPos.y(), 1, 1);
@@ -307,6 +308,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const Camer
 
     f->glDisable(GL_SCISSOR_TEST);
     m_pStack->m_bLockShader = false;
+    m_pStack->m_bPicking = false;
     m_pStack->shaderPop();
     m_pStack->cameraProjectionPop();
     m_pStack->worldToCameraPop();

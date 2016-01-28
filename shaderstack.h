@@ -21,6 +21,7 @@ public:
 
     void applyAll();
     bool inInitialState() const;
+    bool isPicking() const;
 
     const CameraParams& cameraParams() const;
     void setCameraParams(const CameraParams &params);
@@ -130,6 +131,7 @@ private:
 
     bool    m_bAutoUpdate;
     bool    m_bLockShader;
+    bool    m_bPicking;
 
     CameraParams            m_CameraParams;
 
