@@ -35,8 +35,11 @@ void OpenGLRenderer::ObjectPicker::checkDrawnObject(SceneObject *obj)
                                     GL_UNSIGNED_BYTE,
                                     &rgba);
 
-            // Convert to ARGB with full opacity.
-            selectedColour = (rgba >> 8) | 0xff000000;
+            // As Qt sees it, this value is returned as ABGR.
+            // We fix this here.
+            selectedColour = (rgba & 0xff00ff00) |
+                    ((rgba & 0x000000ff) << 16) |
+                    ((rgba & 0x00ff0000) >> 16);
         }
     }
 }
@@ -281,9 +284,6 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const Camer
     QOpenGLContext* context = QOpenGLContext::currentContext();
     Q_ASSERT(context);
     QOpenGLFunctions_4_1_Core* f = context->versionFunctions<QOpenGLFunctions_4_1_Core>();
-
-//    SceneObject* selected = NULL;
-//    float nearest = 1.0f;
 
     m_ObjectPicker = ObjectPicker(f, oglPos, pickColor != NULL);
     m_bPicking = true;
