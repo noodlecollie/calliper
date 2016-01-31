@@ -20,7 +20,7 @@ public:
     void setGridPower(int power);
     void incrementGridPower();
     void decrementGridPower();
-    float gridMultiple() const;
+    unsigned int gridMultiple() const;
 
 private:
     void setUpGeometry();

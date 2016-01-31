@@ -186,4 +186,12 @@ namespace Math
         // The up vector is a cross product between the other two.
         up = QVector3D::crossProduct(right, fwd);
     }
+    
+    void clampToNearestMultiple(QVector3D &vec, qint64 multiple)
+    {
+        for ( int i = 0; i < 3; i++ )
+        {
+            vec[i] = (float)nearestMultiple(vec[i], multiple);
+        }
+    }
 }

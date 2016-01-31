@@ -39,6 +39,7 @@ private:
     bool m_bInMove;
     QVector3D m_vecOriginalHandlePos;
     QVector3D m_vecMovementAxis;
+    float m_flHandeCamDist;
 };
 
 #endif // DEBUGTESTTOOL_H

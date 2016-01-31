@@ -570,7 +570,7 @@ int MapGrid::stdLineVertCount(int power)
     return 1 << (6 - power);
 }
 
-float MapGrid::gridMultiple() const
+unsigned int MapGrid::gridMultiple() const
 {
-    return (float)(1 << m_iPowerTwo);
+    return 1 << m_iPowerTwo;
 }

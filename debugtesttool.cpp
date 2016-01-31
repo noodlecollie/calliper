@@ -11,6 +11,7 @@
 #include "scenecamera.h"
 #include "mapscene.h"
 #include "mapgrid.h"
+#include "callipermath.h"
 
 DebugTestTool::DebugTestTool(MapDocument *document) : BaseTool(DebugTestTool::staticName(), document)
 {
@@ -143,6 +144,7 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
 
     m_vecOriginalHandlePos = m_pHandle->position();
     m_vecBeginPos = v->camera()->mapPoint(e->pos(), v->size());
+    m_flHandeCamDist = (m_pHandle->position() - v->camera()->position()).length();
     qDebug() << "Picked colour:" << QColor::fromRgb(col) << "Begin position:" << m_vecBeginPos;
     m_bInMove = true;
 }
@@ -162,8 +164,13 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
         return;
     }
 
-    float gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
+    unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
     QVector3D newPos = v->camera()->mapPoint(e->pos(), v->size());
+    QVector3D translation = (v->camera()->position() + ((newPos - v->camera()->position()).normalized()) * m_flHandeCamDist) - m_vecBeginPos;
+    QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
+    Math::clampToNearestMultiple(newHandlePos, gridMultiple);
+    m_pHandle->setPosition(newHandlePos);
+    qDebug() << "Handle translation:" << translation;
 }
 
 void DebugTestTool::vMouseRelease(QMouseEvent *)
