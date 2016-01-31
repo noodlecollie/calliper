@@ -15,18 +15,24 @@ public:
 
     struct PlaneSet
     {
-        PlaneSet() : left(0), right(0), top(0), bottom(0), near(0), far(0) {}
+        PlaneSet() : leftPlane(0), rightPlane(0), topPlane(0), bottomPlane(0), nearPlane(0), farPlane(0)
+        {
+        }
         PlaneSet(float l, float r, float t, float b, float n, float f) :
-            left(l), right(r), top(t), bottom(b), near(n), far(f) {}
-        PlaneSet(const float* vals) : left(vals[0]), right(vals[1]), top(vals[2]),
-            bottom(vals[3]), near(vals[4]), far(vals[5]) {}
-
-        float left;
-        float right;
-        float top;
-        float bottom;
-        float near;
-        float far;
+            leftPlane(l), rightPlane(r), topPlane(t), bottomPlane(b), nearPlane(n), farPlane(f)
+        {
+        }
+        PlaneSet(const float* vals) : leftPlane(vals[0]), rightPlane(vals[1]), topPlane(vals[2]),
+            bottomPlane(vals[3]), nearPlane(vals[4]), farPlane(vals[5])
+        {
+        }
+        
+        float leftPlane;
+        float rightPlane;
+        float topPlane;
+        float bottomPlane;
+        float nearPlane;
+        float farPlane;
     };
 
     CameraLens(LensType type);

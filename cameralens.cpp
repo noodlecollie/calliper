@@ -169,7 +169,7 @@ void CameraLens::setPlanes(float left, float right, float top, float bottom, flo
 
 void CameraLens::setPlanes(const PlaneSet &planes)
 {
-    setPlanes(planes.left, planes.right, planes.top, planes.bottom, planes.near, planes.far);
+    setPlanes(planes.leftPlane, planes.rightPlane, planes.topPlane, planes.bottomPlane, planes.nearPlane, planes.farPlane);
 }
 
 QMatrix4x4 CameraLens::projectionMatrix() const
@@ -213,8 +213,8 @@ BoundingBox CameraLens::localViewVolumeBounds() const
         case Perspective:
         {
             PlaneSet pl = planes();
-            return BoundingBox(QVector3D(pl.right, pl.top, -pl.near),
-                               QVector3D(pl.left, pl.bottom, -pl.far));
+            return BoundingBox(QVector3D(pl.rightPlane, pl.topPlane, -pl.nearPlane),
+                               QVector3D(pl.leftPlane, pl.bottomPlane, -pl.farPlane));
 
 //            float top = m_flFarPlane * qTan(qDegreesToRadians(m_flPFOV/2.0f));
 //            float bottom = -top;
