@@ -145,7 +145,26 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
     m_vecOriginalHandlePos = m_pHandle->position();
     m_vecBeginPos = v->camera()->mapPoint(e->pos(), v->size());
     m_flHandeCamDist = (m_pHandle->position() - v->camera()->position()).length();
-    qDebug() << "Picked colour:" << QColor::fromRgb(col) << "Begin position:" << m_vecBeginPos;
+    QColor qcol = QColor::fromRgb(col);
+
+    if ( qcol == TranslationHandle::xAxisPickColor )
+    {
+        m_vecMovementAxis = QVector3D(1,0,0);
+    }
+    else if ( qcol == TranslationHandle::yAxisPickColor )
+    {
+        m_vecMovementAxis = QVector3D(0,1,0);
+    }
+    else if ( qcol == TranslationHandle::zAxisPickColor )
+    {
+        m_vecMovementAxis = QVector3D(0,0,1);
+    }
+    else
+    {
+        Q_ASSERT(false);
+    }
+
+    qDebug() << "Picked colour:" << qcol << "Begin position:" << m_vecBeginPos << "Axis:" << m_vecMovementAxis;
     m_bInMove = true;
 }
 
