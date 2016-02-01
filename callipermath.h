@@ -4,6 +4,7 @@
 #include <QMatrix4x4>
 #include <QVector3D>
 #include "eulerangle.h"
+#include <QSizeF>
 
 namespace Math
 {
@@ -38,6 +39,10 @@ namespace Math
     void clampToNearestMultiple(QVector3D &vec, qint64 multiple);
 
     void cameraOrientationVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up);
+
+    // Returns the size of a camera plane in camera space. The centre of the plane
+    // is the centroid of the size rectangle.
+    QSizeF cameraPlaneSize(float fov, float aspectRatio, float distance);
 }
 
 #endif // MATH_H

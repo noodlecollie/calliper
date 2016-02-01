@@ -194,4 +194,13 @@ namespace Math
             vec[i] = (float)nearestMultiple(vec[i], multiple);
         }
     }
+
+    QSizeF cameraPlaneSize(float fov, float aspectRatio)
+    {
+        float top = distance * qTan(qDegreesToRadians(fov/2.0f));
+        float bottom = -top;
+        float right = top * aspectRatio;
+        float left = -right;
+        return QSizeF(right-left, top-bottom);
+    }
 }
