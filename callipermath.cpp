@@ -195,12 +195,14 @@ namespace Math
         }
     }
 
-    QSizeF cameraPlaneSize(float fov, float aspectRatio)
+    void perspectivePlane(float fov, float aspectRatio, float distance, QVector3D &min, QVector3D &max)
     {
         float top = distance * qTan(qDegreesToRadians(fov/2.0f));
         float bottom = -top;
         float right = top * aspectRatio;
         float left = -right;
-        return QSizeF(right-left, top-bottom);
+
+        min = QVector3D(left, bottom, distance);
+        max = QVector3D(right, top, distance);
     }
 }
