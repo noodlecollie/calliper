@@ -186,12 +186,12 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
     unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
     QVector3D newPos = v->camera()->lens()->mapPoint(e->pos(), v->size());
 
-    QMatrix4x4 cameraToWorld = v->camera()->rootToLocal().inverted();
+	QMatrix4x4 cameraToWorld = v->camera()->rootToLocal().inverted() * Math::openGLToHammer();
     QVector3D wOrigDir = (cameraToWorld * QVector4D(m_vecBeginPos, 0)).toVector3D();
     QVector3D wNewDir = (cameraToWorld * QVector4D(newPos, 0)).toVector3D();
     QVector3D wOrigPos = v->camera()->position() + (m_flHandeCamDist * wOrigDir);
     QVector3D wNewPos = v->camera()->position() + (m_flHandeCamDist * wNewDir);
-    QVector3D translation = wNewPos - wOrigPos;
+	QVector3D translation = QVector3D::dotProduct(wNewPos - wOrigPos, m_vecMovementAxis) * m_vecMovementAxis;
 
     QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
     Math::clampToNearestMultiple(newHandlePos, gridMultiple);
