@@ -125,27 +125,31 @@ void BaseTool::vMousePress(QMouseEvent *e)
         return;
 
     SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::MapSceneFlag, e->pos());
+	addToSelectedSet(obj, !m_flKBModifiers.testFlag(Qt::ControlModifier));
+}
 
-    if ( !m_flKBModifiers.testFlag(Qt::ControlModifier) )
-    {
-        m_pDocument->selectedSetClear();
-        if ( obj )
-            m_pDocument->selectedSetInsert(obj);
-    }
-    else
-    {
-        if ( !obj )
-            return;
+void BaseTool::addToSelectedSet(SceneObject *obj, bool clearPrevious)
+{
+	if ( clearPrevious )
+	{
+		m_pDocument->selectedSetClear();
+		if ( obj )
+			m_pDocument->selectedSetInsert(obj);
+	}
+	else
+	{
+		if ( !obj )
+			return;
 
-        if ( m_pDocument->selectedSet().contains(obj) )
-        {
-            m_pDocument->selectedSetRemove(obj);
-        }
-        else
-        {
-            m_pDocument->selectedSetInsert(obj);
-        }
-    }
+		if ( m_pDocument->selectedSet().contains(obj) )
+		{
+			m_pDocument->selectedSetRemove(obj);
+		}
+		else
+		{
+			m_pDocument->selectedSetInsert(obj);
+		}
+	}
 }
 
 void BaseTool::vMouseMove(QMouseEvent *e)

@@ -66,6 +66,8 @@ protected:
     void setMouseLookEnabled(bool enabled);
     void toggleMouseLookEnabled();
 
+	void addToSelectedSet(SceneObject* obj, bool clearPrevious = false);
+
     MapDocument*    m_pDocument;
     bool            m_bActive;
 

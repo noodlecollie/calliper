@@ -34,7 +34,7 @@ QString DebugTestTool::staticName()
 
 void DebugTestTool::vKeyPress(QKeyEvent *e)
 {
-    if ( e->isAutoRepeat() )
+	if ( e->isAutoRepeat() || m_bInMove )
         return;
 
     switch (e->key())
@@ -138,9 +138,15 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
         return;
 
     QRgb col = 0xffffffff;
-    SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::UISceneFlag, e->pos(), &col);
-    if ( !obj || obj != m_pHandle )
-        return;
+	SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::UISceneFlag | MapDocument::MapSceneFlag, e->pos(), &col);
+	if ( !obj )
+		return;
+
+	if ( obj->scene() == m_pDocument->scene() )
+	{
+		addToSelectedSet(obj, !m_flKBModifiers.testFlag(Qt::ControlModifier));
+		return;
+	}
 
     m_vecOriginalHandlePos = m_pHandle->position();
     m_vecBeginPos = v->camera()->lens()->mapPoint(e->pos(), v->size());
@@ -196,10 +202,19 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
     QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
     Math::clampToNearestMultiple(newHandlePos, gridMultiple);
     m_pHandle->setPosition(newHandlePos);
+	translation = newHandlePos - m_vecOriginalHandlePos;
     qDebug() << "Handle translation:" << translation;
+
+	m_vecTranslation = translation;
+	updateTableManipulators();
 }
 
 void DebugTestTool::vMouseRelease(QMouseEvent *)
 {
+	if ( m_bInMove )
+	{
+		applyTableManipulators();
+	}
+
     m_bInMove = false;
 }
