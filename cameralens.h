@@ -74,6 +74,9 @@ public:
 
     BoundingBox localViewVolumeBounds() const;
 
+    // Returns the given pixel point as a 3D vector point in camera space.
+    QVector3D mapPoint(const QPoint &pos, const QSize &viewSize) const;
+
 private:
     LensType    m_iType;
 

@@ -147,6 +147,11 @@ namespace Math
                           0, 0, 0, 1);
     }
 
+    QMatrix4x4 windowToDevice(const QSize &size)
+    {
+        return windowToDevice(size.width(), size.height());
+    }
+
     qint64 previousMultiple(float value, qint64 multiple)
     {
         return qFloor(value/multiple) * multiple;

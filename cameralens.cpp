@@ -246,3 +246,27 @@ CameraLens::PlaneSet CameraLens::planes() const
         return PlaneSet(m_flLeftPlane, m_flRightPlane, m_flTopPlane, m_flBottomPlane, m_flNearPlane, m_flFarPlane);
     }
 }
+
+QVector3D CameraLens::mapPoint(const QPoint &pos, const QSize &viewSize) const
+{
+    // Adapted from original Qt code:
+    // https://github.com/qtproject/qt3d/blob/qt4/src/threed/viewing/qglcamera.cpp
+
+    int x = pos.x(), y = pos.y();
+    int width = viewSize.width(), height = viewSize.height();
+
+    float xrel, yrel;
+    if (width)
+        xrel = (((float)(x * 2)) - (float)width) / (float)width;
+    else
+        xrel = 0.0f;
+    if (height)
+        yrel = -(((float)(y * 2)) - (float)height) / (float)height;
+    else
+        yrel = 0.0f;
+
+    QMatrix4x4 unprojection = projectionMatrix().inverted();
+
+    // Return in camera space.
+    return unprojection.map(QVector3D(xrel, yrel, -1.0f));
+}

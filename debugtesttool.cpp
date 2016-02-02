@@ -143,7 +143,7 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
         return;
 
     m_vecOriginalHandlePos = m_pHandle->position();
-    m_vecBeginPos = v->camera()->mapPoint(e->pos(), v->size());
+    m_vecBeginPos = v->camera()->lens()->mapPoint(e->pos(), v->size());
     m_flHandeCamDist = (m_pHandle->position() - v->camera()->position()).length();
     QColor qcol = QColor::fromRgb(col);
 
@@ -184,8 +184,15 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
     }
 
     unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
-    QVector3D newPos = v->camera()->mapPoint(e->pos(), v->size());
-    QVector3D translation = (v->camera()->position() + ((newPos - v->camera()->position()).normalized()) * m_flHandeCamDist) - m_vecBeginPos;
+    QVector3D newPos = v->camera()->lens()->mapPoint(e->pos(), v->size());
+
+    QMatrix4x4 cameraToWorld = v->camera()->rootToLocal().inverted();
+    QVector3D wOrigDir = (cameraToWorld * QVector4D(m_vecBeginPos, 0)).toVector3D();
+    QVector3D wNewDir = (cameraToWorld * QVector4D(newPos, 0)).toVector3D();
+    QVector3D wOrigPos = v->camera()->position() + (m_flHandeCamDist * wOrigDir);
+    QVector3D wNewPos = v->camera()->position() + (m_flHandeCamDist * wNewDir);
+    QVector3D translation = wNewPos - wOrigPos;
+
     QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
     Math::clampToNearestMultiple(newHandlePos, gridMultiple);
     m_pHandle->setPosition(newHandlePos);

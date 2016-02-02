@@ -22,6 +22,7 @@ namespace Math
     // Window: pixels, (0,0) is top left.
     // Device: (-1,-1) LL to (1,1) UR, (0,0) is centre.
     QMatrix4x4 windowToDevice(int width, int height);
+    QMatrix4x4 windowToDevice(const QSize &size);
 
     // These ignore roll.
     QVector3D angleToVectorSimple(const EulerAngle &angle);

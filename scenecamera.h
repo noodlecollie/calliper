@@ -22,9 +22,6 @@ public:
     virtual void draw(ShaderStack *stack);
     virtual bool scalable() const;
 
-    // Returns the given pixel point as a 3D vector point on the near plane.
-    QVector3D mapPoint(const QPoint &pos, const QSize &viewSize) const;
-
 protected:
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();
