@@ -149,7 +149,7 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
 	}
 
     m_vecOriginalHandlePos = m_pHandle->position();
-    m_vecBeginPos = v->camera()->lens()->mapPoint(e->pos(), v->size());
+    m_BeginPos = e->pos();
     m_flHandeCamDist = (m_pHandle->position() - v->camera()->position()).length();
     QColor qcol = QColor::fromRgb(col);
 
@@ -170,7 +170,7 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
         Q_ASSERT(false);
     }
 
-    qDebug() << "Picked colour:" << qcol << "Begin position:" << m_vecBeginPos << "Axis:" << m_vecMovementAxis;
+    qDebug() << "Picked colour:" << qcol << "Begin position:" << m_BeginPos << "Axis:" << m_vecMovementAxis;
     m_bInMove = true;
 }
 
@@ -190,19 +190,13 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
     }
 
     unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
-    QVector3D newPos = v->camera()->lens()->mapPoint(e->pos(), v->size());
-
-	QMatrix4x4 cameraToWorld = v->camera()->rootToLocal().inverted() * Math::openGLToHammer();
-    QVector3D wOrigDir = (cameraToWorld * QVector4D(m_vecBeginPos, 0)).toVector3D();
-    QVector3D wNewDir = (cameraToWorld * QVector4D(newPos, 0)).toVector3D();
-    QVector3D wOrigPos = v->camera()->position() + (m_flHandeCamDist * wOrigDir);
-    QVector3D wNewPos = v->camera()->position() + (m_flHandeCamDist * wNewDir);
-	QVector3D translation = QVector3D::dotProduct(wNewPos - wOrigPos, m_vecMovementAxis) * m_vecMovementAxis;
+    QVector3D translation = v->camera()->worldTranslation(m_BeginPos, e->pos(), v->size(), m_flHandeCamDist);
+    translation = QVector3D::dotProduct(translation, m_vecMovementAxis) * m_vecMovementAxis;
 
     QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
     Math::clampToNearestMultiple(newHandlePos, gridMultiple);
     m_pHandle->setPosition(newHandlePos);
-	translation = newHandlePos - m_vecOriginalHandlePos;
+    translation = newHandlePos - m_vecOriginalHandlePos;
     qDebug() << "Handle translation:" << translation;
 
 	m_vecTranslation = translation;

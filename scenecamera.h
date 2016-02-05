@@ -22,6 +22,10 @@ public:
     virtual void draw(ShaderStack *stack);
     virtual bool scalable() const;
 
+    // The translation is defined from p0 to p1, along the plane that is parallel to the
+    // camera view plane and at the specified distance in front of where the camera is pointing.
+    QVector3D worldTranslation(const QPoint &p0, const QPoint &p1, const QSize &viewSize, float distFromCamera) const;
+
 protected:
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();

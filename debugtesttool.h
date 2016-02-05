@@ -35,7 +35,7 @@ private:
     QVector3D   m_vecTranslation;
 
     TranslationHandle* m_pHandle;
-    QVector3D m_vecBeginPos;
+    QPoint m_BeginPos;
     bool m_bInMove;
     QVector3D m_vecOriginalHandlePos;
     QVector3D m_vecMovementAxis;
