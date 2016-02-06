@@ -1,19 +1,16 @@
 #ifndef TRANSLATIONHANDLE_H
 #define TRANSLATIONHANDLE_H
 
-#include "sceneobject.h"
+#include "uimanipulator.h"
 
-class TranslationHandle : public SceneObject
+class TranslationHandle : public UIManipulator
 {
 public:
     TranslationHandle(SceneObject* parent = 0);
     virtual ~TranslationHandle();
 
     virtual void draw(ShaderStack* stack);
-
-    static const QColor xAxisPickColor;
-    static const QColor yAxisPickColor;
-    static const QColor zAxisPickColor;
+    static int axisFlagsFromPickColor(QRgb colour);
 
 private:
     void drawNormal();
@@ -24,6 +21,11 @@ private:
     int m_iXOffset;
     int m_iYOffset;
     int m_iZOffset;
+    int m_iXYOffset;
+    int m_iYZOffset;
+    int m_iXZOffset;
+    int m_iAxisSectionLength;
+    int m_iPlaneSectionLength;
 };
 
 #endif // TRANSLATIONHANDLE_H

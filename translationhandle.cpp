@@ -9,6 +9,13 @@
 #include <QtMath>
 #include "callipermath.h"
 
+#define PICKCOLOUR_X 0xffff0000
+#define PICKCOLOUR_Y 0xff00ff00
+#define PICKCOLOUR_Z 0xff0000ff
+#define PICKCOLOUR_XY 0xff888800
+#define PICKCOLOUR_YZ 0xff008888
+#define PICKCOLOUR_XZ 0xff880088
+
 void addTranslationHead(float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
     static const float HEAD_RADIUS = 0.05f;
@@ -52,6 +59,31 @@ void addTranslationHead(float scale, const QColor &col, const QMatrix4x4 &transf
     data.append(geometry);
 }
 
+void addTranslationPanel(float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
+{
+    GeometryData geometry;
+    geometry.setShaderOverride(PerVertexColorShader::staticName());
+
+    // Panel is in the XY plane.
+    geometry.appendVertex(QVector3D(0,0,0), col);
+    geometry.appendVertex(QVector3D(scale,0,0), col);
+    geometry.appendVertex(QVector3D(scale,scale,0), col);
+    geometry.appendVertex(QVector3D(0,scale,0), col);
+
+    // Create two faces facing opposite directions.
+    geometry.appendIndexTriangle(0,1,2);
+    geometry.appendIndexTriangle(0,2,3);
+    geometry.appendIndexTriangle(0,3,2);
+    geometry.appendIndexTriangle(0,2,1);
+
+    if ( !transform.isIdentity() )
+    {
+        geometry.transform(transform);
+    }
+
+    data.append(geometry);
+}
+
 void addTranslationShaft(float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
     GeometryData geometry;
@@ -83,12 +115,23 @@ void TranslationHandle::build()
 
     m_iXOffset = geometry->indexCount();
     addTranslationHead(scale, QColor::fromRgb(0xffff0000), QMatrix4x4(), *geometry);
+    m_iAxisSectionLength = geometry->indexCount() - m_iXOffset;
 
     m_iYOffset = geometry->indexCount();
     addTranslationHead(scale, QColor::fromRgb(0xff00ff00), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *geometry);
 
     m_iZOffset = geometry->indexCount();
     addTranslationHead(scale, QColor::fromRgb(0xff0000ff), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *geometry);
+
+    m_iXYOffset = geometry->indexCount();
+    addTranslationPanel(scale/4.0f, QColor::fromRgba(0x88ffff00), QMatrix4x4(), *geometry);
+    m_iPlaneSectionLength = geometry->indexCount() - m_iXYOffset;
+
+    m_iYZOffset = geometry->indexCount();
+    addTranslationPanel(scale/4, QColor::fromRgba(0x8800ffff), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *geometry);
+
+    m_iXZOffset = geometry->indexCount();
+    addTranslationPanel(scale/4, QColor::fromRgba(0x88ff00ff), Math::matrixRotateX(qDegreesToRadians(90.0f)), *geometry);
 
     m_iShaftOffset = geometry->indexCount();
 
@@ -99,7 +142,7 @@ void TranslationHandle::build()
     setGeometry(geometry);
 }
 
-TranslationHandle::TranslationHandle(SceneObject *parent) : SceneObject(parent)
+TranslationHandle::TranslationHandle(SceneObject *parent) : UIManipulator(parent)
 {
     build();
 }
@@ -161,36 +204,77 @@ void TranslationHandle::drawNormal()
 
 void TranslationHandle::drawForPicking(ShaderStack *stack)
 {
-    int sectionCount = m_iShaftOffset / 3;
-
     // Draw X.
     stack->globalColorPush();
-    stack->globalColorSetTop(xAxisPickColor);
+    stack->globalColorSetTop(PICKCOLOUR_X);
     geometry()->setDrawMode(GL_TRIANGLES);
-    geometry()->draw(m_iXOffset * sizeof(unsigned int), sectionCount);
+    geometry()->draw(m_iXOffset * sizeof(unsigned int), m_iAxisSectionLength);
     geometry()->setDrawMode(GL_LINES);
     geometry()->draw((m_iShaftOffset) * sizeof(unsigned int), 2);
     stack->globalColorPop();
 
     // Draw Y.
     stack->globalColorPush();
-    stack->globalColorSetTop(yAxisPickColor);
+    stack->globalColorSetTop(PICKCOLOUR_Y);
     geometry()->setDrawMode(GL_TRIANGLES);
-    geometry()->draw(m_iYOffset * sizeof(unsigned int), sectionCount);
+    geometry()->draw(m_iYOffset * sizeof(unsigned int), m_iAxisSectionLength);
     geometry()->setDrawMode(GL_LINES);
     geometry()->draw((m_iShaftOffset+2) * sizeof(unsigned int), 2);
     stack->globalColorPop();
 
     // Draw Z.
     stack->globalColorPush();
-    stack->globalColorSetTop(zAxisPickColor);
+    stack->globalColorSetTop(PICKCOLOUR_Z);
     geometry()->setDrawMode(GL_TRIANGLES);
-    geometry()->draw(m_iZOffset * sizeof(unsigned int), sectionCount);
+    geometry()->draw(m_iZOffset * sizeof(unsigned int), m_iAxisSectionLength);
     geometry()->setDrawMode(GL_LINES);
     geometry()->draw((m_iShaftOffset+4) * sizeof(unsigned int), 2);
     stack->globalColorPop();
+
+    geometry()->setDrawMode(GL_TRIANGLES);
+
+    // Draw XY.
+    stack->globalColorPush();
+    stack->globalColorSetTop(PICKCOLOUR_XY);
+    geometry()->draw(m_iXYOffset * sizeof(unsigned int), m_iPlaneSectionLength);
+    stack->globalColorPop();
+
+    // Draw XZ.
+    stack->globalColorPush();
+    stack->globalColorSetTop(PICKCOLOUR_XZ);
+    geometry()->draw(m_iXZOffset * sizeof(unsigned int), m_iPlaneSectionLength);
+    stack->globalColorPop();
+
+    // Draw YZ.
+    stack->globalColorPush();
+    stack->globalColorSetTop(PICKCOLOUR_YZ);
+    geometry()->draw(m_iYZOffset * sizeof(unsigned int), m_iPlaneSectionLength);
+    stack->globalColorPop();
 }
 
-const QColor TranslationHandle::xAxisPickColor(Qt::red);
-const QColor TranslationHandle::yAxisPickColor(Qt::green);
-const QColor TranslationHandle::zAxisPickColor(Qt::blue);
+int TranslationHandle::axisFlagsFromPickColor(QRgb colour)
+{
+    switch (colour)
+    {
+        case PICKCOLOUR_X:
+            return UIManipulator::AxisX;
+
+        case PICKCOLOUR_Y:
+            return UIManipulator::AxisY;
+
+        case PICKCOLOUR_Z:
+            return UIManipulator::AxisZ;
+
+        case PICKCOLOUR_XY:
+            return UIManipulator::AxisXY;
+
+        case PICKCOLOUR_XZ:
+            return UIManipulator::AxisXZ;
+
+        case PICKCOLOUR_YZ:
+            return UIManipulator::AxisYZ;
+
+        default:
+            return 0;
+    }
+}
