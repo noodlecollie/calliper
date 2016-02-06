@@ -154,10 +154,9 @@ TranslationHandle::~TranslationHandle()
 
 void TranslationHandle::draw(ShaderStack *stack)
 {
-//    ShaderProgram* program = resourceManager()->shader(m_pGeometry->shaderOverride());
-//    Q_ASSERT(program);
-//    stack->shaderPush(program);
-    stack->shaderPush(resourceManager()->shader(SelectionMaskShader::staticName()));
+    ShaderProgram* program = resourceManager()->shader(m_pGeometry->shaderOverride());
+    Q_ASSERT(program);
+    stack->shaderPush(program);
 
     stack->modelToWorldPostMultiply(localToParent());
 
@@ -181,8 +180,7 @@ void TranslationHandle::draw(ShaderStack *stack)
     }
     else
     {
-        //drawNormal();
-        drawForPicking(stack);
+        drawNormal();
     }
 
     stack->counterScalePop();
