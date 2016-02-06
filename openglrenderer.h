@@ -104,7 +104,7 @@ private:
 
     void clearDeferred();
     void renderDeferred();
-    void renderIgnoreDepth();
+    void renderTranslucent();
 
     QColor      m_colGlobalColour;
     int         m_iShader;
@@ -116,7 +116,7 @@ private:
     ShaderStack*    m_pStack;
     bool            m_bPreparedForRendering;
 
-    QMap<float, DeferredObject> m_IgnoreDepthList;
+    QMap<float, DeferredObject> m_TranslucentObjects;
 
     ObjectPicker m_ObjectPicker;
     bool m_bPicking;

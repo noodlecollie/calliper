@@ -14,6 +14,17 @@ SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
     m_iRenderFlags = 0;
 }
 
+SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(cloneFrom.parentObject())
+{
+    m_pScene = cloneFrom.m_pScene;
+    m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));
+    m_iRenderFlags = cloneFrom.m_iRenderFlags;
+
+    setPosition(cloneFrom.position());
+    setAngles(cloneFrom.angles());
+    setScale(cloneFrom.scale());
+}
+
 SceneObject::~SceneObject()
 {
 }
@@ -130,4 +141,9 @@ int SceneObject::renderFlags() const
 void SceneObject::setRenderFlags(int flags)
 {
     m_iRenderFlags = flags;
+}
+
+SceneObject* SceneObject::clone() const
+{
+    return new SceneObject(*this);
 }

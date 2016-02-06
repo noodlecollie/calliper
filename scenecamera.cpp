@@ -18,6 +18,13 @@ SceneCamera::SceneCamera(SceneObject *parent) : SceneObject(parent),
     rebuildViewBoundsGeometry();
 }
 
+SceneCamera::SceneCamera(const SceneCamera &cloneFrom) : SceneObject(cloneFrom),
+    m_pLens(new CameraLens(*cloneFrom.m_pLens.data())), m_pBoundsGeom(new GeometryData(*cloneFrom.m_pBoundsGeom.data()))
+{
+    m_LocalLensBounds = cloneFrom.m_LocalLensBounds;
+    m_bDrawBounds = cloneFrom.m_bDrawBounds;
+}
+
 SceneCamera::~SceneCamera()
 {
 }
@@ -155,4 +162,9 @@ QVector3D SceneCamera::worldTranslation(const QPoint &p0, const QPoint &p1, cons
 QVector3D SceneCamera::frustumDirection(const QPoint &p, const QSize &viewSize) const
 {
     return ((rootToLocal().inverted() * Math::openGLToHammer()) * QVector4D(lens()->mapPoint(p, viewSize), 0)).toVector3D();
+}
+
+SceneObject* SceneCamera::clone() const
+{
+    return new SceneCamera(*this);
 }

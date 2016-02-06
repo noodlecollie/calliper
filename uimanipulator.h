@@ -24,7 +24,12 @@ public:
 
     static QList<QVector3D> manipulationAxes(int axisFlags);
 
-    UIManipulator(SceneObject* parent = 0);
+    explicit UIManipulator(SceneObject* parent = 0);
+
+    virtual SceneObject* clone() const;
+
+protected:
+    explicit UIManipulator(const UIManipulator &cloneFrom);
 };
 
 #endif // UIMANIPULATOR_H

@@ -12,6 +12,7 @@
 #include "callipermath.h"
 #include <QCursor>
 #include "uiscene.h"
+#include <QStandardPaths>
 
 BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
 {
@@ -295,6 +296,12 @@ void BaseTool::vKeyRelease(QKeyEvent *e)
             m_CameraController.right(false);
             return;
         }
+
+        case Qt::Key_F5:
+        {
+            saveFrameToDesktop();
+            return;
+        }
     }
 }
 
@@ -364,4 +371,14 @@ void BaseTool::setMouseLookEnabled(bool enabled)
 void BaseTool::toggleMouseLookEnabled()
 {
     setMouseLookEnabled(!m_bMouseLookEnabled);
+}
+
+void BaseTool::saveFrameToDesktop()
+{
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v )
+        return;
+
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + QString("/frame.png");
+    v->saveCurrentFrame(path);
 }

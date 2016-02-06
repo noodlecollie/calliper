@@ -380,6 +380,24 @@ void Viewport::debugSaveCurrentFrame()
     image.save(path);
 }
 
+void Viewport::saveCurrentFrame()
+{
+    QOpenGLFramebufferObjectFormat fboFormat;
+    fboFormat.setSamples(0);
+    fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+
+    QOpenGLFramebufferObject fbo(sizeInPixels(), fboFormat);
+    fbo.bind();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    drawScene();
+
+    fbo.release();
+    QImage image = fbo.toImage(true);
+    m_bSaveFrameResult = image.save(m_szSaveFrameFilename);
+}
+
 QSize Viewport::sizeInPixels() const
 {
     return application()->mainWindow()->devicePixelRatio() * size();
@@ -406,6 +424,12 @@ void Viewport::processRenderTasks()
     {
         selectFromDepthBuffer(m_DepthSelectPos);
         m_iRenderTasks &= ~DepthBufferSelect;
+    }
+
+    if ( (m_iRenderTasks & SaveCurrentFrame) == SaveCurrentFrame )
+    {
+        saveCurrentFrame();
+        m_iRenderTasks &= ~SaveCurrentFrame;
     }
 }
 
@@ -466,4 +490,12 @@ SceneObject* Viewport::pickObjectFromDepthBuffer(int sceneFlags, const QPoint &p
         *pickColor = m_PickColour;
 
     return m_pPickedObject;
+}
+
+bool Viewport::saveCurrentFrame(const QString &filename)
+{
+    m_iRenderTasks |= SaveCurrentFrame;
+    m_szSaveFrameFilename = filename;
+    repaint();
+    return m_bSaveFrameResult;
 }

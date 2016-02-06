@@ -3,6 +3,21 @@
 
 OriginMarker::OriginMarker(SceneObject *parent) : SceneObject(parent)
 {
+    constructGeometry();
+}
+
+OriginMarker::OriginMarker(const OriginMarker &cloneFrom) : SceneObject(cloneFrom)
+{
+    m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));
+}
+
+bool OriginMarker::editable() const
+{
+    return false;
+}
+
+void OriginMarker::constructGeometry()
+{
     m_pGeometry->setShaderOverride(PerVertexColorShader::staticName());
 
     m_pGeometry->setDrawMode(GL_LINES);
@@ -20,7 +35,7 @@ OriginMarker::OriginMarker(SceneObject *parent) : SceneObject(parent)
     m_pGeometry->appendIndex(5);
 }
 
-bool OriginMarker::editable() const
+SceneObject* OriginMarker::clone() const
 {
-    return false;
+    return new OriginMarker(*this);
 }

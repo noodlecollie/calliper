@@ -65,6 +65,7 @@ protected:
 
     void setMouseLookEnabled(bool enabled);
     void toggleMouseLookEnabled();
+    void saveFrameToDesktop();
 
 	void addToSelectedSet(SceneObject* obj, bool clearPrevious = false);
 

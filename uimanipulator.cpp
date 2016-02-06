@@ -4,6 +4,12 @@ UIManipulator::UIManipulator(SceneObject *parent) : SceneObject(parent)
 {
 
 }
+
+UIManipulator::UIManipulator(const UIManipulator &cloneFrom) : SceneObject(cloneFrom)
+{
+
+}
+
 QList<QVector3D> UIManipulator::manipulationAxes(int axisFlags)
 {
     QList<QVector3D> axes;
@@ -26,3 +32,7 @@ QList<QVector3D> UIManipulator::manipulationAxes(int axisFlags)
     return axes;
 }
 
+SceneObject* UIManipulator::clone() const
+{
+    return new UIManipulator(*this);
+}

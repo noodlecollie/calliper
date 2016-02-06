@@ -48,14 +48,6 @@ namespace SceneFactory
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAt(QVector3D(0,0,0));
 
-        c = new SceneCamera(scene->root());
-        c->setObjectName("camera2");
-        c->setPosition(QVector3D(128,0,0));
-        c->lens()->setFieldOfView(45);
-        c->lens()->setNearPlane(1);
-        c->lens()->setFarPlane(100);
-        c->setDrawBounds(true);
-
         SceneObject* block = new SceneObject(scene->root());
         block->setObjectName("block");
         block->setGeometry(GeometryFactory::cube(32.0f));
@@ -66,6 +58,16 @@ namespace SceneFactory
         camModel->setObjectName("camModel");
         camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
+
+        SceneObject* testBlock = new SceneObject(scene->root());
+        testBlock->setObjectName("testBlock");
+        testBlock->setGeometry(GeometryFactory::cubeSolidColor(96.0f, QColor::fromRgba(0x80ff8800)));
+        testBlock->setPosition(QVector3D(0,-256,0));
+        testBlock->setRenderFlags(SceneObject::Translucent);
+
+        SceneObject* testBlock2 = testBlock->clone();
+        testBlock2->setObjectName("testBlock2");
+        testBlock2->setPosition(QVector3D(0, -512, 0));
 
         return scene;
     }

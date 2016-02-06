@@ -6,11 +6,15 @@
 class TranslationHandle : public UIManipulator
 {
 public:
-    TranslationHandle(SceneObject* parent = 0);
+    explicit TranslationHandle(SceneObject* parent = 0);
     virtual ~TranslationHandle();
+    virtual SceneObject* clone() const;
 
     virtual void draw(ShaderStack* stack);
     static int axisFlagsFromPickColor(QRgb colour);
+
+protected:
+    explicit TranslationHandle(const TranslationHandle &cloneFrom);
 
 private:
     void drawNormal();

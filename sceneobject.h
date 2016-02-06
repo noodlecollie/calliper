@@ -17,11 +17,14 @@ class SceneObject : public HierarchicalObject
 public:
     enum RenderFlag
     {
-        IgnoreDepth = 0x1,
+        Translucent = 0x1,
     };
 
     explicit SceneObject(SceneObject *parent = 0);
     virtual ~SceneObject();
+
+    // Object name is not cloned.
+    virtual SceneObject* clone() const;
 
     SceneObject* parentObject() const;
     QList<SceneObject*> children() const;
@@ -47,6 +50,7 @@ signals:
 public slots:
 
 protected:
+    explicit SceneObject(const SceneObject &cloneFrom);
     QScopedPointer<GeometryData>    m_pGeometry;
     BaseScene*  m_pScene;
     int m_iRenderFlags;

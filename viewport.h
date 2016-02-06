@@ -40,6 +40,7 @@ public:
     bool drawFPS() const;
 
     SceneObject* pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, QRgb* pickColor = NULL);
+    bool saveCurrentFrame(const QString &filename);
 
 signals:
     void preFrame(int);
@@ -64,7 +65,8 @@ protected:
 private:
     enum RenderTask
     {
-        DepthBufferSelect = 0x1
+        DepthBufferSelect = 0x1,
+        SaveCurrentFrame = 0x2
     };
 
     void updateBackgroundColor();
@@ -76,6 +78,7 @@ private:
     void drawScene();
     void processRenderTasks();
     void selectFromDepthBuffer(const QPoint &pos);
+    void saveCurrentFrame();
 
     GLuint  m_iVertexArray;
     QTimer  m_Timer;
@@ -96,6 +99,8 @@ private:
     bool    m_bDrawFocusHighlight;
     bool    m_bDrawFPS;
     int     m_iRenderTasks;
+    QString m_szSaveFrameFilename;
+    bool    m_bSaveFrameResult;
 
     QPoint          m_DepthSelectPos;
     SceneObject*    m_pPickedObject;

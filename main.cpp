@@ -1,5 +1,3 @@
-#if 1
-
 #include "mainwindow.h"
 #include <QApplication>
 #include <QSurfaceFormat>
@@ -20,11 +18,22 @@ int main(int argc, char *argv[])
     format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
     format.setSamples(2);
 
+    // Today I learned: the surface itself doesn't need an alpha channel.
+    // When we blend colours in OpenGL, the alpha value passed in with the colour
+    // is only used internally by OpenGL in order to calculate the physical RGB
+    // to write back into the colour buffer. We don't need to set any alpha on the
+    // surface itself, since the RGB values will already have been blended by the
+    // time they're written back to the colour buffer. If we do set the alpha, that
+    // means we'll actually be able to see through the surface and whatever is behind
+    // will be visible. This isn't what we want for the application main window!
+    // If we want to create a frame buffer later on where the actual colour buffer
+    // output should be translucent, override the default alpha buffer size to 8 bits.
+
     format.setDepthBufferSize(24);
     format.setRedBufferSize(8);
     format.setGreenBufferSize(8);
     format.setBlueBufferSize(8);
-    format.setAlphaBufferSize(8);
+    format.setAlphaBufferSize(0);
     format.setStencilBufferSize(8);
 
     QSurfaceFormat::setDefaultFormat(format);
@@ -66,27 +75,3 @@ int main(int argc, char *argv[])
 
     return ret;
 }
-
-#else
-
-#include <QtDebug>
-
-class A { public: A(){} virtual ~A(){} };
-class B : public A { public: B() : A() {} virtual ~B(){} };
-class C { public: C(){} virtual ~C(){} };
-class AC : public A, public C { public: AC() : A(), C() {} virtual ~AC(){} };
-class D : public B, public C { public: D() : B(), C() {} virtual ~D(){} };
-
-int main(int argc, char *argv[])
-{
-    D classD;
-    AC* pClassAC = dynamic_cast<AC*>(&classD);
-    A* pClassA = dynamic_cast<A*>(&classD);
-    C* pClassC = dynamic_cast<C*>(&classD);
-    qDebug() << "pClassAC =" << pClassAC
-             << "pClassA =" << pClassA
-             << "pClassC =" << pClassC;
-    return 0;
-}
-
-#endif

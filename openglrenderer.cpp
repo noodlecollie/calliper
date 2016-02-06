@@ -156,22 +156,13 @@ void OpenGLRenderer::end()
 
 void OpenGLRenderer::renderDeferred()
 {
-    renderIgnoreDepth();
+    renderTranslucent();
 }
 
-void OpenGLRenderer::renderIgnoreDepth()
+void OpenGLRenderer::renderTranslucent()
 {
-    QOpenGLContext* context = QOpenGLContext::currentContext();
-    Q_ASSERT(context);
-
-    QOpenGLFunctions_4_1_Core* f = context->versionFunctions<QOpenGLFunctions_4_1_Core>();
-    bool depthWasEnabled = f->glIsEnabled(GL_DEPTH_TEST);
-
-    if ( depthWasEnabled )
-        f->glDisable(GL_DEPTH_TEST);
-
-    for ( QMap<float,DeferredObject>::const_iterator it = m_IgnoreDepthList.constBegin();
-          it != m_IgnoreDepthList.constEnd(); ++it )
+    for ( QMap<float,DeferredObject>::const_iterator it = m_TranslucentObjects.constBegin();
+          it != m_TranslucentObjects.constEnd(); ++it )
     {
         const DeferredObject &dfo = *it;
 
@@ -183,9 +174,6 @@ void OpenGLRenderer::renderIgnoreDepth()
 
         m_pStack->modelToWorldPop();
     }
-
-    if ( depthWasEnabled )
-        f->glEnable(GL_DEPTH_TEST);
 }
 
 void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
@@ -198,15 +186,15 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
     {
         // Check if we need to defer this object.
         bool deferred = false;
-        if ( (obj->renderFlags() & SceneObject::IgnoreDepth) == SceneObject::IgnoreDepth )
-        {
-            deferred = true;
+//        if ( (obj->renderFlags() & SceneObject::Translucent) == SceneObject::Translucent )
+//        {
+//            deferred = true;
 
-            // Order objects within the map by depth.
-            // We order by Y because this would be converted to Z by the coordinate transform matrix.
-            float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
-            m_IgnoreDepthList.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
-        }
+//            // Order objects within the map by depth.
+//            // We order by Y because this would be converted to Z by the coordinate transform matrix.
+//            float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
+//            m_TranslucentObjects.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
+//        }
 
         if ( !deferred )
         {
@@ -453,7 +441,7 @@ void OpenGLRenderer::setFogEndDistance(float dist)
 
 void OpenGLRenderer::clearDeferred()
 {
-    m_IgnoreDepthList.clear();
+    m_TranslucentObjects.clear();
 }
 
 QVector2D OpenGLRenderer::deviceCoordinates(const QVector3D &worldPos, const SceneCamera *camera)

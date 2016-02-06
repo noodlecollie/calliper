@@ -147,6 +147,19 @@ TranslationHandle::TranslationHandle(SceneObject *parent) : UIManipulator(parent
     build();
 }
 
+TranslationHandle::TranslationHandle(const TranslationHandle &cloneFrom) : UIManipulator(cloneFrom)
+{
+    m_iShaftOffset = cloneFrom.m_iShaftOffset;
+    m_iXOffset = cloneFrom.m_iXOffset;
+    m_iYOffset = cloneFrom.m_iYOffset;
+    m_iZOffset = cloneFrom.m_iZOffset;
+    m_iXYOffset = cloneFrom.m_iXYOffset;
+    m_iYZOffset = cloneFrom.m_iYZOffset;
+    m_iXZOffset = cloneFrom.m_iXZOffset;
+    m_iAxisSectionLength = cloneFrom.m_iAxisSectionLength;
+    m_iPlaneSectionLength = cloneFrom.m_iPlaneSectionLength;
+}
+
 TranslationHandle::~TranslationHandle()
 {
 
@@ -275,4 +288,9 @@ int TranslationHandle::axisFlagsFromPickColor(QRgb colour)
         default:
             return 0;
     }
+}
+
+SceneObject* TranslationHandle::clone() const
+{
+    return new TranslationHandle(*this);
 }

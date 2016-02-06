@@ -9,8 +9,9 @@ class SceneCamera : public SceneObject
 {
     Q_OBJECT
 public:
-    SceneCamera(SceneObject* parent = 0);
+    explicit SceneCamera(SceneObject* parent = 0);
     virtual ~SceneCamera();
+    virtual SceneObject* clone() const;
 
     CameraLens* lens() const;
 
@@ -30,6 +31,7 @@ public:
     QVector3D frustumDirection(const QPoint &p, const QSize &viewSize) const;
 
 protected:
+    explicit SceneCamera(const SceneCamera &cloneFrom);
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();
 
