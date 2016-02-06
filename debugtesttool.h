@@ -4,9 +4,11 @@
 #include "basetool.h"
 #include <QHash>
 #include "sceneobjectmanipulator.h"
+#include "callipermath.h"
 
 class SceneObject;
 class TranslationHandle;
+class SceneCamera;
 
 class DebugTestTool : public BaseTool
 {
@@ -30,6 +32,7 @@ private:
     void updateTableFromSet();
     void updateTableManipulators();
     void applyTableManipulators();
+    static Math::AxisIdentifier planeConstraintAxis(int axisFlags, const SceneCamera* camera);
 
     ManipTable  m_ManipTable;
     QVector3D   m_vecTranslation;
@@ -40,6 +43,7 @@ private:
     QVector3D m_vecOriginalHandlePos;
     QList<QVector3D> m_MovementAxes;
     float m_flHandeCamDist;
+    int m_iAxisFlags;
 };
 
 #endif // DEBUGTESTTOOL_H

@@ -151,3 +151,8 @@ QVector3D SceneCamera::worldTranslation(const QPoint &p0, const QPoint &p1, cons
      return (position() + (distFromCamera * ((cameraToWorld * QVector4D(lens()->mapPoint(p1, viewSize), 0)).toVector3D())))
              - (position() + (distFromCamera * ((cameraToWorld * QVector4D(lens()->mapPoint(p0, viewSize), 0)).toVector3D())));
 }
+
+QVector3D SceneCamera::frustumDirection(const QPoint &p, const QSize &viewSize) const
+{
+    return ((rootToLocal().inverted() * Math::openGLToHammer()) * QVector4D(lens()->mapPoint(p, viewSize), 0)).toVector3D();
+}

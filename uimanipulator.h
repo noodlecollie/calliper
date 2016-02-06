@@ -4,6 +4,7 @@
 #include "sceneobject.h"
 #include <QList>
 #include <QVector3D>
+#include "callipermath.h"
 
 class UIManipulator : public SceneObject
 {

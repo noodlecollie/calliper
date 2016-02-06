@@ -8,6 +8,13 @@
 
 namespace Math
 {
+    enum AxisIdentifier
+    {
+        AxisX = 0,
+        AxisY = 1,
+        AxisZ = 2,
+    };
+
     QMatrix4x4 matrixTranslate(const QVector3D &translation);
     QMatrix4x4 matrixRotateX(float radians);
     QMatrix4x4 matrixRotateY(float radians);
@@ -41,6 +48,9 @@ namespace Math
 
     void cameraOrientationVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up);
     void perspectivePlane(float fov, float aspectRatio, float distance, QVector3D &min, QVector3D &max);
+
+    // Intersection of a ray with a plane defined by axis=value, eg. x=0
+    QVector3D intersectionPoint(const QVector3D &origin, const QVector3D &direction, AxisIdentifier axis, float axisValue, bool* success = NULL);
 }
 
 #endif // MATH_H

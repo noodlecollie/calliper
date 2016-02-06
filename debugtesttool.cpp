@@ -151,8 +151,8 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
     m_vecOriginalHandlePos = m_pHandle->position();
     m_BeginPos = e->pos();
     m_flHandeCamDist = (m_pHandle->position() - v->camera()->position()).length();
-    int axisFlags = TranslationHandle::axisFlagsFromPickColor(col);
-    m_MovementAxes = UIManipulator::manipulationAxes(axisFlags);
+    m_iAxisFlags = TranslationHandle::axisFlagsFromPickColor(col);
+    m_MovementAxes = UIManipulator::manipulationAxes(m_iAxisFlags);
 
     qDebug() << "Picked colour:" << col << "Begin position:" << m_BeginPos << "Axis:" << m_MovementAxes;
     m_bInMove = true;
@@ -174,19 +174,45 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
     }
 
     unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
-    QVector3D translation = v->camera()->worldTranslation(m_BeginPos, e->pos(), v->size(), m_flHandeCamDist);
 
-    QVector3D combinedTranslation;
-    foreach ( QVector3D axis, m_MovementAxes )
+    // If there is no constraint on the movement axis, just move in the camera plane.
+    if ( m_iAxisFlags == UIManipulator::AxisXYZ )
     {
-        combinedTranslation += QVector3D::dotProduct(translation, axis) * axis;
+        QVector3D translation = v->camera()->worldTranslation(m_BeginPos, e->pos(), v->size(), m_flHandeCamDist);
+        QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
+        Math::clampToNearestMultiple(newHandlePos, gridMultiple);
+        m_pHandle->setPosition(newHandlePos);
+    }
+    // Otherwise, move only in the specified axes and along the specified plane.
+    else
+    {
+        Math::AxisIdentifier axis = planeConstraintAxis(m_iAxisFlags, v->camera());
+        float value = m_vecOriginalHandlePos[axis];
+
+        bool success = false;
+        QVector3D initialIntersection = Math::intersectionPoint(v->camera()->position(), v->camera()->frustumDirection(m_BeginPos, v->size()), axis, value, &success);
+        if ( !success )
+            return;
+
+        success = false;
+        QVector3D planeIntersection = Math::intersectionPoint(v->camera()->position(), v->camera()->frustumDirection(e->pos(), v->size()), axis, value, &success);
+        if ( !success )
+            return;
+
+        QVector3D translation = planeIntersection - initialIntersection;
+        QList<QVector3D> translationAxes = m_pHandle->manipulationAxes(m_iAxisFlags);
+        QVector3D overallTranslation;
+        foreach ( QVector3D axis, translationAxes )
+        {
+            overallTranslation += QVector3D::dotProduct(translation, axis) * axis;
+        }
+
+        QVector3D newHandlePos = m_vecOriginalHandlePos + overallTranslation;
+        Math::clampToNearestMultiple(newHandlePos, gridMultiple);
+        m_pHandle->setPosition(newHandlePos);
     }
 
-    QVector3D newHandlePos = m_vecOriginalHandlePos + combinedTranslation;
-    Math::clampToNearestMultiple(newHandlePos, gridMultiple);
-    m_pHandle->setPosition(newHandlePos);
-
-    QVector3D handleTranslation = newHandlePos - m_vecOriginalHandlePos;
+    QVector3D handleTranslation = m_pHandle->position() - m_vecOriginalHandlePos;
     qDebug() << "Handle translation:" << handleTranslation;
 
     m_vecTranslation = handleTranslation;
@@ -201,4 +227,78 @@ void DebugTestTool::vMouseRelease(QMouseEvent *)
 	}
 
     m_bInMove = false;
+}
+
+Math::AxisIdentifier DebugTestTool::planeConstraintAxis(int axisFlags, const SceneCamera *camera)
+{
+    switch (axisFlags)
+    {
+        // If the axis is single, we want to choose the plane depending on which one the camera is most perpendicular to.
+        case UIManipulator::AxisX:
+        {
+            QVector3D dir = Math::angleToVectorSimple(camera->angles());
+
+            // Choose the plane whose normal most closely matches the camera's view direction
+            if ( qAbs(QVector3D::dotProduct(dir, QVector3D(0,1,0))) > qAbs(QVector3D::dotProduct(dir, QVector3D(0,0,1))) )
+            {
+                return Math::AxisY;
+            }
+            else
+            {
+                return Math::AxisZ;
+            }
+        }
+
+        case UIManipulator::AxisY:
+        {
+            QVector3D dir = Math::angleToVectorSimple(camera->angles());
+
+            // Choose the plane whose normal most closely matches the camera's view direction
+            if ( qAbs(QVector3D::dotProduct(dir, QVector3D(1,0,0))) > qAbs(QVector3D::dotProduct(dir, QVector3D(0,0,1))) )
+            {
+                return Math::AxisX;
+            }
+            else
+            {
+                return Math::AxisZ;
+            }
+        }
+
+        case UIManipulator::AxisZ:
+        {
+            QVector3D dir = Math::angleToVectorSimple(camera->angles());
+
+            // Choose the plane whose normal most closely matches the camera's view direction
+            if ( qAbs(QVector3D::dotProduct(dir, QVector3D(1,0,0))) > qAbs(QVector3D::dotProduct(dir, QVector3D(0,1,0))) )
+            {
+                return Math::AxisX;
+            }
+            else
+            {
+                return Math::AxisY;
+            }
+        }
+
+        // Otherwise, return the axis not in the plane.
+        case UIManipulator::AxisXY:
+        {
+            return Math::AxisZ;
+        }
+
+        case UIManipulator::AxisXZ:
+        {
+            return Math::AxisY;
+        }
+
+        case UIManipulator::AxisYZ:
+        {
+            return Math::AxisX;
+        }
+
+        default:
+        {
+            Q_ASSERT(false);
+            return Math::AxisX;
+        }
+    }
 }

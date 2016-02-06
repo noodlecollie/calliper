@@ -210,4 +210,40 @@ namespace Math
         min = QVector3D(left, bottom, distance);
         max = QVector3D(right, top, distance);
     }
+
+    QVector3D intersectionPoint(const QVector3D &origin, const QVector3D &direction, AxisIdentifier axis, float axisValue, bool* success)
+    {
+        Q_ASSERT(!direction.isNull());
+
+        // Ray: origin + t(direction)
+        // Find the point where the given axis value for this ray is axisValue.
+        // Eg. for plane x=3, find where ray.x = 3.
+        // ox + t(dx) = 3 -> t(dx) = 3 - ox -> t = (3 - ox)/dx
+        // More generally (with a specifying the chosen axis and v the value):
+        // oa + t(da) = v -> t(da) = v - oa -> t = (v - oa)/da
+
+        // If the direction of the ray is 0 in the axis specified for the plane, this means that the ray will never intersect
+        // the plane (or it already lies within it). In this case, return unsuccessful.
+        if ( qFuzzyIsNull(direction[axis]) )
+        {
+            if ( success )
+            {
+                *success = false;
+            }
+
+            return QVector3D();
+        }
+
+        if ( success )
+        {
+            *success = true;
+        }
+
+        // The ray will definitely intersect the plane.
+        // Calaulate the parametric parameter t.
+        float t = (axisValue - origin[axis])/direction[axis];
+
+        // Return the intersection point.
+        return origin + (t * direction);
+    }
 }
