@@ -38,7 +38,7 @@ private:
     QPoint m_BeginPos;
     bool m_bInMove;
     QVector3D m_vecOriginalHandlePos;
-    QVector3D m_vecMovementAxis;
+    QList<QVector3D> m_MovementAxes;
     float m_flHandeCamDist;
 };
 

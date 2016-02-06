@@ -152,27 +152,9 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
     m_BeginPos = e->pos();
     m_flHandeCamDist = (m_pHandle->position() - v->camera()->position()).length();
     int axisFlags = TranslationHandle::axisFlagsFromPickColor(col);
+    m_MovementAxes = UIManipulator::manipulationAxes(axisFlags);
 
-    if ( axisFlags == UIManipulator::AxisX )
-    {
-        m_vecMovementAxis = QVector3D(1,0,0);
-    }
-    else if ( axisFlags == UIManipulator::AxisY )
-    {
-        m_vecMovementAxis = QVector3D(0,1,0);
-    }
-    else if ( axisFlags == UIManipulator::AxisZ )
-    {
-        m_vecMovementAxis = QVector3D(0,0,1);
-    }
-    else
-    {
-        // TODO
-        m_vecMovementAxis = QVector3D(0,0,0);
-        //Q_ASSERT(false);
-    }
-
-    qDebug() << "Picked colour:" << col << "Begin position:" << m_BeginPos << "Axis:" << m_vecMovementAxis;
+    qDebug() << "Picked colour:" << col << "Begin position:" << m_BeginPos << "Axis:" << m_MovementAxes;
     m_bInMove = true;
 }
 
@@ -193,15 +175,21 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
 
     unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
     QVector3D translation = v->camera()->worldTranslation(m_BeginPos, e->pos(), v->size(), m_flHandeCamDist);
-    translation = QVector3D::dotProduct(translation, m_vecMovementAxis) * m_vecMovementAxis;
 
-    QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
+    QVector3D combinedTranslation;
+    foreach ( QVector3D axis, m_MovementAxes )
+    {
+        combinedTranslation += QVector3D::dotProduct(translation, axis) * axis;
+    }
+
+    QVector3D newHandlePos = m_vecOriginalHandlePos + combinedTranslation;
     Math::clampToNearestMultiple(newHandlePos, gridMultiple);
     m_pHandle->setPosition(newHandlePos);
-    translation = newHandlePos - m_vecOriginalHandlePos;
-    qDebug() << "Handle translation:" << translation;
 
-	m_vecTranslation = translation;
+    QVector3D handleTranslation = newHandlePos - m_vecOriginalHandlePos;
+    qDebug() << "Handle translation:" << handleTranslation;
+
+    m_vecTranslation = handleTranslation;
 	updateTableManipulators();
 }
 
