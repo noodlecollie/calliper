@@ -177,6 +177,8 @@ void OpenGLRenderer::renderTranslucent()
         m_pStack->modelToWorldSetToIdentity();
         m_pStack->modelToWorldPreMultiply(dfo.matrix);
         dfo.object->draw(m_pStack);
+        if ( m_bPicking )
+            m_ObjectPicker.checkDrawnObject(dfo.object);
 
         m_pStack->modelToWorldPop();
     }
