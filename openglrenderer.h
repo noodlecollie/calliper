@@ -117,6 +117,7 @@ private:
     bool            m_bPreparedForRendering;
 
     QMap<float, DeferredObject> m_TranslucentObjects;
+    QVector3D m_vecCurrentCameraWorldPosition;
 
     ObjectPicker m_ObjectPicker;
     bool m_bPicking;

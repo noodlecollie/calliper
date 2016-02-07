@@ -138,6 +138,13 @@ void OpenGLRenderer::begin()
     m_pStack->applyAll();
     m_pStack->setAutoUpdate(true);
 
+    m_vecCurrentCameraWorldPosition = QVector3D();
+    const HierarchicalObject* o = m_pStack->cameraParams().hierarchicalObject();
+    if ( o )
+    {
+        m_vecCurrentCameraWorldPosition = (o->rootToLocal().inverted() * QVector4D(0,0,0,1)).toVector3D();
+    }
+
     clearDeferred();
 
     m_bPreparedForRendering = true;
@@ -186,15 +193,16 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
     {
         // Check if we need to defer this object.
         bool deferred = false;
-//        if ( (obj->renderFlags() & SceneObject::Translucent) == SceneObject::Translucent )
-//        {
-//            deferred = true;
+        if ( (obj->renderFlags() & SceneObject::Translucent) == SceneObject::Translucent )
+        {
+            deferred = true;
 
-//            // Order objects within the map by depth.
-//            // We order by Y because this would be converted to Z by the coordinate transform matrix.
-//            float y = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).y();
-//            m_TranslucentObjects.insert(y, DeferredObject(obj, stack->modelToWorldTop()));
-//        }
+            // Order objects within the map by depth.
+            // obj->position() is used because localToParent() has not yet been applied.
+            // The depth is negated because of the way QMap orderes keys.
+            QVector3D worldPos = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).toVector3D();
+            m_TranslucentObjects.insertMulti(-(worldPos - m_vecCurrentCameraWorldPosition).lengthSquared(), DeferredObject(obj, stack->modelToWorldTop()));
+        }
 
         if ( !deferred )
         {

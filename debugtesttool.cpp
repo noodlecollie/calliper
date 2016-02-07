@@ -139,10 +139,8 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
 
     QRgb col = 0xffffffff;
 	SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::UISceneFlag | MapDocument::MapSceneFlag, e->pos(), &col);
-	if ( !obj )
-		return;
 
-	if ( obj->scene() == m_pDocument->scene() )
+    if ( !obj || obj->scene() == m_pDocument->scene() )
 	{
 		addToSelectedSet(obj, !m_flKBModifiers.testFlag(Qt::ControlModifier));
 		return;
