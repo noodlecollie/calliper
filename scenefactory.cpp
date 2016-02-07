@@ -48,16 +48,22 @@ namespace SceneFactory
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAt(QVector3D(0,0,0));
 
+        SceneObject* camModel = new SceneObject(scene->root());
+        camModel->setObjectName("camModel");
+        camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
+        camModel->setPosition(QVector3D(0,128,0));
+
         SceneObject* block = new SceneObject(scene->root());
         block->setObjectName("block");
         block->setGeometry(GeometryFactory::cube(32.0f));
         block->geometry()->setTexture(0, "/textures/test");
         block->setPosition(QVector3D(64,0,0));
 
-        SceneObject* camModel = new SceneObject(scene->root());
-        camModel->setObjectName("camModel");
-        camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
-        camModel->setPosition(QVector3D(0,128,0));
+        SceneObject* block2 = block->clone();
+        block2->setObjectName("block2");
+        block2->geometry()->setTexture(0, "/textures/debug_translucent");
+        block2->setPosition(QVector3D(128,0,0));
+        block2->setRenderFlags(SceneObject::Translucent);
 
         SceneObject* testBlock = new SceneObject(scene->root());
         testBlock->setObjectName("testBlock");

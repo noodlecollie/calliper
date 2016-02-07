@@ -145,8 +145,6 @@ void OpenGLRenderer::begin()
         m_vecCurrentCameraWorldPosition = (o->rootToLocal().inverted() * QVector4D(0,0,0,1)).toVector3D();
     }
 
-    clearDeferred();
-
     m_bPreparedForRendering = true;
 }
 
@@ -164,6 +162,7 @@ void OpenGLRenderer::end()
 void OpenGLRenderer::renderDeferred()
 {
     renderTranslucent();
+    clearDeferred();
 }
 
 void OpenGLRenderer::renderTranslucent()

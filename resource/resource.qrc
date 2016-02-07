@@ -24,5 +24,6 @@
         <file>models/editor/camera.mtl</file>
         <file>models/editor/camera.obj</file>
         <file>shaders/pervertexcolor_screenspace.vert</file>
+        <file>textures/debug_translucent.png</file>
     </qresource>
 </RCC>

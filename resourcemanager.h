@@ -4,11 +4,11 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include <QVector>
 #include <QHash>
+#include <QOpenGLTexture>
 
 class QOffscreenSurface;
 class QOpenGLContext;
 class ShaderProgram;
-class QOpenGLTexture;
 class SimpleNumericFont;
 class QOpenGLFramebufferObject;
 
@@ -46,6 +46,8 @@ private:
 
     void setUpShaders();
     void setUpBuiltInTextures();
+    void addBuiltInTexture(const QString &path, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max,
+                           QOpenGLTexture::WrapMode s = QOpenGLTexture::Repeat, QOpenGLTexture::WrapMode t = QOpenGLTexture::Repeat);
 
     QOffscreenSurface*  m_pSurface;
     QOpenGLContext*     m_pBackgroundContext;
