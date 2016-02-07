@@ -144,7 +144,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionDebug_Tool"/>
    <addaction name="actionTranslate_Tool"/>
@@ -383,6 +383,22 @@
   </connection>
   <connection>
    <sender>actionDebug_Tool</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>toolButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTranslate_Tool</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>toolButtonClicked()</slot>

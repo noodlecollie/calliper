@@ -8,7 +8,10 @@
 
 class UIManipulator : public SceneObject
 {
+	Q_OBJECT
 public:
+	explicit UIManipulator(SceneObject* parent = 0);
+
     enum ManipulationAxisFlag
     {
         AxisX = 0x1,
@@ -24,8 +27,7 @@ public:
 
     static QList<QVector3D> manipulationAxes(int axisFlags);
     static void clampToNearestMultiple(QVector3D &vec, qint64 multiple, int axisFlags);
-
-    explicit UIManipulator(SceneObject* parent = 0);
+	static Math::AxisIdentifier planeConstraintAxis(int axisFlags, const HierarchicalObject &camera);
 
     virtual SceneObject* clone() const;
 

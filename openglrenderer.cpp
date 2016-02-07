@@ -186,6 +186,10 @@ void OpenGLRenderer::renderTranslucent()
 
 void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 {
+    // If the object is hidden, don't draw it or any of its children.
+    if ( obj->hidden() )
+        return;
+
     stack->modelToWorldPush();
 
     // TODO: Really we should change this so that the renderer always applies the modelToWorld matrix.

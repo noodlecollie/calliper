@@ -7,8 +7,7 @@
 #include "scenecamera.h"
 #include "originmarker.h"
 #include "inputprocessor.h"
-#include "basetool.h"
-#include "debugtesttool.h"
+#include "tools.h"
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
 
@@ -21,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pActiveViewport = NULL;
 
 	ui->actionDebug_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(DebugTestTool::staticName()));
+    ui->actionTranslate_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(TranslationTool::staticName()));
 
     setUpConnections();
 

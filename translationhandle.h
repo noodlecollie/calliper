@@ -5,6 +5,7 @@
 
 class TranslationHandle : public UIManipulator
 {
+	Q_OBJECT
 public:
     explicit TranslationHandle(SceneObject* parent = 0);
     virtual ~TranslationHandle();

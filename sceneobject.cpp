@@ -12,6 +12,7 @@ SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
     m_pScene = parent ? parent->m_pScene : NULL;
     m_pGeometry.reset(new GeometryData());
     m_iRenderFlags = 0;
+    m_bHidden = false;
 }
 
 SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(cloneFrom.parentObject())
@@ -161,4 +162,14 @@ BoundingBox SceneObject::computeLocalBounds() const
     }
 
     return bounds;
+}
+
+bool SceneObject::hidden() const
+{
+    return m_bHidden;
+}
+
+void SceneObject::setHidden(bool hide)
+{
+    m_bHidden = hide;
 }

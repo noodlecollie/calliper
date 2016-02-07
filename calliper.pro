@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     mapgrid.cpp \
     cameraparams.cpp \
     translationhandle.cpp \
-    uimanipulator.cpp
+    uimanipulator.cpp \
+    translationtool.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -98,7 +99,8 @@ HEADERS  += mainwindow.h \
     mapgrid.h \
     cameraparams.h \
     translationhandle.h \
-    uimanipulator.h
+    uimanipulator.h \
+    translationtool.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

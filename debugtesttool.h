@@ -13,7 +13,7 @@ class SceneCamera;
 class DebugTestTool : public BaseTool
 {
 public:
-    DebugTestTool(MapDocument* document);
+	explicit DebugTestTool(MapDocument* document);
     virtual ~DebugTestTool();
 
     static QString staticName();
@@ -31,8 +31,7 @@ private:
     typedef QHash<SceneObject*, SceneObjectManipulator> ManipTable;
     void updateTableFromSet();
     void updateTableManipulators();
-    void applyTableManipulators();
-    static Math::AxisIdentifier planeConstraintAxis(int axisFlags, const SceneCamera* camera);
+	void applyTableManipulators();
 
     ManipTable  m_ManipTable;
     QVector3D   m_vecTranslation;

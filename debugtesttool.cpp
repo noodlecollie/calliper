@@ -99,7 +99,13 @@ void DebugTestTool::updateTableFromSet()
     }
 
     // Move the handle to the centroid.
-    m_pHandle->setPosition(m_pDocument->selectedSetCentroid());
+    if ( m_pDocument->selectedSet().count() == 1 )
+    {
+        const SceneObject* obj = *m_pDocument->selectedSet().constBegin();
+        m_pHandle->setPosition((obj->rootToLocal().inverted() * QVector4D(0,0,0,1)).toVector3D());
+    }
+    else
+        m_pHandle->setPosition(m_pDocument->selectedSetCentroid());
 }
 
 void DebugTestTool::updateTableManipulators()
@@ -187,7 +193,7 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
     // Otherwise, move only in the specified axes and along the specified plane.
     else
     {
-        Math::AxisIdentifier axis = planeConstraintAxis(m_iAxisFlags, v->camera());
+        Math::AxisIdentifier axis = UIManipulator::planeConstraintAxis(m_iAxisFlags, *v->camera());
         float value = m_vecOriginalHandlePos[axis];
 
         bool success = false;
@@ -228,78 +234,4 @@ void DebugTestTool::vMouseRelease(QMouseEvent *)
 	}
 
     m_bInMove = false;
-}
-
-Math::AxisIdentifier DebugTestTool::planeConstraintAxis(int axisFlags, const SceneCamera *camera)
-{
-    switch (axisFlags)
-    {
-        // If the axis is single, we want to choose the plane depending on which one the camera is most perpendicular to.
-        case UIManipulator::AxisX:
-        {
-            QVector3D dir = Math::angleToVectorSimple(camera->angles());
-
-            // Choose the plane whose normal most closely matches the camera's view direction
-            if ( qAbs(QVector3D::dotProduct(dir, QVector3D(0,1,0))) > qAbs(QVector3D::dotProduct(dir, QVector3D(0,0,1))) )
-            {
-                return Math::AxisY;
-            }
-            else
-            {
-                return Math::AxisZ;
-            }
-        }
-
-        case UIManipulator::AxisY:
-        {
-            QVector3D dir = Math::angleToVectorSimple(camera->angles());
-
-            // Choose the plane whose normal most closely matches the camera's view direction
-            if ( qAbs(QVector3D::dotProduct(dir, QVector3D(1,0,0))) > qAbs(QVector3D::dotProduct(dir, QVector3D(0,0,1))) )
-            {
-                return Math::AxisX;
-            }
-            else
-            {
-                return Math::AxisZ;
-            }
-        }
-
-        case UIManipulator::AxisZ:
-        {
-            QVector3D dir = Math::angleToVectorSimple(camera->angles());
-
-            // Choose the plane whose normal most closely matches the camera's view direction
-            if ( qAbs(QVector3D::dotProduct(dir, QVector3D(1,0,0))) > qAbs(QVector3D::dotProduct(dir, QVector3D(0,1,0))) )
-            {
-                return Math::AxisX;
-            }
-            else
-            {
-                return Math::AxisY;
-            }
-        }
-
-        // Otherwise, return the axis not in the plane.
-        case UIManipulator::AxisXY:
-        {
-            return Math::AxisZ;
-        }
-
-        case UIManipulator::AxisXZ:
-        {
-            return Math::AxisY;
-        }
-
-        case UIManipulator::AxisYZ:
-        {
-            return Math::AxisX;
-        }
-
-        default:
-        {
-            Q_ASSERT(false);
-            return Math::AxisX;
-        }
-    }
 }

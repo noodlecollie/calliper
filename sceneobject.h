@@ -49,15 +49,20 @@ public:
     // Computes bounds in local space.
     BoundingBox computeLocalBounds() const;
 
+	bool hidden() const;
+	void setHidden(bool hide);
+
 signals:
 
 public slots:
 
 protected:
     explicit SceneObject(const SceneObject &cloneFrom);
+
     QScopedPointer<GeometryData>    m_pGeometry;
-    BaseScene*  m_pScene;
-    int m_iRenderFlags;
+	BaseScene*						m_pScene;
+	int								m_iRenderFlags;
+	bool							m_bHidden;
 };
 
 #endif // SCENEOBJECT_H
