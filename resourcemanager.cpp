@@ -8,6 +8,14 @@
 #include "simplenumericfont.h"
 #include <QOpenGLFramebufferObject>
 
+#define MIPMAPS_DISABLED
+
+#ifdef MIPMAPS_DISABLED
+#define MIPMAP(_x) QOpenGLTexture::Linear
+#else
+#define MIPMAP(_x) (_x)
+#endif
+
 static ResourceManager* g_pResourceManager = NULL;
 ResourceManager* resourceManager()
 {
@@ -102,21 +110,25 @@ void ResourceManager::setUpBuiltInTextures()
     m_Textures.insert(QString(), m_pDefaultTexture);
 
     // Other random ones.
-    addBuiltInTexture(":/textures/test.png", QOpenGLTexture::LinearMipMapLinear, QOpenGLTexture::LinearMipMapLinear);
-    addBuiltInTexture(":/textures/uvsample.png", QOpenGLTexture::NearestMipMapNearest, QOpenGLTexture::NearestMipMapNearest);
-    addBuiltInTexture(":/textures/debug_crosshair.png", QOpenGLTexture::NearestMipMapNearest, QOpenGLTexture::NearestMipMapNearest);
-    addBuiltInTexture(":/textures/debug_translucent.png", QOpenGLTexture::LinearMipMapLinear, QOpenGLTexture::LinearMipMapLinear);
+    addBuiltInTexture(":/textures/test.png", MIPMAP(QOpenGLTexture::LinearMipMapLinear),
+                      MIPMAP(QOpenGLTexture::LinearMipMapLinear));
+    addBuiltInTexture(":/textures/uvsample.png", MIPMAP(QOpenGLTexture::NearestMipMapNearest),
+                      MIPMAP(QOpenGLTexture::NearestMipMapNearest));
+    addBuiltInTexture(":/textures/debug_crosshair.png", MIPMAP(QOpenGLTexture::NearestMipMapNearest),
+                      MIPMAP(QOpenGLTexture::NearestMipMapNearest));
+    addBuiltInTexture(":/textures/debug_translucent.png", MIPMAP(QOpenGLTexture::LinearMipMapLinear),
+                      MIPMAP(QOpenGLTexture::LinearMipMapLinear));
 }
 
 void ResourceManager::addBuiltInTexture(const QString &path, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max,
                                         QOpenGLTexture::WrapMode s, QOpenGLTexture::WrapMode t)
 {
-    QOpenGLTexture* t2 = new QOpenGLTexture(QImage(path).mirrored());
-    t2->setMinificationFilter(min);
-    t2->setMagnificationFilter(max);
-    t2->setWrapMode(QOpenGLTexture::DirectionS, s);
-    t2->setWrapMode(QOpenGLTexture::DirectionT, t);
-    m_Textures.insert(path.mid(1).remove(".png"), t2);
+    QOpenGLTexture* tex = new QOpenGLTexture(QImage(path).mirrored());
+    tex->setMinificationFilter(min);
+    tex->setMagnificationFilter(max);
+    tex->setWrapMode(QOpenGLTexture::DirectionS, s);
+    tex->setWrapMode(QOpenGLTexture::DirectionT, t);
+    m_Textures.insert(path.mid(1).remove(".png"), tex);
 }
 
 void ResourceManager::makeCurrent()

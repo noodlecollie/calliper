@@ -3,6 +3,7 @@
 
 #include <QMatrix4x4>
 #include <QVector3D>
+#include <QVector2D>
 #include "eulerangle.h"
 #include <QRectF>
 
@@ -49,8 +50,13 @@ namespace Math
     void cameraOrientationVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up);
     void perspectivePlane(float fov, float aspectRatio, float distance, QVector3D &min, QVector3D &max);
 
-    // Intersection of a ray with a plane defined by axis=value, eg. x=0
-    QVector3D intersectionPoint(const QVector3D &origin, const QVector3D &direction, AxisIdentifier axis, float axisValue, bool* success = NULL);
+    bool fuzzyVectorEquals(const QVector2D &v1, const QVector2D &v2);
+    bool fuzzyVectorEquals(const QVector3D &v1, const QVector3D &v2);
+    bool fuzzyVectorEquals(const QVector4D &v1, const QVector4D &v2);
+
+    bool fuzzyVectorIsNull(const QVector2D &vec);
+    bool fuzzyVectorIsNull(const QVector3D &vec);
+    bool fuzzyVectorIsNull(const QVector4D &vec);
 }
 
 #endif // MATH_H

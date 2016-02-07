@@ -12,6 +12,7 @@
 #include "mapscene.h"
 #include "mapgrid.h"
 #include "callipermath.h"
+#include "ray3d.h"
 
 DebugTestTool::DebugTestTool(MapDocument *document) : BaseTool(DebugTestTool::staticName(), document)
 {
@@ -197,12 +198,14 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
         float value = m_vecOriginalHandlePos[axis];
 
         bool success = false;
-        QVector3D initialIntersection = Math::intersectionPoint(v->camera()->position(), v->camera()->frustumDirection(m_BeginPos, v->size()), axis, value, &success);
+        Ray3D initialRay(v->camera()->position(), v->camera()->frustumDirection(m_BeginPos, v->size()));
+        QVector3D initialIntersection = initialRay.parameterise(axis, value, &success);
         if ( !success )
             return;
 
         success = false;
-        QVector3D planeIntersection = Math::intersectionPoint(v->camera()->position(), v->camera()->frustumDirection(e->pos(), v->size()), axis, value, &success);
+        Ray3D planeRay(v->camera()->position(), v->camera()->frustumDirection(e->pos(), v->size()));
+        QVector3D planeIntersection = planeRay.parameterise(axis, value, &success);
         if ( !success )
             return;
 

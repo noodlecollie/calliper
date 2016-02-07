@@ -211,39 +211,48 @@ namespace Math
         max = QVector3D(right, top, distance);
     }
 
-    QVector3D intersectionPoint(const QVector3D &origin, const QVector3D &direction, AxisIdentifier axis, float axisValue, bool* success)
+    bool fuzzyVectorEquals(const QVector2D &v1, const QVector2D &v2)
     {
-        Q_ASSERT(!direction.isNull());
+        return (fuzzyVectorIsNull(v1) && fuzzyVectorIsNull(v2)) ||
+                (qFuzzyCompare(v1.x(), v2.x()) &&
+                qFuzzyCompare(v1.y(), v2.y()));
+    }
 
-        // Ray: origin + t(direction)
-        // Find the point where the given axis value for this ray is axisValue.
-        // Eg. for plane x=3, find where ray.x = 3.
-        // ox + t(dx) = 3 -> t(dx) = 3 - ox -> t = (3 - ox)/dx
-        // More generally (with a specifying the chosen axis and v the value):
-        // oa + t(da) = v -> t(da) = v - oa -> t = (v - oa)/da
+    bool fuzzyVectorEquals(const QVector3D &v1, const QVector3D &v2)
+    {
+        return (fuzzyVectorIsNull(v1) && fuzzyVectorIsNull(v2)) ||
+                (qFuzzyCompare(v1.x(), v2.x()) &&
+                qFuzzyCompare(v1.y(), v2.y()) &&
+                qFuzzyCompare(v1.z(), v2.z()));
+    }
 
-        // If the direction of the ray is 0 in the axis specified for the plane, this means that the ray will never intersect
-        // the plane (or it already lies within it). In this case, return unsuccessful.
-        if ( qFuzzyIsNull(direction[axis]) )
-        {
-            if ( success )
-            {
-                *success = false;
-            }
+    bool fuzzyVectorEquals(const QVector4D &v1, const QVector4D &v2)
+    {
+        return (fuzzyVectorIsNull(v1) && fuzzyVectorIsNull(v2)) ||
+                (qFuzzyCompare(v1.x(), v2.x()) &&
+                qFuzzyCompare(v1.y(), v2.y()) &&
+                qFuzzyCompare(v1.z(), v2.z()) &&
+                qFuzzyCompare(v1.w(), v2.w()));
+    }
 
-            return QVector3D();
-        }
+    bool fuzzyVectorIsNull(const QVector2D &vec)
+    {
+        return qFuzzyIsNull(vec.x()) &&
+                qFuzzyIsNull(vec.y());
+    }
 
-        if ( success )
-        {
-            *success = true;
-        }
+    bool fuzzyVectorIsNull(const QVector3D &vec)
+    {
+        return qFuzzyIsNull(vec.x()) &&
+                qFuzzyIsNull(vec.y()) &&
+                qFuzzyIsNull(vec.z());
+    }
 
-        // The ray will definitely intersect the plane.
-        // Calaulate the parametric parameter t.
-        float t = (axisValue - origin[axis])/direction[axis];
-
-        // Return the intersection point.
-        return origin + (t * direction);
+    bool fuzzyVectorIsNull(const QVector4D &vec)
+    {
+        return qFuzzyIsNull(vec.x()) &&
+                qFuzzyIsNull(vec.y()) &&
+                qFuzzyIsNull(vec.z()) &&
+                qFuzzyIsNull(vec.w());
     }
 }

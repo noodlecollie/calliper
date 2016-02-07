@@ -54,7 +54,8 @@ SOURCES += main.cpp\
     cameraparams.cpp \
     translationhandle.cpp \
     uimanipulator.cpp \
-    translationtool.cpp
+    translationtool.cpp \
+    ray3d.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -100,7 +101,8 @@ HEADERS  += mainwindow.h \
     cameraparams.h \
     translationhandle.h \
     uimanipulator.h \
-    translationtool.h
+    translationtool.h \
+    ray3d.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui
