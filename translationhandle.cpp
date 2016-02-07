@@ -28,15 +28,13 @@ void addTranslationHead(float scale, const QColor &col, const QMatrix4x4 &transf
     for ( int i = 0; i < 8; i++ )
     {
         float radians = ((float)i * M_PI)/4.0f;
-        geometry.appendVertex(QVector3D((1.0f - HEAD_LENGTH) * scale,
-                                         HEAD_RADIUS * scale * qSin(radians),
-                                         HEAD_RADIUS * scale * qCos(radians)),
-                               col);
+        QVector3D pos((1.0f - HEAD_LENGTH) * scale, HEAD_RADIUS * scale * qSin(radians), HEAD_RADIUS * scale * qCos(radians));
+        geometry.appendVertex(pos, QVector3D(), col);
     }
 
     // Arrow head point
     int arrowPointIndex = geometry.vertexCount();
-    geometry.appendVertex(QVector3D(scale,0,0), col);
+    geometry.appendVertex(QVector3D(scale,0,0), QVector3D(), col);
 
     // Arrow head circumference triangles
     for ( int i = 0; i < 8; i++ )
@@ -65,10 +63,10 @@ void addTranslationPanel(float scale, const QColor &col, const QMatrix4x4 &trans
     geometry.setShaderOverride(PerVertexColorShader::staticName());
 
     // Panel is in the XY plane.
-    geometry.appendVertex(QVector3D(0,0,0), col);
-    geometry.appendVertex(QVector3D(scale,0,0), col);
-    geometry.appendVertex(QVector3D(scale,scale,0), col);
-    geometry.appendVertex(QVector3D(0,scale,0), col);
+    geometry.appendVertex(QVector3D(0,0,0), QVector3D(), col);
+    geometry.appendVertex(QVector3D(scale,0,0), QVector3D(), col);
+    geometry.appendVertex(QVector3D(scale,scale,0), QVector3D(), col);
+    geometry.appendVertex(QVector3D(0,scale,0), QVector3D(), col);
 
     // Create two faces facing opposite directions.
     geometry.appendIndexTriangle(0,1,2);
@@ -90,10 +88,8 @@ void addTranslationShaft(float scale, const QColor &col, const QMatrix4x4 &trans
     geometry.setShaderOverride(PerVertexColorShader::staticName());
 
     // Arrow shaft (line)
-    geometry.appendVertex(QVector3D(0,0,0),
-                           col);
-    geometry.appendVertex(QVector3D(0.85f * scale, 0, 0),
-                           col);
+    geometry.appendVertex(QVector3D(0,0,0), QVector3D(), col);
+    geometry.appendVertex(QVector3D(0.85f * scale, 0, 0), QVector3D(), col);
     geometry.appendIndex(0);
     geometry.appendIndex(1);
 
@@ -109,7 +105,7 @@ void TranslationHandle::build()
 {
     const float scale = 0.5f;
     GeometryData* geometry = new GeometryData;
-    geometry->setDataFormat(GeometryData::PositionColor);
+    geometry->setDataFormat(GeometryData::PositionNormalColor);
     geometry->setShaderOverride(PerVertexColorShader::staticName());
     geometry->setDrawMode(GL_TRIANGLES);
 

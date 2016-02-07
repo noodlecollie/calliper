@@ -28,7 +28,7 @@ public:
     enum DataFormat
     {
         PositionNormalUV,
-        PositionColor,
+        PositionNormalColor,
         PositionNormalUVColor,
     };
 
@@ -40,7 +40,7 @@ public:
     void appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv);
 
     // Per-vertex coloured lines
-    void appendVertex(const QVector3D &pos, const QColor &col);
+    void appendVertex(const QVector3D &pos, const QVector3D &normal, const QColor &col);
 
     // Mixture of the two - all data included.
     void appendVertex(const QVector3D &pos, const QVector3D &normal, const QVector2D &uv, const QColor &col);

@@ -99,7 +99,7 @@ void DebugTestTool::updateTableFromSet()
     }
 
     // Move the handle to the centroid.
-    m_pHandle->setPosition(m_pDocument->selectedSetBounds().centroid());
+    m_pHandle->setPosition(m_pDocument->selectedSetCentroid());
 }
 
 void DebugTestTool::updateTableManipulators()
@@ -181,7 +181,7 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
     {
         QVector3D translation = v->camera()->worldTranslation(m_BeginPos, e->pos(), v->size(), m_flHandeCamDist);
         QVector3D newHandlePos = m_vecOriginalHandlePos + translation;
-        Math::clampToNearestMultiple(newHandlePos, gridMultiple);
+        UIManipulator::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
         m_pHandle->setPosition(newHandlePos);
     }
     // Otherwise, move only in the specified axes and along the specified plane.
@@ -209,7 +209,7 @@ void DebugTestTool::vMouseMove(QMouseEvent *e)
         }
 
         QVector3D newHandlePos = m_vecOriginalHandlePos + overallTranslation;
-        Math::clampToNearestMultiple(newHandlePos, gridMultiple);
+        UIManipulator::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
         m_pHandle->setPosition(newHandlePos);
     }
 

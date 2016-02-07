@@ -35,7 +35,7 @@ public:
     void selectedSetInsert(SceneObject* object);
     void selectedSetRemove(SceneObject* object);
     void selectedSetClear();
-    BoundingBox selectedSetBounds() const;
+    QVector3D selectedSetCentroid() const;
 
     QColor selectedColor() const;
     void setSelectedColor(const QColor &col);

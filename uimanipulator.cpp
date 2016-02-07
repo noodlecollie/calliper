@@ -36,3 +36,15 @@ SceneObject* UIManipulator::clone() const
 {
     return new UIManipulator(*this);
 }
+
+void UIManipulator::clampToNearestMultiple(QVector3D &vec, qint64 multiple, int axisFlags)
+{
+    for ( int i = 0; i < 3; i++ )
+    {
+        int flag = 1 << i;
+        if ( (axisFlags & flag) != flag )
+            continue;
+
+        vec[i] = (float)Math::nearestMultiple(vec[i], multiple);
+    }
+}

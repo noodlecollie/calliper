@@ -21,7 +21,7 @@ static int numComponents[] = {
 
 static const int formatStride[] = {
     8*sizeof(float),    // PositionNormalUV
-    7*sizeof(float),    // PositionColor
+    10*sizeof(float),    // PositionNormalColor
     12*sizeof(float),   // PositionNormalUVColor
 };
 
@@ -48,15 +48,18 @@ static int formatOffset(GeometryData::DataFormat format, ShaderProgram::Attribut
             }
         }
 
-        case GeometryData::PositionColor:
+        case GeometryData::PositionNormalColor:
         {
             switch (att)
             {
             case ShaderProgram::Position:
                 return 0;
 
-            case ShaderProgram::Color:
+            case ShaderProgram::Normal:
                 return 3*sizeof(float);
+
+            case ShaderProgram::Color:
+                return 6*sizeof(float);
 
             default:
                 Q_ASSERT(false);
@@ -164,9 +167,9 @@ void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, c
     m_bVerticesStale = true;
 }
 
-void GeometryData::appendVertex(const QVector3D &pos, const QColor &col)
+void GeometryData::appendVertex(const QVector3D &pos, const QVector3D &normal, const QColor &col)
 {
-    m_iDataFormat = PositionColor;
+    m_iDataFormat = PositionNormalColor;
     int size = m_Vertices.size();
     int increment = formatStride[m_iDataFormat]/sizeof(float);
     m_Vertices.resize(size + increment);
@@ -175,10 +178,14 @@ void GeometryData::appendVertex(const QVector3D &pos, const QColor &col)
     m_Vertices[size+1] = pos.y();
     m_Vertices[size+2] = pos.z();
 
-    m_Vertices[size+3] = col.redF();
-    m_Vertices[size+4] = col.greenF();
-    m_Vertices[size+5] = col.blueF();
-    m_Vertices[size+6] = col.alphaF();
+    m_Vertices[size+3] = normal.x();
+    m_Vertices[size+4] = normal.y();
+    m_Vertices[size+5] = normal.z();
+
+    m_Vertices[size+6] = col.redF();
+    m_Vertices[size+7] = col.greenF();
+    m_Vertices[size+8] = col.blueF();
+    m_Vertices[size+9] = col.alphaF();
 
     m_bVerticesStale = true;
 }
@@ -395,13 +402,19 @@ void GeometryData::applyDataFormat(ShaderProgram *program)
             break;
         }
 
-        case PositionColor:
+        case PositionNormalColor:
         {
             program->setAttributeFormat(
                         ShaderProgram::Position,
                         numComponents[ShaderProgram::Position],
                         formatStride[m_iDataFormat],
                         formatOffset(m_iDataFormat, ShaderProgram::Position));
+
+            program->setAttributeFormat(
+                        ShaderProgram::Normal,
+                        numComponents[ShaderProgram::Normal],
+                        formatStride[m_iDataFormat],
+                        formatOffset(m_iDataFormat, ShaderProgram::Normal));
 
             program->setAttributeFormat(
                         ShaderProgram::Color,

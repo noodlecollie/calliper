@@ -79,10 +79,10 @@ void MapGrid::setUpGeometry()
     int offset = 0;
 
     // Origin - through (0,0)
-    m_pGeometry->appendVertex(QVector3D(-1,0,0), m_colOrigin);
-    m_pGeometry->appendVertex(QVector3D(1,0,0), m_colOrigin);
-    m_pGeometry->appendVertex(QVector3D(0,-1,0), m_colOrigin);
-    m_pGeometry->appendVertex(QVector3D(0,1,0), m_colOrigin);
+    m_pGeometry->appendVertex(QVector3D(-1,0,0), QVector3D(), m_colOrigin);
+    m_pGeometry->appendVertex(QVector3D(1,0,0), QVector3D(), m_colOrigin);
+    m_pGeometry->appendVertex(QVector3D(0,-1,0), QVector3D(), m_colOrigin);
+    m_pGeometry->appendVertex(QVector3D(0,1,0), QVector3D(), m_colOrigin);
     m_pGeometry->appendIndex(baseVertex+offset++);
     m_pGeometry->appendIndex(baseVertex+offset++);
     m_pGeometry->appendIndex(baseVertex+offset++);
@@ -93,10 +93,10 @@ void MapGrid::setUpGeometry()
     offset = 0;
 
     // Major lines - every 1024 units
-    m_pGeometry->appendVertex(QVector3D(-1,0,0), m_colMajor);
-    m_pGeometry->appendVertex(QVector3D(1,0,0), m_colMajor);
-    m_pGeometry->appendVertex(QVector3D(0,-1,0), m_colMajor);
-    m_pGeometry->appendVertex(QVector3D(0,1,0), m_colMajor);
+    m_pGeometry->appendVertex(QVector3D(-1,0,0), QVector3D(), m_colMajor);
+    m_pGeometry->appendVertex(QVector3D(1,0,0), QVector3D(), m_colMajor);
+    m_pGeometry->appendVertex(QVector3D(0,-1,0), QVector3D(), m_colMajor);
+    m_pGeometry->appendVertex(QVector3D(0,1,0), QVector3D(), m_colMajor);
     m_pGeometry->appendIndex(baseVertex+offset++);
     m_pGeometry->appendIndex(baseVertex+offset++);
     m_pGeometry->appendIndex(baseVertex+offset++);
@@ -128,8 +128,8 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/8.0f;
-                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), m_colMinor);
-                    m_pGeometry->appendVertex(QVector3D(1, f, 0), m_colMinor);
+                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), QVector3D(), m_colMinor);
+                    m_pGeometry->appendVertex(QVector3D(1, f, 0), QVector3D(), m_colMinor);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;
@@ -153,8 +153,8 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/8.0f;
-                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), m_colMinor);
-                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), m_colMinor);
+                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), QVector3D(), m_colMinor);
+                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), QVector3D(), m_colMinor);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;
@@ -189,8 +189,8 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/32.0f;
-                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), m_colStd);
-                    m_pGeometry->appendVertex(QVector3D(1, f, 0), m_colStd);
+                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), QVector3D(), m_colStd);
+                    m_pGeometry->appendVertex(QVector3D(1, f, 0), QVector3D(), m_colStd);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;
@@ -217,8 +217,8 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/32.0f;
-                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), m_colStd);
-                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), m_colStd);
+                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), QVector3D(), m_colStd);
+                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), QVector3D(), m_colStd);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     m_pGeometry->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;

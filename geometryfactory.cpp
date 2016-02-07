@@ -176,10 +176,10 @@ namespace GeometryFactory
                 break;
             }
 
-            d->appendVertex((-radius*u) + (-radius*v) + (radius*normal), col);
-            d->appendVertex((radius*u) + (-radius*v) + (radius*normal), col);
-            d->appendVertex((radius*u) + (radius*v) + (radius*normal), col);
-            d->appendVertex((-radius*u) + (radius*v) + (radius*normal), col);
+            d->appendVertex((-radius*u) + (-radius*v) + (radius*normal), normal, col);
+            d->appendVertex((radius*u) + (-radius*v) + (radius*normal), normal, col);
+            d->appendVertex((radius*u) + (radius*v) + (radius*normal), normal, col);
+            d->appendVertex((-radius*u) + (radius*v) + (radius*normal), normal, col);
 
             int index = 4*i;
             d->appendIndex(index);
@@ -213,10 +213,10 @@ namespace GeometryFactory
     {
         GeometryData* geometry = new GeometryData();
         geometry->setDrawMode(GL_LINE_LOOP);
-        geometry->appendVertex(QVector3D(-radius, -radius, 0), col);
-        geometry->appendVertex(QVector3D(radius, -radius, 0), col);
-        geometry->appendVertex(QVector3D(radius, radius, 0), col);
-        geometry->appendVertex(QVector3D(-radius, radius, 0), col);
+        geometry->appendVertex(QVector3D(-radius, -radius, 0), QVector3D(), col);
+        geometry->appendVertex(QVector3D(radius, -radius, 0), QVector3D(), col);
+        geometry->appendVertex(QVector3D(radius, radius, 0), QVector3D(), col);
+        geometry->appendVertex(QVector3D(-radius, radius, 0), QVector3D(), col);
         geometry->appendIndex(0);
         geometry->appendIndex(1);
         geometry->appendIndex(2);
@@ -231,7 +231,7 @@ namespace GeometryFactory
         geometry->setDrawMode(GL_LINES);
         for ( int i = 0; i < corners.count(); i++ )
         {
-            geometry->appendVertex(corners.at(i), col);
+            geometry->appendVertex(corners.at(i), QVector3D(), col);
         }
 
         geometry->appendIndex(0);

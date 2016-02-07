@@ -150,15 +150,18 @@ UIScene* MapDocument::uiScene() const
 }
 
 // TODO: Make this faster. Everything is computed on demand, sometimes more than once!
-BoundingBox MapDocument::selectedSetBounds() const
+QVector3D MapDocument::selectedSetCentroid() const
 {
-    BoundingBox bbox;
+    QVector3D centroid;
+    int count = 0;
 
     for ( QSet<SceneObject*>::const_iterator it = m_SelectedSet.cbegin(); it != m_SelectedSet.cend(); ++it )
     {
         SceneObject* o = *it;
-        bbox.unionWith(o->rootToLocal().inverted() * o->computeLocalBounds());
+        QVector3D vec = (o->rootToLocal().inverted() * o->computeLocalBounds()).centroid();
+        centroid = ((centroid * count) + vec)/(count+1);
+        count++;
     }
 
-    return bbox;
+    return centroid;
 }

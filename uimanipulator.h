@@ -23,6 +23,7 @@ public:
     };
 
     static QList<QVector3D> manipulationAxes(int axisFlags);
+    static void clampToNearestMultiple(QVector3D &vec, qint64 multiple, int axisFlags);
 
     explicit UIManipulator(SceneObject* parent = 0);
 
