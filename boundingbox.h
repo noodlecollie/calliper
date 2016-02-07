@@ -23,12 +23,13 @@ public:
     QVector3D centroid() const;
 
     QList<QVector3D> corners() const;
-    BoundingBox transformed(const QMatrix4x4 &transform) const;
+    BoundingBox transformed(const QMatrix4x4 &mat) const; // Does not modify
+    BoundingBox& transform(const QMatrix4x4 &mat);        // Does modify
 
     bool isNull() const;
 
     BoundingBox unionCopy(const BoundingBox &other) const;  // Does not modify
-    BoundingBox& unionOf(const BoundingBox &other);         // Does modify
+    BoundingBox& unionWith(const BoundingBox &other);       // Does modify
 
     // X alternates between min and max most frequently,
     // then Y and then Z. The list begins at min and ends at max.
@@ -39,5 +40,7 @@ private:
     QVector3D   m_vecMin;
     QVector3D   m_vecMax;
 };
+
+BoundingBox operator *(const QMatrix4x4 &mat, const BoundingBox &bbox);
 
 #endif // BOUNDINGBOX_H

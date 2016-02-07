@@ -6,6 +6,7 @@
 #include "geometrydata.h"
 #include <QMatrix4x4>
 #include "eulerangle.h"
+#include "boundingbox.h"
 
 class BaseScene;
 class ShaderStack;
@@ -44,6 +45,9 @@ public:
 
     int renderFlags() const;
     void setRenderFlags(int flags);
+
+    // Computes bounds in local space.
+    BoundingBox computeLocalBounds() const;
 
 signals:
 

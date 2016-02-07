@@ -148,3 +148,17 @@ UIScene* MapDocument::uiScene() const
 {
     return m_pUIScene;
 }
+
+// TODO: Make this faster. Everything is computed on demand, sometimes more than once!
+BoundingBox MapDocument::selectedSetBounds() const
+{
+    BoundingBox bbox;
+
+    for ( QSet<SceneObject*>::const_iterator it = m_SelectedSet.cbegin(); it != m_SelectedSet.cend(); ++it )
+    {
+        SceneObject* o = *it;
+        bbox.unionWith(o->rootToLocal().inverted() * o->computeLocalBounds());
+    }
+
+    return bbox;
+}

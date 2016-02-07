@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QColor>
 #include <QSet>
+#include "boundingbox.h"
 
 class MapScene;
 class UIScene;
@@ -34,6 +35,7 @@ public:
     void selectedSetInsert(SceneObject* object);
     void selectedSetRemove(SceneObject* object);
     void selectedSetClear();
+    BoundingBox selectedSetBounds() const;
 
     QColor selectedColor() const;
     void setSelectedColor(const QColor &col);

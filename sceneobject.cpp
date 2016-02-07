@@ -147,3 +147,18 @@ SceneObject* SceneObject::clone() const
 {
     return new SceneObject(*this);
 }
+
+BoundingBox SceneObject::computeLocalBounds() const
+{
+    // Compute our bounds.
+    BoundingBox bounds = geometry()->localBounds();
+
+    // Union these with the bounds of all our children.
+    QList<SceneObject*> childList = children();
+    foreach ( SceneObject* o, childList )
+    {
+        bounds.unionWith(o->localToParent() * o->computeLocalBounds());
+    }
+
+    return bounds;
+}

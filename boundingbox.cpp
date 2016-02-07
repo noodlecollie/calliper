@@ -1,6 +1,11 @@
 #include "boundingbox.h"
 #include <QVector4D>
 
+BoundingBox operator *(const QMatrix4x4 &mat, const BoundingBox &bbox)
+{
+    return bbox.transformed(mat);
+}
+
 BoundingBox::BoundingBox()
 {
 }
@@ -88,13 +93,13 @@ QList<QVector3D> BoundingBox::corners(const QVector3D &min, const QVector3D &max
     return list;
 }
 
-BoundingBox BoundingBox::transformed(const QMatrix4x4 &transform) const
+BoundingBox BoundingBox::transformed(const QMatrix4x4 &mat) const
 {
     QList<QVector3D> list = corners();
 
     for ( int i = 0; i < list.count(); i++ )
     {
-        list[i] = (transform * QVector4D(list[i],1)).toVector3D();
+        list[i] = (mat * QVector4D(list[i],1)).toVector3D();
     }
 
     QVector3D min = list.at(0), max = list.at(0);
@@ -121,6 +126,12 @@ BoundingBox BoundingBox::transformed(const QMatrix4x4 &transform) const
     return BoundingBox(min,max);
 }
 
+BoundingBox& BoundingBox::transform(const QMatrix4x4 &mat)
+{
+    *this = transformed(mat);
+    return *this;
+}
+
 bool BoundingBox::operator ==(const BoundingBox &other) const
 {
     return m_vecMin == other.m_vecMin &&
@@ -137,7 +148,7 @@ QVector3D BoundingBox::centroid() const
     return m_vecMin + ((m_vecMax-m_vecMin)/2.0f);
 }
 
-BoundingBox& BoundingBox::unionOf(const BoundingBox &other)
+BoundingBox& BoundingBox::unionWith(const BoundingBox &other)
 {
     QVector3D mn = other.min(), mx = other.max();
 

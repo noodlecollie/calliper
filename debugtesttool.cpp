@@ -97,6 +97,9 @@ void DebugTestTool::updateTableFromSet()
             m_ManipTable.insert((*it), SceneObjectManipulator(*it));
         }
     }
+
+    // Move the handle to the centroid.
+    m_pHandle->setPosition(m_pDocument->selectedSetBounds().centroid());
 }
 
 void DebugTestTool::updateTableManipulators()
