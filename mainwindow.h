@@ -35,6 +35,7 @@ public slots:
     void sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column);
     void sceneTreeItemClicked(QTreeWidgetItem* item, int column);
     void viewportPreFrame(int msec);
+	void toolButtonClicked();
 
 private:
     void setUpConnections();

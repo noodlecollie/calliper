@@ -165,3 +165,14 @@ QVector3D MapDocument::selectedSetCentroid() const
 
     return centroid;
 }
+
+int MapDocument::toolIndex(const QString &name) const
+{
+	for ( int i = 0; i < m_Tools.count(); i++ )
+	{
+		if ( m_Tools.at(i)->objectName() == name )
+			return i;
+	}
+
+	return -1;
+}

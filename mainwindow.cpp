@@ -8,6 +8,9 @@
 #include "originmarker.h"
 #include "inputprocessor.h"
 #include "basetool.h"
+#include "debugtesttool.h"
+
+#define PROP_STRING_LINKED_TOOL	"linkedTool"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     m_iActiveDocument = -1;
     m_pActiveViewport = NULL;
+
+	ui->actionDebug_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(DebugTestTool::staticName()));
 
     setUpConnections();
 
@@ -262,4 +267,22 @@ void MainWindow::viewportPreFrame(int msec)
         return;
 
     t->update(msec);
+}
+
+void MainWindow::toolButtonClicked()
+{
+	MapDocument* doc = activeDocument();
+	if ( !doc )
+		return;
+
+	QAction* action = qobject_cast<QAction*>(sender());
+	Q_ASSERT(action);
+
+	QString toolName = action->property(PROP_STRING_LINKED_TOOL).toString();
+	int toolIndex = doc->toolIndex(toolName);
+	if ( toolIndex < 0 )
+		return;
+
+	doc->setActiveToolIndex(toolIndex);
+	qDebug() << "Set active tool to" << toolName;
 }

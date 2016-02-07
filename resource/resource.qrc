@@ -25,5 +25,9 @@
         <file>models/editor/camera.obj</file>
         <file>shaders/pervertexcolor_screenspace.vert</file>
         <file>textures/debug_translucent.png</file>
+        <file>icons/tool_debug.png</file>
+        <file>icons/tool_rotate.png</file>
+        <file>icons/tool_scale.png</file>
+        <file>icons/tool_translate.png</file>
     </qresource>
 </RCC>
