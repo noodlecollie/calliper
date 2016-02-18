@@ -29,6 +29,11 @@ private:
 
     bool				m_bInMove;
     TranslationHandle*	m_pHandle;
+    QVector3D           m_vecOriginalHandlePos;
+    QPoint              m_BeginDragPos;
+    float               m_flHandleCamDist;
+    int                 m_iAxisFlags;
+    QList<QVector3D>    m_MovementAxes;
 };
 
 #endif // TRANSLATIONTOOL_H

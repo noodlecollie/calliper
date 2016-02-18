@@ -133,3 +133,33 @@ bool HierarchicalObject::scalable() const
 {
     return true;
 }
+
+QVector3D HierarchicalObject::rootToLocal(const QVector3D &vec, bool direction) const
+{
+    return (rootToLocal() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
+}
+
+QVector3D HierarchicalObject::localToRoot(const QVector3D &vec, bool direction) const
+{
+    return (rootToLocal().inverted() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
+}
+
+QVector3D HierarchicalObject::parentToLocal(const QVector3D &vec, bool direction) const
+{
+    return (parentToLocal() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
+}
+
+QVector3D HierarchicalObject::localToParent(const QVector3D &vec, bool direction) const
+{
+    return (localToParent() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
+}
+
+QVector3D HierarchicalObject::parentToRoot(const QVector3D &vec, bool direction) const
+{
+    return (rootToLocal().inverted() * parentToLocal() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
+}
+
+QVector3D HierarchicalObject::rootToParent(const QVector3D &vec, bool direction) const
+{
+    return (localToParent() * rootToLocal() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
+}

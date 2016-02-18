@@ -22,6 +22,15 @@ public:
     // Traverses the tree and calculates the root -> local matrix.
     QMatrix4x4 rootToLocal() const;
 
+    // To convert lots of vectors, getting the matrix and doing it manually will probably be quicker,
+    // especially with anything involving the root transform.
+    QVector3D rootToLocal(const QVector3D &vec, bool direction = false) const;
+    QVector3D localToRoot(const QVector3D &vec, bool direction = false) const;
+    QVector3D parentToLocal(const QVector3D &vec, bool direction = false) const;
+    QVector3D localToParent(const QVector3D &vec, bool direction = false) const;
+    QVector3D parentToRoot(const QVector3D &vec, bool direction = false) const;
+    QVector3D rootToParent(const QVector3D &vec, bool direction = false) const;
+
     // Local
     QVector3D position() const;
     void setPosition(const QVector3D &pos);

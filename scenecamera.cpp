@@ -132,29 +132,29 @@ bool SceneCamera::scalable() const
 
 QVector3D SceneCamera::worldTranslation(const QPoint &p0, const QPoint &p1, const QSize &viewSize, float distFromCamera) const
 {
-    // Get the camera-space directions corresponding to the two points.
-    // If the lens is perspective, these will diverge from the camera origin ((0,0,0) camera space).
+//    Get the camera-space directions corresponding to the two points.
+//    If the lens is perspective, these will diverge from the camera origin ((0,0,0) camera space).
 //    QVector3D cDir0 = lens()->mapPoint(p0, viewSize);
 //    QVector3D cDir1 = lens()->mapPoint(p1, viewSize);
 
-    // Get the camera->world matrix.
+//    Get the camera->world matrix.
     QMatrix4x4 cameraToWorld = rootToLocal().inverted() * Math::openGLToHammer();
 
-    // Translate the directions to world space.
+//    Translate the directions to world space.
 //    QVector3D wDir0 = (cameraToWorld * QVector4D(cDir0, 0)).toVector3D();
 //    QVector3D wDir1 = (cameraToWorld * QVector4D(cDir1, 0)).toVector3D();
 
-    // Calculate the new positions in world space.
-    // These lie along the lines that begin at the camera origin in the world
-    // and extend along each direction. If the lens is perspective, the further
-    // the distance from the camera the further separated the two points will be.
+//    Calculate the new positions in world space.
+//    These lie along the lines that begin at the camera origin in the world
+//    and extend along each direction. If the lens is perspective, the further
+//    the distance from the camera the further separated the two points will be.
 //    QVector3D wPos0 = position() + (distFromCamera * wDir0);
 //    QVector3D wPos1 = position() + (distFromCamera * wDir1);
 
-    // Return the translation.
+//    Return the translation.
 //    return wPos1 - wPos0;
 
-    // In one line, this is:
+//    In one line, this is:
      return (position() + (distFromCamera * ((cameraToWorld * QVector4D(lens()->mapPoint(p1, viewSize), 0)).toVector3D())))
              - (position() + (distFromCamera * ((cameraToWorld * QVector4D(lens()->mapPoint(p0, viewSize), 0)).toVector3D())));
 }

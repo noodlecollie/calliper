@@ -28,6 +28,7 @@ public:
     QVector3D worldTranslation(const QPoint &p0, const QPoint &p1, const QSize &viewSize, float distFromCamera) const;
 
     // Given a point on the screen, returns the direction of a ray cast from the camera origin that goes through that point.
+    // This is a world direction.
     QVector3D frustumDirection(const QPoint &p, const QSize &viewSize) const;
 
 protected:
