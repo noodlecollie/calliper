@@ -20,6 +20,7 @@ SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(clon
     m_pScene = cloneFrom.m_pScene;
     m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));
     m_iRenderFlags = cloneFrom.m_iRenderFlags;
+    m_bHidden = cloneFrom.m_bHidden;
 
     setPosition(cloneFrom.position());
     setAngles(cloneFrom.angles());

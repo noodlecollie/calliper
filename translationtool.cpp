@@ -34,6 +34,7 @@ void TranslationTool::vActivate()
 {
     m_pHandle = new TranslationHandle(m_pDocument->uiScene()->root());
     m_pHandle->setObjectName("_translationHandle");
+    updateTableFromSet();
     updateHandleState();
     m_bInMove = false;
 }
