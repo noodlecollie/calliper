@@ -52,6 +52,10 @@ public:
 	bool hidden() const;
 	void setHidden(bool hide);
 
+    virtual void serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
+    virtual bool shouldSerialiseGeometry() const;
+
 signals:
 
 public slots:

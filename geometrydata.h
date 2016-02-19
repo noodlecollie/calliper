@@ -10,6 +10,7 @@
 #include "boundingbox.h"
 #include <QMatrix4x4>
 #include <QtDebug>
+#include "iserialisable.h"
 
 class QOpenGLBuffer;
 class ShaderProgram;
@@ -17,7 +18,7 @@ class QOpenGLTexture;
 
 #define MAX_GEOM_TEXTURES 4
 
-class GeometryData
+class GeometryData : public ISerialisable
 {
 public:
     GeometryData();
@@ -95,6 +96,9 @@ public:
 
     bool append(const GeometryData &other);
     void transform(const QMatrix4x4 &mat);
+
+    virtual void serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
 
 private:
     QVector<float>          m_Vertices;

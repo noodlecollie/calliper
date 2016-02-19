@@ -173,3 +173,40 @@ void SceneObject::setHidden(bool hide)
 {
     m_bHidden = hide;
 }
+
+void SceneObject::serialiseToJson(QJsonObject &obj) const
+{
+    // Set the identifier for this object.
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(SceneObject::serialiseIdentifier()));
+
+    // Serialise the parent object first.
+    QJsonObject jsonParent;
+    HierarchicalObject::serialiseToJson(jsonParent);
+
+    // Insert this as the superclass.
+    obj.insert(ISerialisable::KEY_SUPERCLASS(), QJsonValue(jsonParent));
+
+    // Serialise geometry.
+    if ( shouldSerialiseGeometry() )
+    {
+        QJsonObject jsonGeom;
+        m_pGeometry->serialiseToJson(jsonGeom);
+        obj.insert("geometry", QJsonValue(jsonGeom));
+    }
+
+    // Other properties
+    obj.insert("renderFlags", QJsonValue(renderFlags()));
+    obj.insert("hidden", QJsonValue(hidden()));
+}
+
+QString SceneObject::serialiseIdentifier() const
+{
+    return staticMetaObject.className();
+}
+
+bool SceneObject::shouldSerialiseGeometry() const
+{
+    // By default this is true.
+    // Subclasses can override.
+    return true;
+}

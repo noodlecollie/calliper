@@ -55,7 +55,8 @@ SOURCES += main.cpp\
     translationhandle.cpp \
     uimanipulator.cpp \
     translationtool.cpp \
-    ray3d.cpp
+    ray3d.cpp \
+    jsonutil.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -102,7 +103,9 @@ HEADERS  += mainwindow.h \
     translationhandle.h \
     uimanipulator.h \
     translationtool.h \
-    ray3d.h
+    ray3d.h \
+    iserialisable.h \
+    jsonutil.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

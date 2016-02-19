@@ -47,19 +47,57 @@ public:
     float roll() const;
     void setRoll(float r);
 
-    inline bool operator==(const EulerAngle &other) const
+    inline bool operator ==(const EulerAngle &other) const
     {
         return m_flPitch == other.m_flPitch && m_flYaw == other.m_flYaw && m_flRoll == other.m_flRoll;
     }
 
-    inline EulerAngle operator+(const EulerAngle &other) const
+    inline EulerAngle operator +(const EulerAngle &other) const
     {
         return EulerAngle(m_flPitch + other.m_flPitch, m_flYaw + other.m_flYaw, m_flRoll + other.m_flRoll);
     }
 
-    inline EulerAngle operator-(const EulerAngle &other) const
+    inline EulerAngle operator -(const EulerAngle &other) const
     {
         return EulerAngle(m_flPitch - other.m_flPitch, m_flYaw - other.m_flYaw, m_flRoll - other.m_flRoll);
+    }
+
+    inline float& operator [](int index)
+    {
+        switch (index)
+        {
+        case 0:
+            return m_flPitch;
+
+        case 1:
+            return m_flYaw;
+
+        case 2:
+            return m_flRoll;
+
+        default:
+            Q_ASSERT(false);
+            return m_flPitch;
+        }
+    }
+
+    inline const float& operator [](int index) const
+    {
+        switch (index)
+        {
+        case 0:
+            return m_flPitch;
+
+        case 1:
+            return m_flYaw;
+
+        case 2:
+            return m_flRoll;
+
+        default:
+            Q_ASSERT(false);
+            return m_flPitch;
+        }
     }
 
 private:

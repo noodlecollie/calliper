@@ -5,6 +5,7 @@
 #include "shaderprogram.h"
 #include <QtDebug>
 #include <QOpenGLTexture>
+#include "jsonutil.h"
 
 QDebug operator<<(QDebug debug, const GeometryData &data)
 {
@@ -626,4 +627,41 @@ void GeometryData::transform(const QMatrix4x4 &mat)
         m_Vertices[index+1] = vec.y();
         m_Vertices[index+2] = vec.z();
     }
+}
+
+void GeometryData::serialiseToJson(QJsonObject &obj) const
+{
+    // Set the identifier.
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(serialiseIdentifier()));
+
+    // Serialise the vertices.
+    QJsonArray arrVerts;
+    JsonUtil::vectorToJsonArray<float,float>(m_Vertices, arrVerts);
+    obj.insert("vertices", QJsonValue(arrVerts));
+
+    // Serialise the indices.
+    QJsonArray arrIndices;
+    JsonUtil::vectorToJsonArray<unsigned int,int>(m_Indices, arrIndices);
+    obj.insert("indices", QJsonValue(arrIndices));
+
+    // Serialise any textures.
+    for ( int i = 0; i < MAX_GEOM_TEXTURES; i++ )
+    {
+        QString s = QString("texture_%0").arg(i);
+        obj.insert(s, QJsonValue(m_Textures[i]));
+    }
+
+    // Other bits and pieces.
+    obj.insert("drawMode", QJsonValue((int)m_iDrawMode));
+    obj.insert("lineWidth", QJsonValue(m_flLineWidth));
+    obj.insert("dataFormat", QJsonValue(m_iDataFormat));
+    obj.insert("shaderOverride", QJsonValue(m_szShaderOverride));
+
+    // Right now we don't serialise the local texture - this is likely to be
+    // one-off data.
+}
+
+QString GeometryData::serialiseIdentifier() const
+{
+    return "GeometryData";
 }

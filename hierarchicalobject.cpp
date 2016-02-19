@@ -1,6 +1,7 @@
 #include "hierarchicalobject.h"
 #include "callipermath.h"
 #include <cmath>
+#include "jsonutil.h"
 
 HierarchicalObject::HierarchicalObject(HierarchicalObject *parent) : QObject(parent)
 {
@@ -162,4 +163,28 @@ QVector3D HierarchicalObject::parentToRoot(const QVector3D &vec, bool direction)
 QVector3D HierarchicalObject::rootToParent(const QVector3D &vec, bool direction) const
 {
     return (localToParent() * rootToLocal() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
+}
+
+void HierarchicalObject::serialiseToJson(QJsonObject &obj) const
+{
+    // Set our identifier.
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(HierarchicalObject::serialiseIdentifier()));
+
+    // Store the relevant properties.
+    QJsonArray arrPos;
+    JsonUtil::vector3ToJsonArray<QVector3D>(position(), arrPos);
+    obj.insert("position", QJsonValue(arrPos));
+
+    QJsonArray arrAng;
+    JsonUtil::vector3ToJsonArray<EulerAngle>(angles(), arrAng);
+    obj.insert("angles", QJsonValue(arrAng));
+
+    QJsonArray arrScl;
+    JsonUtil::vector3ToJsonArray<QVector3D>(scale(), arrScl);
+    obj.insert("scale", QJsonValue(arrScl));
+}
+
+QString HierarchicalObject::serialiseIdentifier() const
+{
+    return staticMetaObject.className();
 }

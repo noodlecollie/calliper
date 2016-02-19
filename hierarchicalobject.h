@@ -5,8 +5,9 @@
 #include <QVector3D>
 #include "eulerangle.h"
 #include <QMatrix4x4>
+#include "iserialisable.h"
 
-class HierarchicalObject : public QObject
+class HierarchicalObject : public QObject, public ISerialisable
 {
     Q_OBJECT
 public:
@@ -47,6 +48,9 @@ public:
     virtual bool scalable() const;
 
     void lookAt(const QVector3D &pos);
+
+    virtual void serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
 
 signals:
 
