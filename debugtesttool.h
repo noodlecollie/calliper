@@ -28,21 +28,7 @@ protected:
     virtual void vMouseRelease(QMouseEvent *);
 
 private:
-    typedef QHash<SceneObject*, SceneObjectManipulator> ManipTable;
-    void updateTableFromSet();
-    void updateTableManipulators();
-	void applyTableManipulators();
 
-    ManipTable  m_ManipTable;
-    QVector3D   m_vecTranslation;
-
-    TranslationHandle* m_pHandle;
-    QPoint m_BeginPos;
-    bool m_bInMove;
-    QVector3D m_vecOriginalHandlePos;
-    QList<QVector3D> m_MovementAxes;
-    float m_flHandeCamDist;
-    int m_iAxisFlags;
 };
 
 #endif // DEBUGTESTTOOL_H
