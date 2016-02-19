@@ -9,7 +9,7 @@
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {
     m_pScene = SceneFactory::debugScene(this);
-    m_pUIScene = SceneFactory::debugUIScene(this);
+    m_pUIScene = SceneFactory::defaultUIScene(this);
     m_colBackground = QColor::fromRgb(0xff262626);
     m_colSelected = QColor::fromRgb(0xffff0000);
 

@@ -59,6 +59,13 @@ namespace SceneFactory
         block->geometry()->setTexture(0, "/textures/test");
         block->setPosition(QVector3D(64,0,0));
 
+        SceneObject* blockChild = block->clone();
+        blockChild->setObjectName("blockChild");
+        blockChild->setParent(block);
+        blockChild->setGeometry(GeometryFactory::cube(8.0f));
+        blockChild->geometry()->setTexture(0, "/textures/test");
+        blockChild->setPosition(QVector3D(0,0,40));
+
         SceneObject* block2 = block->clone();
         block2->setObjectName("block2");
         block2->geometry()->setTexture(0, "/textures/debug_translucent");
@@ -74,6 +81,13 @@ namespace SceneFactory
         SceneObject* testBlock2 = testBlock->clone();
         testBlock2->setObjectName("testBlock2");
         testBlock2->setPosition(QVector3D(0, -512, 0));
+
+        return scene;
+    }
+
+    UIScene* defaultUIScene(MapDocument *document)
+    {
+        UIScene* scene = new UIScene(document);
 
         return scene;
     }

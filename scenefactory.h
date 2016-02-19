@@ -10,6 +10,7 @@ namespace SceneFactory
     MapScene* defaultScene(MapDocument* document);
     MapScene* debugScene(MapDocument* document);
 
+    UIScene* defaultUIScene(MapDocument* document);
     UIScene* debugUIScene(MapDocument* document);
 }
 

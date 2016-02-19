@@ -43,6 +43,7 @@ void TranslationTool::vDeactivate()
     if ( m_bInMove )
         endMove();
 
+    clearTableManipulators();
     delete m_pHandle;
     m_pHandle = NULL;
     BaseTool::vDeactivate();
@@ -120,9 +121,9 @@ void TranslationTool::vMouseMove(QMouseEvent *e)
     // If there is no constraint on the movement axis, just move in the camera plane.
     if ( m_iAxisFlags == UIManipulator::AxisXYZ )
     {
-        QVector3D worldTranslation = v->camera()->worldTranslation(m_BeginDragPos, e->pos(), v->size(), m_flHandleCamDist);
+        m_vecCurrentWorldTranslation = v->camera()->worldTranslation(m_BeginDragPos, e->pos(), v->size(), m_flHandleCamDist);
 
-        QVector3D newHandlePos = m_vecOriginalHandlePos + worldTranslation;
+        QVector3D newHandlePos = m_vecOriginalHandlePos + m_vecCurrentWorldTranslation;
         UIManipulator::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
         m_pHandle->setPosition(m_pHandle->rootToParent(newHandlePos));
     }
@@ -170,9 +171,15 @@ void TranslationTool::vMouseMove(QMouseEvent *e)
         // Snap it to the grid.
         UIManipulator::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
 
+        // Store our translation so we can update our objects.
+        // This must be recalculated from before as the new handle position has been clamped.
+        m_vecCurrentWorldTranslation = newHandlePos - m_vecOriginalHandlePos;
+
         // Set it on the handle.
         m_pHandle->setPosition(m_pHandle->rootToParent(newHandlePos));
     }
+
+    updateTableManipulators();
 }
 
 void TranslationTool::vMouseRelease(QMouseEvent *)
@@ -187,22 +194,106 @@ void TranslationTool::vSelectedSetChanged()
         endMove();
 
     updateTableFromSet();
+    updateHandleState();
     BaseTool::vSelectedSetChanged();
 }
 
 void TranslationTool::endMove()
 {
+    commitTableManipulators();
     m_bInMove = false;
 }
 
 void TranslationTool::updateHandleState()
 {
     Q_ASSERT(m_pHandle);
-    m_pHandle->setPosition(m_pDocument->selectedSetCentroid());
-    m_pHandle->setHidden(m_pDocument->selectedSet().count() < 1);
+    const QSet<SceneObject*> &sset = m_pDocument->selectedSet();
+    m_pHandle->setPosition(sset.count() == 1 ? (*sset.begin())->localToRoot(QVector3D(0,0,0)) : m_pDocument->selectedSetCentroid());
+    m_pHandle->setHidden(sset.count() < 1);
 }
 
 void TranslationTool::updateTableFromSet()
 {
-    updateHandleState();
+    typedef QSet<SceneObject*> SOSet;
+    const SOSet &set = m_pDocument->selectedSet();
+
+    if ( set.count() < 1 )
+    {
+        clearTableManipulators();
+        return;
+    }
+
+    // Remove our manipulators that are no longer present in the set.
+    QList<SceneObject*> toRemove;
+    for ( ManipTable::const_iterator it = m_ManipTable.constBegin(); it != m_ManipTable.constEnd(); ++it )
+    {
+        if ( !set.contains(it.key()) )
+            toRemove.append(it.key());
+    }
+
+    foreach ( SceneObject* o, toRemove )
+    {
+        m_ManipTable.remove(o);
+    }
+
+    // Add new items that are not present in our table.
+    for ( SOSet::const_iterator it = set.constBegin(); it != set.constEnd(); ++it )
+    {
+        if ( !m_ManipTable.contains(*it) )
+        {
+            m_ManipTable.insert((*it), SceneObjectManipulator(*it));
+        }
+    }
+}
+
+void TranslationTool::updateTableManipulators()
+{
+    for ( ManipTable::iterator it = m_ManipTable.begin(); it != m_ManipTable.end(); ++it )
+    {
+        SceneObject* obj = it.key();
+        SceneObjectManipulator& m = it.value();
+
+        // If the object already has ancestors in the table, don't set its position - it will inherit.
+        if ( isAncestorInManipulatorTable(obj) )
+            continue;
+
+        // Transform the translation into a parent translation before we set it.
+        m.setTranslation(obj->rootToParent(m_vecCurrentWorldTranslation));
+        qDebug() << "Updating" << obj << "manipulator translation:" << m.translation();
+    }
+}
+
+void TranslationTool::commitTableManipulators()
+{
+    for ( ManipTable::iterator it = m_ManipTable.begin(); it != m_ManipTable.end(); ++it )
+    {
+        SceneObject* obj = it.key();
+        SceneObjectManipulator& m = it.value();
+
+        // If the object already has ancestors in the table, don't do anything - it will inherit.
+        if ( isAncestorInManipulatorTable(obj) )
+            continue;
+
+        qDebug() << "Applying" << obj << "manipulator translation:" << m.translation();
+        m.apply();
+    }
+}
+
+bool TranslationTool::isAncestorInManipulatorTable(const SceneObject *obj) const
+{
+    SceneObject* p = obj->parentObject();
+    while (p)
+    {
+        if ( m_ManipTable.contains(p) )
+            return true;
+
+        p = p->parentObject();
+    }
+
+    return false;
+}
+
+void TranslationTool::clearTableManipulators()
+{
+    m_ManipTable.clear();
 }

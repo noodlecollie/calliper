@@ -2,6 +2,7 @@
 #define TRANSLATIONTOOL_H
 
 #include "basetool.h"
+#include "sceneobjectmanipulator.h"
 
 class TranslationHandle;
 
@@ -23,9 +24,15 @@ protected:
     virtual void vMouseRelease(QMouseEvent *);
 
 private:
+    typedef QHash<SceneObject*, SceneObjectManipulator> ManipTable;
+
     void endMove();
     void updateHandleState();
     void updateTableFromSet();
+    void updateTableManipulators();
+    void commitTableManipulators();
+    void clearTableManipulators();
+    bool isAncestorInManipulatorTable(const SceneObject* obj) const;
 
     bool				m_bInMove;
     TranslationHandle*	m_pHandle;
@@ -34,6 +41,8 @@ private:
     float               m_flHandleCamDist;
     int                 m_iAxisFlags;
     QList<QVector3D>    m_MovementAxes;
+    ManipTable          m_ManipTable;
+    QVector3D           m_vecCurrentWorldTranslation;
 };
 
 #endif // TRANSLATIONTOOL_H
