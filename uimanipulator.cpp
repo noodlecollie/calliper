@@ -122,3 +122,9 @@ Math::AxisIdentifier UIManipulator::planeConstraintAxis(int axisFlags, const Hie
 		}
 	}
 }
+
+bool UIManipulator::serialiseToJson(QJsonObject &) const
+{
+    // UI elements should not be serialised.
+    return false;
+}

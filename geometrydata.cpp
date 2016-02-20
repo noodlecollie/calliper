@@ -629,7 +629,7 @@ void GeometryData::transform(const QMatrix4x4 &mat)
     }
 }
 
-void GeometryData::serialiseToJson(QJsonObject &obj) const
+bool GeometryData::serialiseToJson(QJsonObject &obj) const
 {
     // Set the identifier.
     obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(serialiseIdentifier()));
@@ -659,6 +659,8 @@ void GeometryData::serialiseToJson(QJsonObject &obj) const
 
     // Right now we don't serialise the local texture - this is likely to be
     // one-off data.
+
+    return true;
 }
 
 QString GeometryData::serialiseIdentifier() const

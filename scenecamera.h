@@ -31,6 +31,9 @@ public:
     // This is a world direction.
     QVector3D frustumDirection(const QPoint &p, const QSize &viewSize) const;
 
+    virtual bool serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
+
 protected:
     explicit SceneCamera(const SceneCamera &cloneFrom);
     virtual void rebuildLocalToParent() const;

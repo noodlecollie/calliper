@@ -5,6 +5,7 @@
 #include "tools.h"
 #include "inputprocessor.h"
 #include "openglrenderer.h"
+#include "jsonutil.h"
 
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {
@@ -176,4 +177,28 @@ int MapDocument::toolIndex(const QString &name) const
 	}
 
 	return -1;
+}
+
+bool MapDocument::serialiseToJson(QJsonObject &obj) const
+{
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), MapDocument::serialiseIdentifier());
+
+    QJsonObject jsonScene;
+    m_pScene->serialiseToJson(jsonScene);
+    obj.insert("scene", QJsonValue(jsonScene));
+
+    QJsonArray arrBgCol;
+    JsonUtil::colorToJsonArray(m_colBackground, arrBgCol);
+    obj.insert("backgroundColor", QJsonValue(arrBgCol));
+
+    QJsonArray arrSelectedCol;
+    JsonUtil::colorToJsonArray(m_colSelected, arrSelectedCol);
+    obj.insert("selectedColor", QJsonValue(arrSelectedCol));
+
+    return true;
+}
+
+QString MapDocument::serialiseIdentifier() const
+{
+    return staticMetaObject.className();
 }

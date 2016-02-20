@@ -31,6 +31,9 @@ public:
 
     virtual SceneObject* clone() const;
 
+    // UI elements should not be serialised.
+    virtual bool serialiseToJson(QJsonObject &) const;
+
 protected:
     explicit UIManipulator(const UIManipulator &cloneFrom);
 };

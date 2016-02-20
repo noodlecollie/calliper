@@ -165,7 +165,7 @@ QVector3D HierarchicalObject::rootToParent(const QVector3D &vec, bool direction)
     return (localToParent() * rootToLocal() * QVector4D(vec, direction ? 0 : 1)).toVector3D();
 }
 
-void HierarchicalObject::serialiseToJson(QJsonObject &obj) const
+bool HierarchicalObject::serialiseToJson(QJsonObject &obj) const
 {
     // Set our identifier.
     obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(HierarchicalObject::serialiseIdentifier()));
@@ -182,6 +182,8 @@ void HierarchicalObject::serialiseToJson(QJsonObject &obj) const
     QJsonArray arrScl;
     JsonUtil::vector3ToJsonArray<QVector3D>(scale(), arrScl);
     obj.insert("scale", QJsonValue(arrScl));
+
+    return true;
 }
 
 QString HierarchicalObject::serialiseIdentifier() const

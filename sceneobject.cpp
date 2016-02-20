@@ -175,8 +175,16 @@ void SceneObject::setHidden(bool hide)
     m_bHidden = hide;
 }
 
-void SceneObject::serialiseToJson(QJsonObject &obj) const
+bool SceneObject::serialiseToJson(QJsonObject &obj) const
 {
+    // If we're not editable, we shouldn't be saved to a file.
+    // This means that non-editable subclasses don't have to bother
+    // with re-implementation of serialisation at all.
+    if ( !editable() )
+    {
+        return false;
+    }
+
     // Set the identifier for this object.
     obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(SceneObject::serialiseIdentifier()));
 
@@ -186,6 +194,9 @@ void SceneObject::serialiseToJson(QJsonObject &obj) const
 
     // Insert this as the superclass.
     obj.insert(ISerialisable::KEY_SUPERCLASS(), QJsonValue(jsonParent));
+
+    // Serialise the name of this object.
+    obj.insert("objectName", QJsonValue(objectName()));
 
     // Serialise geometry.
     if ( shouldSerialiseGeometry() )
@@ -198,6 +209,8 @@ void SceneObject::serialiseToJson(QJsonObject &obj) const
     // Other properties
     obj.insert("renderFlags", QJsonValue(renderFlags()));
     obj.insert("hidden", QJsonValue(hidden()));
+
+    return true;
 }
 
 QString SceneObject::serialiseIdentifier() const

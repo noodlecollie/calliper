@@ -7,6 +7,7 @@
 #include "resourcemanager.h"
 #include <QPoint>
 #include <QSize>
+#include <QJsonArray>
 
 #define MAX_PITCH_DELTA 89.0f
 #define MAX_ROLL_DELTA 180.0f
@@ -167,4 +168,42 @@ QVector3D SceneCamera::frustumDirection(const QPoint &p, const QSize &viewSize) 
 SceneObject* SceneCamera::clone() const
 {
     return new SceneCamera(*this);
+}
+
+bool SceneCamera::serialiseToJson(QJsonObject &obj) const
+{
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(SceneCamera::serialiseIdentifier()));
+
+    // Serialise the parent object first.
+    QJsonObject jsonParent;
+    SceneObject::serialiseToJson(jsonParent);
+
+    // Insert this as the superclass.
+    obj.insert(ISerialisable::KEY_SUPERCLASS(), QJsonValue(jsonParent));
+
+    obj.insert("lensType", QJsonValue((int)m_pLens->type()));
+    obj.insert("nearPlane", QJsonValue(m_pLens->nearPlane()));
+    obj.insert("farPlane", QJsonValue(m_pLens->farPlane()));
+
+    if ( m_pLens->type() == CameraLens::Orthographic )
+    {
+        QJsonArray arrPlanes;
+        arrPlanes.append(QJsonValue(m_pLens->topPlane()));
+        arrPlanes.append(QJsonValue(m_pLens->bottomPlane()));
+        arrPlanes.append(QJsonValue(m_pLens->leftPlane()));
+        arrPlanes.append(QJsonValue(m_pLens->rightPlane()));
+        obj.insert("orthoPlanes", QJsonValue(arrPlanes));
+    }
+    else if ( m_pLens->type() == CameraLens::Perspective )
+    {
+        obj.insert("fov", QJsonValue(m_pLens->fieldOfView()));
+    }
+
+    return true;
+}
+
+
+QString SceneCamera::serialiseIdentifier() const
+{
+    return staticMetaObject.className();
 }

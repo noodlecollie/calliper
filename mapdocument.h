@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QSet>
 #include "boundingbox.h"
+#include "iserialisable.h"
 
 class MapScene;
 class UIScene;
@@ -12,7 +13,7 @@ class SceneObject;
 class BaseTool;
 class InputProcessor;
 
-class MapDocument : public QObject
+class MapDocument : public QObject, public ISerialisable
 {
     Q_OBJECT
 public:
@@ -50,6 +51,9 @@ public:
     BaseTool* activeTool() const;
 
     InputProcessor* inputProcessor() const;
+
+    virtual bool serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
 
 private:
     void createTools();

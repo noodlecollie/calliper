@@ -97,7 +97,7 @@ public:
     bool append(const GeometryData &other);
     void transform(const QMatrix4x4 &mat);
 
-    virtual void serialiseToJson(QJsonObject &obj) const;
+    virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
 
 private:

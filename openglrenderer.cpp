@@ -186,11 +186,6 @@ void OpenGLRenderer::renderTranslucent()
 
 void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 {
-    if ( obj->objectName() == "blockChild" )
-    {
-        bool breakpoint = true;
-    }
-
     // If the object is hidden, don't draw it or any of its children.
     if ( obj->hidden() )
         return;

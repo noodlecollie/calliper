@@ -49,7 +49,7 @@ public:
 
     void lookAt(const QVector3D &pos);
 
-    virtual void serialiseToJson(QJsonObject &obj) const;
+    virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
 
 signals:

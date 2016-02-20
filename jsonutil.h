@@ -4,6 +4,7 @@
 #include <QVector3D>
 #include <QJsonArray>
 #include <QVector>
+#include <QColor>
 
 namespace JsonUtil
 {
@@ -59,6 +60,9 @@ namespace JsonUtil
 
         return vec;
     }
+
+    void colorToJsonArray(const QColor &col, QJsonArray &arr);
+    QColor jsonArrayToColor(const QJsonArray &arr);
 }
 
 #endif // JSONUTIL_H

@@ -36,6 +36,7 @@ public slots:
     void sceneTreeItemClicked(QTreeWidgetItem* item, int column);
     void viewportPreFrame(int msec);
 	void toolButtonClicked();
+    void saveCurrentDocumentAs();
 
 private:
     void setUpConnections();
@@ -47,6 +48,7 @@ private:
 
     int m_iActiveDocument;
     Viewport* m_pActiveViewport;
+    QString m_szLastSaveDir;
 };
 
 #endif // MAINWINDOW_H

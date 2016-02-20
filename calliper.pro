@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     uimanipulator.cpp \
     translationtool.cpp \
     ray3d.cpp \
-    jsonutil.cpp
+    jsonutil.cpp \
+    callipermapfile.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -105,7 +106,8 @@ HEADERS  += mainwindow.h \
     translationtool.h \
     ray3d.h \
     iserialisable.h \
-    jsonutil.h
+    jsonutil.h \
+    callipermapfile.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

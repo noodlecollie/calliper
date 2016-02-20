@@ -8,6 +8,10 @@
 #include "originmarker.h"
 #include "inputprocessor.h"
 #include "tools.h"
+#include <QFileDialog>
+#include <QStandardPaths>
+#include "callipermapfile.h"
+#include <QMessageBox>
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
 
@@ -18,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     m_iActiveDocument = -1;
     m_pActiveViewport = NULL;
+    m_szLastSaveDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 
 	ui->actionDebug_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(DebugTestTool::staticName()));
     ui->actionTranslate_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(TranslationTool::staticName()));
@@ -285,4 +290,30 @@ void MainWindow::toolButtonClicked()
 
 	doc->setActiveToolIndex(toolIndex);
 	qDebug() << "Set active tool to" << toolName;
+}
+
+void MainWindow::saveCurrentDocumentAs()
+{
+    MapDocument* doc = activeDocument();
+    if ( !doc )
+        return;
+
+    QString filename = QFileDialog::getSaveFileName(this, "Save document as...", m_szLastSaveDir, "Calliper map files (*.cmf)");
+    if ( filename.isNull() )
+        return;
+
+    CalliperMapFile cmf(filename, doc);
+
+    // For now, save as the most human-readable format.
+    if ( !cmf.saveToFile(CalliperMapFile::IndentedJson) )
+    {
+        QMessageBox::warning(this, "Error", QString("Unable to save file %0").arg(filename));
+        return;
+    }
+
+    // Cache the directory for next time.
+    {
+        QDir directory(filename);
+        m_szLastSaveDir = directory.canonicalPath();
+    }
 }
