@@ -181,7 +181,7 @@ bool SceneCamera::serialiseToJson(QJsonObject &obj) const
     // Insert this as the superclass.
     obj.insert(ISerialisable::KEY_SUPERCLASS(), QJsonValue(jsonParent));
 
-    obj.insert("lensType", QJsonValue((int)m_pLens->type()));
+    obj.insert("lensType", QJsonValue(CameraLens::LensTypeNames[m_pLens->type()]));
     obj.insert("nearPlane", QJsonValue(m_pLens->nearPlane()));
     obj.insert("farPlane", QJsonValue(m_pLens->farPlane()));
 

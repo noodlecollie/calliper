@@ -13,6 +13,8 @@ public:
         Perspective
     };
 
+    static const char* LensTypeNames[2];
+
     struct PlaneSet
     {
         PlaneSet() : leftPlane(0), rightPlane(0), topPlane(0), bottomPlane(0), nearPlane(0), farPlane(0)

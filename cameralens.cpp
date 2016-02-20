@@ -1,6 +1,12 @@
 #include "cameralens.h"
 #include <QtMath>
 
+const char* CameraLens::LensTypeNames[2] =
+{
+    "Orthographic",
+    "Perspective",
+};
+
 CameraLens::CameraLens(LensType type)
 {
     m_iType = type;

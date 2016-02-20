@@ -6,6 +6,7 @@
 #include <QtDebug>
 #include <QOpenGLTexture>
 #include "jsonutil.h"
+#include "generalutil.h"
 
 QDebug operator<<(QDebug debug, const GeometryData &data)
 {
