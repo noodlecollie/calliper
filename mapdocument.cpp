@@ -202,3 +202,13 @@ QString MapDocument::serialiseIdentifier() const
 {
     return staticMetaObject.className();
 }
+
+QString MapDocument::filename() const
+{
+    return m_szFilename;
+}
+
+void MapDocument::setFilename(const QString &name)
+{
+    m_szFilename = name;
+}

@@ -37,12 +37,14 @@ public slots:
     void viewportPreFrame(int msec);
 	void toolButtonClicked();
     void saveCurrentDocumentAs();
+    void saveCurrentDocument();
 
 private:
     void setUpConnections();
     void populateSceneTree(MapScene* scene);
     void populateSceneTreeRecursive(SceneObject* object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items);
     void changeActiveDocument(MapDocument* oldDoc, MapDocument* newDoc);
+    void saveDocument(MapDocument* document, const QString &filename);
 
     Ui::MainWindow *ui;
 

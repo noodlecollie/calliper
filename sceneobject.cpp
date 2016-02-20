@@ -13,6 +13,7 @@ SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
     m_pGeometry.reset(new GeometryData());
     m_iRenderFlags = 0;
     m_bHidden = false;
+    m_bSerialiseGeometry = false;
 }
 
 SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(cloneFrom.parentObject())
@@ -21,6 +22,7 @@ SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(clon
     m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));
     m_iRenderFlags = cloneFrom.m_iRenderFlags;
     m_bHidden = cloneFrom.m_bHidden;
+    m_bSerialiseGeometry = cloneFrom.m_bSerialiseGeometry;
 
     setPosition(cloneFrom.position());
     setAngles(cloneFrom.angles());
@@ -220,7 +222,5 @@ QString SceneObject::serialiseIdentifier() const
 
 bool SceneObject::shouldSerialiseGeometry() const
 {
-    // By default this is true.
-    // Subclasses can override.
-    return true;
+    return m_bSerialiseGeometry;
 }

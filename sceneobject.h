@@ -54,7 +54,9 @@ public:
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
-    virtual bool shouldSerialiseGeometry() const;
+
+    // False by default.
+    bool shouldSerialiseGeometry() const;
 
 signals:
 
@@ -67,6 +69,7 @@ protected:
 	BaseScene*						m_pScene;
 	int								m_iRenderFlags;
 	bool							m_bHidden;
+    bool                            m_bSerialiseGeometry;
 };
 
 #endif // SCENEOBJECT_H

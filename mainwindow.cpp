@@ -292,6 +292,44 @@ void MainWindow::toolButtonClicked()
 	qDebug() << "Set active tool to" << toolName;
 }
 
+void MainWindow::saveDocument(MapDocument *document, const QString &filename)
+{
+    CalliperMapFile cmf(filename, document);
+
+    // For now, save as the most human-readable format.
+    if ( !cmf.saveToFile(CalliperMapFile::IndentedJson) )
+    {
+        QMessageBox::warning(this, "Error", QString("Unable to save file %0").arg(filename));
+        return;
+    }
+
+    // Cache the file name within the document.
+    document->setFilename(filename);
+
+    // Cache the directory for next time.
+    {
+        QDir directory(filename);
+        m_szLastSaveDir = directory.canonicalPath();
+    }
+}
+
+void MainWindow::saveCurrentDocument()
+{
+    MapDocument* doc = activeDocument();
+    if ( !doc )
+        return;
+
+    // If the document filename is null then it's never been set, so call saveAs().
+    if ( doc->filename().isNull() )
+    {
+        saveCurrentDocumentAs();
+        return;
+    }
+
+    // Save our file.
+    saveDocument(doc, doc->filename());
+}
+
 void MainWindow::saveCurrentDocumentAs()
 {
     MapDocument* doc = activeDocument();
@@ -302,18 +340,5 @@ void MainWindow::saveCurrentDocumentAs()
     if ( filename.isNull() )
         return;
 
-    CalliperMapFile cmf(filename, doc);
-
-    // For now, save as the most human-readable format.
-    if ( !cmf.saveToFile(CalliperMapFile::IndentedJson) )
-    {
-        QMessageBox::warning(this, "Error", QString("Unable to save file %0").arg(filename));
-        return;
-    }
-
-    // Cache the directory for next time.
-    {
-        QDir directory(filename);
-        m_szLastSaveDir = directory.canonicalPath();
-    }
+    saveDocument(doc, filename);
 }

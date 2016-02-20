@@ -29,6 +29,9 @@ public:
     MapScene* scene() const;
     UIScene* uiScene() const;
 
+    QString filename() const;
+    void setFilename(const QString &name);
+
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &col);
 
@@ -66,6 +69,7 @@ private:
     QColor  m_colSelected;
     QList<BaseTool*>    m_Tools;
     int m_iActiveTool;
+    QString m_szFilename;
 
     InputProcessor* m_pInputProcessor;
 };
