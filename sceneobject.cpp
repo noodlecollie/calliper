@@ -227,10 +227,11 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
 
 SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent) : HierarchicalObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
 {
+    initDefaults(parent);
+
     // Make sure this object identifies us.
     if ( !validateIdentifier(serialisedData, SceneObject::serialiseIdentifier()) )
     {
-        initDefaults(parent);
         return;
     }
 
@@ -241,7 +242,7 @@ SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent)
     }
 
     QJsonValue vGeometry = serialisedData.value("geometry");
-    if ( !vGeometry.isNull() )
+    if ( vGeometry.isObject() )
     {
         setGeometry(new GeometryData(vGeometry.toObject()));
     }
@@ -267,4 +268,9 @@ QString SceneObject::serialiseIdentifier() const
 bool SceneObject::shouldSerialiseGeometry() const
 {
     return m_bSerialiseGeometry;
+}
+
+void SceneObject::setShouldSerialiseGeometry(bool enabled)
+{
+    m_bSerialiseGeometry = enabled;
 }

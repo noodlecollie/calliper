@@ -7,9 +7,8 @@
 BaseScene::BaseScene(MapDocument *doc)
 {
     m_pDocument = doc;
-    m_pRootObject = new SceneObject(NULL);
-    m_pRootObject->m_pScene = this;
-    m_pRootObject->setObjectName("root");
+    m_pRootObject = NULL;
+    setRoot(new SceneObject(NULL));
 }
 
 BaseScene::~BaseScene()
@@ -20,6 +19,15 @@ BaseScene::~BaseScene()
 SceneObject* BaseScene::root() const
 {
     return m_pRootObject;
+}
+
+void BaseScene::setRoot(SceneObject *root)
+{
+    Q_ASSERT(root && !root->parent());
+    delete m_pRootObject;
+    m_pRootObject = root;
+    m_pRootObject->m_pScene = this;
+    m_pRootObject->setObjectName("root");
 }
 
 QList<SceneCamera*> BaseScene::findCameras() const

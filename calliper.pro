@@ -58,8 +58,8 @@ SOURCES += main.cpp\
     ray3d.cpp \
     jsonutil.cpp \
     callipermapfile.cpp \
-    unserialisationfactory.cpp \
-    generalutil.cpp
+    generalutil.cpp \
+    sceneobjectfactory.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -110,8 +110,8 @@ HEADERS  += mainwindow.h \
     iserialisable.h \
     jsonutil.h \
     callipermapfile.h \
-    unserialisationfactory.h \
-    generalutil.h
+    generalutil.h \
+    sceneobjectfactory.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui

@@ -98,6 +98,9 @@ namespace JsonUtil
         int enumIndex = C::staticMetaObject.indexOfEnumerator(flagName.toLatin1().constData());
         QMetaEnum metaEnum = C::staticMetaObject.enumerator(enumIndex);
         QString flagString = jsonArrayToFlagsString(arr);
+        if ( flagString.isNull() || flagString.isEmpty() )
+            return T(0);
+
         int value = metaEnum.keysToValue(flagString.toLatin1().constData());
         return T(value);
     }

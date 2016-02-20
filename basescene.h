@@ -36,6 +36,8 @@ public:
     QList<SceneCamera*> findCameras() const;
 
 protected:
+    void setRoot(SceneObject* root);
+
     SceneObject*    m_pRootObject;
     MapDocument*    m_pDocument;
 };

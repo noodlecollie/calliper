@@ -15,7 +15,6 @@ class SceneObject : public HierarchicalObject
 {
     Q_OBJECT
     friend class BaseScene;
-    friend class UnserialisationFactory;
 public:
     enum RenderFlag
     {
@@ -26,6 +25,7 @@ public:
     Q_FLAG(RenderFlags)
 
     explicit SceneObject(SceneObject *parent = 0);
+    explicit SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
     virtual ~SceneObject();
 
     // Object name is not cloned.
@@ -61,6 +61,7 @@ public:
 
     // False by default.
     bool shouldSerialiseGeometry() const;
+    void setShouldSerialiseGeometry(bool enabled);
 
 signals:
 
@@ -68,7 +69,6 @@ public slots:
 
 protected:
     explicit SceneObject(const SceneObject &cloneFrom);
-    explicit SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
 
     QScopedPointer<GeometryData>    m_pGeometry;
 	BaseScene*						m_pScene;

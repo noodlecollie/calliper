@@ -3,13 +3,12 @@
 #include "iserialisable.h"
 #include <QSaveFile>
 #include <QJsonDocument>
+#include <QFile>
 
 CalliperMapFile::CalliperMapFile(const QString &filename, MapDocument *document)
 {
     m_szFilename = filename;
     m_pDocument = document;
-
-    insertMetadata();
 }
 
 QString CalliperMapFile::filename() const
@@ -60,6 +59,7 @@ bool CalliperMapFile::saveToFile(FileFormat format)
     if ( !file.open(QIODevice::WriteOnly) )
         return false;
 
+    insertMetadata();
     insertSerialisedDocument();
 
     QJsonDocument jsonDoc(m_RootObject);
@@ -93,4 +93,46 @@ bool CalliperMapFile::saveToFile(FileFormat format)
 
     file.commit();
     return true;
+}
+
+bool CalliperMapFile::loadFromFile(FileFormat format)
+{
+    QFile file(m_szFilename);
+    if ( !file.open(QIODevice::ReadOnly) )
+        return false;
+
+    QJsonDocument jsonDoc;
+    switch (format)
+    {
+    case Binary:
+        jsonDoc = QJsonDocument::fromBinaryData(file.readAll());
+        break;
+
+    case IndentedJson:
+    case CompactJson:
+        jsonDoc = QJsonDocument::fromJson(file.readAll());
+        break;
+    }
+
+    file.close();
+
+    if ( !jsonDoc.isObject() )
+        return false;
+
+    // Make sure the version is correct.
+    m_RootObject = jsonDoc.object();
+    QJsonObject metadata = m_RootObject.value("metadata").toObject();
+    if ( metadata.isEmpty() )
+        return false;
+
+    QJsonValue vVersion = metadata.value("version");
+    if ( !vVersion.isDouble() )
+        return false;
+
+    unsigned short version = (unsigned short)vVersion.toInt();
+    if ( version != ISerialisable::SERIALISATION_VERSION() )
+        return false;
+
+    // Unserialise the document.
+    return m_pDocument->unserialiseFromJson(m_RootObject.value("document").toObject());
 }

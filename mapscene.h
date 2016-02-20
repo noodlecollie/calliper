@@ -19,9 +19,12 @@ public:
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
+    bool unserialiseFromJson(const QJsonObject &serialisedData);
 
 private:
+    void insertStandardItems();
     bool serialiseRecursive(SceneObject* obj, QJsonObject &jsonParent) const;
+    bool unserialiseRecursive(SceneObject* parent, const QJsonObject &serialisedData);
 
     MapGrid*       m_pGrid;
 };

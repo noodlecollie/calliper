@@ -38,6 +38,7 @@ public slots:
 	void toolButtonClicked();
     void saveCurrentDocumentAs();
     void saveCurrentDocument();
+    void loadDocument();
 
 private:
     void setUpConnections();
@@ -45,12 +46,14 @@ private:
     void populateSceneTreeRecursive(SceneObject* object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items);
     void changeActiveDocument(MapDocument* oldDoc, MapDocument* newDoc);
     void saveDocument(MapDocument* document, const QString &filename);
+    void loadDocument(MapDocument* document, const QString &filename);
 
     Ui::MainWindow *ui;
 
     int m_iActiveDocument;
     Viewport* m_pActiveViewport;
     QString m_szLastSaveDir;
+    QString m_szLastLoadDir;
 };
 
 #endif // MAINWINDOW_H

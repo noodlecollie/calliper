@@ -3,10 +3,13 @@
 #include "sceneobject.h"
 #include "mapgrid.h"
 #include <QJsonArray>
+#include "sceneobjectfactory.h"
+#include "originmarker.h"
 
 MapScene::MapScene(MapDocument *document) : BaseScene(document)
 {
     m_pGrid = NULL;
+    insertStandardItems();
 }
 
 MapScene::~MapScene()
@@ -25,13 +28,27 @@ MapGrid* MapScene::grid() const
 
 bool MapScene::serialiseToJson(QJsonObject &obj) const
 {
-    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(serialiseIdentifier()));
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(MapScene::serialiseIdentifier()));
 
     QJsonObject rootObj;
     serialiseRecursive(m_pRootObject, rootObj);
     obj.insert("root", QJsonValue(rootObj));
 
     return true;
+}
+
+bool MapScene::unserialiseFromJson(const QJsonObject &serialisedData)
+{
+    if ( !validateIdentifier(serialisedData, MapScene::serialiseIdentifier()) )
+        return false;
+
+    QJsonValue vRootObject = serialisedData.value("root");
+    if ( !vRootObject.isObject() )
+        return false;
+
+    bool success = unserialiseRecursive(NULL, vRootObject.toObject());
+    insertStandardItems();
+    return success;
 }
 
 QString MapScene::serialiseIdentifier() const
@@ -67,4 +84,37 @@ bool MapScene::serialiseRecursive(SceneObject *obj, QJsonObject &jsonParent) con
     }
 
     return true;
+}
+
+bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &serialisedData)
+{
+    // Unserialise the object and attach it to the parent.
+    SceneObject* obj = SceneObjectFactory::unserialiseFromJson(serialisedData, parent);
+    if ( !obj )
+        return false;
+
+    // If the parent is NULL, this object is the root.
+    if ( !parent )
+    {
+        setRoot(obj);
+        m_pGrid = NULL;
+    }
+
+    // For each of the children in the serialised data, call this recursively.
+    QJsonArray arrChildren = serialisedData.value("children").toArray();
+    for ( int i = 0; i < arrChildren.count(); i++ )
+    {
+        unserialiseRecursive(obj, arrChildren.at(i).toObject());
+    }
+
+    return true;
+}
+
+void MapScene::insertStandardItems()
+{
+    OriginMarker* o = new OriginMarker(root());
+    o->setObjectName("origin");
+
+    MapGrid* grid = new MapGrid(root());
+    grid->setObjectName("grid");
 }

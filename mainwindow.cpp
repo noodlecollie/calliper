@@ -14,6 +14,13 @@
 #include <QMessageBox>
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
+#define NO_NATIVE_FILE_DIALOG
+
+#ifdef NO_NATIVE_FILE_DIALOG
+#define FILE_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
+#else
+#define FILE_DIALOG_OPTIONS 0
+#endif
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_iActiveDocument = -1;
     m_pActiveViewport = NULL;
     m_szLastSaveDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    m_szLastLoadDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 
 	ui->actionDebug_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(DebugTestTool::staticName()));
     ui->actionTranslate_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(TranslationTool::staticName()));
@@ -120,6 +128,10 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
         if ( cameras.count() > 0 )
         {
             ui->viewport->setCamera(cameras.at(0));
+        }
+        else
+        {
+            ui->viewport->setCamera(NULL);
         }
 
         ui->viewport->installEventFilter(newDoc->inputProcessor());
@@ -336,9 +348,47 @@ void MainWindow::saveCurrentDocumentAs()
     if ( !doc )
         return;
 
-    QString filename = QFileDialog::getSaveFileName(this, "Save document as...", m_szLastSaveDir, "Calliper map files (*.cmf)");
+    QString filename = QFileDialog::getSaveFileName(this, "Save document as...", m_szLastSaveDir, "Calliper map files (*.cmf)", NULL, FILE_DIALOG_OPTIONS);
     if ( filename.isNull() )
         return;
 
     saveDocument(doc, filename);
+}
+
+void MainWindow::loadDocument()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open document", m_szLastLoadDir, "Calliper map files (*.cmf)", NULL, FILE_DIALOG_OPTIONS);
+    if ( filename.isNull() )
+        return;
+
+    MapDocument* doc = application()->newDocument();
+    loadDocument(doc, filename);
+
+    // The new document is created on the end of the list.
+    // Switch to it.
+    MapDocument* oldDoc = activeDocument();
+    m_iActiveDocument = application()->documentCount() - 1;
+    updateDocumentList(application()->documents());
+    changeActiveDocument(oldDoc, activeDocument());
+}
+
+void MainWindow::loadDocument(MapDocument *document, const QString &filename)
+{
+    CalliperMapFile cmf(filename, document);
+
+    // For now, read only indented JSON.
+    if ( !cmf.loadFromFile(CalliperMapFile::IndentedJson) )
+    {
+        QMessageBox::warning(this, "Error", QString("Unable to load file %0").arg(filename));
+        return;
+    }
+
+    // Cache the filename.
+    document->setFilename(filename);
+
+    // Cache the directory for next time.
+    {
+        QDir directory(filename);
+        m_szLastLoadDir = directory.canonicalPath();
+    }
 }

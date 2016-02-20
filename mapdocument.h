@@ -57,6 +57,7 @@ public:
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
+    bool unserialiseFromJson(const QJsonObject &serialisedData);
 
 private:
     void createTools();

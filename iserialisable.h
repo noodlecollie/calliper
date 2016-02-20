@@ -30,9 +30,9 @@ protected:
         QJsonValue id = serialisedData.value(ISerialisable::KEY_IDENTIFIER());
         if ( !id.isString() || id.toString() != identifier )
         {
-            Q_ASSERT(false);
             qWarning() << "WARNING: Serialisation identifier" << (id.isString() ? id.toString() : QString("(null)"))
                        << "does not match" << identifier << "upon unserialisation.";
+            Q_ASSERT(false);
             return false;
         }
 

@@ -7,10 +7,19 @@
 #include "openglrenderer.h"
 #include "jsonutil.h"
 
+//#define DEBUG_SCENES
+
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {
+
+#ifdef DEBUG_SCENES
     m_pScene = SceneFactory::debugScene(this);
     m_pUIScene = SceneFactory::defaultUIScene(this);
+#else
+    m_pScene = SceneFactory::defaultScene(this);
+    m_pUIScene = SceneFactory::defaultUIScene(this);
+#endif
+
     m_colBackground = QColor::fromRgb(0xff262626);
     m_colSelected = QColor::fromRgb(0xffff0000);
 
@@ -196,6 +205,34 @@ bool MapDocument::serialiseToJson(QJsonObject &obj) const
     obj.insert("selectedColor", QJsonValue(arrSelectedCol));
 
     return true;
+}
+
+bool MapDocument::unserialiseFromJson(const QJsonObject &serialisedData)
+{
+    if ( !validateIdentifier(serialisedData, MapDocument::serialiseIdentifier()) )
+        return false;
+
+    QJsonArray arrBgCol = serialisedData.value("backgroundColor").toArray();
+    if ( arrBgCol.count() >= 3 )
+    {
+        setBackgroundColor(JsonUtil::jsonArrayToColor(arrBgCol));
+    }
+
+    QJsonArray arrSelectedCol = serialisedData.value("selectedColor").toArray();
+    if ( arrSelectedCol.count() >= 3 )
+    {
+        setSelectedColor(JsonUtil::jsonArrayToColor(arrSelectedCol));
+    }
+
+    QJsonValue vScene = serialisedData.value("scene");
+    if ( vScene.isObject() )
+    {
+        return m_pScene->unserialiseFromJson(vScene.toObject());
+    }
+    else
+    {
+        return false;
+    }
 }
 
 QString MapDocument::serialiseIdentifier() const

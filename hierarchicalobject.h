@@ -10,9 +10,9 @@
 class HierarchicalObject : public QObject, public ISerialisable
 {
     Q_OBJECT
-    friend class UnserialisationFactory;
 public:
     explicit HierarchicalObject(HierarchicalObject *parent = 0);
+    explicit HierarchicalObject(const QJsonObject &serialisedData, HierarchicalObject* parent = 0);
     virtual ~HierarchicalObject();
 
     // Matrices
@@ -58,8 +58,6 @@ signals:
 public slots:
 
 protected:
-    explicit HierarchicalObject(const QJsonObject &serialisedData, HierarchicalObject* parent = 0);
-
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();
     void rebuildMatrices() const;

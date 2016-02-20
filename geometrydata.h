@@ -20,7 +20,6 @@ class QOpenGLTexture;
 
 class GeometryData : public ISerialisable
 {
-    friend class UnserialisationFactory;
 public:
     GeometryData();
     GeometryData(const GeometryData &other);
