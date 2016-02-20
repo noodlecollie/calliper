@@ -5,15 +5,20 @@
 
 HierarchicalObject::HierarchicalObject(HierarchicalObject *parent) : QObject(parent)
 {
-    m_vecPosition = QVector3D(0,0,0);
-    m_angAngles = EulerAngle(0,0,0);
-    m_bMatricesStale = true;
-    m_vecScale = QVector3D(1,1,1);
+    initDefaults();
 }
 
 HierarchicalObject::~HierarchicalObject()
 {
 
+}
+
+void HierarchicalObject::initDefaults()
+{
+    m_vecPosition = QVector3D(0,0,0);
+    m_angAngles = EulerAngle(0,0,0);
+    m_bMatricesStale = true;
+    m_vecScale = QVector3D(1,1,1);
 }
 
 QVector3D HierarchicalObject::position() const
@@ -189,4 +194,44 @@ bool HierarchicalObject::serialiseToJson(QJsonObject &obj) const
 QString HierarchicalObject::serialiseIdentifier() const
 {
     return staticMetaObject.className();
+}
+
+HierarchicalObject::HierarchicalObject(const QJsonObject &serialisedData, HierarchicalObject *parent) : QObject(parent)
+{
+    // Make sure this object identifies us.
+    if ( !validateIdentifier(serialisedData, HierarchicalObject::serialiseIdentifier()) )
+    {
+        initDefaults();
+        return;
+    }
+
+    QJsonArray arrPos = serialisedData.value("position").toArray();
+    if ( arrPos.count() >= 3 )
+    {
+        setPosition(JsonUtil::jsonArrayToVector3<QVector3D>(arrPos));
+    }
+    else
+    {
+        setPosition(QVector3D());
+    }
+
+    QJsonArray arrAng = serialisedData.value("angles").toArray();
+    if ( arrAng.count() >= 3 )
+    {
+        setAngles(JsonUtil::jsonArrayToVector3<EulerAngle>(arrAng));
+    }
+    else
+    {
+        setAngles(EulerAngle());
+    }
+
+    QJsonArray arrScl = serialisedData.value("scale").toArray();
+    if ( arrScl.count() >= 3 )
+    {
+        setScale(JsonUtil::jsonArrayToVector3<QVector3D>(arrScl));
+    }
+    else
+    {
+        setScale(QVector3D(1,1,1));
+    }
 }

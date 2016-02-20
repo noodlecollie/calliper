@@ -15,11 +15,15 @@ class SceneObject : public HierarchicalObject
 {
     Q_OBJECT
     friend class BaseScene;
+    friend class UnserialisationFactory;
 public:
     enum RenderFlag
     {
+        NoRenderFlag = 0x0,
         Translucent = 0x1,
     };
+    Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
+    Q_FLAG(RenderFlags)
 
     explicit SceneObject(SceneObject *parent = 0);
     virtual ~SceneObject();
@@ -43,8 +47,8 @@ public:
     virtual bool editable() const;
     virtual void draw(ShaderStack* stack);
 
-    int renderFlags() const;
-    void setRenderFlags(int flags);
+    RenderFlags renderFlags() const;
+    void setRenderFlags(RenderFlags flags);
 
     // Computes bounds in local space.
     BoundingBox computeLocalBounds() const;
@@ -64,12 +68,18 @@ public slots:
 
 protected:
     explicit SceneObject(const SceneObject &cloneFrom);
+    explicit SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
 
     QScopedPointer<GeometryData>    m_pGeometry;
 	BaseScene*						m_pScene;
-	int								m_iRenderFlags;
+    RenderFlags						m_RenderFlags;
 	bool							m_bHidden;
     bool                            m_bSerialiseGeometry;
+
+private:
+    void initDefaults(SceneObject* parent);
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(SceneObject::RenderFlags)
 
 #endif // SCENEOBJECT_H

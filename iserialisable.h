@@ -3,6 +3,7 @@
 
 #include <QJsonObject>
 #include <QString>
+#include <QtDebug>
 
 class ISerialisable
 {
@@ -21,6 +22,22 @@ public:
     // If this returns false, the identifier string is undefined.
     virtual bool serialiseToJson(QJsonObject &obj) const = 0;
     virtual QString serialiseIdentifier() const = 0;
+
+protected:
+    // Convenience functions for later validation
+    static bool validateIdentifier(const QJsonObject &serialisedData, const QString &identifier)
+    {
+        QJsonValue id = serialisedData.value(ISerialisable::KEY_IDENTIFIER());
+        if ( !id.isString() || id.toString() != identifier )
+        {
+            Q_ASSERT(false);
+            qWarning() << "WARNING: Serialisation identifier" << (id.isString() ? id.toString() : QString("(null)"))
+                       << "does not match" << identifier << "upon unserialisation.";
+            return false;
+        }
+
+        return true;
+    }
 };
 
 #endif // ISERIALISABLE_H

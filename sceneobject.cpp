@@ -6,27 +6,33 @@
 #include "resourcemanager.h"
 #include <QOpenGLTexture>
 #include "mapdocument.h"
+#include "jsonutil.h"
 
 SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
 {
-    m_pScene = parent ? parent->m_pScene : NULL;
-    m_pGeometry.reset(new GeometryData());
-    m_iRenderFlags = 0;
-    m_bHidden = false;
-    m_bSerialiseGeometry = false;
+    initDefaults(parent);
 }
 
 SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(cloneFrom.parentObject())
 {
     m_pScene = cloneFrom.m_pScene;
     m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));
-    m_iRenderFlags = cloneFrom.m_iRenderFlags;
+    m_RenderFlags = cloneFrom.m_RenderFlags;
     m_bHidden = cloneFrom.m_bHidden;
     m_bSerialiseGeometry = cloneFrom.m_bSerialiseGeometry;
 
     setPosition(cloneFrom.position());
     setAngles(cloneFrom.angles());
     setScale(cloneFrom.scale());
+}
+
+void SceneObject::initDefaults(SceneObject* parent)
+{
+    m_pScene = parent ? parent->m_pScene : NULL;
+    m_pGeometry.reset(new GeometryData());
+    m_RenderFlags = NoRenderFlag;
+    m_bHidden = false;
+    m_bSerialiseGeometry = false;
 }
 
 SceneObject::~SceneObject()
@@ -137,14 +143,14 @@ void SceneObject::draw(ShaderStack *stack)
     }
 }
 
-int SceneObject::renderFlags() const
+SceneObject::RenderFlags SceneObject::renderFlags() const
 {
-    return m_iRenderFlags;
+    return m_RenderFlags;
 }
 
-void SceneObject::setRenderFlags(int flags)
+void SceneObject::setRenderFlags(RenderFlags flags)
 {
-    m_iRenderFlags = flags;
+    m_RenderFlags = flags;
 }
 
 SceneObject* SceneObject::clone() const
@@ -208,11 +214,41 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
         obj.insert("geometry", QJsonValue(jsonGeom));
     }
 
+    // Serialise render flags as an array.
+    QJsonArray arrRenderFlags;
+    JsonUtil::flagsToJsonArray<SceneObject, RenderFlags>(m_RenderFlags, "RenderFlags", arrRenderFlags);
+    obj.insert("renderFlags", QJsonValue(arrRenderFlags));
+
     // Other properties
-    obj.insert("renderFlags", QJsonValue(renderFlags()));
     obj.insert("hidden", QJsonValue(hidden()));
 
     return true;
+}
+
+SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent) : HierarchicalObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
+{
+    // Make sure this object identifies us.
+    if ( !validateIdentifier(serialisedData, SceneObject::serialiseIdentifier()) )
+    {
+        initDefaults(parent);
+        return;
+    }
+
+    QJsonValue vObjectName = serialisedData.value("objectName");
+    if ( vObjectName.isString() )
+    {
+        setObjectName(vObjectName.toString());
+    }
+
+    // UNS TODO: Geometry
+
+    // UNS TODO: renderFlags - export as strings
+
+    QJsonValue vHidden = serialisedData.value("hidden");
+    if ( vHidden.isBool() )
+    {
+        setHidden(vHidden.toBool());
+    }
 }
 
 QString SceneObject::serialiseIdentifier() const
