@@ -240,9 +240,17 @@ SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent)
         setObjectName(vObjectName.toString());
     }
 
-    // UNS TODO: Geometry
+    QJsonValue vGeometry = serialisedData.value("geometry");
+    if ( !vGeometry.isNull() )
+    {
+        setGeometry(new GeometryData(vGeometry.toObject()));
+    }
 
-    // UNS TODO: renderFlags - export as strings
+    QJsonValue vRenderFlags = serialisedData.value("renderFlags");
+    if ( vRenderFlags.isArray() )
+    {
+        m_RenderFlags = JsonUtil::jsonArrayToFlags<SceneObject, RenderFlags>(vRenderFlags.toArray(), "RenderFlags");
+    }
 
     QJsonValue vHidden = serialisedData.value("hidden");
     if ( vHidden.isBool() )

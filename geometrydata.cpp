@@ -106,6 +106,11 @@ int GeometryData::vertexFormatBytes() const
 
 GeometryData::GeometryData()
 {
+    initDefaults();
+}
+
+void GeometryData::initDefaults()
+{
     m_bVerticesStale = true;
     m_bIndicesStale = true;
 
@@ -662,6 +667,47 @@ bool GeometryData::serialiseToJson(QJsonObject &obj) const
     // one-off data.
 
     return true;
+}
+
+GeometryData::GeometryData(const QJsonObject &serialisedData)
+{
+    initDefaults();
+
+    if ( !validateIdentifier(serialisedData, serialiseIdentifier()) )
+        return;
+
+    m_Vertices = JsonUtil::floatingPointJsonArrayToVector<float>(serialisedData.value("vertices").toArray());
+    m_Indices = JsonUtil::integerJsonArrayToVector<unsigned int>(serialisedData.value("indices").toArray());
+
+    for ( int i = 0; i < MAX_GEOM_TEXTURES; i++ )
+    {
+        QString s = QString("texture_%0").arg(i);
+        QJsonValue val = serialisedData.value(s);
+        if ( val.isString() )
+        {
+            m_Textures[i] = val.toString();
+        }
+    }
+
+    QJsonValue vDrawMode = serialisedData.value("drawMode");
+    if ( vDrawMode.isDouble() )
+    {
+        m_iDrawMode = vDrawMode.toInt();
+    }
+
+    QJsonValue vLineWidth = serialisedData.value("lineWidth");
+    if ( vLineWidth.isDouble() )
+    {
+        m_flLineWidth = (float)vLineWidth.toDouble();
+    }
+
+    QJsonValue vDataFormat = serialisedData.value("dataFormat");
+    if ( vDataFormat.isDouble() )
+    {
+        m_iDataFormat = (DataFormat)vDataFormat.toInt();
+    }
+
+    m_szShaderOverride = serialisedData.value("shaderOverride").toString();
 }
 
 QString GeometryData::serialiseIdentifier() const

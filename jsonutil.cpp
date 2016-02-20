@@ -17,4 +17,23 @@ namespace JsonUtil
                       arr.at(2).toInt(),
                       arr.count() == 3 ? 255 : arr.at(3).toInt());
     }
+
+    QString jsonArrayToFlagsString(const QJsonArray &arr)
+    {
+        QString s;
+        bool hasFlag = false;
+
+        for ( int i = 0; i < arr.count(); i++ )
+        {
+            if ( hasFlag )
+            {
+                s += "|";
+            }
+
+            hasFlag = true;
+            s += arr.at(i).toString();
+        }
+
+        return s;
+    }
 }

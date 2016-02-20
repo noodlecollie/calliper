@@ -8,6 +8,7 @@
 class SceneCamera : public SceneObject
 {
     Q_OBJECT
+    friend class UnserialisationFactory;
 public:
     explicit SceneCamera(SceneObject* parent = 0);
     virtual ~SceneCamera();
@@ -36,10 +37,12 @@ public:
 
 protected:
     explicit SceneCamera(const SceneCamera &cloneFrom);
+    explicit SceneCamera(const QJsonObject &serialisedData, SceneObject* parent = 0);
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();
 
 private:
+    void initDefaults();
     void rebuildViewBoundsGeometry();
 
     QScopedPointer<CameraLens>  m_pLens;

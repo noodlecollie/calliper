@@ -12,11 +12,17 @@
 #define MAX_PITCH_DELTA 89.0f
 #define MAX_ROLL_DELTA 180.0f
 
-SceneCamera::SceneCamera(SceneObject *parent) : SceneObject(parent),
-    m_pLens(new CameraLens(CameraLens::Perspective)), m_pBoundsGeom(new GeometryData())
+SceneCamera::SceneCamera(SceneObject *parent) : SceneObject(parent)
 {
+    initDefaults();
     m_LocalLensBounds = m_pLens->localViewVolumeBounds();
     rebuildViewBoundsGeometry();
+}
+
+void SceneCamera::initDefaults()
+{
+    m_pLens.reset(new CameraLens(CameraLens::Perspective));
+    m_pBoundsGeom.reset(new GeometryData());
 }
 
 SceneCamera::SceneCamera(const SceneCamera &cloneFrom) : SceneObject(cloneFrom),
@@ -200,6 +206,73 @@ bool SceneCamera::serialiseToJson(QJsonObject &obj) const
     }
 
     return true;
+}
+
+SceneCamera::SceneCamera(const QJsonObject &serialisedData, SceneObject *parent) : SceneObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
+{
+    initDefaults();
+
+    if ( !validateIdentifier(serialisedData, SceneCamera::serialiseIdentifier()) )
+        return;
+
+    QString lensType = serialisedData.value("lensType").toString();
+    if ( lensType == CameraLens::LensTypeNames[0] )
+    {
+        m_pLens->setType(CameraLens::Orthographic);
+    }
+    else
+    {
+        m_pLens->setType(CameraLens::Perspective);
+    }
+
+    QJsonValue vNearPlane = serialisedData.value("nearPlane");
+    if ( vNearPlane.isDouble() )
+    {
+        m_pLens->setNearPlane((float)vNearPlane.toDouble());
+    }
+
+    QJsonValue vFarPlane = serialisedData.value("farPlane");
+    if ( vFarPlane.isDouble() )
+    {
+        m_pLens->setFarPlane((float)vFarPlane.toDouble());
+    }
+
+    if ( m_pLens->type() == CameraLens::Orthographic )
+    {
+        QJsonArray arrPlanes = serialisedData.value("orthoPlanes").toArray();
+        for ( int i = 0; i < arrPlanes.count(); i++ )
+        {
+            switch (i)
+            {
+            case 0:
+                m_pLens->setTopPlane((float)arrPlanes.at(i).toDouble());
+                break;
+
+            case 1:
+                m_pLens->setBottomPlane((float)arrPlanes.at(i).toDouble());
+                break;
+
+            case 2:
+                m_pLens->setLeftPlane((float)arrPlanes.at(i).toDouble());
+                break;
+
+            case 3:
+                m_pLens->setRightPlane((float)arrPlanes.at(i).toDouble());
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
+    else if ( m_pLens->type() == CameraLens::Perspective )
+    {
+        QJsonValue vFOV = serialisedData.value("fov");
+        if ( vFOV.isDouble() )
+        {
+            m_pLens->setFieldOfView((float)vFOV.toDouble());
+        }
+    }
 }
 
 

@@ -37,7 +37,7 @@ namespace JsonUtil
     }
 
     template<typename T>
-    QVector<T> floatJsonArrayToVector(const QJsonArray &arr)
+    QVector<T> floatingPointJsonArrayToVector(const QJsonArray &arr)
     {
         QVector<T> vec;
 
@@ -50,7 +50,7 @@ namespace JsonUtil
     }
 
     template<typename T>
-    QVector<T> intJsonArrayToVector(const QJsonArray &arr)
+    QVector<T> integerJsonArrayToVector(const QJsonArray &arr)
     {
         QVector<T> vec;
 
@@ -88,6 +88,18 @@ namespace JsonUtil
                 arr.append(QJsonValue(QString(metaEnum.valueToKey(value))));
             }
         }
+    }
+
+    QString jsonArrayToFlagsString(const QJsonArray &arr);
+
+    template<typename C, typename T>
+    T jsonArrayToFlags(const QJsonArray &arr, const QString &flagName)
+    {
+        int enumIndex = C::staticMetaObject.indexOfEnumerator(flagName.toLatin1().constData());
+        QMetaEnum metaEnum = C::staticMetaObject.enumerator(enumIndex);
+        QString flagString = jsonArrayToFlagsString(arr);
+        int value = metaEnum.keysToValue(flagString.toLatin1().constData());
+        return T(value);
     }
 }
 

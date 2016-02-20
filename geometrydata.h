@@ -20,9 +20,11 @@ class QOpenGLTexture;
 
 class GeometryData : public ISerialisable
 {
+    friend class UnserialisationFactory;
 public:
     GeometryData();
     GeometryData(const GeometryData &other);
+    GeometryData(const QJsonObject &serialisedData);
     ~GeometryData();
 
     // Position must always be the first attribute!
@@ -97,10 +99,14 @@ public:
     bool append(const GeometryData &other);
     void transform(const QMatrix4x4 &mat);
 
+    // Be careful when serialising/deserialising this - very little validation is done.
+    // The serialised data should be considered internal and volatile.
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
 
 private:
+    void initDefaults();
+
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;
 
