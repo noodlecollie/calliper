@@ -11,10 +11,12 @@ class CalliperMapFile
 public:
     enum FileFormat
     {
-        Binary,
+        Binary = 0,
         IndentedJson,
         CompactJson
     };
+
+    static const char* FileFormatStrings[3];
 
     CalliperMapFile(const QString &filename, MapDocument* document);
 
@@ -28,7 +30,7 @@ public:
     bool loadFromFile();
 
 private:
-    void insertMetadata();
+    void insertMetadata(FileFormat format);
     void insertSerialisedDocument();
 
     QString         m_szFilename;

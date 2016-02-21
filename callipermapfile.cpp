@@ -9,6 +9,13 @@
 static const QByteArray HEADER_FORMAT_BINARY("#CMF FORMAT BINARY\n");
 static const QByteArray HEADER_FORMAT_JSON("#CMF FORMAT JSON\n");
 
+const char* CalliperMapFile::FileFormatStrings[3] =
+{
+    "Binary",
+    "IndentedJson",
+    "CompactJson",
+};
+
 CalliperMapFile::CalliperMapFile(const QString &filename, MapDocument *document)
 {
     m_szFilename = filename;
@@ -35,12 +42,13 @@ void CalliperMapFile::setDocument(MapDocument *document)
     m_pDocument = document;
 }
 
-void CalliperMapFile::insertMetadata()
+void CalliperMapFile::insertMetadata(FileFormat format)
 {
     m_RootObject.remove("metadata");
 
     QJsonObject metadata;
     metadata.insert("version", QJsonValue((int)ISerialisable::SERIALISATION_VERSION()));
+    metadata.insert("format", QJsonValue(FileFormatStrings[format]));
 
     m_RootObject.insert("metadata", QJsonValue(metadata));
 }
@@ -63,7 +71,7 @@ bool CalliperMapFile::saveToFile(FileFormat format)
     if ( !file.open(QIODevice::WriteOnly) )
         return false;
 
-    insertMetadata();
+    insertMetadata(format);
     insertSerialisedDocument();
 
     QJsonDocument jsonDoc(m_RootObject);
@@ -160,6 +168,20 @@ bool CalliperMapFile::loadFromFile()
     unsigned short version = (unsigned short)vVersion.toInt();
     if ( version != ISerialisable::SERIALISATION_VERSION() )
         return false;
+
+    FileFormat docFormat = IndentedJson;
+    QJsonValue vFormat = metadata.value("format");
+    if ( vFormat.isString() )
+    {
+        QString sFormat = vFormat.toString();
+        if ( sFormat == FileFormatStrings[CompactJson] )
+            docFormat = CompactJson;
+        else if ( sFormat == FileFormatStrings[Binary] )
+            docFormat = Binary;
+        else
+            docFormat = IndentedJson;
+    }
+    m_pDocument->setFileFormat(docFormat);
 
     // Unserialise the document.
     return m_pDocument->unserialiseFromJson(m_RootObject.value("document").toObject());

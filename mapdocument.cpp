@@ -20,6 +20,8 @@ MapDocument::MapDocument(QObject *parent) : QObject(parent)
     m_pUIScene = SceneFactory::defaultUIScene(this);
 #endif
 
+    m_iFileFormat = CalliperMapFile::IndentedJson;
+
     m_colBackground = QColor::fromRgb(0xff262626);
     m_colSelected = QColor::fromRgb(0xffff0000);
 
@@ -248,4 +250,14 @@ QString MapDocument::filename() const
 void MapDocument::setFilename(const QString &name)
 {
     m_szFilename = name;
+}
+
+CalliperMapFile::FileFormat MapDocument::fileFormat() const
+{
+    return m_iFileFormat;
+}
+
+void MapDocument::setFileFormat(CalliperMapFile::FileFormat format)
+{
+    m_iFileFormat = format;
 }

@@ -59,7 +59,8 @@ SOURCES += main.cpp\
     jsonutil.cpp \
     callipermapfile.cpp \
     generalutil.cpp \
-    sceneobjectfactory.cpp
+    sceneobjectfactory.cpp \
+    cmfoptionsdialog.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -111,10 +112,12 @@ HEADERS  += mainwindow.h \
     jsonutil.h \
     callipermapfile.h \
     generalutil.h \
-    sceneobjectfactory.h
+    sceneobjectfactory.h \
+    cmfoptionsdialog.h
 
 FORMS    += mainwindow.ui \
-    viewportuseroptions.ui
+    viewportuseroptions.ui \
+    cmfoptionsdialog.ui
 
 RESOURCES += \
     resource/resource.qrc

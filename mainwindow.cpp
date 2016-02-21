@@ -10,8 +10,8 @@
 #include "tools.h"
 #include <QFileDialog>
 #include <QStandardPaths>
-#include "callipermapfile.h"
 #include <QMessageBox>
+#include "cmfoptionsdialog.h"
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
 
@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pActiveViewport = NULL;
     m_szLastSaveDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     m_szLastLoadDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    m_iLastSaveFormat = CalliperMapFile::IndentedJson;
 
 	ui->actionDebug_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(DebugTestTool::staticName()));
     ui->actionTranslate_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(TranslationTool::staticName()));
@@ -303,12 +304,11 @@ void MainWindow::toolButtonClicked()
 	qDebug() << "Set active tool to" << toolName;
 }
 
-void MainWindow::saveDocument(MapDocument *document, const QString &filename)
+void MainWindow::saveDocument(MapDocument *document, const QString &filename, CalliperMapFile::FileFormat format)
 {
     CalliperMapFile cmf(filename, document);
 
-    // For now, save as the most human-readable format.
-    if ( !cmf.saveToFile(CalliperMapFile::IndentedJson) )
+    if ( !cmf.saveToFile(format) )
     {
         QMessageBox::warning(this, "Error", QString("Unable to save file %0").arg(filename));
         return;
@@ -316,12 +316,26 @@ void MainWindow::saveDocument(MapDocument *document, const QString &filename)
 
     // Cache the file name within the document.
     document->setFilename(filename);
+    document->setFileFormat(format);
+
+    int lastSlash = filename.lastIndexOf('/');
+    if ( lastSlash >= 0 && lastSlash < filename.length() - 1 )
+    {
+        document->setObjectName(filename.mid(lastSlash+1));
+    }
+    else
+    {
+        document->setObjectName(filename);
+    }
 
     // Cache the directory for next time.
     {
         QDir directory(filename);
         m_szLastSaveDir = directory.canonicalPath();
     }
+
+    m_iLastSaveFormat = format;
+    updateDocumentList(application()->documents());
 }
 
 void MainWindow::saveCurrentDocument()
@@ -338,7 +352,7 @@ void MainWindow::saveCurrentDocument()
     }
 
     // Save our file.
-    saveDocument(doc, doc->filename());
+    saveDocument(doc, doc->filename(), doc->fileFormat());
 }
 
 void MainWindow::saveCurrentDocumentAs()
@@ -351,7 +365,11 @@ void MainWindow::saveCurrentDocumentAs()
     if ( filename.isNull() )
         return;
 
-    saveDocument(doc, filename);
+    CalliperMapFile::FileFormat cmfFormat = m_iLastSaveFormat;
+    if ( !CMFOptionsDialog::chooseFileFormat(this, cmfFormat) )
+        return;
+
+    saveDocument(doc, filename, cmfFormat);
 }
 
 void MainWindow::loadDocument()
@@ -383,6 +401,16 @@ void MainWindow::loadDocument(MapDocument *document, const QString &filename)
 
     // Cache the filename.
     document->setFilename(filename);
+
+    int lastSlash = filename.lastIndexOf('/');
+    if ( lastSlash >= 0 && lastSlash < filename.length() - 1 )
+    {
+        document->setObjectName(filename.mid(lastSlash+1));
+    }
+    else
+    {
+        document->setObjectName(filename);
+    }
 
     // Cache the directory for next time.
     {

@@ -74,4 +74,6 @@ int main(int argc, char *argv[])
     ResourceManager::shutdown();
 
     return ret;
+
+    return a.exec();
 }

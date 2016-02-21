@@ -6,6 +6,7 @@
 #include <QSet>
 #include "boundingbox.h"
 #include "iserialisable.h"
+#include "callipermapfile.h"
 
 class MapScene;
 class UIScene;
@@ -31,6 +32,9 @@ public:
 
     QString filename() const;
     void setFilename(const QString &name);
+
+    CalliperMapFile::FileFormat fileFormat() const;
+    void setFileFormat(CalliperMapFile::FileFormat format);
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &col);
@@ -71,6 +75,7 @@ private:
     QList<BaseTool*>    m_Tools;
     int m_iActiveTool;
     QString m_szFilename;
+    CalliperMapFile::FileFormat m_iFileFormat;
 
     InputProcessor* m_pInputProcessor;
 };

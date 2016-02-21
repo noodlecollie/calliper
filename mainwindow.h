@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QList>
 #include "mapdocument.h"
+#include "callipermapfile.h"
 
 namespace Ui {
 class MainWindow;
@@ -45,7 +46,7 @@ private:
     void populateSceneTree(MapScene* scene);
     void populateSceneTreeRecursive(SceneObject* object, QTreeWidgetItem* parent, QList<QTreeWidgetItem*> &items);
     void changeActiveDocument(MapDocument* oldDoc, MapDocument* newDoc);
-    void saveDocument(MapDocument* document, const QString &filename);
+    void saveDocument(MapDocument* document, const QString &filename, CalliperMapFile::FileFormat format);
     void loadDocument(MapDocument* document, const QString &filename);
 
     Ui::MainWindow *ui;
@@ -54,6 +55,7 @@ private:
     Viewport* m_pActiveViewport;
     QString m_szLastSaveDir;
     QString m_szLastLoadDir;
+    CalliperMapFile::FileFormat m_iLastSaveFormat;
 };
 
 #endif // MAINWINDOW_H
