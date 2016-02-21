@@ -14,9 +14,8 @@
 #include <QMessageBox>
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
-#define NO_NATIVE_FILE_DIALOG
 
-#ifdef NO_NATIVE_FILE_DIALOG
+#ifdef QT_DEBUG
 #define FILE_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
 #else
 #define FILE_DIALOG_OPTIONS 0

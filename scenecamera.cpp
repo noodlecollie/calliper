@@ -23,6 +23,7 @@ void SceneCamera::initDefaults()
 {
     m_pLens.reset(new CameraLens(CameraLens::Perspective));
     m_pBoundsGeom.reset(new GeometryData());
+    m_bDrawBounds = false;
 }
 
 SceneCamera::SceneCamera(const SceneCamera &cloneFrom) : SceneObject(cloneFrom),
@@ -190,6 +191,7 @@ bool SceneCamera::serialiseToJson(QJsonObject &obj) const
     obj.insert("lensType", QJsonValue(CameraLens::LensTypeNames[m_pLens->type()]));
     obj.insert("nearPlane", QJsonValue(m_pLens->nearPlane()));
     obj.insert("farPlane", QJsonValue(m_pLens->farPlane()));
+    obj.insert("drawBounds", QJsonValue(m_bDrawBounds));
 
     if ( m_pLens->type() == CameraLens::Orthographic )
     {
@@ -235,6 +237,12 @@ SceneCamera::SceneCamera(const QJsonObject &serialisedData, SceneObject *parent)
     if ( vFarPlane.isDouble() )
     {
         m_pLens->setFarPlane((float)vFarPlane.toDouble());
+    }
+
+    QJsonValue vDrawBounds = serialisedData.value("drawBounds");
+    if ( vDrawBounds.isBool() )
+    {
+        m_bDrawBounds = vDrawBounds.toBool();
     }
 
     if ( m_pLens->type() == CameraLens::Orthographic )

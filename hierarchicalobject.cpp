@@ -198,10 +198,11 @@ QString HierarchicalObject::serialiseIdentifier() const
 
 HierarchicalObject::HierarchicalObject(const QJsonObject &serialisedData, HierarchicalObject *parent) : QObject(parent)
 {
+    initDefaults();
+
     // Make sure this object identifies us.
     if ( !validateIdentifier(serialisedData, HierarchicalObject::serialiseIdentifier()) )
     {
-        initDefaults();
         return;
     }
 

@@ -1,0 +1,83 @@
+{
+    "document": {
+        "backgroundColor": [
+            38,
+            38,
+            38,
+            255
+        ],
+        "identifier": "MapDocument",
+        "scene": {
+            "identifier": "MapScene",
+            "root": {
+                "children": [
+                    {
+                        "drawBounds": false,
+                        "farPlane": 1000,
+                        "fov": 90,
+                        "identifier": "SceneCamera",
+                        "lensType": "Perspective",
+                        "nearPlane": 1,
+                        "superclass": {
+                            "hidden": false,
+                            "identifier": "SceneObject",
+                            "objectName": "camera",
+                            "renderFlags": [
+                            ],
+                            "superclass": {
+                                "angles": [
+                                    23.842636108398438,
+                                    225,
+                                    0
+                                ],
+                                "identifier": "HierarchicalObject",
+                                "position": [
+                                    128,
+                                    128,
+                                    80
+                                ],
+                                "scale": [
+                                    1,
+                                    1,
+                                    1
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "hidden": false,
+                "identifier": "SceneObject",
+                "objectName": "root",
+                "renderFlags": [
+                ],
+                "superclass": {
+                    "angles": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "identifier": "HierarchicalObject",
+                    "position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "scale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            }
+        },
+        "selectedColor": [
+            255,
+            0,
+            0,
+            255
+        ]
+    },
+    "metadata": {
+        "version": 1
+    }
+}
