@@ -4,6 +4,10 @@
 #include <QSaveFile>
 #include <QJsonDocument>
 #include <QFile>
+#include <QRegularExpression>
+
+static const QByteArray HEADER_FORMAT_BINARY("#CMF FORMAT BINARY\n");
+static const QByteArray HEADER_FORMAT_JSON("#CMF FORMAT JSON\n");
 
 CalliperMapFile::CalliperMapFile(const QString &filename, MapDocument *document)
 {
@@ -64,28 +68,32 @@ bool CalliperMapFile::saveToFile(FileFormat format)
 
     QJsonDocument jsonDoc(m_RootObject);
 
+    const QByteArray* header;
     QByteArray data;
     switch (format)
     {
-        case Binary:
-            data = jsonDoc.toBinaryData();
-            break;
+    case Binary:
+        header = &HEADER_FORMAT_BINARY;
+        data = jsonDoc.toBinaryData();
+        break;
 
-        case IndentedJson:
-            data = jsonDoc.toJson(QJsonDocument::Indented);
-            break;
+    case IndentedJson:
+        header = &HEADER_FORMAT_JSON;
+        data = jsonDoc.toJson(QJsonDocument::Indented);
+        break;
 
-        case CompactJson:
-            data = jsonDoc.toJson(QJsonDocument::Compact);
-            break;
+    case CompactJson:
+        header = &HEADER_FORMAT_JSON;
+        data = jsonDoc.toJson(QJsonDocument::Compact);
+        break;
 
-        default:
-            file.cancelWriting();
-            Q_ASSERT(false);
-            return false;
+    default:
+        file.cancelWriting();
+        Q_ASSERT(false);
+        return false;
     }
 
-    if ( file.write(data) < 0 )
+    if ( file.write(*header) < 0 || file.write(data) < 0 )
     {
         file.cancelWriting();
         return false;
@@ -95,26 +103,46 @@ bool CalliperMapFile::saveToFile(FileFormat format)
     return true;
 }
 
-bool CalliperMapFile::loadFromFile(FileFormat format)
+bool CalliperMapFile::loadFromFile()
 {
     QFile file(m_szFilename);
     if ( !file.open(QIODevice::ReadOnly) )
         return false;
 
-    QJsonDocument jsonDoc;
-    switch (format)
-    {
-    case Binary:
-        jsonDoc = QJsonDocument::fromBinaryData(file.readAll());
-        break;
-
-    case IndentedJson:
-    case CompactJson:
-        jsonDoc = QJsonDocument::fromJson(file.readAll());
-        break;
-    }
-
+    QByteArray data = file.readAll();
     file.close();
+
+    // Get the first newline.
+    int nl = data.indexOf('\n');
+    if ( nl <= 0 )
+        return false;
+
+    // Get the format type
+    QString header(data.mid(0, nl));
+    header = header.trimmed();
+
+    QStringList headerTokens = header.split(QRegularExpression("\\s"));
+    if ( headerTokens.count() < 3 )
+        return false;
+
+    // Ensure it's a directive.
+    if ( headerTokens.at(0) != "#CMF" )
+        return false;
+
+    // Ensure it describes the format.
+    if ( headerTokens.at(1) != "FORMAT" )
+        return false;
+
+    // Get the format.
+    bool binary = false;
+    if ( headerTokens.at(2) == "BINARY" )
+        binary = true;
+    else if ( headerTokens.at(2) == "JSON" )
+        binary = false;
+    else
+        return false;
+
+    QJsonDocument jsonDoc = binary ? QJsonDocument::fromBinaryData(data.mid(nl+1)) : QJsonDocument::fromJson(data.mid(nl+1));
 
     if ( !jsonDoc.isObject() )
         return false;

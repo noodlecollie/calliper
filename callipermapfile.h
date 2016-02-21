@@ -25,7 +25,7 @@ public:
     void setDocument(MapDocument* document);
 
     bool saveToFile(FileFormat format);
-    bool loadFromFile(FileFormat format);
+    bool loadFromFile();
 
 private:
     void insertMetadata();

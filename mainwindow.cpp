@@ -375,8 +375,7 @@ void MainWindow::loadDocument(MapDocument *document, const QString &filename)
 {
     CalliperMapFile cmf(filename, document);
 
-    // For now, read only indented JSON.
-    if ( !cmf.loadFromFile(CalliperMapFile::IndentedJson) )
+    if ( !cmf.loadFromFile() )
     {
         QMessageBox::warning(this, "Error", QString("Unable to load file %0").arg(filename));
         return;

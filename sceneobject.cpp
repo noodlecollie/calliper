@@ -207,6 +207,7 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
     obj.insert("objectName", QJsonValue(objectName()));
 
     // Serialise geometry.
+    obj.insert("serialiseGeometry", QJsonValue(shouldSerialiseGeometry()));
     if ( shouldSerialiseGeometry() )
     {
         QJsonObject jsonGeom;
@@ -245,6 +246,12 @@ SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent)
     if ( vGeometry.isObject() )
     {
         setGeometry(new GeometryData(vGeometry.toObject()));
+    }
+
+    QJsonValue vSerialiseGeometry = serialisedData.value("serialiseGeometry");
+    if ( vSerialiseGeometry.isBool() )
+    {
+        setShouldSerialiseGeometry(vSerialiseGeometry.toBool());
     }
 
     QJsonValue vRenderFlags = serialisedData.value("renderFlags");
