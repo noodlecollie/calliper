@@ -8,6 +8,7 @@ class OriginMarker : public SceneObject
     Q_OBJECT
 public:
     explicit OriginMarker(SceneObject* parent = 0);
+    virtual ~OriginMarker();
 
     virtual bool editable() const;
     virtual SceneObject* clone() const;

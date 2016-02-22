@@ -60,7 +60,9 @@ SOURCES += main.cpp\
     callipermapfile.cpp \
     generalutil.cpp \
     sceneobjectfactory.cpp \
-    cmfoptionsdialog.cpp
+    cmfoptionsdialog.cpp \
+    brush.cpp \
+    brushface.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -113,7 +115,9 @@ HEADERS  += mainwindow.h \
     callipermapfile.h \
     generalutil.h \
     sceneobjectfactory.h \
-    cmfoptionsdialog.h
+    cmfoptionsdialog.h \
+    brush.h \
+    brushface.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui \

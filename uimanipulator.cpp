@@ -10,6 +10,10 @@ UIManipulator::UIManipulator(const UIManipulator &cloneFrom) : SceneObject(clone
 
 }
 
+UIManipulator::~UIManipulator()
+{
+}
+
 QList<QVector3D> UIManipulator::manipulationAxes(int axisFlags)
 {
     QList<QVector3D> axes;

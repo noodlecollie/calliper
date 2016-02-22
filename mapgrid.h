@@ -12,6 +12,7 @@ class MapGrid : public SceneObject
     Q_OBJECT
 public:
     explicit MapGrid(SceneObject* parent = 0);
+    virtual ~MapGrid();
 
     virtual bool editable() const;
     virtual void draw(ShaderStack *stack);

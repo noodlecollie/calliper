@@ -6,6 +6,10 @@ OriginMarker::OriginMarker(SceneObject *parent) : SceneObject(parent)
     constructGeometry();
 }
 
+OriginMarker::~OriginMarker()
+{
+}
+
 OriginMarker::OriginMarker(const OriginMarker &cloneFrom) : SceneObject(cloneFrom)
 {
     m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));

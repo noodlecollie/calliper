@@ -11,6 +11,7 @@ class UIManipulator : public SceneObject
 	Q_OBJECT
 public:
 	explicit UIManipulator(SceneObject* parent = 0);
+    virtual ~UIManipulator();
 
     enum ManipulationAxisFlag
     {

@@ -40,6 +40,10 @@ MapGrid::MapGrid(SceneObject *parent) : SceneObject(parent)
     setUpGeometry();
 }
 
+MapGrid::~MapGrid()
+{
+}
+
 int MapGrid::gridPower() const
 {
     return m_iPowerTwo;
