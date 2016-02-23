@@ -194,31 +194,25 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 
     // TODO: Really we should change this so that the renderer always applies the modelToWorld matrix.
     // The object inside can then un-apply it if necessary.
-    if ( !obj->isEmpty() )
+
+    // Check if we need to defer this object.
+    bool deferred = false;
+    if ( (obj->renderFlags() & SceneObject::Translucent) == SceneObject::Translucent )
     {
-        // Check if we need to defer this object.
-        bool deferred = false;
-        if ( (obj->renderFlags() & SceneObject::Translucent) == SceneObject::Translucent )
-        {
-            deferred = true;
+        deferred = true;
 
-            // Order objects within the map by depth.
-            // obj->position() is used because localToParent() has not yet been applied.
-            // The depth is negated because of the way QMap orderes keys.
-            QVector3D worldPos = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).toVector3D();
-            m_TranslucentObjects.insertMulti(-(worldPos - m_vecCurrentCameraWorldPosition).lengthSquared(), DeferredObject(obj, stack->modelToWorldTop()));
-        }
+        // Order objects within the map by depth.
+        // obj->position() is used because localToParent() has not yet been applied.
+        // The depth is negated because of the way QMap orderes keys.
+        QVector3D worldPos = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).toVector3D();
+        m_TranslucentObjects.insertMulti(-(worldPos - m_vecCurrentCameraWorldPosition).lengthSquared(), DeferredObject(obj, stack->modelToWorldTop()));
+    }
 
-        if ( !deferred )
-        {
-            obj->draw(stack);
-            if ( m_bPicking )
-                m_ObjectPicker.checkDrawnObject(obj);
-        }
-        else
-        {
-            stack->modelToWorldPostMultiply(obj->localToParent());
-        }
+    if ( !deferred )
+    {
+        obj->draw(stack);
+        if ( m_bPicking )
+            m_ObjectPicker.checkDrawnObject(obj);
     }
     else
     {

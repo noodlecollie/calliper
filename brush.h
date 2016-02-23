@@ -19,12 +19,14 @@ public:
     QList<QVector3D> vertexList() const;
     void clearVertices();
     QList<QVector3D> vertexList(const QList<int> &indices) const;
+    void replaceVertex(int index, const QVector3D &v);
 
     QList<BrushFace*> faces() const;
 
 private:
     void removeVertexFromChildFaces(int index);
     void clearVerticesFromChildFaces();
+    void updateVertexInChildFaces(int index);
 
     QList<QVector3D>    m_Vertices;
 };

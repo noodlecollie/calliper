@@ -12,6 +12,8 @@
 #include <QtDebug>
 #include "uiscene.h"
 #include "translationhandle.h"
+#include "brush.h"
+#include "brushface.h"
 
 namespace SceneFactory
 {
@@ -78,6 +80,47 @@ namespace SceneFactory
         testBlock2->setObjectName("testBlock2");
         testBlock2->setPosition(QVector3D(0, -512, 0));
         testBlock->setShouldSerialiseGeometry(true);
+
+        Brush* b = new Brush(scene->root());
+        b->setObjectName("brush");
+        b->setPosition(QVector3D(256,0,0));
+
+        b->appendVertex(QVector3D(-32,0,0));
+        b->appendVertex(QVector3D(32,0,0));
+        b->appendVertex(QVector3D(0,64,0));
+        b->appendVertex(QVector3D(0,0,64));
+
+        {
+            BrushFace* f = new BrushFace(b);
+            f->setObjectName("brushFace1");
+            f->appendVertex(0);
+            f->appendVertex(2);
+            f->appendVertex(1);
+        }
+
+        {
+            BrushFace* f = new BrushFace(b);
+            f->setObjectName("brushFace2");
+            f->appendVertex(0);
+            f->appendVertex(3);
+            f->appendVertex(2);
+        }
+
+        {
+            BrushFace* f = new BrushFace(b);
+            f->setObjectName("brushFace3");
+            f->appendVertex(1);
+            f->appendVertex(2);
+            f->appendVertex(3);
+        }
+
+        {
+            BrushFace* f = new BrushFace(b);
+            f->setObjectName("brushFace4");
+            f->appendVertex(0);
+            f->appendVertex(1);
+            f->appendVertex(3);
+        }
 
         return scene;
     }

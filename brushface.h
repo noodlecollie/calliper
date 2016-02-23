@@ -26,11 +26,19 @@ public:
     void clearVertices();
     QList<QVector3D> referencedVertexList() const;
 
+    bool isValid() const;
+    QVector3D normal() const;
+
+    virtual void draw(ShaderStack *stack);
+
 private:
     void notifyVertexRemoved(int index);
+    void notifyVertexChanged(int index);
+    void buildGeometry();
 
     QString     m_szTexturePath;
     QList<int>  m_Vertices;
+    bool        m_bVerticesStale;
 };
 
 #endif // BRUSHFACE_H

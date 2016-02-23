@@ -79,3 +79,18 @@ QList<QVector3D> Brush::vertexList(const QList<int> &indices) const
 
     return verts;
 }
+
+void Brush::replaceVertex(int index, const QVector3D &v)
+{
+    m_Vertices.replace(index, v);
+    updateVertexInChildFaces(index);
+}
+
+void Brush::updateVertexInChildFaces(int index)
+{
+    QList<BrushFace*> childFaces = faces();
+    foreach ( BrushFace* face, childFaces )
+    {
+        face->notifyVertexChanged(index);
+    }
+}

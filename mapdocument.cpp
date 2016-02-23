@@ -7,7 +7,7 @@
 #include "openglrenderer.h"
 #include "jsonutil.h"
 
-//#define DEBUG_SCENES
+#define DEBUG_SCENES
 
 MapDocument::MapDocument(QObject *parent) : QObject(parent)
 {
