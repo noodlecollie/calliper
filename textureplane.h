@@ -55,6 +55,10 @@ public:
     // Returns the default U and V vectors for a plane with a normal along the given positive axis.
     static void uvAxes(Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis);
 
+    // Maps a 3D point to a 2D OpenGL texture co-ordinate.
+    // The point is assumed to be in the same co-ordinate space as the plane.
+    QVector2D textureCoordinate(const QVector3D &point, const QSize &textureSize) const;
+
 private:
     void updateAxes() const;
 

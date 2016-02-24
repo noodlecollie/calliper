@@ -57,7 +57,7 @@ QVector2D TexturePlane::scale() const
 
 void TexturePlane::setScale(const QVector2D &sc)
 {
-    if ( sc == m_vecScale )
+    if ( sc == m_vecScale || m_vecScale.x() == 0 || m_vecScale.y() == 0 )
         return;
 
     m_vecScale = sc;
@@ -185,4 +185,27 @@ void TexturePlane::uvAxes(Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D
     default:
         Q_ASSERT(false);
     }
+}
+
+QVector2D TexturePlane::textureCoordinate(const QVector3D &point, const QSize &textureSize) const
+{
+    // Method:
+    // 1. Divide U and V by the appropriate scale factors.
+    // 2. Project the input point to a 2D point by dotting it with both U and V.
+    // 3. Convert the translation (in pixels) into texture units by dividing it componentwise by the texture size.
+    //    Note that the texture size Y should be invertex to account for the flipped Y axis between pixels and texture units.
+    // 4. Subtract the translation from the projected point.
+
+    QVector3D u = uAxis();
+    QVector3D v = vAxis();
+
+    u /= m_vecScale.x();
+    v /= m_vecScale.y();
+
+    QVector2D projectedPoint(QVector3D::dot(point, u), QVector3D::dot(point, v));
+
+    QVector2D tuTranslation(m_vecTranslation.x() / (float)textureSize.width(), m_vecTranslation.y() / (float)-textureSize.y());
+    projectedPoint -= tuTranslation;
+
+    return projectedPoint;
 }
