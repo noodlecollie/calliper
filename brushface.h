@@ -4,6 +4,7 @@
 #include "sceneobject.h"
 
 class Brush;
+class TexturePlane;
 
 class BrushFace : public SceneObject
 {
@@ -14,9 +15,6 @@ public:
     virtual ~BrushFace();
 
     Brush* parentBrush() const;
-
-    QString texturePath() const;
-    void setTexturePath(const QString &path);
 
     int vertexAt(int index) const;
     void appendVertex(int v);
@@ -29,16 +27,21 @@ public:
     bool isValid() const;
     QVector3D normal() const;
 
+    TexturePlane* texturePlane() const;
+
     virtual void draw(ShaderStack *stack);
+
+private slots:
+    void forceRebuildGeometry();
 
 private:
     void notifyVertexRemoved(int index);
     void notifyVertexChanged(int index);
     void buildGeometry();
 
-    QString     m_szTexturePath;
-    QList<int>  m_Vertices;
-    bool        m_bVerticesStale;
+    QList<int>      m_Vertices;
+    bool            m_bRebuildGeometry;
+    TexturePlane*   m_pTexturePlane;
 };
 
 #endif // BRUSHFACE_H

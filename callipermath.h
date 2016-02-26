@@ -57,6 +57,8 @@ namespace Math
     bool fuzzyVectorIsNull(const QVector2D &vec);
     bool fuzzyVectorIsNull(const QVector3D &vec);
     bool fuzzyVectorIsNull(const QVector4D &vec);
+
+    QVector3D cardinalAxis(AxisIdentifier axis, bool negated = false);
 }
 
 #endif // MATH_H

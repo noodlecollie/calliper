@@ -4,12 +4,16 @@
 #include "mapdocument.h"
 #include "mapscene.h"
 #include "resourcemanager.h"
+#include "textureplane.h"
 
 BrushFace::BrushFace(Brush *parent, QList<int> vertices) : SceneObject(parent),
     m_Vertices(vertices)
 {
     Q_ASSERT(parent);
-    m_bVerticesStale = true;
+    m_bRebuildGeometry = true;
+
+    m_pTexturePlane = new TexturePlane(this);
+    connect(m_pTexturePlane, &TexturePlane::dataChanged, this, &BrushFace::forceRebuildGeometry);
 }
 
 BrushFace::~BrushFace()
@@ -21,16 +25,6 @@ Brush* BrushFace::parentBrush() const
     return qobject_cast<Brush*>(parent());
 }
 
-QString BrushFace::texturePath() const
-{
-    return m_szTexturePath;
-}
-
-void BrushFace::setTexturePath(const QString &path)
-{
-    m_szTexturePath = path;
-}
-
 int BrushFace::vertexAt(int index) const
 {
     return m_Vertices.at(index);
@@ -39,7 +33,7 @@ int BrushFace::vertexAt(int index) const
 void BrushFace::appendVertex(int v)
 {
     m_Vertices.append(v);
-    m_bVerticesStale = true;
+    m_bRebuildGeometry = true;
 }
 
 int BrushFace::vertexCount() const
@@ -50,7 +44,7 @@ int BrushFace::vertexCount() const
 void BrushFace::removeVertex(int index)
 {
     m_Vertices.removeAt(index);
-    m_bVerticesStale = true;
+    m_bRebuildGeometry = true;
 }
 
 QList<int> BrushFace::vertexList() const
@@ -61,7 +55,7 @@ QList<int> BrushFace::vertexList() const
 void BrushFace::clearVertices()
 {
     m_Vertices.clear();
-    m_bVerticesStale = true;
+    m_bRebuildGeometry = true;
 }
 
 void BrushFace::notifyVertexRemoved(int index)
@@ -70,7 +64,7 @@ void BrushFace::notifyVertexRemoved(int index)
     // Firstly remove it if we have a reference to it.
     if ( m_Vertices.removeAll(index) > 0 )
     {
-        m_bVerticesStale = true;
+        m_bRebuildGeometry = true;
 
         // Any vertices whose index is higher than this will
         // now have been shifted one index down.
@@ -111,13 +105,15 @@ void BrushFace::buildGeometry()
     if ( verts.count() < 3 )
         return;
 
-    QVector3D normal = QVector3D::normal(verts.at(0), verts.at(1));
+    QVector3D normal = QVector3D::normal(verts.at(0), verts.at(1), verts.at(2));
 
     // Add all vertices.
     // UVs are calculated later.
+    QOpenGLTexture* tex = resourceManager()->texture(m_pTexturePlane->texturePath());
+    QSize texSize(tex->width(), tex->height());
     foreach ( QVector3D v, verts )
     {
-        m_pGeometry->appendVertex(v, normal, QVector2D());
+        m_pGeometry->appendVertex(v, normal, m_pTexturePlane->textureCoordinate(v, texSize, normal));
     }
 
     // Add all indices.
@@ -126,22 +122,23 @@ void BrushFace::buildGeometry()
         m_pGeometry->appendIndexTriangle(0, i, i+1);
     }
 
-    // TODO: Calculate UVs.
+    m_pGeometry->setTexture(0, m_pTexturePlane->texturePath());
 
-    m_pGeometry->setTexture(0, m_szTexturePath);
+    m_bRebuildGeometry = false;
 
-    m_bVerticesStale = false;
+    qDebug() << "Scale" << m_pTexturePlane->scale() << "gives point" << QVector3D(1,0,0)
+             << "as texture co-ordinate" << m_pTexturePlane->textureCoordinate(QVector3D(1,0,0), texSize, QVector3D(0,-1,0));
 }
 
 void BrushFace::notifyVertexChanged(int index)
 {
     if ( m_Vertices.contains(index) )
-        m_bVerticesStale = true;
+        m_bRebuildGeometry = true;
 }
 
 void BrushFace::draw(ShaderStack *stack)
 {
-    if ( m_bVerticesStale )
+    if ( m_bRebuildGeometry )
         buildGeometry();
 
     stack->modelToWorldPostMultiply(localToParent());
@@ -178,4 +175,14 @@ void BrushFace::draw(ShaderStack *stack)
     {
         stack->globalColorPop();
     }
+}
+
+void BrushFace::forceRebuildGeometry()
+{
+    m_bRebuildGeometry = true;
+}
+
+TexturePlane* BrushFace::texturePlane() const
+{
+    return m_pTexturePlane;
 }

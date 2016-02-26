@@ -21,6 +21,11 @@ int Brush::appendVertex(const QVector3D &v)
     return m_Vertices.count() - 1;
 }
 
+void Brush::appendVertices(const QList<QVector3D> &verts)
+{
+    m_Vertices.append(verts);
+}
+
 int Brush::vertexCount() const
 {
     return m_Vertices.count();

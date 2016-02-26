@@ -1,15 +1,17 @@
 #ifndef TEXTUREPLANE_H
 #define TEXTUREPLANE_H
 
+#include <QObject>
 #include <QString>
 #include <QVector3D>
 #include <QVector2D>
 #include "callipermath.h"
 
-class TexturePlane
+class TexturePlane : public QObject
 {
+    Q_OBJECT
 public:
-    explicit TexturePlane();
+    explicit TexturePlane(QObject* parent = 0);
 
     // Texture to be used on the face.
     QString texturePath() const;
@@ -47,30 +49,30 @@ public:
     float rotation() const;
     void setRotation(float rot);
 
-    // Should be normalised!
-    // Things might fuck up if this is not the case.
-    QVector3D normal() const;
-    void setNormal(const QVector3D &n);
-
     // Returns the default U and V vectors for a plane with a normal along the given positive axis.
     static void uvAxes(Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis);
 
+    // Returns the U and V vectors for the plane, with the provided normal.
+    // U and V are unit vectors rotated correctly according to the texture rotation.
+    void uvAxes(const QVector3D &normal, QVector3D &uAxis, QVector3D &vAxis) const;
+
     // Maps a 3D point to a 2D OpenGL texture co-ordinate.
     // The point is assumed to be in the same co-ordinate space as the plane.
-    QVector2D textureCoordinate(const QVector3D &point, const QSize &textureSize) const;
+    // U and V should be unit vectors.
+    QVector2D textureCoordinate(const QVector3D &point, const QSize &textureSize, const QVector3D &uAxis,
+                                const QVector3D &vAxis) const;
+
+    // Same as above but auto-generates U and V from the given normal.
+    QVector2D textureCoordinate(const QVector3D &point, const QSize &textureSize, const QVector3D &normal) const;
+
+signals:
+    void dataChanged();
 
 private:
-    void updateAxes() const;
-
     QString     m_szTexturePath;
     QVector2D   m_vecScale;
     QVector2D   m_vecTranslation;
     float       m_flRotation;
-    QVector3D   m_vecNormal;
-
-    mutable QVector3D   m_vecUAxis;
-    mutable QVector3D   m_vecVAxis;
-    mutable bool        m_bAxesStale;
 };
 
 #endif // TEXTUREPLANE_H

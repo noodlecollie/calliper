@@ -4,6 +4,7 @@
 #include <QVector3D>
 #include <QList>
 #include <QMatrix4x4>
+#include "callipermath.h"
 
 class BoundingBox
 {

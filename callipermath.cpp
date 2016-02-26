@@ -255,4 +255,23 @@ namespace Math
                 qFuzzyIsNull(vec.z()) &&
                 qFuzzyIsNull(vec.w());
     }
+
+    QVector3D cardinalAxis(AxisIdentifier axis, bool negated)
+    {
+        switch (axis)
+        {
+        case AxisX:
+            return QVector3D(negated ? -1 : 1, 0, 0);
+
+        case AxisY:
+            return QVector3D(0, negated ? -1 : 1, 0);
+
+        case AxisZ:
+            return QVector3D(0, 0, negated ? -1 : 1);
+
+        default:
+            Q_ASSERT(false);
+            return QVector3D();
+        }
+    }
 }

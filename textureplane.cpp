@@ -1,13 +1,11 @@
 #include "textureplane.h"
 #include <QQuaternion>
 
-TexturePlane::TexturePlane()
+TexturePlane::TexturePlane(QObject *parent) : QObject(parent)
 {
     m_vecScale = QVector2D(1,1);
     m_vecTranslation = QVector2D(0,0);
     m_flRotation = 0;
-    m_vecNormal = QVector3D(0,0,1);
-    m_bAxesStale = true;
 }
 
 QString TexturePlane::texturePath() const
@@ -18,22 +16,7 @@ QString TexturePlane::texturePath() const
 void TexturePlane::setTexturePath(const QString &path)
 {
     m_szTexturePath = path;
-}
-
-QVector3D TexturePlane::uAxis() const
-{
-    if ( m_bAxesStale )
-        updateAxes();
-
-    return m_vecUAxis;
-}
-
-QVector3D TexturePlane::vAxis() const
-{
-    if ( m_bAxesStale )
-        updateAxes();
-
-    return m_vecVAxis;
+    emit dataChanged();
 }
 
 QVector2D TexturePlane::translation() const
@@ -47,7 +30,7 @@ void TexturePlane::setTranslation(const QVector2D &tr)
         return;
 
     m_vecTranslation = tr;
-    m_bAxesStale = true;
+    emit dataChanged();
 }
 
 QVector2D TexturePlane::scale() const
@@ -61,7 +44,7 @@ void TexturePlane::setScale(const QVector2D &sc)
         return;
 
     m_vecScale = sc;
-    m_bAxesStale = true;
+    emit dataChanged();
 }
 
 float TexturePlane::rotation() const
@@ -75,26 +58,13 @@ void TexturePlane::setRotation(float rot)
         return;
 
     m_flRotation = rot;
-    m_bAxesStale = true;
+    emit dataChanged();
 }
 
-QVector3D TexturePlane::normal() const
+void TexturePlane::uvAxes(const QVector3D &normal, QVector3D &uAxis, QVector3D &vAxis) const
 {
-    return m_vecNormal;
-}
+    Q_ASSERT(!normal.isNull());
 
-void TexturePlane::setNormal(const QVector3D &n)
-{
-    Q_ASSERT(!n.isNull());
-    if ( n == m_vecNormal || n.isNull() )
-        return;
-
-    m_vecNormal == n;
-    m_bAxesStale = true;
-}
-
-void TexturePlane::updateAxes() const
-{
     // Order of operations:
     // - Translation applied before rotation
     // - Translation applied before scale
@@ -110,9 +80,9 @@ void TexturePlane::updateAxes() const
     // - Incrementing the rotation rotates the texture anticlockwise on the plane
 
     // Find the closest cardinal axis to use as the normal of the plane.
-    float x = qAbs(m_vecNormal.x());
-    float y = qAbs(m_vecNormal.y());
-    float z = qAbs(m_vecNormal.z());
+    float x = qAbs(normal.x());
+    float y = qAbs(normal.y());
+    float z = qAbs(normal.z());
 
     // By default we use Z as the normal.
     Math::AxisIdentifier normalAxis = Math::AxisZ;
@@ -127,17 +97,20 @@ void TexturePlane::updateAxes() const
         normalAxis = Math::AxisZ;
 
     // Get the U and V axes.
-    QVector3D uAxis, vAxis;
     uvAxes(normalAxis, uAxis, vAxis);
 
     // If the actual value of the normal is negative, flip the U axis.
-    if ( m_vecNormal[normalAxis] < 0 )
+    bool flippedU = false;
+    if ( normal[normalAxis] < 0 )
+    {
         uAxis = -uAxis;
+        flippedU = true;
+    }
 
     // We now have some basic 3D axes to use.
     // Dot these with the normal to see whether they're perpendicular.
-    float uDot = QVector3D::dotProduct(uAxis, m_vecNormal);
-    float vDot = QVector3D::dotProduct(vAxis, m_vecNormal);
+    float uDot = QVector3D::dotProduct(uAxis, normal);
+    float vDot = QVector3D::dotProduct(vAxis, normal);
 
     // If the dot product is non-zero, the axis needs to be changed.
     // The dot value d gives the amount of the normal vector's direction that the vector v accounts for, between 0 and 1.
@@ -146,16 +119,15 @@ void TexturePlane::updateAxes() const
     // The resulting vector, v-dn, will have no component in the normal direction; it just needs to be
     // normalised back to a unit vector.
 
-    uAxis = (uAxis - (uDot * m_vecNormal)).normalized();
-    vAxis = (vAxis - (vDot * m_vecNormal)).normalized();
+    uAxis = (uAxis - (uDot * normal)).normalized();
+    vAxis = (vAxis - (vDot * normal)).normalized();
 
     // The axes are now perpendicular to the normal of the plane.
     // Rotate them around the normal.
-    QQuaternion qRot(m_flRotation, m_vecNormal);
-    m_vecUAxis = qRot.rotatedVector(uAxis);
-    m_vecVAxis = qRot.rotatedVector(vAxis);
-
-    m_bAxesStale = false;
+    // If we flipped U, use the negative normal as the axis.
+    QQuaternion qRot(m_flRotation, flippedU ? -normal : normal);
+    uAxis = qRot.rotatedVector(uAxis);
+    vAxis = qRot.rotatedVector(vAxis);
 }
 
 void TexturePlane::uvAxes(Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis)
@@ -187,7 +159,8 @@ void TexturePlane::uvAxes(Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D
     }
 }
 
-QVector2D TexturePlane::textureCoordinate(const QVector3D &point, const QSize &textureSize) const
+QVector2D TexturePlane::textureCoordinate(const QVector3D &point, const QSize &textureSize, const QVector3D &uAxis,
+                                          const QVector3D &vAxis) const
 {
     // Method:
     // 1. Divide U and V by the appropriate scale factors.
@@ -196,16 +169,23 @@ QVector2D TexturePlane::textureCoordinate(const QVector3D &point, const QSize &t
     //    Note that the texture size Y should be invertex to account for the flipped Y axis between pixels and texture units.
     // 4. Subtract the translation from the projected point.
 
-    QVector3D u = uAxis();
-    QVector3D v = vAxis();
+    QVector3D u = uAxis;
+    QVector3D v = vAxis;
 
     u /= m_vecScale.x();
     v /= m_vecScale.y();
 
-    QVector2D projectedPoint(QVector3D::dot(point, u), QVector3D::dot(point, v));
+    QVector2D projectedPoint(QVector3D::dotProduct(point, u), QVector3D::dotProduct(point, v));
 
-    QVector2D tuTranslation(m_vecTranslation.x() / (float)textureSize.width(), m_vecTranslation.y() / (float)-textureSize.y());
+    QVector2D tuTranslation(m_vecTranslation.x() / (float)textureSize.width(), m_vecTranslation.y() / (float)-textureSize.height());
     projectedPoint -= tuTranslation;
 
     return projectedPoint;
+}
+
+QVector2D TexturePlane::textureCoordinate(const QVector3D &point, const QSize &textureSize, const QVector3D &normal) const
+{
+    QVector3D uAxis, vAxis;
+    uvAxes(normal, uAxis, vAxis);
+    return textureCoordinate(point, textureSize, uAxis, vAxis);
 }

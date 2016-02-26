@@ -14,6 +14,7 @@ public:
 
     QVector3D vertexAt(int index) const;
     int appendVertex(const QVector3D &v);
+    void appendVertices(const QList<QVector3D> &verts);
     int vertexCount() const;
     void removeVertex(int index);
     QList<QVector3D> vertexList() const;

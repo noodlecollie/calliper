@@ -63,7 +63,8 @@ SOURCES += main.cpp\
     cmfoptionsdialog.cpp \
     brush.cpp \
     brushface.cpp \
-    textureplane.cpp
+    textureplane.cpp \
+    brushfactory.cpp
 
 HEADERS  += mainwindow.h \
     viewport.h \
@@ -119,7 +120,8 @@ HEADERS  += mainwindow.h \
     cmfoptionsdialog.h \
     brush.h \
     brushface.h \
-    textureplane.h
+    textureplane.h \
+    brushfactory.h
 
 FORMS    += mainwindow.ui \
     viewportuseroptions.ui \

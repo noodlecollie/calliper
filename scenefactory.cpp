@@ -14,6 +14,8 @@
 #include "translationhandle.h"
 #include "brush.h"
 #include "brushface.h"
+#include "textureplane.h"
+#include "brushfactory.h"
 
 namespace SceneFactory
 {
@@ -81,46 +83,10 @@ namespace SceneFactory
         testBlock2->setPosition(QVector3D(0, -512, 0));
         testBlock->setShouldSerialiseGeometry(true);
 
-        Brush* b = new Brush(scene->root());
+        Brush* b = BrushFactory::fromBoundingBox(BoundingBox(QVector3D(-64,-64,-8), QVector3D(64,64,8)),
+                                                 scene->root(), "/textures/test");
         b->setObjectName("brush");
         b->setPosition(QVector3D(256,0,0));
-
-        b->appendVertex(QVector3D(-32,0,0));
-        b->appendVertex(QVector3D(32,0,0));
-        b->appendVertex(QVector3D(0,64,0));
-        b->appendVertex(QVector3D(0,0,64));
-
-        {
-            BrushFace* f = new BrushFace(b);
-            f->setObjectName("brushFace1");
-            f->appendVertex(0);
-            f->appendVertex(2);
-            f->appendVertex(1);
-        }
-
-        {
-            BrushFace* f = new BrushFace(b);
-            f->setObjectName("brushFace2");
-            f->appendVertex(0);
-            f->appendVertex(3);
-            f->appendVertex(2);
-        }
-
-        {
-            BrushFace* f = new BrushFace(b);
-            f->setObjectName("brushFace3");
-            f->appendVertex(1);
-            f->appendVertex(2);
-            f->appendVertex(3);
-        }
-
-        {
-            BrushFace* f = new BrushFace(b);
-            f->setObjectName("brushFace4");
-            f->appendVertex(0);
-            f->appendVertex(1);
-            f->appendVertex(3);
-        }
 
         return scene;
     }

@@ -103,8 +103,8 @@ void ResourceManager::setUpBuiltInTextures()
 {
     // Default texture - returned if any other texture is not found.
     m_pDefaultTexture = new QOpenGLTexture(QImage(":/textures/error.png").mirrored());
-    m_pDefaultTexture->setMinificationFilter(QOpenGLTexture::NearestMipMapNearest);
-    m_pDefaultTexture->setMagnificationFilter(QOpenGLTexture::NearestMipMapNearest);
+    m_pDefaultTexture->setMinificationFilter(MIPMAP(QOpenGLTexture::NearestMipMapNearest));
+    m_pDefaultTexture->setMagnificationFilter(MIPMAP(QOpenGLTexture::NearestMipMapNearest));
     m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
     m_Textures.insert(QString(), m_pDefaultTexture);
