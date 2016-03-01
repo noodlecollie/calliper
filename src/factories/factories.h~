@@ -3,5 +3,6 @@
 
 #include "geometryfactory.h"
 #include "scenefactory.h"
+#include "brushfactory.h"
 
 #endif // FACTORIES_H
