@@ -349,7 +349,7 @@ void BaseTool::setMouseLookEnabled(bool enabled)
     if ( !v )
         enabled = false;
 
-    if ( enabled == m_bMouseLookEnabled )
+    if ( enabled == m_bMouseLookEnabled || !v )
         return;
 
     if ( enabled )
