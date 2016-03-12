@@ -21,6 +21,7 @@ namespace BrushFactory
         for ( int i = 0; i < 6; i++ )
         {
             BrushFace* f = new BrushFace(b);
+            f->setObjectName(QString("face%0").arg(i));
             f->texturePlane()->setTexturePath(texture);
 
             switch (i)

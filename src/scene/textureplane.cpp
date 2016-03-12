@@ -99,14 +99,6 @@ void TexturePlane::uvAxes(const QVector3D &normal, QVector3D &uAxis, QVector3D &
     // Get the U and V axes.
     uvAxes(normalAxis, uAxis, vAxis);
 
-    // If the actual value of the normal is negative, flip the U axis.
-    bool flippedU = false;
-    if ( normal[normalAxis] < 0 )
-    {
-        uAxis = -uAxis;
-        flippedU = true;
-    }
-
     // We now have some basic 3D axes to use.
     // Dot these with the normal to see whether they're perpendicular.
     float uDot = QVector3D::dotProduct(uAxis, normal);
@@ -124,8 +116,9 @@ void TexturePlane::uvAxes(const QVector3D &normal, QVector3D &uAxis, QVector3D &
 
     // The axes are now perpendicular to the normal of the plane.
     // Rotate them around the normal.
-    // If we flipped U, use the negative normal as the axis.
-    QQuaternion qRot(m_flRotation, flippedU ? -normal : normal);
+    // Since we want to rotate clockwise around the correct direction, flip the normal
+    // if required.
+    QQuaternion qRot = QQuaternion::fromAxisAndAngle(normal[normalAxis] < 0 ? -normal : normal, m_flRotation);
     uAxis = qRot.rotatedVector(uAxis);
     vAxis = qRot.rotatedVector(vAxis);
 }
@@ -172,8 +165,8 @@ QVector2D TexturePlane::textureCoordinate(const QVector3D &point, const QSize &t
     QVector3D u = uAxis;
     QVector3D v = vAxis;
 
-    u /= m_vecScale.x();
-    v /= m_vecScale.y();
+    u /= m_vecScale.x() * textureSize.width();
+    v /= m_vecScale.y() * textureSize.height();
 
     QVector2D projectedPoint(QVector3D::dotProduct(point, u), QVector3D::dotProduct(point, v));
 

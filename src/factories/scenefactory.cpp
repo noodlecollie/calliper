@@ -83,10 +83,16 @@ namespace SceneFactory
         testBlock2->setPosition(QVector3D(0, -512, 0));
         testBlock->setShouldSerialiseGeometry(true);
 
-        Brush* b = BrushFactory::fromBoundingBox(BoundingBox(QVector3D(-64,-64,-8), QVector3D(64,64,8)),
+        Brush* b = BrushFactory::fromBoundingBox(BoundingBox(QVector3D(0,0,0), QVector3D(256,256,256)),
                                                  scene->root(), "/textures/test");
         b->setObjectName("brush");
         b->setPosition(QVector3D(256,0,0));
+
+        QVector3D vU, vV;
+        BrushFace* bf = b->findChild<BrushFace*>("face2", Qt::FindDirectChildrenOnly);
+        TexturePlane* pl = bf->texturePlane();
+        pl->uvAxes(QVector3D(0,-1,0), vU, vV);
+        qDebug() << "U and V for normal" << QVector3D(0,-1,0) << "are" << vU << "and" << vV;
 
         return scene;
     }
