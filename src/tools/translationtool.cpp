@@ -258,9 +258,7 @@ void TranslationTool::updateTableManipulators()
         if ( isAncestorInManipulatorTable(obj) )
             continue;
 
-        // Transform the translation into a parent translation before we set it.
-        m.setTranslation(obj->rootToParent(m_vecCurrentWorldTranslation));
-        qDebug() << "Updating" << obj << "manipulator translation:" << m.translation();
+        m.setTranslation(m_vecCurrentWorldTranslation);
     }
 }
 
