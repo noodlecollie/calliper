@@ -25,7 +25,7 @@ public:
     Q_FLAG(RenderFlags)
 
     explicit SceneObject(SceneObject *parent = 0);
-    explicit SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
+    SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
     virtual ~SceneObject();
 
     // Object name is not cloned.

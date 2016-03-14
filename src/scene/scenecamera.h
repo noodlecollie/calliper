@@ -10,7 +10,7 @@ class SceneCamera : public SceneObject
     Q_OBJECT
 public:
     explicit SceneCamera(SceneObject* parent = 0);
-    explicit SceneCamera(const QJsonObject &serialisedData, SceneObject* parent = 0);
+    SceneCamera(const QJsonObject &serialisedData, SceneObject* parent = 0);
     virtual ~SceneCamera();
     virtual SceneObject* clone() const;
 

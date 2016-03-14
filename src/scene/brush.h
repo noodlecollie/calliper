@@ -10,7 +10,9 @@ class Brush : public SceneObject
     Q_OBJECT
 public:
     explicit Brush(SceneObject* parent = 0);
+    Brush(const QJsonObject &serialisedData, SceneObject* parent = 0);
     virtual ~Brush();
+    virtual SceneObject* clone() const;
 
     QVector3D vertexAt(int index) const;
     int appendVertex(const QVector3D &v);
@@ -24,7 +26,14 @@ public:
 
     QList<BrushFace*> faces() const;
 
+    virtual bool serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
+
+protected:
+    explicit Brush(const Brush &cloneFrom);
+
 private:
+    void initDefaults();
     void removeVertexFromChildFaces(int index);
     void clearVerticesFromChildFaces();
     void updateVertexInChildFaces(int index);
