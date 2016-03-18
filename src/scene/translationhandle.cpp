@@ -167,8 +167,6 @@ void TranslationHandle::draw(ShaderStack *stack)
     Q_ASSERT(program);
     stack->shaderPush(program);
 
-    stack->modelToWorldPostMultiply(localToParent());
-
     QVector4D testVec = stack->cameraProjectionTop() * stack->coordinateTransformTop() * stack->worldToCameraTop()
             * stack->modelToWorldTop() * QVector4D(0,0,0,1);
 

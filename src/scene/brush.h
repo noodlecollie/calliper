@@ -28,6 +28,7 @@ public:
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
+    virtual void draw(ShaderStack *stack);
 
 protected:
     explicit Brush(const Brush &cloneFrom);

@@ -6,10 +6,11 @@
 #include "resourcemanager.h"
 #include "textureplane.h"
 
-BrushFace::BrushFace(Brush *parent, QList<int> vertices) : SceneObject(parent),
+BrushFace::BrushFace(Brush *parent, QList<int> vertices) : QObject(parent),
     m_Vertices(vertices)
 {
     Q_ASSERT(parent);
+    m_pGeometry = new GeometryData();
     m_bRebuildGeometry = true;
 
     m_pTexturePlane = new TexturePlane(this);
@@ -18,6 +19,7 @@ BrushFace::BrushFace(Brush *parent, QList<int> vertices) : SceneObject(parent),
 
 BrushFace::~BrushFace()
 {
+    delete m_pGeometry;
 }
 
 Brush* BrushFace::parentBrush() const
@@ -125,9 +127,6 @@ void BrushFace::buildGeometry()
     m_pGeometry->setTexture(0, m_pTexturePlane->texturePath());
 
     m_bRebuildGeometry = false;
-
-    qDebug() << "Scale" << m_pTexturePlane->scale() << "gives point" << QVector3D(1,0,0)
-             << "as texture co-ordinate" << m_pTexturePlane->textureCoordinate(QVector3D(1,0,0), texSize, QVector3D(0,-1,0));
 }
 
 void BrushFace::notifyVertexChanged(int index)
@@ -141,23 +140,22 @@ void BrushFace::draw(ShaderStack *stack)
     if ( m_bRebuildGeometry )
         buildGeometry();
 
-    stack->modelToWorldPostMultiply(localToParent());
-
-    if ( geometry()->isEmpty() )
+    if ( m_pGeometry->isEmpty() )
         return;
 
     // Upload and bind the geometry.
-    geometry()->upload();
-    geometry()->bindVertices(true);
-    geometry()->bindIndices(true);
+    m_pGeometry->upload();
+    m_pGeometry->bindVertices(true);
+    m_pGeometry->bindIndices(true);
 
     // Apply the data format.
-    geometry()->applyDataFormat(stack->shaderTop());
+    m_pGeometry->applyDataFormat(stack->shaderTop());
 
     // If we're selected, set the global colour.
     bool pushedColor = false;
-    MapDocument* doc = m_pScene->document();
-    if ( doc->selectedSet().contains(this) )
+    Brush* b = parentBrush();
+    MapDocument* doc = b->scene()->document();
+    if ( doc->selectedSet().contains(b) )
     {
         pushedColor = true;
         stack->globalColorPush();
@@ -165,11 +163,11 @@ void BrushFace::draw(ShaderStack *stack)
     }
 
     // Apply the texture.
-    QOpenGLTexture* tex = resourceManager()->texture(geometry()->texture(0));
+    QOpenGLTexture* tex = resourceManager()->texture(m_pGeometry->texture(0));
     tex->bind(0);
 
     // Draw.
-    geometry()->draw();
+    m_pGeometry->draw();
 
     if ( pushedColor )
     {

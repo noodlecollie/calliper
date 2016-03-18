@@ -191,9 +191,7 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
         return;
 
     stack->modelToWorldPush();
-
-    // TODO: Really we should change this so that the renderer always applies the modelToWorld matrix.
-    // The object inside can then un-apply it if necessary.
+    stack->modelToWorldPostMultiply(obj->localToParent());
 
     // Check if we need to defer this object.
     bool deferred = false;
@@ -213,10 +211,6 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
         obj->draw(stack);
         if ( m_bPicking )
             m_ObjectPicker.checkDrawnObject(obj);
-    }
-    else
-    {
-        stack->modelToWorldPostMultiply(obj->localToParent());
     }
 
     QList<SceneObject*> children = obj->children();

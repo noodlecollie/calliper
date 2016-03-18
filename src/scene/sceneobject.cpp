@@ -79,67 +79,57 @@ bool SceneObject::editable() const
 
 void SceneObject::draw(ShaderStack *stack)
 {
+    if ( geometry()->isEmpty() )
+        return;
+
     bool shaderOverridden = false;
-    if ( !geometry()->isEmpty() )
+
+    // If we have a shader override, push the override.
+    QString shaderOverrideName = geometry()->shaderOverride();
+    if ( !shaderOverrideName.isNull() )
     {
-        // If we have a shader override, push the override.
-        QString shaderOverrideName = geometry()->shaderOverride();
-        if ( !shaderOverrideName.isNull() )
+        ShaderProgram* program = resourceManager()->shader(shaderOverrideName);
+        if ( program )
         {
-            ShaderProgram* program = resourceManager()->shader(shaderOverrideName);
-            if ( program )
-            {
-                shaderOverridden = true;
-                stack->shaderPush(program);
-            }
+            shaderOverridden = true;
+            stack->shaderPush(program);
         }
     }
 
-    // Multiply the modelWorld matrix by our current one.
-    // This updates the shader uniform too.
-    // We do this even if the geometry is empty, so that the
-    // transformation will apply recursively.
-    // It is the caller's responsibility to manage pushing
-    // and popping of the m2w matrix.
-    stack->modelToWorldPostMultiply(localToParent());
+    // Upload and bind the geometry.
+    geometry()->upload();
+    geometry()->bindVertices(true);
+    geometry()->bindIndices(true);
 
-    if ( !geometry()->isEmpty() )
+    // Apply the data format.
+    geometry()->applyDataFormat(stack->shaderTop());
+
+    // If we're selected, set the global colour.
+    bool pushedColor = false;
+    MapDocument* doc = m_pScene->document();
+    if ( doc->selectedSet().contains(this) )
     {
-        // Upload and bind the geometry.
-        geometry()->upload();
-        geometry()->bindVertices(true);
-        geometry()->bindIndices(true);
+        pushedColor = true;
+        stack->globalColorPush();
+        stack->globalColorSetTop(doc->selectedColor());
+    }
 
-        // Apply the data format.
-        geometry()->applyDataFormat(stack->shaderTop());
+    // Apply the texture.
+    QOpenGLTexture* tex = resourceManager()->texture(geometry()->texture(0));
+    tex->bind(0);
 
-        // If we're selected, set the global colour.
-        bool pushedColor = false;
-        MapDocument* doc = m_pScene->document();
-        if ( doc->selectedSet().contains(this) )
-        {
-            pushedColor = true;
-            stack->globalColorPush();
-            stack->globalColorSetTop(doc->selectedColor());
-        }
+    // Draw.
+    geometry()->draw();
 
-        // Apply the texture.
-        QOpenGLTexture* tex = resourceManager()->texture(geometry()->texture(0));
-        tex->bind(0);
+    if ( pushedColor )
+    {
+        stack->globalColorPop();
+    }
 
-        // Draw.
-        geometry()->draw();
-
-        if ( pushedColor )
-        {
-            stack->globalColorPop();
-        }
-
-        // Pop the shader if we pushed one earlier.
-        if ( shaderOverridden )
-        {
-            stack->shaderPop();
-        }
+    // Pop the shader if we pushed one earlier.
+    if ( shaderOverridden )
+    {
+        stack->shaderPop();
     }
 }
 

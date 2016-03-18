@@ -100,8 +100,6 @@ void SceneCamera::rebuildViewBoundsGeometry()
 
 void SceneCamera::draw(ShaderStack *stack)
 {
-    stack->modelToWorldPostMultiply(localToParent());
-
     if ( stack->cameraParams().hierarchicalObject() != this )
     {
         if ( m_bDrawBounds )

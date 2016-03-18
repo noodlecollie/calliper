@@ -1,6 +1,7 @@
 #include "brush.h"
 #include "brushface.h"
 #include "jsonutil.h"
+#include "shaderstack.h"
 
 Brush::Brush(SceneObject *parent) : SceneObject(parent)
 {
@@ -176,5 +177,14 @@ Brush::Brush(const QJsonObject &serialisedData, SceneObject *parent) :
         }
 
         m_Vertices.append(JsonUtil::jsonArrayToVector3<QVector3D>(arrVertex));
+    }
+}
+
+void Brush::draw(ShaderStack *stack)
+{
+    QList<BrushFace*> faceList = faces();
+    foreach ( BrushFace* f , faceList )
+    {
+        f->draw(stack);
     }
 }

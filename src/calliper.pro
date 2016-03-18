@@ -133,7 +133,7 @@ SOURCES += \
     tools/inputprocessor.cpp \
     tools/sceneobjectmanipulator.cpp \
     tools/translationtool.cpp \
-    main.cpp
+    application/main.cpp
 
 RESOURCES += \
     resource/resource.qrc

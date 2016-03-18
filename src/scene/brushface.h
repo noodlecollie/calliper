@@ -1,12 +1,14 @@
 #ifndef BRUSHFACE_H
 #define BRUSHFACE_H
 
-#include "sceneobject.h"
+#include <QObject>
 
 class Brush;
 class TexturePlane;
+class ShaderStack;
+class GeometryData;
 
-class BrushFace : public SceneObject
+class BrushFace : public QObject
 {
     Q_OBJECT
     friend class Brush;
@@ -29,7 +31,7 @@ public:
 
     TexturePlane* texturePlane() const;
 
-    virtual void draw(ShaderStack *stack);
+    void draw(ShaderStack *stack);
 
 private slots:
     void forceRebuildGeometry();
@@ -42,6 +44,7 @@ private:
     QList<int>      m_Vertices;
     bool            m_bRebuildGeometry;
     TexturePlane*   m_pTexturePlane;
+    GeometryData*   m_pGeometry;
 };
 
 #endif // BRUSHFACE_H
