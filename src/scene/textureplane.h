@@ -6,12 +6,16 @@
 #include <QVector3D>
 #include <QVector2D>
 #include "callipermath.h"
+#include "iserialisable.h"
 
-class TexturePlane : public QObject
+class TexturePlane : public QObject, public ISerialisable
 {
     Q_OBJECT
 public:
     explicit TexturePlane(QObject* parent = 0);
+    TexturePlane(QJsonObject &serialisedData, QObject* parent = 0);
+
+    TexturePlane* clone() const;
 
     // Texture to be used on the face.
     QString texturePath() const;
@@ -65,10 +69,18 @@ public:
     // Same as above but auto-generates U and V from the given normal.
     QVector2D textureCoordinate(const QVector3D &point, const QSize &textureSize, const QVector3D &normal) const;
 
+    virtual bool serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
+
 signals:
     void dataChanged();
 
+protected:
+    explicit TexturePlane(const TexturePlane &cloneFrom);
+
 private:
+    void initDefaults();
+
     QString     m_szTexturePath;
     QVector2D   m_vecScale;
     QVector2D   m_vecTranslation;

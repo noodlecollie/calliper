@@ -1,11 +1,22 @@
 #include "textureplane.h"
 #include <QQuaternion>
+#include "jsonutil.h"
 
 TexturePlane::TexturePlane(QObject *parent) : QObject(parent)
+{
+    initDefaults();
+}
+
+void TexturePlane::initDefaults()
 {
     m_vecScale = QVector2D(1,1);
     m_vecTranslation = QVector2D(0,0);
     m_flRotation = 0;
+}
+
+TexturePlane* TexturePlane::clone() const
+{
+    return new TexturePlane(*this);
 }
 
 QString TexturePlane::texturePath() const
@@ -181,4 +192,72 @@ QVector2D TexturePlane::textureCoordinate(const QVector3D &point, const QSize &t
     QVector3D uAxis, vAxis;
     uvAxes(normal, uAxis, vAxis);
     return textureCoordinate(point, textureSize, uAxis, vAxis);
+}
+
+QString TexturePlane::serialiseIdentifier() const
+{
+    return staticMetaObject.className();
+}
+
+bool TexturePlane::serialiseToJson(QJsonObject &obj) const
+{
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(TexturePlane::serialiseIdentifier()));
+
+    obj.insert("texturePath", QJsonValue(m_szTexturePath));
+
+    QJsonArray arrScale;
+    JsonUtil::vector2ToJsonArray<QVector2D>(m_vecScale, arrScale);
+    obj.insert("scale", QJsonValue(arrScale));
+
+    QJsonArray arrTranslation;
+    JsonUtil::vector2ToJsonArray<QVector2D>(m_vecTranslation, arrTranslation);
+    obj.insert("translation", QJsonValue(arrTranslation));
+
+    obj.insert("rotation", QJsonValue(m_flRotation));
+
+    return true;
+}
+
+TexturePlane::TexturePlane(QJsonObject &serialisedData, QObject *parent) : QObject(parent)
+{
+    initDefaults();
+
+    if ( !validateIdentifier(serialisedData, TexturePlane::serialiseIdentifier()) )
+        return;
+
+    QJsonValue vTexturePath = serialisedData.value("texturePath");
+    if ( vTexturePath.isString() )
+        m_szTexturePath = vTexturePath.toString();
+
+    QJsonValue vScale = serialisedData.value("scale");
+    if ( vScale.isArray() )
+    {
+        QJsonArray arrScale = vScale.toArray();
+        if ( arrScale.count() >= 2 )
+        {
+            m_vecScale = JsonUtil::jsonArrayToVector2<QVector2D>(arrScale);
+        }
+    }
+
+    QJsonValue vTranslation = serialisedData.value("translation");
+    if ( vTranslation.isArray() )
+    {
+        QJsonArray arrTranslation = vTranslation.toArray();
+        if ( arrTranslation.count() >= 2 )
+        {
+            m_vecTranslation = JsonUtil::jsonArrayToVector2<QVector2D>(arrTranslation);
+        }
+    }
+
+    QJsonValue vRotation = serialisedData.value("rotation");
+    if ( vRotation.isDouble() )
+        m_flRotation = (float)vRotation.toDouble();
+}
+
+TexturePlane::TexturePlane(const TexturePlane &cloneFrom) : QObject(cloneFrom.parent())
+{
+    m_szTexturePath = cloneFrom.m_szTexturePath;
+    m_vecScale = cloneFrom.m_vecScale;
+    m_vecTranslation = cloneFrom.m_vecTranslation;
+    m_flRotation = cloneFrom.m_flRotation;
 }

@@ -18,6 +18,13 @@ namespace JsonUtil
         arr.append(QJsonValue(vec[2]));
     }
 
+    template<typename T>
+    void vector2ToJsonArray(const T &vec, QJsonArray &arr)
+    {
+        arr.append(QJsonValue(vec[0]));
+        arr.append(QJsonValue(vec[1]));
+    }
+
     // Works with any class that has a 3-float constructor.
     template<typename T>
     T jsonArrayToVector3(const QJsonArray &arr)
@@ -25,6 +32,13 @@ namespace JsonUtil
         return T((float)arr.at(0).toDouble(),
                 (float)arr.at(1).toDouble(),
                 (float)arr.at(2).toDouble());
+    }
+
+    template<typename T>
+    T jsonArrayToVector2(const QJsonArray &arr)
+    {
+        return T((float)arr.at(0).toDouble(),
+                (float)arr.at(1).toDouble());
     }
 
     template<typename T, typename C>

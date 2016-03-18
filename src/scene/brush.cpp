@@ -108,7 +108,6 @@ void Brush::updateVertexInChildFaces(int index)
 
 Brush::Brush(const Brush &cloneFrom) : SceneObject(cloneFrom), m_Vertices(cloneFrom.m_Vertices)
 {
-
 }
 
 SceneObject* Brush::clone() const
@@ -154,5 +153,28 @@ Brush::Brush(const QJsonObject &serialisedData, SceneObject *parent) :
     if ( !validateIdentifier(serialisedData, Brush::serialiseIdentifier()) )
         return;
 
-    // TODO: Read
+    QJsonValue vVertices = serialisedData.value("vertices");
+    QJsonArray arrVertices = vVertices.toArray();
+    if ( !vVertices.isArray() || arrVertices.count() < 1 )
+    {
+        qWarning() << "Vertices array within brush" << objectName() << "is invalid!";
+        return;
+    }
+
+    for ( int i = 0; i < arrVertices.count(); i++ )
+    {
+        QJsonValue vVertex = arrVertices.at(i);
+        QJsonArray arrVertex = vVertex.toArray();
+        if ( !vVertex.isArray() || arrVertex.count() < 3 )
+        {
+            // Fail first - better this way, as it's clear that a brush is
+            // invalid if it has no vertices. This should make it easier to
+            // detect when unserialising faces.
+            qWarning() << "Vertex" << i << "in brush" << objectName() << "is invalid!";
+            m_Vertices.clear();
+            break;
+        }
+
+        m_Vertices.append(JsonUtil::jsonArrayToVector3<QVector3D>(arrVertex));
+    }
 }
