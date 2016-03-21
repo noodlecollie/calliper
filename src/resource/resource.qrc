@@ -32,6 +32,5 @@
         <file>icons/icon_rotate_new.png</file>
         <file>icons/icon-scale-new.png</file>
         <file>icons/icon-translate-new.png</file>
-        <file>scripts/calliper.style</file>
     </qresource>
 </RCC>
