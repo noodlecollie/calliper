@@ -185,25 +185,11 @@ bool SceneCamera::serialiseToJson(QJsonObject &obj) const
 
     // Insert this as the superclass.
     obj.insert(ISerialisable::KEY_SUPERCLASS(), QJsonValue(jsonParent));
-
-    obj.insert("lensType", QJsonValue(CameraLens::LensTypeNames[m_pLens->type()]));
-    obj.insert("nearPlane", QJsonValue(m_pLens->nearPlane()));
-    obj.insert("farPlane", QJsonValue(m_pLens->farPlane()));
     obj.insert("drawBounds", QJsonValue(m_bDrawBounds));
 
-    if ( m_pLens->type() == CameraLens::Orthographic )
-    {
-        QJsonArray arrPlanes;
-        arrPlanes.append(QJsonValue(m_pLens->topPlane()));
-        arrPlanes.append(QJsonValue(m_pLens->bottomPlane()));
-        arrPlanes.append(QJsonValue(m_pLens->leftPlane()));
-        arrPlanes.append(QJsonValue(m_pLens->rightPlane()));
-        obj.insert("orthoPlanes", QJsonValue(arrPlanes));
-    }
-    else if ( m_pLens->type() == CameraLens::Perspective )
-    {
-        obj.insert("fov", QJsonValue(m_pLens->fieldOfView()));
-    }
+    QJsonObject lensObj;
+    m_pLens->serialiseToJson(lensObj);
+    obj.insert("lens", QJsonValue(lensObj));
 
     return true;
 }
@@ -215,69 +201,16 @@ SceneCamera::SceneCamera(const QJsonObject &serialisedData, SceneObject *parent)
     if ( !validateIdentifier(serialisedData, SceneCamera::serialiseIdentifier()) )
         return;
 
-    QString lensType = serialisedData.value("lensType").toString();
-    if ( lensType == CameraLens::LensTypeNames[0] )
-    {
-        m_pLens->setType(CameraLens::Orthographic);
-    }
-    else
-    {
-        m_pLens->setType(CameraLens::Perspective);
-    }
-
-    QJsonValue vNearPlane = serialisedData.value("nearPlane");
-    if ( vNearPlane.isDouble() )
-    {
-        m_pLens->setNearPlane((float)vNearPlane.toDouble());
-    }
-
-    QJsonValue vFarPlane = serialisedData.value("farPlane");
-    if ( vFarPlane.isDouble() )
-    {
-        m_pLens->setFarPlane((float)vFarPlane.toDouble());
-    }
-
     QJsonValue vDrawBounds = serialisedData.value("drawBounds");
     if ( vDrawBounds.isBool() )
     {
         m_bDrawBounds = vDrawBounds.toBool();
     }
 
-    if ( m_pLens->type() == CameraLens::Orthographic )
+    QJsonValue vLens = serialisedData.value("lens");
+    if ( vLens.isObject() )
     {
-        QJsonArray arrPlanes = serialisedData.value("orthoPlanes").toArray();
-        for ( int i = 0; i < arrPlanes.count(); i++ )
-        {
-            switch (i)
-            {
-            case 0:
-                m_pLens->setTopPlane((float)arrPlanes.at(i).toDouble());
-                break;
-
-            case 1:
-                m_pLens->setBottomPlane((float)arrPlanes.at(i).toDouble());
-                break;
-
-            case 2:
-                m_pLens->setLeftPlane((float)arrPlanes.at(i).toDouble());
-                break;
-
-            case 3:
-                m_pLens->setRightPlane((float)arrPlanes.at(i).toDouble());
-                break;
-
-            default:
-                break;
-            }
-        }
-    }
-    else if ( m_pLens->type() == CameraLens::Perspective )
-    {
-        QJsonValue vFOV = serialisedData.value("fov");
-        if ( vFOV.isDouble() )
-        {
-            m_pLens->setFieldOfView((float)vFOV.toDouble());
-        }
+        m_pLens->setFromJson(vLens.toObject());
     }
 }
 

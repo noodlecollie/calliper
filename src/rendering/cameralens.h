@@ -3,8 +3,9 @@
 
 #include <QMatrix4x4>
 #include "boundingbox.h"
+#include "iserialisable.h"
 
-class CameraLens
+class CameraLens : public ISerialisable
 {
 public:
     enum LensType
@@ -78,6 +79,10 @@ public:
 
     // Returns the given pixel point as a 3D vector point in camera space.
     QVector3D mapPoint(const QPoint &pos, const QSize &viewSize) const;
+
+    virtual bool serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
+    void setFromJson(const QJsonObject &serialisedData);
 
 private:
     LensType    m_iType;
