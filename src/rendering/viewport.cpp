@@ -228,7 +228,7 @@ void Viewport::setBackgroundColor(const QColor &col)
 
 QColor Viewport::defaultBackgroundColor()
 {
-    return QColor::fromRgb(0xff33001a);
+    return QColor::fromRgb(0xff202525);
 }
 
 // TODO: Merge common pieces of these functions?
