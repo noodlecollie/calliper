@@ -16,15 +16,15 @@ public:
 
     QVector3D vertexAt(int index) const;
     int appendVertex(const QVector3D &v);
-    void appendVertices(const QList<QVector3D> &verts);
+    void appendVertices(const QVector<QVector3D> &verts);
     int vertexCount() const;
     void removeVertex(int index);
-    QList<QVector3D> vertexList() const;
+    QVector<QVector3D> vertexList() const;
     void clearVertices();
-    QList<QVector3D> vertexList(const QList<int> &indices) const;
+    QVector<QVector3D> vertexList(const QVector<int> &indices) const;
     void replaceVertex(int index, const QVector3D &v);
 
-    QList<BrushFace*> faces() const;
+    QVector<BrushFace*> faces() const;
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
@@ -39,7 +39,7 @@ private:
     void clearVerticesFromChildFaces();
     void updateVertexInChildFaces(int index);
 
-    QList<QVector3D>    m_Vertices;
+    QVector<QVector3D>    m_Vertices;
 };
 
 #endif // BRUSH_H

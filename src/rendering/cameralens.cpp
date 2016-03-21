@@ -1,5 +1,6 @@
 #include "cameralens.h"
 #include <QtMath>
+#include <QJsonArray>
 
 const char* CameraLens::LensTypeNames[2] =
 {

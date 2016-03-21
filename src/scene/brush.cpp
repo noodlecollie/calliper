@@ -28,7 +28,7 @@ int Brush::appendVertex(const QVector3D &v)
     return m_Vertices.count() - 1;
 }
 
-void Brush::appendVertices(const QList<QVector3D> &verts)
+void Brush::appendVertices(const QVector<QVector3D> &verts)
 {
     m_Vertices.append(verts);
 }
@@ -52,19 +52,19 @@ void Brush::clearVertices()
     m_Vertices.clear();
 }
 
-QList<QVector3D> Brush::vertexList() const
+QVector<QVector3D> Brush::vertexList() const
 {
     return m_Vertices;
 }
 
-QList<BrushFace*> Brush::faces() const
+QVector<BrushFace*> Brush::faces() const
 {
-    return findChildren<BrushFace*>(QString(), Qt::FindDirectChildrenOnly);
+    return findChildren<BrushFace*>(QString(), Qt::FindDirectChildrenOnly).toVector();
 }
 
 void Brush::removeVertexFromChildFaces(int index)
 {
-    QList<BrushFace*> childFaces = faces();
+    QVector<BrushFace*> childFaces = faces();
     foreach ( BrushFace* face, childFaces )
     {
         face->notifyVertexRemoved(index);
@@ -73,16 +73,16 @@ void Brush::removeVertexFromChildFaces(int index)
 
 void Brush::clearVerticesFromChildFaces()
 {
-    QList<BrushFace*> childFaces = faces();
+    QVector<BrushFace*> childFaces = faces();
     foreach ( BrushFace* face, childFaces )
     {
         face->clearVertices();
     }
 }
 
-QList<QVector3D> Brush::vertexList(const QList<int> &indices) const
+QVector<QVector3D> Brush::vertexList(const QVector<int> &indices) const
 {
-    QList<QVector3D> verts;
+    QVector<QVector3D> verts;
 
     foreach ( int i, indices )
     {
@@ -100,7 +100,7 @@ void Brush::replaceVertex(int index, const QVector3D &v)
 
 void Brush::updateVertexInChildFaces(int index)
 {
-    QList<BrushFace*> childFaces = faces();
+    QVector<BrushFace*> childFaces = faces();
     foreach ( BrushFace* face, childFaces )
     {
         face->notifyVertexChanged(index);
@@ -182,7 +182,7 @@ Brush::Brush(const QJsonObject &serialisedData, SceneObject *parent) :
 
 void Brush::draw(ShaderStack *stack)
 {
-    QList<BrushFace*> faceList = faces();
+    QVector<BrushFace*> faceList = faces();
     foreach ( BrushFace* f , faceList )
     {
         f->draw(stack);

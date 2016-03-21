@@ -13,7 +13,7 @@ class TexturePlane : public QObject, public ISerialisable
     Q_OBJECT
 public:
     explicit TexturePlane(QObject* parent = 0);
-    TexturePlane(QJsonObject &serialisedData, QObject* parent = 0);
+    TexturePlane(const QJsonObject &serialisedData, QObject* parent = 0);
 
     TexturePlane* clone() const;
 

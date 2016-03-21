@@ -5,11 +5,39 @@
 #include "mapscene.h"
 #include "resourcemanager.h"
 #include "textureplane.h"
+#include "jsonutil.h"
 
-BrushFace::BrushFace(Brush *parent, QList<int> vertices) : QObject(parent),
+BrushFace::BrushFace(Brush *parent, QVector<int> vertices) : QObject(parent),
     m_Vertices(vertices)
 {
     Q_ASSERT(parent);
+}
+
+BrushFace::BrushFace(Brush *parent, const QJsonObject &serialisedData) : QObject(parent)
+{
+    Q_ASSERT(parent);
+    initDefaults();
+
+    if ( !validateIdentifier(serialisedData, BrushFace::serialiseIdentifier()) )
+        return;
+
+    QJsonValue vVertices;
+    if ( vVertices.isArray() )
+    {
+        m_Vertices = JsonUtil::integerJsonArrayToVector<int>(vVertices.toArray());
+    }
+
+    QJsonValue vTexturePlane;
+    if ( vTexturePlane.isObject() )
+    {
+        delete m_pTexturePlane;
+        m_pTexturePlane = new TexturePlane(vTexturePlane.toObject(), this);
+        connect(m_pTexturePlane, &TexturePlane::dataChanged, this, &BrushFace::forceRebuildGeometry);
+    }
+}
+
+void BrushFace::initDefaults()
+{
     m_pGeometry = new GeometryData();
     m_bRebuildGeometry = true;
 
@@ -49,7 +77,7 @@ void BrushFace::removeVertex(int index)
     m_bRebuildGeometry = true;
 }
 
-QList<int> BrushFace::vertexList() const
+QVector<int> BrushFace::vertexList() const
 {
     return m_Vertices;
 }
@@ -80,7 +108,7 @@ void BrushFace::notifyVertexRemoved(int index)
     }
 }
 
-QList<QVector3D> BrushFace::referencedVertexList() const
+QVector<QVector3D> BrushFace::referencedVertexList() const
 {
     return parentBrush()->vertexList(m_Vertices);
 }
@@ -103,7 +131,7 @@ void BrushFace::buildGeometry()
 {
     m_pGeometry->clear();
 
-    QList<QVector3D> verts = referencedVertexList();
+    QVector<QVector3D> verts = referencedVertexList();
     if ( verts.count() < 3 )
         return;
 
@@ -183,4 +211,24 @@ void BrushFace::forceRebuildGeometry()
 TexturePlane* BrushFace::texturePlane() const
 {
     return m_pTexturePlane;
+}
+
+bool BrushFace::serialiseToJson(QJsonObject &obj) const
+{
+    obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(BrushFace::serialiseIdentifier()));
+
+    QJsonArray arrVertices;
+    JsonUtil::vectorToJsonArray<int,int>(m_Vertices, arrVertices);
+    obj.insert("vertices", QJsonValue(arrVertices));
+
+    QJsonObject planeObj;
+    m_pTexturePlane->serialiseToJson(planeObj);
+    obj.insert("texturePlane", QJsonValue(planeObj));
+
+    return true;
+}
+
+QString BrushFace::serialiseIdentifier() const
+{
+    return staticMetaObject.className();
 }

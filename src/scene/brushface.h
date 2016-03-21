@@ -2,18 +2,20 @@
 #define BRUSHFACE_H
 
 #include <QObject>
+#include "iserialisable.h"
 
 class Brush;
 class TexturePlane;
 class ShaderStack;
 class GeometryData;
 
-class BrushFace : public QObject
+class BrushFace : public QObject, public ISerialisable
 {
     Q_OBJECT
     friend class Brush;
 public:
-    explicit BrushFace(Brush* parent, QList<int> vertices = QList<int>());
+    BrushFace(Brush* parent, QVector<int> vertices = QVector<int>());
+    BrushFace(Brush* parent, const QJsonObject &serialisedData);
     virtual ~BrushFace();
 
     Brush* parentBrush() const;
@@ -22,9 +24,9 @@ public:
     void appendVertex(int v);
     int vertexCount() const;
     void removeVertex(int index);
-    QList<int> vertexList() const;
+    QVector<int> vertexList() const;
     void clearVertices();
-    QList<QVector3D> referencedVertexList() const;
+    QVector<QVector3D> referencedVertexList() const;
 
     bool isValid() const;
     QVector3D normal() const;
@@ -33,15 +35,19 @@ public:
 
     void draw(ShaderStack *stack);
 
+    virtual bool serialiseToJson(QJsonObject &obj) const;
+    virtual QString serialiseIdentifier() const;
+
 private slots:
     void forceRebuildGeometry();
 
 private:
+    void initDefaults();
     void notifyVertexRemoved(int index);
     void notifyVertexChanged(int index);
     void buildGeometry();
 
-    QList<int>      m_Vertices;
+    QVector<int>      m_Vertices;
     bool            m_bRebuildGeometry;
     TexturePlane*   m_pTexturePlane;
     GeometryData*   m_pGeometry;

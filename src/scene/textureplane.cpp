@@ -218,7 +218,7 @@ bool TexturePlane::serialiseToJson(QJsonObject &obj) const
     return true;
 }
 
-TexturePlane::TexturePlane(QJsonObject &serialisedData, QObject *parent) : QObject(parent)
+TexturePlane::TexturePlane(const QJsonObject &serialisedData, QObject *parent) : QObject(parent)
 {
     initDefaults();
 

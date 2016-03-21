@@ -10,7 +10,7 @@ namespace BrushFactory
     {
         // Get the vertices from the bounding box.
         // X alternates most frequently, then Y and then Z.
-        QList<QVector3D> verts = bbox.corners();
+        QVector<QVector3D> verts = bbox.corners().toVector();
 
         // Add these to the brush.
         Brush* b = new Brush(parent);
