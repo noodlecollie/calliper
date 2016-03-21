@@ -29,5 +29,9 @@
         <file>icons/tool_rotate.png</file>
         <file>icons/tool_scale.png</file>
         <file>icons/tool_translate.png</file>
+        <file>icons/icon_rotate_new.png</file>
+        <file>icons/icon-scale-new.png</file>
+        <file>icons/icon-translate-new.png</file>
+        <file>scripts/calliper.style</file>
     </qresource>
 </RCC>

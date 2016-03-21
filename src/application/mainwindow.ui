@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -149,10 +149,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionDebug_Tool"/>
    <addaction name="actionTranslate_Tool"/>
    <addaction name="actionRotate_Tool"/>
    <addaction name="actionScale_Tool"/>
+   <addaction name="actionDebug_Tool"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -194,7 +194,7 @@
   </action>
   <action name="actionDebug_Tool">
    <property name="icon">
-    <iconset resource="resource/resource.qrc">
+    <iconset resource="../resource/resource.qrc">
      <normaloff>:/icons/tool_debug.png</normaloff>:/icons/tool_debug.png</iconset>
    </property>
    <property name="text">
@@ -206,8 +206,8 @@
   </action>
   <action name="actionTranslate_Tool">
    <property name="icon">
-    <iconset resource="resource/resource.qrc">
-     <normaloff>:/icons/tool_translate.png</normaloff>:/icons/tool_translate.png</iconset>
+    <iconset resource="../resource/resource.qrc">
+     <normaloff>:/icons/icon-translate-new.png</normaloff>:/icons/icon-translate-new.png</iconset>
    </property>
    <property name="text">
     <string>Translate Tool</string>
@@ -215,11 +215,14 @@
    <property name="toolTip">
     <string>Translate</string>
    </property>
+   <property name="shortcut">
+    <string>T</string>
+   </property>
   </action>
   <action name="actionRotate_Tool">
    <property name="icon">
-    <iconset resource="resource/resource.qrc">
-     <normaloff>:/icons/tool_rotate.png</normaloff>:/icons/tool_rotate.png</iconset>
+    <iconset resource="../resource/resource.qrc">
+     <normaloff>:/icons/icon_rotate_new.png</normaloff>:/icons/icon_rotate_new.png</iconset>
    </property>
    <property name="text">
     <string>Rotate Tool</string>
@@ -227,17 +230,23 @@
    <property name="toolTip">
     <string>Rotate</string>
    </property>
+   <property name="shortcut">
+    <string>R</string>
+   </property>
   </action>
   <action name="actionScale_Tool">
    <property name="icon">
-    <iconset resource="resource/resource.qrc">
-     <normaloff>:/icons/tool_scale.png</normaloff>:/icons/tool_scale.png</iconset>
+    <iconset resource="../resource/resource.qrc">
+     <normaloff>:/icons/icon-scale-new.png</normaloff>:/icons/icon-scale-new.png</iconset>
    </property>
    <property name="text">
     <string>Scale Tool</string>
    </property>
    <property name="toolTip">
     <string>Scale</string>
+   </property>
+   <property name="shortcut">
+    <string>X</string>
    </property>
   </action>
   <action name="actionSave_As">
@@ -277,7 +286,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resource/resource.qrc"/>
+  <include location="../resource/resource.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -5,6 +5,7 @@
 #include "resourcemanager.h"
 #include "openglrenderer.h"
 #include "application.h"
+#include <QFile>
 
 int main(int argc, char *argv[])
 {
@@ -44,6 +45,18 @@ int main(int argc, char *argv[])
     a.setApplicationDisplayName("Calliper");
     a.setOrganizationName("Infra");
     a.setOrganizationName("Infra");
+
+    QFile f(":qdarkstyle/style.qss");
+    if (!f.exists())
+    {
+        printf("Unable to set stylesheet, file not found\n");
+    }
+    else
+    {
+        f.open(QFile::ReadOnly | QFile::Text);
+        QTextStream ts(&f);
+        qApp->setStyleSheet(ts.readAll());
+    }
 
     // Initialise the resource manager.
     ResourceManager::initialise();

@@ -136,7 +136,8 @@ SOURCES += \
     application/main.cpp
 
 RESOURCES += \
-    resource/resource.qrc
+    resource/resource.qrc \
+    qdarkstyle/style.qrc
 
 FORMS += \
     application/mainwindow.ui \
