@@ -143,6 +143,17 @@ bool Brush::serialiseToJson(QJsonObject &obj) const
 
     obj.insert("vertices", QJsonValue(arrVertices));
 
+    QJsonArray arrFaces;
+    QVector<BrushFace*> faceList = faces();
+    foreach ( BrushFace* f, faceList )
+    {
+        QJsonObject o;
+        f->serialiseToJson(o);
+        arrFaces.append(o);
+    }
+
+    obj.insert("faces", QJsonValue(arrFaces));
+
     return true;
 }
 
@@ -173,10 +184,22 @@ Brush::Brush(const QJsonObject &serialisedData, SceneObject *parent) :
             // detect when unserialising faces.
             qWarning() << "Vertex" << i << "in brush" << objectName() << "is invalid!";
             m_Vertices.clear();
-            break;
+            return;
         }
 
         m_Vertices.append(JsonUtil::jsonArrayToVector3<QVector3D>(arrVertex));
+    }
+
+    QJsonValue vFaces = serialisedData.value("faces");
+    if ( vFaces.isArray() )
+    {
+        QJsonArray arrFaces = vFaces.toArray();
+        for ( int i = 0; i < arrFaces.count(); i++ )
+        {
+            QJsonValue f = arrFaces.at(i);
+            if ( f.isObject() )
+                new BrushFace(this, f.toObject());
+        }
     }
 }
 
