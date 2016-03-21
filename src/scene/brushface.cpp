@@ -11,6 +11,7 @@ BrushFace::BrushFace(Brush *parent, QVector<int> vertices) : QObject(parent),
     m_Vertices(vertices)
 {
     Q_ASSERT(parent);
+    initDefaults();
 }
 
 BrushFace::BrushFace(Brush *parent, const QJsonObject &serialisedData) : QObject(parent)
