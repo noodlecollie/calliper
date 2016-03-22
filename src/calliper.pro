@@ -78,7 +78,9 @@ HEADERS += \
     tools/inputprocessor.h \
     tools/sceneobjectmanipulator.h \
     tools/tools.h \
-    tools/translationtool.h
+    tools/translationtool.h \
+    tools/scaletool.h \
+    scene/scalehandle.h
 
 SOURCES += \
     application/application.cpp \
@@ -133,7 +135,9 @@ SOURCES += \
     tools/inputprocessor.cpp \
     tools/sceneobjectmanipulator.cpp \
     tools/translationtool.cpp \
-    application/main.cpp
+    application/main.cpp \
+    tools/scaletool.cpp \
+    scene/scalehandle.cpp
 
 RESOURCES += \
     resource/resource.qrc \
