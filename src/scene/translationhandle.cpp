@@ -135,7 +135,7 @@ void TranslationHandle::build()
     addTranslationShaft(scale, QColor::fromRgb(0xff00ff00), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *geometry);
     addTranslationShaft(scale, QColor::fromRgb(0xff0000ff), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *geometry);
 
-    setGeometry(geometry);
+    appendGeometry(geometry);
 }
 
 TranslationHandle::TranslationHandle(SceneObject *parent) : UIManipulator(parent)
@@ -163,7 +163,8 @@ TranslationHandle::~TranslationHandle()
 
 void TranslationHandle::draw(ShaderStack *stack)
 {
-    ShaderProgram* program = resourceManager()->shader(m_pGeometry->shaderOverride());
+    GeometryData* geom = m_GeometryList.at(0).data();
+    ShaderProgram* program = resourceManager()->shader(geom->shaderOverride());
     Q_ASSERT(program);
     stack->shaderPush(program);
 
@@ -174,86 +175,86 @@ void TranslationHandle::draw(ShaderStack *stack)
     stack->counterScaleSetTop(testVec.z());
 
     // Upload and bind the geometry.
-    geometry()->upload();
-    geometry()->bindVertices(true);
-    geometry()->bindIndices(true);
+    geom->upload();
+    geom->bindVertices(true);
+    geom->bindIndices(true);
 
     // Apply the data format.
-    geometry()->applyDataFormat(stack->shaderTop());
+    geom->applyDataFormat(stack->shaderTop());
 
     if ( stack->isPicking() )
     {
-        drawForPicking(stack);
+        drawForPicking(stack, geom);
     }
     else
     {
-        drawNormal();
+        drawNormal(geom);
     }
 
     stack->counterScalePop();
     stack->shaderPop();
 }
 
-void TranslationHandle::drawNormal()
+void TranslationHandle::drawNormal(GeometryData *geom)
 {
     int firstBatch = m_iShaftOffset;
-    int secondBatch = geometry()->indexCount() - m_iShaftOffset;
+    int secondBatch = geom->indexCount() - m_iShaftOffset;
 
     // Draw.
-    geometry()->setDrawMode(GL_TRIANGLES);
-    geometry()->draw(0, firstBatch);
+    geom->setDrawMode(GL_TRIANGLES);
+    geom->draw(0, firstBatch);
 
-    geometry()->setDrawMode(GL_LINES);
-    geometry()->draw(m_iShaftOffset * sizeof(unsigned int), secondBatch);
+    geom->setDrawMode(GL_LINES);
+    geom->draw(m_iShaftOffset * sizeof(unsigned int), secondBatch);
 }
 
-void TranslationHandle::drawForPicking(ShaderStack *stack)
+void TranslationHandle::drawForPicking(ShaderStack *stack, GeometryData *geom)
 {
     // Draw X.
     stack->globalColorPush();
     stack->globalColorSetTop(PICKCOLOUR_X);
-    geometry()->setDrawMode(GL_TRIANGLES);
-    geometry()->draw(m_iXOffset * sizeof(unsigned int), m_iAxisSectionLength);
-    geometry()->setDrawMode(GL_LINES);
-    geometry()->draw((m_iShaftOffset) * sizeof(unsigned int), 2);
+    geom->setDrawMode(GL_TRIANGLES);
+    geom->draw(m_iXOffset * sizeof(unsigned int), m_iAxisSectionLength);
+    geom->setDrawMode(GL_LINES);
+    geom->draw((m_iShaftOffset) * sizeof(unsigned int), 2);
     stack->globalColorPop();
 
     // Draw Y.
     stack->globalColorPush();
     stack->globalColorSetTop(PICKCOLOUR_Y);
-    geometry()->setDrawMode(GL_TRIANGLES);
-    geometry()->draw(m_iYOffset * sizeof(unsigned int), m_iAxisSectionLength);
-    geometry()->setDrawMode(GL_LINES);
-    geometry()->draw((m_iShaftOffset+2) * sizeof(unsigned int), 2);
+    geom->setDrawMode(GL_TRIANGLES);
+    geom->draw(m_iYOffset * sizeof(unsigned int), m_iAxisSectionLength);
+    geom->setDrawMode(GL_LINES);
+    geom->draw((m_iShaftOffset+2) * sizeof(unsigned int), 2);
     stack->globalColorPop();
 
     // Draw Z.
     stack->globalColorPush();
     stack->globalColorSetTop(PICKCOLOUR_Z);
-    geometry()->setDrawMode(GL_TRIANGLES);
-    geometry()->draw(m_iZOffset * sizeof(unsigned int), m_iAxisSectionLength);
-    geometry()->setDrawMode(GL_LINES);
-    geometry()->draw((m_iShaftOffset+4) * sizeof(unsigned int), 2);
+    geom->setDrawMode(GL_TRIANGLES);
+    geom->draw(m_iZOffset * sizeof(unsigned int), m_iAxisSectionLength);
+    geom->setDrawMode(GL_LINES);
+    geom->draw((m_iShaftOffset+4) * sizeof(unsigned int), 2);
     stack->globalColorPop();
 
-    geometry()->setDrawMode(GL_TRIANGLES);
+    geom->setDrawMode(GL_TRIANGLES);
 
     // Draw XY.
     stack->globalColorPush();
     stack->globalColorSetTop(PICKCOLOUR_XY);
-    geometry()->draw(m_iXYOffset * sizeof(unsigned int), m_iPlaneSectionLength);
+    geom->draw(m_iXYOffset * sizeof(unsigned int), m_iPlaneSectionLength);
     stack->globalColorPop();
 
     // Draw XZ.
     stack->globalColorPush();
     stack->globalColorSetTop(PICKCOLOUR_XZ);
-    geometry()->draw(m_iXZOffset * sizeof(unsigned int), m_iPlaneSectionLength);
+    geom->draw(m_iXZOffset * sizeof(unsigned int), m_iPlaneSectionLength);
     stack->globalColorPop();
 
     // Draw YZ.
     stack->globalColorPush();
     stack->globalColorSetTop(PICKCOLOUR_YZ);
-    geometry()->draw(m_iYZOffset * sizeof(unsigned int), m_iPlaneSectionLength);
+    geom->draw(m_iYZOffset * sizeof(unsigned int), m_iPlaneSectionLength);
     stack->globalColorPop();
 }
 

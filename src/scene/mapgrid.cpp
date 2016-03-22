@@ -75,39 +75,42 @@ bool MapGrid::editable() const
 
 void MapGrid::setUpGeometry()
 {
-    m_pGeometry->clear();
-    m_pGeometry->setShaderOverride(PerVertexColorShader::staticName());
-    m_pGeometry->setDrawMode(GL_LINES);
+    GeometryData* geom = new GeometryData();
+    appendGeometry(geom);
 
-    int baseVertex = m_pGeometry->vertexCount();
+    geom->clear();
+    geom->setShaderOverride(PerVertexColorShader::staticName());
+    geom->setDrawMode(GL_LINES);
+
+    int baseVertex = geom->vertexCount();
     int offset = 0;
 
     // Origin - through (0,0)
-    m_pGeometry->appendVertex(QVector3D(-1,0,0), QVector3D(), m_colOrigin);
-    m_pGeometry->appendVertex(QVector3D(1,0,0), QVector3D(), m_colOrigin);
-    m_pGeometry->appendVertex(QVector3D(0,-1,0), QVector3D(), m_colOrigin);
-    m_pGeometry->appendVertex(QVector3D(0,1,0), QVector3D(), m_colOrigin);
-    m_pGeometry->appendIndex(baseVertex+offset++);
-    m_pGeometry->appendIndex(baseVertex+offset++);
-    m_pGeometry->appendIndex(baseVertex+offset++);
-    m_pGeometry->appendIndex(baseVertex+offset++);
+    geom->appendVertex(QVector3D(-1,0,0), QVector3D(), m_colOrigin);
+    geom->appendVertex(QVector3D(1,0,0), QVector3D(), m_colOrigin);
+    geom->appendVertex(QVector3D(0,-1,0), QVector3D(), m_colOrigin);
+    geom->appendVertex(QVector3D(0,1,0), QVector3D(), m_colOrigin);
+    geom->appendIndex(baseVertex+offset++);
+    geom->appendIndex(baseVertex+offset++);
+    geom->appendIndex(baseVertex+offset++);
+    geom->appendIndex(baseVertex+offset++);
     m_DrawOffsets.append(QPair<int,int>(baseVertex, offset));
 
-    baseVertex = m_pGeometry->vertexCount();
+    baseVertex = geom->vertexCount();
     offset = 0;
 
     // Major lines - every 1024 units
-    m_pGeometry->appendVertex(QVector3D(-1,0,0), QVector3D(), m_colMajor);
-    m_pGeometry->appendVertex(QVector3D(1,0,0), QVector3D(), m_colMajor);
-    m_pGeometry->appendVertex(QVector3D(0,-1,0), QVector3D(), m_colMajor);
-    m_pGeometry->appendVertex(QVector3D(0,1,0), QVector3D(), m_colMajor);
-    m_pGeometry->appendIndex(baseVertex+offset++);
-    m_pGeometry->appendIndex(baseVertex+offset++);
-    m_pGeometry->appendIndex(baseVertex+offset++);
-    m_pGeometry->appendIndex(baseVertex+offset++);
+    geom->appendVertex(QVector3D(-1,0,0), QVector3D(), m_colMajor);
+    geom->appendVertex(QVector3D(1,0,0), QVector3D(), m_colMajor);
+    geom->appendVertex(QVector3D(0,-1,0), QVector3D(), m_colMajor);
+    geom->appendVertex(QVector3D(0,1,0), QVector3D(), m_colMajor);
+    geom->appendIndex(baseVertex+offset++);
+    geom->appendIndex(baseVertex+offset++);
+    geom->appendIndex(baseVertex+offset++);
+    geom->appendIndex(baseVertex+offset++);
     m_DrawOffsets.append(QPair<int,int>(baseVertex, offset));
 
-    baseVertex = m_pGeometry->vertexCount();
+    baseVertex = geom->vertexCount();
     offset = 0;
 
     // Minor lines - every 512 units to every 64 units, depending on density
@@ -132,10 +135,10 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/8.0f;
-                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), QVector3D(), m_colMinor);
-                    m_pGeometry->appendVertex(QVector3D(1, f, 0), QVector3D(), m_colMinor);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    geom->appendVertex(QVector3D(-1, f, 0), QVector3D(), m_colMinor);
+                    geom->appendVertex(QVector3D(1, f, 0), QVector3D(), m_colMinor);
+                    geom->appendIndex(baseVertex+offset++);
+                    geom->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;
                 }
 
@@ -157,10 +160,10 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/8.0f;
-                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), QVector3D(), m_colMinor);
-                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), QVector3D(), m_colMinor);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    geom->appendVertex(QVector3D(f, -1, 0), QVector3D(), m_colMinor);
+                    geom->appendVertex(QVector3D(f, 1, 0), QVector3D(), m_colMinor);
+                    geom->appendIndex(baseVertex+offset++);
+                    geom->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;
                 }
 
@@ -171,7 +174,7 @@ void MapGrid::setUpGeometry()
 
     m_DrawOffsets.append(QPair<int,int>(baseVertex, offset));
 
-    baseVertex = m_pGeometry->vertexCount();
+    baseVertex = geom->vertexCount();
     offset = 0;
 
     // Standard lines - every 32 units to every 1 unit.
@@ -193,10 +196,10 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/32.0f;
-                    m_pGeometry->appendVertex(QVector3D(-1, f, 0), QVector3D(), m_colStd);
-                    m_pGeometry->appendVertex(QVector3D(1, f, 0), QVector3D(), m_colStd);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    geom->appendVertex(QVector3D(-1, f, 0), QVector3D(), m_colStd);
+                    geom->appendVertex(QVector3D(1, f, 0), QVector3D(), m_colStd);
+                    geom->appendIndex(baseVertex+offset++);
+                    geom->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;
                 }
 
@@ -221,10 +224,10 @@ void MapGrid::setUpGeometry()
                 if ( !slotsUsed[acc-1] )
                 {
                     float f = (float)acc/32.0f;
-                    m_pGeometry->appendVertex(QVector3D(f, -1, 0), QVector3D(), m_colStd);
-                    m_pGeometry->appendVertex(QVector3D(f, 1, 0), QVector3D(), m_colStd);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
-                    m_pGeometry->appendIndex(baseVertex+offset++);
+                    geom->appendVertex(QVector3D(f, -1, 0), QVector3D(), m_colStd);
+                    geom->appendVertex(QVector3D(f, 1, 0), QVector3D(), m_colStd);
+                    geom->appendIndex(baseVertex+offset++);
+                    geom->appendIndex(baseVertex+offset++);
                     slotsUsed[acc-1] = true;
                 }
 
@@ -255,7 +258,9 @@ void MapGrid::draw(ShaderStack *stack)
     MapDocument* doc = scene()->document();
     Q_ASSERT(doc);
 
-    stack->shaderPush(resourceManager()->shader(m_pGeometry->shaderOverride()));
+    GeometryDataPointer &geom = m_GeometryList[0];
+
+    stack->shaderPush(resourceManager()->shader(geom->shaderOverride()));
     stack->fogColorPush();
     stack->fogBeginPush();
     stack->fogEndPush();
@@ -266,15 +271,15 @@ void MapGrid::draw(ShaderStack *stack)
     stack->fogBeginSetTop(stack->fogEndTop() -
                           (0.5f * (lens->farPlane() - lens->nearPlane())));
 
-    m_pGeometry->upload();
-    m_pGeometry->bindVertices(true);
-    m_pGeometry->bindIndices(true);
-    m_pGeometry->applyDataFormat(stack->shaderTop());
+    geom->upload();
+    geom->bindVertices(true);
+    geom->bindIndices(true);
+    geom->applyDataFormat(stack->shaderTop());
 
-    drawOriginLines(stack, bbox);
-    drawMajorLines(stack, bbox);
-    drawMinorLines(stack, bbox);
-    drawStandardLines(stack, bbox);
+    drawOriginLines(stack, bbox, geom);
+    drawMajorLines(stack, bbox, geom);
+    drawMinorLines(stack, bbox, geom);
+    drawStandardLines(stack, bbox, geom);
 
     stack->fogEndPop();
     stack->fogBeginPop();
@@ -282,7 +287,7 @@ void MapGrid::draw(ShaderStack *stack)
     stack->shaderPop();
 }
 
-void MapGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox, GeometryDataPointer &geom)
 {
     // Draw x and y separately.
     // Taking x as an example, we want to translate the line on x
@@ -299,7 +304,7 @@ void MapGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldSetToIdentity();
         stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(centroid.x(),0,0))
                                         * Math::matrixScale(QVector3D(extent.x()/2.0f,1,1)));
-        m_pGeometry->draw(offsets.first * sizeof(unsigned int), 2);
+        geom->draw(offsets.first * sizeof(unsigned int), 2);
     }
 
     if ( bbox.min().x() <= 0 && bbox.max().x() >= 0 )
@@ -308,11 +313,11 @@ void MapGrid::drawOriginLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldSetToIdentity();
         stack->modelToWorldPostMultiply(Math::matrixTranslate(QVector3D(0,centroid.y(),0))
                                         * Math::matrixScale(QVector3D(1,extent.y()/2.0f,1)));
-        m_pGeometry->draw((offsets.first+2) * sizeof(unsigned int), 2);
+        geom->draw((offsets.first+2) * sizeof(unsigned int), 2);
     }
 }
 
-void MapGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox, GeometryDataPointer &geom)
 {
     // Draw X and Y separately.
     // Taking X as an example, firstly we want to scale the line up to cover
@@ -340,7 +345,7 @@ void MapGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldPush();
         stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D(0,(float)i,0)));
         stack->modelToWorldApply();
-        m_pGeometry->draw(offsets.first * sizeof(unsigned int), 2);
+        geom->draw(offsets.first * sizeof(unsigned int), 2);
         stack->modelToWorldPop();
     }
     stack->setAutoUpdate(true);
@@ -360,14 +365,14 @@ void MapGrid::drawMajorLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldPush();
         stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D((float)i,0,0)));
         stack->modelToWorldApply();
-        m_pGeometry->draw((offsets.first+2) * sizeof(unsigned int), 2);
+        geom->draw((offsets.first+2) * sizeof(unsigned int), 2);
         stack->modelToWorldPop();
     }
     stack->setAutoUpdate(true);
     stack->modelToWorldApply();
 }
 
-void MapGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox, GeometryDataPointer &geom)
 {
     // Minor lines begin at 1 (for a 512 unit gridline) and end at
     // 0.125 (for a 64 unit gridline).
@@ -432,7 +437,7 @@ void MapGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldPush();
         stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D(0,(float)i,0)));
         stack->modelToWorldApply();
-        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        geom->draw(localOffset * sizeof(unsigned int), localCount);
         stack->modelToWorldPop();
     }
     stack->setAutoUpdate(true);
@@ -456,7 +461,7 @@ void MapGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldPush();
         stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D((float)i,0,0)));
         stack->modelToWorldApply();
-        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        geom->draw(localOffset * sizeof(unsigned int), localCount);
         stack->modelToWorldPop();
     }
     stack->setAutoUpdate(true);
@@ -464,7 +469,7 @@ void MapGrid::drawMinorLines(ShaderStack *stack, const BoundingBox &bbox)
     stack->modelToWorldApply();
 }
 
-void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
+void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox, GeometryDataPointer &geom)
 {
     // Standard lines begin at 1 (for a 32 unit gridline) and end at
     // 1/32 (for a 1 unit gridline).
@@ -518,7 +523,7 @@ void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldPush();
         stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D(0,(float)i,0)));
         stack->modelToWorldApply();
-        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        geom->draw(localOffset * sizeof(unsigned int), localCount);
         stack->modelToWorldPop();
     }
     stack->setAutoUpdate(true);
@@ -551,7 +556,7 @@ void MapGrid::drawStandardLines(ShaderStack *stack, const BoundingBox &bbox)
         stack->modelToWorldPush();
         stack->modelToWorldPreMultiply(Math::matrixTranslate(QVector3D((float)i,0,0)));
         stack->modelToWorldApply();
-        m_pGeometry->draw(localOffset * sizeof(unsigned int), localCount);
+        geom->draw(localOffset * sizeof(unsigned int), localCount);
         stack->modelToWorldPop();
     }
     stack->setAutoUpdate(true);

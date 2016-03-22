@@ -45,35 +45,36 @@ namespace SceneFactory
 
         SceneObject* camModel = new SceneObject(scene->root());
         camModel->setObjectName("camModel");
-        camModel->setGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
+        camModel->appendGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
         camModel->setShouldSerialiseGeometry(true);
 
         SceneObject* block = new SceneObject(scene->root());
         block->setObjectName("block");
-        block->setGeometry(GeometryFactory::cube(32.0f));
-        block->geometry()->setTexture(0, "/textures/test");
+        block->appendGeometry(GeometryFactory::cube(32.0f));
+        block->geometryAt(0)->setTexture(0, "/textures/test");
         block->setPosition(QVector3D(64,0,0));
         block->setShouldSerialiseGeometry(true);
 
         SceneObject* blockChild = block->clone();
         blockChild->setObjectName("blockChild");
         blockChild->setParent(block);
-        blockChild->setGeometry(GeometryFactory::cube(8.0f));
-        blockChild->geometry()->setTexture(0, "/textures/test");
+        blockChild->clearGeometry();
+        blockChild->appendGeometry(GeometryFactory::cube(8.0f));
+        blockChild->geometryAt(0)->setTexture(0, "/textures/test");
         blockChild->setPosition(QVector3D(0,0,40));
         blockChild->setShouldSerialiseGeometry(true);
 
         SceneObject* block2 = block->clone();
         block2->setObjectName("block2");
-        block2->geometry()->setTexture(0, "/textures/debug_translucent");
+        block2->geometryAt(0)->setTexture(0, "/textures/debug_translucent");
         block2->setPosition(QVector3D(128,0,0));
         block2->setRenderFlags(SceneObject::Translucent);
         block2->setShouldSerialiseGeometry(true);
 
         SceneObject* testBlock = new SceneObject(scene->root());
         testBlock->setObjectName("testBlock");
-        testBlock->setGeometry(GeometryFactory::cubeSolidColor(96.0f, QColor::fromRgba(0x80ff8800)));
+        testBlock->appendGeometry(GeometryFactory::cubeSolidColor(96.0f, QColor::fromRgba(0x80ff8800)));
         testBlock->setPosition(QVector3D(0,-256,0));
         testBlock->setRenderFlags(SceneObject::Translucent);
         testBlock->setShouldSerialiseGeometry(true);

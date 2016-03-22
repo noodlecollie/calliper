@@ -12,7 +12,7 @@ OriginMarker::~OriginMarker()
 
 OriginMarker::OriginMarker(const OriginMarker &cloneFrom) : SceneObject(cloneFrom)
 {
-    m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));
+
 }
 
 bool OriginMarker::editable() const
@@ -22,21 +22,25 @@ bool OriginMarker::editable() const
 
 void OriginMarker::constructGeometry()
 {
-    m_pGeometry->setShaderOverride(PerVertexColorShader::staticName());
+    // TODO: Use multiple GeometryDatas now we have this capability!
+    GeometryData* geom = new GeometryData();
+    geom->setShaderOverride(PerVertexColorShader::staticName());
 
-    m_pGeometry->setDrawMode(GL_LINES);
-    m_pGeometry->appendVertex(QVector3D(0,0,0), QVector3D(), QColor(255,0,0));
-    m_pGeometry->appendVertex(QVector3D(64,0,0), QVector3D(), QColor(255,0,0));
-    m_pGeometry->appendVertex(QVector3D(0,0,0), QVector3D(), QColor(0,255,0));
-    m_pGeometry->appendVertex(QVector3D(0,64,0), QVector3D(), QColor(0,255,0));
-    m_pGeometry->appendVertex(QVector3D(0,0,0), QVector3D(), QColor(0,0,255));
-    m_pGeometry->appendVertex(QVector3D(0,0,64), QVector3D(), QColor(0,0,255));
-    m_pGeometry->appendIndex(0);
-    m_pGeometry->appendIndex(1);
-    m_pGeometry->appendIndex(2);
-    m_pGeometry->appendIndex(3);
-    m_pGeometry->appendIndex(4);
-    m_pGeometry->appendIndex(5);
+    geom->setDrawMode(GL_LINES);
+    geom->appendVertex(QVector3D(0,0,0), QVector3D(), QColor(255,0,0));
+    geom->appendVertex(QVector3D(64,0,0), QVector3D(), QColor(255,0,0));
+    geom->appendVertex(QVector3D(0,0,0), QVector3D(), QColor(0,255,0));
+    geom->appendVertex(QVector3D(0,64,0), QVector3D(), QColor(0,255,0));
+    geom->appendVertex(QVector3D(0,0,0), QVector3D(), QColor(0,0,255));
+    geom->appendVertex(QVector3D(0,0,64), QVector3D(), QColor(0,0,255));
+    geom->appendIndex(0);
+    geom->appendIndex(1);
+    geom->appendIndex(2);
+    geom->appendIndex(3);
+    geom->appendIndex(4);
+    geom->appendIndex(5);
+
+    appendGeometry(geom);
 }
 
 SceneObject* OriginMarker::clone() const

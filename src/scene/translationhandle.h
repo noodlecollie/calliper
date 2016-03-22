@@ -18,8 +18,8 @@ protected:
     explicit TranslationHandle(const TranslationHandle &cloneFrom);
 
 private:
-    void drawNormal();
-    void drawForPicking(ShaderStack* stack);
+    void drawNormal(GeometryData* geom);
+    void drawForPicking(ShaderStack* stack, GeometryData* geom);
     void build();
 
     int m_iShaftOffset;

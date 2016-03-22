@@ -2,14 +2,17 @@
 #define SCENEOBJECT_H
 
 #include "hierarchicalobject.h"
-#include <QScopedPointer>
 #include "geometrydata.h"
 #include <QMatrix4x4>
 #include "eulerangle.h"
 #include "boundingbox.h"
+#include <QSharedPointer>
+#include <QVector>
 
 class BaseScene;
 class ShaderStack;
+
+typedef QSharedPointer<GeometryData> GeometryDataPointer;
 
 class SceneObject : public HierarchicalObject
 {
@@ -35,10 +38,18 @@ public:
     QList<SceneObject*> children() const;
     BaseScene* scene() const;
 
-    // The SceneObject owns its geometry.
-    // Any old geometry that is replaced will be deleted.
-    GeometryData* geometry() const;
-    void setGeometry(GeometryData* data);
+    int geometryCount() const;
+    GeometryDataPointer geometryAt(int index) const;
+    void setGeometryAt(int index, const GeometryDataPointer &geom);
+    void appendGeometry(const GeometryDataPointer &geom);
+    void removeGeometry(int index);
+    void clearGeometry();
+
+    // Convenience.
+    inline void appendGeometry(GeometryData* geom)
+    {
+        appendGeometry(GeometryDataPointer(geom));
+    }
 
     // Empty => This object has no geometry
     // (=> it's just for grouping children)
@@ -70,14 +81,19 @@ public slots:
 protected:
     explicit SceneObject(const SceneObject &cloneFrom);
 
-    QScopedPointer<GeometryData>    m_pGeometry;
 	BaseScene*						m_pScene;
     RenderFlags						m_RenderFlags;
 	bool							m_bHidden;
     bool                            m_bSerialiseGeometry;
+    QVector<GeometryDataPointer>    m_GeometryList;
 
 private:
     void initDefaults(SceneObject* parent);
+    void deepCloneGeometryFrom(const QVector<GeometryDataPointer> &list);
+    void drawGeometry(GeometryData* geom, ShaderStack* stack);
+    BoundingBox totalGeometryBounds() const;
+    void serialiseAllGeometry(QJsonObject &obj) const;
+    void unserialiseAllGeometry(const QJsonArray &geomArray);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(SceneObject::RenderFlags)

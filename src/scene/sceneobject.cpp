@@ -16,10 +16,10 @@ SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
 SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(cloneFrom.parentObject())
 {
     m_pScene = cloneFrom.m_pScene;
-    m_pGeometry.reset(new GeometryData(*cloneFrom.m_pGeometry.data()));
     m_RenderFlags = cloneFrom.m_RenderFlags;
     m_bHidden = cloneFrom.m_bHidden;
     m_bSerialiseGeometry = cloneFrom.m_bSerialiseGeometry;
+    deepCloneGeometryFrom(cloneFrom.m_GeometryList);
 
     setPosition(cloneFrom.position());
     setAngles(cloneFrom.angles());
@@ -29,7 +29,6 @@ SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(clon
 void SceneObject::initDefaults(SceneObject* parent)
 {
     m_pScene = parent ? parent->m_pScene : NULL;
-    m_pGeometry.reset(new GeometryData());
     m_RenderFlags = NoRenderFlag;
     m_bHidden = false;
     m_bSerialiseGeometry = false;
@@ -39,22 +38,9 @@ SceneObject::~SceneObject()
 {
 }
 
-GeometryData* SceneObject::geometry() const
-{
-    return m_pGeometry.data();
-}
-
-void SceneObject::setGeometry(GeometryData *data)
-{
-    Q_ASSERT(data);
-    if ( !data || m_pGeometry.data() == data ) return;
-
-    m_pGeometry.reset(data);
-}
-
 bool SceneObject::isEmpty() const
 {
-    return m_pGeometry->isEmpty();
+    return m_GeometryList.count() < 1;
 }
 
 SceneObject* SceneObject::parentObject() const
@@ -79,30 +65,8 @@ bool SceneObject::editable() const
 
 void SceneObject::draw(ShaderStack *stack)
 {
-    if ( geometry()->isEmpty() )
+    if ( isEmpty() )
         return;
-
-    bool shaderOverridden = false;
-
-    // If we have a shader override, push the override.
-    QString shaderOverrideName = geometry()->shaderOverride();
-    if ( !shaderOverrideName.isNull() )
-    {
-        ShaderProgram* program = resourceManager()->shader(shaderOverrideName);
-        if ( program )
-        {
-            shaderOverridden = true;
-            stack->shaderPush(program);
-        }
-    }
-
-    // Upload and bind the geometry.
-    geometry()->upload();
-    geometry()->bindVertices(true);
-    geometry()->bindIndices(true);
-
-    // Apply the data format.
-    geometry()->applyDataFormat(stack->shaderTop());
 
     // If we're selected, set the global colour.
     bool pushedColor = false;
@@ -114,17 +78,47 @@ void SceneObject::draw(ShaderStack *stack)
         stack->globalColorSetTop(doc->selectedColor());
     }
 
-    // Apply the texture.
-    QOpenGLTexture* tex = resourceManager()->texture(geometry()->texture(0));
-    tex->bind(0);
-
-    // Draw.
-    geometry()->draw();
+    for ( int i = 0; i < m_GeometryList.count(); i++ )
+    {
+        drawGeometry(m_GeometryList.at(i).data(), stack);
+    }
 
     if ( pushedColor )
     {
         stack->globalColorPop();
     }
+}
+
+void SceneObject::drawGeometry(GeometryData *geom, ShaderStack *stack)
+{
+    bool shaderOverridden = false;
+
+    // If we have a shader override, push the override.
+    QString shaderOverrideName = geom->shaderOverride();
+    if ( !shaderOverrideName.isNull() )
+    {
+        ShaderProgram* program = resourceManager()->shader(shaderOverrideName);
+        if ( program )
+        {
+            shaderOverridden = true;
+            stack->shaderPush(program);
+        }
+    }
+
+    // Upload and bind the geometry.
+    geom->upload();
+    geom->bindVertices(true);
+    geom->bindIndices(true);
+
+    // Apply the data format.
+    geom->applyDataFormat(stack->shaderTop());
+
+    // Apply the texture.
+    QOpenGLTexture* tex = resourceManager()->texture(geom->texture(0));
+    tex->bind(0);
+
+    // Draw.
+    geom->draw();
 
     // Pop the shader if we pushed one earlier.
     if ( shaderOverridden )
@@ -151,7 +145,7 @@ SceneObject* SceneObject::clone() const
 BoundingBox SceneObject::computeLocalBounds() const
 {
     // Compute our bounds.
-    BoundingBox bounds = geometry()->localBounds();
+    BoundingBox bounds = totalGeometryBounds();
 
     // Union these with the bounds of all our children.
     QList<SceneObject*> childList = children();
@@ -161,6 +155,16 @@ BoundingBox SceneObject::computeLocalBounds() const
     }
 
     return bounds;
+}
+
+BoundingBox SceneObject::totalGeometryBounds() const
+{
+    BoundingBox bbox;
+    for ( int i = 0; i < m_GeometryList.count(); i++ )
+    {
+        bbox.unionWith(m_GeometryList.at(i)->localBounds());
+    }
+    return bbox;
 }
 
 bool SceneObject::hidden() const
@@ -200,9 +204,7 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
     obj.insert("serialiseGeometry", QJsonValue(shouldSerialiseGeometry()));
     if ( shouldSerialiseGeometry() )
     {
-        QJsonObject jsonGeom;
-        m_pGeometry->serialiseToJson(jsonGeom);
-        obj.insert("geometry", QJsonValue(jsonGeom));
+        serialiseAllGeometry(obj);
     }
 
     // Serialise render flags as an array.
@@ -214,6 +216,22 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
     obj.insert("hidden", QJsonValue(hidden()));
 
     return true;
+}
+
+void SceneObject::serialiseAllGeometry(QJsonObject &obj) const
+{
+    if ( m_GeometryList.count() < 1 )
+        return;
+
+    QJsonArray arrGeometry;
+    for ( int i = 0; i < m_GeometryList.count(); i++ )
+    {
+        QJsonObject g;
+        m_GeometryList.at(i)->serialiseToJson(g);
+        arrGeometry.append(QJsonValue(g));
+    }
+
+    obj.insert("geometry", QJsonValue(arrGeometry));
 }
 
 SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent) : HierarchicalObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
@@ -233,9 +251,9 @@ SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent)
     }
 
     QJsonValue vGeometry = serialisedData.value("geometry");
-    if ( vGeometry.isObject() )
+    if ( vGeometry.isArray() )
     {
-        setGeometry(new GeometryData(vGeometry.toObject()));
+        unserialiseAllGeometry(vGeometry.toArray());
     }
 
     QJsonValue vSerialiseGeometry = serialisedData.value("serialiseGeometry");
@@ -257,6 +275,15 @@ SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent)
     }
 }
 
+void SceneObject::unserialiseAllGeometry(const QJsonArray &geomArray)
+{
+    m_GeometryList.clear();
+    for ( int i = 0; i < geomArray.count(); i++ )
+    {
+        m_GeometryList.append(GeometryDataPointer(new GeometryData(geomArray.at(i).toObject())));
+    }
+}
+
 QString SceneObject::serialiseIdentifier() const
 {
     return staticMetaObject.className();
@@ -270,4 +297,46 @@ bool SceneObject::shouldSerialiseGeometry() const
 void SceneObject::setShouldSerialiseGeometry(bool enabled)
 {
     m_bSerialiseGeometry = enabled;
+}
+
+void SceneObject::deepCloneGeometryFrom(const QVector<GeometryDataPointer> &list)
+{
+    m_GeometryList.clear();
+
+    foreach ( GeometryDataPointer g, list )
+    {
+        m_GeometryList.append(GeometryDataPointer(new GeometryData(*(g.data()))));
+    }
+}
+
+int SceneObject::geometryCount() const
+{
+    return m_GeometryList.count();
+}
+
+GeometryDataPointer SceneObject::geometryAt(int index) const
+{
+    return m_GeometryList.at(index);
+}
+
+void SceneObject::setGeometryAt(int index, const GeometryDataPointer &geom)
+{
+    Q_ASSERT(geom.data());
+    m_GeometryList.replace(index, geom);
+}
+
+void SceneObject::appendGeometry(const GeometryDataPointer &geom)
+{
+    Q_ASSERT(geom.data());
+    m_GeometryList.append(geom);
+}
+
+void SceneObject::removeGeometry(int index)
+{
+    m_GeometryList.remove(index);
+}
+
+void SceneObject::clearGeometry()
+{
+    m_GeometryList.clear();
 }

@@ -26,10 +26,10 @@ public:
 
 private:
     void setUpGeometry();
-    void drawOriginLines(ShaderStack* stack, const BoundingBox &bbox);
-    void drawMajorLines(ShaderStack* stack, const BoundingBox &bbox);
-    void drawMinorLines(ShaderStack* stack, const BoundingBox &bbox);
-    void drawStandardLines(ShaderStack* stack, const BoundingBox &bbox);
+    void drawOriginLines(ShaderStack* stack, const BoundingBox &bbox, GeometryDataPointer &geom);
+    void drawMajorLines(ShaderStack* stack, const BoundingBox &bbox, GeometryDataPointer &geom);
+    void drawMinorLines(ShaderStack* stack, const BoundingBox &bbox, GeometryDataPointer &geom);
+    void drawStandardLines(ShaderStack* stack, const BoundingBox &bbox, GeometryDataPointer &geom);
     int limitGridPower(float camWorldZ) const;
     static int stdLineVertCount(int power);
 
