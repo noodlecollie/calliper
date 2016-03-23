@@ -8,7 +8,7 @@ class ScaleHandle : public UIManipulator
     Q_OBJECT
 public:
     explicit ScaleHandle(SceneObject *parent = 0);
-    virtual ~SceneHandle();
+    virtual ~ScaleHandle();
     virtual SceneObject* clone() const;
 
 signals:
