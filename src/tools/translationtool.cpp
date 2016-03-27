@@ -81,6 +81,12 @@ void TranslationTool::vMousePress(QMouseEvent *e)
         return;
     }
 
+    if ( obj != m_pHandle )
+    {
+        m_pDocument->selectedSetClear();
+        return;
+    }
+
     // Cache the following:
 
     // Original handle world position at the beginning of the drag.

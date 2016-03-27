@@ -17,11 +17,6 @@ void BlockCreationHandle::initDefaults()
     m_bRebuildGeometry = true;
 }
 
-bool BlockCreationHandle::editable() const
-{
-    return false;
-}
-
 SceneObject* BlockCreationHandle::clone() const
 {
     return new BlockCreationHandle(*this);

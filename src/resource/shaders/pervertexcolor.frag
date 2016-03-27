@@ -19,7 +19,7 @@ void main()
     // Get the dot product of the normal with the light.
     // We rescale this to make sure that the faces don't get too dark.
     // The rescaling is [0.5 1]
-    float dp = dot(fNormal, directionalLight);
+    float dp = -dot(fNormal, directionalLight);
     dp = 0.5 + (0.5 * ((0.5*dp) + 0.5));
 
     float dist = abs(fViewSpace.z);

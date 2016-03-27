@@ -121,8 +121,8 @@ void TranslationHandle::build()
     addTranslationHead(scale, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
 
     addTranslationPanel(scale/4.0f, QColor::fromRgba(PICKCOLOUR_XY), QMatrix4x4(), *arrows);
-    addTranslationPanel(scale/4, QColor::fromRgba(PICKCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
-    addTranslationPanel(scale/4, QColor::fromRgba(PICKCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *arrows);
+    addTranslationPanel(scale/4.0f, QColor::fromRgba(PICKCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
+    addTranslationPanel(scale/4.0f, QColor::fromRgba(PICKCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *arrows);
 
     addTranslationShaft(scale, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
     addTranslationShaft(scale, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
@@ -139,6 +139,7 @@ TranslationHandle::TranslationHandle(SceneObject *parent) : UIManipulator(parent
 
 TranslationHandle::TranslationHandle(const TranslationHandle &cloneFrom) : UIManipulator(cloneFrom)
 {
+    build();
 }
 
 TranslationHandle::~TranslationHandle()
@@ -148,34 +149,7 @@ TranslationHandle::~TranslationHandle()
 
 void TranslationHandle::draw(ShaderStack *stack)
 {
-    QVector4D testVec = stack->cameraProjectionTop() * stack->coordinateTransformTop() * stack->worldToCameraTop()
-            * stack->modelToWorldTop() * QVector4D(0,0,0,1);
-
-    stack->counterScalePush();
-    stack->counterScaleSetTop(testVec.z());
-
-    for ( int i = 0; i < geometryCount(); i++ )
-    {
-        GeometryData* geom = geometryAt(i).data();
-
-        ShaderProgram* program = resourceManager()->shader(geom->shaderOverride());
-        Q_ASSERT(program);
-        stack->shaderPush(program);
-
-        // Upload and bind the geometry.
-        geom->upload();
-        geom->bindVertices(true);
-        geom->bindIndices(true);
-
-        // Apply the data format.
-        geom->applyDataFormat(stack->shaderTop());
-
-        geom->draw();
-
-        stack->shaderPop();
-    }
-
-    stack->counterScalePop();
+    UIManipulator::draw(stack);
 }
 
 int TranslationHandle::axisFlagsFromPickColor(QRgb colour)

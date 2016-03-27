@@ -1,4 +1,5 @@
 #include "uimanipulator.h"
+#include "shaderstack.h"
 
 UIManipulator::UIManipulator(SceneObject *parent) : SceneObject(parent)
 {
@@ -136,4 +137,23 @@ bool UIManipulator::serialiseToJson(QJsonObject &) const
 bool UIManipulator::editable() const
 {
     return false;
+}
+
+void UIManipulator::draw(ShaderStack *stack)
+{
+    if ( isEmpty() )
+        return;
+
+    QVector4D testVec = stack->cameraProjectionTop() * stack->coordinateTransformTop() * stack->worldToCameraTop()
+            * stack->modelToWorldTop() * QVector4D(0,0,0,1);
+
+    stack->counterScalePush();
+    stack->counterScaleSetTop(testVec.z());
+
+    for ( int i = 0; i < geometryCount(); i++ )
+    {
+        drawGeometry(geometryAt(i).data(), stack);
+    }
+
+    stack->counterScalePop();
 }

@@ -36,6 +36,7 @@ public:
     virtual bool serialiseToJson(QJsonObject &) const;
 
     virtual bool editable() const;
+    virtual void draw(ShaderStack *stack);
 
 protected:
     explicit UIManipulator(const UIManipulator &cloneFrom);

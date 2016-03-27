@@ -11,8 +11,6 @@ public:
     explicit BlockCreationHandle(SceneObject *parent = 0);
     virtual ~BlockCreationHandle();
     virtual SceneObject* clone() const;
-
-    virtual bool editable() const;
     virtual void draw(ShaderStack *stack);
 
     BoundingBox bounds() const;

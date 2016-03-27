@@ -55,7 +55,7 @@ OpenGLRenderer::OpenGLRenderer()
     g_pRenderer = this;
     m_pStack = NULL;
     m_bPreparedForRendering = false;
-    m_vecDirectionalLight = QVector3D(1,0.8f,0.5f).normalized();
+    m_vecDirectionalLight = Math::angleToVectorSimple(EulerAngle(25.0f, -90.0f - 45.0f, 0.0f));
     m_colFogColour = QColor::fromRgb(0xff999999);
     m_colGlobalColour = QColor::fromRgb(0xffffffff);
     m_flFogBegin = 0;

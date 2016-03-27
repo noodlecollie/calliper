@@ -132,7 +132,7 @@ namespace GeometryFactory
         return d;
     }
 
-    GeometryData* cubeSolidColor(float radius, const QColor &col)
+    GeometryData* cubeSolidColor(float radius, const QColor &col, bool nullNormals)
     {
         GeometryData* d = new GeometryData();
         d->setShaderOverride(PerVertexColorShader::staticName());
@@ -176,10 +176,10 @@ namespace GeometryFactory
                 break;
             }
 
-            d->appendVertex((-radius*u) + (-radius*v) + (radius*normal), normal, col);
-            d->appendVertex((radius*u) + (-radius*v) + (radius*normal), normal, col);
-            d->appendVertex((radius*u) + (radius*v) + (radius*normal), normal, col);
-            d->appendVertex((-radius*u) + (radius*v) + (radius*normal), normal, col);
+            d->appendVertex((-radius*u) + (-radius*v) + (radius*normal), nullNormals ? QVector3D() : normal, col);
+            d->appendVertex((radius*u) + (-radius*v) + (radius*normal), nullNormals ? QVector3D() : normal, col);
+            d->appendVertex((radius*u) + (radius*v) + (radius*normal), nullNormals ? QVector3D() : normal, col);
+            d->appendVertex((-radius*u) + (radius*v) + (radius*normal), nullNormals ? QVector3D() : normal, col);
 
             int index = 4*i;
             d->appendIndex(index);

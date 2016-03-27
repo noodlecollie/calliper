@@ -17,6 +17,12 @@ uniform mat4 projection;
 uniform float counterScale;
 uniform vec3 directionalLight;
 
+bool isNull(vec3 v)
+{
+    const float EPS = 0.05;
+    return v.x < EPS && v.y < EPS && v.z < EPS;
+}
+
 void main()
 {
         vec4 intermediate = hammerToOpenGL * worldToCamera * modelToWorld * vec4(counterScale * vPositionModelSpace, 1);
@@ -28,5 +34,5 @@ void main()
         // Convert the normals to world space.
         // If the normal is 0 (ie. not applicable), pass it as the opposite direction to the directional light.
         // This means the vertex will be at full brightness.
-        fNormal = length(vNormal) == 0 ? -directionalLight : normalize((modelToWorld * vec4(vNormal, 0)).xyz);
+        fNormal = isNull(vNormal) ? -directionalLight : normalize((modelToWorld * vec4(vNormal, 0)).xyz);
 }

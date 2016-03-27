@@ -10,6 +10,7 @@ public:
     explicit ScaleHandle(SceneObject *parent = 0);
     virtual ~ScaleHandle();
     virtual SceneObject* clone() const;
+    void draw(ShaderStack *stack);
 
 signals:
 

@@ -16,7 +16,8 @@
 #include "brushface.h"
 #include "textureplane.h"
 #include "brushfactory.h"
-#include "blockcreationhandle.h"
+#include "scalehandle.h"
+#include "openglrenderer.h"
 
 namespace SceneFactory
 {
@@ -103,6 +104,9 @@ namespace SceneFactory
     UIScene* debugUIScene(MapDocument *document)
     {
         UIScene* scene = new UIScene(document);
+
+        ScaleHandle* h = new ScaleHandle(scene->root());
+        h->setPosition(-renderer()->directionalLight() * 128);
 
         return scene;
     }
