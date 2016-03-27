@@ -16,6 +16,7 @@
 #include "brushface.h"
 #include "textureplane.h"
 #include "brushfactory.h"
+#include "blockcreationhandle.h"
 
 namespace SceneFactory
 {
@@ -88,12 +89,6 @@ namespace SceneFactory
                                                  scene->root(), "/textures/test");
         b->setObjectName("brush");
         b->setPosition(QVector3D(256,0,0));
-
-        QVector3D vU, vV;
-        BrushFace* bf = b->findChild<BrushFace*>("face2", Qt::FindDirectChildrenOnly);
-        TexturePlane* pl = bf->texturePlane();
-        pl->uvAxes(QVector3D(0,-1,0), vU, vV);
-        qDebug() << "U and V for normal" << QVector3D(0,-1,0) << "are" << vU << "and" << vV;
 
         return scene;
     }

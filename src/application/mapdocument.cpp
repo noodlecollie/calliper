@@ -14,7 +14,7 @@ MapDocument::MapDocument(QObject *parent) : QObject(parent)
 
 #ifdef DEBUG_SCENES
     m_pScene = SceneFactory::debugScene(this);
-    m_pUIScene = SceneFactory::defaultUIScene(this);
+    m_pUIScene = SceneFactory::debugUIScene(this);
 #else
     m_pScene = SceneFactory::defaultScene(this);
     m_pUIScene = SceneFactory::defaultUIScene(this);

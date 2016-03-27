@@ -80,6 +80,7 @@ public slots:
 
 protected:
     explicit SceneObject(const SceneObject &cloneFrom);
+    void drawGeometry(GeometryData* geom, ShaderStack* stack);
 
 	BaseScene*						m_pScene;
     RenderFlags						m_RenderFlags;
@@ -90,7 +91,6 @@ protected:
 private:
     void initDefaults(SceneObject* parent);
     void deepCloneGeometryFrom(const QVector<GeometryDataPointer> &list);
-    void drawGeometry(GeometryData* geom, ShaderStack* stack);
     BoundingBox totalGeometryBounds() const;
     void serialiseAllGeometry(QJsonObject &obj) const;
     void unserialiseAllGeometry(const QJsonArray &geomArray);

@@ -35,6 +35,8 @@ public:
     // UI elements should not be serialised.
     virtual bool serialiseToJson(QJsonObject &) const;
 
+    virtual bool editable() const;
+
 protected:
     explicit UIManipulator(const UIManipulator &cloneFrom);
 };

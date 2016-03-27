@@ -132,3 +132,8 @@ bool UIManipulator::serialiseToJson(QJsonObject &) const
     // UI elements should not be serialised.
     return false;
 }
+
+bool UIManipulator::editable() const
+{
+    return false;
+}
