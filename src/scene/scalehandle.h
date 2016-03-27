@@ -17,6 +17,9 @@ public slots:
 
 protected:
     explicit ScaleHandle(const ScaleHandle &cloneFrom);
+
+private:
+    void build();
 };
 
 #endif // SCALEHANDLE_H

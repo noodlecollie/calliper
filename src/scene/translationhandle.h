@@ -18,19 +18,7 @@ protected:
     explicit TranslationHandle(const TranslationHandle &cloneFrom);
 
 private:
-    void drawNormal(GeometryData* geom);
-    void drawForPicking(ShaderStack* stack, GeometryData* geom);
     void build();
-
-    int m_iShaftOffset;
-    int m_iXOffset;
-    int m_iYOffset;
-    int m_iZOffset;
-    int m_iXYOffset;
-    int m_iYZOffset;
-    int m_iXZOffset;
-    int m_iAxisSectionLength;
-    int m_iPlaneSectionLength;
 };
 
 #endif // TRANSLATIONHANDLE_H
