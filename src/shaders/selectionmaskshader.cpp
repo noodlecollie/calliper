@@ -28,6 +28,7 @@ void SelectionMaskShader::construct()
     link();
 
     m_iAttributeLocations[Position] = f->glGetAttribLocation(handle(), "vPositionModelSpace");
+    m_iAttributeLocations[Color] = f->glGetAttribLocation(handle(), "vColor");
     m_iAttributeLocations[ModelToWorldMatrix] = f->glGetUniformLocation(handle(), "modelToWorld");
     m_iAttributeLocations[WorldToCameraMatrix] = f->glGetUniformLocation(handle(), "worldToCamera");
     m_iAttributeLocations[CoordinateTransformMatrix] = f->glGetUniformLocation(handle(), "hammerToOpenGL");
@@ -43,6 +44,7 @@ void SelectionMaskShader::apply() const
     f->glUseProgram(handle());
 
     f->glEnableVertexAttribArray(m_iAttributeLocations[Position]);
+    f->glEnableVertexAttribArray(m_iAttributeLocations[Color]);
 }
 
 void SelectionMaskShader::release() const
@@ -50,4 +52,5 @@ void SelectionMaskShader::release() const
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
 
     f->glDisableVertexAttribArray(m_iAttributeLocations[Position]);
+    f->glDisableVertexAttribArray(m_iAttributeLocations[Color]);
 }
