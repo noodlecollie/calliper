@@ -9,7 +9,7 @@ class ScaleTool : public BaseTool
     Q_OBJECT
 public:
     explicit ScaleTool(MapDocument *document);
-    virtual ~TranslationTool();
+    virtual ~ScaleTool();
     static QString staticName();
 
 signals:

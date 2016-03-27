@@ -80,7 +80,8 @@ HEADERS += \
     tools/tools.h \
     tools/translationtool.h \
     tools/scaletool.h \
-    scene/scalehandle.h
+    scene/scalehandle.h \
+    scene/blockcreationhandle.h
 
 SOURCES += \
     application/application.cpp \
@@ -137,7 +138,8 @@ SOURCES += \
     tools/translationtool.cpp \
     application/main.cpp \
     tools/scaletool.cpp \
-    scene/scalehandle.cpp
+    scene/scalehandle.cpp \
+    scene/blockcreationhandle.cpp
 
 RESOURCES += \
     resource/resource.qrc \

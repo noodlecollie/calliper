@@ -5,7 +5,13 @@ ScaleHandle::ScaleHandle(SceneObject *parent) : UIManipulator(parent)
 
 }
 
-ScaleHandle::~SceneHandle()
+ScaleHandle::~ScaleHandle()
 {
 
+}
+
+SceneObject* ScaleHandle::clone() const
+{
+    Q_ASSERT(false);
+    return NULL;
 }

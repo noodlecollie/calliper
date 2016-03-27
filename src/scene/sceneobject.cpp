@@ -91,6 +91,9 @@ void SceneObject::draw(ShaderStack *stack)
 
 void SceneObject::drawGeometry(GeometryData *geom, ShaderStack *stack)
 {
+    if ( geom->isEmpty() )
+        return;
+
     bool shaderOverridden = false;
 
     // If we have a shader override, push the override.
