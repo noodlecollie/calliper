@@ -19,6 +19,11 @@ namespace GeometryFactory
     GeometryData* lineCuboid(const QVector3D &min, const QVector3D &max, const QColor &col);
     GeometryData* lineCuboid(const BoundingBox &bbox, const QColor &col);
 
+    // Length is from base to tip.
+    // Width is width of arrow head, which is twice the width of the shaft.
+    // Head proportion is the proportion of the length that the head takes up.
+    GeometryData* flatArrow(float length, float width, float headProportion, const QColor &col, bool nullNormals = false);
+
     GeometryData* fromObjFile(const QString &filename, float scale = 1.0f);
 }
 

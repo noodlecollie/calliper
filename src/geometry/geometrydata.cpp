@@ -514,13 +514,21 @@ unsigned int* GeometryData::indexAt(int i)
     return &(m_Indices.data()[i]);
 }
 
-void GeometryData::appendIndexTriangle(unsigned int i0, unsigned int i1, unsigned int i2)
+void GeometryData::appendIndexTriangle(unsigned int i0, unsigned int i1, unsigned int i2, bool doubleSided)
 {
     int currentSize = m_Indices.size();
-    m_Indices.resize(currentSize + 3);
+
+    m_Indices.resize(currentSize + (doubleSided ? 6 : 3));
     m_Indices[currentSize] = i0;
     m_Indices[currentSize+1] = i1;
     m_Indices[currentSize+2] = i2;
+
+    if ( doubleSided )
+    {
+        m_Indices[currentSize+3] = i0;
+        m_Indices[currentSize+4] = i2;
+        m_Indices[currentSize+5] = i1;
+    }
 
     m_bIndicesStale = true;
 }
@@ -578,7 +586,10 @@ bool GeometryData::append(const GeometryData &other)
 {
     // We can't merge if we have different formats.
     if ( dataFormat() != other.dataFormat() )
+    {
+        Q_ASSERT(false);
         return false;
+    }
 
     // This is where our new vertices start in the list.
     int baseVertex = vertexCount();
@@ -632,6 +643,15 @@ void GeometryData::transform(const QMatrix4x4 &mat)
         m_Vertices[index] = vec.x();
         m_Vertices[index+1] = vec.y();
         m_Vertices[index+2] = vec.z();
+
+        // Also transform the normals.
+        int normalOffset = formatOffset(dataFormat(), ShaderProgram::Normal) / sizeof(float);
+        index = index + normalOffset;
+
+        QVector4D n = mat * QVector4D(m_Vertices[index], m_Vertices[index+1], m_Vertices[index+2], 0);
+        m_Vertices[index] = n.x();
+        m_Vertices[index+1] = n.y();
+        m_Vertices[index+2] = n.z();
     }
 }
 

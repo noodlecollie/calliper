@@ -55,7 +55,7 @@ public:
     const float* vertexAt(int i) const;
 
     void appendIndex(unsigned int i);
-    void appendIndexTriangle(unsigned int i0, unsigned int i1, unsigned int i2);
+    void appendIndexTriangle(unsigned int i0, unsigned int i1, unsigned int i2, bool doubleSided = false);
     void clearIndices();
     int indexCount() const;
     int indexBytes() const;

@@ -310,4 +310,76 @@ namespace GeometryFactory
 
         return geometry;
     }
+
+    GeometryData* singleFlatArrow(float length, float width, float headProportion, const QColor &col, bool nullNormals)
+    {
+        GeometryData* geom = new GeometryData();
+        geom->setDrawMode(GL_TRIANGLES);
+        geom->setShaderOverride(PerVertexColorShader::staticName());
+
+        // Shaft
+        geom->appendVertex(QVector3D(0.0f, width/4.0f, 0.0f),
+                           QVector3D(0,0, nullNormals ? 0 : 1),
+                           col);
+        geom->appendVertex(QVector3D(0.0f, -width/4.0f, 0.0f),
+                           QVector3D(0,0,1),
+                           col);
+        geom->appendVertex(QVector3D(length*(1-headProportion), -width/4.0f, 0.0f),
+                           QVector3D(0,0, nullNormals ? 0 : 1),
+                           col);
+        geom->appendVertex(QVector3D(length*(1-headProportion), width/4.0f, 0.0f),
+                           QVector3D(0,0, nullNormals ? 0 : 1),
+                           col);
+
+        // Head
+        geom->appendVertex(QVector3D(length*(1-headProportion), width/2.0f, 0.0f),
+                           QVector3D(0,0, nullNormals ? 0 : 1),
+                           col);
+        geom->appendVertex(QVector3D(length*(1-headProportion), -width/2.0f, 0.0f),
+                           QVector3D(0,0, nullNormals ? 0 : 1),
+                           col);
+        geom->appendVertex(QVector3D(length, 0.0f, 0.0f),
+                           QVector3D(0,0, nullNormals ? 0 : 1),
+                           col);
+
+        return geom;
+    }
+
+    GeometryData* flatArrow(float length, float width, float headProportion, const QColor &col, bool nullNormals)
+    {
+        GeometryData* geom = new GeometryData();
+        geom->setDrawMode(GL_TRIANGLES);
+        geom->setShaderOverride(PerVertexColorShader::staticName());
+        geom->setDataFormat(GeometryData::PositionNormalColor);
+
+        // Get the first side.
+        GeometryData* side1 = singleFlatArrow(length, width, headProportion, col, nullNormals);
+        geom->append(*side1);
+
+        // If we have null normals, we can just create double-sided triangles.
+        if ( nullNormals )
+        {
+            geom->appendIndexTriangle(0,1,2,true);
+            geom->appendIndexTriangle(0,2,3,true);
+            geom->appendIndexTriangle(4,5,6,true);
+        }
+
+        // Otherwise we need a new side.
+        else
+        {
+            side1->transform(Math::matrixRotateX(qDegreesToRadians(180.0f)));
+            geom->append(*side1);
+
+            for ( int i = 0; i < 2; i++ )
+            {
+                int b = i*7;
+                geom->appendIndexTriangle(b+0,b+1,b+2);
+                geom->appendIndexTriangle(b+0,b+2,b+3);
+                geom->appendIndexTriangle(b+4,b+5,b+6);
+            }
+        }
+
+        delete side1;
+        return geom;
+    }
 }

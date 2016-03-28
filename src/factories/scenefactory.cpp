@@ -91,6 +91,11 @@ namespace SceneFactory
         b->setObjectName("brush");
         b->setPosition(QVector3D(256,0,0));
 
+        SceneObject* arrow = new SceneObject(scene->root());
+        arrow->appendGeometry(GeometryFactory::flatArrow(128, 32, 0.25f, QColor::fromRgb(0xffffffff)));
+        arrow->setPosition(-renderer()->directionalLight() * 128);
+        arrow->setAngles(Math::vectorToAngleSimple(renderer()->directionalLight()));
+
         return scene;
     }
 
@@ -104,9 +109,6 @@ namespace SceneFactory
     UIScene* debugUIScene(MapDocument *document)
     {
         UIScene* scene = new UIScene(document);
-
-        ScaleHandle* h = new ScaleHandle(scene->root());
-        h->setPosition(-renderer()->directionalLight() * 128);
 
         return scene;
     }
