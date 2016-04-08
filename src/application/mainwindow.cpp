@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->actionDebug_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(DebugTestTool::staticName()));
     ui->actionTranslate_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(TranslationTool::staticName()));
+    ui->actionScale_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(ScaleTool::staticName()));
 
     setUpConnections();
 

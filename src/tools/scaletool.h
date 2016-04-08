@@ -4,6 +4,8 @@
 #include "basetool.h"
 #include "sceneobjectmanipulator.h"
 
+class ScaleHandle;
+
 class ScaleTool : public BaseTool
 {
     Q_OBJECT
@@ -15,6 +17,13 @@ public:
 signals:
 
 public slots:
+
+protected:
+    virtual void vActivate();
+    virtual void vDeactivate();
+
+private:
+    ScaleHandle*    m_pHandle;
 };
 
 #endif // SCALETOOL_H
