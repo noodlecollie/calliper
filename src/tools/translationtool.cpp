@@ -189,10 +189,14 @@ void TranslationTool::vMouseMove(QMouseEvent *e)
     updateTableManipulators();
 }
 
-void TranslationTool::vMouseRelease(QMouseEvent *)
+void TranslationTool::vMouseRelease(QMouseEvent *e)
 {
-    if ( m_bInMove )
-        endMove();
+    if ( !m_bInMove )
+    {
+        BaseTool::vMouseRelease(e);
+    }
+
+    endMove();
 }
 
 void TranslationTool::vSelectedSetChanged()

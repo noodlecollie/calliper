@@ -21,9 +21,18 @@ public slots:
 protected:
     virtual void vActivate();
     virtual void vDeactivate();
+    virtual void vKeyPress(QKeyEvent *e);
+    virtual void vKeyRelease(QKeyEvent *e);
+    virtual void vSelectedSetChanged();
+    virtual void vMousePress(QMouseEvent *e);
+    virtual void vMouseMove(QMouseEvent *e);
+    virtual void vMouseRelease(QMouseEvent *e);
 
 private:
+    void endMove();
+
     ScaleHandle*    m_pHandle;
+    bool            m_bInMove;
 };
 
 #endif // SCALETOOL_H
