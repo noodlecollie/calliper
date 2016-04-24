@@ -2,10 +2,11 @@
 #define BRUSH_H
 
 #include "sceneobject.h"
+#include "iraydetectable.h"
 
 class BrushFace;
 
-class Brush : public SceneObject
+class Brush : public SceneObject, public IRayDetectable
 {
     Q_OBJECT
 public:
@@ -29,6 +30,8 @@ public:
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
     virtual void draw(ShaderStack *stack);
+
+    virtual float computeIntersection(const Ray3D &ray, QRgb *col) const;
 
 protected:
     explicit Brush(const Brush &cloneFrom);

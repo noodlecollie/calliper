@@ -233,3 +233,25 @@ QString BrushFace::serialiseIdentifier() const
 {
     return staticMetaObject.className();
 }
+
+float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col) const
+{
+    QVector3D nrm = normal();
+    if (nrm.isNull())
+        return (float)qInf();
+
+    // We assume that the normal and the ray direction are both unit vectors.
+    // If they're perpendicular, we're parallel to the plane.
+    if ( QVector3D::dotProduct(nrm, ray.direction()) == 0 )
+        return (float)qInf();
+
+    // TODO
+}
+
+float BrushFace::planeDistanceFromOrigin() const
+{
+    if ( !isValid() || !parentBrush() )
+        return 0;
+
+    return QVector3D::dotProduct(normal(), parentBrush()->vertexAt(0));
+}

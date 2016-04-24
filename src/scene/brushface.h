@@ -3,13 +3,14 @@
 
 #include <QObject>
 #include "iserialisable.h"
+#include "iraydetectable.h"
 
 class Brush;
 class TexturePlane;
 class ShaderStack;
 class GeometryData;
 
-class BrushFace : public QObject, public ISerialisable
+class BrushFace : public QObject, public ISerialisable, public IRayDetectable
 {
     Q_OBJECT
     friend class Brush;
@@ -30,6 +31,7 @@ public:
 
     bool isValid() const;
     QVector3D normal() const;
+    float planeDistanceFromOrigin() const;
 
     TexturePlane* texturePlane() const;
 
@@ -37,6 +39,8 @@ public:
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
+
+    virtual float computeIntersection(const Ray3D &ray, QRgb *col) const;
 
 private slots:
     void forceRebuildGeometry();

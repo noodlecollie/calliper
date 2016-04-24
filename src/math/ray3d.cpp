@@ -158,3 +158,11 @@ bool Ray3D::fuzzyIsNull() const
 {
     return Math::fuzzyVectorIsNull(m_vecDirection);
 }
+
+float Ray3D::atDistanceFromOrigin(float distance) const
+{
+    if ( isNull() )
+        return QVector3D();
+
+    return distance * m_vecDirection;
+}

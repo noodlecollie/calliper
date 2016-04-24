@@ -16,6 +16,7 @@ class ShaderProgram;
 class QOpenGLFunctions_4_1_Core;
 class CameraLens;
 class SceneCamera;
+class QOpenGLTexture;
 
 class OpenGLRenderer
 {
@@ -121,6 +122,8 @@ private:
 
     ObjectPicker m_ObjectPicker;
     bool m_bPicking;
+
+    QOpenGLTexture* m_pRayTexture;
 };
 
 OpenGLRenderer* renderer();
