@@ -25,6 +25,7 @@ public:
     QVector3D parameterise(Math::AxisIdentifier axis, float value, bool* success = NULL) const;
     QVector3D parameterise(float t) const;
     float distanceFrom(const QVector3D &point, bool* success = NULL) const;
+    QVector3D atDistanceFromOrigin(float distance) const;
 
     bool operator ==(const Ray3D &other) const;
     bool operator !=(const Ray3D &other) const;

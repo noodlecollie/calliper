@@ -12,6 +12,8 @@
 #include "geometryfactory.h"
 #include <QSurface>
 #include "shaders.h"
+#include <QOpenGLTexture>
+#include "iraydetectable.h"
 
 void OpenGLRenderer::ObjectPicker::checkDrawnObject(SceneObject *obj)
 {
@@ -62,15 +64,16 @@ OpenGLRenderer::OpenGLRenderer()
     m_flFogEnd = 0;
     m_iShader = 0;
     m_bPicking = false;
+    m_pRayTexture = new QOpenGLTexture(QOpenGLTexture::Target2D);
 }
 
 OpenGLRenderer::~OpenGLRenderer()
 {
     resourceManager()->makeCurrent();
     QOpenGLFunctions_4_1_Core* f = resourceManager()->functions();
-
-    // Nothing yet
     Q_UNUSED(f);
+
+    delete m_pRayTexture;
 
     resourceManager()->doneCurrent();
 }

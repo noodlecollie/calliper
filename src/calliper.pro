@@ -81,7 +81,8 @@ HEADERS += \
     tools/translationtool.h \
     tools/scaletool.h \
     scene/scalehandle.h \
-    scene/blockcreationhandle.h
+    scene/blockcreationhandle.h \
+    math/iraydetectable.h
 
 SOURCES += \
     application/application.cpp \

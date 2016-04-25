@@ -2,6 +2,7 @@
 #include "brushface.h"
 #include "jsonutil.h"
 #include "shaderstack.h"
+#include <QtGlobal>
 
 Brush::Brush(SceneObject *parent) : SceneObject(parent)
 {
@@ -210,4 +211,27 @@ void Brush::draw(ShaderStack *stack)
     {
         f->draw(stack);
     }
+}
+
+float Brush::computeIntersection(const Ray3D &ray, QRgb *col) const
+{
+    float intersection = (float)qInf();
+    QList<BrushFace*> faceList = faces();
+
+    foreach ( BrushFace* face, faceList )
+    {
+        // Compute face intersection.
+        QRgb fCol = 0xff000000;
+        float fInt = face->computeIntersection(ray, &fCol);
+
+        // If closer than current, set to current.
+        if ( fInt < intersection )
+        {
+            intersection = fInt;
+            if ( col )
+                *col = fCol;
+        }
+    }
+
+    return intersection;
 }
