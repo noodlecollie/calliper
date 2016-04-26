@@ -242,10 +242,59 @@ float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col) const
 
     // We assume that the normal and the ray direction are both unit vectors.
     // If they're perpendicular, we're parallel to the plane.
-    if ( QVector3D::dotProduct(nrm, ray.direction()) == 0 )
+    if ( qFuzzyIsNull(QVector3D::dotProduct(nrm, ray.direction())) )
         return (float)qInf();
 
-    // TODO
+    // Get the point at which the ray intersects the plane.
+    QVector3D pointOnPlane = planeDistanceFromOrigin() * nrm;
+    float rayParam = QVector3D::dotProduct(-nrm, ray.origin() - pointOnPlane)
+            / QVector3D::dotProduct(nrm, ray.direction());
+    QVector3D intersection = ray.parameterise(rayParam);
+
+    // Now determine whether the intersection lies within the polygon of this face.
+    // We do this by checking each directed edge of the polygon.
+    // For each edge, we generate a direction perpendicular to both the
+    // edge direction and the face normal (so a perpendicular direction that
+    // lies in the plane). We do a dot product with this and the direction of
+    // the intersection point for each edge: if the sign of the dot product
+    // is the same for all edges, the intersection point is on the polygon,
+    // otherwise it is not.
+
+    QVector<QVector3D> points = referencedVertexList();
+    float sign = 0.0f;
+    bool haveSetSign = false;
+    for ( int i = 0; i < points.count(); i++ )
+    {
+        const QVector3D &p0 = points.at(i);
+        const QVector3D &p1 = points.at(i == (points.count()-1) ? 0 : i+1);
+        QVector3D edgeDir = p1 - p0;
+        QVector3D intersectionDir = intersection - p0;
+        QVector3D perpendicularEdgeDir = QVector3D::crossProduct(edgeDir.normalized(), nrm);
+
+        // See what the sign is for the dot product.
+        // intersectionDir doesn't have to be normalised for this.
+        float dp = QVector3D::dotProduct(perpendicularEdgeDir, intersectionDir);
+
+        if ( haveSetSign )
+        {
+            // If the sign is different to what we had recorded previously,
+            // the ray misses the polygon. If the dp is 0, this is always
+            // allowed as it means it's right on the edge.
+            if ( (dp < 0.0f && sign >= 0.0f) || (dp > 0.0f && sign <= 0.0f) )
+                return (float)qInf();
+        }
+
+        sign = dp;
+        haveSetSign = true;
+    }
+
+    // The intersection point is within the polygon - return it.
+    if ( col )
+    {
+        // TODO: Compute a proper colour.
+        *col = 0xffffffff;
+    }
+    return rayParam;
 }
 
 float BrushFace::planeDistanceFromOrigin() const

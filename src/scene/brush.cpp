@@ -216,7 +216,7 @@ void Brush::draw(ShaderStack *stack)
 float Brush::computeIntersection(const Ray3D &ray, QRgb *col) const
 {
     float intersection = (float)qInf();
-    QList<BrushFace*> faceList = faces();
+    QVector<BrushFace*> faceList = faces();
 
     foreach ( BrushFace* face, faceList )
     {
