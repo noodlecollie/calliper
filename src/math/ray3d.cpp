@@ -1,6 +1,12 @@
 #include "ray3d.h"
 #include <QtMath>
 
+QDebug& operator <<(QDebug &debug, const Ray3D &ray)
+{
+    debug.nospace() << "Ray3D(" << ray.origin() << ", " << ray.direction() << ")";
+    return debug;
+}
+
 Ray3D::Ray3D()
 {
     // Vectors initialised to null.

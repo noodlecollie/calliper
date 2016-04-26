@@ -22,7 +22,7 @@ SceneObject* BlockCreationHandle::clone() const
     return new BlockCreationHandle(*this);
 }
 
-BlockCreationHandle::BlockCreationHandle(const BlockCreationHandle &cloneFrom)
+BlockCreationHandle::BlockCreationHandle(const BlockCreationHandle &cloneFrom) : UIManipulator(cloneFrom)
 {
     initDefaults();
     m_Bounds = cloneFrom.m_Bounds;

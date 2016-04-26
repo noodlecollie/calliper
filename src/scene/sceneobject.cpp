@@ -343,3 +343,11 @@ void SceneObject::clearGeometry()
 {
     m_GeometryList.clear();
 }
+
+float SceneObject::computeIntersection(const Ray3D &ray, QRgb *col) const
+{
+    // By default we don't support this.
+    Q_UNUSED(ray);
+    Q_UNUSED(col);
+    return (float)qInf();
+}

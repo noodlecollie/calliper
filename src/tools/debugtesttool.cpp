@@ -53,7 +53,16 @@ void DebugTestTool::vActivate()
 
 void DebugTestTool::vMousePress(QMouseEvent *e)
 {
-    BaseTool::vMousePress(e);
+    //BaseTool::vMousePress(e);
+
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v || !v->camera() )
+        return;
+
+    SceneCamera* cam = v->camera();
+    QVector3D rayDir = cam->frustumDirection(e->pos(), v->size());
+    Ray3D ray(cam->position() + (cam->lens()->nearPlane() * rayDir), rayDir);
+    qDebug() << "Ray:" << ray;
 }
 
 void DebugTestTool::vMouseMove(QMouseEvent *e)

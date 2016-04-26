@@ -2,11 +2,10 @@
 #define BRUSH_H
 
 #include "sceneobject.h"
-#include "iraydetectable.h"
 
 class BrushFace;
 
-class Brush : public SceneObject, public IRayDetectable
+class Brush : public SceneObject
 {
     Q_OBJECT
 public:

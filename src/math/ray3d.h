@@ -47,4 +47,6 @@ private:
     QVector3D m_vecDirection;
 };
 
+QDebug& operator <<(QDebug &debug, const Ray3D &ray);
+
 #endif // RAY3D_H

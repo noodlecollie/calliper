@@ -8,13 +8,14 @@
 #include "boundingbox.h"
 #include <QSharedPointer>
 #include <QVector>
+#include "iraydetectable.h"
 
 class BaseScene;
 class ShaderStack;
 
 typedef QSharedPointer<GeometryData> GeometryDataPointer;
 
-class SceneObject : public HierarchicalObject
+class SceneObject : public HierarchicalObject, public IRayDetectable
 {
     Q_OBJECT
     friend class BaseScene;
@@ -73,6 +74,8 @@ public:
     // False by default.
     bool shouldSerialiseGeometry() const;
     void setShouldSerialiseGeometry(bool enabled);
+
+    virtual float computeIntersection(const Ray3D &ray, QRgb *col) const;
 
 signals:
 
