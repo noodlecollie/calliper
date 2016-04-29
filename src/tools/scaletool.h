@@ -3,6 +3,7 @@
 
 #include "basetool.h"
 #include "sceneobjectmanipulator.h"
+#include <QHash>
 
 class ScaleHandle;
 
@@ -29,10 +30,20 @@ protected:
     virtual void vMouseRelease(QMouseEvent *e);
 
 private:
+    typedef QHash<SceneObject*, SceneObjectManipulator> ManipTable;
+
     void endMove();
+    void updateHandleState();
+    void updateTableFromSet();
+    void updateTableManipulators();
+    void commitTableManipulators();
+    void clearTableManipulators();
+    bool isAncestorInManipulatorTable(const SceneObject* obj) const;
 
     ScaleHandle*    m_pHandle;
     bool            m_bInMove;
+    ManipTable      m_ManipTable;
+    QVector3D       m_vecScale;
 };
 
 #endif // SCALETOOL_H
