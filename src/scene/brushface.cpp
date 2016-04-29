@@ -125,7 +125,7 @@ QVector3D BrushFace::normal() const
         return QVector3D();
 
     Brush* b = parentBrush();
-    return QVector3D::normal(b->vertexAt(m_Vertices.at(0)), b->vertexAt(m_Vertices.at(1)));
+    return QVector3D::normal(b->vertexAt(m_Vertices.at(0)), b->vertexAt(m_Vertices.at(1)), b->vertexAt(m_Vertices.at(2)));
 }
 
 void BrushFace::buildGeometry()
@@ -234,16 +234,23 @@ QString BrushFace::serialiseIdentifier() const
     return staticMetaObject.className();
 }
 
-float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col) const
+float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateSpace space) const
 {
+    // For now we just assume that the ray is in local space.
+    Q_UNUSED(space)
+
     QVector3D nrm = normal();
     if (nrm.isNull())
+    {
         return (float)qInf();
+    }
 
     // We assume that the normal and the ray direction are both unit vectors.
     // If they're perpendicular, we're parallel to the plane.
     if ( qFuzzyIsNull(QVector3D::dotProduct(nrm, ray.direction())) )
+    {
         return (float)qInf();
+    }
 
     // Get the point at which the ray intersects the plane.
     QVector3D pointOnPlane = planeDistanceFromOrigin() * nrm;
@@ -281,7 +288,9 @@ float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col) const
             // the ray misses the polygon. If the dp is 0, this is always
             // allowed as it means it's right on the edge.
             if ( (dp < 0.0f && sign >= 0.0f) || (dp > 0.0f && sign <= 0.0f) )
+            {
                 return (float)qInf();
+            }
         }
 
         sign = dp;
@@ -302,5 +311,5 @@ float BrushFace::planeDistanceFromOrigin() const
     if ( !isValid() || !parentBrush() )
         return 0;
 
-    return QVector3D::dotProduct(normal(), parentBrush()->vertexAt(0));
+    return QVector3D::dotProduct(normal(), parentBrush()->vertexAt(m_Vertices.at(0)));
 }

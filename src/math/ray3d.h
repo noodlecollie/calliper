@@ -27,6 +27,9 @@ public:
     float distanceFrom(const QVector3D &point, bool* success = NULL) const;
     QVector3D atDistanceFromOrigin(float distance) const;
 
+    Ray3D& transform(const QMatrix4x4 &mat);
+    Ray3D transformed(const QMatrix4x4 &mat) const;
+
     bool operator ==(const Ray3D &other) const;
     bool operator !=(const Ray3D &other) const;
 
@@ -41,6 +44,11 @@ public:
 
     bool isEquivalentTo(const Ray3D &other) const;
     bool fuzzyIsEquivalentTo(const Ray3D &other) const;
+
+    inline static bool inFrontOfOrigin(float t)
+    {
+        return t > 0.0f && t < (float)qInf();
+    }
 
 private:
     QVector3D m_vecOrigin;

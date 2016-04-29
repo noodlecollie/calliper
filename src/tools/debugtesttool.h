@@ -5,6 +5,7 @@
 #include <QHash>
 #include "sceneobjectmanipulator.h"
 #include "callipermath.h"
+#include "ray3d.h"
 
 class SceneObject;
 class TranslationHandle;
@@ -28,7 +29,10 @@ protected:
     virtual void vMouseRelease(QMouseEvent *);
 
 private:
+    void buildRayVisuals(const Ray3D &ray, float intersection);
 
+    SceneObject*    m_pRayVisuals;
+    int             m_iLastRay;
 };
 
 #endif // DEBUGTESTTOOL_H

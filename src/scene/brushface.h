@@ -10,7 +10,7 @@ class TexturePlane;
 class ShaderStack;
 class GeometryData;
 
-class BrushFace : public QObject, public ISerialisable, public IRayDetectable
+class BrushFace : public QObject, public ISerialisable, private IRayDetectable
 {
     Q_OBJECT
     friend class Brush;
@@ -40,8 +40,6 @@ public:
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
 
-    virtual float computeIntersection(const Ray3D &ray, QRgb *col) const;
-
 private slots:
     void forceRebuildGeometry();
 
@@ -50,6 +48,7 @@ private:
     void notifyVertexRemoved(int index);
     void notifyVertexChanged(int index);
     void buildGeometry();
+    virtual float computeIntersection(const Ray3D &ray, QRgb *col = NULL, RayCoordinateSpace space = IRayDetectable::WorldSpace) const;
 
     QVector<int>      m_Vertices;
     bool            m_bRebuildGeometry;

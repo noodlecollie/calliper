@@ -4,7 +4,7 @@
 QDebug& operator <<(QDebug &debug, const Ray3D &ray)
 {
     debug.nospace() << "Ray3D(" << ray.origin() << ", " << ray.direction() << ")";
-    return debug;
+    return debug.space();
 }
 
 Ray3D::Ray3D()
@@ -15,7 +15,7 @@ Ray3D::Ray3D()
 Ray3D::Ray3D(const QVector3D &origin, const QVector3D &direction)
 {
     m_vecOrigin = origin;
-    m_vecDirection = direction;
+    setDirection(direction);    // Perform the usual checks.
 }
 
 QVector3D Ray3D::origin() const
@@ -171,4 +171,18 @@ QVector3D Ray3D::atDistanceFromOrigin(float distance) const
         return QVector3D();
 
     return distance * m_vecDirection;
+}
+
+Ray3D& Ray3D::transform(const QMatrix4x4 &mat)
+{
+    m_vecOrigin = (mat * QVector4D(m_vecOrigin, 1)).toVector3D();
+    setDirection((mat * QVector4D(m_vecDirection, 0)).toVector3D());
+
+    return *this;
+}
+
+Ray3D Ray3D::transformed(const QMatrix4x4 &mat) const
+{
+    return Ray3D((mat * QVector4D(m_vecOrigin, 1)).toVector3D(),
+                 (mat * QVector4D(m_vecDirection, 0)).toVector3D());
 }

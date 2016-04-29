@@ -18,6 +18,7 @@ class QOpenGLTexture;
 
 #define MAX_GEOM_TEXTURES 4
 
+// TODO: Make this class copy-on-write or something, it's probably quite slow right now.
 class GeometryData : public ISerialisable
 {
 public:
@@ -56,6 +57,7 @@ public:
 
     void appendIndex(unsigned int i);
     void appendIndexTriangle(unsigned int i0, unsigned int i1, unsigned int i2, bool doubleSided = false);
+    void appendIndex(unsigned int i0, unsigned int i1);
     void clearIndices();
     int indexCount() const;
     int indexBytes() const;

@@ -30,7 +30,7 @@ public:
     virtual QString serialiseIdentifier() const;
     virtual void draw(ShaderStack *stack);
 
-    virtual float computeIntersection(const Ray3D &ray, QRgb *col) const;
+    virtual float computeIntersection(const Ray3D &ray, QRgb *col = NULL, RayCoordinateSpace space = IRayDetectable::WorldSpace) const;
 
 protected:
     explicit Brush(const Brush &cloneFrom);

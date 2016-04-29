@@ -213,8 +213,24 @@ void Brush::draw(ShaderStack *stack)
     }
 }
 
-float Brush::computeIntersection(const Ray3D &ray, QRgb *col) const
+float Brush::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateSpace space) const
 {
+    // Transform the ray into local co-ordinates.
+    Ray3D localRay;
+    switch (space)
+    {
+    case IRayDetectable::WorldSpace:
+        localRay = ray.transformed(rootToLocal());
+        break;
+
+    case IRayDetectable::ParentSpace:
+        localRay = ray.transformed(parentToLocal());
+        break;
+
+    default:
+        break;
+    }
+
     float intersection = (float)qInf();
     QVector<BrushFace*> faceList = faces();
 
@@ -222,7 +238,7 @@ float Brush::computeIntersection(const Ray3D &ray, QRgb *col) const
     {
         // Compute face intersection.
         QRgb fCol = 0xff000000;
-        float fInt = face->computeIntersection(ray, &fCol);
+        float fInt = face->computeIntersection(ray, &fCol, IRayDetectable::LocalSpace);
 
         // If closer than current, set to current.
         if ( fInt < intersection )

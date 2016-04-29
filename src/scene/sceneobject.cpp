@@ -344,10 +344,55 @@ void SceneObject::clearGeometry()
     m_GeometryList.clear();
 }
 
-float SceneObject::computeIntersection(const Ray3D &ray, QRgb *col) const
+float SceneObject::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateSpace space) const
 {
     // By default we don't support this.
     Q_UNUSED(ray);
     Q_UNUSED(col);
+    Q_UNUSED(space);
     return (float)qInf();
+}
+
+SceneObject* SceneObject::computeRayCastRecursive(const Ray3D &ray, float &intersection, QRgb *col)
+{
+    // TODO: Do initial testing with bounding boxes - would probably be quicker.
+
+    Ray3D localRay = ray.transformed(parentToLocal());
+
+    SceneObject* nearestObject = NULL;
+    float nearestIntersection = (float)qInf();
+    QRgb nearestColour = 0xff000000;
+
+    // See if the ray hits us.
+    // The intersection must be in front of the ray's origin point!
+    QRgb tempColour = 0xff000000;
+    float tempIntersection = computeIntersection(localRay, &tempColour, IRayDetectable::LocalSpace);
+
+    if ( Ray3D::inFrontOfOrigin(tempIntersection) )
+    {
+        nearestIntersection = tempIntersection;
+        nearestObject = this;
+        nearestColour = tempColour;
+    }
+
+    // Now see if any of our children give intersections nearer than us.
+    QList<SceneObject*> childList = children();
+    SceneObject* tempObject = NULL;
+    foreach ( SceneObject* child, childList )
+    {
+        tempObject = child->computeRayCastRecursive(localRay, tempIntersection, &tempColour);
+
+        if ( tempObject && tempIntersection < nearestIntersection && tempIntersection > 0.0f )
+        {
+            nearestIntersection = tempIntersection;
+            nearestObject = child;
+            nearestColour = tempColour;
+        }
+    }
+
+    intersection = nearestIntersection;
+    if ( col )
+        *col = nearestColour;
+
+    return nearestObject;
 }

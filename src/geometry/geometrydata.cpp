@@ -533,6 +533,16 @@ void GeometryData::appendIndexTriangle(unsigned int i0, unsigned int i1, unsigne
     m_bIndicesStale = true;
 }
 
+void GeometryData::appendIndex(unsigned int i0, unsigned int i1)
+{
+    int currentSize = m_Indices.size();
+    m_Indices.resize(currentSize + 2);
+    m_Indices[currentSize] = i0;
+    m_Indices[currentSize+1] = i1;
+
+    m_bIndicesStale = true;
+}
+
 BoundingBox GeometryData::localBounds() const
 {
     QVector3D max, min;
