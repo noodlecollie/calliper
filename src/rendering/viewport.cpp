@@ -29,6 +29,14 @@
 #include "scenecamera.h"
 #include "uiscene.h"
 
+#define VIEWPORT_REPAINT_HACK
+
+#ifdef VIEWPORT_REPAINT_HACK
+#define REPAINT() repaintHack()
+#else
+#define REPAINT() repaint()
+#endif
+
 static const QColor NO_CAMERA_COLOUR = QColor::fromRgb(0xff00394d);
 
 Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f)
@@ -484,7 +492,7 @@ SceneObject* Viewport::pickObjectFromDepthBuffer(int sceneFlags, const QPoint &p
     m_iRenderTasks |= DepthBufferSelect;
     m_DepthSelectPos = pos;
     m_fScenePickFlags = sceneFlags;
-    repaint();
+    REPAINT();
 
     if ( pickColor )
         *pickColor = m_PickColour;
@@ -498,4 +506,13 @@ bool Viewport::saveCurrentFrame(const QString &filename)
     m_szSaveFrameFilename = filename;
     repaint();
     return m_bSaveFrameResult;
+}
+
+// Due to a bug in Qt 5.6, repaint() doesn't
+// invoke a synchronous repaint like it should.
+// We force one here.
+void Viewport::repaintHack()
+{
+    QPaintEvent e(QRect(0, 0, size().width(), size().height()));
+    paintEvent(&e);
 }

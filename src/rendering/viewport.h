@@ -42,6 +42,8 @@ public:
     SceneObject* pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, QRgb* pickColor = NULL);
     bool saveCurrentFrame(const QString &filename);
 
+    void repaintHack();
+
 signals:
     void preFrame(int);
 
