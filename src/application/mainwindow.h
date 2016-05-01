@@ -14,6 +14,7 @@ class MapScene;
 class SceneObject;
 class QTreeWidgetItem;
 class Viewport;
+class QActionGroup;
 
 class MainWindow : public QMainWindow
 {
@@ -48,6 +49,7 @@ private:
     void changeActiveDocument(MapDocument* oldDoc, MapDocument* newDoc);
     void saveDocument(MapDocument* document, const QString &filename, CalliperMapFile::FileFormat format);
     void loadDocument(MapDocument* document, const QString &filename);
+    void setUpAction(QAction* action, const QString &linkedTool);
 
     Ui::MainWindow *ui;
 
@@ -56,6 +58,7 @@ private:
     QString m_szLastSaveDir;
     QString m_szLastLoadDir;
     CalliperMapFile::FileFormat m_iLastSaveFormat;
+    QActionGroup* m_pToolButtonGroup;
 };
 
 #endif // MAINWINDOW_H

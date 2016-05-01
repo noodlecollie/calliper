@@ -134,7 +134,7 @@ void ScaleTool::vMouseMove(QMouseEvent *e)
     }
 
     // Get the current grid multiple.
-    unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
+    //unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
 
     // If there is no constraint on the movement axis, scale in all dimensions.
     if ( m_iAxisFlags == UIManipulator::AxisXYZ )
@@ -199,8 +199,6 @@ void ScaleTool::vMouseMove(QMouseEvent *e)
 
             m_vecScale[i] = sc;
         }
-
-        qDebug() << "Scale:" << m_vecScale;
     }
 
     m_pHandle->rescaleHandle(m_vecScale);

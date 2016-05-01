@@ -12,6 +12,7 @@
 #include <QStandardPaths>
 #include <QMessageBox>
 #include "cmfoptionsdialog.h"
+#include <QActionGroup>
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
 
@@ -26,15 +27,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // It looks like Qt Designer doesn't support setting QActionGroups in the form designer. (???)
+    // Therefore we have to do this here.
+    m_pToolButtonGroup = new QActionGroup(ui->menuBar);
+
     m_iActiveDocument = -1;
     m_pActiveViewport = NULL;
     m_szLastSaveDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     m_szLastLoadDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     m_iLastSaveFormat = CalliperMapFile::IndentedJson;
 
-	ui->actionDebug_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(DebugTestTool::staticName()));
-    ui->actionTranslate_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(TranslationTool::staticName()));
-    ui->actionScale_Tool->setProperty(PROP_STRING_LINKED_TOOL, QVariant(ScaleTool::staticName()));
+    setUpAction(ui->actionDebug_Tool, DebugTestTool::staticName());
+    setUpAction(ui->actionTranslate_Tool, TranslationTool::staticName());
+    setUpAction(ui->actionScale_Tool, ScaleTool::staticName());
+    setUpAction(ui->actionRotate_Tool, "NOT_IMPLEMENTED");
 
     setUpConnections();
 
@@ -418,4 +425,10 @@ void MainWindow::loadDocument(MapDocument *document, const QString &filename)
         QDir directory(filename);
         m_szLastLoadDir = directory.canonicalPath();
     }
+}
+
+void MainWindow::setUpAction(QAction *action, const QString &linkedTool)
+{
+    action->setProperty(PROP_STRING_LINKED_TOOL, linkedTool);
+    m_pToolButtonGroup->addAction(action);
 }
