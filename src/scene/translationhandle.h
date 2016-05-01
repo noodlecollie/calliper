@@ -12,7 +12,6 @@ public:
     virtual SceneObject* clone() const;
 
     virtual void draw(ShaderStack* stack);
-    static int axisFlagsFromPickColor(QRgb colour);
 
 protected:
     explicit TranslationHandle(const TranslationHandle &cloneFrom);

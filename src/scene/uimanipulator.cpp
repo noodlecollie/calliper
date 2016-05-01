@@ -1,6 +1,14 @@
 #include "uimanipulator.h"
 #include "shaderstack.h"
 
+const QRgb UIManipulator::PICKCOLOUR_X = 0x88ff0000;
+const QRgb UIManipulator::PICKCOLOUR_Y = 0x8800ff00;
+const QRgb UIManipulator::PICKCOLOUR_Z = 0x880000ff;
+const QRgb UIManipulator::PICKCOLOUR_XY = 0x88888800;
+const QRgb UIManipulator::PICKCOLOUR_YZ = 0x88008888;
+const QRgb UIManipulator::PICKCOLOUR_XZ = 0x88880088;
+const unsigned int UIManipulator::PICKMASK = 0x00ffffff;
+
 UIManipulator::UIManipulator(SceneObject *parent) : SceneObject(parent)
 {
 
@@ -156,4 +164,31 @@ void UIManipulator::draw(ShaderStack *stack)
     }
 
     stack->counterScalePop();
+}
+
+int UIManipulator::axisFlagsFromPickColor(QRgb colour)
+{
+    switch (colour & PICKMASK)
+    {
+        case PICKCOLOUR_X & PICKMASK:
+            return UIManipulator::AxisX;
+
+        case PICKCOLOUR_Y & PICKMASK:
+            return UIManipulator::AxisY;
+
+        case PICKCOLOUR_Z & PICKMASK:
+            return UIManipulator::AxisZ;
+
+        case PICKCOLOUR_XY & PICKMASK:
+            return UIManipulator::AxisXY;
+
+        case PICKCOLOUR_XZ & PICKMASK:
+            return UIManipulator::AxisXZ;
+
+        case PICKCOLOUR_YZ & PICKMASK:
+            return UIManipulator::AxisYZ;
+
+        default:
+            return 0;
+    }
 }

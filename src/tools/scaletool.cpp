@@ -7,6 +7,8 @@
 #include "mainwindow.h"
 #include <QMouseEvent>
 #include "mapscene.h"
+#include "scenecamera.h"
+#include "mapgrid.h"
 
 ScaleTool::ScaleTool(MapDocument *document) : BaseTool(ScaleTool::staticName(), document)
 {
@@ -95,6 +97,25 @@ void ScaleTool::vMousePress(QMouseEvent *e)
         m_pDocument->selectedSetClear();
         return;
     }
+
+    // Cache the following:
+
+    // Original handle world position at the beginning of the drag.
+    m_vecOriginalHandlePos = m_pHandle->parentToRoot(m_pHandle->position());
+
+    // Original mouse position in the viewport.
+    m_BeginDragPos = e->pos();
+
+    // Distance between camera and handle - to maintain when dragging relative to camera.
+    m_flHandleCamDist = (m_pHandle->position() - v->camera()->position()).length();
+
+    // The flags for the axes we're constrained to.
+    m_iAxisFlags = UIManipulator::axisFlagsFromPickColor(col);
+
+    // The axes themselves
+    m_MovementAxes = UIManipulator::manipulationAxes(m_iAxisFlags);
+
+    m_bInMove = true;
 }
 
 void ScaleTool::vMouseMove(QMouseEvent *e)
@@ -104,6 +125,86 @@ void ScaleTool::vMouseMove(QMouseEvent *e)
         BaseTool::vMouseMove(e);
         return;
     }
+
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v || !v->camera() )
+    {
+        BaseTool::vMouseMove(e);
+        return;
+    }
+
+    // Get the current grid multiple.
+    unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
+
+    // If there is no constraint on the movement axis, scale in all dimensions.
+    if ( m_iAxisFlags == UIManipulator::AxisXYZ )
+    {
+        // TODO
+    }
+
+    // Otherwise, scale only in the specified axis or along the specified plane.
+    else
+    {
+        // Get the axis identifier for our movement constraint flags.
+        // This indicates the plane where this axis value is 0.
+        Math::AxisIdentifier axis = UIManipulator::planeConstraintAxis(m_iAxisFlags, *v->camera());
+
+        // Get the co-ordinate of the handle in this axis.
+        float value = m_vecOriginalHandlePos[axis];
+
+        // Generate a ray from the camera origin that passes through the initial drag position,
+        // and find where it intersects the axis=value plane.
+        // Eg. where x=5.
+        bool success = false;
+        Ray3D initialRay(v->camera()->position(), v->camera()->frustumDirection(m_BeginDragPos, v->size()));
+        QVector3D initialIntersection = initialRay.parameterise(axis, value, &success);
+        if ( !success )
+            return;
+
+        // Do the same for the current drag position.
+        success = false;
+        Ray3D planeRay(v->camera()->position(), v->camera()->frustumDirection(e->pos(), v->size()));
+        QVector3D planeIntersection = planeRay.parameterise(axis, value, &success);
+        if ( !success )
+            return;
+
+        // Don't clamp, because in the future we'll need to clamp to
+        // scale multiples instead, not grid values.
+        // UIManipulator::clampToNearestMultiple(planeIntersection, gridMultiple, m_iAxisFlags);
+
+        // The scale is the ratio of the new vector to the original vector.
+        // The vectors are anchored at the handle position.
+        QVector3D originalScaleVec = initialIntersection - m_vecOriginalHandlePos;
+        QVector3D newScaleVec = planeIntersection - m_vecOriginalHandlePos;
+
+        // Ensure the scale only occurs in the axes we want.
+        QVector3D constrainedOriginalVec;
+        QVector3D constrainedNewVec;
+        foreach ( QVector3D axis, m_MovementAxes )
+        {
+            constrainedOriginalVec += QVector3D::dotProduct(originalScaleVec, axis) * axis;
+            constrainedNewVec += QVector3D::dotProduct(newScaleVec, axis) * axis;
+        }
+
+        m_vecScale = QVector3D(1,1,1);
+
+        for ( int i = 0; i < 3; i++ )
+        {
+            if ( qFuzzyIsNull(constrainedOriginalVec[i]) )
+                continue;
+
+            float sc = constrainedNewVec[i] / constrainedOriginalVec[i];
+            if ( sc < 0.0f )
+                sc = 0.0f;
+
+            m_vecScale[i] = sc;
+        }
+
+        qDebug() << "Scale:" << m_vecScale;
+    }
+
+    m_pHandle->rescaleHandle(m_vecScale);
+    updateTableManipulators();
 }
 
 void ScaleTool::vMouseRelease(QMouseEvent *e)
@@ -119,6 +220,8 @@ void ScaleTool::vMouseRelease(QMouseEvent *e)
 
 void ScaleTool::endMove()
 {
+    m_pHandle->rescaleHandle(QVector3D(1,1,1));
+    commitTableManipulators();
     m_bInMove = false;
 }
 
@@ -182,7 +285,17 @@ void ScaleTool::commitTableManipulators()
         if ( isAncestorInManipulatorTable(obj) )
             continue;
 
-        qDebug() << "Applying" << obj << "manipulator scale:" << m.scale();
+        // We want to visualise scales of 0 when editing, but don't want to apply them.
+        // Therefore make sure there is no scale of 0 here.
+        QVector3D scale = m.scale();
+        for ( int i = 0; i < 3; i++ )
+        {
+            if ( qFuzzyIsNull(scale[i]) )
+                scale[i] = 1;
+        }
+        m.setScale(scale);
+
+        qDebug() << "Applying" << obj << "manipulator scale:" << scale;
         m.apply();
     }
 }

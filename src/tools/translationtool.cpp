@@ -99,7 +99,7 @@ void TranslationTool::vMousePress(QMouseEvent *e)
     m_flHandleCamDist = (m_pHandle->position() - v->camera()->position()).length();
 
     // The flags for the axes we're constrained to.
-    m_iAxisFlags = TranslationHandle::axisFlagsFromPickColor(col);
+    m_iAxisFlags = UIManipulator::axisFlagsFromPickColor(col);
 
     // The axes themselves
     m_MovementAxes = UIManipulator::manipulationAxes(m_iAxisFlags);

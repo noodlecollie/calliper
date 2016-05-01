@@ -40,10 +40,15 @@ private:
     void clearTableManipulators();
     bool isAncestorInManipulatorTable(const SceneObject* obj) const;
 
-    ScaleHandle*    m_pHandle;
-    bool            m_bInMove;
-    ManipTable      m_ManipTable;
-    QVector3D       m_vecScale;
+    ScaleHandle*        m_pHandle;
+    bool                m_bInMove;
+    ManipTable          m_ManipTable;
+    QVector3D           m_vecScale;
+    QVector3D           m_vecOriginalHandlePos;
+    QPoint              m_BeginDragPos;
+    float               m_flHandleCamDist;
+    int                 m_iAxisFlags;
+    QList<QVector3D>    m_MovementAxes;
 };
 
 #endif // SCALETOOL_H

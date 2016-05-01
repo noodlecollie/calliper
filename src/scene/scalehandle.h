@@ -12,6 +12,8 @@ public:
     virtual SceneObject* clone() const;
     void draw(ShaderStack *stack);
 
+    void rescaleHandle(const QVector3D scale);
+
 signals:
 
 public slots:
@@ -20,7 +22,7 @@ protected:
     explicit ScaleHandle(const ScaleHandle &cloneFrom);
 
 private:
-    void build();
+    void build(const QVector3D &scale = QVector3D(1,1,1));
 };
 
 #endif // SCALEHANDLE_H

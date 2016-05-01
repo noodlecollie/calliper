@@ -4,33 +4,28 @@
 #include "shaders.h"
 #include <QtMath>
 
-#define PICKCOLOUR_X    0x88ff0000
-#define PICKCOLOUR_Y    0x8800ff00
-#define PICKCOLOUR_Z    0x880000ff
-#define PICKCOLOUR_XY   0x88888800
-#define PICKCOLOUR_YZ   0x88008888
-#define PICKCOLOUR_XZ   0x88880088
-#define PICKMASK        0x00ffffff
+#define SCALE 0.5f
+#define HEAD_RADIUS (SCALE * (0.15f/2.0f))
 
-void addScaleHead(float scale, float radius, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
+void addScaleHead(float radius, float translation, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
-    GeometryData* geom = GeometryFactory::cubeSolidColor(scale*radius, col, true);
-    geom->transform(Math::matrixTranslate(QVector3D(scale * (1-radius), 0, 0)));
+    GeometryData* geom = GeometryFactory::cubeSolidColor(radius, col, true);
+    geom->transform(Math::matrixTranslate(QVector3D(translation, 0, 0)));
     geom->transform(transform);
     data.append(*geom);
     delete geom;
 }
 
-void addScalePanel(float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
+void addScalePanel(float scale1, float scale2, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
     GeometryData geometry;
     geometry.setShaderOverride(PerVertexColorShader::staticName());
 
     // Panel is in the XY plane.
     geometry.appendVertex(QVector3D(0,0,0), QVector3D(), col);
-    geometry.appendVertex(QVector3D(scale,0,0), QVector3D(), col);
-    geometry.appendVertex(QVector3D(scale,scale,0), QVector3D(), col);
-    geometry.appendVertex(QVector3D(0,scale,0), QVector3D(), col);
+    geometry.appendVertex(QVector3D(scale1,0,0), QVector3D(), col);
+    geometry.appendVertex(QVector3D(scale1,scale2,0), QVector3D(), col);
+    geometry.appendVertex(QVector3D(0,scale2,0), QVector3D(), col);
 
     // Create two faces facing opposite directions.
     geometry.appendIndexTriangle(0,1,2);
@@ -85,10 +80,18 @@ ScaleHandle::ScaleHandle(const ScaleHandle &cloneFrom) : UIManipulator(cloneFrom
     build();
 }
 
-void ScaleHandle::build()
+void ScaleHandle::build(const QVector3D &scale)
 {
-    static const float SCALE = 0.5f;
-    static const float HEAD_RADIUS = 0.15f/2.0f;
+    clearGeometry();
+
+    // Calculate maximum extents of the handle.
+    float lengths[3];
+    for ( int i = 0; i < 3; i++ )
+    {
+        lengths[i] = scale[i] * SCALE;
+        if ( lengths[i] < 3 * HEAD_RADIUS )
+            lengths[i] = 3 * HEAD_RADIUS;
+    }
 
     GeometryData* heads = new GeometryData();
     GeometryData* lines = new GeometryData();
@@ -101,20 +104,25 @@ void ScaleHandle::build()
     lines->setShaderOverride(PerVertexColorShader::staticName());
     lines->setDrawMode(GL_LINES);
 
-    addScaleHead(SCALE, HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *heads);
-    addScaleHead(SCALE, HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *heads);
-    addScaleHead(SCALE, HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *heads);
+    addScaleHead(HEAD_RADIUS, lengths[0] - HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *heads);
+    addScaleHead(HEAD_RADIUS, lengths[1] - HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *heads);
+    addScaleHead(HEAD_RADIUS, lengths[2] - HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *heads);
 
-    addScalePanel(SCALE/4.0f, QColor::fromRgba(PICKCOLOUR_XY), QMatrix4x4(), *heads);
-    addScalePanel(SCALE/4.0f, QColor::fromRgba(PICKCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *heads);
-    addScalePanel(SCALE/4.0f, QColor::fromRgba(PICKCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *heads);
+//    addScalePanel(lengths[0]/4.0f, lengths[1]/4.0f, QColor::fromRgba(PICKCOLOUR_XY), QMatrix4x4(), *heads);
+//    addScalePanel(lengths[2]/4.0f, lengths[1]/4.0f, QColor::fromRgba(PICKCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *heads);
+//    addScalePanel(lengths[0]/4.0f, lengths[2]/4.0f, QColor::fromRgba(PICKCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *heads);
 
-    addScaleShaft(SCALE - (2*SCALE*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
-    addScaleShaft(SCALE - (2*SCALE*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
-    addScaleShaft(SCALE - (2*SCALE*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
+    addScaleShaft(lengths[0] - (2*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
+    addScaleShaft(lengths[1] - (2*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
+    addScaleShaft(lengths[2] - (2*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
 
     appendGeometry(heads);
     appendGeometry(lines);
+}
+
+void ScaleHandle::rescaleHandle(const QVector3D scale)
+{
+    build(scale);
 }
 
 void ScaleHandle::draw(ShaderStack *stack)

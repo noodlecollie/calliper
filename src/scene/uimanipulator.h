@@ -38,8 +38,18 @@ public:
     virtual bool editable() const;
     virtual void draw(ShaderStack *stack);
 
+    static int axisFlagsFromPickColor(QRgb colour);
+
 protected:
     explicit UIManipulator(const UIManipulator &cloneFrom);
+
+    const static QRgb PICKCOLOUR_X;
+    const static QRgb PICKCOLOUR_Y;
+    const static QRgb PICKCOLOUR_Z;
+    const static QRgb PICKCOLOUR_XY;
+    const static QRgb PICKCOLOUR_YZ;
+    const static QRgb PICKCOLOUR_XZ;
+    const static unsigned int PICKMASK;
 };
 
 #endif // UIMANIPULATOR_H

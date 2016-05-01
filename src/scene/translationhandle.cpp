@@ -152,33 +152,6 @@ void TranslationHandle::draw(ShaderStack *stack)
     UIManipulator::draw(stack);
 }
 
-int TranslationHandle::axisFlagsFromPickColor(QRgb colour)
-{
-    switch (colour & PICKMASK)
-    {
-        case PICKCOLOUR_X & PICKMASK:
-            return UIManipulator::AxisX;
-
-        case PICKCOLOUR_Y & PICKMASK:
-            return UIManipulator::AxisY;
-
-        case PICKCOLOUR_Z & PICKMASK:
-            return UIManipulator::AxisZ;
-
-        case PICKCOLOUR_XY & PICKMASK:
-            return UIManipulator::AxisXY;
-
-        case PICKCOLOUR_XZ & PICKMASK:
-            return UIManipulator::AxisXZ;
-
-        case PICKCOLOUR_YZ & PICKMASK:
-            return UIManipulator::AxisYZ;
-
-        default:
-            return 0;
-    }
-}
-
 SceneObject* TranslationHandle::clone() const
 {
     return new TranslationHandle(*this);
