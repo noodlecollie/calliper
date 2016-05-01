@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setUpAction(ui->actionTranslate_Tool, TranslationTool::staticName());
     setUpAction(ui->actionScale_Tool, ScaleTool::staticName());
     setUpAction(ui->actionRotate_Tool, "NOT_IMPLEMENTED");
+    setUpAction(ui->actionCreate_Geometry, "NOT_IMPLEMENTED");
 
     setUpConnections();
 
@@ -127,7 +128,7 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
     if ( newDoc )
     {
         if ( newDoc->activeToolIndex() < 0 )
-            newDoc->setActiveToolIndex(0);
+            newDoc->setActiveToolIndex(getActiveToolFromButtons(newDoc));
 
         ui->viewport->setBackgroundColor(newDoc->backgroundColor());
         ui->viewport->setDocument(newDoc);
@@ -431,4 +432,14 @@ void MainWindow::setUpAction(QAction *action, const QString &linkedTool)
 {
     action->setProperty(PROP_STRING_LINKED_TOOL, linkedTool);
     m_pToolButtonGroup->addAction(action);
+}
+
+int MainWindow::getActiveToolFromButtons(MapDocument* doc)
+{
+    QAction* toolAction = m_pToolButtonGroup->checkedAction();
+    if ( !toolAction )
+        return -1;
+
+    QString toolName = toolAction->property(PROP_STRING_LINKED_TOOL).toString();
+    return doc->toolIndex(toolName);
 }

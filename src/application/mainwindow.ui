@@ -80,9 +80,16 @@
     </widget>
     <addaction name="menuDocks"/>
    </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="title">
+     <string>Debug</string>
+    </property>
+    <addaction name="actionDebug_Tool"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
    <addaction name="menuDocuments"/>
+   <addaction name="menuDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockSceneTree">
@@ -152,7 +159,7 @@
    <addaction name="actionTranslate_Tool"/>
    <addaction name="actionRotate_Tool"/>
    <addaction name="actionScale_Tool"/>
-   <addaction name="actionDebug_Tool"/>
+   <addaction name="actionCreate_Geometry"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -286,6 +293,24 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionCreate_Geometry">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resource/resource.qrc">
+     <normaloff>:/icons/tool_create_brush.png</normaloff>:/icons/tool_create_brush.png</iconset>
+   </property>
+   <property name="text">
+    <string>Create Geometry</string>
+   </property>
+   <property name="toolTip">
+    <string>Create Geometry</string>
+   </property>
+   <property name="shortcut">
+    <string>N</string>
    </property>
   </action>
  </widget>

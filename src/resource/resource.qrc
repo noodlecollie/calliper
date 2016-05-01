@@ -32,5 +32,6 @@
         <file>icons/icon_rotate_new.png</file>
         <file>icons/icon-scale-new.png</file>
         <file>icons/icon-translate-new.png</file>
+        <file>icons/tool_create_brush.png</file>
     </qresource>
 </RCC>

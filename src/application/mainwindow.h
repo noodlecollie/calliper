@@ -50,6 +50,7 @@ private:
     void saveDocument(MapDocument* document, const QString &filename, CalliperMapFile::FileFormat format);
     void loadDocument(MapDocument* document, const QString &filename);
     void setUpAction(QAction* action, const QString &linkedTool);
+    int getActiveToolFromButtons(MapDocument* doc);
 
     Ui::MainWindow *ui;
 

@@ -115,9 +115,10 @@ int MapDocument::toolCount() const
 
 void MapDocument::createTools()
 {
-    m_Tools.append(new DebugTestTool(this));
     m_Tools.append(new TranslationTool(this));
     m_Tools.append(new ScaleTool(this));
+
+    m_Tools.append(new DebugTestTool(this));
 }
 
 int MapDocument::activeToolIndex() const
