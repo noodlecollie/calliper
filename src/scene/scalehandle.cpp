@@ -15,7 +15,7 @@
 void addScaleHead(float scale, float radius, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
     GeometryData* geom = GeometryFactory::cubeSolidColor(scale*radius, col, true);
-    geom->transform(Math::matrixTranslate(QVector3D(scale - radius, 0, 0)));
+    geom->transform(Math::matrixTranslate(QVector3D(scale * (1-radius), 0, 0)));
     geom->transform(transform);
     data.append(*geom);
     delete geom;
@@ -109,9 +109,9 @@ void ScaleHandle::build()
     addScalePanel(SCALE/4.0f, QColor::fromRgba(PICKCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *heads);
     addScalePanel(SCALE/4.0f, QColor::fromRgba(PICKCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *heads);
 
-    addScaleShaft(SCALE - HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
-    addScaleShaft(SCALE - HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
-    addScaleShaft(SCALE - HEAD_RADIUS, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
+    addScaleShaft(SCALE - (2*SCALE*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
+    addScaleShaft(SCALE - (2*SCALE*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
+    addScaleShaft(SCALE - (2*SCALE*HEAD_RADIUS), QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
 
     appendGeometry(heads);
     appendGeometry(lines);
