@@ -14,7 +14,8 @@ public:
 
 protected:
     virtual UIManipulator* constructManipulator();
-    virtual void updateManipulatorFromMouseMove(QMouseEvent *e, Viewport* viewport);
+    virtual void updateManipulatorFromMouseMove(QMouseEvent *e);
+    virtual void updateManipulatorForMouseRelease(QMouseEvent *);
     virtual void updateManipulator();
     virtual void updateSceneObjectManipulator(SceneObject *, SceneObjectManipulator &manip);
     virtual void commitSceneObjectManipulator(SceneObject *, SceneObjectManipulator &manip);

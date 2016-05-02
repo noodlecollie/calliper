@@ -35,8 +35,10 @@ UIManipulator* TranslationTool::constructManipulator()
     return handle;
 }
 
-void TranslationTool::updateManipulatorFromMouseMove(QMouseEvent *e, Viewport* viewport)
+void TranslationTool::updateManipulatorFromMouseMove(QMouseEvent *e)
 {
+    Viewport* viewport = application()->mainWindow()->activeViewport();
+
     // Get the current grid multiple.
     unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
 
@@ -105,6 +107,10 @@ void TranslationTool::updateManipulatorFromMouseMove(QMouseEvent *e, Viewport* v
     }
 
     updateTableManipulators();
+}
+
+void TranslationTool::updateManipulatorForMouseRelease(QMouseEvent *)
+{
 }
 
 void TranslationTool::updateManipulator()

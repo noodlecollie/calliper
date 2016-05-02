@@ -39,7 +39,8 @@ protected:
     bool isAncestorInManipulatorTable(const SceneObject* obj) const;
 
     virtual UIManipulator* constructManipulator() = 0;
-    virtual void updateManipulatorFromMouseMove(QMouseEvent* e, Viewport* viewport) = 0;
+    virtual void updateManipulatorFromMouseMove(QMouseEvent* e) = 0;
+    virtual void updateManipulatorForMouseRelease(QMouseEvent* e) = 0;
     virtual void updateManipulator() = 0;
     virtual void updateSceneObjectManipulator(SceneObject* obj, SceneObjectManipulator &manip) = 0;
     virtual void commitSceneObjectManipulator(SceneObject* obj, SceneObjectManipulator &manip) = 0;

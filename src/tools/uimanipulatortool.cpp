@@ -115,7 +115,7 @@ void UIManipulatorTool::vMouseMove(QMouseEvent *e)
         return;
     }
 
-    updateManipulatorFromMouseMove(e, v);
+    updateManipulatorFromMouseMove(e);
 }
 
 void UIManipulatorTool::vMouseRelease(QMouseEvent *e)
@@ -125,6 +125,7 @@ void UIManipulatorTool::vMouseRelease(QMouseEvent *e)
         BaseTool::vMouseRelease(e);
     }
 
+    updateManipulatorForMouseRelease(e);
     endMove();
 }
 
