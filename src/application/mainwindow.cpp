@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setUpAction(ui->actionTranslate_Tool, TranslationTool::staticName());
     setUpAction(ui->actionScale_Tool, ScaleTool::staticName());
     setUpAction(ui->actionRotate_Tool, "NOT_IMPLEMENTED");
-    setUpAction(ui->actionCreate_Geometry, "NOT_IMPLEMENTED");
+    setUpAction(ui->actionCreate_Geometry, CreateGeometryTool::staticName());
 
     setUpConnections();
 

@@ -64,7 +64,7 @@ HEADERS += \
     serialisation/iserialisable.h \
     serialisation/jsonutil.h \
     serialisation/objfileparser.h \
-    shaders/basescene.h \
+    scene/basescene.h \
     shaders/basiclittextureshader.h \
     shaders/minimumshader.h \
     shaders/minimumtexturedshader.h \
@@ -84,7 +84,8 @@ HEADERS += \
     scene/blockcreationhandle.h \
     math/iraydetectable.h \
     tools/uimanipulatortool.h \
-    scene/spatialsnapshot.h
+    scene/spatialsnapshot.h \
+    tools/creategeometrytool.h
 
 SOURCES += \
     application/application.cpp \
@@ -126,7 +127,7 @@ SOURCES += \
     serialisation/cmfoptionsdialog.cpp \
     serialisation/jsonutil.cpp \
     serialisation/objfileparser.cpp \
-    shaders/basescene.cpp \
+    scene/basescene.cpp \
     shaders/basiclittextureshader.cpp \
     shaders/minimumshader.cpp \
     shaders/minimumtexturedshader.cpp \
@@ -144,7 +145,8 @@ SOURCES += \
     scene/scalehandle.cpp \
     scene/blockcreationhandle.cpp \
     tools/uimanipulatortool.cpp \
-    scene/spatialsnapshot.cpp
+    scene/spatialsnapshot.cpp \
+    tools/creategeometrytool.cpp
 
 RESOURCES += \
     resource/resource.qrc \

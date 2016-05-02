@@ -4,6 +4,7 @@
 #include "debugtesttool.h"
 #include "translationtool.h"
 #include "scaletool.h"
+#include "creategeometrytool.h"
 
 #endif // TOOLS_H
 

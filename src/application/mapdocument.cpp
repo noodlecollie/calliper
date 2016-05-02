@@ -117,6 +117,7 @@ void MapDocument::createTools()
 {
     m_Tools.append(new TranslationTool(this));
     m_Tools.append(new ScaleTool(this));
+    m_Tools.append(new CreateGeometryTool(this));
 
     m_Tools.append(new DebugTestTool(this));
 }
