@@ -3,17 +3,16 @@
 #include "scenecamera.h"
 #include "mapscene.h"
 #include "uiscene.h"
+#include "mapdocument.h"
 
-BaseScene::BaseScene(MapDocument *doc)
+BaseScene::BaseScene(MapDocument *doc) : QObject(doc)
 {
-    m_pDocument = doc;
     m_pRootObject = NULL;
     setRoot(new SceneObject(NULL));
 }
 
 BaseScene::~BaseScene()
 {
-    delete m_pRootObject;
 }
 
 SceneObject* BaseScene::root() const
@@ -26,6 +25,7 @@ void BaseScene::setRoot(SceneObject *root)
     Q_ASSERT(root && !root->parent());
     delete m_pRootObject;
     m_pRootObject = root;
+    m_pRootObject->setParent(this);
     m_pRootObject->m_pScene = this;
     m_pRootObject->setObjectName("root");
 }
@@ -67,5 +67,5 @@ const UIScene* BaseScene::uiScene() const
 
 MapDocument* BaseScene::document() const
 {
-    return m_pDocument;
+    return qobject_cast<MapDocument*>(parent());
 }

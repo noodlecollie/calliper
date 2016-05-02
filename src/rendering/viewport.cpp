@@ -52,6 +52,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_iRenderTasks = 0;
     m_pPickedObject = NULL;
     m_fScenePickFlags = 0;
+    m_pHighlightOutline = NULL;
 
     m_pEmptyText = NULL;
     m_pNoCameraText = NULL;
@@ -75,6 +76,8 @@ Viewport::~Viewport()
 {
     makeCurrent();
     delete m_pEmptyText;
+    delete m_pHighlightOutline;
+    delete m_pNoCameraText;
 }
 
 void Viewport::updateBackgroundColor()

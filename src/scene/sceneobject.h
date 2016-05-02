@@ -31,6 +31,7 @@ public:
     explicit SceneObject(SceneObject *parent = 0);
     SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
     virtual ~SceneObject();
+    void destroy();
 
     // Object name is not cloned.
     virtual SceneObject* clone() const;
@@ -38,6 +39,7 @@ public:
     SceneObject* parentObject() const;
     QList<SceneObject*> children() const;
     BaseScene* scene() const;
+    bool isRoot() const;
 
     int geometryCount() const;
     GeometryDataPointer geometryAt(int index) const;

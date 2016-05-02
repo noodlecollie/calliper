@@ -396,3 +396,8 @@ SceneObject* SceneObject::computeRayCastRecursive(const Ray3D &ray, float &inter
 
     return nearestObject;
 }
+
+bool SceneObject::isRoot() const
+{
+    return parentObject() == NULL;
+}

@@ -1,7 +1,7 @@
 #ifndef BASESCENE_H
 #define BASESCENE_H
 
-#include <QList>
+#include <QObject>
 
 class SceneObject;
 class SceneCamera;
@@ -9,8 +9,10 @@ class MapScene;
 class UIScene;
 class MapDocument;
 
-class BaseScene
+class BaseScene : public QObject
 {
+    Q_OBJECT
+    friend class SceneObject;
 public:
     enum SceneType
     {
@@ -19,7 +21,7 @@ public:
         TypeUIScene
     };
 
-    BaseScene(MapDocument* doc);
+    explicit BaseScene(MapDocument* doc);
     virtual ~BaseScene();
     virtual SceneType type() const;
 
@@ -39,7 +41,6 @@ protected:
     void setRoot(SceneObject* root);
 
     SceneObject*    m_pRootObject;
-    MapDocument*    m_pDocument;
 };
 
 #endif // BASESCENE_H

@@ -34,7 +34,6 @@ MapDocument::MapDocument(QObject *parent) : QObject(parent)
 MapDocument::~MapDocument()
 {
     qDeleteAll(m_Tools);
-    delete m_pScene;
 }
 
 MapScene* MapDocument::scene() const
