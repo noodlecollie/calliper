@@ -6,6 +6,7 @@
 #include "eulerangle.h"
 #include <QMatrix4x4>
 #include "iserialisable.h"
+#include "spatialsnapshot.h"
 
 class HierarchicalObject : public QObject, public ISerialisable
 {
@@ -52,6 +53,11 @@ public:
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
+
+    inline SpatialSnapshot spatialSnapshot() const
+    {
+        return SpatialSnapshot(position(), angles(), scale());
+    }
 
 signals:
 

@@ -82,7 +82,9 @@ HEADERS += \
     tools/scaletool.h \
     scene/scalehandle.h \
     scene/blockcreationhandle.h \
-    math/iraydetectable.h
+    math/iraydetectable.h \
+    tools/uimanipulatortool.h \
+    scene/spatialsnapshot.h
 
 SOURCES += \
     application/application.cpp \
@@ -140,7 +142,8 @@ SOURCES += \
     application/main.cpp \
     tools/scaletool.cpp \
     scene/scalehandle.cpp \
-    scene/blockcreationhandle.cpp
+    scene/blockcreationhandle.cpp \
+    tools/uimanipulatortool.cpp
 
 RESOURCES += \
     resource/resource.qrc \
