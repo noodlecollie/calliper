@@ -6,6 +6,7 @@
 #include "spatialsnapshot.h"
 
 class UIManipulator;
+class Viewport;
 
 class UIManipulatorTool : public BaseTool
 {
@@ -38,7 +39,7 @@ protected:
     bool isAncestorInManipulatorTable(const SceneObject* obj) const;
 
     virtual UIManipulator* constructManipulator() = 0;
-    virtual void updateManipulatorFromMouseMove(QMouseEvent* e) = 0;
+    virtual void updateManipulatorFromMouseMove(QMouseEvent* e, Viewport* viewport) = 0;
     virtual void updateManipulator() = 0;
     virtual void updateSceneObjectManipulator(SceneObject* obj, SceneObjectManipulator &manip) = 0;
     virtual void commitSceneObjectManipulator(SceneObject* obj, SceneObjectManipulator &manip) = 0;
@@ -47,6 +48,7 @@ protected:
     bool                m_bInMove;
     ManipTable          m_ManipTable;
     SpatialSnapshot     m_ManipulatorOriginalOrientation;
+    SpatialSnapshot     m_Transformation;
     QPoint              m_BeginDragPos;
     float               m_flHandleCamDist;
     int                 m_iAxisFlags;

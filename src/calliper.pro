@@ -143,7 +143,8 @@ SOURCES += \
     tools/scaletool.cpp \
     scene/scalehandle.cpp \
     scene/blockcreationhandle.cpp \
-    tools/uimanipulatortool.cpp
+    tools/uimanipulatortool.cpp \
+    scene/spatialsnapshot.cpp
 
 RESOURCES += \
     resource/resource.qrc \

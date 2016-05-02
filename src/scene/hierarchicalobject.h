@@ -59,6 +59,11 @@ public:
         return SpatialSnapshot(position(), angles(), scale());
     }
 
+    inline SpatialSnapshot worldSpatialSnapshot() const
+    {
+        return SpatialSnapshot().transformed(rootToLocal().inverted());
+    }
+
 signals:
 
 public slots:

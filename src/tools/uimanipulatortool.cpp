@@ -10,7 +10,10 @@
 UIManipulatorTool::UIManipulatorTool(const QString &name, MapDocument *document) :
     BaseTool(name, document)
 {
-
+    m_pManipulator = NULL;
+    m_bInMove = false;
+    m_flHandleCamDist = 0.0f;
+    m_iAxisFlags = 0;
 }
 
 UIManipulatorTool::~UIManipulatorTool()
@@ -79,13 +82,14 @@ void UIManipulatorTool::vMousePress(QMouseEvent *e)
 
     // Cache the following:
 
-    m_ManipulatorOriginalOrientation = m_pManipulator->spatialSnapshot().transformed(m_pManipulator->rootToLocal().inverted());
+    m_ManipulatorOriginalOrientation = m_pManipulator->worldSpatialSnapshot();
+    m_Transformation = SpatialSnapshot();
 
     // Original mouse position in the viewport.
     m_BeginDragPos = e->pos();
 
     // Distance between camera and handle - to maintain when dragging relative to camera.
-    m_flHandleCamDist = (m_ManipulatorOriginalOrientation.position - v->camera()->position()).length();
+    m_flHandleCamDist = (m_ManipulatorOriginalOrientation.translation - v->camera()->position()).length();
 
     // The flags for the axes we're constrained to.
     m_iAxisFlags = UIManipulator::axisFlagsFromPickColor(col);
@@ -111,7 +115,7 @@ void UIManipulatorTool::vMouseMove(QMouseEvent *e)
         return;
     }
 
-    updateManipulatorFromMouseMove(e);
+    updateManipulatorFromMouseMove(e, v);
 }
 
 void UIManipulatorTool::vMouseRelease(QMouseEvent *e)
