@@ -42,6 +42,10 @@ public:
     {
         T* obj = new T(std::move(args)...);
         Q_ASSERT(qobject_cast<SceneObject*>(obj));
+
+        if ( !obj->parentObject() )
+            setRoot(obj);
+
         obj->m_pScene = this;
         emit sceneObjectCreated(obj);
         return obj;

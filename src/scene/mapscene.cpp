@@ -93,9 +93,9 @@ bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &seri
         return false;
 
     // If the parent is NULL, this object is the root.
+    // Reset our grid pointer.
     if ( !parent )
     {
-        setRoot(obj);
         m_pGrid = NULL;
     }
 
