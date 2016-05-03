@@ -6,9 +6,8 @@
 class ScaleHandle : public UIManipulator
 {
     Q_OBJECT
+    friend class BaseScene;
 public:
-    explicit ScaleHandle(SceneObject *parent = 0);
-    virtual ~ScaleHandle();
     virtual SceneObject* clone() const;
     void draw(ShaderStack *stack);
 
@@ -19,7 +18,9 @@ signals:
 public slots:
 
 protected:
-    explicit ScaleHandle(const ScaleHandle &cloneFrom);
+    explicit ScaleHandle(BaseScene* scene, SceneObject *parent);
+    ScaleHandle(const ScaleHandle &cloneFrom);
+    virtual ~ScaleHandle();
 
 private:
     void build(const QVector3D &scale = QVector3D(1,1,1));

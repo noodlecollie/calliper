@@ -7,9 +7,8 @@
 class BlockCreationHandle : public UIManipulator
 {
     Q_OBJECT
+    friend class BaseScene;
 public:
-    explicit BlockCreationHandle(SceneObject *parent = 0);
-    virtual ~BlockCreationHandle();
     virtual SceneObject* clone() const;
     virtual void draw(ShaderStack *stack);
 
@@ -18,7 +17,9 @@ public:
     void setBounds(const QVector3D &min, const QVector3D &max);
 
 protected:
+    explicit BlockCreationHandle(BaseScene* scene, SceneObject *parent);
     BlockCreationHandle(const BlockCreationHandle &cloneFrom);
+    virtual ~BlockCreationHandle();
 
 signals:
 

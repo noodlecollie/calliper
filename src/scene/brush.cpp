@@ -3,8 +3,9 @@
 #include "jsonutil.h"
 #include "shaderstack.h"
 #include <QtGlobal>
+#include "basescene.h"
 
-Brush::Brush(SceneObject *parent) : SceneObject(parent)
+Brush::Brush(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
     initDefaults();
 }
@@ -114,7 +115,7 @@ Brush::Brush(const Brush &cloneFrom) : SceneObject(cloneFrom), m_Vertices(cloneF
 
 SceneObject* Brush::clone() const
 {
-    return new Brush(*this);
+    return m_pScene->cloneSceneObject<Brush>(this);
 }
 
 QString Brush::serialiseIdentifier() const
@@ -158,8 +159,8 @@ bool Brush::serialiseToJson(QJsonObject &obj) const
     return true;
 }
 
-Brush::Brush(const QJsonObject &serialisedData, SceneObject *parent) :
-    SceneObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
+Brush::Brush(BaseScene* scene, const QJsonObject &serialisedData, SceneObject *parent) :
+    SceneObject(scene, serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
 {
     initDefaults();
 

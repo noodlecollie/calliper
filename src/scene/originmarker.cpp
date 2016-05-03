@@ -1,7 +1,8 @@
 #include "originmarker.h"
 #include "pervertexcolorshader.h"
+#include "basescene.h"
 
-OriginMarker::OriginMarker(SceneObject *parent) : SceneObject(parent)
+OriginMarker::OriginMarker(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
     constructGeometry();
 }
@@ -45,5 +46,5 @@ void OriginMarker::constructGeometry()
 
 SceneObject* OriginMarker::clone() const
 {
-    return new OriginMarker(*this);
+    return m_pScene->cloneSceneObject<OriginMarker>(this);
 }

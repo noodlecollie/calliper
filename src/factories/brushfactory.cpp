@@ -8,12 +8,14 @@ namespace BrushFactory
 {
     Brush* fromBoundingBox(const BoundingBox &bbox, SceneObject *parent, const QString &texture)
     {
+        Q_ASSERT(parent);
+
         // Get the vertices from the bounding box.
         // X alternates most frequently, then Y and then Z.
         QVector<QVector3D> verts = bbox.corners().toVector();
 
         // Add these to the brush.
-        Brush* b = new Brush(parent);
+        Brush* b = parent->scene()->createSceneObject<Brush>(parent);
         b->appendVertices(verts);
 
         // Create the faces.

@@ -1,5 +1,6 @@
 #include "uimanipulator.h"
 #include "shaderstack.h"
+#include "basescene.h"
 
 const QRgb UIManipulator::PICKCOLOUR_X = 0x88ff0000;
 const QRgb UIManipulator::PICKCOLOUR_Y = 0x8800ff00;
@@ -9,7 +10,7 @@ const QRgb UIManipulator::PICKCOLOUR_YZ = 0x88008888;
 const QRgb UIManipulator::PICKCOLOUR_XZ = 0x88880088;
 const unsigned int UIManipulator::PICKMASK = 0x00ffffff;
 
-UIManipulator::UIManipulator(SceneObject *parent) : SceneObject(parent)
+UIManipulator::UIManipulator(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
 
 }
@@ -47,7 +48,7 @@ QList<QVector3D> UIManipulator::manipulationAxes(int axisFlags)
 
 SceneObject* UIManipulator::clone() const
 {
-    return new UIManipulator(*this);
+    return m_pScene->cloneSceneObject<UIManipulator>(this);
 }
 
 void UIManipulator::clampToNearestMultiple(QVector3D &vec, qint64 multiple, int axisFlags)

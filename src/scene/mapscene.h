@@ -1,5 +1,5 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef MAPSCENE_H
+#define MAPSCENE_H
 
 #include "basescene.h"
 #include "iserialisable.h"
@@ -21,6 +21,9 @@ public:
     virtual QString serialiseIdentifier() const;
     bool unserialiseFromJson(const QJsonObject &serialisedData);
 
+protected:
+    virtual void sceneClearedEvent();
+
 private:
     void insertStandardItems();
     bool serialiseRecursive(SceneObject* obj, QJsonObject &jsonParent) const;
@@ -29,4 +32,4 @@ private:
     MapGrid*       m_pGrid;
 };
 
-#endif // SCENE_H
+#endif // MAPSCENE_H

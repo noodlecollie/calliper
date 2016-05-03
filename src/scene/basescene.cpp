@@ -7,30 +7,34 @@
 
 BaseScene::BaseScene(MapDocument *doc) : QObject(doc)
 {
-    m_pRootObject = NULL;
-    setRoot(new SceneObject(NULL));
+    createNewRoot();
 }
 
 BaseScene::~BaseScene()
 {
 }
 
+void BaseScene::clear()
+{
+    destroySceneObject(m_pRootObject);
+    sceneClearedEvent();
+    createNewRoot();
+}
+
+void BaseScene::createNewRoot()
+{
+    // Ensure this is set to NULL before we attempt to create a root,
+    // because the root object itself does debug verification that depends on this.
+    m_pRootObject = NULL;
+
+    m_pRootObject = new SceneObject(this, NULL);
+    m_pRootObject->setParent(this);
+    m_pRootObject->setObjectName("root");
+}
+
 SceneObject* BaseScene::root() const
 {
     return m_pRootObject;
-}
-
-void BaseScene::setRoot(SceneObject *root)
-{
-    Q_ASSERT(root && !root->parent());
-
-    if ( m_pRootObject )
-        destroySceneObject(m_pRootObject);
-
-    m_pRootObject = root;
-    m_pRootObject->setParent(this);
-    m_pRootObject->m_pScene = this;
-    m_pRootObject->setObjectName("root");
 }
 
 QList<SceneCamera*> BaseScene::findCameras() const
@@ -81,6 +85,12 @@ SceneObject* BaseScene::unserialiseSceneObject(const QJsonObject &serialisedData
 
 void BaseScene::destroySceneObject(SceneObject *obj)
 {
+    Q_ASSERT(obj != m_pRootObject);
+    Q_ASSERT(obj->m_pScene == this);
     emit subtreeDestroyed(obj);
     delete obj;
+}
+
+void BaseScene::sceneClearedEvent()
+{
 }

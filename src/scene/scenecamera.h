@@ -8,10 +8,8 @@
 class SceneCamera : public SceneObject
 {
     Q_OBJECT
+    friend class BaseScene;
 public:
-    explicit SceneCamera(SceneObject* parent = 0);
-    SceneCamera(const QJsonObject &serialisedData, SceneObject* parent = 0);
-    virtual ~SceneCamera();
     virtual SceneObject* clone() const;
 
     CameraLens* lens() const;
@@ -36,7 +34,10 @@ public:
     virtual QString serialiseIdentifier() const;
 
 protected:
-    explicit SceneCamera(const SceneCamera &cloneFrom);
+    explicit SceneCamera(BaseScene* scene, SceneObject* parent);
+    SceneCamera(BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent);
+    SceneCamera(const SceneCamera &cloneFrom);
+    virtual ~SceneCamera();
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();
 

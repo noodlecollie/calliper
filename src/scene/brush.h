@@ -8,10 +8,8 @@ class BrushFace;
 class Brush : public SceneObject
 {
     Q_OBJECT
+    friend class BaseScene;
 public:
-    explicit Brush(SceneObject* parent = 0);
-    Brush(const QJsonObject &serialisedData, SceneObject* parent = 0);
-    virtual ~Brush();
     virtual SceneObject* clone() const;
 
     QVector3D vertexAt(int index) const;
@@ -33,7 +31,10 @@ public:
     virtual float computeIntersection(const Ray3D &ray, QRgb *col = NULL, RayCoordinateSpace space = IRayDetectable::WorldSpace) const;
 
 protected:
-    explicit Brush(const Brush &cloneFrom);
+    explicit Brush(BaseScene* scene, SceneObject* parent);
+    Brush(BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent);
+    Brush(const Brush &cloneFrom);
+    virtual ~Brush();
 
 private:
     void initDefaults();

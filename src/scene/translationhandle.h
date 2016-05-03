@@ -6,15 +6,16 @@
 class TranslationHandle : public UIManipulator
 {
 	Q_OBJECT
+    friend class BaseScene;
 public:
-    explicit TranslationHandle(SceneObject* parent = 0);
-    virtual ~TranslationHandle();
     virtual SceneObject* clone() const;
 
     virtual void draw(ShaderStack* stack);
 
 protected:
-    explicit TranslationHandle(const TranslationHandle &cloneFrom);
+    explicit TranslationHandle(BaseScene* scene, SceneObject* parent);
+    TranslationHandle(const TranslationHandle &cloneFrom);
+    virtual ~TranslationHandle();
 
 private:
     void build();

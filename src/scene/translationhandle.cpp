@@ -8,6 +8,7 @@
 #include <cmath>
 #include <QtMath>
 #include "callipermath.h"
+#include "basescene.h"
 
 #define PICKCOLOUR_X    0x88ff0000
 #define PICKCOLOUR_Y    0x8800ff00
@@ -132,7 +133,7 @@ void TranslationHandle::build()
     appendGeometry(lines);
 }
 
-TranslationHandle::TranslationHandle(SceneObject *parent) : UIManipulator(parent)
+TranslationHandle::TranslationHandle(BaseScene *scene, SceneObject *parent) : UIManipulator(scene, parent)
 {
     build();
 }
@@ -154,5 +155,5 @@ void TranslationHandle::draw(ShaderStack *stack)
 
 SceneObject* TranslationHandle::clone() const
 {
-    return new TranslationHandle(*this);
+    return m_pScene->cloneSceneObject<TranslationHandle>(this);
 }

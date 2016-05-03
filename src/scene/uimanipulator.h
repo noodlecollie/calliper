@@ -9,10 +9,8 @@
 class UIManipulator : public SceneObject
 {
 	Q_OBJECT
+    friend class BaseScene;
 public:
-	explicit UIManipulator(SceneObject* parent = 0);
-    virtual ~UIManipulator();
-
     enum ManipulationAxisFlag
     {
         AxisX = 0x1,
@@ -41,7 +39,9 @@ public:
     static int axisFlagsFromPickColor(QRgb colour);
 
 protected:
-    explicit UIManipulator(const UIManipulator &cloneFrom);
+    explicit UIManipulator(BaseScene* scene, SceneObject* parent);
+    UIManipulator(const UIManipulator &cloneFrom);
+    virtual ~UIManipulator();
 
     const static QRgb PICKCOLOUR_X;
     const static QRgb PICKCOLOUR_Y;

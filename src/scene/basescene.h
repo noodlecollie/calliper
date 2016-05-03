@@ -32,6 +32,7 @@ public:
     const UIScene* uiScene() const;
 
     SceneObject* root() const;
+    void clear();
     MapDocument* document() const;
 
     QList<SceneObject*> findByName(const QString &name);
@@ -40,13 +41,21 @@ public:
     template<typename T, typename... Args>
     T* createSceneObject(Args... args)
     {
-        T* obj = new T(std::move(args)...);
+        T* obj = new T(this, std::move(args)...);
+        Q_ASSERT(qobject_cast<SceneObject*>(obj));
+        Q_ASSERT(obj->parentObject());
+
+        emit sceneObjectCreated(obj);
+        return obj;
+    }
+
+    template<typename T>
+    T* cloneSceneObject(const T* cloneFrom)
+    {
+        Q_ASSERT(cloneFrom->m_pScene == this);
+        T* obj = new T(*cloneFrom);
         Q_ASSERT(qobject_cast<SceneObject*>(obj));
 
-        if ( !obj->parentObject() )
-            setRoot(obj);
-
-        obj->m_pScene = this;
         emit sceneObjectCreated(obj);
         return obj;
     }
@@ -59,9 +68,12 @@ signals:
     void subtreeDestroyed(SceneObject* object);
 
 protected:
-    void setRoot(SceneObject* root);
+    virtual void sceneClearedEvent();
 
     SceneObject*    m_pRootObject;
+
+private:
+    void createNewRoot();
 };
 
 #endif // BASESCENE_H

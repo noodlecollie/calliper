@@ -7,14 +7,19 @@
 #include <QOpenGLTexture>
 #include "mapdocument.h"
 #include "jsonutil.h"
+#include "basescene.h"
 
-SceneObject::SceneObject(SceneObject *parent) : HierarchicalObject(parent)
+SceneObject::SceneObject(BaseScene* scene, SceneObject *parent) : HierarchicalObject(parent)
 {
-    initDefaults(parent);
+    initDefaults(parent, scene);
 }
 
 SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(cloneFrom.parentObject())
 {
+    Q_ASSERT(cloneFrom.m_pScene);
+    Q_ASSERT(cloneFrom.parentObject());
+    Q_ASSERT(&cloneFrom != cloneFrom.m_pScene->root());
+
     m_pScene = cloneFrom.m_pScene;
     m_RenderFlags = cloneFrom.m_RenderFlags;
     m_bHidden = cloneFrom.m_bHidden;
@@ -26,9 +31,12 @@ SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(clon
     setScale(cloneFrom.scale());
 }
 
-void SceneObject::initDefaults(SceneObject* parent)
+void SceneObject::initDefaults(SceneObject* parent, BaseScene* scene)
 {
-    m_pScene = parent ? parent->m_pScene : NULL;
+    Q_ASSERT(scene);
+    Q_ASSERT((parent && parent->m_pScene) || !scene->root());
+
+    m_pScene = scene;
     m_RenderFlags = NoRenderFlag;
     m_bHidden = false;
     m_bSerialiseGeometry = false;
@@ -147,7 +155,7 @@ void SceneObject::setRenderFlags(RenderFlags flags)
 
 SceneObject* SceneObject::clone() const
 {
-    return m_pScene->createSceneObject<SceneObject>(*this);
+    return m_pScene->cloneSceneObject<SceneObject>(this);
 }
 
 BoundingBox SceneObject::computeLocalBounds() const
@@ -242,9 +250,10 @@ void SceneObject::serialiseAllGeometry(QJsonObject &obj) const
     obj.insert("geometry", QJsonValue(arrGeometry));
 }
 
-SceneObject::SceneObject(const QJsonObject &serialisedData, SceneObject *parent) : HierarchicalObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
+SceneObject::SceneObject(BaseScene* scene, const QJsonObject &serialisedData, SceneObject *parent) :
+    HierarchicalObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
 {
-    initDefaults(parent);
+    initDefaults(parent, scene);
 
     // Make sure this object identifies us.
     if ( !validateIdentifier(serialisedData, SceneObject::serialiseIdentifier()) )

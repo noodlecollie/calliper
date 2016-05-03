@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include "mapscene.h"
 #include "scenecamera.h"
+#include "uiscene.h"
 
 UIManipulatorTool::UIManipulatorTool(const QString &name, MapDocument *document) :
     BaseTool(name, document)
@@ -38,8 +39,7 @@ void UIManipulatorTool::vDeactivate()
         endMove();
 
     clearTableManipulators();
-    delete m_pManipulator;
-    m_pManipulator = NULL;
+    m_pDocument->uiScene()->destroySceneObject(m_pManipulator);
     BaseTool::vDeactivate();
 }
 

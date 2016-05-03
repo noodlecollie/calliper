@@ -1,8 +1,9 @@
 #include "blockcreationhandle.h"
 #include "geometryfactory.h"
 #include "shaders.h"
+#include "basescene.h"
 
-BlockCreationHandle::BlockCreationHandle(SceneObject *parent) : UIManipulator(parent)
+BlockCreationHandle::BlockCreationHandle(BaseScene *scene, SceneObject *parent) : UIManipulator(scene, parent)
 {
     initDefaults();
 }
@@ -19,7 +20,7 @@ void BlockCreationHandle::initDefaults()
 
 SceneObject* BlockCreationHandle::clone() const
 {
-    return new BlockCreationHandle(*this);
+    return m_pScene->cloneSceneObject<BlockCreationHandle>(this);
 }
 
 BlockCreationHandle::BlockCreationHandle(const BlockCreationHandle &cloneFrom) : UIManipulator(cloneFrom)

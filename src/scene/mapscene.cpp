@@ -15,6 +15,11 @@ MapScene::~MapScene()
 {
 }
 
+void MapScene::sceneClearedEvent()
+{
+    m_pGrid = NULL;
+}
+
 BaseScene::SceneType MapScene::type() const
 {
     return TypeMapScene;
@@ -87,16 +92,13 @@ bool MapScene::serialiseRecursive(SceneObject *obj, QJsonObject &jsonParent) con
 
 bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &serialisedData)
 {
-    // Unserialise the object and attach it to the parent.
-    SceneObject* obj = unserialiseSceneObject(serialisedData, parent);
-    if ( !obj )
-        return false;
-
-    // If the parent is NULL, this object is the root.
-    // Reset our grid pointer.
-    if ( !parent )
+    SceneObject* obj = NULL;
+    if ( parent )
     {
-        m_pGrid = NULL;
+        // Unserialise the object and attach it to the parent.
+        obj = unserialiseSceneObject(serialisedData, parent);
+        if ( !obj )
+            return false;
     }
 
     // For each of the children in the serialised data, call this recursively.
@@ -111,9 +113,9 @@ bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &seri
 
 void MapScene::insertStandardItems()
 {
-    OriginMarker* o = new OriginMarker(root());
+    OriginMarker* o = createSceneObject<OriginMarker>(root());
     o->setObjectName("origin");
 
-    MapGrid* grid = new MapGrid(root());
+    MapGrid* grid = createSceneObject<MapGrid>(root());
     grid->setObjectName("grid");
 }

@@ -6,15 +6,15 @@
 class OriginMarker : public SceneObject
 {
     Q_OBJECT
+    friend class BaseScene;
 public:
-    explicit OriginMarker(SceneObject* parent = 0);
-    virtual ~OriginMarker();
-
     virtual bool editable() const;
     virtual SceneObject* clone() const;
 
 protected:
-    explicit OriginMarker(const OriginMarker &cloneFrom);
+    explicit OriginMarker(BaseScene* scene, SceneObject* parent);
+    OriginMarker(const OriginMarker &cloneFrom);
+    virtual ~OriginMarker();
 
 private:
     void constructGeometry();

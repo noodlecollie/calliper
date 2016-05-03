@@ -30,7 +30,7 @@ QString TranslationTool::staticName()
 
 UIManipulator* TranslationTool::constructManipulator()
 {
-    TranslationHandle* handle = new TranslationHandle(m_pDocument->uiScene()->root());
+    TranslationHandle* handle = m_pDocument->uiScene()->createSceneObject<TranslationHandle>(m_pDocument->uiScene()->root());
     handle->setObjectName("_translationHandle");
     return handle;
 }

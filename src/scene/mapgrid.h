@@ -10,10 +10,8 @@
 class MapGrid : public SceneObject
 {
     Q_OBJECT
+    friend class BaseScene;
 public:
-    explicit MapGrid(SceneObject* parent = 0);
-    virtual ~MapGrid();
-
     virtual bool editable() const;
     virtual void draw(ShaderStack *stack);
     virtual SceneObject* clone() const;
@@ -23,6 +21,10 @@ public:
     void incrementGridPower();
     void decrementGridPower();
     unsigned int gridMultiple() const;
+
+protected:
+    explicit MapGrid(BaseScene* scene, SceneObject* parent);
+    virtual ~MapGrid();
 
 private:
     void setUpGeometry();

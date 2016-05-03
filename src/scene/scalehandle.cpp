@@ -3,6 +3,7 @@
 #include "geometrydata.h"
 #include "shaders.h"
 #include <QtMath>
+#include "basescene.h"
 
 #define SCALE 0.5f
 #define HEAD_RADIUS (SCALE * (0.15f/2.0f))
@@ -60,7 +61,7 @@ void addScaleShaft(float scale, const QColor &col, const QMatrix4x4 &transform, 
     data.append(geometry);
 }
 
-ScaleHandle::ScaleHandle(SceneObject *parent) : UIManipulator(parent)
+ScaleHandle::ScaleHandle(BaseScene *scene, SceneObject *parent) : UIManipulator(scene, parent)
 {
     build();
 }
@@ -72,7 +73,7 @@ ScaleHandle::~ScaleHandle()
 
 SceneObject* ScaleHandle::clone() const
 {
-    return new ScaleHandle(*this);
+    return m_pScene->cloneSceneObject<ScaleHandle>(this);
 }
 
 ScaleHandle::ScaleHandle(const ScaleHandle &cloneFrom) : UIManipulator(cloneFrom)

@@ -22,13 +22,13 @@
 
 #define STDLINE_LOD_DELTA 128.0f
 
-MapGrid::MapGrid(SceneObject *parent) : SceneObject(parent)
+MapGrid::MapGrid(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
     Q_ASSERT(m_pScene);
-    MapScene* scene = m_pScene->mapScene();
-    Q_ASSERT(scene);
-    Q_ASSERT(!scene->m_pGrid);
-    scene->m_pGrid = this;
+    MapScene* s = m_pScene->mapScene();
+    Q_ASSERT(s);
+    Q_ASSERT(!s->m_pGrid);
+    s->m_pGrid = this;
 
     // Standard Hammer colours
     m_colMajor = QColor(100, 46, 0);

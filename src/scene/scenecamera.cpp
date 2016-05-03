@@ -8,11 +8,12 @@
 #include <QPoint>
 #include <QSize>
 #include <QJsonArray>
+#include "basescene.h"
 
 #define MAX_PITCH_DELTA 89.0f
 #define MAX_ROLL_DELTA 180.0f
 
-SceneCamera::SceneCamera(SceneObject *parent) : SceneObject(parent)
+SceneCamera::SceneCamera(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
     initDefaults();
     m_LocalLensBounds = m_pLens->localViewVolumeBounds();
@@ -172,7 +173,7 @@ QVector3D SceneCamera::frustumDirection(const QPoint &p, const QSize &viewSize) 
 
 SceneObject* SceneCamera::clone() const
 {
-    return new SceneCamera(*this);
+    return m_pScene->cloneSceneObject<SceneCamera>(this);
 }
 
 bool SceneCamera::serialiseToJson(QJsonObject &obj) const
@@ -194,7 +195,8 @@ bool SceneCamera::serialiseToJson(QJsonObject &obj) const
     return true;
 }
 
-SceneCamera::SceneCamera(const QJsonObject &serialisedData, SceneObject *parent) : SceneObject(serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
+SceneCamera::SceneCamera(BaseScene* scene, const QJsonObject &serialisedData, SceneObject *parent) :
+    SceneObject(scene, serialisedData.value(ISerialisable::KEY_SUPERCLASS()).toObject(), parent)
 {
     initDefaults();
 

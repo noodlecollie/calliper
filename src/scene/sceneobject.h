@@ -83,10 +83,10 @@ signals:
 public slots:
 
 protected:
-    explicit SceneObject(SceneObject *parent = 0);
-    SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
-    virtual ~SceneObject();
+    explicit SceneObject(BaseScene* scene, SceneObject *parent);
+    SceneObject(BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent);
     SceneObject(const SceneObject &cloneFrom);
+    virtual ~SceneObject();
 
     void drawGeometry(GeometryData* geom, ShaderStack* stack);
 
@@ -97,7 +97,7 @@ protected:
     QVector<GeometryDataPointer>    m_GeometryList;
 
 private:
-    void initDefaults(SceneObject* parent);
+    void initDefaults(SceneObject* parent, BaseScene* scene);
     void deepCloneGeometryFrom(const QVector<GeometryDataPointer> &list);
     BoundingBox totalGeometryBounds() const;
     void serialiseAllGeometry(QJsonObject &obj) const;
