@@ -52,6 +52,7 @@ bool MapScene::unserialiseFromJson(const QJsonObject &serialisedData)
     if ( !vRootObject.isObject() )
         return false;
 
+    clear();
     bool success = unserialiseRecursive(NULL, vRootObject.toObject());
     insertStandardItems();
     return success;
@@ -101,6 +102,10 @@ bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &seri
         obj = unserialiseSceneObject(serialisedData, parent);
         if ( !obj )
             return false;
+    }
+    else
+    {
+        obj = m_pRootObject;
     }
 
     // For each of the children in the serialised data, call this recursively.

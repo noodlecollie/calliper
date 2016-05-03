@@ -107,14 +107,21 @@ void MainWindow::closeActiveDocument()
     if ( m_iActiveDocument < 0 ) return;
 
     MapDocument* oldDoc = activeDocument();
+    MapDocument* newDoc = NULL;
 
     int old = m_iActiveDocument;
     if ( m_iActiveDocument == application()->documentCount() - 1 )
     {
         m_iActiveDocument--;
+        if ( m_iActiveDocument >= 0 )
+            newDoc = application()->document(m_iActiveDocument);
+    }
+    else
+    {
+        newDoc = application()->document(m_iActiveDocument+1);
     }
 
-    changeActiveDocument(oldDoc, activeDocument());
+    changeActiveDocument(oldDoc, newDoc);
     application()->closeDocument(old);
 }
 
