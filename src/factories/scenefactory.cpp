@@ -45,13 +45,13 @@ namespace SceneFactory
         // For the purposes of debugging, serialise our geometry data.
         // This is pretty damn verbose but it means we can load it back in easily.
 
-        SceneObject* camModel = new SceneObject(scene->root());
+        SceneObject* camModel = scene->createSceneObject<SceneObject>(scene->root());
         camModel->setObjectName("camModel");
         camModel->appendGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
         camModel->setShouldSerialiseGeometry(true);
 
-        SceneObject* block = new SceneObject(scene->root());
+        SceneObject* block = scene->createSceneObject<SceneObject>(scene->root());
         block->setObjectName("block");
         block->appendGeometry(GeometryFactory::cube(32.0f));
         block->geometryAt(0)->setTexture(0, "/textures/test");
@@ -74,7 +74,7 @@ namespace SceneFactory
         block2->setRenderFlags(SceneObject::Translucent);
         block2->setShouldSerialiseGeometry(true);
 
-        SceneObject* testBlock = new SceneObject(scene->root());
+        SceneObject* testBlock = scene->createSceneObject<SceneObject>(scene->root());
         testBlock->setObjectName("testBlock");
         testBlock->appendGeometry(GeometryFactory::cubeSolidColor(96.0f, QColor::fromRgba(0x80ff8800)));
         testBlock->setPosition(QVector3D(0,-256,0));
@@ -91,7 +91,7 @@ namespace SceneFactory
         b->setObjectName("brush");
         b->setPosition(QVector3D(256,0,0));
 
-        SceneObject* arrow = new SceneObject(scene->root());
+        SceneObject* arrow = scene->createSceneObject<SceneObject>(scene->root());
         arrow->appendGeometry(GeometryFactory::flatArrow(128, 32, 0.25f, QColor::fromRgb(0xffffffff)));
         arrow->setPosition(-renderer()->directionalLight() * 128);
         arrow->setAngles(Math::vectorToAngleSimple(renderer()->directionalLight()));

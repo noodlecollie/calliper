@@ -32,7 +32,6 @@ HEADERS += \
     factories/factories.h \
     factories/geometryfactory.h \
     factories/scenefactory.h \
-    factories/sceneobjectfactory.h \
     geometry/boundingbox.h \
     geometry/geometrydata.h \
     math/callipermath.h \
@@ -96,7 +95,6 @@ SOURCES += \
     factories/brushfactory.cpp \
     factories/geometryfactory.cpp \
     factories/scenefactory.cpp \
-    factories/sceneobjectfactory.cpp \
     geometry/boundingbox.cpp \
     geometry/geometrydata.cpp \
     math/callipermath.cpp \

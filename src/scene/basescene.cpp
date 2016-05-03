@@ -23,7 +23,10 @@ SceneObject* BaseScene::root() const
 void BaseScene::setRoot(SceneObject *root)
 {
     Q_ASSERT(root && !root->parent());
-    delete m_pRootObject;
+
+    if ( m_pRootObject )
+        destroySceneObject(m_pRootObject);
+
     m_pRootObject = root;
     m_pRootObject->setParent(this);
     m_pRootObject->m_pScene = this;
@@ -70,9 +73,14 @@ MapDocument* BaseScene::document() const
     return qobject_cast<MapDocument*>(parent());
 }
 
+SceneObject* BaseScene::unserialiseSceneObject(const QJsonObject &serialisedData, SceneObject *parent)
+{
+    // TODO
+    return NULL;
+}
+
 void BaseScene::destroySceneObject(SceneObject *obj)
 {
-    Q_ASSERT(obj->m_pScene == this);
     emit subtreeDestroyed(obj);
     delete obj;
 }

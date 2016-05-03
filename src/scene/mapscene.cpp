@@ -3,7 +3,6 @@
 #include "sceneobject.h"
 #include "mapgrid.h"
 #include <QJsonArray>
-#include "sceneobjectfactory.h"
 #include "originmarker.h"
 
 MapScene::MapScene(MapDocument *document) : BaseScene(document)
@@ -89,7 +88,7 @@ bool MapScene::serialiseRecursive(SceneObject *obj, QJsonObject &jsonParent) con
 bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &serialisedData)
 {
     // Unserialise the object and attach it to the parent.
-    SceneObject* obj = SceneObjectFactory::unserialiseFromJson(serialisedData, parent);
+    SceneObject* obj = unserialiseSceneObject(serialisedData, parent);
     if ( !obj )
         return false;
 

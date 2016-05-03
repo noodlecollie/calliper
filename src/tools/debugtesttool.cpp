@@ -47,7 +47,7 @@ void DebugTestTool::vDeactivate()
 {
     BaseTool::vDeactivate();
 
-    delete m_pRayVisuals;
+    m_pDocument->scene()->destroySceneObject(m_pRayVisuals);
     m_pRayVisuals = NULL;
 }
 
@@ -55,7 +55,7 @@ void DebugTestTool::vActivate()
 {
     BaseTool::vActivate();
 
-    m_pRayVisuals = new SceneObject(m_pDocument->scene()->root());
+    m_pRayVisuals = m_pDocument->scene()->createSceneObject<SceneObject>(m_pDocument->scene()->root());
     m_pRayVisuals->appendGeometry(new GeometryData());
     m_pRayVisuals->appendGeometry(new GeometryData());
     m_pRayVisuals->appendGeometry(new GeometryData());

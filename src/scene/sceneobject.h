@@ -28,11 +28,6 @@ public:
     Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
     Q_FLAG(RenderFlags)
 
-    explicit SceneObject(SceneObject *parent = 0);
-    SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
-    virtual ~SceneObject();
-    void destroy();
-
     // Object name is not cloned.
     virtual SceneObject* clone() const;
 
@@ -88,7 +83,11 @@ signals:
 public slots:
 
 protected:
-    explicit SceneObject(const SceneObject &cloneFrom);
+    explicit SceneObject(SceneObject *parent = 0);
+    SceneObject(const QJsonObject &serialisedData, SceneObject* parent = 0);
+    virtual ~SceneObject();
+    SceneObject(const SceneObject &cloneFrom);
+
     void drawGeometry(GeometryData* geom, ShaderStack* stack);
 
 	BaseScene*						m_pScene;

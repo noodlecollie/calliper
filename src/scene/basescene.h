@@ -43,21 +43,15 @@ public:
         T* obj = new T(std::move(args)...);
         Q_ASSERT(qobject_cast<SceneObject*>(obj));
         obj->m_pScene = this;
+        emit sceneObjectCreated(obj);
         return obj;
     }
 
-    template<typename T>
-    T* createSceneObject(SceneObject* parent)
-    {
-        T* obj = new T(parent);
-        Q_ASSERT(qobject_cast<SceneObject*>(obj));
-        obj->m_pScene = this;
-        return obj;
-    }
-
+    SceneObject* unserialiseSceneObject(const QJsonObject &serialisedData, SceneObject* parent);
     void destroySceneObject(SceneObject* obj);
 
 signals:
+    void sceneObjectCreated(SceneObject* object);
     void subtreeDestroyed(SceneObject* object);
 
 protected:
