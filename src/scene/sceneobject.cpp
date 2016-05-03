@@ -53,6 +53,11 @@ QList<SceneObject*> SceneObject::children() const
     return findChildren<SceneObject*>(QString(), Qt::FindDirectChildrenOnly);
 }
 
+QList<SceneObject*> SceneObject::allChildren() const
+{
+    return findChildren<SceneObject*>(QString());
+}
+
 BaseScene* SceneObject::scene() const
 {
     return m_pScene;
