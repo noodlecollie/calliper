@@ -21,8 +21,8 @@ public:
     virtual QString serialiseIdentifier() const;
     bool unserialiseFromJson(const QJsonObject &serialisedData);
 
-protected:
-    virtual void sceneClearedEvent();
+private slots:
+    void checkIfSceneCleared(SceneObject* obj);
 
 private:
     void insertStandardItems();

@@ -4,32 +4,49 @@
 #include "mapscene.h"
 #include "uiscene.h"
 #include "mapdocument.h"
+#include "sceneobjectfactory.h"
 
 BaseScene::BaseScene(MapDocument *doc) : QObject(doc)
 {
-    createNewRoot();
+    m_pRootObject = NULL;
+    createRoot();
 }
 
 BaseScene::~BaseScene()
 {
+    destroyRoot();
+}
+
+void BaseScene::createRoot()
+{
+    Q_ASSERT(!m_pRootObject);
+    m_pRootObject = new SceneObject(this, NULL);
+    m_pRootObject->setObjectName("root");
+
+#ifdef LOG_SCENE_OBJECT_LIFETIMES
+    qDebug() << "Root scene object" << m_pRootObject << "created";
+#endif
+
+    emit sceneObjectCreated(m_pRootObject);
+}
+
+void BaseScene::destroyRoot()
+{
+    Q_ASSERT(m_pRootObject);
+
+#ifdef LOG_SCENE_OBJECT_LIFETIMES
+    qDebug() << "Scene object" << m_pRootObject << "about to be destroyed.";
+#endif
+
+    emit subtreeDestroyed(m_pRootObject);
+    delete m_pRootObject;
+    m_pRootObject = NULL;
 }
 
 void BaseScene::clear()
 {
-    destroySceneObject(m_pRootObject);
-    sceneClearedEvent();
-    createNewRoot();
-}
-
-void BaseScene::createNewRoot()
-{
-    // Ensure this is set to NULL before we attempt to create a root,
-    // because the root object itself does debug verification that depends on this.
-    m_pRootObject = NULL;
-
-    m_pRootObject = new SceneObject(this, NULL);
-    m_pRootObject->setParent(this);
-    m_pRootObject->setObjectName("root");
+    destroyRoot();
+    createRoot();
 }
 
 SceneObject* BaseScene::root() const
@@ -79,18 +96,23 @@ MapDocument* BaseScene::document() const
 
 SceneObject* BaseScene::unserialiseSceneObject(const QJsonObject &serialisedData, SceneObject *parent)
 {
-    // TODO
-    return NULL;
+    QString identifier = serialisedData.value(ISerialisable::KEY_IDENTIFIER()).toString();
+    if ( identifier.isNull() )
+        return NULL;
+
+    SceneObjectFactory::FactoryFuncPointer p = SceneObjectFactory::getFactory(identifier);
+    return p ? p(serialisedData, this, parent) : NULL;
 }
 
 void BaseScene::destroySceneObject(SceneObject *obj)
 {
     Q_ASSERT(obj != m_pRootObject);
     Q_ASSERT(obj->m_pScene == this);
+
+#ifdef LOG_SCENE_OBJECT_LIFETIMES
+    qDebug() << "Scene object" << obj->objectName() << "about to be destroyed.";
+#endif
+
     emit subtreeDestroyed(obj);
     delete obj;
-}
-
-void BaseScene::sceneClearedEvent()
-{
 }

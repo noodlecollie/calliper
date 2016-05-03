@@ -9,6 +9,12 @@ class MapScene;
 class UIScene;
 class MapDocument;
 
+#define LOG_SCENE_OBJECT_LIFETIMES
+
+#ifdef LOG_SCENE_OBJECT_LIFETIMES
+#include <QtDebug>
+#endif
+
 class BaseScene : public QObject
 {
     Q_OBJECT
@@ -45,6 +51,10 @@ public:
         Q_ASSERT(qobject_cast<SceneObject*>(obj));
         Q_ASSERT(obj->parentObject());
 
+#ifdef LOG_SCENE_OBJECT_LIFETIMES
+        qDebug() << "Scene object" << obj << "created";
+#endif
+
         emit sceneObjectCreated(obj);
         return obj;
     }
@@ -55,6 +65,10 @@ public:
         Q_ASSERT(cloneFrom->m_pScene == this);
         T* obj = new T(*cloneFrom);
         Q_ASSERT(qobject_cast<SceneObject*>(obj));
+
+#ifdef LOG_SCENE_OBJECT_LIFETIMES
+        qDebug() << "Scene object" << cloneFrom << "cloned.";
+#endif
 
         emit sceneObjectCreated(obj);
         return obj;
@@ -68,12 +82,11 @@ signals:
     void subtreeDestroyed(SceneObject* object);
 
 protected:
-    virtual void sceneClearedEvent();
-
     SceneObject*    m_pRootObject;
 
 private:
-    void createNewRoot();
+    void createRoot();
+    void destroyRoot();
 };
 
 #endif // BASESCENE_H

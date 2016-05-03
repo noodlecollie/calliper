@@ -84,7 +84,8 @@ HEADERS += \
     math/iraydetectable.h \
     tools/uimanipulatortool.h \
     scene/spatialsnapshot.h \
-    tools/creategeometrytool.h
+    tools/creategeometrytool.h \
+    factories/sceneobjectfactory.h
 
 SOURCES += \
     application/application.cpp \
@@ -144,7 +145,8 @@ SOURCES += \
     scene/blockcreationhandle.cpp \
     tools/uimanipulatortool.cpp \
     scene/spatialsnapshot.cpp \
-    tools/creategeometrytool.cpp
+    tools/creategeometrytool.cpp \
+    factories/sceneobjectfactory.cpp
 
 RESOURCES += \
     resource/resource.qrc \

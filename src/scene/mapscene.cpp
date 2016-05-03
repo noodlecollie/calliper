@@ -8,6 +8,7 @@
 MapScene::MapScene(MapDocument *document) : BaseScene(document)
 {
     m_pGrid = NULL;
+    connect(this, &BaseScene::subtreeDestroyed, this, &MapScene::checkIfSceneCleared);
     insertStandardItems();
 }
 
@@ -15,9 +16,10 @@ MapScene::~MapScene()
 {
 }
 
-void MapScene::sceneClearedEvent()
+void MapScene::checkIfSceneCleared(SceneObject *obj)
 {
-    m_pGrid = NULL;
+    if ( obj->isRoot() || obj == m_pGrid )
+        m_pGrid = NULL;
 }
 
 BaseScene::SceneType MapScene::type() const
