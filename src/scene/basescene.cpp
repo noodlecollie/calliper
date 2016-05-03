@@ -69,3 +69,10 @@ MapDocument* BaseScene::document() const
 {
     return qobject_cast<MapDocument*>(parent());
 }
+
+void BaseScene::destroySceneObject(SceneObject *obj)
+{
+    Q_ASSERT(obj->m_pScene == this);
+    emit subtreeDestroyed(obj);
+    delete obj;
+}

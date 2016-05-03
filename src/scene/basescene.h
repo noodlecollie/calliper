@@ -37,6 +37,29 @@ public:
     QList<SceneObject*> findByName(const QString &name);
     QList<SceneCamera*> findCameras() const;
 
+    template<typename T, typename... Args>
+    T* createSceneObject(Args... args)
+    {
+        T* obj = new T(std::move(args)...);
+        Q_ASSERT(qobject_cast<SceneObject*>(obj));
+        obj->m_pScene = this;
+        return obj;
+    }
+
+    template<typename T>
+    T* createSceneObject(SceneObject* parent)
+    {
+        T* obj = new T(parent);
+        Q_ASSERT(qobject_cast<SceneObject*>(obj));
+        obj->m_pScene = this;
+        return obj;
+    }
+
+    void destroySceneObject(SceneObject* obj);
+
+signals:
+    void subtreeDestroyed(SceneObject* object);
+
 protected:
     void setRoot(SceneObject* root);
 
