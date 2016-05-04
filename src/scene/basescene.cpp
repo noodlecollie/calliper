@@ -4,7 +4,6 @@
 #include "mapscene.h"
 #include "uiscene.h"
 #include "mapdocument.h"
-#include "sceneobjectfactory.h"
 
 BaseScene::BaseScene(MapDocument *doc) : QObject(doc)
 {
@@ -92,16 +91,6 @@ const UIScene* BaseScene::uiScene() const
 MapDocument* BaseScene::document() const
 {
     return qobject_cast<MapDocument*>(parent());
-}
-
-SceneObject* BaseScene::unserialiseSceneObject(const QJsonObject &serialisedData, SceneObject *parent)
-{
-    QString identifier = serialisedData.value(ISerialisable::KEY_IDENTIFIER()).toString();
-    if ( identifier.isNull() )
-        return NULL;
-
-    SceneObjectFactory::FactoryFuncPointer p = SceneObjectFactory::getFactory(identifier);
-    return p ? p(serialisedData, this, parent) : NULL;
 }
 
 void BaseScene::destroySceneObject(SceneObject *obj)

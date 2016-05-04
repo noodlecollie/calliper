@@ -1,24 +1,14 @@
 #include "sceneobjectfactory.h"
+#include <functional>
 #include "sceneobject.h"
-#include "scenecamera.h"
 #include "basescene.h"
-
-namespace FactoryFunctions
-{
-    SceneObject* createSceneObject(const QJsonObject &serialisedData, BaseScene* scene, SceneObject* parent)
-    {
-        return scene->createSceneObject<SceneObject>(serialisedData, parent);
-    }
-
-    SceneObject* createSceneCamera(const QJsonObject &serialisedData, BaseScene* scene, SceneObject* parent)
-    {
-        return scene->createSceneObject<SceneCamera>(serialisedData, parent);
-    }
-}
+#include "scenecamera.h"
+#include "brush.h"
 
 namespace SceneObjectFactory
 {
-    typedef QHash<QString, FactoryFuncPointer> FunctionTable;
+    typedef std::function<SceneObject*(BaseScene*, const QJsonObject&, SceneObject*)> FactoryFunction;
+    typedef QHash<QString, FactoryFunction> FunctionTable;
 
     FunctionTable functionTable;
     bool functionTableInitialised = false;
@@ -28,22 +18,36 @@ namespace SceneObjectFactory
         if ( functionTableInitialised )
             return;
 
-        functionTable.insert(SceneObject::staticMetaObject.className(), &FactoryFunctions::createSceneObject);
-        functionTable.insert(SceneCamera::staticMetaObject.className(), &FactoryFunctions::createSceneCamera);
+        // SceneObject
+        functionTable.insert(SceneObject::staticMetaObject.className(),
+                             [](BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent) -> SceneObject*
+        { return scene->createSceneObject<SceneObject>(serialisedData, parent); });
+
+        // SceneCamera
+        functionTable.insert(SceneCamera::staticMetaObject.className(),
+                             [](BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent) -> SceneObject*
+        { return scene->createSceneObject<SceneCamera>(serialisedData, parent); });
+
+        // Brush
+        functionTable.insert(Brush::staticMetaObject.className(),
+                             [](BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent) -> SceneObject*
+        { return scene->createSceneObject<Brush>(serialisedData, parent); });
 
         functionTableInitialised = true;
     }
 
-    FactoryFuncPointer getFactory(const QString &identifier)
+    SceneObject* unserialiseFrom(BaseScene *scene, const QJsonObject &serialisedData, SceneObject *parent)
     {
         initialiseFunctionTable();
-
-        FactoryFuncPointer fPointer = functionTable.value(identifier, NULL);
-        if ( !fPointer )
+        static FactoryFunction defaultFunction = [] (BaseScene*, const QJsonObject&, SceneObject*) -> SceneObject*
         {
-            qWarning() << "WARNING: No compatible factory function present for SceneObject type" << identifier;
-        }
+            return NULL;
+        };
 
-        return fPointer;
+        QString identifier = serialisedData.value(ISerialisable::KEY_IDENTIFIER()).toString();
+        if ( identifier.isNull() )
+            return NULL;
+
+        return functionTable.value(identifier, defaultFunction)(scene, serialisedData, parent);
     }
 }

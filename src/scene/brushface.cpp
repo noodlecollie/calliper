@@ -22,13 +22,13 @@ BrushFace::BrushFace(Brush *parent, const QJsonObject &serialisedData) : QObject
     if ( !validateIdentifier(serialisedData, BrushFace::serialiseIdentifier()) )
         return;
 
-    QJsonValue vVertices;
+    QJsonValue vVertices = serialisedData.value("vertices");
     if ( vVertices.isArray() )
     {
         m_Vertices = JsonUtil::integerJsonArrayToVector<int>(vVertices.toArray());
     }
 
-    QJsonValue vTexturePlane;
+    QJsonValue vTexturePlane = serialisedData.value("texturePlane");
     if ( vTexturePlane.isObject() )
     {
         delete m_pTexturePlane;

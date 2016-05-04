@@ -74,7 +74,6 @@ public:
         return obj;
     }
 
-    SceneObject* unserialiseSceneObject(const QJsonObject &serialisedData, SceneObject* parent);
     void destroySceneObject(SceneObject* obj);
 
 signals:
