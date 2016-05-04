@@ -34,6 +34,7 @@ public:
     SceneObject* parentObject() const;
     QList<SceneObject*> children() const;
     QList<SceneObject*> allChildren() const;
+    QList<SceneObject*> ancestors() const;
     BaseScene* scene() const;
     bool isRoot() const;
 

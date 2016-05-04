@@ -415,3 +415,16 @@ bool SceneObject::isRoot() const
 {
     return parentObject() == NULL;
 }
+
+QList<SceneObject*> SceneObject::ancestors() const
+{
+    QList<SceneObject*> list;
+    SceneObject* o = parentObject();
+    while ( o )
+    {
+        list.prepend(o);
+        o = o->parentObject();
+    }
+
+    return list;
+}
