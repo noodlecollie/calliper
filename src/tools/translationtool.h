@@ -7,6 +7,7 @@ class TranslationHandle;
 
 class TranslationTool : public UIManipulatorTool
 {
+    Q_OBJECT
 public:
     explicit TranslationTool(MapDocument* document);
     virtual ~TranslationTool();

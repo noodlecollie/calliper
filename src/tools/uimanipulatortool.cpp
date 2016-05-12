@@ -27,6 +27,7 @@ UIManipulatorTool::~UIManipulatorTool()
 
 void UIManipulatorTool::vActivate()
 {
+    BaseTool::vActivate();
     m_pManipulator = constructManipulator();
     updateTableFromSet();
     updateManipulator();

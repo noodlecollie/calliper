@@ -1,7 +1,9 @@
 #ifndef CREATEGEOMETRYTOOL_H
 #define CREATEGEOMETRYTOOL_H
 
-#include "basetool.h"
+#include "uimanipulatortool.h"
+
+class BlockCreationHandle;
 
 class CreateGeometryTool : public BaseTool
 {
@@ -11,9 +13,15 @@ public:
     virtual ~CreateGeometryTool();
     static QString staticName();
 
+    virtual void vActivate();
+    virtual void vDeactivate();
+
 signals:
 
 public slots:
+
+private:
+    BlockCreationHandle*    m_pManipulator;
 };
 
 #endif // CREATEGEOMETRYTOOL_H
