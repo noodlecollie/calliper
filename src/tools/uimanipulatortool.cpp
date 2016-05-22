@@ -15,6 +15,7 @@ UIManipulatorTool::UIManipulatorTool(const QString &name, MapDocument *document)
     m_bInMove = false;
     m_flHandleCamDist = 0.0f;
     m_iAxisFlags = 0;
+    m_bHoveringOnManipulator = false;
 }
 
 UIManipulatorTool::~UIManipulatorTool()
@@ -119,6 +120,42 @@ void UIManipulatorTool::vMouseMove(QMouseEvent *e)
     updateManipulatorFromMouseMove(e);
 }
 
+void UIManipulatorTool::vMouseMoveHover(QMouseEvent *e)
+{
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v || !v->camera() )
+    {
+        BaseTool::vMouseMoveHover(e);
+        return;
+    }
+
+    if ( m_bMouseLookEnabled )
+    {
+        if ( m_bHoveringOnManipulator )
+            endManipulatorHover();
+        m_bHoveringOnManipulator = false;
+
+        BaseTool::vMouseMoveHover(e);
+        return;
+    }
+
+    updateManipulatorHoverState(v, e->pos());
+}
+
+bool UIManipulatorTool::isMouseOnManipulator(Viewport *v, const QPoint &pos, QRgb *pickColour) const
+{
+    SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::UISceneFlag, pos, pickColour);
+    return obj && obj == m_pManipulator;
+}
+
+void UIManipulatorTool::vEnter(QEnterEvent *)
+{
+}
+
+void UIManipulatorTool::vLeave(QEvent *)
+{
+}
+
 void UIManipulatorTool::vMouseRelease(QMouseEvent *e)
 {
     if ( !m_bInMove )
@@ -140,10 +177,33 @@ void UIManipulatorTool::vSelectedSetChanged()
     BaseTool::vSelectedSetChanged();
 }
 
+void UIManipulatorTool::updateManipulatorHoverState(Viewport *v, const QPoint &pos)
+{
+    QRgb col = 0xffffffff;
+    if ( isMouseOnManipulator(v, pos, &col) )
+    {
+        if ( !m_bHoveringOnManipulator )
+            startManipulatorHover(col);
+        m_bHoveringOnManipulator = true;
+    }
+    else
+    {
+        if ( m_bHoveringOnManipulator )
+            endManipulatorHover();
+        m_bHoveringOnManipulator = false;
+    }
+}
+
 void UIManipulatorTool::endMove()
 {
     commitTableManipulators();
     m_bInMove = false;
+
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v || !v->camera() )
+        return;
+
+    updateManipulatorHoverState(v, v->mapFromGlobal(QCursor::pos()));
 }
 
 bool UIManipulatorTool::isAncestorInManipulatorTable(const SceneObject *obj) const

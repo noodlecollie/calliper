@@ -81,10 +81,10 @@ void BaseTool::mousePressEvent(QMouseEvent *e)
 void BaseTool::mouseMoveEvent(QMouseEvent *e)
 {
     Q_ASSERT(m_bActive);
-    if ( e->buttons() != Qt::NoButton )
-        vMouseMove(e);
-    else
+    if ( e->buttons() == Qt::NoButton )
         vMouseMoveHover(e);
+    else
+        vMouseMove(e);
 }
 
 void BaseTool::mouseReleaseEvent(QMouseEvent *e)
@@ -115,13 +115,13 @@ void BaseTool::enterEvent(QEnterEvent *e)
 {
     Q_ASSERT(m_bActive);
     m_bMouseEntered = true;
-    vEnterEvent(e);
+    vEnter(e);
 }
 
 void BaseTool::leaveEvent(QEvent *e)
 {
     Q_ASSERT(m_bActive);
-    vLeaveEvent(e);
+    vLeave(e);
     m_bMouseEntered = false;
 }
 
@@ -228,11 +228,11 @@ void BaseTool::handleMouseLook(QMouseEvent *e)
     }
 }
 
-void BaseTool::vEnterEvent(QEnterEvent *)
+void BaseTool::vEnter(QEnterEvent *)
 {
 }
 
-void BaseTool::vLeaveEvent(QEvent *)
+void BaseTool::vLeave(QEvent *)
 {
 }
 

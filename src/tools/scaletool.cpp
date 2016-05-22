@@ -133,3 +133,13 @@ void ScaleTool::updateManipulator()
     m_pManipulator->setPosition(sset.count() == 1 ? (*sset.begin())->localToRoot(QVector3D(0,0,0)) : m_pDocument->selectedSetCentroid());
     m_pManipulator->setHidden(sset.count() < 1);
 }
+
+void ScaleTool::startManipulatorHover(QRgb pickColour)
+{
+    qDebug() << "Hovering over scale handle with pick colour" << QColor::fromRgb(pickColour);
+}
+
+void ScaleTool::endManipulatorHover()
+{
+    qDebug() << "Ending hover over scale handle";
+}

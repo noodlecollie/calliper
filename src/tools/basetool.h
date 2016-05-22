@@ -67,8 +67,8 @@ protected:
     virtual void vKeyRelease(QKeyEvent*);
     virtual void vSelectedSetChanged();
     virtual void vUpdate(int msec);
-    virtual void vEnterEvent(QEnterEvent*);
-    virtual void vLeaveEvent(QEvent*);
+    virtual void vEnter(QEnterEvent*);
+    virtual void vLeave(QEvent*);
 
     void setMouseLookEnabled(bool enabled);
     void toggleMouseLookEnabled();

@@ -4,6 +4,7 @@
 #include "basetool.h"
 #include "sceneobjectmanipulator.h"
 #include "spatialsnapshot.h"
+#include <QRgb>
 
 class UIManipulator;
 class Viewport;
@@ -30,6 +31,9 @@ protected:
     virtual void vMousePress(QMouseEvent *e);
     virtual void vMouseMove(QMouseEvent *e);
     virtual void vMouseRelease(QMouseEvent *e);
+    virtual void vMouseMoveHover(QMouseEvent *e);
+    virtual void vEnter(QEnterEvent *e);
+    virtual void vLeave(QEvent *e);
 
     void endMove();
     void updateTableFromSet();
@@ -44,6 +48,11 @@ protected:
     virtual void updateManipulator() = 0;
     virtual void updateSceneObjectManipulator(SceneObject* obj, SceneObjectManipulator &manip) = 0;
     virtual void commitSceneObjectManipulator(SceneObject* obj, SceneObjectManipulator &manip) = 0;
+    virtual void startManipulatorHover(QRgb pickColour) = 0;
+    virtual void endManipulatorHover() = 0;
+
+    bool isMouseOnManipulator(Viewport* v, const QPoint &pos, QRgb* pickColour) const;
+    void updateManipulatorHoverState(Viewport* v, const QPoint &pos);
 
     UIManipulator*      m_pManipulator;
     bool                m_bInMove;
@@ -54,6 +63,7 @@ protected:
     float               m_flHandleCamDist;
     int                 m_iAxisFlags;
     QList<QVector3D>    m_MovementAxes;
+    bool                m_bHoveringOnManipulator;
 };
 
 #endif // UIMANIPULATORTOOL_H
