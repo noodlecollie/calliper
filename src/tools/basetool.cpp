@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include <QEnterEvent>
 #include "viewport.h"
 #include "application.h"
 #include "mainwindow.h"
@@ -13,6 +14,7 @@
 #include <QCursor>
 #include "uiscene.h"
 #include <QStandardPaths>
+#include "viewport.h"
 
 BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
 {
@@ -26,6 +28,7 @@ BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
     m_CameraController.setDecelTime(0.1f);
     m_CameraController.setTopSpeed(1200.0f);
     m_bMouseLookEnabled = false;
+    m_bMouseEntered = false;
 }
 
 BaseTool::~BaseTool()
@@ -40,12 +43,30 @@ void BaseTool::activate()
 
     vActivate();
     m_bActive = true;
+
+    // If the mouse is within the viewport, generate an enter event.
+    Viewport* v = application()->mainWindow()->activeViewport();
+    if ( !v )
+        return;
+
+    if ( isMouseWithinViewport(v) )
+    {
+        QEnterEvent e = generateEnterEvent(v);
+        enterEvent(&e);
+    }
 }
 
 void BaseTool::deactivate()
 {
     if ( !m_bActive )
         return;
+
+    // If the mouse has entered, send a leave event.
+    if ( m_bMouseEntered )
+    {
+        QEvent e(QEvent::Leave);
+        leaveEvent(&e);
+    }
 
     vDeactivate();
     m_bActive = false;
@@ -60,7 +81,10 @@ void BaseTool::mousePressEvent(QMouseEvent *e)
 void BaseTool::mouseMoveEvent(QMouseEvent *e)
 {
     Q_ASSERT(m_bActive);
-    vMouseMove(e);
+    if ( e->buttons() != Qt::NoButton )
+        vMouseMove(e);
+    else
+        vMouseMoveHover(e);
 }
 
 void BaseTool::mouseReleaseEvent(QMouseEvent *e)
@@ -85,6 +109,20 @@ void BaseTool::keyReleaseEvent(QKeyEvent *e)
 {
     Q_ASSERT(m_bActive);
     vKeyRelease(e);
+}
+
+void BaseTool::enterEvent(QEnterEvent *e)
+{
+    Q_ASSERT(m_bActive);
+    m_bMouseEntered = true;
+    vEnterEvent(e);
+}
+
+void BaseTool::leaveEvent(QEvent *e)
+{
+    Q_ASSERT(m_bActive);
+    vLeaveEvent(e);
+    m_bMouseEntered = false;
 }
 
 bool BaseTool::isActive() const
@@ -155,6 +193,16 @@ void BaseTool::addToSelectedSet(SceneObject *obj, bool clearPrevious)
 
 void BaseTool::vMouseMove(QMouseEvent *e)
 {
+    handleMouseLook(e);
+}
+
+void BaseTool::vMouseMoveHover(QMouseEvent *e)
+{
+    handleMouseLook(e);
+}
+
+void BaseTool::handleMouseLook(QMouseEvent *e)
+{
     Viewport* v = application()->mainWindow()->activeViewport();
     if ( !v )
         return;
@@ -178,6 +226,14 @@ void BaseTool::vMouseMove(QMouseEvent *e)
         // Cache the new position.
         QCursor::setPos(v->mapToGlobal(v->viewCentre()));
     }
+}
+
+void BaseTool::vEnterEvent(QEnterEvent *)
+{
+}
+
+void BaseTool::vLeaveEvent(QEvent *)
+{
 }
 
 void BaseTool::vMouseRelease(QMouseEvent *)
@@ -356,12 +412,10 @@ void BaseTool::setMouseLookEnabled(bool enabled)
     {
         QPoint p = v->mapToGlobal(v->viewCentre());
         QCursor::setPos(p);
-        v->setMouseTracking(true);
         v->setCursor(Qt::BlankCursor);
     }
     else
     {
-        v->setMouseTracking(false);
         v->setCursor(Qt::ArrowCursor);
     }
 
@@ -381,4 +435,15 @@ void BaseTool::saveFrameToDesktop()
 
     QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + QString("/frame.png");
     v->saveCurrentFrame(path);
+}
+
+bool BaseTool::isMouseWithinViewport(Viewport *v)
+{
+    return v->rect().contains(v->mapFromGlobal(QCursor::pos()));
+}
+
+QEnterEvent BaseTool::generateEnterEvent(Viewport* v)
+{
+    QPoint mouseGlobal = QCursor::pos();
+    return QEnterEvent(v->mapFromGlobal(mouseGlobal), v->window()->mapFromGlobal(mouseGlobal), mouseGlobal);
 }

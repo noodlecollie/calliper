@@ -4,6 +4,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include <QEnterEvent>
 #include "mapscene.h"
 #include "viewport.h"
 #include "basetool.h"
@@ -52,6 +53,16 @@ bool InputProcessor::eventFilter(QObject *watched, QEvent *event)
         case QEvent::Wheel:
             if ( tool )
                 tool->wheelEvent(dynamic_cast<QWheelEvent*>(event));
+            return true;
+
+        case QEvent::Enter:
+            if ( tool )
+                tool->enterEvent(dynamic_cast<QEnterEvent*>(event));
+            return true;
+
+        case QEvent::Leave:
+            if ( tool )
+                tool->leaveEvent(event);
             return true;
 
         default:

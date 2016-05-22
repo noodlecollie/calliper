@@ -53,6 +53,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_pPickedObject = NULL;
     m_fScenePickFlags = 0;
     m_pHighlightOutline = NULL;
+    setMouseTracking(true);
 
     m_pEmptyText = NULL;
     m_pNoCameraText = NULL;
