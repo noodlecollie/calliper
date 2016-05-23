@@ -27,7 +27,7 @@ void CreateGeometryTool::vActivate()
 
     m_pManipulator = m_pDocument->scene()->createSceneObject<BlockCreationHandle>(m_pDocument->scene()->root());
     m_pManipulator->setObjectName("_geometryCreationHandle");
-    m_pManipulator->setBounds(QVector3D(0,0,0), QVector3D(128,128,118));
+    m_pManipulator->setHidden(true);
 }
 
 void CreateGeometryTool::vDeactivate()

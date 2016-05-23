@@ -3,6 +3,7 @@
 
 #include "ray3d.h"
 #include <QColor>
+#include "raytracecontact.h"
 
 class IRayDetectable
 {
@@ -18,7 +19,7 @@ public:
 
     // Assumes that the ray is in local space.
     // Returns qInf() if no intersection occurred.
-    virtual float computeIntersection(const Ray3D &ray, QRgb* col = NULL, RayCoordinateSpace space = WorldSpace) const = 0;
+    virtual bool computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space = WorldSpace) const = 0;
 };
 
 #endif // IRAYDETECTABLE_H

@@ -74,10 +74,10 @@ public:
     bool shouldSerialiseGeometry() const;
     void setShouldSerialiseGeometry(bool enabled);
 
-    virtual float computeIntersection(const Ray3D &ray, QRgb *col = NULL, RayCoordinateSpace space = IRayDetectable::WorldSpace) const;
+    virtual bool computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const;
 
     // Assumes the ray is in parent space.
-    SceneObject* computeRayCastRecursive(const Ray3D &ray, float& intersection, QRgb* col);
+    SceneObject* computeRayCastRecursive(const Ray3D &ray, RayTraceContact& contact);
 
 signals:
 

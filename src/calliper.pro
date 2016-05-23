@@ -85,7 +85,8 @@ HEADERS += \
     tools/uimanipulatortool.h \
     scene/spatialsnapshot.h \
     tools/creategeometrytool.h \
-    factories/sceneobjectfactory.h
+    factories/sceneobjectfactory.h \
+    math/raytracecontact.h
 
 SOURCES += \
     application/application.cpp \

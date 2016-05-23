@@ -234,7 +234,7 @@ QString BrushFace::serialiseIdentifier() const
     return staticMetaObject.className();
 }
 
-float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateSpace space) const
+bool BrushFace::computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const
 {
     // For now we just assume that the ray is in local space.
     Q_UNUSED(space)
@@ -242,14 +242,14 @@ float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateS
     QVector3D nrm = normal();
     if (nrm.isNull())
     {
-        return (float)qInf();
+        return false;
     }
 
     // We assume that the normal and the ray direction are both unit vectors.
     // If they're perpendicular, we're parallel to the plane.
     if ( qFuzzyIsNull(QVector3D::dotProduct(nrm, ray.direction())) )
     {
-        return (float)qInf();
+        return false;
     }
 
     // Get the point at which the ray intersects the plane.
@@ -289,7 +289,7 @@ float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateS
             // allowed as it means it's right on the edge.
             if ( (dp < 0.0f && sign >= 0.0f) || (dp > 0.0f && sign <= 0.0f) )
             {
-                return (float)qInf();
+                return false;
             }
         }
 
@@ -298,12 +298,12 @@ float BrushFace::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateS
     }
 
     // The intersection point is within the polygon - return it.
-    if ( col )
-    {
-        // TODO: Compute a proper colour.
-        *col = 0xffffffff;
-    }
-    return rayParam;
+    // TODO: Compute a proper colour.
+    contact.rayParameter = rayParam;
+    contact.color = 0xffffffff;
+    contact.normal = nrm;
+
+    return true;
 }
 
 float BrushFace::planeDistanceFromOrigin() const

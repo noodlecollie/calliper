@@ -74,13 +74,13 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
     QVector3D rayDir = cam->frustumDirection(e->pos(), v->size());
     Ray3D ray(cam->position() + (cam->lens()->nearPlane() * rayDir), rayDir);
 
-    float intersection = (float)qInf();
-    QRgb colour = 0xff000000;
-    SceneObject* hitObject = m_pDocument->scene()->root()->computeRayCastRecursive(ray, intersection, &colour);
+    RayTraceContact contact;
+    SceneObject* hitObject = m_pDocument->scene()->root()->computeRayCastRecursive(ray, contact);
     if ( hitObject )
     {
-        qDebug() << "Ray" << ray << "hit object" << hitObject->objectName() << "at distance" << intersection << "to receive colour" << colour << "\n";
-        buildRayVisuals(ray, intersection);
+        qDebug() << "Ray" << ray << "hit object" << hitObject->objectName() << "at distance" << contact.rayParameter
+                 << "to receive colour" << contact.color << "\n";
+        buildRayVisuals(ray, contact.rayParameter);
     }
     else
     {

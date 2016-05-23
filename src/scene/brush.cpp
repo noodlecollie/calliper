@@ -214,7 +214,7 @@ void Brush::draw(ShaderStack *stack)
     }
 }
 
-float Brush::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateSpace space) const
+bool Brush::computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const
 {
     // Transform the ray into local co-ordinates.
     Ray3D localRay;
@@ -232,23 +232,22 @@ float Brush::computeIntersection(const Ray3D &ray, QRgb *col, RayCoordinateSpace
         break;
     }
 
-    float intersection = (float)qInf();
+    bool hadContact = false;
     QVector<BrushFace*> faceList = faces();
 
     foreach ( BrushFace* face, faceList )
     {
         // Compute face intersection.
-        QRgb fCol = 0xff000000;
-        float fInt = face->computeIntersection(ray, &fCol, IRayDetectable::LocalSpace);
+        RayTraceContact tempContact;
+        bool result = face->computeIntersection(ray, tempContact, IRayDetectable::LocalSpace);
 
         // If closer than current, set to current.
-        if ( fInt < intersection )
+        if ( result && tempContact.rayParameter < contact.rayParameter )
         {
-            intersection = fInt;
-            if ( col )
-                *col = fCol;
+            hadContact = true;
+            contact = tempContact;
         }
     }
 
-    return intersection;
+    return hadContact;
 }

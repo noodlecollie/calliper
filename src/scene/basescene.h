@@ -9,7 +9,7 @@ class MapScene;
 class UIScene;
 class MapDocument;
 
-#define LOG_SCENE_OBJECT_LIFETIMES
+//#define LOG_SCENE_OBJECT_LIFETIMES
 
 #ifdef LOG_SCENE_OBJECT_LIFETIMES
 #include <QtDebug>

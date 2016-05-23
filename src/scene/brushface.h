@@ -48,7 +48,7 @@ private:
     void notifyVertexRemoved(int index);
     void notifyVertexChanged(int index);
     void buildGeometry();
-    virtual float computeIntersection(const Ray3D &ray, QRgb *col = NULL, RayCoordinateSpace space = IRayDetectable::WorldSpace) const;
+    virtual bool computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const;
 
     QVector<int>      m_Vertices;
     bool            m_bRebuildGeometry;

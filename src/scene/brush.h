@@ -28,7 +28,7 @@ public:
     virtual QString serialiseIdentifier() const;
     virtual void draw(ShaderStack *stack);
 
-    virtual float computeIntersection(const Ray3D &ray, QRgb *col = NULL, RayCoordinateSpace space = IRayDetectable::WorldSpace) const;
+    virtual bool computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const;
 
 protected:
     explicit Brush(BaseScene* scene, SceneObject* parent);
