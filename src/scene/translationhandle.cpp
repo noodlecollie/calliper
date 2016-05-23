@@ -174,20 +174,18 @@ void TranslationHandle::build()
     // ============================================ //
 
     // ============================================ //
-    addTranslationShaft(XNormal, scale, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
-    addTranslationShaft(YNormal, scale, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
-    addTranslationShaft(ZNormal, scale, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
+    addTranslationShaft(XShaftNormal, scale, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
+    addTranslationShaft(YShaftNormal, scale, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
+    addTranslationShaft(ZShaftNormal, scale, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
 
-    addTranslationShaft(XHover, scale, QColor::fromRgb(HOVERCOLOUR_X), QMatrix4x4(), *lines);
-    addTranslationShaft(YHover, scale, QColor::fromRgb(HOVERCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
-    addTranslationShaft(ZHover, scale, QColor::fromRgb(HOVERCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
+    addTranslationShaft(XShaftHover, scale, QColor::fromRgb(HOVERCOLOUR_X), QMatrix4x4(), *lines);
+    addTranslationShaft(YShaftHover, scale, QColor::fromRgb(HOVERCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
+    addTranslationShaft(ZShaftHover, scale, QColor::fromRgb(HOVERCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
 
-    m_ShaftSections.append((int)XNormal);
-    m_ShaftSections.append((int)YNormal);
-    m_ShaftSections.append((int)ZNormal);
+    m_ShaftSections.append((int)XShaftNormal);
+    m_ShaftSections.append((int)YShaftNormal);
+    m_ShaftSections.append((int)ZShaftNormal);
     // ============================================ //
-
-    lines->setSectionCount(6);
 
     appendGeometry(arrows);
     appendGeometry(lines);
