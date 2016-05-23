@@ -121,6 +121,10 @@ void GeometryData::initDefaults()
     m_flLineWidth = 1.0f;
 
     m_iDataFormat = PositionNormalUV;
+
+    m_iSectionCount = 0;
+    memset(&m_SectionOffsets, 0, MAX_GEOM_SECTIONS * sizeof(unsigned int));
+    memset(&m_SectionLengths, 0, MAX_GEOM_SECTIONS * sizeof(unsigned int));
 }
 
 GeometryData::GeometryData(const GeometryData &other)
@@ -743,4 +747,39 @@ GeometryData::GeometryData(const QJsonObject &serialisedData)
 QString GeometryData::serialiseIdentifier() const
 {
     return "GeometryData";
+}
+
+unsigned int GeometryData::sectionLength(int section) const
+{
+    Q_ASSERT(section >= 0 && section < MAX_GEOM_SECTIONS);
+    return m_SectionLengths[section];
+}
+
+unsigned int GeometryData::sectionOffset(int section) const
+{
+    Q_ASSERT(section >= 0 && section < MAX_GEOM_SECTIONS);
+    return m_SectionOffsets[section];
+}
+
+void GeometryData::setSectionOffset(int section, unsigned int offset)
+{
+    Q_ASSERT(section >= 0 && section < MAX_GEOM_SECTIONS);
+    m_SectionOffsets[section] = offset;
+}
+
+void GeometryData::setSectionLength(int section, unsigned int length)
+{
+    Q_ASSERT(section >= 0 && section < MAX_GEOM_SECTIONS);
+    m_SectionLengths[section] = length;
+}
+
+int GeometryData::sectionCount() const
+{
+    return m_iSectionCount;
+}
+
+void GeometryData::setSectionCount(int count)
+{
+    Q_ASSERT(count >= 0 && count < MAX_GEOM_SECTIONS);
+    m_iSectionCount = count;
 }

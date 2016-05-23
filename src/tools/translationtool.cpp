@@ -132,10 +132,19 @@ void TranslationTool::commitSceneObjectManipulator(SceneObject *, SceneObjectMan
 
 void TranslationTool::startManipulatorHover(QRgb pickColour)
 {
-    qDebug() << "Hovering over translation handle with pick colour" << QColor::fromRgb(pickColour);
+    TranslationHandle* handle = qobject_cast<TranslationHandle*>(m_pManipulator);
+    handle->setHoverSection(pickColour);
 }
 
 void TranslationTool::endManipulatorHover()
 {
-    qDebug() << "Ending hover over translation handle";
+    TranslationHandle* handle = qobject_cast<TranslationHandle*>(m_pManipulator);
+    handle->setHoverAxis(-1);
+
+}
+
+void TranslationTool::updateManipulatorHover(QRgb pickColour)
+{
+    TranslationHandle* handle = qobject_cast<TranslationHandle*>(m_pManipulator);
+    handle->setHoverSection(pickColour);
 }

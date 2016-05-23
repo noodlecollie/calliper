@@ -50,6 +50,7 @@ protected:
     virtual void commitSceneObjectManipulator(SceneObject* obj, SceneObjectManipulator &manip) = 0;
     virtual void startManipulatorHover(QRgb pickColour) = 0;
     virtual void endManipulatorHover() = 0;
+    virtual void updateManipulatorHover(QRgb pickColour) = 0;
 
     bool isMouseOnManipulator(Viewport* v, const QPoint &pos, QRgb* pickColour) const;
     void updateManipulatorHoverState(Viewport* v, const QPoint &pos);

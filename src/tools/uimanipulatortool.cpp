@@ -184,6 +184,9 @@ void UIManipulatorTool::updateManipulatorHoverState(Viewport *v, const QPoint &p
     {
         if ( !m_bHoveringOnManipulator )
             startManipulatorHover(col);
+        else
+            updateManipulatorHover(col);
+
         m_bHoveringOnManipulator = true;
     }
     else

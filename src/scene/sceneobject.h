@@ -89,7 +89,7 @@ protected:
     SceneObject(const SceneObject &cloneFrom);
     virtual ~SceneObject();
 
-    void drawGeometry(GeometryData* geom, ShaderStack* stack);
+    void drawGeometry(GeometryData* geom, ShaderStack* stack, const int* sections = NULL, int sectionCount = 0);
 
 	BaseScene*						m_pScene;
     RenderFlags						m_RenderFlags;

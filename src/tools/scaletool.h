@@ -26,6 +26,7 @@ protected:
     virtual void commitSceneObjectManipulator(SceneObject *, SceneObjectManipulator &manip);
     virtual void startManipulatorHover(QRgb pickColour);
     virtual void endManipulatorHover();
+    virtual void updateManipulatorHover(QRgb pickColour);
 };
 
 #endif // SCALETOOL_H

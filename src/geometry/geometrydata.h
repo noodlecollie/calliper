@@ -17,6 +17,7 @@ class ShaderProgram;
 class QOpenGLTexture;
 
 #define MAX_GEOM_TEXTURES 4
+#define MAX_GEOM_SECTIONS 16
 
 // TODO: Make this class copy-on-write or something, it's probably quite slow right now.
 class GeometryData : public ISerialisable
@@ -72,6 +73,23 @@ public:
     void upload(bool force = false);
     void draw(int offset = 0, int count = -1);
 
+    // Assumed sections have been set up correctly.
+    // Sections are basically offsets and lengths stored
+    // within the object. The GeometryData makes no attempt
+    // to manage or validate them.
+    inline void drawSection(int section)
+    {
+        draw(m_SectionOffsets[section] * sizeof(unsigned int), m_SectionLengths[section]);
+    }
+
+    inline void drawSection(const int* sections, int count)
+    {
+        for ( int i = 0; i < count; i++ )
+        {
+            drawSection(sections[i]);
+        }
+    }
+
     QString texture(int index) const;
     void setTexture(int index, const QString &path);
 
@@ -105,6 +123,18 @@ public:
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
 
+    unsigned int sectionOffset(int section) const;
+    unsigned int sectionLength(int section) const;
+    void setSectionOffset(int section, unsigned int offset);
+    void setSectionLength(int section, unsigned int length);
+    inline void setSection(int section, unsigned int offset, unsigned int length)
+    {
+        setSectionOffset(section, offset);
+        setSectionLength(section, length);
+    }
+    int sectionCount() const;
+    void setSectionCount(int count);
+
 private:
     void initDefaults();
 
@@ -124,6 +154,10 @@ private:
 
     QSharedPointer<QOpenGLTexture>  m_pLocalTexture;
     QString m_szShaderOverride;
+
+    unsigned int    m_SectionOffsets[MAX_GEOM_SECTIONS];    // Offset of beginning of section, in indices.
+    unsigned int    m_SectionLengths[MAX_GEOM_SECTIONS];    // Length of section, in indices
+    int             m_iSectionCount;
 };
 
 QDebug operator<<(QDebug debug, const GeometryData &data);

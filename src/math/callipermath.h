@@ -14,6 +14,12 @@ namespace Math
         AxisX = 0,
         AxisY = 1,
         AxisZ = 2,
+
+        AxisXY = 3,
+        AxisYZ = 4,
+        AxisXZ = 5,
+
+        AxisXYZ = 6,
     };
 
     QMatrix4x4 matrixTranslate(const QVector3D &translation);

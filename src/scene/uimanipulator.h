@@ -37,11 +37,14 @@ public:
     virtual void draw(ShaderStack *stack);
 
     static int axisFlagsFromPickColor(QRgb colour);
+    static int axisIdentifierFromPickColor(QRgb colour);
 
 protected:
     explicit UIManipulator(BaseScene* scene, SceneObject* parent);
     UIManipulator(const UIManipulator &cloneFrom);
     virtual ~UIManipulator();
+
+    void initDefaults();
 
     const static QRgb PICKCOLOUR_X;
     const static QRgb PICKCOLOUR_Y;
@@ -50,6 +53,15 @@ protected:
     const static QRgb PICKCOLOUR_YZ;
     const static QRgb PICKCOLOUR_XZ;
     const static unsigned int PICKMASK;
+
+    const static QRgb HOVERCOLOUR_X;
+    const static QRgb HOVERCOLOUR_Y;
+    const static QRgb HOVERCOLOUR_Z;
+    const static QRgb HOVERCOLOUR_XY;
+    const static QRgb HOVERCOLOUR_YZ;
+    const static QRgb HOVERCOLOUR_XZ;
+
+    QVector<int>    m_SectionsToDraw;
 };
 
 #endif // UIMANIPULATOR_H

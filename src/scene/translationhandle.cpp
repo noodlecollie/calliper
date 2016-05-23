@@ -10,15 +10,34 @@
 #include "callipermath.h"
 #include "basescene.h"
 
-#define PICKCOLOUR_X    0x88ff0000
-#define PICKCOLOUR_Y    0x8800ff00
-#define PICKCOLOUR_Z    0x880000ff
-#define PICKCOLOUR_XY   0x88888800
-#define PICKCOLOUR_YZ   0x88008888
-#define PICKCOLOUR_XZ   0x88880088
-#define PICKMASK        0x00ffffff
+enum GeometrySections
+{
+    XNormal = 0,
+    YNormal,
+    ZNormal,
+    XYNormal,
+    YZNormal,
+    XZNormal,
 
-void addTranslationHead(float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
+    XHover,
+    YHover,
+    ZHover,
+    XYHover,
+    YZHover,
+    XZHover,
+
+    XShaftNormal = 0,
+    YShaftNormal,
+    ZShaftNormal,
+    XShaftHover,
+    YShaftHover,
+    ZShaftHover
+};
+
+// When rendering for picking, we don't want to draw any hover states.
+const int PICKING_SECTIONS[] = { 0, 1, 2, 3, 4, 5 };
+
+void addTranslationHead(GeometrySections section, float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
     static const float HEAD_RADIUS = 0.05f;
     static const float HEAD_LENGTH = 0.15f;
@@ -56,10 +75,12 @@ void addTranslationHead(float scale, const QColor &col, const QMatrix4x4 &transf
         geometry.transform(transform);
     }
 
+    data.setSection((int)section, data.indexCount(), geometry.indexCount());
+    data.setSectionCount(data.sectionCount()+1);
     data.append(geometry);
 }
 
-void addTranslationPanel(float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
+void addTranslationPanel(GeometrySections section, float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
     GeometryData geometry;
     geometry.setShaderOverride(PerVertexColorShader::staticName());
@@ -81,10 +102,12 @@ void addTranslationPanel(float scale, const QColor &col, const QMatrix4x4 &trans
         geometry.transform(transform);
     }
 
+    data.setSection((int)section, data.indexCount(), geometry.indexCount());
+    data.setSectionCount(data.sectionCount()+1);
     data.append(geometry);
 }
 
-void addTranslationShaft(float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
+void addTranslationShaft(GeometrySections section, float scale, const QColor &col, const QMatrix4x4 &transform, GeometryData &data)
 {
     GeometryData geometry;
     geometry.setShaderOverride(PerVertexColorShader::staticName());
@@ -100,6 +123,8 @@ void addTranslationShaft(float scale, const QColor &col, const QMatrix4x4 &trans
         geometry.transform(transform);
     }
 
+    data.setSection((int)section, data.indexCount(), geometry.indexCount());
+    data.setSectionCount(data.sectionCount()+1);
     data.append(geometry);
 }
 
@@ -117,17 +142,52 @@ void TranslationHandle::build()
     lines->setShaderOverride(PerVertexColorShader::staticName());
     lines->setDrawMode(GL_LINES);
 
-    addTranslationHead(scale, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *arrows);
-    addTranslationHead(scale, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *arrows);
-    addTranslationHead(scale, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
+    // ============================================ //
+    // Add normal geometry sections.
+    addTranslationHead(XNormal, scale, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *arrows);
+    addTranslationHead(YNormal, scale, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *arrows);
+    addTranslationHead(ZNormal, scale, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
 
-    addTranslationPanel(scale/4.0f, QColor::fromRgba(PICKCOLOUR_XY), QMatrix4x4(), *arrows);
-    addTranslationPanel(scale/4.0f, QColor::fromRgba(PICKCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
-    addTranslationPanel(scale/4.0f, QColor::fromRgba(PICKCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *arrows);
+    // Add hover geometry sections.
+    addTranslationHead(XHover, scale, QColor::fromRgb(HOVERCOLOUR_X), QMatrix4x4(), *arrows);
+    addTranslationHead(YHover, scale, QColor::fromRgb(HOVERCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *arrows);
+    addTranslationHead(ZHover, scale, QColor::fromRgb(HOVERCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
 
-    addTranslationShaft(scale, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
-    addTranslationShaft(scale, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
-    addTranslationShaft(scale, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
+    // Specify that these pieces should be drawn normal by default.
+    m_ArrowSections.append((int)XNormal);
+    m_ArrowSections.append((int)YNormal);
+    m_ArrowSections.append((int)ZNormal);
+    // ============================================ //
+
+    // ============================================ //
+    addTranslationPanel(XYNormal, scale/4.0f, QColor::fromRgba(PICKCOLOUR_XY), QMatrix4x4(), *arrows);
+    addTranslationPanel(YZNormal, scale/4.0f, QColor::fromRgba(PICKCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
+    addTranslationPanel(XZNormal, scale/4.0f, QColor::fromRgba(PICKCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *arrows);
+
+    addTranslationPanel(XYHover, scale/4.0f, QColor::fromRgba(HOVERCOLOUR_XY), QMatrix4x4(), *arrows);
+    addTranslationPanel(YZHover, scale/4.0f, QColor::fromRgba(HOVERCOLOUR_YZ), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *arrows);
+    addTranslationPanel(XZHover, scale/4.0f, QColor::fromRgba(HOVERCOLOUR_XZ), Math::matrixRotateX(qDegreesToRadians(90.0f)), *arrows);
+
+    m_ArrowSections.append((int)XYNormal);
+    m_ArrowSections.append((int)YZNormal);
+    m_ArrowSections.append((int)XZNormal);
+    // ============================================ //
+
+    // ============================================ //
+    addTranslationShaft(XNormal, scale, QColor::fromRgb(PICKCOLOUR_X), QMatrix4x4(), *lines);
+    addTranslationShaft(YNormal, scale, QColor::fromRgb(PICKCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
+    addTranslationShaft(ZNormal, scale, QColor::fromRgb(PICKCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
+
+    addTranslationShaft(XHover, scale, QColor::fromRgb(HOVERCOLOUR_X), QMatrix4x4(), *lines);
+    addTranslationShaft(YHover, scale, QColor::fromRgb(HOVERCOLOUR_Y), Math::matrixRotateZ(qDegreesToRadians(90.0f)), *lines);
+    addTranslationShaft(ZHover, scale, QColor::fromRgb(HOVERCOLOUR_Z), Math::matrixRotateY(qDegreesToRadians(-90.0f)), *lines);
+
+    m_ShaftSections.append((int)XNormal);
+    m_ShaftSections.append((int)YNormal);
+    m_ShaftSections.append((int)ZNormal);
+    // ============================================ //
+
+    lines->setSectionCount(6);
 
     appendGeometry(arrows);
     appendGeometry(lines);
@@ -148,12 +208,50 @@ TranslationHandle::~TranslationHandle()
 
 }
 
-void TranslationHandle::draw(ShaderStack *stack)
-{
-    UIManipulator::draw(stack);
-}
-
 SceneObject* TranslationHandle::clone() const
 {
     return m_pScene->cloneSceneObject<TranslationHandle>(this);
+}
+
+void TranslationHandle::setHoverAxis(int axis)
+{
+    for ( int i = 0; i < m_ArrowSections.count(); i++ )
+    {
+        m_ArrowSections[i] = (axis == i) ? (int)(XHover + i) : (int)(XNormal + i);
+    }
+
+    for ( int i = 0; i < m_ShaftSections.count(); i++ )
+    {
+        m_ShaftSections[i] = (axis == i) ? (int)(XShaftHover + i) : (int)(XShaftNormal + i);
+    }
+}
+
+void TranslationHandle::setHoverSection(QRgb pickColour)
+{
+    setHoverAxis(axisIdentifierFromPickColor(pickColour));
+}
+
+void TranslationHandle::draw(ShaderStack *stack)
+{
+    if ( isEmpty() )
+        return;
+
+    QVector4D testVec = stack->cameraProjectionTop() * stack->coordinateTransformTop() * stack->worldToCameraTop()
+            * stack->modelToWorldTop() * QVector4D(0,0,0,1);
+
+    stack->counterScalePush();
+    stack->counterScaleSetTop(testVec.z());
+
+    if ( stack->isPicking() )
+    {
+        drawGeometry(geometryAt(0).data(), stack, PICKING_SECTIONS, 6);
+        drawGeometry(geometryAt(1).data(), stack, PICKING_SECTIONS, 3);
+    }
+    else
+    {
+        drawGeometry(geometryAt(0).data(), stack, m_ArrowSections.data(), m_ArrowSections.count());
+        drawGeometry(geometryAt(1).data(), stack, m_ShaftSections.data(), m_ShaftSections.count());
+    }
+
+    stack->counterScalePop();
 }

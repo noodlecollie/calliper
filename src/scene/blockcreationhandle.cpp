@@ -10,7 +10,7 @@ BlockCreationHandle::BlockCreationHandle(BaseScene *scene, SceneObject *parent) 
 
 BlockCreationHandle::~BlockCreationHandle()
 {
-    bool halt = true;
+
 }
 
 void BlockCreationHandle::initDefaults()

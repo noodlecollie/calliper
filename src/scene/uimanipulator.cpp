@@ -10,14 +10,19 @@ const QRgb UIManipulator::PICKCOLOUR_YZ = 0x88008888;
 const QRgb UIManipulator::PICKCOLOUR_XZ = 0x88880088;
 const unsigned int UIManipulator::PICKMASK = 0x00ffffff;
 
+const QRgb UIManipulator::HOVERCOLOUR_X = 0x88f7a59b;
+const QRgb UIManipulator::HOVERCOLOUR_Y = 0x889bd092;
+const QRgb UIManipulator::HOVERCOLOUR_Z = 0x8893b3de;
+const QRgb UIManipulator::HOVERCOLOUR_XY = 0x88fec67d;
+const QRgb UIManipulator::HOVERCOLOUR_YZ = 0x8899d5c9;
+const QRgb UIManipulator::HOVERCOLOUR_XZ = 0x88c48cbe;
+
 UIManipulator::UIManipulator(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
-
 }
 
 UIManipulator::UIManipulator(const UIManipulator &cloneFrom) : SceneObject(cloneFrom)
 {
-
 }
 
 UIManipulator::~UIManipulator()
@@ -191,5 +196,32 @@ int UIManipulator::axisFlagsFromPickColor(QRgb colour)
 
         default:
             return 0;
+    }
+}
+
+int UIManipulator::axisIdentifierFromPickColor(QRgb colour)
+{
+    switch (colour & PICKMASK)
+    {
+        case PICKCOLOUR_X & PICKMASK:
+            return Math::AxisX;
+
+        case PICKCOLOUR_Y & PICKMASK:
+            return Math::AxisY;
+
+        case PICKCOLOUR_Z & PICKMASK:
+            return Math::AxisZ;
+
+        case PICKCOLOUR_XY & PICKMASK:
+            return Math::AxisXY;
+
+        case PICKCOLOUR_XZ & PICKMASK:
+            return Math::AxisXZ;
+
+        case PICKCOLOUR_YZ & PICKMASK:
+            return Math::AxisYZ;
+
+        default:
+            return -1;
     }
 }

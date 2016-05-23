@@ -102,7 +102,7 @@ void SceneObject::draw(ShaderStack *stack)
     }
 }
 
-void SceneObject::drawGeometry(GeometryData *geom, ShaderStack *stack)
+void SceneObject::drawGeometry(GeometryData *geom, ShaderStack *stack, const int *sections, int sectionCount)
 {
     if ( geom->isEmpty() )
         return;
@@ -134,7 +134,10 @@ void SceneObject::drawGeometry(GeometryData *geom, ShaderStack *stack)
     tex->bind(0);
 
     // Draw.
-    geom->draw();
+    if ( !sections )
+        geom->draw();
+    else
+        geom->drawSection(sections, sectionCount);
 
     // Pop the shader if we pushed one earlier.
     if ( shaderOverridden )

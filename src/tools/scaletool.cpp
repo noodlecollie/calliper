@@ -134,12 +134,14 @@ void ScaleTool::updateManipulator()
     m_pManipulator->setHidden(sset.count() < 1);
 }
 
-void ScaleTool::startManipulatorHover(QRgb pickColour)
+void ScaleTool::startManipulatorHover(QRgb)
 {
-    qDebug() << "Hovering over scale handle with pick colour" << QColor::fromRgb(pickColour);
 }
 
 void ScaleTool::endManipulatorHover()
 {
-    qDebug() << "Ending hover over scale handle";
+}
+
+void ScaleTool::updateManipulatorHover(QRgb)
+{
 }
