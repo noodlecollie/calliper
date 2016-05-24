@@ -8,9 +8,9 @@
 #include "eulerangle.h"
 #include "shaderstack.h"
 #include <QMap>
+#include "sceneobject.h"
 
 class BaseScene;
-class SceneObject;
 class GeometryData;
 class ShaderProgram;
 class QOpenGLFunctions_4_1_Core;
@@ -52,7 +52,7 @@ public:
 
     void renderScene(BaseScene* scene, const CameraParams &params);
     SceneObject* selectFromDepthBuffer(BaseScene* scene, const CameraParams &params,
-                                       const QPoint &oglPos, QRgb* pickColor = NULL);
+                                       const QPoint &oglPos, int selectionMask = SceneObject::AllObjectsMask, QRgb* pickColor = NULL);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
     void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter,

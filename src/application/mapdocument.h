@@ -18,12 +18,6 @@ class MapDocument : public QObject, public ISerialisable
 {
     Q_OBJECT
 public:
-    enum SceneTypeFlag
-    {
-        MapSceneFlag = 0x1,
-        UISceneFlag = 0x2,
-    };
-
     explicit MapDocument(QObject* parent = 0);
     ~MapDocument();
 

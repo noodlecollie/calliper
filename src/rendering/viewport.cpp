@@ -51,7 +51,8 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
     m_bDrawFPS = false;
     m_iRenderTasks = 0;
     m_pPickedObject = NULL;
-    m_fScenePickFlags = 0;
+    m_iScenePickFlags = 0;
+    m_iObjectSelectionMask = SceneObject::AllObjectsMask;
     m_pHighlightOutline = NULL;
     setMouseTracking(true);
 
@@ -462,11 +463,11 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
 
     renderer()->begin();
 
-    if ( (m_fScenePickFlags & MapDocument::MapSceneFlag) == MapDocument::MapSceneFlag )
+    if ( (m_iScenePickFlags & BaseScene::MapSceneFlag) == BaseScene::MapSceneFlag )
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         QRgb pickCol = 0xffffffff;
-        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->scene(), CameraParams(m_pCamera), oglPos, &pickCol);
+        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->scene(), CameraParams(m_pCamera), oglPos, m_iObjectSelectionMask, &pickCol);
         if ( obj )
         {
             m_PickColour = pickCol;
@@ -474,11 +475,12 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
         }
     }
 
-    if ( (m_fScenePickFlags & MapDocument::UISceneFlag) == MapDocument::UISceneFlag )
+    if ( (m_iScenePickFlags & BaseScene::UISceneFlag) == BaseScene::UISceneFlag )
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         QRgb pickCol = 0xffffffff;
-        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->uiScene(), CameraParams(m_pCamera->rootToLocal(), m_pCamera->lens()->projectionMatrix()), oglPos, &pickCol);
+        SceneObject* obj = renderer()->selectFromDepthBuffer(m_pDocument->uiScene(), CameraParams(m_pCamera->rootToLocal(), m_pCamera->lens()->projectionMatrix()),
+                                                             oglPos, m_iObjectSelectionMask, &pickCol);
         if ( obj )
         {
             m_PickColour = pickCol;
@@ -491,11 +493,12 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     fbo.release();
 }
 
-SceneObject* Viewport::pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, QRgb* pickColor)
+SceneObject* Viewport::pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, int selectionMask, QRgb *pickColor)
 {
     m_iRenderTasks |= DepthBufferSelect;
     m_DepthSelectPos = pos;
-    m_fScenePickFlags = sceneFlags;
+    m_iScenePickFlags = sceneFlags;
+    m_iObjectSelectionMask = selectionMask;
     REPAINT();
 
     if ( pickColor )

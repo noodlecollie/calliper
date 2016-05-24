@@ -27,6 +27,12 @@ public:
         TypeUIScene
     };
 
+    enum SceneTypeFlag
+    {
+        MapSceneFlag = 0x1,
+        UISceneFlag = 0x2,
+    };
+
     explicit BaseScene(MapDocument* doc);
     virtual ~BaseScene();
     virtual SceneType type() const;

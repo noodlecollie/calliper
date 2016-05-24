@@ -132,6 +132,7 @@ private:
     bool    m_bAutoUpdate;
     bool    m_bLockShader;
     bool    m_bPicking;
+    int     m_iPickingMask;
 
     CameraParams            m_CameraParams;
 

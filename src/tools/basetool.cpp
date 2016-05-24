@@ -163,7 +163,7 @@ void BaseTool::vMousePress(QMouseEvent *e)
     if ( !v )
         return;
 
-    SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::MapSceneFlag, e->pos());
+    SceneObject* obj = v->pickObjectFromDepthBuffer(BaseScene::MapSceneFlag, e->pos());
 	addToSelectedSet(obj, !m_flKBModifiers.testFlag(Qt::ControlModifier));
 }
 

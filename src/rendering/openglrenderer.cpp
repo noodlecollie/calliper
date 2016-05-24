@@ -175,6 +175,9 @@ void OpenGLRenderer::renderTranslucent()
     {
         const DeferredObject &dfo = *it;
 
+        if ( m_bPicking && !dfo.object->passesObjectMask(m_pStack->m_iPickingMask) )
+            continue;
+
         m_pStack->modelToWorldPush();
 
         m_pStack->modelToWorldSetToIdentity();
@@ -211,9 +214,18 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 
     if ( !deferred )
     {
-        obj->draw(stack);
         if ( m_bPicking )
-            m_ObjectPicker.checkDrawnObject(obj);
+        {
+            if ( obj->passesObjectMask(stack->m_iPickingMask) )
+            {
+                obj->draw(stack);
+                m_ObjectPicker.checkDrawnObject(obj);
+            }
+        }
+        else
+        {
+            obj->draw(stack);
+        }
     }
 
     QList<SceneObject*> children = obj->children();
@@ -268,8 +280,7 @@ void OpenGLRenderer::renderScene(BaseScene *scene, const CameraParams &params)
     m_pStack->worldToCameraPop();
 }
 
-SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const CameraParams &params,
-                                                   const QPoint &oglPos, QRgb *pickColor)
+SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const CameraParams &params, const QPoint &oglPos, int selectionMask, QRgb *pickColor)
 {
     Q_ASSERT(m_bPreparedForRendering);
 
@@ -291,6 +302,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const Camer
     m_pStack->shaderPush(resourceManager()->shader(SelectionMaskShader::staticName()));
     m_pStack->m_bLockShader = true;
     m_pStack->m_bPicking = true;
+    m_pStack->m_iPickingMask = selectionMask;
 
     f->glEnable(GL_SCISSOR_TEST);
     f->glScissor(oglPos.x(), oglPos.y(), 1, 1);

@@ -28,6 +28,14 @@ public:
     Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
     Q_FLAG(RenderFlags)
 
+    // Used for filtering different types of scene object.
+    enum ObjectMask
+    {
+        NotEditableMask = 0x1,          // Allow non-editables.
+
+        AllObjectsMask = 0xffffffff,    // Allow all.
+    };
+
     // Object name is not cloned.
     virtual SceneObject* clone() const;
 
@@ -78,6 +86,8 @@ public:
 
     // Assumes the ray is in parent space.
     SceneObject* computeRayCastRecursive(const Ray3D &ray, RayTraceContact& contact);
+
+    virtual bool passesObjectMask(int mask) const;
 
 signals:
 

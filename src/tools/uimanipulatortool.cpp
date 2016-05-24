@@ -68,7 +68,7 @@ void UIManipulatorTool::vMousePress(QMouseEvent *e)
         return;
 
     QRgb col = 0xffffffff;
-    SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::UISceneFlag | MapDocument::MapSceneFlag, e->pos(), &col);
+    SceneObject* obj = v->pickObjectFromDepthBuffer(BaseScene::UISceneFlag | BaseScene::MapSceneFlag, e->pos(), SceneObject::AllObjectsMask, &col);
 
     if ( !obj || obj->scene() == m_pDocument->scene() )
     {
@@ -144,7 +144,7 @@ void UIManipulatorTool::vMouseMoveHover(QMouseEvent *e)
 
 bool UIManipulatorTool::isMouseOnManipulator(Viewport *v, const QPoint &pos, QRgb *pickColour) const
 {
-    SceneObject* obj = v->pickObjectFromDepthBuffer(MapDocument::UISceneFlag, pos, pickColour);
+    SceneObject* obj = v->pickObjectFromDepthBuffer(BaseScene::UISceneFlag, pos, SceneObject::AllObjectsMask, pickColour);
     return obj && obj == m_pManipulator;
 }
 

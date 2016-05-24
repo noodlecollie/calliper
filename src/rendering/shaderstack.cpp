@@ -1,12 +1,14 @@
 #include "shaderstack.h"
 #include "shaderprogram.h"
 #include "scenecamera.h"
+#include "sceneobject.h"
 
 ShaderStack::ShaderStack(ShaderProgram* initial, bool autoUpdate)
 {
     m_bAutoUpdate = autoUpdate;
     m_bLockShader = false;
     m_bPicking = false;
+    m_iPickingMask = SceneObject::AllObjectsMask;
     m_Shaders.push(initial);
     m_Shaders.top()->apply();
 

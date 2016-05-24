@@ -15,13 +15,20 @@ public:
 
     virtual void vActivate();
     virtual void vDeactivate();
+    virtual void vMousePress(QMouseEvent *e);
+    virtual void vMouseRelease(QMouseEvent *e);
 
 signals:
 
 public slots:
 
 private:
+    void endDrag();
+
     BlockCreationHandle*    m_pManipulator;
+
+    bool                    m_bInDrag;
+    QPoint                  m_PosDragBegin;
 };
 
 #endif // CREATEGEOMETRYTOOL_H

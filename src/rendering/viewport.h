@@ -7,12 +7,12 @@
 #include <QColor>
 #include "cameracontroller.h"
 #include <QTime>
+#include "sceneobject.h"
 
 class SceneCamera;
 class GeometryData;
 class ViewportUserOptions;
 class QPushButton;
-class SceneObject;
 class MapDocument;
 
 class Viewport : public QOpenGLWidget, public QOpenGLFunctions_4_1_Core
@@ -39,7 +39,7 @@ public:
     bool drawFocusHighlight() const;
     bool drawFPS() const;
 
-    SceneObject* pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, QRgb* pickColor = NULL);
+    SceneObject* pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, int selectionMask = SceneObject::AllObjectsMask, QRgb* pickColor = NULL);
     bool saveCurrentFrame(const QString &filename);
 
     void repaintHack();
@@ -107,7 +107,8 @@ private:
     QPoint          m_DepthSelectPos;
     SceneObject*    m_pPickedObject;
     QRgb            m_PickColour;
-    int             m_fScenePickFlags;
+    int             m_iScenePickFlags;
+    int             m_iObjectSelectionMask;
 };
 
 #endif // VIEWPORT_H

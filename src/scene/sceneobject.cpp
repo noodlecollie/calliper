@@ -431,3 +431,13 @@ QList<SceneObject*> SceneObject::ancestors() const
 
     return list;
 }
+
+bool SceneObject::passesObjectMask(int mask) const
+{
+    // If we are not editable but the non-editable mask is not set,
+    // we should not be picked.
+    if ( (mask & NotEditableMask) != NotEditableMask && !editable() )
+        return false;
+
+    return true;
+}

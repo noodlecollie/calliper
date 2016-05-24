@@ -2,6 +2,7 @@
 #include "mapdocument.h"
 #include "mapscene.h"
 #include "blockcreationhandle.h"
+#include <QMouseEvent>
 
 CreateGeometryTool::CreateGeometryTool(MapDocument *document) : BaseTool(CreateGeometryTool::staticName(), document)
 {
@@ -36,4 +37,20 @@ void CreateGeometryTool::vDeactivate()
     m_pManipulator = NULL;
 
     BaseTool::vDeactivate();
+}
+
+void CreateGeometryTool::vMousePress(QMouseEvent *e)
+{
+    m_bInDrag = true;
+    m_PosDragBegin = e->pos();
+}
+
+void CreateGeometryTool::vMouseRelease(QMouseEvent *e)
+{
+    endDrag();
+}
+
+void CreateGeometryTool::endDrag()
+{
+    m_bInDrag = false;
 }
