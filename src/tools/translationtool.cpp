@@ -43,14 +43,14 @@ void TranslationTool::updateManipulatorFromMouseMove(QMouseEvent *e)
     unsigned int gridMultiple = m_pDocument->scene()->grid()->gridMultiple();
 
     // If there is no constraint on the movement axis, just move in the camera plane.
-    if ( m_iAxisFlags == UIManipulator::AxisXYZ )
+    if ( m_iAxisFlags == Math::AxisFlagXYZ )
     {
         m_Transformation.translation =
                 viewport->camera()->worldTranslation(m_BeginDragPos, e->pos(), viewport->size(), m_flHandleCamDist);
 
         QVector3D newHandlePos = m_ManipulatorOriginalOrientation.translation
                 + m_Transformation.translation;
-        UIManipulator::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
+        Math::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
         m_pManipulator->setPosition(m_pManipulator->rootToParent(newHandlePos));
     }
 
@@ -96,7 +96,7 @@ void TranslationTool::updateManipulatorFromMouseMove(QMouseEvent *e)
         QVector3D newHandlePos = m_ManipulatorOriginalOrientation.translation + overallTranslation;
 
         // Snap it to the grid.
-        UIManipulator::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
+        Math::clampToNearestMultiple(newHandlePos, gridMultiple, m_iAxisFlags);
 
         // Store our translation so we can update our objects.
         // This must be recalculated from before as the new handle position has been clamped.

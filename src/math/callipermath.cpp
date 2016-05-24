@@ -274,4 +274,16 @@ namespace Math
             return QVector3D();
         }
     }
+
+    void clampToNearestMultiple(QVector3D &vec, qint64 multiple, AxisFlag axisFlags)
+    {
+        for ( int i = 0; i < 3; i++ )
+        {
+            int flag = 1 << i;
+            if ( (axisFlags & flag) != flag )
+                continue;
+
+            vec[i] = (float)nearestMultiple(vec[i], multiple);
+        }
+    }
 }

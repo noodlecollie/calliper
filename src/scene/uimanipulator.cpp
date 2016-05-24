@@ -33,17 +33,17 @@ QList<QVector3D> UIManipulator::manipulationAxes(int axisFlags)
 {
     QList<QVector3D> axes;
 
-    if ( (axisFlags & AxisX) == AxisX )
+    if ( (axisFlags & Math::AxisFlagX) == Math::AxisFlagX )
     {
         axes.append(QVector3D(1,0,0));
     }
 
-    if ( (axisFlags & AxisY) == AxisY )
+    if ( (axisFlags & Math::AxisFlagY) == Math::AxisFlagY )
     {
         axes.append(QVector3D(0,1,0));
     }
 
-    if ( (axisFlags & AxisZ) == AxisZ )
+    if ( (axisFlags & Math::AxisFlagZ) == Math::AxisFlagZ )
     {
         axes.append(QVector3D(0,0,1));
     }
@@ -56,24 +56,12 @@ SceneObject* UIManipulator::clone() const
     return m_pScene->cloneSceneObject<UIManipulator>(this);
 }
 
-void UIManipulator::clampToNearestMultiple(QVector3D &vec, qint64 multiple, int axisFlags)
-{
-    for ( int i = 0; i < 3; i++ )
-    {
-        int flag = 1 << i;
-        if ( (axisFlags & flag) != flag )
-            continue;
-
-        vec[i] = (float)Math::nearestMultiple(vec[i], multiple);
-    }
-}
-
 Math::AxisIdentifier UIManipulator::planeConstraintAxis(int axisFlags, const HierarchicalObject &camera)
 {
 	switch (axisFlags)
 	{
 		// If the axis is single, we want to choose the plane depending on which one the camera is most perpendicular to.
-		case AxisX:
+        case Math::AxisFlagX:
 		{
 			QVector3D dir = Math::angleToVectorSimple(camera.angles());
 
@@ -88,7 +76,7 @@ Math::AxisIdentifier UIManipulator::planeConstraintAxis(int axisFlags, const Hie
 			}
 		}
 
-		case AxisY:
+        case Math::AxisFlagY:
 		{
 			QVector3D dir = Math::angleToVectorSimple(camera.angles());
 
@@ -103,7 +91,7 @@ Math::AxisIdentifier UIManipulator::planeConstraintAxis(int axisFlags, const Hie
 			}
 		}
 
-		case AxisZ:
+        case Math::AxisFlagZ:
 		{
 			QVector3D dir = Math::angleToVectorSimple(camera.angles());
 
@@ -119,17 +107,17 @@ Math::AxisIdentifier UIManipulator::planeConstraintAxis(int axisFlags, const Hie
 		}
 
 		// Otherwise, return the axis not in the plane.
-		case AxisXY:
+        case Math::AxisFlagXY:
 		{
 			return Math::AxisZ;
 		}
 
-		case AxisXZ:
+        case Math::AxisFlagXZ:
 		{
 			return Math::AxisY;
 		}
 
-		case AxisYZ:
+        case Math::AxisFlagYZ:
 		{
 			return Math::AxisX;
 		}
@@ -172,34 +160,34 @@ void UIManipulator::draw(ShaderStack *stack)
     stack->counterScalePop();
 }
 
-int UIManipulator::axisFlagsFromPickColor(QRgb colour)
+Math::AxisFlag UIManipulator::axisFlagsFromPickColor(QRgb colour)
 {
     switch (colour & PICKMASK)
     {
         case PICKCOLOUR_X & PICKMASK:
-            return UIManipulator::AxisX;
+            return Math::AxisFlagX;
 
         case PICKCOLOUR_Y & PICKMASK:
-            return UIManipulator::AxisY;
+            return Math::AxisFlagY;
 
         case PICKCOLOUR_Z & PICKMASK:
-            return UIManipulator::AxisZ;
+            return Math::AxisFlagZ;
 
         case PICKCOLOUR_XY & PICKMASK:
-            return UIManipulator::AxisXY;
+            return Math::AxisFlagXY;
 
         case PICKCOLOUR_XZ & PICKMASK:
-            return UIManipulator::AxisXZ;
+            return Math::AxisFlagXZ;
 
         case PICKCOLOUR_YZ & PICKMASK:
-            return UIManipulator::AxisYZ;
+            return Math::AxisFlagYZ;
 
         default:
-            return 0;
+            return Math::NoAxisFlag;
     }
 }
 
-int UIManipulator::axisIdentifierFromPickColor(QRgb colour)
+Math::AxisIdentifier UIManipulator::axisIdentifierFromPickColor(QRgb colour)
 {
     switch (colour & PICKMASK)
     {
@@ -222,6 +210,6 @@ int UIManipulator::axisIdentifierFromPickColor(QRgb colour)
             return Math::AxisYZ;
 
         default:
-            return -1;
+            return Math::NoAxis;
     }
 }

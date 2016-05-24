@@ -28,6 +28,7 @@ public:
     BoundingBox& transform(const QMatrix4x4 &mat);        // Does modify
 
     bool isNull() const;
+    bool hasZeroVolume() const;
 
     BoundingBox unionCopy(const BoundingBox &other) const;  // Does not modify
     BoundingBox& unionWith(const BoundingBox &other);       // Does modify

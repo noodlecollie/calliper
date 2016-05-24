@@ -11,6 +11,8 @@ namespace Math
 {
     enum AxisIdentifier
     {
+        NoAxis = -1,
+
         AxisX = 0,
         AxisY = 1,
         AxisZ = 2,
@@ -20,6 +22,21 @@ namespace Math
         AxisXZ = 5,
 
         AxisXYZ = 6,
+    };
+
+    enum AxisFlag
+    {
+        NoAxisFlag = 0x0,
+
+        AxisFlagX = 0x1,
+        AxisFlagY = 0x2,
+        AxisFlagZ = 0x4,
+
+        AxisFlagXY = AxisFlagX | AxisFlagY,
+        AxisFlagXZ = AxisFlagX | AxisFlagZ,
+        AxisFlagYZ = AxisFlagY | AxisFlagZ,
+
+        AxisFlagXYZ = AxisFlagX | AxisFlagY | AxisFlagZ
     };
 
     QMatrix4x4 matrixTranslate(const QVector3D &translation);
@@ -65,6 +82,7 @@ namespace Math
     bool fuzzyVectorIsNull(const QVector4D &vec);
 
     QVector3D cardinalAxis(AxisIdentifier axis, bool negated = false);
+    void clampToNearestMultiple(QVector3D &vec, qint64 multiple, AxisFlag axisFlags);
 }
 
 #endif // MATH_H

@@ -31,9 +31,10 @@ public:
     // Used for filtering different types of scene object.
     enum ObjectMask
     {
-        NotEditableMask = 0x1,          // Allow non-editables.
+        AllObjectsMask = 0xffffffff,                            // Allow all.
 
-        AllObjectsMask = 0xffffffff,    // Allow all.
+        NotEditableMask = 0x1,                                  // Allow non-editables.
+        EditableOnlyMask = AllObjectsMask & ~NotEditableMask    // Disallow non-editables.
     };
 
     // Object name is not cloned.

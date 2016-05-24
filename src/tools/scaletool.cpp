@@ -39,7 +39,7 @@ void ScaleTool::updateManipulatorFromMouseMove(QMouseEvent *e)
     Viewport* viewport = application()->mainWindow()->activeViewport();
 
     // If there is no constraint on the movement axis, scale in all dimensions.
-    if ( m_iAxisFlags == UIManipulator::AxisXYZ )
+    if ( m_iAxisFlags == Math::AxisFlagXYZ )
     {
         // TODO
     }

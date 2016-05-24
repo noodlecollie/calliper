@@ -11,21 +11,7 @@ class UIManipulator : public SceneObject
 	Q_OBJECT
     friend class BaseScene;
 public:
-    enum ManipulationAxisFlag
-    {
-        AxisX = 0x1,
-        AxisY = 0x2,
-        AxisZ = 0x4,
-
-        AxisXY = AxisX | AxisY,
-        AxisXZ = AxisX | AxisZ,
-        AxisYZ = AxisY | AxisZ,
-
-        AxisXYZ = AxisX | AxisY | AxisZ
-    };
-
     static QList<QVector3D> manipulationAxes(int axisFlags);
-    static void clampToNearestMultiple(QVector3D &vec, qint64 multiple, int axisFlags);
 	static Math::AxisIdentifier planeConstraintAxis(int axisFlags, const HierarchicalObject &camera);
 
     virtual SceneObject* clone() const;
@@ -36,8 +22,8 @@ public:
     virtual bool editable() const;
     virtual void draw(ShaderStack *stack);
 
-    static int axisFlagsFromPickColor(QRgb colour);
-    static int axisIdentifierFromPickColor(QRgb colour);
+    static Math::AxisFlag axisFlagsFromPickColor(QRgb colour);
+    static Math::AxisIdentifier axisIdentifierFromPickColor(QRgb colour);
 
 protected:
     explicit UIManipulator(BaseScene* scene, SceneObject* parent);

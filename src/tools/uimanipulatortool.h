@@ -62,7 +62,7 @@ protected:
     SpatialSnapshot     m_Transformation;
     QPoint              m_BeginDragPos;
     float               m_flHandleCamDist;
-    int                 m_iAxisFlags;
+    Math::AxisFlag      m_iAxisFlags;
     QList<QVector3D>    m_MovementAxes;
     bool                m_bHoveringOnManipulator;
 };

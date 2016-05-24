@@ -4,6 +4,7 @@
 #include "sceneobject.h"
 #include "cameralens.h"
 #include <QScopedPointer>
+#include "ray3d.h"
 
 class SceneCamera : public SceneObject
 {
@@ -13,6 +14,7 @@ public:
     virtual SceneObject* clone() const;
 
     CameraLens* lens() const;
+    QVector3D forwardVector() const;
 
     bool drawBounds() const;
     void setDrawBounds(bool enabled);
@@ -29,6 +31,7 @@ public:
     // Given a point on the screen, returns the direction of a ray cast from the camera origin that goes through that point.
     // This is a world direction.
     QVector3D frustumDirection(const QPoint &p, const QSize &viewSize) const;
+    Ray3D frustumRay(const QPoint &p, const QSize &viewSize) const;
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;

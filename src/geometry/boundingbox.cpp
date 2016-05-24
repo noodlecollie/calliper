@@ -72,6 +72,13 @@ bool BoundingBox::isNull() const
     return m_vecMin.isNull() && m_vecMax.isNull();
 }
 
+bool BoundingBox::hasZeroVolume() const
+{
+    return qFuzzyIsNull(m_vecMax.x() - m_vecMin.x()) ||
+            qFuzzyIsNull(m_vecMax.y() - m_vecMin.y()) ||
+            qFuzzyIsNull(m_vecMax.z() - m_vecMin.z());
+}
+
 QList<QVector3D> BoundingBox::corners() const
 {
     return isNull() ? QList<QVector3D>() : corners(m_vecMin, m_vecMax);

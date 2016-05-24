@@ -171,6 +171,12 @@ QVector3D SceneCamera::frustumDirection(const QPoint &p, const QSize &viewSize) 
     return ((rootToLocal().inverted() * Math::openGLToHammer()) * QVector4D(lens()->mapPoint(p, viewSize), 0)).toVector3D();
 }
 
+Ray3D SceneCamera::frustumRay(const QPoint &p, const QSize &viewSize) const
+{
+    QVector3D rayDir = frustumDirection(p, viewSize);
+    return Ray3D(position() + (lens()->nearPlane() * rayDir), rayDir);
+}
+
 SceneObject* SceneCamera::clone() const
 {
     return m_pScene->cloneSceneObject<SceneCamera>(this);
@@ -220,4 +226,9 @@ SceneCamera::SceneCamera(BaseScene* scene, const QJsonObject &serialisedData, Sc
 QString SceneCamera::serialiseIdentifier() const
 {
     return staticMetaObject.className();
+}
+
+QVector3D SceneCamera::forwardVector() const
+{
+    return Math::angleToVectorSimple(angles());
 }
