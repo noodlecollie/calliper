@@ -105,3 +105,22 @@ void BaseScene::destroySceneObject(SceneObject *obj)
     emit subtreeDestroyed(obj);
     delete obj;
 }
+
+void BaseScene::processAddObject(SceneObject *obj)
+{
+    // If this is a background object, add to our background set.
+    if ( obj->isBackground() )
+    {
+        m_BackgroundObjects.insert(obj);
+    }
+}
+
+void BaseScene::processRemoveObject(SceneObject *obj)
+{
+    // If this is a background object, remove it from the background set.
+    if ( obj->isBackground() )
+    {
+        m_BackgroundObjects.subtract(obj->allChildren().toSet());
+        m_BackgroundObjects.remove(obj);
+    }
+}

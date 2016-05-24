@@ -13,6 +13,7 @@ class MapGrid : public SceneObject
     friend class BaseScene;
 public:
     virtual bool editable() const;
+    virtual bool isBackground() const;
     virtual void draw(ShaderStack *stack);
     virtual SceneObject* clone() const;
 

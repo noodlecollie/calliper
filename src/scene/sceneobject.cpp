@@ -76,6 +76,11 @@ bool SceneObject::editable() const
     return true;
 }
 
+bool SceneObject::isBackground() const
+{
+    return false;
+}
+
 void SceneObject::draw(ShaderStack *stack)
 {
     if ( isEmpty() )

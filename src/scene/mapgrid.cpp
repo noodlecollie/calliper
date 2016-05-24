@@ -73,6 +73,11 @@ bool MapGrid::editable() const
     return false;
 }
 
+bool MapGrid::isBackground() const
+{
+    return true;
+}
+
 void MapGrid::setUpGeometry()
 {
     GeometryData* geom = new GeometryData();

@@ -2,6 +2,7 @@
 #define BASESCENE_H
 
 #include <QObject>
+#include <QSet>
 
 class SceneObject;
 class SceneCamera;
@@ -87,11 +88,14 @@ signals:
     void subtreeDestroyed(SceneObject* object);
 
 protected:
-    SceneObject*    m_pRootObject;
+    SceneObject*        m_pRootObject;
+    QSet<SceneObject*>  m_BackgroundObjects;
 
 private:
     void createRoot();
     void destroyRoot();
+    void processAddObject(SceneObject* obj);
+    void processRemoveObject(SceneObject* obj);
 };
 
 #endif // BASESCENE_H
