@@ -402,13 +402,15 @@ SceneObject* SceneObject::computeRayCastRecursive(const Ray3D &ray, RayTraceCont
 
         if ( tempObject && childContact.rayParameter < nearestContact.rayParameter && childContact.rayParameter > 0.0f )
         {
-            nearestObject = child;
+            nearestObject = tempObject;
             nearestContact = childContact;
             hasNearestContact = true;
         }
     }
 
-    contact = nearestContact;
+    if ( hasNearestContact )
+        contact = nearestContact;
+
     return nearestObject;
 }
 
