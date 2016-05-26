@@ -31,5 +31,9 @@ void Crosshair3D::constructGeometry()
     geom->appendVertex(QVector3D(0,0,1), QVector3D(), QColor::fromRgb(0xffffffff));
     geom->appendVertex(QVector3D(0,0,-1), QVector3D(), QColor::fromRgb(0xffffffff));
 
+    geom->appendIndex(0,1);
+    geom->appendIndex(2,3);
+    geom->appendIndex(4,5);
+
     appendGeometry(geom);
 }

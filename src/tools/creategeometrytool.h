@@ -7,6 +7,7 @@
 
 class BlockCreationHandle;
 class SceneCamera;
+class Crosshair3D;
 
 class CreateGeometryTool : public BaseTool
 {
@@ -21,6 +22,7 @@ public:
     virtual void vMousePress(QMouseEvent *e);
     virtual void vMouseRelease(QMouseEvent *e);
     virtual void vMouseMove(QMouseEvent *e);
+    virtual void vMouseMoveHover(QMouseEvent *e);
 
 signals:
 
@@ -30,8 +32,10 @@ private:
     void endDrag();
     static bool rayIntersectsZ0Plane(SceneCamera* camera, const Ray3D &ray, QVector3D &intersection);
     void updateManipulatorBounds(bool endOfDrag = false);
+    void updateCrosshairVisibility(const QPoint &mousePos);
 
     BlockCreationHandle*    m_pManipulator;
+    Crosshair3D*            m_pCrosshair;
 
     bool                    m_bInDrag;
     QPoint                  m_PosDragBegin;

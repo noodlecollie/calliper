@@ -6,6 +6,7 @@
 class Crosshair3D : public SceneObject
 {
     Q_OBJECT
+    friend class BaseScene;
 public:
 
 protected:

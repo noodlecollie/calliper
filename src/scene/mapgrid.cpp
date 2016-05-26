@@ -56,6 +56,8 @@ void MapGrid::setGridPower(int power)
         m_iPowerTwo = POWER2_1;
     else if ( m_iPowerTwo > POWER2_1024 )
         m_iPowerTwo = POWER2_1024;
+
+    emit gridPowerChanged();
 }
 
 void MapGrid::incrementGridPower()

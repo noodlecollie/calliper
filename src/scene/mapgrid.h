@@ -23,6 +23,9 @@ public:
     void decrementGridPower();
     unsigned int gridMultiple() const;
 
+signals:
+    void gridPowerChanged();
+
 protected:
     explicit MapGrid(BaseScene* scene, SceneObject* parent);
     virtual ~MapGrid();
