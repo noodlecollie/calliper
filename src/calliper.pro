@@ -86,7 +86,8 @@ HEADERS += \
     scene/spatialsnapshot.h \
     tools/creategeometrytool.h \
     factories/sceneobjectfactory.h \
-    math/raytracecontact.h
+    math/raytracecontact.h \
+    crosshair3d.h
 
 SOURCES += \
     application/application.cpp \
@@ -147,7 +148,8 @@ SOURCES += \
     tools/uimanipulatortool.cpp \
     scene/spatialsnapshot.cpp \
     tools/creategeometrytool.cpp \
-    factories/sceneobjectfactory.cpp
+    factories/sceneobjectfactory.cpp \
+    crosshair3d.cpp
 
 RESOURCES += \
     resource/resource.qrc \
