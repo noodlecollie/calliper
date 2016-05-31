@@ -16,6 +16,8 @@ BlockCreationHandle::~BlockCreationHandle()
 void BlockCreationHandle::initDefaults()
 {
     m_bRebuildGeometry = true;
+    m_bDrawFaces = false;
+    setDrawFaces(true);
 }
 
 SceneObject* BlockCreationHandle::clone() const
@@ -54,6 +56,13 @@ void BlockCreationHandle::rebuildGeometry()
     geom->setShaderOverride(PerVertexColorShader::staticName());
     appendGeometry(geom);
 
+    if ( m_bDrawFaces )
+    {
+        GeometryData* faces = GeometryFactory::cuboidSolidColor(m_Bounds, QColor::fromRgba(0x80ffffff));
+        faces->setShaderOverride(PerVertexColorShader::staticName());
+        appendGeometry(faces);
+    }
+
     m_bRebuildGeometry = false;
 }
 
@@ -68,4 +77,27 @@ void BlockCreationHandle::draw(ShaderStack *stack)
         rebuildGeometry();
 
     SceneObject::draw(stack);
+}
+
+bool BlockCreationHandle::drawFaces() const
+{
+    return m_bDrawFaces;
+}
+
+void BlockCreationHandle::setDrawFaces(bool enabled)
+{
+    if ( enabled == m_bDrawFaces )
+        return;
+
+    m_bDrawFaces = enabled;
+    if ( m_bDrawFaces )
+    {
+        setRenderFlags(renderFlags() | Translucent);
+    }
+    else
+    {
+        setRenderFlags(renderFlags() & ~Translucent);
+    }
+
+    m_bRebuildGeometry = true;
 }

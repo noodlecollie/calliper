@@ -37,6 +37,13 @@ public:
     // then Y and then Z. The list begins at min and ends at max.
     static QList<QVector3D> corners(const QVector3D &min, const QVector3D &max);
 
+    // Specifies which corner indexes between 0 and 7 are used for each face.
+    // This is returned as a pointer to an array of 8 indexes.
+    // The first 4 are the vertices for a face with a positive normal
+    // in the given axis, and the second 4 are for a negative normal.
+    // Vertices are specified in counter-clockwise winding.
+    static const int* cornerVerticesForFace(Math::AxisIdentifier axis);
+
 private:
     void sortVectors();
     QVector3D   m_vecMin;

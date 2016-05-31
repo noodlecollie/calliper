@@ -9,6 +9,19 @@
 #include <QFile>
 #include "callipermath.h"
 
+void appendRectFace(const QVector3D &v0, const QVector3D &v1, const QVector3D &v2, const QVector3D &v3,
+                    const QVector3D &normal, const QColor &col, GeometryData* geom)
+{
+    unsigned int i = geom->vertexCount();
+    geom->appendVertex(v0, normal, col);
+    geom->appendVertex(v1, normal, col);
+    geom->appendVertex(v2, normal, col);
+    geom->appendVertex(v3, normal, col);
+
+    geom->appendIndexTriangle(i, i+1, i+2);
+    geom->appendIndexTriangle(i, i+2, i+3);
+}
+
 namespace GeometryFactory
 {
     GeometryData* cube(float radius)
@@ -267,6 +280,60 @@ namespace GeometryFactory
     GeometryData* lineCuboid(const BoundingBox &bbox, const QColor &col)
     {
         return lineCuboid(bbox.min(), bbox.max(), col);
+    }
+
+    GeometryData* cuboidSolidColor(const QVector3D &min, const QVector3D &max, const QColor &col, bool nullNormals)
+    {
+        QList<QVector3D> corners = BoundingBox::corners(min,max);
+        GeometryData* geometry = new GeometryData();
+
+        for ( int i = 0; i < 6; i++ )
+        {
+            Math::AxisIdentifier axis = (Math::AxisIdentifier)(i%3);
+            bool negativeAxis = i >= 3;
+
+            QVector3D normal;
+            if ( !nullNormals )
+            {
+                switch (axis)
+                {
+                    case Math::AxisX:
+                        normal = QVector3D(1,0,0);
+                        break;
+
+                    case Math::AxisY:
+                        normal = QVector3D(0,1,0);
+                        break;
+
+                    case Math::AxisZ:
+                        normal = QVector3D(0,0,1);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if ( negativeAxis )
+                    normal *= -1;
+            }
+
+            // Build the face for this axis.
+            const int* indices = BoundingBox::cornerVerticesForFace(axis);
+            int offset = negativeAxis ? 4 : 0;
+
+            appendRectFace(corners.at(indices[offset+0]),
+                    corners.at(indices[offset+1]),
+                    corners.at(indices[offset+2]),
+                    corners.at(indices[offset+3]),
+                    normal, col, geometry);
+        }
+
+        return geometry;
+    }
+
+    GeometryData* cuboidSolidColor(const BoundingBox &bbox, const QColor &col, bool nullNormals)
+    {
+        return cuboidSolidColor(bbox.min(), bbox.max(), col, nullNormals);
     }
 
     GeometryData* fromObjFile(const QString &filename, float scale)

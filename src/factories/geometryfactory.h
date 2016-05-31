@@ -18,6 +18,8 @@ namespace GeometryFactory
     GeometryData* lineRect(float radius, const QColor &col);
     GeometryData* lineCuboid(const QVector3D &min, const QVector3D &max, const QColor &col);
     GeometryData* lineCuboid(const BoundingBox &bbox, const QColor &col);
+    GeometryData* cuboidSolidColor(const QVector3D &min, const QVector3D &max, const QColor &col, bool nullNormals = false);
+    GeometryData* cuboidSolidColor(const BoundingBox &bbox, const QColor &col, bool nullNormals = false);
 
     // Length is from base to tip.
     // Width is width of arrow head, which is twice the width of the shaft.

@@ -1,6 +1,10 @@
 #include "boundingbox.h"
 #include <QVector4D>
 
+const int cornerVertexIndicesX[] = { 1, 3, 7, 5,   0, 4, 6, 2, };
+const int cornerVertexIndicesY[] = { 3, 2, 6, 7,   0, 1, 5, 4, };
+const int cornerVertexIndicesZ[] = { 4, 5, 7, 6,   0, 2, 3, 1, };
+
 BoundingBox operator *(const QMatrix4x4 &mat, const BoundingBox &bbox)
 {
     return bbox.transformed(mat);
@@ -185,4 +189,23 @@ BoundingBox BoundingBox::unionCopy(const BoundingBox &other) const
                        QVector3D(qMax(m_vecMax.x(), mx.x()),
                                  qMax(m_vecMax.y(), mx.y()),
                                  qMax(m_vecMax.z(), mx.z())));
+}
+
+const int* BoundingBox::cornerVerticesForFace(Math::AxisIdentifier axis)
+{
+    switch (axis)
+    {
+        case Math::AxisX:
+            return cornerVertexIndicesX;
+
+        case Math::AxisY:
+            return cornerVertexIndicesY;
+
+        case Math::AxisZ:
+            return cornerVertexIndicesZ;
+
+        default:
+            Q_ASSERT(false);
+            return NULL;
+    }
 }
