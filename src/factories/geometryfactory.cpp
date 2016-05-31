@@ -22,6 +22,52 @@ void appendRectFace(const QVector3D &v0, const QVector3D &v1, const QVector3D &v
     geom->appendIndexTriangle(i, i+2, i+3);
 }
 
+void appendPin(int subdivisions, float radius, const QColor &col, GeometryData* geom, const QMatrix4x4 &transform = QMatrix4x4())
+{
+    Q_ASSERT(subdivisions >= 3);
+
+    GeometryData temp;
+    temp.setDataFormat(GeometryData::PositionNormalColor);
+
+    // Create vertices at the end of the pin.
+    // These have x = 1, and y and z vary.
+    float angleDelta = 1.0f/(float)subdivisions;
+    for ( int i = 0; i < subdivisions; i++ )
+    {
+        float rot = i * angleDelta * 2.0f * M_PI;
+        float yDisplacement = (float)radius * qCos(rot);
+        float zDisplacement = (float)radius * qSin(rot);
+
+        // TODO: Normal
+        temp.appendVertex(QVector3D(1, yDisplacement, zDisplacement), QVector3D(), col);
+    }
+
+    // Create the origin vertex.
+    temp.appendVertex(QVector3D(0,0,0), QVector3D(), col);
+
+    // Create each of the outer faces.
+    int originIndex = temp.vertexCount() - 1;
+    for ( int i = 0; i < subdivisions; i++ )
+    {
+        int index0 = i;
+        int index1 = i == (subdivisions - 1) ? 0 : i+1;
+        temp.appendIndexTriangle(originIndex, index1, index0);
+    }
+
+    // Create the end face.
+    for ( int i = 1; i < subdivisions-1; i++ )
+    {
+        temp.appendIndexTriangle(0, i, i+1);
+    }
+
+    if ( !transform.isIdentity() )
+    {
+        temp.transform(transform);
+    }
+
+    geom->append(temp);
+}
+
 namespace GeometryFactory
 {
     GeometryData* cube(float radius)
@@ -447,6 +493,25 @@ namespace GeometryFactory
         }
 
         delete side1;
+        return geom;
+    }
+
+    GeometryData* triPin(int subdivisions, float pinRadius)
+    {
+        GeometryData* geom = new GeometryData();
+        geom->setShaderOverride(PerVertexColorShader::staticName());
+        geom->setDataFormat(GeometryData::PositionNormalColor);
+
+        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xffff0000), geom, QMatrix4x4());
+        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xffff0000), geom, Math::matrixRotateZ(qDegreesToRadians(180.0f)));
+
+        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff00ff00), geom, Math::matrixRotateZ(qDegreesToRadians(90.0f)));
+        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff00ff00), geom, Math::matrixRotateZ(qDegreesToRadians(-90.0f)));
+
+        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(90.0f)));
+        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(-90.0f)));
+
+        qDebug() << "Vertices:" << geom->vertexCount() << "Indices:" << geom->indexCount();
         return geom;
     }
 }
