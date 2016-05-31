@@ -27,6 +27,8 @@ public:
     MapDocument* activeDocument() const;
     Viewport* activeViewport() const;
 
+    virtual QSize sizeHint() const;
+
 public slots:
     void quit();
     void updateDocumentList(const QList<MapDocument*> &docs);

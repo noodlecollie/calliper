@@ -222,3 +222,38 @@ void CreateGeometryTool::updateManipulatorBounds(bool endOfDrag)
     m_pManipulator->setHidden(endOfDrag ? BoundingBox(m_vecDragBeginClamped, m_vecDragCurrentClamped).hasZeroVolume() : false);
     m_pManipulator->setBounds(m_vecDragBeginClamped, m_vecDragCurrentClamped);
 }
+
+void CreateGeometryTool::clearManipulator()
+{
+    m_pManipulator->setBounds(BoundingBox());
+    m_pManipulator->setHidden(true);
+    m_vecDragBegin = QVector3D();
+    m_vecDragBeginClamped = QVector3D();
+    m_vecDragCurrent = QVector3D();
+    m_vecDragCurrentClamped = QVector3D();
+}
+
+void CreateGeometryTool::vKeyPress(QKeyEvent *e)
+{
+    if ( m_bMouseLookEnabled )
+    {
+        BaseTool::vKeyPress(e);
+        return;
+    }
+
+    if ( m_bInDrag )
+        return;
+
+    switch (e->key())
+    {
+        case Qt::Key_Escape:
+        {
+            clearManipulator();
+            break;
+        }
+
+        default:
+            BaseTool::vKeyPress(e);
+            break;
+    }
+}

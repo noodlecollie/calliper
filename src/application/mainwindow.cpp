@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include "cmfoptionsdialog.h"
 #include <QActionGroup>
+#include <QScreen>
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
 
@@ -47,11 +48,18 @@ MainWindow::MainWindow(QWidget *parent) :
     setUpConnections();
 
     updateDocumentList(QList<MapDocument*>());
+
+    resize(sizeHint());
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+QSize MainWindow::sizeHint() const
+{
+    return qApp->primaryScreen()->size()/2.0f;
 }
 
 void MainWindow::quit()

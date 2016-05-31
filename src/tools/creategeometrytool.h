@@ -23,6 +23,7 @@ public:
     virtual void vMouseRelease(QMouseEvent *e);
     virtual void vMouseMove(QMouseEvent *e);
     virtual void vMouseMoveHover(QMouseEvent *e);
+    virtual void vKeyPress(QKeyEvent *e);
 
 signals:
 
@@ -33,6 +34,7 @@ private:
     static bool rayIntersectsZ0Plane(SceneCamera* camera, const Ray3D &ray, QVector3D &intersection);
     void updateManipulatorBounds(bool endOfDrag = false);
     void updateCrosshairVisibility(const QPoint &mousePos);
+    void clearManipulator();
 
     BlockCreationHandle*    m_pManipulator;
     Crosshair3D*            m_pCrosshair;
