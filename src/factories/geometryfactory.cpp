@@ -496,7 +496,7 @@ namespace GeometryFactory
         return geom;
     }
 
-    GeometryData* triPin(int subdivisions, float pinRadius)
+    GeometryData* hexPin(int subdivisions, float pinRadius)
     {
         GeometryData* geom = new GeometryData();
         geom->setShaderOverride(PerVertexColorShader::staticName());

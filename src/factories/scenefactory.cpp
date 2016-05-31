@@ -92,7 +92,7 @@ namespace SceneFactory
         b->setPosition(QVector3D(256,0,0));
 
         SceneObject* arrow = scene->createSceneObject<SceneObject>(scene->root());
-        arrow->appendGeometry(GeometryFactory::triPin(5, 0.1f));
+        arrow->appendGeometry(GeometryFactory::hexPin(5, 0.1f));
         arrow->setScale(QVector3D(16,16,16));
         arrow->setPosition(-renderer()->directionalLight() * 128);
 

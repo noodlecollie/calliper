@@ -27,7 +27,7 @@ namespace GeometryFactory
     GeometryData* flatArrow(float length, float width, float headProportion, const QColor &col, bool nullNormals = false);
 
     // Think the move_rope 3D position marker from Hammer.
-    GeometryData* triPin(int subdivisions, float pinRadius);
+    GeometryData* hexPin(int subdivisions, float pinRadius);
 
     GeometryData* fromObjFile(const QString &filename, float scale = 1.0f);
 }
