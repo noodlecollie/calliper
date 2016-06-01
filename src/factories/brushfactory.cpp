@@ -4,18 +4,27 @@
 #include "brushface.h"
 #include "textureplane.h"
 
+void appendCuboidFace(BrushFace* face, Math::AxisIdentifier axis, bool frontFace)
+{
+    const int* indices = BoundingBox::cornerVerticesForFace(axis);
+    int offset = frontFace ? 0 : 4;
+    for ( int i = 0; i < 4; i++ )
+    {
+        face->appendVertex(indices[offset + i]);
+    }
+}
+
 namespace BrushFactory
 {
-    Brush* fromBoundingBox(const BoundingBox &bbox, SceneObject *parent, const QString &texture)
+    Brush* fromBoundingBox(BaseScene *scene, SceneObject *parent, const BoundingBox &bbox, const QString &texture, const QVector3D origin)
     {
-        Q_ASSERT(parent);
-
         // Get the vertices from the bounding box.
         // X alternates most frequently, then Y and then Z.
-        QVector<QVector3D> verts = bbox.corners().toVector();
+        QVector<QVector3D> verts = bbox.transformed(Math::matrixTranslate(-origin)).corners().toVector();
 
         // Add these to the brush.
-        Brush* b = parent->scene()->createSceneObject<Brush>(parent);
+        Brush* b = scene->createSceneObject<Brush>(parent);
+        b->setPosition(origin);
         b->appendVertices(verts);
 
         // Create the faces.
@@ -26,65 +35,7 @@ namespace BrushFactory
             f->setObjectName(QString("face%0").arg(i));
             f->texturePlane()->setTexturePath(texture);
 
-            switch (i)
-            {
-                case 0: // X min
-                {
-                    f->appendVertex(0);
-                    f->appendVertex(4);
-                    f->appendVertex(6);
-                    f->appendVertex(2);
-                    break;
-                }
-
-                case 1: // X max
-                {
-                    f->appendVertex(1);
-                    f->appendVertex(3);
-                    f->appendVertex(7);
-                    f->appendVertex(5);
-                    break;
-                }
-
-                case 2: // Y min
-                {
-                    f->appendVertex(0);
-                    f->appendVertex(1);
-                    f->appendVertex(5);
-                    f->appendVertex(4);
-                    break;
-                }
-
-                case 3: // Y max
-                {
-                    f->appendVertex(2);
-                    f->appendVertex(6);
-                    f->appendVertex(7);
-                    f->appendVertex(3);
-                    break;
-                }
-
-                case 4: // Z min
-                {
-                    f->appendVertex(0);
-                    f->appendVertex(2);
-                    f->appendVertex(3);
-                    f->appendVertex(1);
-                    break;
-                }
-
-                case 5: // Z max
-                {
-                    f->appendVertex(4);
-                    f->appendVertex(5);
-                    f->appendVertex(7);
-                    f->appendVertex(6);
-                    break;
-                }
-
-                default:
-                    break;
-            }
+            appendCuboidFace(f, (Math::AxisIdentifier)(i%3), i < 3);
         }
 
         return b;

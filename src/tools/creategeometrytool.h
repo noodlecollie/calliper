@@ -37,6 +37,7 @@ private:
     void updateCrosshairVisibility(const QPoint &mousePos);
     void clearManipulator();
     void updateBoundsDepth();
+    void createBlockBrush();
 
     BlockCreationHandle*    m_pManipulator;
     Crosshair3D*            m_pCrosshair;

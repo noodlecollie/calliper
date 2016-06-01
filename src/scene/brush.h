@@ -31,7 +31,7 @@ public:
     virtual bool computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const;
 
 protected:
-    explicit Brush(BaseScene* scene, SceneObject* parent);
+    Brush(BaseScene* scene, SceneObject* parent);
     Brush(BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent);
     Brush(const Brush &cloneFrom);
     virtual ~Brush();

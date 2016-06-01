@@ -75,6 +75,7 @@ protected:
     void saveFrameToDesktop();
 
 	void addToSelectedSet(SceneObject* obj, bool clearPrevious = false);
+    void deleteSelectedObjects();
 
     static bool isMouseWithinViewport(Viewport* v);
     static QEnterEvent generateEnterEvent(Viewport* v);

@@ -20,6 +20,8 @@ MapDocument::MapDocument(QObject *parent) : QObject(parent)
     m_pUIScene = SceneFactory::defaultUIScene(this);
 #endif
 
+    connect(m_pScene, SIGNAL(subtreeDestroyed(SceneObject*)), this, SLOT(notifySubtreeAboutToBeDestroyed(SceneObject*)));
+
     m_iFileFormat = CalliperMapFile::IndentedJson;
 
     m_colBackground = QColor::fromRgb(0xff262626);
@@ -67,10 +69,12 @@ void MapDocument::selectedSetInsert(SceneObject *object)
 
 void MapDocument::selectedSetRemove(SceneObject *object)
 {
-    m_SelectedSet.remove(object);
-    BaseTool* t = tool(m_iActiveTool);
-    if ( t )
-        t->selectedSetChanged();
+    if ( m_SelectedSet.remove(object) )
+    {
+        BaseTool* t = tool(m_iActiveTool);
+        if ( t )
+            t->selectedSetChanged();
+    }
 }
 
 void MapDocument::selectedSetClear()
@@ -262,4 +266,9 @@ CalliperMapFile::FileFormat MapDocument::fileFormat() const
 void MapDocument::setFileFormat(CalliperMapFile::FileFormat format)
 {
     m_iFileFormat = format;
+}
+
+void MapDocument::notifySubtreeAboutToBeDestroyed(SceneObject *obj)
+{
+    selectedSetRemove(obj);
 }

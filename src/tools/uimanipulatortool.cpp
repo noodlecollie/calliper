@@ -50,7 +50,18 @@ void UIManipulatorTool::vKeyPress(QKeyEvent *e)
     if ( m_bInMove )
         return;
 
-    BaseTool::vKeyPress(e);
+    switch (e->key())
+    {
+        case Qt::Key_Escape:
+        {
+            m_pDocument->selectedSetClear();
+            break;
+        }
+
+        default:
+            BaseTool::vKeyPress(e);
+            break;
+    }
 }
 
 void UIManipulatorTool::vKeyRelease(QKeyEvent *e)

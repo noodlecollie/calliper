@@ -118,6 +118,8 @@ void ResourceManager::setUpBuiltInTextures()
                       MIPMAP(QOpenGLTexture::NearestMipMapNearest));
     addBuiltInTexture(":/textures/debug_translucent.png", MIPMAP(QOpenGLTexture::LinearMipMapLinear),
                       MIPMAP(QOpenGLTexture::LinearMipMapLinear));
+    addBuiltInTexture(":/textures/dev/dev_purple001.png", MIPMAP(QOpenGLTexture::LinearMipMapLinear),
+                      MIPMAP(QOpenGLTexture::LinearMipMapLinear));
 }
 
 void ResourceManager::addBuiltInTexture(const QString &path, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max,

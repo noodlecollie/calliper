@@ -11,6 +11,7 @@
 #include "cameralens.h"
 #include "mapgrid.h"
 #include "crosshair3d.h"
+#include "brushfactory.h"
 
 CreateGeometryTool::CreateGeometryTool(MapDocument *document) : BaseTool(CreateGeometryTool::staticName(), document)
 {
@@ -251,6 +252,12 @@ void CreateGeometryTool::vKeyPress(QKeyEvent *e)
             break;
         }
 
+        case Qt::Key_Return:
+        {
+            createBlockBrush();
+            break;
+        }
+
         default:
             BaseTool::vKeyPress(e);
             break;
@@ -278,4 +285,18 @@ void CreateGeometryTool::updateBoundsDepth()
     m_vecDragCurrent[2] = m_vecDragBegin[2] + m_flBlockDepth;
     m_vecDragCurrentClamped = m_vecDragCurrent;
     Math::clampToNearestMultiple(m_vecDragCurrentClamped, m_pDocument->scene()->grid()->gridMultiple(), Math::AxisFlagXYZ);
+}
+
+void CreateGeometryTool::createBlockBrush()
+{
+    if ( m_bInDrag )
+        return;
+
+    BoundingBox bbox = m_pManipulator->bounds();
+    if ( bbox.hasZeroVolume() )
+        return;
+
+    // TODO: Textures.
+    BrushFactory::fromBoundingBox(m_pDocument->scene(), m_pDocument->scene()->root(), bbox, "/textures/dev/dev_purple001", bbox.centroid());
+    clearManipulator();
 }

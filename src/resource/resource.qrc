@@ -35,5 +35,6 @@
         <file>icons/tool_create_brush.png</file>
         <file>textures/ui/square-handle.png</file>
         <file>textures/ui/circle-handle.png</file>
+        <file>textures/dev/dev_purple001.png</file>
     </qresource>
 </RCC>

@@ -86,8 +86,7 @@ namespace SceneFactory
         testBlock2->setPosition(QVector3D(0, -512, 0));
         testBlock->setShouldSerialiseGeometry(true);
 
-        Brush* b = BrushFactory::fromBoundingBox(BoundingBox(QVector3D(0,0,0), QVector3D(256,256,256)),
-                                                 scene->root(), "/textures/test");
+        Brush* b = BrushFactory::fromBoundingBox(scene, scene->root(), BoundingBox(QVector3D(0,0,0), QVector3D(256,256,256)), "/textures/test");
         b->setObjectName("brush");
         b->setPosition(QVector3D(256,0,0));
 

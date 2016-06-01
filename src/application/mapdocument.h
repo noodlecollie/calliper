@@ -57,6 +57,9 @@ public:
     virtual QString serialiseIdentifier() const;
     bool unserialiseFromJson(const QJsonObject &serialisedData);
 
+private slots:
+    void notifySubtreeAboutToBeDestroyed(SceneObject* obj);
+
 private:
     void createTools();
     void switchTool(BaseTool* oldTool, BaseTool* newTool);

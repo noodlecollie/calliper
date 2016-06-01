@@ -107,6 +107,11 @@ QList<QVector3D> BoundingBox::corners(const QVector3D &min, const QVector3D &max
 BoundingBox BoundingBox::transformed(const QMatrix4x4 &mat) const
 {
     QList<QVector3D> list = corners();
+    if ( list.count() < 1 )
+    {
+        QVector3D transformedVec = (mat * QVector4D()).toVector3D();
+        return BoundingBox(transformedVec, transformedVec);
+    }
 
     for ( int i = 0; i < list.count(); i++ )
     {

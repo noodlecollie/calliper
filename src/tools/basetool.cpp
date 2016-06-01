@@ -311,6 +311,12 @@ void BaseTool::vKeyPress(QKeyEvent *e)
             return;
         }
 
+        case Qt::Key_Delete:
+        {
+            deleteSelectedObjects();
+            return;
+        }
+
         default:
             return;
     }
@@ -446,4 +452,19 @@ QEnterEvent BaseTool::generateEnterEvent(Viewport* v)
 {
     QPoint mouseGlobal = QCursor::pos();
     return QEnterEvent(v->mapFromGlobal(mouseGlobal), v->window()->mapFromGlobal(mouseGlobal), mouseGlobal);
+}
+
+void BaseTool::deleteSelectedObjects()
+{
+    QSet<SceneObject*> objects = m_pDocument->selectedSet();
+
+    foreach ( SceneObject* obj, objects )
+    {
+        // We should check each time whether the given object is still in the selected set,
+        // because it could already have been destroyed when a previous parent was destroyed.
+        if ( !m_pDocument->selectedSet().contains(obj) )
+            continue;
+
+        m_pDocument->scene()->destroySceneObject(obj);
+    }
 }
