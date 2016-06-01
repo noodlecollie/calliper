@@ -37,3 +37,8 @@ void Crosshair3D::constructGeometry()
 
     appendGeometry(geom);
 }
+
+bool Crosshair3D::editable() const
+{
+    return false;
+}

@@ -16,6 +16,8 @@ CreateGeometryTool::CreateGeometryTool(MapDocument *document) : BaseTool(CreateG
 {
     m_pManipulator = NULL;
     m_pCrosshair = NULL;
+    m_pBeginDragTarget = NULL;
+    m_flBlockDepth = 64.0f;
 }
 
 CreateGeometryTool::~CreateGeometryTool()
@@ -64,11 +66,12 @@ void CreateGeometryTool::vMousePress(QMouseEvent *e)
 
     m_bInDrag = true;
     m_PosDragBegin = e->pos();
+    m_flBlockDepth = m_pDocument->scene()->grid()->gridMultiple();
 
-    SceneObject* target = v->pickObjectFromDepthBuffer(BaseScene::MapSceneFlag, m_PosDragBegin, SceneObject::EditableOnlyMask);
+    m_pBeginDragTarget = v->pickObjectFromDepthBuffer(BaseScene::MapSceneFlag, m_PosDragBegin, SceneObject::EditableOnlyMask);
     Ray3D ray = c->frustumRay(m_PosDragBegin, v->size());
 
-    if ( !target )
+    if ( !m_pBeginDragTarget )
     {
         if ( !rayIntersectsZ0Plane(c, ray, m_vecDragBegin) )
         {
@@ -80,11 +83,9 @@ void CreateGeometryTool::vMousePress(QMouseEvent *e)
         Math::clampToNearestMultiple(m_vecDragBeginClamped, m_pDocument->scene()->grid()->gridMultiple(), Math::AxisFlagXYZ);
 
         m_PosDragCurrent = m_PosDragBegin;
-
         m_vecDragCurrent = m_vecDragBegin;
-        m_vecDragCurrent[2] += m_pDocument->scene()->grid()->gridMultiple();
-        m_vecDragCurrentClamped = m_vecDragBeginClamped;
 
+        updateBoundsDepth();
         updateManipulatorBounds();
     }
     else
@@ -112,10 +113,10 @@ void CreateGeometryTool::vMouseMove(QMouseEvent *e)
 
     m_PosDragCurrent = e->pos();
 
-    SceneObject* target = v->pickObjectFromDepthBuffer(BaseScene::MapSceneFlag, m_PosDragCurrent, SceneObject::EditableOnlyMask);
+//    SceneObject* target = v->pickObjectFromDepthBuffer(BaseScene::MapSceneFlag, m_PosDragCurrent, SceneObject::EditableOnlyMask);
     Ray3D ray = c->frustumRay(m_PosDragCurrent, v->size());
 
-    if ( !target )
+    if ( /*!target*/ !m_pBeginDragTarget )
     {
         if ( !rayIntersectsZ0Plane(c, ray, m_vecDragCurrent) )
         {
@@ -123,10 +124,7 @@ void CreateGeometryTool::vMouseMove(QMouseEvent *e)
             return;
         }
 
-        m_vecDragCurrent[2] += m_pDocument->scene()->grid()->gridMultiple();
-        m_vecDragCurrentClamped = m_vecDragCurrent;
-        Math::clampToNearestMultiple(m_vecDragCurrentClamped, m_pDocument->scene()->grid()->gridMultiple(), Math::AxisFlagXYZ);
-
+        updateBoundsDepth();
         updateManipulatorBounds();
     }
     else
@@ -179,6 +177,7 @@ void CreateGeometryTool::updateCrosshairVisibility(const QPoint &mousePos)
 
 void CreateGeometryTool::endDrag()
 {
+    m_pBeginDragTarget = NULL;
     m_bInDrag = false;
     updateManipulatorBounds(true);
 
@@ -256,4 +255,27 @@ void CreateGeometryTool::vKeyPress(QKeyEvent *e)
             BaseTool::vKeyPress(e);
             break;
     }
+}
+
+void CreateGeometryTool::vWheel(QWheelEvent *e)
+{
+    if ( !m_bInDrag )
+    {
+        BaseTool::vWheel(e);
+        return;
+    }
+
+    QPoint dAngle = e->angleDelta();
+    float fraction = dAngle.y() / 120.0f;
+
+    m_flBlockDepth += fraction * m_pDocument->scene()->grid()->gridMultiple();
+    updateBoundsDepth();
+    updateManipulatorBounds();
+}
+
+void CreateGeometryTool::updateBoundsDepth()
+{
+    m_vecDragCurrent[2] = m_vecDragBegin[2] + m_flBlockDepth;
+    m_vecDragCurrentClamped = m_vecDragCurrent;
+    Math::clampToNearestMultiple(m_vecDragCurrentClamped, m_pDocument->scene()->grid()->gridMultiple(), Math::AxisFlagXYZ);
 }

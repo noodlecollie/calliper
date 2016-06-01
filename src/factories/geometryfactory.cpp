@@ -9,7 +9,7 @@
 #include <QFile>
 #include "callipermath.h"
 
-void appendRectFace(const QVector3D &v0, const QVector3D &v1, const QVector3D &v2, const QVector3D &v3,
+static void appendRectFace(const QVector3D &v0, const QVector3D &v1, const QVector3D &v2, const QVector3D &v3,
                     const QVector3D &normal, const QColor &col, GeometryData* geom)
 {
     unsigned int i = geom->vertexCount();
@@ -22,7 +22,7 @@ void appendRectFace(const QVector3D &v0, const QVector3D &v1, const QVector3D &v
     geom->appendIndexTriangle(i, i+2, i+3);
 }
 
-void appendPin(int subdivisions, float radius, const QColor &col, GeometryData* geom, const QMatrix4x4 &transform = QMatrix4x4())
+static void appendPin(int subdivisions, float radius, const QColor &col, GeometryData* geom, const QMatrix4x4 &transform = QMatrix4x4())
 {
     Q_ASSERT(subdivisions >= 3);
 
@@ -511,7 +511,6 @@ namespace GeometryFactory
         appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(90.0f)));
         appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(-90.0f)));
 
-        qDebug() << "Vertices:" << geom->vertexCount() << "Indices:" << geom->indexCount();
         return geom;
     }
 }

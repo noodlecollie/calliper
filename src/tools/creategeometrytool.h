@@ -24,6 +24,7 @@ public:
     virtual void vMouseMove(QMouseEvent *e);
     virtual void vMouseMoveHover(QMouseEvent *e);
     virtual void vKeyPress(QKeyEvent *e);
+    virtual void vWheel(QWheelEvent *e);
 
 signals:
 
@@ -35,6 +36,7 @@ private:
     void updateManipulatorBounds(bool endOfDrag = false);
     void updateCrosshairVisibility(const QPoint &mousePos);
     void clearManipulator();
+    void updateBoundsDepth();
 
     BlockCreationHandle*    m_pManipulator;
     Crosshair3D*            m_pCrosshair;
@@ -46,6 +48,8 @@ private:
     QVector3D               m_vecDragBeginClamped;
     QVector3D               m_vecDragCurrent;
     QVector3D               m_vecDragCurrentClamped;
+    SceneObject*            m_pBeginDragTarget;
+    float                   m_flBlockDepth;
 };
 
 #endif // CREATEGEOMETRYTOOL_H

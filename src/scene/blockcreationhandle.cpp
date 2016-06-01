@@ -3,6 +3,9 @@
 #include "shaders.h"
 #include "basescene.h"
 
+#define COL_VALID 0x80ffffff
+#define COL_INVALID 0x80ff0000
+
 BlockCreationHandle::BlockCreationHandle(BaseScene *scene, SceneObject *parent) : UIManipulator(scene, parent)
 {
     initDefaults();
@@ -58,7 +61,7 @@ void BlockCreationHandle::rebuildGeometry()
 
     if ( m_bDrawFaces )
     {
-        GeometryData* faces = GeometryFactory::cuboidSolidColor(m_Bounds, QColor::fromRgba(0x80ffffff));
+        GeometryData* faces = GeometryFactory::cuboidSolidColor(m_Bounds, QColor::fromRgba(m_Bounds.hasZeroVolume() ? COL_INVALID : COL_VALID));
         faces->setShaderOverride(PerVertexColorShader::staticName());
         appendGeometry(faces);
     }
