@@ -6,6 +6,105 @@
 #define COL_VALID 0x80ffffff
 #define COL_INVALID 0x80ff0000
 
+// Panels are created in XY plane. Only the X and Y bounds of the bounding box are considered.
+// Colours array is an array of 8 colours, beginning at +X and continuing
+// anticlockwise around the face. They correspond to the edges and corners.
+// Width is the width of each of the panels, as a fraction of the shortest dimension.
+void appendFaceDragPanels(GeometryData* geom, const BoundingBox dimensions, const QRgb* colours, const QMatrix4x4 transform = QMatrix4x4(), float width = 0.2f)
+{
+    if ( dimensions.isEmpty() )
+        return;
+
+    float shortestDim = qMin(dimensions.span(0), dimensions.span(1));
+    float panelWidth = width * shortestDim;
+    float panelPadding = (shortestDim - (2.0f * panelWidth)) * 0.1f;
+
+    for ( int i = 0; i < 8; i++ )
+    {
+        float xmin = 0, xmax = 0, ymin = 0, ymax = 0;
+
+        switch (i)
+        {
+            case 0:
+            {
+                xmin = dimensions.max().x() - panelWidth;
+                xmax = dimensions.max().x();
+                ymin = dimensions.min().y() + panelWidth + panelPadding;
+                ymax = dimensions.max().y() - panelWidth - panelPadding;
+                break;
+            }
+
+            case 1:
+            {
+                xmin = dimensions.max().x() - panelWidth;
+                xmax = dimensions.max().x();
+                ymin = dimensions.min().y() + panelWidth;
+                ymax = dimensions.max().y();
+                break;
+            }
+
+            case 2:
+            {
+                xmin = dimensions.min().x() + panelWidth + panelPadding;
+                xmax = dimensions.max().x() - panelWidth - panelPadding;
+                ymin = dimensions.max().y() - panelWidth;
+                ymax = dimensions.max().y();
+                break;
+            }
+
+            case 3:
+            {
+                xmin = dimensions.min().x();
+                xmax = dimensions.min().x() + panelWidth;
+                ymin = dimensions.max().y() - panelWidth;
+                ymax = dimensions.max().y();
+                break;
+            }
+
+            case 4:
+            {
+                xmin = dimensions.min().x();
+                xmax = dimensions.min().x() + panelWidth;
+                ymin = dimensions.min().y() + panelWidth + panelPadding;
+                ymax = dimensions.max().y() - panelWidth - panelPadding;
+                break;
+            }
+
+            case 5:
+            {
+                xmin = dimensions.min().x();
+                xmax = dimensions.min().x() + panelWidth;
+                ymin = dimensions.min().y();
+                ymax = dimensions.min().y() + panelWidth;
+                break;
+            }
+
+            case 6:
+            {
+                xmin = dimensions.min().x() + panelWidth + panelPadding;
+                xmax = dimensions.max().x() - panelWidth - panelPadding;
+                ymin = dimensions.min().y();
+                ymax = dimensions.min().y() + panelWidth;
+                break;
+            }
+
+            case 7:
+            {
+                xmin = dimensions.max().x() - panelWidth;
+                xmax = dimensions.max().x();
+                ymin = dimensions.min().y();
+                ymax = dimensions.min().y() + panelWidth;
+                break;
+            }
+
+            default:
+                break;
+        }
+
+        // TODO: Continue.
+    }
+}
+
 BlockCreationHandle::BlockCreationHandle(BaseScene *scene, SceneObject *parent) : UIManipulator(scene, parent)
 {
     initDefaults();

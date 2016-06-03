@@ -44,6 +44,9 @@ public:
     // Vertices are specified in counter-clockwise winding.
     static const int* cornerVerticesForFace(Math::AxisIdentifier axis);
 
+    // Returns the width on the specific axis.
+    float span(int axis) const;
+
 private:
     void sortVectors();
     QVector3D   m_vecMin;

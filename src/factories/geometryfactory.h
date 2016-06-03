@@ -15,6 +15,7 @@ namespace GeometryFactory
     GeometryData* cubeSolidColor(float radius, const QColor &col, bool nullNormals = false);
     GeometryData* cubeFullAtts(float radius);
     GeometryData* triangleQuad(float radius);
+    GeometryData* triangleQuad(const QSizeF &dimensions, const QColor &col, const QVector2D &origin = QVector2D());
     GeometryData* lineRect(float radius, const QColor &col);
     GeometryData* lineCuboid(const QVector3D &min, const QVector3D &max, const QColor &col);
     GeometryData* lineCuboid(const BoundingBox &bbox, const QColor &col);

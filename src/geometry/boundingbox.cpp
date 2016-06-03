@@ -214,3 +214,8 @@ const int* BoundingBox::cornerVerticesForFace(Math::AxisIdentifier axis)
             return NULL;
     }
 }
+
+float BoundingBox::span(int axis) const
+{
+    return m_vecMax[axis] - m_vecMin[axis];
+}
