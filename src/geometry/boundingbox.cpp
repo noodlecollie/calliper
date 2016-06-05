@@ -50,12 +50,14 @@ QVector3D BoundingBox::min() const
     return m_vecMin;
 }
 
-void BoundingBox::setMin(const QVector3D &vec)
+void BoundingBox::setMin(const QVector3D &vec, bool sortAfter)
 {
     if ( m_vecMin == vec ) return;
 
     m_vecMin = vec;
-    sortVectors();
+
+    if ( sortAfter )
+        sortVectors();
 }
 
 QVector3D BoundingBox::max() const
@@ -63,12 +65,14 @@ QVector3D BoundingBox::max() const
     return m_vecMax;
 }
 
-void BoundingBox::setMax(const QVector3D &vec)
+void BoundingBox::setMax(const QVector3D &vec, bool sortAfter)
 {
     if ( m_vecMax == vec ) return;
 
     m_vecMax = vec;
-    sortVectors();
+
+    if ( sortAfter)
+        sortVectors();
 }
 
 bool BoundingBox::isNull() const
@@ -218,4 +222,17 @@ const int* BoundingBox::cornerVerticesForFace(Math::AxisIdentifier axis)
 float BoundingBox::span(int axis) const
 {
     return m_vecMax[axis] - m_vecMin[axis];
+}
+
+BoundingBox BoundingBox::centredOnOrigin() const
+{
+    QVector3D cent = centroid();
+    QVector3D radius = (m_vecMax - m_vecMin)/2.0f;
+    return BoundingBox(cent - radius, cent + radius);
+}
+
+BoundingBox& BoundingBox::centreOnOrigin()
+{
+    *this = centredOnOrigin();
+    return *this;
 }

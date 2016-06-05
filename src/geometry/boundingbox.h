@@ -16,10 +16,10 @@ public:
     bool operator!=(const BoundingBox &other) const;
 
     QVector3D min() const;
-    void setMin(const QVector3D &vec);
+    void setMin(const QVector3D &vec, bool sortAfter = true);
 
     QVector3D max() const;
-    void setMax(const QVector3D &vec);
+    void setMax(const QVector3D &vec, bool sortAfter = true);
 
     QVector3D centroid() const;
 
@@ -44,11 +44,15 @@ public:
     // Vertices are specified in counter-clockwise winding.
     static const int* cornerVerticesForFace(Math::AxisIdentifier axis);
 
+    BoundingBox centredOnOrigin() const;
+    BoundingBox& centreOnOrigin();
+
     // Returns the width on the specific axis.
     float span(int axis) const;
 
-private:
     void sortVectors();
+
+private:
     QVector3D   m_vecMin;
     QVector3D   m_vecMax;
 };
