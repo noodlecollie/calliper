@@ -1,5 +1,6 @@
 #include "crosshair3d.h"
 #include "pervertexcolorshader.h"
+#include "basescene.h"
 
 Crosshair3D::Crosshair3D(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
@@ -14,6 +15,11 @@ Crosshair3D::Crosshair3D(const Crosshair3D &cloneFrom) : SceneObject(cloneFrom)
 Crosshair3D::~Crosshair3D()
 {
 
+}
+
+SceneObject* Crosshair3D::clone() const
+{
+    return m_pScene->cloneSceneObject<Crosshair3D>(this);
 }
 
 void Crosshair3D::constructGeometry()

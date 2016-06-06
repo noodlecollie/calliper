@@ -1,4 +1,5 @@
 #include "basedraghandle.h"
+#include "basescene.h"
 
 BaseDragHandle::BaseDragHandle(BaseScene *scene, SceneObject *parent, const QString &iconTexture) : UIManipulator(scene, parent)
 {
@@ -13,4 +14,9 @@ BaseDragHandle::BaseDragHandle(const BaseDragHandle &cloneFrom) : UIManipulator(
 BaseDragHandle::~BaseDragHandle()
 {
 
+}
+
+SceneObject* BaseDragHandle::clone() const
+{
+    return m_pScene->cloneSceneObject<BaseDragHandle>(this);
 }

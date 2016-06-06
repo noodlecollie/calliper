@@ -22,7 +22,7 @@ static void appendRectFace(const QVector3D &v0, const QVector3D &v1, const QVect
     geom->appendIndexTriangle(i, i+2, i+3);
 }
 
-static void appendPin(int subdivisions, float radius, const QColor &col, GeometryData* geom, const QMatrix4x4 &transform = QMatrix4x4())
+static void appendPin(int subdivisions, float radius, float length, const QColor &col, GeometryData* geom, const QMatrix4x4 &transform = QMatrix4x4())
 {
     Q_ASSERT(subdivisions >= 3);
 
@@ -39,7 +39,7 @@ static void appendPin(int subdivisions, float radius, const QColor &col, Geometr
         float zDisplacement = (float)radius * qSin(rot);
 
         // TODO: Normal
-        temp.appendVertex(QVector3D(1, yDisplacement, zDisplacement), QVector3D(), col);
+        temp.appendVertex(QVector3D(length, yDisplacement, zDisplacement), QVector3D(), col);
     }
 
     // Create the origin vertex.
@@ -510,14 +510,27 @@ namespace GeometryFactory
         geom->setShaderOverride(PerVertexColorShader::staticName());
         geom->setDataFormat(GeometryData::PositionNormalColor);
 
-        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xffff0000), geom, QMatrix4x4());
-        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xffff0000), geom, Math::matrixRotateZ(qDegreesToRadians(180.0f)));
+        appendPin(subdivisions, pinRadius, 1.0f, QColor::fromRgb(0xffff0000), geom, QMatrix4x4());
+        appendPin(subdivisions, pinRadius, 1.0f, QColor::fromRgb(0xffff0000), geom, Math::matrixRotateZ(qDegreesToRadians(180.0f)));
 
-        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff00ff00), geom, Math::matrixRotateZ(qDegreesToRadians(90.0f)));
-        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff00ff00), geom, Math::matrixRotateZ(qDegreesToRadians(-90.0f)));
+        appendPin(subdivisions, pinRadius, 1.0f, QColor::fromRgb(0xff00ff00), geom, Math::matrixRotateZ(qDegreesToRadians(90.0f)));
+        appendPin(subdivisions, pinRadius, 1.0f, QColor::fromRgb(0xff00ff00), geom, Math::matrixRotateZ(qDegreesToRadians(-90.0f)));
 
-        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(90.0f)));
-        appendPin(subdivisions, pinRadius, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(-90.0f)));
+        appendPin(subdivisions, pinRadius, 1.0f, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(90.0f)));
+        appendPin(subdivisions, pinRadius, 1.0f, QColor::fromRgb(0xff0000ff), geom, Math::matrixRotateY(qDegreesToRadians(-90.0f)));
+
+        return geom;
+    }
+
+    GeometryData* coneSolidColor(float radius, float length, int subdivisions, const QColor &col)
+    {
+        Q_ASSERT(subdivisions >= 3);
+
+        GeometryData* geom = new GeometryData();
+        geom->setShaderOverride(PerVertexColorShader::staticName());
+        geom->setDataFormat(GeometryData::PositionNormalColor);
+
+        appendPin(subdivisions, radius, length, col, geom, Math::matrixTranslate(QVector3D(length, 0, 0)) * Math::matrixRotateZ(qDegreesToRadians(180.0f)));
 
         return geom;
     }

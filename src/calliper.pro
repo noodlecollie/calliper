@@ -88,7 +88,8 @@ HEADERS += \
     factories/sceneobjectfactory.h \
     math/raytracecontact.h \
     scene/crosshair3d.h \
-    scene/basedraghandle.h
+    scene/basedraghandle.h \
+    scene/uiwireframebox.h
 
 SOURCES += \
     application/application.cpp \
@@ -151,7 +152,8 @@ SOURCES += \
     tools/creategeometrytool.cpp \
     factories/sceneobjectfactory.cpp \
     scene/crosshair3d.cpp \
-    scene/basedraghandle.cpp
+    scene/basedraghandle.cpp \
+    scene/uiwireframebox.cpp
 
 RESOURCES += \
     resource/resource.qrc \
