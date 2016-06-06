@@ -15,8 +15,3 @@ BaseDragHandle::~BaseDragHandle()
 {
 
 }
-
-SceneObject* BaseDragHandle::clone() const
-{
-    return m_pScene->cloneSceneObject<BaseDragHandle>(this);
-}

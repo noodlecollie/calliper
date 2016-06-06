@@ -14,8 +14,6 @@ public:
     static QList<QVector3D> manipulationAxes(int axisFlags);
 	static Math::AxisIdentifier planeConstraintAxis(int axisFlags, const HierarchicalObject &camera);
 
-    virtual SceneObject* clone() const;
-
     // UI elements should not be serialised.
     virtual bool serialiseToJson(QJsonObject &) const;
 

@@ -8,7 +8,6 @@ class BaseDragHandle : public UIManipulator
     friend class BaseScene;
     Q_OBJECT
 public:
-    virtual SceneObject* clone() const;
 
 protected:
     explicit BaseDragHandle(BaseScene* scene, SceneObject *parent, const QString &iconTexture);

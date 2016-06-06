@@ -15,7 +15,6 @@ public:
     virtual bool editable() const;
     virtual bool isBackground() const;
     virtual void draw(ShaderStack *stack);
-    virtual SceneObject* clone() const;
 
     int gridPower() const;
     void setGridPower(int power);

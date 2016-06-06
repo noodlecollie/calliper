@@ -11,8 +11,6 @@ class SceneCamera : public SceneObject
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual SceneObject* clone() const;
-
     CameraLens* lens() const;
     QVector3D forwardVector() const;
 

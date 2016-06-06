@@ -69,6 +69,8 @@ public:
     template<typename T>
     T* cloneSceneObject(const T* cloneFrom)
     {
+        Q_ASSERT(cloneFrom);
+        Q_ASSERT(cloneFrom->metaObject()->className() == T::staticMetaObject.className());
         Q_ASSERT(cloneFrom->m_pScene == this);
         T* obj = new T(*cloneFrom);
         Q_ASSERT(qobject_cast<SceneObject*>(obj));

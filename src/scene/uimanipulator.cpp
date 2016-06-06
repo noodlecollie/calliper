@@ -51,11 +51,6 @@ QList<QVector3D> UIManipulator::manipulationAxes(int axisFlags)
     return axes;
 }
 
-SceneObject* UIManipulator::clone() const
-{
-    return m_pScene->cloneSceneObject<UIManipulator>(this);
-}
-
 Math::AxisIdentifier UIManipulator::planeConstraintAxis(int axisFlags, const HierarchicalObject &camera)
 {
 	switch (axisFlags)

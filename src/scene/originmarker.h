@@ -9,7 +9,6 @@ class OriginMarker : public SceneObject
     friend class BaseScene;
 public:
     virtual bool editable() const;
-    virtual SceneObject* clone() const;
 
 protected:
     explicit OriginMarker(BaseScene* scene, SceneObject* parent);

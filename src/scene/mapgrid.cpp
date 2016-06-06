@@ -590,10 +590,3 @@ unsigned int MapGrid::gridMultiple() const
 {
     return 1 << m_iPowerTwo;
 }
-
-SceneObject* MapGrid::clone() const
-{
-    // We shouldn't be allowed to clone a grid because there should only be one in a given scene!
-    Q_ASSERT(false);
-    return NULL;
-}

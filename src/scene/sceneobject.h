@@ -37,9 +37,6 @@ public:
         EditableOnlyMask = AllObjectsMask & ~NotEditableMask    // Disallow non-editables.
     };
 
-    // Object name is not cloned.
-    virtual SceneObject* clone() const;
-
     SceneObject* parentObject() const;
     QList<SceneObject*> children() const;
     QList<SceneObject*> allChildren() const;

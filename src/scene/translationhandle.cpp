@@ -206,11 +206,6 @@ TranslationHandle::~TranslationHandle()
 
 }
 
-SceneObject* TranslationHandle::clone() const
-{
-    return m_pScene->cloneSceneObject<TranslationHandle>(this);
-}
-
 void TranslationHandle::setHoverAxis(int axis)
 {
     for ( int i = 0; i < m_ArrowSections.count(); i++ )

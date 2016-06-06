@@ -161,11 +161,6 @@ void SceneObject::setRenderFlags(RenderFlags flags)
     m_RenderFlags = flags;
 }
 
-SceneObject* SceneObject::clone() const
-{
-    return m_pScene->cloneSceneObject<SceneObject>(this);
-}
-
 BoundingBox SceneObject::computeLocalBounds() const
 {
     // Compute our bounds.

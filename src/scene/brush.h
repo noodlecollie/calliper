@@ -10,8 +10,6 @@ class Brush : public SceneObject
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual SceneObject* clone() const;
-
     QVector3D vertexAt(int index) const;
     int appendVertex(const QVector3D &v);
     void appendVertices(const QVector<QVector3D> &verts);

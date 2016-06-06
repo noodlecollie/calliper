@@ -8,7 +8,6 @@ class UIWireframeBox : public UIManipulator
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual SceneObject* clone() const;
 
 protected:
     explicit UIWireframeBox(BaseScene* scene, SceneObject *parent);

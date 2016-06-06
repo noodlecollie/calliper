@@ -113,11 +113,6 @@ Brush::Brush(const Brush &cloneFrom) : SceneObject(cloneFrom), m_Vertices(cloneF
 {
 }
 
-SceneObject* Brush::clone() const
-{
-    return m_pScene->cloneSceneObject<Brush>(this);
-}
-
 QString Brush::serialiseIdentifier() const
 {
     return staticMetaObject.className();

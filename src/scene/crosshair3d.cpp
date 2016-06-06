@@ -17,11 +17,6 @@ Crosshair3D::~Crosshair3D()
 
 }
 
-SceneObject* Crosshair3D::clone() const
-{
-    return m_pScene->cloneSceneObject<Crosshair3D>(this);
-}
-
 void Crosshair3D::constructGeometry()
 {
     GeometryData* geom = new GeometryData();

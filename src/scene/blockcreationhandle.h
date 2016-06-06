@@ -9,7 +9,6 @@ class BlockCreationHandle : public UIManipulator
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual SceneObject* clone() const;
     virtual void draw(ShaderStack *stack);
 
     BoundingBox bounds() const;

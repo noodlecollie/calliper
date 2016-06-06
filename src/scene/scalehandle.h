@@ -8,7 +8,6 @@ class ScaleHandle : public UIManipulator
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual SceneObject* clone() const;
     void draw(ShaderStack *stack);
 
     void rescaleHandle(const QVector3D scale);

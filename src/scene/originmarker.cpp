@@ -43,8 +43,3 @@ void OriginMarker::constructGeometry()
 
     appendGeometry(geom);
 }
-
-SceneObject* OriginMarker::clone() const
-{
-    return m_pScene->cloneSceneObject<OriginMarker>(this);
-}

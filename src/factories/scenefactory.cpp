@@ -58,7 +58,7 @@ namespace SceneFactory
         block->setPosition(QVector3D(64,0,0));
         block->setShouldSerialiseGeometry(true);
 
-        SceneObject* blockChild = block->clone();
+        SceneObject* blockChild = scene->cloneSceneObject<SceneObject>(block);
         blockChild->setObjectName("blockChild");
         blockChild->setParent(block);
         blockChild->clearGeometry();
@@ -67,7 +67,7 @@ namespace SceneFactory
         blockChild->setPosition(QVector3D(0,0,40));
         blockChild->setShouldSerialiseGeometry(true);
 
-        SceneObject* block2 = block->clone();
+        SceneObject* block2 = scene->cloneSceneObject<SceneObject>(block);
         block2->setObjectName("block2");
         block2->geometryAt(0)->setTexture(0, "/textures/debug_translucent");
         block2->setPosition(QVector3D(128,0,0));
@@ -81,7 +81,7 @@ namespace SceneFactory
         testBlock->setRenderFlags(SceneObject::Translucent);
         testBlock->setShouldSerialiseGeometry(true);
 
-        SceneObject* testBlock2 = testBlock->clone();
+        SceneObject* testBlock2 = scene->cloneSceneObject<SceneObject>(testBlock);
         testBlock2->setObjectName("testBlock2");
         testBlock2->setPosition(QVector3D(0, -512, 0));
         testBlock->setShouldSerialiseGeometry(true);

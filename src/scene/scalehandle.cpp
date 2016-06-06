@@ -71,11 +71,6 @@ ScaleHandle::~ScaleHandle()
 
 }
 
-SceneObject* ScaleHandle::clone() const
-{
-    return m_pScene->cloneSceneObject<ScaleHandle>(this);
-}
-
 ScaleHandle::ScaleHandle(const ScaleHandle &cloneFrom) : UIManipulator(cloneFrom)
 {
     build();

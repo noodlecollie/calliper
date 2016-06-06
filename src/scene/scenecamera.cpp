@@ -177,11 +177,6 @@ Ray3D SceneCamera::frustumRay(const QPoint &p, const QSize &viewSize) const
     return Ray3D(position() + (lens()->nearPlane() * rayDir), rayDir);
 }
 
-SceneObject* SceneCamera::clone() const
-{
-    return m_pScene->cloneSceneObject<SceneCamera>(this);
-}
-
 bool SceneCamera::serialiseToJson(QJsonObject &obj) const
 {
     obj.insert(ISerialisable::KEY_IDENTIFIER(), QJsonValue(SceneCamera::serialiseIdentifier()));

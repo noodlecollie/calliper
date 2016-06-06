@@ -23,11 +23,6 @@ void BlockCreationHandle::initDefaults()
     setDrawFaces(true);
 }
 
-SceneObject* BlockCreationHandle::clone() const
-{
-    return m_pScene->cloneSceneObject<BlockCreationHandle>(this);
-}
-
 BlockCreationHandle::BlockCreationHandle(const BlockCreationHandle &cloneFrom) : UIManipulator(cloneFrom)
 {
     initDefaults();

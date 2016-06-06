@@ -9,8 +9,6 @@ class TranslationHandle : public UIManipulator
 	Q_OBJECT
     friend class BaseScene;
 public:
-    virtual SceneObject* clone() const;
-
     virtual void draw(ShaderStack* stack);
 
     // Pass -1 to set no axis.
