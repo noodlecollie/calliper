@@ -12,6 +12,8 @@
 #include "mapgrid.h"
 #include "crosshair3d.h"
 #include "brushfactory.h"
+#include "uiscene.h"
+#include "uiblockcreationhandle.h"
 
 CreateGeometryTool::CreateGeometryTool(MapDocument *document) : BaseTool(CreateGeometryTool::staticName(), document)
 {
@@ -19,6 +21,7 @@ CreateGeometryTool::CreateGeometryTool(MapDocument *document) : BaseTool(CreateG
     m_pCrosshair = NULL;
     m_pBeginDragTarget = NULL;
     m_flBlockDepth = 64.0f;
+    m_pUIBox = NULL;
 }
 
 CreateGeometryTool::~CreateGeometryTool()
@@ -45,6 +48,10 @@ void CreateGeometryTool::vActivate()
     m_pCrosshair = m_pDocument->scene()->createSceneObject<Crosshair3D>(m_pDocument->scene()->root());
     m_pCrosshair->setObjectName("_geometryCreationCrosshair");
     m_pCrosshair->setHidden(true);
+
+    m_pUIBox = m_pDocument->uiScene()->createSceneObject<UIBlockCreationHandle>(m_pDocument->uiScene()->root());
+    m_pUIBox->setObjectName("_geometryCreationWBox");
+    m_pUIBox->setHidden(true);
 }
 
 void CreateGeometryTool::vDeactivate()
@@ -54,6 +61,9 @@ void CreateGeometryTool::vDeactivate()
 
     m_pDocument->scene()->destroySceneObject(m_pCrosshair);
     m_pCrosshair = NULL;
+
+    m_pDocument->uiScene()->destroySceneObject(m_pUIBox);
+    m_pUIBox = NULL;
 
     BaseTool::vDeactivate();
 }
@@ -219,14 +229,22 @@ bool CreateGeometryTool::rayIntersectsZ0Plane(SceneCamera *camera, const Ray3D &
 
 void CreateGeometryTool::updateManipulatorBounds(bool endOfDrag)
 {
-    m_pManipulator->setHidden(endOfDrag ? BoundingBox(m_vecDragBeginClamped, m_vecDragCurrentClamped).hasZeroVolume() : false);
+    bool hidden = endOfDrag ? BoundingBox(m_vecDragBeginClamped, m_vecDragCurrentClamped).hasZeroVolume() : false;
+
+    m_pManipulator->setHidden(hidden);
     m_pManipulator->setBounds(m_vecDragBeginClamped, m_vecDragCurrentClamped);
+
+    m_pUIBox->setHidden(hidden);
+    m_pUIBox->setBounds(m_vecDragBeginClamped, m_vecDragCurrentClamped);
 }
 
 void CreateGeometryTool::clearManipulator()
 {
     m_pManipulator->setBounds(BoundingBox());
     m_pManipulator->setHidden(true);
+    m_pUIBox->setBounds(BoundingBox());
+    m_pUIBox->setHidden(true);
+
     m_vecDragBegin = QVector3D();
     m_vecDragBeginClamped = QVector3D();
     m_vecDragCurrent = QVector3D();

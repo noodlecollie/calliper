@@ -8,6 +8,7 @@
 class BlockCreationHandle;
 class SceneCamera;
 class Crosshair3D;
+class UIBlockCreationHandle;
 
 class CreateGeometryTool : public BaseTool
 {
@@ -38,9 +39,12 @@ private:
     void clearManipulator();
     void updateBoundsDepth();
     void createBlockBrush();
+    void createScaleHandles();
+    void destroyScaleHandles();
 
     BlockCreationHandle*    m_pManipulator;
     Crosshair3D*            m_pCrosshair;
+    UIBlockCreationHandle*  m_pUIBox;
 
     bool                    m_bInDrag;
     QPoint                  m_PosDragBegin;

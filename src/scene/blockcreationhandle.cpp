@@ -19,8 +19,6 @@ BlockCreationHandle::~BlockCreationHandle()
 void BlockCreationHandle::initDefaults()
 {
     m_bRebuildGeometry = true;
-    m_bDrawFaces = false;
-    setDrawFaces(true);
 }
 
 BlockCreationHandle::BlockCreationHandle(const BlockCreationHandle &cloneFrom) : UIManipulator(cloneFrom)
@@ -50,16 +48,9 @@ void BlockCreationHandle::rebuildGeometry()
         clearGeometry();
     }
 
-    GeometryData* geom = GeometryFactory::lineCuboid(m_Bounds, QColor::fromRgb(0xffffffff));
-    geom->setShaderOverride(PerVertexColorShader::staticName());
-    appendGeometry(geom);
-
-    if ( m_bDrawFaces )
-    {
-        GeometryData* faces = GeometryFactory::cuboidSolidColor(m_Bounds, QColor::fromRgba(m_Bounds.hasZeroVolume() ? COL_INVALID : COL_VALID));
-        faces->setShaderOverride(PerVertexColorShader::staticName());
-        appendGeometry(faces);
-    }
+    GeometryData* faces = GeometryFactory::cuboidSolidColor(m_Bounds, QColor::fromRgba(m_Bounds.hasZeroVolume() ? COL_INVALID : COL_VALID));
+    faces->setShaderOverride(PerVertexColorShader::staticName());
+    appendGeometry(faces);
 
     m_bRebuildGeometry = false;
 }
@@ -74,28 +65,6 @@ void BlockCreationHandle::draw(ShaderStack *stack)
     if ( m_bRebuildGeometry )
         rebuildGeometry();
 
+    // Bypass UIManipulator::draw because we don't want all that fancy rescaling stuff.
     SceneObject::draw(stack);
-}
-
-bool BlockCreationHandle::drawFaces() const
-{
-    return m_bDrawFaces;
-}
-
-void BlockCreationHandle::setDrawFaces(bool enabled)
-{
-    if ( enabled == m_bDrawFaces )
-        return;
-
-    m_bDrawFaces = enabled;
-    if ( m_bDrawFaces )
-    {
-        setRenderFlags(renderFlags() | Translucent);
-    }
-    else
-    {
-        setRenderFlags(renderFlags() & ~Translucent);
-    }
-
-    m_bRebuildGeometry = true;
 }

@@ -15,9 +15,6 @@ public:
     void setBounds(const BoundingBox &bounds);
     void setBounds(const QVector3D &min, const QVector3D &max);
 
-    bool drawFaces() const;
-    void setDrawFaces(bool enabled);
-
 protected:
     explicit BlockCreationHandle(BaseScene* scene, SceneObject *parent);
     BlockCreationHandle(const BlockCreationHandle &cloneFrom);
@@ -33,7 +30,6 @@ private:
 
     BoundingBox m_Bounds;
     bool        m_bRebuildGeometry;
-    bool        m_bDrawFaces;
 };
 
 #endif // BLOCKCREATIONHANDLE_H
