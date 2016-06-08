@@ -8,31 +8,20 @@
 BaseDragHandle::BaseDragHandle(BaseScene *scene, SceneObject *parent, const QString &iconTexture) : UIManipulator(scene, parent)
 {
     m_szIconTexture = iconTexture;
+    m_bBillboard = false;
     buildSprite();
 }
 
 BaseDragHandle::BaseDragHandle(const BaseDragHandle &cloneFrom) : UIManipulator(cloneFrom)
 {
     m_szIconTexture = cloneFrom.m_szIconTexture;
+    m_bBillboard = false;
     buildSprite();
 }
 
 BaseDragHandle::~BaseDragHandle()
 {
 
-}
-
-void BaseDragHandle::draw(ShaderStack *stack)
-{
-    QMatrix4x4 modMat = Math::matrixTranslate(QVector4D(stack->worldToCameraTop().column(3)).toVector3D()) * Math::StaticMatrix::ROT_Z_270();
-
-    stack->worldToCameraPush();
-    stack->worldToCameraSetToIdentity();
-    stack->worldToCameraPostMultiply(modMat);
-
-    UIManipulator::draw(stack);
-
-    stack->worldToCameraPop();
 }
 
 void BaseDragHandle::buildSprite()

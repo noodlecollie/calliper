@@ -110,10 +110,6 @@ namespace SceneFactory
     {
         UIScene* scene = new UIScene(document);
 
-        BaseDragHandle* h = scene->createSceneObject<BaseDragHandle>(scene->root(), "/textures/ui/square-handle");
-        h->setObjectName("_tempHandle");
-        h->setScale(0.1f);
-
         return scene;
     }
 }

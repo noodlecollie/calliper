@@ -3,6 +3,10 @@
 
 #include "uimanipulator.h"
 
+#define SCALE_HANDLE_COUNT 20
+
+class AxisDragHandle;
+
 class UIBlockCreationHandle : public UIManipulator
 {
     Q_OBJECT
@@ -27,7 +31,7 @@ private:
 
     BoundingBox     m_Bounds;
     bool            m_bRebuildGeometry;
-    UIManipulator*  m_pScaleHandles[6];
+    AxisDragHandle* m_pScaleHandles[SCALE_HANDLE_COUNT];
 };
 
 #endif // UIWIREFRAMEBOX_H

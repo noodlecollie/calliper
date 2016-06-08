@@ -199,6 +199,30 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
     stack->modelToWorldPush();
     stack->modelToWorldPostMultiply(obj->localToParent());
 
+    bool billboard = obj->billboard();
+    if ( billboard )
+    {
+        QMatrix4x4 cameraToWorld = stack->worldToCameraTop().inverted();
+        QVector3D camPos = (cameraToWorld * QVector4D(0,0,0,1)).toVector3D();
+        QVector3D look = (camPos - (stack->modelToWorldTop() * QVector4D(0,0,0,1)).toVector3D()).normalized();
+
+        QVector3D camUp = (cameraToWorld * QVector4D(0,0,1,0)).toVector3D().normalized();
+        QVector3D right = QVector3D::crossProduct(camUp, look);
+        QVector3D billboardUp = QVector3D::crossProduct(look, right);
+
+        QVector3D worldPos = (stack->modelToWorldTop() * QVector4D(0,0,0,1)).toVector3D();
+
+        QMatrix4x4 billboardPreTransform;
+        billboardPreTransform.setColumn(0, QVector4D(right, 0));
+        billboardPreTransform.setColumn(1, QVector4D(billboardUp, 0));
+        billboardPreTransform.setColumn(2, QVector4D(look, 0));
+        billboardPreTransform.setColumn(3, QVector4D(worldPos, 1));
+
+        stack->modelToWorldPush();
+        stack->modelToWorldSetToIdentity();
+        stack->modelToWorldPostMultiply(billboardPreTransform);
+    }
+
     // Check if we need to defer this object.
     bool deferred = false;
     if ( (obj->renderFlags() & SceneObject::Translucent) == SceneObject::Translucent )
@@ -207,7 +231,7 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 
         // Order objects within the map by depth.
         // obj->position() is used because localToParent() has not yet been applied.
-        // The depth is negated because of the way QMap orderes keys.
+        // The depth is negated because of the way QMap orders keys.
         QVector3D worldPos = ((stack->worldToCameraTop() * stack->modelToWorldTop()) * QVector4D(obj->position(), 1)).toVector3D();
         m_TranslucentObjects.insertMulti(-(worldPos - m_vecCurrentCameraWorldPosition).lengthSquared(), DeferredObject(obj, stack->modelToWorldTop()));
     }
@@ -226,6 +250,11 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
         {
             obj->draw(stack);
         }
+    }
+
+    if ( billboard )
+    {
+        stack->modelToWorldPop();
     }
 
     QList<SceneObject*> children = obj->children();

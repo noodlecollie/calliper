@@ -3,16 +3,9 @@
 #include "geometryfactory.h"
 #include "shaders.h"
 #include <QtMath>
+#include "axisdraghandle.h"
 
-static const QRgb scaleHandleColours[6] =
-{
-    0xffff0000,
-    0xff00ff00,
-    0xff0000ff,
-    0xffff0000,
-    0xff00ff00,
-    0xff0000ff,
-};
+#define TEXTURE_SQUARE_HANDLE "/textures/ui/square-handle"
 
 UIBlockCreationHandle::UIBlockCreationHandle(BaseScene *scene, SceneObject *parent) : UIManipulator(scene, parent)
 {
@@ -33,7 +26,7 @@ UIBlockCreationHandle::UIBlockCreationHandle(const UIBlockCreationHandle &cloneF
 void UIBlockCreationHandle::initDefaults()
 {
     m_bRebuildGeometry = true;
-    memset(m_pScaleHandles, 0, 6 * sizeof(SceneObject*));
+    memset(m_pScaleHandles, 0, SCALE_HANDLE_COUNT * sizeof(AxisDragHandle*));
     createScaleHandles();
 }
 
@@ -82,61 +75,112 @@ void UIBlockCreationHandle::draw(ShaderStack *stack)
 
 void UIBlockCreationHandle::createScaleHandles()
 {
-    QMatrix4x4 transform;
-
-    for ( int i = 0; i < 6; i++ )
+    for ( int i = 0; i < SCALE_HANDLE_COUNT; i++ )
     {
-        UIManipulator* obj = m_pScene->createSceneObject<UIManipulator>(m_pScene->root());
+        // 0-7:   Z max handles, starting at min on X and Y and proceeding anticlockwise.
+        // 8-15:  Same but Z min.
+        // 16-19: Edges connecting each corner.
 
+        int x = 0, y = 0, z = 0;
+
+        // Choose X constraint:
         switch (i)
         {
-            case 1:     // Y+
-            {
-                transform = Math::matrixRotateZ(qDegreesToRadians(90.0f));
-                obj->setObjectName("_blockScaleYPos");
+            // +X:
+            case 2:
+            case 3:
+            case 4:
+            case 10:
+            case 11:
+            case 12:
+            case 17:
+            case 18:
+                x = 1;
                 break;
-            }
 
-            case 2:     // Z+
-            {
-                transform = Math::matrixRotateY(qDegreesToRadians(-90.0f));
-                obj->setObjectName("_blockScaleZPos");
+            // -X:
+            case 0:
+            case 6:
+            case 7:
+            case 8:
+            case 14:
+            case 15:
+            case 16:
+            case 19:
+                x = -1;
                 break;
-            }
 
-            case 3:     // X-
-            {
-                transform = Math::matrixRotateZ(qDegreesToRadians(180.0f));
-                obj->setObjectName("_blockScaleXNeg");
+            default:
                 break;
-            }
-
-            case 4:     // Y-
-            {
-                transform = Math::matrixRotateZ(qDegreesToRadians(-90.0f));
-                obj->setObjectName("_blockScaleYNeg");
-                break;
-            }
-
-            case 5:     // Z-
-            {
-                transform = Math::matrixRotateY(qDegreesToRadians(90.0f));
-                obj->setObjectName("_blockScaleZNeg");
-                break;
-            }
-
-            default:    // X+
-            {
-                transform = QMatrix4x4();
-                obj->setObjectName("_blockScaleXPos");
-                break;
-            }
         }
 
-        GeometryData* geometry = GeometryFactory::coneSolidColor(0.025f, 0.25f, 12, QColor::fromRgb(scaleHandleColours[i]));
-        geometry->transform(transform);
-        obj->appendGeometry(geometry);
+        // Choose Y constraint:
+        switch(i)
+        {
+            // +Y:
+            case 4:
+            case 5:
+            case 6:
+            case 12:
+            case 13:
+            case 14:
+            case 18:
+            case 19:
+                y = 1;
+                break;
+
+            // -Y:
+            case 0:
+            case 1:
+            case 2:
+            case 8:
+            case 9:
+            case 10:
+            case 16:
+            case 17:
+                y = -1;
+                break;
+
+            default:
+                break;
+        }
+
+        // Choose Z constraint:
+        switch(i)
+        {
+            // +Z:
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                z = 1;
+                break;
+
+            // -Z:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+                z = -1;
+                break;
+
+            default:
+                break;
+        }
+
+        AxisDragHandle* obj = m_pScene->createSceneObject<AxisDragHandle>(m_pScene->root(), TEXTURE_SQUARE_HANDLE);
+        obj->setObjectName(QString("_blockScaleHandle%0%1%2").arg(x).arg(y).arg(z));
+        obj->setAxisConstraints(x,y,z);
         obj->setHidden(true);
+        obj->setScale(0.1f);
 
         m_pScaleHandles[i] = obj;
     }
@@ -153,32 +197,15 @@ void UIBlockCreationHandle::updateScaleHandles()
     QVector3D radius = (m_Bounds.max() - m_Bounds.min())/2.0f;
     QVector3D centroid = m_Bounds.centroid();
 
-    for ( int i = 0; i < 6; i++ )
+    for ( int i = 0; i < SCALE_HANDLE_COUNT; i++ )
     {
         QVector3D delta = radius;
-        switch (i%3)
+
+        const int* constraints = m_pScaleHandles[i]->axisConstraints();
+        for ( int i = 0; i < 3; i++ )
         {
-            case 0:
-                delta.setY(0);
-                delta.setZ(0);
-                break;
-
-            case 1:
-                delta.setX(0);
-                delta.setZ(0);
-                break;
-
-            case 2:
-                delta.setX(0);
-                delta.setY(0);
-                break;
-
-            default:
-                break;
+            delta[i] *= constraints[i];
         }
-
-        if ( i >= 3 )
-            delta *= -1;
 
         m_pScaleHandles[i]->setHidden(false);
         m_pScaleHandles[i]->setPosition(centroid + delta);
@@ -187,6 +214,6 @@ void UIBlockCreationHandle::updateScaleHandles()
 
 void UIBlockCreationHandle::hideAllScaleHandles()
 {
-    for ( int i = 0; i < 6; i++)
+    for ( int i = 0; i < SCALE_HANDLE_COUNT; i++)
         m_pScaleHandles[i]->setHidden(true);
 }

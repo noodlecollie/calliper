@@ -64,7 +64,7 @@ void SceneCamera::rebuildLocalToParent() const
     // but the OpenGL camera by default looks down (Hammer's) Y.
     // This means we need to apply an orientation first so that we face down
     // X before we do our other transforms.
-    static const QMatrix4x4 defaultRot = Math::matrixRotateZ(qDegreesToRadians(-90.0f));
+    static const QMatrix4x4 defaultRot = Math::StaticMatrix::ROT_Z_270();
 
     SceneObject::rebuildLocalToParent();
     m_matLocalToParent = m_matLocalToParent * defaultRot;
