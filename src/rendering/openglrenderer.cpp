@@ -130,7 +130,7 @@ void OpenGLRenderer::begin()
     m_pStack = new ShaderStack(program, false);
 
     // Set up initial things.
-    m_pStack->coordinateTransformPostMultiply(Math::hammerToOpenGL());
+    m_pStack->coordinateTransformPostMultiply(Math::StaticMatrix::HAMMER_TO_OPENGL());
     m_pStack->fogColorSetTop(fogColor());
     m_pStack->fogBeginSetTop(fogBeginDistance());
     m_pStack->fogEndSetTop(fogEndDistance());
@@ -463,5 +463,5 @@ void OpenGLRenderer::clearDeferred()
 QVector2D OpenGLRenderer::deviceCoordinates(const QVector3D &worldPos, const SceneCamera *camera)
 {
     // World -> camera -> OpenGL camera -> projected -> divided by w and returned.
-    return (camera->lens()->projectionMatrix() * Math::hammerToOpenGL() * camera->rootToLocal() * QVector4D(worldPos, 1)).toVector2DAffine();
+    return (camera->lens()->projectionMatrix() * Math::StaticMatrix::HAMMER_TO_OPENGL() * camera->rootToLocal() * QVector4D(worldPos, 1)).toVector2DAffine();
 }

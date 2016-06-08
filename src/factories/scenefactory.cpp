@@ -18,6 +18,7 @@
 #include "brushfactory.h"
 #include "scalehandle.h"
 #include "openglrenderer.h"
+#include "basedraghandle.h"
 
 namespace SceneFactory
 {
@@ -108,6 +109,10 @@ namespace SceneFactory
     UIScene* debugUIScene(MapDocument *document)
     {
         UIScene* scene = new UIScene(document);
+
+        BaseDragHandle* h = scene->createSceneObject<BaseDragHandle>(scene->root(), "/textures/ui/square-handle");
+        h->setObjectName("_tempHandle");
+        h->setScale(0.1f);
 
         return scene;
     }

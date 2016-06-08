@@ -46,6 +46,7 @@ private:
 
     void setUpShaders();
     void setUpBuiltInTextures();
+    void setUpInternalTextures();
     void addBuiltInTexture(const QString &path, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max,
                            QOpenGLTexture::WrapMode s = QOpenGLTexture::Repeat, QOpenGLTexture::WrapMode t = QOpenGLTexture::Repeat);
 

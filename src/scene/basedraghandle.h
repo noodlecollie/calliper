@@ -8,6 +8,7 @@ class BaseDragHandle : public UIManipulator
     friend class BaseScene;
     Q_OBJECT
 public:
+    virtual void draw(ShaderStack *stack);
 
 protected:
     explicit BaseDragHandle(BaseScene* scene, SceneObject *parent, const QString &iconTexture);
@@ -15,6 +16,8 @@ protected:
     virtual ~BaseDragHandle();
 
 private:
+    void buildSprite();
+
     QString     m_szIconTexture;
 };
 

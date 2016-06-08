@@ -1,19 +1,35 @@
 #include "callipermath.h"
 #include <QtMath>
 
-static const QMatrix4x4 HAMMER_TO_OPENGL(
+#define MATARGS_ROT_X(_s, _c) 1,0,0,0, 0,(_c),-(_s),0, 0,(_s),(_c),0, 0,0,0,1
+#define MATARGS_ROT_Y(_s, _c) (_c),0,(_s),0, 0,1,0,0, -(_s),0,(_c),0, 0,0,0,1
+#define MATARGS_ROT_Z(_s, _c) (_c),-(_s),0,0, (_s),(_c),0,0, 0,0,1,0, 0,0,0,1
+
+static const QMatrix4x4 M_HAMMER_TO_OPENGL(
         1, 0, 0, 0,
         0, 0, 1, 0,
         0,-1, 0, 0,
         0, 0, 0, 1
         );
 
-static const QMatrix4x4 OPENGL_TO_HAMMER(
+static const QMatrix4x4 M_OPENGL_TO_HAMMER(
         1, 0, 0, 0,
         0, 0,-1, 0,
         0, 1, 0, 0,
         0, 0, 0, 1
         );
+
+static const QMatrix4x4 M_ROT_X_90(MATARGS_ROT_X(1, 0));
+static const QMatrix4x4 M_ROT_X_180(MATARGS_ROT_X(0, -1));
+static const QMatrix4x4 M_ROT_X_270(MATARGS_ROT_X(-1, 0));
+
+static const QMatrix4x4 M_ROT_Y_90(MATARGS_ROT_Y(1, 0));
+static const QMatrix4x4 M_ROT_Y_180(MATARGS_ROT_Y(0, -1));
+static const QMatrix4x4 M_ROT_Y_270(MATARGS_ROT_Y(-1, 0));
+
+static const QMatrix4x4 M_ROT_Z_90(MATARGS_ROT_Z(1, 0));
+static const QMatrix4x4 M_ROT_Z_180(MATARGS_ROT_Z(0, -1));
+static const QMatrix4x4 M_ROT_Z_270(MATARGS_ROT_Z(-1, 0));
 
 QMatrix4x4 _matRotX(float c, float s)
 {
@@ -41,6 +57,24 @@ QMatrix4x4 _matRotZ(float c, float s)
 
 namespace Math
 {
+    namespace StaticMatrix
+    {
+        const QMatrix4x4& ROT_X_90() { return M_ROT_X_90; }
+        const QMatrix4x4& ROT_X_180() { return M_ROT_X_180; }
+        const QMatrix4x4& ROT_X_270() { return M_ROT_X_270; }
+
+        const QMatrix4x4& ROT_Y_90() { return M_ROT_Y_90; }
+        const QMatrix4x4& ROT_Y_180() { return M_ROT_Y_180; }
+        const QMatrix4x4& ROT_Y_270() { return M_ROT_Y_270; }
+
+        const QMatrix4x4& ROT_Z_90() { return M_ROT_Z_90; }
+        const QMatrix4x4& ROT_Z_180() { return M_ROT_Z_180; }
+        const QMatrix4x4& ROT_Z_270() { return M_ROT_Z_270; }
+
+        const QMatrix4x4& HAMMER_TO_OPENGL() { return M_HAMMER_TO_OPENGL; }
+        const QMatrix4x4& OPENGL_TO_HAMMER() { return M_OPENGL_TO_HAMMER; }
+    }
+
     QMatrix4x4 matrixTranslate(const QVector3D &translation)
     {
         return QMatrix4x4(1, 0, 0, translation.x(),
@@ -75,16 +109,6 @@ namespace Math
     QMatrix4x4 matrixScaleUniform(float scale)
     {
         return matrixScale(QVector3D(scale, scale, scale));
-    }
-
-    const QMatrix4x4& hammerToOpenGL()
-    {
-        return HAMMER_TO_OPENGL;
-    }
-
-    const QMatrix4x4& openGLToHammer()
-    {
-        return OPENGL_TO_HAMMER;
     }
 
     QVector3D angleToVectorSimple(const EulerAngle &angle)

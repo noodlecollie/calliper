@@ -39,6 +39,24 @@ namespace Math
         AxisFlagXYZ = AxisFlagX | AxisFlagY | AxisFlagZ
     };
 
+    namespace StaticMatrix
+    {
+        const QMatrix4x4& ROT_X_90();
+        const QMatrix4x4& ROT_X_180();
+        const QMatrix4x4& ROT_X_270();
+
+        const QMatrix4x4& ROT_Y_90();
+        const QMatrix4x4& ROT_Y_180();
+        const QMatrix4x4& ROT_Y_270();
+
+        const QMatrix4x4& ROT_Z_90();
+        const QMatrix4x4& ROT_Z_180();
+        const QMatrix4x4& ROT_Z_270();
+
+        const QMatrix4x4& HAMMER_TO_OPENGL();
+        const QMatrix4x4& OPENGL_TO_HAMMER();
+    }
+
     QMatrix4x4 matrixTranslate(const QVector3D &translation);
     QMatrix4x4 matrixRotateX(float radians);
     QMatrix4x4 matrixRotateY(float radians);
@@ -46,9 +64,6 @@ namespace Math
     QMatrix4x4 matrixScale(const QVector3D &scale);
     QMatrix4x4 matrixScaleUniform(float scale);
     QMatrix4x4 matrixOrientation(const EulerAngle &angle);
-
-    const QMatrix4x4& hammerToOpenGL();
-    const QMatrix4x4& openGLToHammer();
 
     // Window: pixels, (0,0) is top left.
     // Device: (-1,-1) LL to (1,1) UR, (0,0) is centre.

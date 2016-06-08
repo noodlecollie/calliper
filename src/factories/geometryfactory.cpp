@@ -422,11 +422,11 @@ namespace GeometryFactory
 
         if ( scale != 1.0f )
         {
-            geometry->transform(Math::matrixScaleUniform(scale) * Math::openGLToHammer());
+            geometry->transform(Math::matrixScaleUniform(scale) * Math::StaticMatrix::OPENGL_TO_HAMMER());
         }
         else
         {
-            geometry->transform(Math::openGLToHammer());
+            geometry->transform(Math::StaticMatrix::OPENGL_TO_HAMMER());
         }
 
         return geometry;

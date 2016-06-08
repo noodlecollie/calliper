@@ -107,7 +107,6 @@ void ResourceManager::setUpBuiltInTextures()
     m_pDefaultTexture->setMagnificationFilter(MIPMAP(QOpenGLTexture::NearestMipMapNearest));
     m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionS, QOpenGLTexture::Repeat);
     m_pDefaultTexture->setWrapMode(QOpenGLTexture::DirectionT, QOpenGLTexture::Repeat);
-    m_Textures.insert(QString(), m_pDefaultTexture);
 
     // Other random ones.
     addBuiltInTexture(":/textures/test.png", MIPMAP(QOpenGLTexture::LinearMipMapLinear),
@@ -120,6 +119,11 @@ void ResourceManager::setUpBuiltInTextures()
                       MIPMAP(QOpenGLTexture::LinearMipMapLinear));
     addBuiltInTexture(":/textures/dev/dev_purple001.png", MIPMAP(QOpenGLTexture::LinearMipMapLinear),
                       MIPMAP(QOpenGLTexture::LinearMipMapLinear));
+
+    addBuiltInTexture(":/textures/ui/square-handle.png", QOpenGLTexture::Nearest,
+                       QOpenGLTexture::Nearest);
+    addBuiltInTexture(":/textures/ui/circle-handle.png", QOpenGLTexture::Nearest,
+                       QOpenGLTexture::Nearest);
 }
 
 void ResourceManager::addBuiltInTexture(const QString &path, QOpenGLTexture::Filter min, QOpenGLTexture::Filter max,

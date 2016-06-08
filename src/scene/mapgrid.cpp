@@ -256,7 +256,7 @@ void MapGrid::draw(ShaderStack *stack)
 
     // Determine the bounds of the camera viewing volume.
     BoundingBox bbox = lens->localViewVolumeBounds()
-            .transformed(hCamera->rootToLocal().inverted() * Math::openGLToHammer());
+            .transformed(hCamera->rootToLocal().inverted() * Math::StaticMatrix::OPENGL_TO_HAMMER());
 
     // If the Z=0 plane is not within this volume, don't draw anything.
     if ( bbox.min().z() > 0 || bbox.max().z() < 0 )

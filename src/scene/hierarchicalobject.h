@@ -47,6 +47,7 @@ public:
 
     QVector3D scale() const;
     void setScale(const QVector3D &vec);
+    inline void setScale(float scl) { setScale(QVector3D(scl,scl,scl)); }
     virtual bool scalable() const;
 
     void lookAt(const QVector3D &pos);

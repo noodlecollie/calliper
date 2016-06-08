@@ -116,7 +116,7 @@ void SceneCamera::draw(ShaderStack *stack)
             {
                 stack->shaderPush(resourceManager()->shader(m_pBoundsGeom->shaderOverride()));
                 stack->modelToWorldPush();
-                stack->modelToWorldPostMultiply(Math::openGLToHammer());
+                stack->modelToWorldPostMultiply(Math::StaticMatrix::OPENGL_TO_HAMMER());
 
                 m_pBoundsGeom->upload();
                 m_pBoundsGeom->bindVertices(true);
@@ -145,7 +145,7 @@ QVector3D SceneCamera::worldTranslation(const QPoint &p0, const QPoint &p1, cons
 //    QVector3D cDir1 = lens()->mapPoint(p1, viewSize);
 
 //    Get the camera->world matrix.
-    QMatrix4x4 cameraToWorld = rootToLocal().inverted() * Math::openGLToHammer();
+    QMatrix4x4 cameraToWorld = rootToLocal().inverted() * Math::StaticMatrix::OPENGL_TO_HAMMER();
 
 //    Translate the directions to world space.
 //    QVector3D wDir0 = (cameraToWorld * QVector4D(cDir0, 0)).toVector3D();
@@ -168,7 +168,7 @@ QVector3D SceneCamera::worldTranslation(const QPoint &p0, const QPoint &p1, cons
 
 QVector3D SceneCamera::frustumDirection(const QPoint &p, const QSize &viewSize) const
 {
-    return ((rootToLocal().inverted() * Math::openGLToHammer()) * QVector4D(lens()->mapPoint(p, viewSize), 0)).toVector3D();
+    return ((rootToLocal().inverted() * Math::StaticMatrix::OPENGL_TO_HAMMER()) * QVector4D(lens()->mapPoint(p, viewSize), 0)).toVector3D();
 }
 
 Ray3D SceneCamera::frustumRay(const QPoint &p, const QSize &viewSize) const
