@@ -360,7 +360,7 @@ namespace Math
             return EulerAngle();
         }
 
-        // Get the angle before any roll.
+        // Get the and before any roll is applied.
         EulerAngle angle = vectorToAngleSimple(fwd);
 
         // If we're on a singularity, determine the roll.
@@ -381,9 +381,54 @@ namespace Math
             return angle;
         }
 
+        // Get a right vector that corresponds to the real angles.
+        QVector3D right = QVector3D::crossProduct(fwd, up);
+        right.normalize();
+
         // Project the forward vector onto the XY plane.
         QVector3D fwdXY(fwd.x(), fwd.y(), 0);
+        fwdXY.normalize();
 
+        // Also get a right basis vector in the XY plane.
+        QVector3D rightBasis = QVector3D::crossProduct(fwdXY, QVector3D(0,0,1));
+
+        // Get the dot product between the two forward vectors.
+        float fwdDot = QVector3D::dotProduct(fwdXY, fwd);
+
+        // Calculate the angle between these two vectors.
+        // This is the pitch.
+        float fwdAngDelta = qAcos(fwdDot);
+
+        // As far as we're concerned, the pitch is only between -90 and 90 degrees
+        // (or 0-90 and 270-0).
+        // If the real forward vector's Z component is negative, the pitch is in
+        // the first quadrant. If it's positive, the pitch is in the fourth quadrant.
+        // Determine the correct angle from this.
+        if ( fwd.z() > 0 )
+        {
+            fwdAngDelta = 360.0f - fwdAngDelta;
+        }
+
+        // Calculate an up basis vector from the pitch angle.
+        // This is done by rotating a vertical vector around the right vector in the XY plane.
+        QQuaternion createUpBasis = QQuaternion::fromAxisAndAngle(rightBasis, fwdAngDelta);
+        QVector3D upBasis = createUpBasis.rotatedVector(QVector3D(0,0,1));
+
+        // We can use the right and up basis vectors to project the current right vector.
+        // This will give new X and Y co-ords in the plane, so we can calculate the angle.
+
+        float xc = QVector3D::dotProduct(right, rightBasis);
+        float yc = QVector3D::dotProduct(right, upBasis);
+        float ang = qRadiansToDegrees(qAtan2(yc, xc));
+
+        // Make the rotation be in the correct direction.
+        ang *= -1;
+
+        // Also make sure it's positive.
+        while ( ang < 0.0f )
+            ang += 360.0f;
+
+        angle.setRoll(ang);
         return angle;
     }
 }
