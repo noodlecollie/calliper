@@ -29,7 +29,7 @@ namespace SceneFactory
         SceneCamera* c = scene->createSceneObject<SceneCamera>(scene->root());
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
-        c->lookAt(QVector3D(0,0,0));
+        c->lookAtGlobal(QVector3D(0,0,0));
 
         return scene;
     }
@@ -41,7 +41,7 @@ namespace SceneFactory
         SceneCamera* c = scene->createSceneObject<SceneCamera>(scene->root());
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
-        c->lookAt(QVector3D(0,0,0));
+        c->lookAtGlobal(QVector3D(0,0,0));
 
         // For the purposes of debugging, serialise our geometry data.
         // This is pretty damn verbose but it means we can load it back in easily.

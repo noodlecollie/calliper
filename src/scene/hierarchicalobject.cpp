@@ -117,9 +117,19 @@ QMatrix4x4 HierarchicalObject::rootToLocal() const
     return mat;
 }
 
-void HierarchicalObject::lookAt(const QVector3D &pos)
+void HierarchicalObject::lookAtLocal(const QVector3D &localSpacePos)
 {
-    setAngles(Math::vectorToAngleSimple(pos - m_vecPosition));
+    setAngles(Math::vectorToAngleSimple(localSpacePos));
+}
+
+void HierarchicalObject::lookAtParent(const QVector3D &parentSpacePos)
+{
+    setAngles(Math::vectorToAngleSimple(parentSpacePos - m_vecPosition));
+}
+
+void HierarchicalObject::lookAtGlobal(const QVector3D &globalSpacePos)
+{
+    setAngles(Math::vectorToAngleSimple(rootToParent(globalSpacePos) - m_vecPosition));
 }
 
 QVector3D HierarchicalObject::scale() const
@@ -235,4 +245,9 @@ HierarchicalObject::HierarchicalObject(const QJsonObject &serialisedData, Hierar
     {
         setScale(QVector3D(1,1,1));
     }
+}
+
+QVector3D HierarchicalObject::globalPosition() const
+{
+    return (rootToLocal().inverted() * QVector4D(0,0,0,1)).toVector3D();
 }

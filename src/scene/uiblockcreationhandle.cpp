@@ -181,6 +181,8 @@ void UIBlockCreationHandle::createScaleHandles()
         obj->setAxisConstraints(x,y,z);
         obj->setHidden(true);
         obj->setScale(0.1f);
+        if ( i == 0 )
+            obj->setDebugVar(true);
 
         m_pScaleHandles[i] = obj;
     }

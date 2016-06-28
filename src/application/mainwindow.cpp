@@ -261,13 +261,13 @@ void MainWindow::sceneTreeItemDoubleClicked(QTreeWidgetItem* item, int column)
     SceneObject* sceneObject = qobject_cast<SceneObject*>(object);
     Q_ASSERT(sceneObject);
 
-    QVector3D pos = sceneObject->position();
+    QVector3D pos = (sceneObject->rootToLocal().inverted() * QVector4D(0,0,0,1)).toVector3D();
     SceneCamera* c = ui->viewport->camera();
     if ( qobject_cast<SceneCamera*>(sceneObject) == c )
         return;
 
     c->setPosition(pos + QVector3D(64,0,0));
-    c->lookAt(pos);
+    c->lookAtGlobal(pos);
     ui->viewport->update();
 }
 

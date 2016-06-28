@@ -37,6 +37,7 @@ public:
     // Local
     QVector3D position() const;
     void setPosition(const QVector3D &pos);
+    QVector3D globalPosition() const;
 
     // Translates in local co-ordinates - X is +forward/-backward,
     // Y is +left/-right, Z is +up/-down
@@ -50,7 +51,9 @@ public:
     inline void setScale(float scl) { setScale(QVector3D(scl,scl,scl)); }
     virtual bool scalable() const;
 
-    void lookAt(const QVector3D &pos);
+    void lookAtLocal(const QVector3D &localSpacePos);
+    void lookAtParent(const QVector3D &parentSpacePos);
+    void lookAtGlobal(const QVector3D &globalSpacePos);
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
