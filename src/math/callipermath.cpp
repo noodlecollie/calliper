@@ -352,4 +352,38 @@ namespace Math
         // Generate the up vector from these two.
         up = QVector3D::crossProduct(right, fwd);
     }
+
+    EulerAngle vectorsToAngle(const QVector3D &fwd, const QVector3D &up)
+    {
+        if ( fwd.isNull() || up.isNull() )
+        {
+            return EulerAngle();
+        }
+
+        // Get the angle before any roll.
+        EulerAngle angle = vectorToAngleSimple(fwd);
+
+        // If we're on a singularity, determine the roll.
+        if ( qFuzzyIsNull(fwd.x()) && qFuzzyIsNull(fwd.y()) )
+        {
+            // This gives us the angle on the wrong side,
+            // and it can also be negative.
+            float ang = qRadiansToDegrees(qAtan2(up.y(), fwd.z() < 0 ? up.x() : -up.x()));
+
+            // Make the rotation be in the correct direction.
+            ang *= -1;
+
+            // Also make sure it's positive.
+            while ( ang < 0.0f )
+                ang += 360.0f;
+
+            angle.setRoll(ang);
+            return angle;
+        }
+
+        // Project the forward vector onto the XY plane.
+        QVector3D fwdXY(fwd.x(), fwd.y(), 0);
+
+        return angle;
+    }
 }

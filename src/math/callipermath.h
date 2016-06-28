@@ -76,6 +76,9 @@ namespace Math
 
     void angleToVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up);
 
+    // Assumes vectors are normalised and perpendicular.
+    EulerAngle vectorsToAngle(const QVector3D &fwd, const QVector3D &up);
+
     // Positive values of x only!
     inline bool isPowerOfTwo (int x)
     {
