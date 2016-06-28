@@ -74,6 +74,8 @@ namespace Math
     QVector3D angleToVectorSimple(const EulerAngle &angle);
     EulerAngle vectorToAngleSimple(const QVector3D &vec);
 
+    void angleToVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up);
+
     // Positive values of x only!
     inline bool isPowerOfTwo (int x)
     {

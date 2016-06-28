@@ -310,4 +310,46 @@ namespace Math
             vec[i] = (float)nearestMultiple(vec[i], multiple);
         }
     }
+
+    void angleToVectors(const EulerAngle &angle, QVector3D &fwd, QVector3D &right, QVector3D &up)
+    {
+        // We already know how to compute the forward vector.
+        fwd = angleToVectorSimple(angle);
+
+        // If the forward vector is at a singularity, we return the other vectors as if we
+        // had begun by looking down the X axis.
+        if ( qFuzzyIsNull(fwd.x()) && qFuzzyIsNull(fwd.y()) )
+        {
+            float sr = qSin(qDegreesToRadians(angle.roll()));
+            float cr = qCos(qDegreesToRadians(angle.roll()));
+
+            if ( fwd.z() < 0.0f )
+            {
+                up = QVector3D(cr,-sr,0);
+            }
+            else
+            {
+                up = QVector3D(-cr,-sr,0);
+            }
+
+            right = QVector3D::crossProduct(fwd, up);
+            return;
+        }
+
+        // We're not pointing down a singularity.
+        // Project the forward vector onto the XY plane so we can find an initial right vector.
+        // This is just a 90 degree clockwise rotation of the projected vector.
+        QVector3D initialRight(fwd.y(), -fwd.x(), 0);
+        initialRight.normalize();
+
+        // Now rotate the right vector by a quarternion constructed from the roll.
+        // The angle is in degrees, not radians.
+        QQuaternion rollRot = QQuaternion::fromAxisAndAngle(fwd, angle.roll());
+
+        // Rotate the right vector.
+        right = rollRot.rotatedVector(initialRight);
+
+        // Generate the up vector from these two.
+        up = QVector3D::crossProduct(right, fwd);
+    }
 }
