@@ -78,6 +78,7 @@ void HierarchicalObject::setAngles(const EulerAngle &angle)
     if ( m_angAngles == angle ) return;
 
     m_angAngles = angle;
+    normaliseAngles();
     clampAngles();
     m_bMatricesStale = true;
 }
@@ -97,6 +98,17 @@ void HierarchicalObject::clampAngles()
         m_angAngles.setRoll(180.0f);
 
     m_angAngles.setYaw(std::fmod(m_angAngles.yaw(), 360.0f));
+}
+
+void HierarchicalObject::normaliseAngles()
+{
+    // Normalise pitch.
+    if ( m_angAngles.pitch() > 180.0f )
+        m_angAngles.setPitch(-360.0f + m_angAngles.pitch());
+
+    // Normalise roll.
+    if ( m_angAngles.roll() > 180.0f )
+        m_angAngles.setRoll(-360.0f + m_angAngles.roll());
 }
 
 void HierarchicalObject::translate(const QVector3D &trans)

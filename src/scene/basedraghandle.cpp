@@ -9,7 +9,6 @@ BaseDragHandle::BaseDragHandle(BaseScene *scene, SceneObject *parent, const QStr
 {
     m_szIconTexture = iconTexture;
     m_bBillboard = false;
-    m_bDebugVar = false;
     buildSprite();
 }
 
@@ -46,15 +45,7 @@ void BaseDragHandle::buildSprite()
 
 void BaseDragHandle::draw(ShaderStack *stack)
 {
-    if ( m_bDebugVar )
-    {
-        lookAtGlobal((stack->worldToCameraTop().inverted() * QVector4D(0,0,0,1)).toVector3D());
-    }
+    lookAtGlobal((stack->worldToCameraTop().inverted() * QVector4D(0,0,0,1)).toVector3D());
 
     UIManipulator::draw(stack);
-}
-
-void BaseDragHandle::setDebugVar(bool b)
-{
-    m_bDebugVar = b;
 }

@@ -75,6 +75,7 @@ public slots:
 protected:
     virtual void rebuildLocalToParent() const;
     virtual void clampAngles();
+    void normaliseAngles();
     void rebuildMatrices() const;
     void initDefaults();
 
