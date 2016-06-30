@@ -90,7 +90,9 @@ HEADERS += \
     scene/crosshair3d.h \
     scene/basedraghandle.h \
     scene/uiblockcreationhandle.h \
-    scene/axisdraghandle.h
+    scene/axisdraghandle.h \
+    serialisation/keyvaluesparser.h \
+    serialisation/keyvaluestoken.h
 
 SOURCES += \
     application/application.cpp \
@@ -155,7 +157,9 @@ SOURCES += \
     scene/crosshair3d.cpp \
     scene/basedraghandle.cpp \
     scene/uiblockcreationhandle.cpp \
-    scene/axisdraghandle.cpp
+    scene/axisdraghandle.cpp \
+    serialisation/keyvaluesparser.cpp \
+    serialisation/keyvaluestoken.cpp
 
 RESOURCES += \
     resource/resource.qrc \
