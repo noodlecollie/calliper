@@ -45,7 +45,9 @@ void BaseDragHandle::buildSprite()
 
 void BaseDragHandle::draw(ShaderStack *stack)
 {
-    lookAtGlobal((stack->worldToCameraTop().inverted() * QVector4D(0,0,0,1)).toVector3D());
+    // This is just about acceptable for our billboarding purposes.
+    // It faces the object backwards along the view vector of the camera.
+    setAngles(Math::vectorToAngleSimple((stack->worldToCameraTop().inverted() * QVector4D(0,-1,0,0)).toVector3D()));
 
     UIManipulator::draw(stack);
 }
