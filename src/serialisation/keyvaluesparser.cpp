@@ -1,6 +1,8 @@
 #include "keyvaluesparser.h"
 #include <QStack>
 #include "keyvaluestoken.h"
+#include <QHash>
+#include <QJsonArray>
 
 KeyValuesParser::KeyValuesParser(const QByteArray &input) :
     m_Input(input)
@@ -129,4 +131,58 @@ void KeyValuesParser::keyValuesToIntermediateJson(QByteArray &intJson)
     // End the root object.
     intJson.append('}');
     depthTokens.pop();
+}
+
+void KeyValuesParser::convertNonUniqueKeysToArrays(QJsonObject &obj)
+{
+    typedef QHash<QString, QJsonArray> JsonTable;
+    JsonTable itemTable;
+
+    for ( QJsonObject::iterator it = obj.begin(); it != obj.end(); ++it )
+    {
+        QString key = it.key();
+        int index = key.indexOf("_");
+        if ( index >= 0 )
+            key = key.mid(index+1);
+        if ( key.isEmpty() )
+            continue;
+
+        if ( !itemTable.contains(key) )
+        {
+            QJsonArray array;
+            array.append(it.value());
+            itemTable.insert(key, array);
+            continue;
+        }
+
+        itemTable[key].append(it.value());
+    }
+
+    obj = QJsonObject();
+    for ( JsonTable::iterator it = itemTable.begin(); it != itemTable.end(); ++it )
+    {
+        if ( it->count() > 1 )
+        {
+            obj.insert(it.key(), *it);
+        }
+        else
+        {
+            obj.insert(it.key(), (*it)[0]);
+        }
+    }
+}
+
+void KeyValuesParser::convertNonUniqueKeysToArraysRecursive(QJsonObject &obj)
+{
+    for ( QJsonObject::iterator it = obj.begin(); it != obj.end(); ++it )
+    {
+        if ( (*it).isObject() )
+        {
+            QJsonObject child = (*it).toObject();
+            convertNonUniqueKeysToArraysRecursive(child);
+            *it = child;
+        }
+    }
+
+    convertNonUniqueKeysToArrays(obj);
 }

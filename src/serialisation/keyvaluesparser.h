@@ -2,6 +2,8 @@
 #define KEYVALUESPARSER_H
 
 #include <QByteArray>
+#include <QJsonObject>
+#include <QJsonArray>
 
 // A basic KV file is -almost- a JSON file. We can treat it as the following:
 // - Every KV object (ie. key with subkeys) corresponds to a JSON object.
@@ -23,11 +25,13 @@ class KeyValuesParser
 {
 public:
     KeyValuesParser(const QByteArray &input);
-    void keyValuesToIntermediateJson(QByteArray &intJson);
+    static void convertNonUniqueKeysToArraysRecursive(QJsonObject &obj);
 
 private:
     int nextNonWhitespaceCharacter(int from) const;
+    void keyValuesToIntermediateJson(QByteArray &intJson);
 
+    static void convertNonUniqueKeysToArrays(QJsonObject &obj);
 
     const QByteArray &m_Input;
 };
