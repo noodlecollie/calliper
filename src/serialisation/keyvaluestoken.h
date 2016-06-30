@@ -51,6 +51,7 @@ private:
     static bool getTokenFromFirstTwoChars(const char* str, TokenType &token);
     static int lengthOfToken(const QByteArray &arr, int position, int offset, const QByteArray &endDelim);
     static int lengthOfToken(const QByteArray &arr, int position, TokenType type);
+    QByteArray getString(const QByteArray &input);
 
     TokenType   m_iTokenType;
     int         m_iBeginPos;

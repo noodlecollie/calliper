@@ -219,21 +219,33 @@ void KeyValuesToken::writeJson(const QByteArray &input, QByteArray &json, int pr
         return;
 
     // If we're an unquoted string, enclose in quotes first.
-    if ( is(TokenStringUnquoted) )
+    if ( isString() )
     {
         json.append('\"');
     }
 
-    if ( prefix >= 0 && isString() )
+    if ( prefix >= 0 )
     {
         json.append(QString("%0_").arg(prefix));
     }
 
-    json.append(input.constData() + m_iBeginPos, m_iLength);
+    json.append(getString(input));
 
-    if ( is(TokenStringUnquoted) )
+    if ( isString() )
     {
         json.append('\"');
+    }
+}
+
+QByteArray KeyValuesToken::getString(const QByteArray &input)
+{
+    if ( is(TokenStringQuoted) )
+    {
+        return QByteArray(input.constData() + m_iBeginPos + 1, m_iLength - 2);
+    }
+    else
+    {
+        return QByteArray(input.constData() + m_iBeginPos, m_iLength);
     }
 }
 

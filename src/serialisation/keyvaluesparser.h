@@ -23,10 +23,11 @@ class KeyValuesParser
 {
 public:
     KeyValuesParser(const QByteArray &input);
+    void keyValuesToIntermediateJson(QByteArray &intJson);
 
 private:
     int nextNonWhitespaceCharacter(int from) const;
-    void keyValuesToIntermediateJson(QByteArray &intJson);
+
 
     const QByteArray &m_Input;
 };

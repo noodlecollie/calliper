@@ -50,7 +50,7 @@ void KeyValuesParser::keyValuesToIntermediateJson(QByteArray &intJson)
         from = nextNonWhitespaceCharacter(from);
 
         // If there's no next token, finish.
-        if ( from >= length )
+        if ( from >= length || from < 0 )
             break;
 
         // Get the next token.
@@ -114,10 +114,16 @@ void KeyValuesParser::keyValuesToIntermediateJson(QByteArray &intJson)
         }
 
         // Actually write the token to the output.
-        token.writeJson(m_Input, intJson, depthTokens.top() % 2 == 0 ? depthTokens.top() : -1);
+        token.writeJson(m_Input, intJson, depthTokens.top() % 2 == 0
+                        ? -1
+                        : (depthTokens.top()-1)/2);
 
         // Advance the index past the token.
         from += token.length();
+
+        // If we're past the end now, return.
+        if ( from >= length )
+            break;
     }
 
     // End the root object.

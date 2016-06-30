@@ -7,8 +7,31 @@
 #include "application.h"
 #include <QFile>
 
+// REMOVE ME
+#include "keyvaluesparser.h"
+#include <QFile>
+
 int main(int argc, char *argv[])
 {
+    {
+        QFile kvIn("/Users/vesper/Desktop/test.vmf");
+        QByteArray contents;
+        if ( kvIn.open(QIODevice::ReadOnly) )
+        {
+            QByteArray in = kvIn.readAll();
+            KeyValuesParser parser(in);
+            kvIn.close();
+            parser.keyValuesToIntermediateJson(contents);
+        }
+
+        QFile outJson("/Users/vesper/Desktop/test.json");
+        if ( outJson.open(QIODevice::WriteOnly) )
+        {
+            outJson.write(contents);
+            outJson.close();
+        }
+    }
+
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     QSurfaceFormat format;
