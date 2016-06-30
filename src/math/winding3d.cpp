@@ -234,3 +234,13 @@ Ray3D::IntersectionType Winding3D::splitEdgeWithPlane(const QVector3D &v0, const
     intersection = pointOfSplit;
     return intersectionType;
 }
+
+QList<QVector3D> Winding3D::vertexList() const
+{
+    QList<QVector3D> list;
+    for ( VertexList::const_iterator it = m_Vertices.begin(); it != m_Vertices.end(); ++it )
+    {
+        list.append(it->point);
+    }
+    return list;
+}

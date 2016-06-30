@@ -5,6 +5,7 @@
 #include <QVector3D>
 #include "plane3d.h"
 #include "ray3d.h"
+#include <QList>
 
 class Winding3D
 {
@@ -15,6 +16,8 @@ public:
 
     bool isNull() const;
     bool isClosed() const;
+
+    QList<QVector3D> vertexList() const;
 
     Winding3D& clip(const Plane3D &clipPlane);
 
