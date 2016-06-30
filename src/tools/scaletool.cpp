@@ -57,17 +57,17 @@ void ScaleTool::updateManipulatorFromMouseMove(QMouseEvent *e)
         // Generate a ray from the camera origin that passes through the initial drag position,
         // and find where it intersects the axis=value plane.
         // Eg. where x=5.
-        bool success = false;
+        Ray3D::IntersectionType intersectionType = Ray3D::NoIntersection;
         Ray3D initialRay(viewport->camera()->position(), viewport->camera()->frustumDirection(m_BeginDragPos, viewport->size()));
-        QVector3D initialIntersection = initialRay.parameterise(axis, value, &success);
-        if ( !success )
+        QVector3D initialIntersection = initialRay.parameterise(axis, value, &intersectionType);
+        if ( intersectionType != Ray3D::SingleIntersection )
             return;
 
         // Do the same for the current drag position.
-        success = false;
+        intersectionType = Ray3D::NoIntersection;
         Ray3D planeRay(viewport->camera()->position(), viewport->camera()->frustumDirection(e->pos(), viewport->size()));
-        QVector3D planeIntersection = planeRay.parameterise(axis, value, &success);
-        if ( !success )
+        QVector3D planeIntersection = planeRay.parameterise(axis, value, &intersectionType);
+        if ( intersectionType != Ray3D::SingleIntersection )
             return;
 
         // The scale is the ratio of the new vector to the original vector.

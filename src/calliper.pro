@@ -92,7 +92,9 @@ HEADERS += \
     scene/uiblockcreationhandle.h \
     scene/axisdraghandle.h \
     serialisation/keyvaluesparser.h \
-    serialisation/keyvaluestoken.h
+    serialisation/keyvaluestoken.h \
+    math/plane3d.h \
+    math/winding3d.h
 
 SOURCES += \
     application/application.cpp \
@@ -159,7 +161,9 @@ SOURCES += \
     scene/uiblockcreationhandle.cpp \
     scene/axisdraghandle.cpp \
     serialisation/keyvaluesparser.cpp \
-    serialisation/keyvaluestoken.cpp
+    serialisation/keyvaluestoken.cpp \
+    math/plane3d.cpp \
+    math/winding3d.cpp
 
 RESOURCES += \
     resource/resource.qrc \

@@ -200,10 +200,11 @@ void CreateGeometryTool::endDrag()
 
 bool CreateGeometryTool::rayIntersectsZ0Plane(SceneCamera *camera, const Ray3D &ray, QVector3D &intersection)
 {
+    Ray3D::IntersectionType intersectionType = Ray3D::NoIntersection;
     bool rayIntersectsZ0 = false;
-    QVector3D potentialIntersection = ray.parameterise(Math::AxisZ, 0, &rayIntersectsZ0);
+    QVector3D potentialIntersection = ray.parameterise(Math::AxisZ, 0, &intersectionType);
 
-    if ( rayIntersectsZ0 )
+    if ( intersectionType == Ray3D::SingleIntersection )
     {
         // Check if intersection was behind the origin of the ray.
         if ( QVector3D::dotProduct(ray.direction(), potentialIntersection - ray.origin()) <= 0.0f )

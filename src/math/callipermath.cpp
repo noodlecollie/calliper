@@ -75,6 +75,29 @@ namespace Math
         const QMatrix4x4& OPENGL_TO_HAMMER() { return M_OPENGL_TO_HAMMER; }
     }
 
+    namespace CoordinateSystem
+    {
+        int max()
+        {
+            return 16384;
+        }
+
+        int min()
+        {
+            return -max();
+        }
+
+        int extent()
+        {
+            return 2*max();
+        }
+
+        double diagonal()
+        {
+            return 1.732050807569 * extent();
+        }
+    }
+
     QMatrix4x4 matrixTranslate(const QVector3D &translation)
     {
         return QMatrix4x4(1, 0, 0, translation.x(),
@@ -430,5 +453,10 @@ namespace Math
 
         angle.setRoll(ang);
         return angle;
+    }
+
+    QVector3D vectorPerpendicularTo(const QVector3D &orig, const QVector3D &normal)
+    {
+        return orig - (QVector3D::dotProduct(orig, normal) * normal);
     }
 }

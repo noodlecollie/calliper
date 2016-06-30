@@ -1,5 +1,6 @@
 #include "ray3d.h"
 #include <QtMath>
+#include "plane3d.h"
 
 QDebug& operator <<(QDebug &debug, const Ray3D &ray)
 {
@@ -43,18 +44,28 @@ QVector3D Ray3D::parameterise(float t) const
     return m_vecOrigin + (t * m_vecDirection);
 }
 
-QVector3D Ray3D::parameterise(Math::AxisIdentifier axis, float value, bool *success) const
+QVector3D Ray3D::parameterise(Math::AxisIdentifier axis, float value, IntersectionType *intersection) const
 {
     // We don't want a null ray, but if the ray is null then this check will catch it anyway.
     if ( qFuzzyIsNull(m_vecDirection[axis]) )
     {
-        if ( success )
-            *success = false;
+        if ( intersection )
+        {
+            if ( qFuzzyCompare(m_vecOrigin[axis], value) )
+            {
+                *intersection = MultipleIntersections;
+            }
+            else
+            {
+                *intersection = SingleIntersection;
+            }
+        }
+
         return QVector3D();
     }
 
-    if ( success )
-        *success = true;
+    if ( intersection )
+        *intersection = SingleIntersection;
 
     return parameterise((value - m_vecOrigin[axis])/m_vecDirection[axis]);
 
@@ -185,4 +196,35 @@ Ray3D Ray3D::transformed(const QMatrix4x4 &mat) const
 {
     return Ray3D((mat * QVector4D(m_vecOrigin, 1)).toVector3D(),
                  (mat * QVector4D(m_vecDirection, 0)).toVector3D());
+}
+
+QVector3D Ray3D::parameterise(const Plane3D &plane, IntersectionType* intersection) const
+{
+    QVector3D planeNormal = plane.normal();
+    QVector3D planeOrg = plane.origin();
+    if ( qFuzzyIsNull(QVector3D::dotProduct(direction(), planeNormal)) )
+    {
+        if ( intersection )
+        {
+            if ( qFuzzyIsNull(QVector3D::dotProduct(planeNormal, origin() - planeOrg)) )
+            {
+                *intersection = MultipleIntersections;
+            }
+            else
+            {
+                *intersection = NoIntersection;
+            }
+        }
+
+        return QVector3D();
+    }
+
+    if ( intersection )
+    {
+        *intersection = SingleIntersection;
+    }
+
+    QVector3D toRay = origin() - planeOrg;
+    return parameterise((-QVector3D::dotProduct(planeNormal, toRay))
+            / QVector3D::dotProduct(planeNormal, direction()));
 }

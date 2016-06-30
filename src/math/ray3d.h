@@ -4,9 +4,18 @@
 #include <QVector3D>
 #include "callipermath.h"
 
+class Plane3D;
+
 class Ray3D
 {
 public:
+    enum IntersectionType
+    {
+        NoIntersection = 0,
+        SingleIntersection,
+        MultipleIntersections,
+    };
+
     // Constructs a null ray (a ray with a null direction).
     Ray3D();
     Ray3D(const QVector3D &origin, const QVector3D &direction);
@@ -22,8 +31,9 @@ public:
     void setDirection(const QVector3D &direction);
 
     // Returns ray where axis=value (ie. ray intersection with plane of this type).
-    QVector3D parameterise(Math::AxisIdentifier axis, float value, bool* success = NULL) const;
+    QVector3D parameterise(Math::AxisIdentifier axis, float value, IntersectionType* intersection = NULL) const;
     QVector3D parameterise(float t) const;
+    QVector3D parameterise(const Plane3D &plane, IntersectionType* intersection = NULL) const;
     float distanceFrom(const QVector3D &point, bool* success = NULL) const;
     QVector3D atDistanceFromOrigin(float distance) const;
 

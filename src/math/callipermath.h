@@ -39,6 +39,15 @@ namespace Math
         AxisFlagXYZ = AxisFlagX | AxisFlagY | AxisFlagZ
     };
 
+    // These are based off Hammer for now.
+    namespace CoordinateSystem
+    {
+        int max();
+        int min();
+        int extent();
+        double diagonal();
+    }
+
     namespace StaticMatrix
     {
         const QMatrix4x4& ROT_X_90();
@@ -103,6 +112,10 @@ namespace Math
 
     QVector3D cardinalAxis(AxisIdentifier axis, bool negated = false);
     void clampToNearestMultiple(QVector3D &vec, qint64 multiple, AxisFlag axisFlags);
+
+    // Assumes normal is of unit length.
+    // The output vector is not normalised.
+    QVector3D vectorPerpendicularTo(const QVector3D &orig, const QVector3D &normal);
 }
 
 #endif // MATH_H
