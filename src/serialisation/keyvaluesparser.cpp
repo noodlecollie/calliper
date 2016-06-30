@@ -3,6 +3,7 @@
 #include "keyvaluestoken.h"
 #include <QHash>
 #include <QJsonArray>
+#include <QJsonDocument>
 
 KeyValuesParser::KeyValuesParser(const QByteArray &input) :
     m_Input(input)
@@ -185,4 +186,20 @@ void KeyValuesParser::convertNonUniqueKeysToArraysRecursive(QJsonObject &obj)
     }
 
     convertNonUniqueKeysToArrays(obj);
+}
+
+QJsonDocument KeyValuesParser::toJsonDocument()
+{
+    QByteArray intermediate;
+    keyValuesToIntermediateJson(intermediate);
+
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(intermediate, &error);
+
+    Q_ASSERT_X(doc.isObject(), Q_FUNC_INFO, "Expected JSON document to have a root object.");
+
+    QJsonObject obj = doc.object();
+    convertNonUniqueKeysToArraysRecursive(obj);
+    doc.setObject(obj);
+    return doc;
 }
