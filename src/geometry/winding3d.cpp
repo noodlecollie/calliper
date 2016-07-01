@@ -29,7 +29,7 @@ bool Winding3D::isClosed() const
     for ( QLinkedList<Vertex>::const_iterator it = m_Vertices.begin();
           it != m_Vertices.end(); ++it)
     {
-        if ( !it->prevEdgeOriginal || !it->nextEdgeOriginal )
+        if ( it->prevEdgeOriginal || it->nextEdgeOriginal )
             return false;
     }
 
