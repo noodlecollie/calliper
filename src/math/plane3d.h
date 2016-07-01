@@ -2,10 +2,24 @@
 #define PLANE3D_H
 
 #include <QVector3D>
+#include <QtDebug>
 
 class Plane3D
 {
 public:
+    enum PointLocation
+    {
+        BehindPlane = -1,
+        OnPlane = 0,
+        InFrontOfPlane = 1,
+    };
+
+    // We can't use nice QMetaEnum features here because
+    // Plane3Ds shouldn't be QObjects. Luckily this is
+    // just about permissible because this enum shouldn't
+    // ever change.
+    static const char* enumPointLocationStringName(PointLocation value);
+
     // Constructs a null plane with no normal.
     Plane3D();
     Plane3D(const QVector3D &normal, float distance);
@@ -33,9 +47,13 @@ public:
 
     QVector3D origin() const;
 
+    PointLocation getPointLocation(const QVector3D &point) const;
+
 private:
     QVector3D   m_vecNormal;
     float       m_flDistance;
 };
+
+QDebug& operator <<(QDebug &debug, const Plane3D &plane);
 
 #endif // PLANE3D_H

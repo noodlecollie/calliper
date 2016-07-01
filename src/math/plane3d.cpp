@@ -1,6 +1,24 @@
 #include "plane3d.h"
 #include "callipermath.h"
 
+QDebug& operator << (QDebug &debug, const Plane3D &plane)
+{
+    debug.nospace() << "Plane3D(" << plane.normal() << ", " << plane.distance() << ")";
+    return debug;
+}
+
+const char* Plane3D::enumPointLocationStringName(PointLocation value)
+{
+    static const char* strings[3] =
+    {
+        "BehindPlane",
+        "OnPlane",
+        "InFrontOfPlane",
+    };
+
+    return strings[(int)value + 1];
+}
+
 Plane3D::Plane3D() : m_vecNormal(), m_flDistance(0)
 {
 }
@@ -81,4 +99,13 @@ bool Plane3D::fuzzyIsParallelTo(const Plane3D &other) const
 QVector3D Plane3D::origin() const
 {
     return m_flDistance * m_vecNormal;
+}
+
+Plane3D::PointLocation Plane3D::getPointLocation(const QVector3D &point) const
+{
+    float dotProduct = QVector3D::dotProduct(normal(), point - origin());
+    if ( qFuzzyIsNull(dotProduct) )
+        return OnPlane;
+
+    return dotProduct > 0.0f ? InFrontOfPlane : BehindPlane;
 }

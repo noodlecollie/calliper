@@ -7,20 +7,8 @@
 #include "application.h"
 #include <QFile>
 
-// REMOVE ME
-#include "winding3d.h"
-#include "plane3d.h"
-
 int main(int argc, char *argv[])
 {
-    // REMOVE ME
-    Winding3D winding(Plane3D(QVector3D(0,0,1), 64.0f));
-    Plane3D clipPlane(QVector3D(1,0,0), 64.0f);
-    qDebug() << "Winding before clipping:\n" << winding.vertexList();
-
-    winding.clip(clipPlane);
-    qDebug() << "Winding after clipping:\n" << winding.vertexList();
-
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     {

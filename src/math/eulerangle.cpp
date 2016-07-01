@@ -47,5 +47,5 @@ void EulerAngle::setRoll(float r)
 QDebug& operator <<(QDebug &debug, const EulerAngle &angle)
 {
     debug.nospace() << "EulerAngle(" << angle.pitch() << "," << angle.yaw() << "," << angle.roll() << ")";
-    return debug.space();
+    return debug;
 }

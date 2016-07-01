@@ -6,6 +6,7 @@
 #include "plane3d.h"
 #include "ray3d.h"
 #include <QList>
+#include <QPair>
 
 class Winding3D
 {
@@ -28,7 +29,6 @@ private:
     void createBlankWinding();
     void generateXAndY(QVector3D &xAxis, QVector3D &yAxis) const;
     Ray3D::IntersectionType splitEdgeWithPlane(const QVector3D &v0, const QVector3D &v1, const Plane3D &plane, QVector3D &intersection);
-    void removeDiscardedVertices();
 
     struct Vertex
     {
@@ -49,10 +49,20 @@ private:
         bool original;
         bool shouldDiscard;
     };
-    typedef QLinkedList<Vertex> VertexList;
 
-    Plane3D                 m_Plane;
-    QLinkedList<Vertex>  m_Vertices;
+    typedef QLinkedList<Vertex> VertexList;
+    typedef QPair<VertexList::iterator, QVector3D> VertexInsert;
+
+    void calculateEdgeSplit(const Plane3D &plane, VertexList::iterator &itV0, VertexList::iterator &itV1);
+    void markVertexToDiscard(VertexList::iterator &vertex);
+    void markVertexToInsert(VertexList::iterator &before, const QVector3D &position);
+    void touchVertex(VertexList::iterator &vertex);
+    void insertWaitingVertices();
+    void removeDiscardedVertices();
+
+    Plane3D                     m_Plane;
+    QLinkedList<Vertex>         m_Vertices;
+    QList<VertexInsert>         m_VerticesToInsert;
 };
 
 #endif // WINDING3D_H
