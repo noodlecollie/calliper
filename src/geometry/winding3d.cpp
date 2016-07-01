@@ -29,7 +29,7 @@ bool Winding3D::isClosed() const
     for ( QLinkedList<Vertex>::const_iterator it = m_Vertices.begin();
           it != m_Vertices.end(); ++it)
     {
-        if ( it->original )
+        if ( !it->prevEdgeOriginal || !it->nextEdgeOriginal )
             return false;
     }
 
@@ -46,29 +46,28 @@ void Winding3D::createBlankWinding()
     }
 
     // Get X and Y.
-    QVector3D xAxis, yAxis;
-    generateXAndY(xAxis, yAxis);
+    generateXAndY();
 
     // Make dem HUGE.
-    xAxis *= Math::CoordinateSystem::diagonal();
-    yAxis *= Math::CoordinateSystem::diagonal();
+    m_vecBasisX *= Math::CoordinateSystem::diagonal();
+    m_vecBasisY *= Math::CoordinateSystem::diagonal();
 
     // Get the plane origin.
     QVector3D org = m_Plane.origin();
 
     // Generate four points.
-    m_Vertices.append(Vertex(org - xAxis + yAxis));
-    m_Vertices.append(Vertex(org + xAxis + yAxis));
-    m_Vertices.append(Vertex(org + xAxis - yAxis));
-    m_Vertices.append(Vertex(org - xAxis - yAxis));
+    m_Vertices.append(Vertex(org - m_vecBasisX + m_vecBasisY, true, true));
+    m_Vertices.append(Vertex(org + m_vecBasisX + m_vecBasisY, true, true));
+    m_Vertices.append(Vertex(org + m_vecBasisX - m_vecBasisY, true, true));
+    m_Vertices.append(Vertex(org - m_vecBasisX - m_vecBasisY, true, true));
 }
 
-void Winding3D::generateXAndY(QVector3D &xAxis, QVector3D &yAxis) const
+void Winding3D::generateXAndY()
 {
     if ( m_Plane.isNull() )
     {
-        xAxis = QVector3D();
-        yAxis = QVector3D();
+        m_vecBasisX = QVector3D();
+        m_vecBasisY = QVector3D();
         return;
     }
 
@@ -86,23 +85,23 @@ void Winding3D::generateXAndY(QVector3D &xAxis, QVector3D &yAxis) const
     }
 
     // Generate Y axis.
-    yAxis = QVector3D();
+    m_vecBasisY = QVector3D();
     switch (largestAxis)
     {
         case Math::AxisZ:
-            yAxis.setX(1);
+            m_vecBasisY.setX(1);
             break;
 
         default:
-            yAxis.setZ(1);
+            m_vecBasisY.setZ(1);
             break;
     }
 
     // Convert Y to lie in the plane.
-    yAxis = Math::vectorPerpendicularTo(yAxis, nrm).normalized();
+    m_vecBasisY = Math::vectorPerpendicularTo(m_vecBasisY, nrm).normalized();
 
     // Generate an X axis using the cross product.
-    xAxis = QVector3D::crossProduct(nrm, yAxis);
+    m_vecBasisX = QVector3D::crossProduct(nrm, m_vecBasisY);
 }
 
 bool Winding3D::equivalentTo(const Winding3D &other) const
@@ -216,8 +215,24 @@ void Winding3D::calculateEdgeSplit(const Plane3D &plane, VertexList::iterator &i
         // No vertex is on the plane, so the plane splits the edge nicely.
         if ( plV0 != Plane3D::OnPlane && plV1 != Plane3D::OnPlane )
         {
+            // If v0 is in front of the plane, the edge before the new vertex is definitely
+            // not an original edge, and the edge after may be (depending on whether v0 says it was).
+            // If v1 is in front of the plane, the edge after the new vertex is definitely
+            // not an original edge, and the edge before may be (depending on whether v0 says it was).
+            EdgeOriginalityPair origPair(false, false);
+            if ( plV0 == Plane3D::InFrontOfPlane )
+            {
+                origPair.first = false;
+                origPair.second = itV0->nextEdgeOriginal;
+            }
+            else
+            {
+                origPair.first = itV0->nextEdgeOriginal;
+                origPair.second = false;
+            }
+
             markVertexToDiscard(plV0 == Plane3D::InFrontOfPlane ? itV0 : itV1);
-            markVertexToInsert(itV1, intersectionPoint);    // Insert in list before second vertex.
+            markVertexToInsert(itV1, intersectionPoint, origPair);    // Insert in list before second vertex.
         }
         else
         {
@@ -268,14 +283,15 @@ void Winding3D::markVertexToDiscard(VertexList::iterator &vertex)
     vertex->shouldDiscard = true;
 }
 
-void Winding3D::markVertexToInsert(VertexList::iterator &before, const QVector3D &position)
+void Winding3D::markVertexToInsert(VertexList::iterator &before, const QVector3D &position, const EdgeOriginalityPair originality)
 {
-    m_VerticesToInsert.append(VertexInsert(before, position));
+    m_VerticesToInsert.append(VertexInsert(before, Vertex(position, originality.first, originality.second)));
 }
 
 void Winding3D::touchVertex(VertexList::iterator &vertex)
 {
-    vertex->original = false;
+    vertex->prevEdgeOriginal = false;
+    vertex->nextEdgeOriginal = false;
 }
 
 Ray3D::IntersectionType Winding3D::splitEdgeWithPlane(const QVector3D &v0, const QVector3D &v1, const Plane3D &plane, QVector3D &intersection)
@@ -312,7 +328,7 @@ void Winding3D::insertWaitingVertices()
     for ( int i = 0; i < m_VerticesToInsert.count(); i++ )
     {
         const VertexInsert &item = m_VerticesToInsert.at(i);
-        m_Vertices.insert(item.first, Vertex(item.second));
+        m_Vertices.insert(item.first, item.second);
     }
 
     m_VerticesToInsert.clear();
@@ -331,4 +347,14 @@ void Winding3D::removeDiscardedVertices()
             ++it;
         }
     }
+}
+
+Winding3D& Winding3D::clip(const QList<Plane3D> &clipPlanes)
+{
+    foreach ( const Plane3D &clipPlane, clipPlanes )
+    {
+        clip(clipPlane);
+    }
+
+    return *this;
 }

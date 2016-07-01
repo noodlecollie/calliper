@@ -7,8 +7,25 @@
 #include "application.h"
 #include <QFile>
 
+// REMOVE ME
+#include "winding3d.h"
+#include "plane3d.h"
+#include <QList>
+
 int main(int argc, char *argv[])
 {
+    // REMOVE ME
+    Winding3D winding(Plane3D(QVector3D(0,0,1), 64.0f));
+    QList<Plane3D> clipPlanes;
+    clipPlanes << Plane3D(QVector3D(1,0,0), 64)
+               << Plane3D(QVector3D(0,1,0), 64)
+               << Plane3D(QVector3D(-1,0,0), 64)
+               << Plane3D(QVector3D(0,-1,0), 64);
+    winding.clip(clipPlanes);
+
+    qDebug() << "Winding:" << winding.vertexList();
+    qDebug() << "Winding closed:" << winding.isClosed();
+
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     {
