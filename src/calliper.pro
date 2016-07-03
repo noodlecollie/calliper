@@ -97,7 +97,8 @@ HEADERS += \
     geometry/winding3d.h \
     geometry/texturedpolygon.h \
     geometry/geometryutil.h \
-    geometry/windingvertex.h
+    geometry/windingvertex.h \
+    geometry/fuzzyvertexmap.h
 
 SOURCES += \
     application/application.cpp \
@@ -169,7 +170,8 @@ SOURCES += \
     geometry/winding3d.cpp \
     geometry/texturedpolygon.cpp \
     geometry/geometryutil.cpp \
-    geometry/windingvertex.cpp
+    geometry/windingvertex.cpp \
+    geometry/fuzzyvertexmap.cpp
 
 RESOURCES += \
     resource/resource.qrc \

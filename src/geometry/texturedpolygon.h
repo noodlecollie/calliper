@@ -6,25 +6,16 @@
 #include <QList>
 #include "plane3d.h"
 
-class TexturedPolygon
+class TexturedPolygon : public Winding3D
 {
 public:
     TexturedPolygon(const Plane3D &plane, const QString &tex);
 
-    Winding3D& winding();
-    const Winding3D& winding() const;
-
     QString texture() const;
     void setTexture(const QString &str);
 
-    QList<int>& vertexIndices();
-    const QList<int>& vertexIndices() const;
-
 private:
-
-    Winding3D   m_Winding;
     QString     m_szTexture;
-    QList<int>  m_VertexIndices;
 };
 
 #endif // TEXTUREDPOLYGON_H
