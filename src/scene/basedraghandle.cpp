@@ -8,14 +8,12 @@
 BaseDragHandle::BaseDragHandle(BaseScene *scene, SceneObject *parent, const QString &iconTexture) : UIManipulator(scene, parent)
 {
     m_szIconTexture = iconTexture;
-    m_bBillboard = false;
     buildSprite();
 }
 
 BaseDragHandle::BaseDragHandle(const BaseDragHandle &cloneFrom) : UIManipulator(cloneFrom)
 {
     m_szIconTexture = cloneFrom.m_szIconTexture;
-    m_bBillboard = false;
     buildSprite();
 }
 

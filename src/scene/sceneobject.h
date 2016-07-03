@@ -64,9 +64,6 @@ public:
     virtual bool editable() const;
     virtual void draw(ShaderStack* stack);
 
-    bool billboard() const;
-    void setBillboard(bool enabled);
-
     // Assumed to be constant throughout the object's lifetime.
     // If true, object will be rendered in a pre-pass, and will
     // not affect depth for any objects in the main pass.
@@ -112,7 +109,6 @@ protected:
 	bool							m_bHidden;
     bool                            m_bSerialiseGeometry;
     QVector<GeometryDataPointer>    m_GeometryList;
-    bool                            m_bBillboard;
 
 private:
     void initDefaults(SceneObject* parent, BaseScene* scene);

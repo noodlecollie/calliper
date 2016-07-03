@@ -362,3 +362,38 @@ Winding3D& Winding3D::clip(const QList<Plane3D> &clipPlanes)
 
     return *this;
 }
+
+int Winding3D::vertexCount() const
+{
+    return m_Vertices.count();
+}
+
+QLinkedList<WindingVertex>::iterator Winding3D::verticesBegin()
+{
+    return m_Vertices.begin();
+}
+
+QLinkedList<WindingVertex>::iterator Winding3D::verticesEnd()
+{
+    return m_Vertices.end();
+}
+
+QLinkedList<WindingVertex>::const_iterator Winding3D::verticesBegin() const
+{
+    return m_Vertices.cbegin();
+}
+
+QLinkedList<WindingVertex>::const_iterator Winding3D::verticesEnd() const
+{
+    return m_Vertices.cend();
+}
+
+QList<int> Winding3D::vertexIndices() const
+{
+    QList<int> indices;
+    for ( VertexList::const_iterator it = m_Vertices.cbegin(); it != m_Vertices.cend(); ++it )
+    {
+        indices.append(it->index());
+    }
+    return indices;
+}

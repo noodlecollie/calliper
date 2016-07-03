@@ -3,6 +3,7 @@
 #include "callipermath.h"
 #include "brushface.h"
 #include "textureplane.h"
+#include "geometryutil.h"
 
 void appendCuboidFace(BrushFace* face, Math::AxisIdentifier axis, bool frontFace)
 {
@@ -41,11 +42,32 @@ namespace BrushFactory
         return b;
     }
 
-    Brush* fromPolygons(BaseScene *scene, SceneObject *parent, const QList<TexturedPolygon> &polygons)
+    Brush* fromPolygons(BaseScene *scene, SceneObject *parent, const QList<TexturedPolygon*> &polygons)
     {
+        // Get a collection of vertices.
+        QList<Winding3D*> windings;
+        foreach ( TexturedPolygon* p, polygons )
+        {
+            windings.append(p);
+        }
+
+        QList<QVector3D> vertices = GeometryUtil::windingsToVertices(windings);
+
         Brush* b = scene->createSceneObject<Brush>(parent);
+        if ( vertices.count() < 1 )
+            return b;
 
+        b->appendVertices(vertices.toVector());
 
+        for ( int i = 0; i < polygons.count(); i++ )
+        {
+            TexturedPolygon* polygon = polygons.at(i);
+            if ( polygon->vertexCount() < 1 )
+                continue;
+
+            BrushFace* face = new BrushFace(b, polygon->vertexIndices().toVector());
+            face->texturePlane()->setTexturePath(polygon->texture());
+        }
 
         return b;
     }

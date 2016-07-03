@@ -121,4 +121,6 @@ namespace Math
     void fuzzyAdjustToUnitGrid(QVector3D &vec);
 }
 
+uint qHash(const QVector3D &vec);
+
 #endif // MATH_H

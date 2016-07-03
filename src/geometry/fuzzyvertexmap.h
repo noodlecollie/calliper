@@ -13,6 +13,8 @@ public:
     void clear();
     int count() const;
 
+    QList<QVector3D> vertexList() const;
+
 private:
     typedef QHash<QVector3D, int> VertexMap;
 

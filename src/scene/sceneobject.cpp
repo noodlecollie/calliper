@@ -23,7 +23,6 @@ SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(clon
     m_pScene = cloneFrom.m_pScene;
     m_RenderFlags = cloneFrom.m_RenderFlags;
     m_bHidden = cloneFrom.m_bHidden;
-    m_bBillboard = cloneFrom.m_bBillboard;
     m_bSerialiseGeometry = cloneFrom.m_bSerialiseGeometry;
     deepCloneGeometryFrom(cloneFrom.m_GeometryList);
 
@@ -41,7 +40,6 @@ void SceneObject::initDefaults(SceneObject* parent, BaseScene* scene)
     m_RenderFlags = NoRenderFlag;
     m_bHidden = false;
     m_bSerialiseGeometry = false;
-    m_bBillboard = false;
 }
 
 SceneObject::~SceneObject()
@@ -235,7 +233,6 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
 
     // Other properties
     obj.insert("hidden", QJsonValue(hidden()));
-    obj.insert("billboard", QJsonValue(billboard()));
 
     return true;
 }
@@ -449,17 +446,4 @@ bool SceneObject::passesObjectMask(int mask) const
         return false;
 
     return true;
-}
-
-bool SceneObject::billboard() const
-{
-    return m_bBillboard;
-}
-
-void SceneObject::setBillboard(bool enabled)
-{
-    if ( m_bBillboard == enabled )
-        return;
-
-    m_bBillboard = enabled;
 }

@@ -18,12 +18,19 @@ public:
     bool isClosed() const;
 
     QList<QVector3D> vertexList() const;
+    QList<int> vertexIndices() const;
 
     Winding3D& clip(const Plane3D &clipPlane);
     Winding3D& clip(const QList<Plane3D> &clipPlanes);
 
     // Quite expensive!
     bool equivalentTo(const Winding3D &other, bool fuzzy = false) const;
+
+    int vertexCount() const;
+    QLinkedList<WindingVertex>::iterator verticesBegin();
+    QLinkedList<WindingVertex>::const_iterator verticesBegin() const;
+    QLinkedList<WindingVertex>::iterator verticesEnd();
+    QLinkedList<WindingVertex>::const_iterator verticesEnd() const;
 
 private:
     typedef QLinkedList<WindingVertex> VertexList;

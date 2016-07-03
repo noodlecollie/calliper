@@ -55,6 +55,11 @@ QMatrix4x4 _matRotZ(float c, float s)
                       0, 0, 0, 1);
 }
 
+uint qHash(const QVector3D &vec)
+{
+    return qHash(QString("%0%1%2").arg(vec.x()).arg(vec.y()).arg(vec.z()));
+}
+
 namespace Math
 {
     namespace StaticMatrix
