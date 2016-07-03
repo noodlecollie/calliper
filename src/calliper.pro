@@ -94,7 +94,10 @@ HEADERS += \
     serialisation/keyvaluesparser.h \
     serialisation/keyvaluestoken.h \
     math/plane3d.h \
-    geometry/winding3d.h
+    geometry/winding3d.h \
+    geometry/texturedpolygon.h \
+    geometry/geometryutil.h \
+    geometry/windingvertex.h
 
 SOURCES += \
     application/application.cpp \
@@ -163,7 +166,10 @@ SOURCES += \
     serialisation/keyvaluesparser.cpp \
     serialisation/keyvaluestoken.cpp \
     math/plane3d.cpp \
-    geometry/winding3d.cpp
+    geometry/winding3d.cpp \
+    geometry/texturedpolygon.cpp \
+    geometry/geometryutil.cpp \
+    geometry/windingvertex.cpp
 
 RESOURCES += \
     resource/resource.qrc \

@@ -459,4 +459,16 @@ namespace Math
     {
         return orig - (QVector3D::dotProduct(orig, normal) * normal);
     }
+
+    void fuzzyAdjustToUnitGrid(QVector3D &vec)
+    {
+        QVector3D unit;
+        for ( int i = 0; i < 3; i++ )
+        {
+            unit[i] = qRound(vec[i]);
+            if ( !qFuzzyCompare(vec[i], unit[i]) )
+                return;
+        }
+        vec = unit;
+    }
 }

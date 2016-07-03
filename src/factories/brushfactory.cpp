@@ -40,4 +40,13 @@ namespace BrushFactory
 
         return b;
     }
+
+    Brush* fromPolygons(BaseScene *scene, SceneObject *parent, const QList<TexturedPolygon> &polygons)
+    {
+        Brush* b = scene->createSceneObject<Brush>(parent);
+
+
+
+        return b;
+    }
 }

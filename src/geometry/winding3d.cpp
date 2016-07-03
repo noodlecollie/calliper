@@ -1,13 +1,6 @@
 #include "winding3d.h"
 #include "callipermath.h"
 
-class Winding3DEdgeHelper
-{
-public:
-
-
-};
-
 Winding3D::Winding3D(const Plane3D &plane) :
     m_Plane(plane)
 {
@@ -26,10 +19,10 @@ bool Winding3D::isClosed() const
     if ( m_Vertices.count() < 1 )
         return false;
 
-    for ( QLinkedList<Vertex>::const_iterator it = m_Vertices.begin();
+    for ( VertexList::const_iterator it = m_Vertices.begin();
           it != m_Vertices.end(); ++it)
     {
-        if ( it->prevEdgeOriginal || it->nextEdgeOriginal )
+        if ( it->isNextEdgeOriginal() )
             return false;
     }
 
@@ -56,10 +49,10 @@ void Winding3D::createBlankWinding()
     QVector3D org = m_Plane.origin();
 
     // Generate four points.
-    m_Vertices.append(Vertex(org - m_vecBasisX + m_vecBasisY, true, true));
-    m_Vertices.append(Vertex(org + m_vecBasisX + m_vecBasisY, true, true));
-    m_Vertices.append(Vertex(org + m_vecBasisX - m_vecBasisY, true, true));
-    m_Vertices.append(Vertex(org - m_vecBasisX - m_vecBasisY, true, true));
+    m_Vertices.append(WindingVertex(org - m_vecBasisX + m_vecBasisY, true, true));
+    m_Vertices.append(WindingVertex(org + m_vecBasisX + m_vecBasisY, true, true));
+    m_Vertices.append(WindingVertex(org + m_vecBasisX - m_vecBasisY, true, true));
+    m_Vertices.append(WindingVertex(org - m_vecBasisX - m_vecBasisY, true, true));
 }
 
 void Winding3D::generateXAndY()
@@ -104,7 +97,7 @@ void Winding3D::generateXAndY()
     m_vecBasisX = QVector3D::crossProduct(nrm, m_vecBasisY);
 }
 
-bool Winding3D::equivalentTo(const Winding3D &other) const
+bool Winding3D::equivalentTo(const Winding3D &other, bool fuzzy) const
 {
     // Plane must be the same.
     if ( m_Plane != other.m_Plane )
@@ -119,8 +112,16 @@ bool Winding3D::equivalentTo(const Winding3D &other) const
     {
         for ( VertexList::const_iterator it2 = other.m_Vertices.begin(); it2 != other.m_Vertices.end(); ++it2 )
         {
-            if ( *it == *it2 )
-                continue;
+            if ( fuzzy )
+            {
+                if ( it->fuzzyEquals(*it2) )
+                    continue;
+            }
+            else
+            {
+                if ( *it == *it2 )
+                    continue;
+            }
         }
 
         // We went through all the other vertices and none of them matched this one.
@@ -165,11 +166,11 @@ Winding3D& Winding3D::clip(const Plane3D &clipPlane)
 
 void Winding3D::calculateEdgeSplit(const Plane3D &plane, VertexList::iterator &itV0, VertexList::iterator &itV1)
 {
-    const QVector3D &v0 = itV0->point;
-    const QVector3D &v1 = itV1->point;
+    QVector3D v0 = itV0->position();
+    QVector3D v1 = itV1->position();
     QVector3D intersectionPoint;
     Ray3D::IntersectionType intersectionType =
-            splitEdgeWithPlane(itV0->point, itV1->point, plane, intersectionPoint);
+            splitEdgeWithPlane(v0, v1, plane, intersectionPoint);
 
     Plane3D::PointLocation plV0 = plane.getPointLocation(v0);
     Plane3D::PointLocation plV1 = plane.getPointLocation(v1);
@@ -219,20 +220,23 @@ void Winding3D::calculateEdgeSplit(const Plane3D &plane, VertexList::iterator &i
             // not an original edge, and the edge after may be (depending on whether v0 says it was).
             // If v1 is in front of the plane, the edge after the new vertex is definitely
             // not an original edge, and the edge before may be (depending on whether v0 says it was).
-            EdgeOriginalityPair origPair(false, false);
+            bool prevEdgeIsOriginal = false;
+            bool nextEdgeIsOriginal = false;
             if ( plV0 == Plane3D::InFrontOfPlane )
             {
-                origPair.first = false;
-                origPair.second = itV0->nextEdgeOriginal;
+                prevEdgeIsOriginal = false;
+                nextEdgeIsOriginal = itV0->isNextEdgeOriginal();
             }
             else
             {
-                origPair.first = itV0->nextEdgeOriginal;
-                origPair.second = false;
+                prevEdgeIsOriginal = itV0->isNextEdgeOriginal();
+                nextEdgeIsOriginal = false;
             }
 
             markVertexToDiscard(plV0 == Plane3D::InFrontOfPlane ? itV0 : itV1);
-            markVertexToInsert(itV1, intersectionPoint, origPair);    // Insert in list before second vertex.
+
+            // Insert in list before second vertex.
+            markVertexToInsert(itV1, intersectionPoint, prevEdgeIsOriginal, nextEdgeIsOriginal);
         }
         else
         {
@@ -280,18 +284,18 @@ void Winding3D::calculateEdgeSplit(const Plane3D &plane, VertexList::iterator &i
 
 void Winding3D::markVertexToDiscard(VertexList::iterator &vertex)
 {
-    vertex->shouldDiscard = true;
+    vertex->setShouldDiscard(true);
 }
 
-void Winding3D::markVertexToInsert(VertexList::iterator &before, const QVector3D &position, const EdgeOriginalityPair originality)
+void Winding3D::markVertexToInsert(VertexList::iterator &before, const QVector3D &position, bool prevEdgeOrig, bool nextEdgeOrig)
 {
-    m_VerticesToInsert.append(VertexInsert(before, Vertex(position, originality.first, originality.second)));
+    m_VerticesToInsert.append(VertexInsert(before, WindingVertex(position, prevEdgeOrig, nextEdgeOrig)));
 }
 
 void Winding3D::touchVertex(VertexList::iterator &vertex)
 {
-    vertex->prevEdgeOriginal = false;
-    vertex->nextEdgeOriginal = false;
+    vertex->setPreviousEdgeOriginal(false);
+    vertex->setNextEdgeOriginal(false);
 }
 
 Ray3D::IntersectionType Winding3D::splitEdgeWithPlane(const QVector3D &v0, const QVector3D &v1, const Plane3D &plane, QVector3D &intersection)
@@ -318,7 +322,7 @@ QList<QVector3D> Winding3D::vertexList() const
     QList<QVector3D> list;
     for ( VertexList::const_iterator it = m_Vertices.begin(); it != m_Vertices.end(); ++it )
     {
-        list.append(it->point);
+        list.append(it->position());
     }
     return list;
 }
@@ -338,7 +342,7 @@ void Winding3D::removeDiscardedVertices()
 {
     for ( VertexList::iterator it = m_Vertices.begin(); it != m_Vertices.end(); /* nope */ )
     {
-        if ( it->shouldDiscard )
+        if ( it->shouldDiscard() )
         {
             it = m_Vertices.erase(it);
         }

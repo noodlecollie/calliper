@@ -116,6 +116,9 @@ namespace Math
     // Assumes normal is of unit length.
     // The output vector is not normalised.
     QVector3D vectorPerpendicularTo(const QVector3D &orig, const QVector3D &normal);
+
+    // If close enough to a unit grid point, sets the vector to the point.
+    void fuzzyAdjustToUnitGrid(QVector3D &vec);
 }
 
 #endif // MATH_H
