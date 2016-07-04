@@ -29,6 +29,12 @@ Plane3D::Plane3D(const QVector3D &normal, float distance) :
     setNormal(normal);
 }
 
+Plane3D::Plane3D(const QVector3D &v0, const QVector3D &v1, const QVector3D &v2)
+{
+    setNormal(QVector3D::crossProduct(v1-v0, v2-v0));
+    m_flDistance = -Math::distanceFromPointToPlane(QVector3D(0,0,0), normal(), v0);
+}
+
 QVector3D Plane3D::normal() const
 {
     return m_vecNormal;

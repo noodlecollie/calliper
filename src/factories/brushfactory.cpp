@@ -67,6 +67,10 @@ namespace BrushFactory
 
             BrushFace* face = new BrushFace(b, polygon->vertexIndices().toVector());
             face->texturePlane()->setTexturePath(polygon->texture());
+            if ( i == 0 )
+            {
+                qDebug() << polygon->vertexIndices();
+            }
         }
 
         return b;

@@ -119,6 +119,8 @@ namespace Math
 
     // If close enough to a unit grid point, sets the vector to the point.
     void fuzzyAdjustToUnitGrid(QVector3D &vec);
+
+    float distanceFromPointToPlane(const QVector3D &point, const QVector3D &planeNormal, const QVector3D pointOnPlane);
 }
 
 uint qHash(const QVector3D &vec);

@@ -19,6 +19,13 @@
 #include "scalehandle.h"
 #include "openglrenderer.h"
 #include "basedraghandle.h"
+#include "keyvaluesparser.h"
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include "texturedpolygon.h"
+#include "generalutil.h"
 
 namespace SceneFactory
 {
@@ -95,6 +102,38 @@ namespace SceneFactory
         arrow->appendGeometry(GeometryFactory::hexPin(5, 0.1f));
         arrow->setScale(QVector3D(16,16,16));
         arrow->setPosition(-renderer()->directionalLight() * 128);
+
+        {
+            QFile file(":/samples/maps/apartment_building.vmf");
+            if ( file.open(QIODevice::ReadOnly) )
+            {
+                QByteArray data = file.readAll();
+                file.close();
+
+                KeyValuesParser parser(data);
+                QJsonDocument doc = parser.toJsonDocument();
+                QJsonObject world = doc.object().value("world").toObject();
+                QJsonArray solids = world.value("solid").toArray();
+                for ( int i = 0; i < solids.count(); i++ )
+                {
+                    QList<TexturedPolygon*> polygons;
+
+                    QJsonObject solid = solids.at(i).toObject();
+                    QJsonArray sides = solid.value("side").toArray();
+                    for ( int j = 0; j < sides.count(); j++ )
+                    {
+                        QString plane = sides.at(j).toObject().value("plane").toString();
+                        QVector3D v0, v1, v2;
+                        GeneralUtil::vectorsFromVmfCoords(plane, v0, v1, v2);
+                        polygons.append(new TexturedPolygon(Plane3D(v0, v1, v2), QString()));
+                        Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
+                    }
+
+                    Brush* planeBrush = BrushFactory::fromPolygons(scene, scene->root(), polygons);
+                    planeBrush->setObjectName(QString("planeBrush%0").arg(i));
+                }
+            }
+        }
 
         return scene;
     }

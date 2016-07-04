@@ -36,5 +36,6 @@
         <file>textures/ui/square-handle.png</file>
         <file>textures/ui/circle-handle.png</file>
         <file>textures/dev/dev_purple001.png</file>
+        <file>samples/maps/apartment_building.vmf</file>
     </qresource>
 </RCC>

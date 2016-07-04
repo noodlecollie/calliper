@@ -23,6 +23,7 @@ public:
     // Constructs a null plane with no normal.
     Plane3D();
     Plane3D(const QVector3D &normal, float distance);
+    Plane3D(const QVector3D &v0, const QVector3D &v1, const QVector3D &v2);
 
     // A null plane has no normal.
     bool isNull() const;

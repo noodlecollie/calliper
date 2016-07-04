@@ -476,4 +476,12 @@ namespace Math
         }
         vec = unit;
     }
+
+    float distanceFromPointToPlane(const QVector3D &point, const QVector3D &planeNormal, const QVector3D pointOnPlane)
+    {
+        // v = vector from point on plane to target point.
+        // n = normal
+        // distance = v dot n
+        return QVector3D::dotProduct(point - pointOnPlane, planeNormal);
+    }
 }
