@@ -26,6 +26,7 @@
 #include <QJsonArray>
 #include "texturedpolygon.h"
 #include "generalutil.h"
+#include "geometryutil.h"
 
 namespace SceneFactory
 {
@@ -49,6 +50,7 @@ namespace SceneFactory
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAtGlobal(QVector3D(0,0,0));
+        c->lens()->setFarPlane(3000.0f);
 
         // For the purposes of debugging, serialise our geometry data.
         // This is pretty damn verbose but it means we can load it back in easily.
@@ -125,12 +127,23 @@ namespace SceneFactory
                         QString plane = sides.at(j).toObject().value("plane").toString();
                         QVector3D v0, v1, v2;
                         GeneralUtil::vectorsFromVmfCoords(plane, v0, v1, v2);
-                        polygons.append(new TexturedPolygon(Plane3D(v0, v1, v2), QString()));
+                        polygons.append(new TexturedPolygon(Plane3D(v0, v2, v1), QString()));
                         Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
+                    }
+
+                    {
+                        QList<Winding3D*> windings;
+                        foreach ( TexturedPolygon* p, polygons)
+                        {
+                            windings.append(p);
+                        }
+                        GeometryUtil::clipWindingsWithEachOther(windings);
                     }
 
                     Brush* planeBrush = BrushFactory::fromPolygons(scene, scene->root(), polygons);
                     planeBrush->setObjectName(QString("planeBrush%0").arg(i));
+
+                    qDeleteAll(polygons);
                 }
             }
         }

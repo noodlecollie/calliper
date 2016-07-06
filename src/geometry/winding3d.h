@@ -32,6 +32,8 @@ public:
     QLinkedList<WindingVertex>::iterator verticesEnd();
     QLinkedList<WindingVertex>::const_iterator verticesEnd() const;
 
+    Plane3D plane() const;
+
 private:
     typedef QLinkedList<WindingVertex> VertexList;
     typedef QPair<VertexList::iterator, WindingVertex> VertexInsert;

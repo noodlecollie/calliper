@@ -70,9 +70,10 @@ void Winding3D::generateXAndY()
     Math::AxisIdentifier largestAxis = Math::AxisX;
     for ( int i = 1; i < 3; i++ )
     {
-        if ( nrm[i] > largest )
+        float val = qAbs(nrm[i]);
+        if ( val > largest )
         {
-            largest = nrm[i];
+            largest = val;
             largestAxis = (Math::AxisIdentifier)i;
         }
     }
@@ -134,6 +135,9 @@ bool Winding3D::equivalentTo(const Winding3D &other, bool fuzzy) const
 
 Winding3D& Winding3D::clip(const Plane3D &clipPlane)
 {
+    if ( clipPlane.isNull() )
+        return *this;
+
     // Go through each edge and try to split it.
     VertexList::iterator itV0 = m_Vertices.begin();
     VertexList::iterator itV1 = m_Vertices.begin();
@@ -396,4 +400,9 @@ QList<int> Winding3D::vertexIndices() const
         indices.append(it->index());
     }
     return indices;
+}
+
+Plane3D Winding3D::plane() const
+{
+    return m_Plane;
 }

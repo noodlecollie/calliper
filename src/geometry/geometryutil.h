@@ -8,6 +8,7 @@
 namespace GeometryUtil
 {
     QList<QVector3D> windingsToVertices(QList<Winding3D*> &windings);
+    void clipWindingsWithEachOther(QList<Winding3D*> windings);
 }
 
 #endif // GEOMETRYUTIL_H
