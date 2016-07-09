@@ -14,6 +14,7 @@
 #include "cmfoptionsdialog.h"
 #include <QActionGroup>
 #include <QScreen>
+#include "valvemapfile.h"
 
 #define PROP_STRING_LINKED_TOOL	"linkedTool"
 
@@ -457,4 +458,27 @@ int MainWindow::getActiveToolFromButtons(MapDocument* doc)
 
     QString toolName = toolAction->property(PROP_STRING_LINKED_TOOL).toString();
     return doc->toolIndex(toolName);
+}
+
+void MainWindow::createSampleMapDocument()
+{
+    int newIndex = application()->documentCount();
+    MapDocument* document = application()->newDocument();
+    ValveMapFile vmf(":/samples/maps/apartment_building.vmf", document);
+
+    if ( !vmf.loadFromFile() )
+    {
+        QMessageBox::warning(this, "Error", QString("Unable to load file /samples/maps/apartment_building.vmf"));
+        application()->closeDocument(newIndex);
+        return;
+    }
+
+    document->setObjectName("apartment_building.vmf");
+
+    // The new document is created on the end of the list.
+    // Switch to it.
+    MapDocument* oldDoc = activeDocument();
+    m_iActiveDocument = application()->documentCount() - 1;
+    updateDocumentList(application()->documents());
+    changeActiveDocument(oldDoc, activeDocument());
 }

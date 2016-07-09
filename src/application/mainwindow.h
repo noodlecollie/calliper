@@ -43,6 +43,7 @@ public slots:
     void saveCurrentDocumentAs();
     void saveCurrentDocument();
     void loadDocument();
+    void createSampleMapDocument();
 
 private:
     void setUpConnections();

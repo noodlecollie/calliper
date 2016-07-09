@@ -105,50 +105,43 @@ namespace SceneFactory
         arrow->setScale(QVector3D(16,16,16));
         arrow->setPosition(-renderer()->directionalLight() * 128);
 
-        {
-            QFile file(":/samples/maps/apartment_building.vmf");
-            if ( file.open(QIODevice::ReadOnly) )
-            {
-                QByteArray data = file.readAll();
-                file.close();
-
-                KeyValuesParser parser(data);
-                QJsonDocument doc = parser.toJsonDocument();
-                QJsonObject world = doc.object().value("world").toObject();
-                QJsonArray solids = world.value("solid").toArray();
-                for ( int i = 0; i < solids.count(); i++ )
-                {
-                    QList<TexturedPolygon*> polygons;
-
-                    QJsonObject solid = solids.at(i).toObject();
-                    QJsonArray sides = solid.value("side").toArray();
-                    for ( int j = 0; j < sides.count(); j++ )
-                    {
-                        QString plane = sides.at(j).toObject().value("plane").toString();
-                        QVector3D v0, v1, v2;
-                        GeneralUtil::vectorsFromVmfCoords(plane, v0, v1, v2);
-                        polygons.append(new TexturedPolygon(Plane3D(v0, v2, v1), QString()));
-                        Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
-                    }
-
-                    {
-                        QList<Winding3D*> windings;
-                        foreach ( TexturedPolygon* p, polygons)
-                        {
-                            windings.append(p);
-                        }
-                        GeometryUtil::clipWindingsWithEachOther(windings);
-                    }
-
-                    Brush* planeBrush = BrushFactory::fromPolygons(scene, scene->root(), polygons);
-                    planeBrush->setObjectName(QString("planeBrush%0").arg(i));
-
-                    qDeleteAll(polygons);
-                }
-            }
-        }
-
         return scene;
+    }
+
+    void populateFromVMF(MapScene *scene, const QJsonDocument &vmf)
+    {
+        QJsonObject world = vmf.object().value("world").toObject();
+        QJsonArray solids = world.value("solid").toArray();
+
+        for ( int i = 0; i < solids.count(); i++ )
+        {
+            QList<TexturedPolygon*> polygons;
+
+            QJsonObject solid = solids.at(i).toObject();
+            QJsonArray sides = solid.value("side").toArray();
+            for ( int j = 0; j < sides.count(); j++ )
+            {
+                QString plane = sides.at(j).toObject().value("plane").toString();
+                QVector3D v0, v1, v2;
+                GeneralUtil::vectorsFromVmfCoords(plane, v0, v1, v2);
+                polygons.append(new TexturedPolygon(Plane3D(v0, v2, v1), QString()));
+                Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
+            }
+
+            {
+                QList<Winding3D*> windings;
+                foreach ( TexturedPolygon* p, polygons)
+                {
+                    windings.append(p);
+                }
+                GeometryUtil::clipWindingsWithEachOther(windings);
+            }
+
+            Brush* planeBrush = BrushFactory::fromPolygons(scene, scene->root(), polygons);
+            planeBrush->setObjectName(QString("planeBrush%0").arg(i));
+
+            qDeleteAll(polygons);
+        }
     }
 
     UIScene* defaultUIScene(MapDocument *document)

@@ -98,7 +98,8 @@ HEADERS += \
     geometry/texturedpolygon.h \
     geometry/geometryutil.h \
     geometry/windingvertex.h \
-    geometry/fuzzyvertexmap.h
+    geometry/fuzzyvertexmap.h \
+    serialisation/valvemapfile.h
 
 SOURCES += \
     application/application.cpp \
@@ -171,7 +172,8 @@ SOURCES += \
     geometry/texturedpolygon.cpp \
     geometry/geometryutil.cpp \
     geometry/windingvertex.cpp \
-    geometry/fuzzyvertexmap.cpp
+    geometry/fuzzyvertexmap.cpp \
+    serialisation/valvemapfile.cpp
 
 RESOURCES += \
     resource/resource.qrc \
