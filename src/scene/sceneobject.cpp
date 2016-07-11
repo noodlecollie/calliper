@@ -20,15 +20,31 @@ SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(clon
     Q_ASSERT(cloneFrom.parentObject());
     Q_ASSERT(&cloneFrom != cloneFrom.m_pScene->root());
 
+    initDefaults();
+
     m_pScene = cloneFrom.m_pScene;
     m_RenderFlags = cloneFrom.m_RenderFlags;
     m_bHidden = cloneFrom.m_bHidden;
     m_bSerialiseGeometry = cloneFrom.m_bSerialiseGeometry;
+    m_CachedBounds = cloneFrom.m_CachedBounds;
+    m_bBoundsStale = cloneFrom.m_bBoundsStale;
+
     deepCloneGeometryFrom(cloneFrom.m_GeometryList);
 
     setPosition(cloneFrom.position());
     setAngles(cloneFrom.angles());
     setScale(cloneFrom.scale());
+}
+
+void SceneObject::initDefaults()
+{
+    m_RenderFlags = NoRenderFlag;
+    m_bHidden = false;
+    m_bSerialiseGeometry = false;
+    m_bBoundsStale = true;
+    m_bUseCachedBounds = false;
+
+    connect(this, &HierarchicalObject::orientationChanged, this, &SceneObject::onOrientationChanged);
 }
 
 void SceneObject::initDefaults(SceneObject* parent, BaseScene* scene)
@@ -37,9 +53,7 @@ void SceneObject::initDefaults(SceneObject* parent, BaseScene* scene)
     Q_ASSERT((parent && parent->m_pScene) || !scene->root());
 
     m_pScene = scene;
-    m_RenderFlags = NoRenderFlag;
-    m_bHidden = false;
-    m_bSerialiseGeometry = false;
+    initDefaults();
 }
 
 SceneObject::~SceneObject()
@@ -163,17 +177,7 @@ void SceneObject::setRenderFlags(RenderFlags flags)
 
 BoundingBox SceneObject::computeLocalBounds() const
 {
-    // Compute our bounds.
-    BoundingBox bounds = totalGeometryBounds();
-
-    // Union these with the bounds of all our children.
-    QList<SceneObject*> childList = children();
-    foreach ( SceneObject* o, childList )
-    {
-        bounds.unionWith(o->localToParent() * o->computeLocalBounds());
-    }
-
-    return bounds;
+    return totalGeometryBounds();
 }
 
 BoundingBox SceneObject::totalGeometryBounds() const
@@ -446,4 +450,60 @@ bool SceneObject::passesObjectMask(int mask) const
         return false;
 
     return true;
+}
+
+void SceneObject::flagBoundsStale()
+{
+    m_bBoundsStale = true;
+
+    SceneObject* p = parentObject();
+    while ( p && !p->m_bBoundsStale )
+    {
+        p->m_bBoundsStale = true;
+        p = p->parentObject();
+    }
+}
+
+void SceneObject::unionOfChildBounds(BoundingBox &bbox) const
+{
+    QList<SceneObject*> childList = children();
+    foreach ( SceneObject* c, childList )
+    {
+        bbox.unionWith(c->localToParent() * c->hierarchicalBounds());
+    }
+}
+
+BoundingBox SceneObject::hierarchicalBounds(bool forceRecompute) const
+{
+    // Update if required.
+    if ( m_bBoundsStale || !m_bUseCachedBounds || forceRecompute )
+    {
+        updateCachedBounds();
+    }
+
+    return m_CachedBounds;
+}
+
+void SceneObject::updateCachedBounds() const
+{
+    m_CachedBounds.setToNull();
+    unionOfChildBounds(m_CachedBounds);
+    m_CachedBounds.unionWith(computeLocalBounds());
+
+    m_bBoundsStale = false;
+}
+
+void SceneObject::onOrientationChanged()
+{
+    flagBoundsStale();
+}
+
+bool SceneObject::useCachedBounds() const
+{
+    return m_bUseCachedBounds;
+}
+
+void SceneObject::setUseCachedBounds(bool use)
+{
+    m_bUseCachedBounds = use;
 }

@@ -32,6 +32,7 @@ void HierarchicalObject::setPosition(const QVector3D &pos)
 
     m_vecPosition = pos;
     m_bMatricesStale = true;
+    emit orientationChanged();
 }
 
 void HierarchicalObject::rebuildMatrices() const
@@ -81,6 +82,7 @@ void HierarchicalObject::setAngles(const EulerAngle &angle)
     normaliseAngles();
     clampAngles();
     m_bMatricesStale = true;
+    emit orientationChanged();
 }
 
 void HierarchicalObject::clampAngles()
@@ -155,6 +157,7 @@ void HierarchicalObject::setScale(const QVector3D &vec)
 
     m_vecScale = vec;
     m_bMatricesStale = true;
+    emit orientationChanged();
 }
 
 bool HierarchicalObject::scalable() const

@@ -69,6 +69,8 @@ public:
     }
 
 signals:
+    // Position/angle/scale within world has changed.
+    void orientationChanged();
 
 public slots:
 

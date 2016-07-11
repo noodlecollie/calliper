@@ -168,7 +168,7 @@ UIScene* MapDocument::uiScene() const
     return m_pUIScene;
 }
 
-// TODO: Make this faster. Everything is computed on demand, sometimes more than once!
+// TODO: Optimise.
 QVector3D MapDocument::selectedSetCentroid() const
 {
     QVector3D centroid;
@@ -177,7 +177,7 @@ QVector3D MapDocument::selectedSetCentroid() const
     for ( QSet<SceneObject*>::const_iterator it = m_SelectedSet.cbegin(); it != m_SelectedSet.cend(); ++it )
     {
         SceneObject* o = *it;
-        QVector3D vec = (o->rootToLocal().inverted() * o->computeLocalBounds()).centroid();
+        QVector3D vec = (o->rootToLocal().inverted() * o->hierarchicalBounds()).centroid();
         centroid = ((centroid * count) + vec)/(count+1);
         count++;
     }

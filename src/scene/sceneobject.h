@@ -73,7 +73,13 @@ public:
     void setRenderFlags(RenderFlags flags);
 
     // Computes bounds in local space.
-    BoundingBox computeLocalBounds() const;
+    virtual BoundingBox computeLocalBounds() const;
+
+    // Hierarchical bounds, returned in local space.
+    BoundingBox hierarchicalBounds(bool forceRecompute = false) const;
+    bool useCachedBounds() const;
+    void setUseCachedBounds(bool use);
+    void flagBoundsStale();
 
 	bool hidden() const;
 	void setHidden(bool hide);
@@ -110,12 +116,22 @@ protected:
     bool                            m_bSerialiseGeometry;
     QVector<GeometryDataPointer>    m_GeometryList;
 
+private slots:
+    void onOrientationChanged();
+
 private:
     void initDefaults(SceneObject* parent, BaseScene* scene);
+    void initDefaults();
     void deepCloneGeometryFrom(const QVector<GeometryDataPointer> &list);
     BoundingBox totalGeometryBounds() const;
     void serialiseAllGeometry(QJsonObject &obj) const;
     void unserialiseAllGeometry(const QJsonArray &geomArray);
+    void unionOfChildBounds(BoundingBox& bbox) const;
+    void updateCachedBounds() const;
+
+    mutable BoundingBox             m_CachedBounds;
+    mutable bool                    m_bBoundsStale;
+    bool                            m_bUseCachedBounds;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(SceneObject::RenderFlags)
