@@ -10,11 +10,13 @@ BoundingBox operator *(const QMatrix4x4 &mat, const BoundingBox &bbox)
     return bbox.transformed(mat);
 }
 
-BoundingBox::BoundingBox()
+BoundingBox::BoundingBox() :
+    m_bIsNull(true)
 {
 }
 
-BoundingBox::BoundingBox(const QVector3D &vMin, const QVector3D &vMax)
+BoundingBox::BoundingBox(const QVector3D &vMin, const QVector3D &vMax) :
+    m_bIsNull(false)
 {
     m_vecMin = vMin;
     m_vecMax = vMax;
@@ -52,6 +54,8 @@ QVector3D BoundingBox::min() const
 
 void BoundingBox::setMin(const QVector3D &vec, bool sortAfter)
 {
+    m_bIsNull = false;
+
     if ( m_vecMin == vec ) return;
 
     m_vecMin = vec;
@@ -67,6 +71,8 @@ QVector3D BoundingBox::max() const
 
 void BoundingBox::setMax(const QVector3D &vec, bool sortAfter)
 {
+    m_bIsNull = false;
+
     if ( m_vecMax == vec ) return;
 
     m_vecMax = vec;
@@ -77,12 +83,13 @@ void BoundingBox::setMax(const QVector3D &vec, bool sortAfter)
 
 bool BoundingBox::isNull() const
 {
-    return m_vecMin.isNull() && m_vecMax.isNull();
+    return m_bIsNull;
 }
 
 bool BoundingBox::hasZeroVolume() const
 {
-    return qFuzzyIsNull(m_vecMax.x() - m_vecMin.x()) ||
+    return  isNull() ||
+            qFuzzyIsNull(m_vecMax.x() - m_vecMin.x()) ||
             qFuzzyIsNull(m_vecMax.y() - m_vecMin.y()) ||
             qFuzzyIsNull(m_vecMax.z() - m_vecMin.z());
 }
@@ -110,6 +117,9 @@ QList<QVector3D> BoundingBox::corners(const QVector3D &min, const QVector3D &max
 
 BoundingBox BoundingBox::transformed(const QMatrix4x4 &mat) const
 {
+    if ( isNull() )
+        return BoundingBox();
+
     QList<QVector3D> list = corners();
     if ( list.count() < 1 )
     {
@@ -148,14 +158,17 @@ BoundingBox BoundingBox::transformed(const QMatrix4x4 &mat) const
 
 BoundingBox& BoundingBox::transform(const QMatrix4x4 &mat)
 {
-    *this = transformed(mat);
+    if ( !isNull() )
+        *this = transformed(mat);
+
     return *this;
 }
 
 bool BoundingBox::operator ==(const BoundingBox &other) const
 {
     return m_vecMin == other.m_vecMin &&
-            m_vecMax == other.m_vecMax;
+            m_vecMax == other.m_vecMax &&
+            m_bIsNull == other.m_bIsNull;
 }
 
 bool BoundingBox::operator !=(const BoundingBox &other) const
@@ -165,39 +178,34 @@ bool BoundingBox::operator !=(const BoundingBox &other) const
 
 QVector3D BoundingBox::centroid() const
 {
+    if ( isNull() )
+        return QVector3D();
+
     return m_vecMin + ((m_vecMax-m_vecMin)/2.0f);
 }
 
 BoundingBox& BoundingBox::unionWith(const BoundingBox &other)
 {
-    QVector3D mn = other.min(), mx = other.max();
-
-    if ( mn.x() < m_vecMin.x() )
-        m_vecMin.setX(mn.x());
-    if ( mn.y() < m_vecMin.y() )
-        m_vecMin.setY(mn.y());
-    if ( mn.z() < m_vecMin.z() )
-        m_vecMin.setZ(mn.z());
-
-    if ( mx.x() > m_vecMax.x() )
-        m_vecMax.setX(mx.x());
-    if ( mx.y() > m_vecMax.y() )
-        m_vecMax.setY(mx.y());
-    if ( mx.z() > m_vecMax.z() )
-        m_vecMax.setZ(mx.z());
+    if ( !isNull() )
+        *this = unionCopy(other);
 
     return *this;
 }
 
 BoundingBox BoundingBox::unionCopy(const BoundingBox &other) const
 {
-    QVector3D mn = other.min(), mx = other.max();
-    return BoundingBox(QVector3D(qMin(m_vecMin.x(), mn.x()),
-                                 qMin(m_vecMin.y(), mn.y()),
-                                 qMin(m_vecMin.z(), mn.z())),
-                       QVector3D(qMax(m_vecMax.x(), mx.x()),
-                                 qMax(m_vecMax.y(), mx.y()),
-                                 qMax(m_vecMax.z(), mx.z())));
+    if ( isNull() )
+        return other;
+
+    if ( other.isNull() )
+        return *this;
+
+    return BoundingBox(QVector3D(qMin(m_vecMin.x(), other.m_vecMin.x()),
+                                 qMin(m_vecMin.y(), other.m_vecMin.y()),
+                                 qMin(m_vecMin.z(), other.m_vecMin.z())),
+                       QVector3D(qMax(m_vecMax.x(), other.m_vecMax.x()),
+                                 qMax(m_vecMax.y(), other.m_vecMax.y()),
+                                 qMax(m_vecMax.z(), other.m_vecMax.z())));
 }
 
 const int* BoundingBox::cornerVerticesForFace(Math::AxisIdentifier axis)
@@ -221,11 +229,17 @@ const int* BoundingBox::cornerVerticesForFace(Math::AxisIdentifier axis)
 
 float BoundingBox::span(int axis) const
 {
+    if ( isNull() )
+        return 0.0f;
+
     return m_vecMax[axis] - m_vecMin[axis];
 }
 
 BoundingBox BoundingBox::centredOnOrigin() const
 {
+    if ( isNull() )
+        return BoundingBox();
+
     QVector3D cent = centroid();
     QVector3D radius = (m_vecMax - m_vecMin)/2.0f;
     return BoundingBox(cent - radius, cent + radius);
@@ -233,6 +247,15 @@ BoundingBox BoundingBox::centredOnOrigin() const
 
 BoundingBox& BoundingBox::centreOnOrigin()
 {
-    *this = centredOnOrigin();
+    if ( !isNull() )
+        *this = centredOnOrigin();
+
     return *this;
+}
+
+void BoundingBox::setToNull()
+{
+    m_bIsNull = true;
+    m_vecMin = QVector3D();
+    m_vecMax = QVector3D();
 }

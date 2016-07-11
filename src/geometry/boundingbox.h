@@ -28,6 +28,7 @@ public:
     BoundingBox& transform(const QMatrix4x4 &mat);        // Does modify
 
     bool isNull() const;
+    void setToNull();
     bool hasZeroVolume() const;
 
     BoundingBox unionCopy(const BoundingBox &other) const;  // Does not modify
@@ -55,6 +56,7 @@ public:
 private:
     QVector3D   m_vecMin;
     QVector3D   m_vecMax;
+    bool        m_bIsNull;
 };
 
 BoundingBox operator *(const QMatrix4x4 &mat, const BoundingBox &bbox);
