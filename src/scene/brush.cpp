@@ -16,7 +16,7 @@ Brush::~Brush()
 
 void Brush::initDefaults()
 {
-
+    setUseCachedBounds(true);
 }
 
 QVector3D Brush::vertexAt(int index) const
@@ -27,12 +27,14 @@ QVector3D Brush::vertexAt(int index) const
 int Brush::appendVertex(const QVector3D &v)
 {
     m_Vertices.append(v);
+    flagBoundsStale();
     return m_Vertices.count() - 1;
 }
 
 void Brush::appendVertices(const QVector<QVector3D> &verts)
 {
     m_Vertices.append(verts);
+    flagBoundsStale();
 }
 
 int Brush::vertexCount() const
@@ -46,12 +48,14 @@ void Brush::removeVertex(int index)
 
     removeVertexFromChildFaces(index);
     m_Vertices.removeAt(index);
+    flagBoundsStale();
 }
 
 void Brush::clearVertices()
 {
     clearVerticesFromChildFaces();
     m_Vertices.clear();
+    flagBoundsStale();
 }
 
 QVector<QVector3D> Brush::vertexList() const
@@ -98,6 +102,8 @@ void Brush::replaceVertex(int index, const QVector3D &v)
 {
     m_Vertices.replace(index, v);
     updateVertexInChildFaces(index);
+    flagBoundsStale();
+
 }
 
 void Brush::updateVertexInChildFaces(int index)

@@ -28,6 +28,7 @@ SceneObject::SceneObject(const SceneObject &cloneFrom) : HierarchicalObject(clon
     m_bSerialiseGeometry = cloneFrom.m_bSerialiseGeometry;
     m_CachedBounds = cloneFrom.m_CachedBounds;
     m_bBoundsStale = cloneFrom.m_bBoundsStale;
+    m_bUseCachedBounds = cloneFrom.m_bUseCachedBounds;
 
     deepCloneGeometryFrom(cloneFrom.m_GeometryList);
 
