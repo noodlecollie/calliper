@@ -16,36 +16,21 @@
 SceneCamera::SceneCamera(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
     initDefaults();
-    m_LocalLensBounds = m_pLens->localViewVolumeBounds();
-    rebuildViewBoundsGeometry();
 }
 
 void SceneCamera::initDefaults()
 {
     m_pLens.reset(new CameraLens(CameraLens::Perspective));
-    m_pBoundsGeom.reset(new GeometryData());
-    m_bDrawBounds = false;
 }
 
 SceneCamera::SceneCamera(const SceneCamera &cloneFrom) : SceneObject(cloneFrom),
-    m_pLens(new CameraLens(*cloneFrom.m_pLens.data())), m_pBoundsGeom(new GeometryData(*cloneFrom.m_pBoundsGeom.data()))
+    m_pLens(new CameraLens(*cloneFrom.m_pLens.data()))
 {
-    m_LocalLensBounds = cloneFrom.m_LocalLensBounds;
-    m_bDrawBounds = cloneFrom.m_bDrawBounds;
+
 }
 
 SceneCamera::~SceneCamera()
 {
-}
-
-bool SceneCamera::drawBounds() const
-{
-    return m_bDrawBounds;
-}
-
-void SceneCamera::setDrawBounds(bool enabled)
-{
-    m_bDrawBounds = enabled;
 }
 
 CameraLens* SceneCamera::lens() const
@@ -88,47 +73,6 @@ void SceneCamera::clampAngles()
         m_angAngles.setRoll(MAX_ROLL_DELTA);
 
     m_angAngles.setYaw(std::fmod(m_angAngles.yaw(), 360.0f));
-}
-
-void SceneCamera::rebuildViewBoundsGeometry()
-{
-    m_pBoundsGeom->clear();
-    if ( m_LocalLensBounds.isNull() ) return;
-
-    m_pBoundsGeom.reset(GeometryFactory::lineCuboid(m_LocalLensBounds, QColor::fromRgb(0xffff0000)));
-    m_pBoundsGeom->setShaderOverride(PerVertexColorShader::staticName());
-}
-
-void SceneCamera::draw(ShaderStack *stack)
-{
-    if ( stack->cameraParams().hierarchicalObject() != this )
-    {
-        if ( m_bDrawBounds )
-        {
-            BoundingBox bounds = lens()->localViewVolumeBounds();
-            if ( bounds != m_LocalLensBounds )
-            {
-                m_LocalLensBounds = bounds;
-                rebuildViewBoundsGeometry();
-            }
-
-            if ( !m_pBoundsGeom->isEmpty() )
-            {
-                stack->shaderPush(resourceManager()->shader(m_pBoundsGeom->shaderOverride()));
-                stack->modelToWorldPush();
-                stack->modelToWorldPostMultiply(Math::StaticMatrix::OPENGL_TO_HAMMER());
-
-                m_pBoundsGeom->upload();
-                m_pBoundsGeom->bindVertices(true);
-                m_pBoundsGeom->bindIndices(true);
-                m_pBoundsGeom->applyDataFormat(stack->shaderTop());
-                m_pBoundsGeom->draw();
-
-                stack->modelToWorldPop();
-                stack->shaderPop();
-            }
-        }
-    }
 }
 
 bool SceneCamera::scalable() const
@@ -187,7 +131,6 @@ bool SceneCamera::serialiseToJson(QJsonObject &obj) const
 
     // Insert this as the superclass.
     obj.insert(ISerialisable::KEY_SUPERCLASS(), QJsonValue(jsonParent));
-    obj.insert("drawBounds", QJsonValue(m_bDrawBounds));
 
     QJsonObject lensObj;
     m_pLens->serialiseToJson(lensObj);
@@ -203,12 +146,6 @@ SceneCamera::SceneCamera(BaseScene* scene, const QJsonObject &serialisedData, Sc
 
     if ( !validateIdentifier(serialisedData, SceneCamera::serialiseIdentifier()) )
         return;
-
-    QJsonValue vDrawBounds = serialisedData.value("drawBounds");
-    if ( vDrawBounds.isBool() )
-    {
-        m_bDrawBounds = vDrawBounds.toBool();
-    }
 
     QJsonValue vLens = serialisedData.value("lens");
     if ( vLens.isObject() )

@@ -14,12 +14,8 @@ public:
     CameraLens* lens() const;
     QVector3D forwardVector() const;
 
-    bool drawBounds() const;
-    void setDrawBounds(bool enabled);
-
     // The world -> camera transform is parentToLocal().
 
-    virtual void draw(ShaderStack *stack);
     virtual bool scalable() const;
 
     // The translation is defined from p0 to p1, along the plane that is parallel to the
@@ -44,12 +40,8 @@ protected:
 
 private:
     void initDefaults();
-    void rebuildViewBoundsGeometry();
 
     QScopedPointer<CameraLens>  m_pLens;
-    BoundingBox m_LocalLensBounds;
-    QScopedPointer<GeometryData>   m_pBoundsGeom;
-    bool        m_bDrawBounds;
 };
 
 #endif // SCENECAMERA_H

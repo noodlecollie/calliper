@@ -241,6 +241,7 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
 
     // Other properties
     obj.insert("hidden", QJsonValue(hidden()));
+    obj.insert("drawBounds", QJsonValue(m_bDrawBounds));
 
     return true;
 }
@@ -302,10 +303,10 @@ SceneObject::SceneObject(BaseScene* scene, const QJsonObject &serialisedData, Sc
         setHidden(vHidden.toBool());
     }
 
-    QJsonValue vBillboard = serialisedData.value("billboard");
-    if ( vBillboard.isBool() )
+    QJsonValue vDrawBounds = serialisedData.value("drawBounds");
+    if ( vDrawBounds.isBool() )
     {
-        setHidden(vBillboard.toBool());
+        m_bDrawBounds = vDrawBounds.toBool();
     }
 }
 
