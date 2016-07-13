@@ -192,7 +192,7 @@ QVector3D BoundingBox::centroid() const
 
 BoundingBox& BoundingBox::unionWith(const BoundingBox &other)
 {
-    if ( !isNull() )
+    if ( !other.isNull() )
         *this = unionCopy(other);
 
     return *this;

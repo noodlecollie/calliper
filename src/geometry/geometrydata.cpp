@@ -547,43 +547,44 @@ void GeometryData::appendIndex(unsigned int i0, unsigned int i1)
     m_bIndicesStale = true;
 }
 
+void GeometryData::setMinHelper(float value, float &toSet, bool &setBefore)
+{
+    if ( !setBefore || value < toSet )
+    {
+        toSet = value;
+        setBefore = true;
+    }
+}
+
+void GeometryData::setMaxHelper(float value, float &toSet, bool &setBefore)
+{
+    if ( !setBefore || value > toSet )
+    {
+        toSet = value;
+        setBefore = true;
+    }
+}
+
 BoundingBox GeometryData::localBounds() const
 {
-    QVector3D max, min;
+    float max[3] = { 0, 0, 0 };
+    float min[3] = { 0, 0, 0 };
+    bool maxSet[3] = { false, false, false };
+    bool minSet[3] = { false, false, false };
 
     for (int i = 0; i < vertexCount(); i++)
     {
         const float* pos = vertexAt(i);
 
-        if ( pos[0] < min.x() )
+        for ( int j = 0; j < 3; j++ )
         {
-            min.setX(pos[0]);
-        }
-        else if ( pos[0] > max.x() )
-        {
-            max.setX(pos[0]);
-        }
-
-        if ( pos[1] < min.y() )
-        {
-            min.setY(pos[1]);
-        }
-        else if ( pos[1] > max.y() )
-        {
-            max.setY(pos[1]);
-        }
-
-        if ( pos[2] < min.z() )
-        {
-            min.setZ(pos[2]);
-        }
-        else if ( pos[2] > max.z() )
-        {
-            max.setZ(pos[2]);
+            setMinHelper(pos[j], min[j], minSet[j]);
+            setMaxHelper(pos[j], max[j], maxSet[j]);
         }
     }
 
-    return BoundingBox(min,max);
+    return BoundingBox(QVector3D(min[0], min[1], min[2]),
+            QVector3D(max[0], max[1], max[2]));
 }
 
 const float* GeometryData::vertexAt(int i) const

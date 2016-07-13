@@ -137,6 +137,8 @@ public:
 
 private:
     void initDefaults();
+    static void setMinHelper(float value, float &toSet, bool &setBefore);
+    static void setMaxHelper(float value, float &toSet, bool &setBefore);
 
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;
