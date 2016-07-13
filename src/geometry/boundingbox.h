@@ -60,5 +60,6 @@ private:
 };
 
 BoundingBox operator *(const QMatrix4x4 &mat, const BoundingBox &bbox);
+QDebug& operator <<(QDebug &debug, const BoundingBox &bbox);
 
 #endif // BOUNDINGBOX_H

@@ -8,6 +8,7 @@
 #include "mapdocument.h"
 #include "jsonutil.h"
 #include "basescene.h"
+#include "geometryfactory.h"
 
 SceneObject::SceneObject(BaseScene* scene, SceneObject *parent) : HierarchicalObject(parent)
 {
@@ -44,6 +45,7 @@ void SceneObject::initDefaults()
     m_bSerialiseGeometry = false;
     m_bBoundsStale = true;
     m_bUseCachedBounds = false;
+    m_bDrawBounds = false;
 
     connect(this, &HierarchicalObject::orientationChanged, this, &SceneObject::onOrientationChanged);
 }
@@ -490,6 +492,7 @@ void SceneObject::updateCachedBounds() const
     m_CachedBounds.setToNull();
     unionOfChildBounds(m_CachedBounds);
     m_CachedBounds.unionWith(computeLocalBounds());
+    m_pBoundsGeom.reset(GeometryFactory::lineCuboid(m_CachedBounds, QColor::fromRgb(0xffff0000)));
 
     m_bBoundsStale = false;
 }
@@ -507,4 +510,31 @@ bool SceneObject::useCachedBounds() const
 void SceneObject::setUseCachedBounds(bool use)
 {
     m_bUseCachedBounds = use;
+}
+
+bool SceneObject::drawBounds() const
+{
+    return m_bDrawBounds;
+}
+
+void SceneObject::setDrawBounds(bool draw)
+{
+    if ( draw == m_bDrawBounds )
+        return;
+
+    m_bDrawBounds = draw;
+
+    if ( m_bDrawBounds )
+        flagBoundsStale();
+}
+
+void SceneObject::drawBoundsGeometry(ShaderStack *stack)
+{
+    if ( m_bBoundsStale || !m_bUseCachedBounds )
+    {
+        updateCachedBounds();
+        qDebug() << "Bounds:" << m_CachedBounds;
+    }
+
+    drawGeometry(m_pBoundsGeom.data(), stack);
 }

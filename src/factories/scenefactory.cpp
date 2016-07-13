@@ -83,6 +83,7 @@ namespace SceneFactory
         block2->setPosition(QVector3D(128,0,0));
         block2->setRenderFlags(SceneObject::Translucent);
         block2->setShouldSerialiseGeometry(true);
+        block2->setDrawBounds(true);
 
         SceneObject* testBlock = scene->createSceneObject<SceneObject>(scene->root());
         testBlock->setObjectName("testBlock");

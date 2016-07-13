@@ -182,9 +182,8 @@ void OpenGLRenderer::renderTranslucent()
 
         m_pStack->modelToWorldSetToIdentity();
         m_pStack->modelToWorldPreMultiply(dfo.matrix);
-        dfo.object->draw(m_pStack);
-        if ( m_bPicking )
-            m_ObjectPicker.checkDrawnObject(dfo.object);
+
+        drawObject(dfo.object, m_pStack);
 
         m_pStack->modelToWorldPop();
     }
@@ -214,18 +213,7 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 
     if ( !deferred )
     {
-        if ( m_bPicking )
-        {
-            if ( obj->passesObjectMask(stack->m_iPickingMask) )
-            {
-                obj->draw(stack);
-                m_ObjectPicker.checkDrawnObject(obj);
-            }
-        }
-        else
-        {
-            obj->draw(stack);
-        }
+        drawObject(obj, stack);
     }
 
     QList<SceneObject*> children = obj->children();
@@ -464,4 +452,22 @@ QVector2D OpenGLRenderer::deviceCoordinates(const QVector3D &worldPos, const Sce
 {
     // World -> camera -> OpenGL camera -> projected -> divided by w and returned.
     return (camera->lens()->projectionMatrix() * Math::StaticMatrix::HAMMER_TO_OPENGL() * camera->rootToLocal() * QVector4D(worldPos, 1)).toVector2DAffine();
+}
+
+void OpenGLRenderer::drawObject(SceneObject *obj, ShaderStack *stack)
+{
+    if ( m_bPicking )
+    {
+        if ( obj->passesObjectMask(stack->m_iPickingMask) )
+        {
+            obj->draw(stack);
+            m_ObjectPicker.checkDrawnObject(obj);
+        }
+    }
+    else
+    {
+        obj->draw(stack);
+        if ( obj->drawBounds() )
+            obj->drawBoundsGeometry(stack);
+    }
 }

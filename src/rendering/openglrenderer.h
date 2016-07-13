@@ -106,6 +106,7 @@ private:
     void clearDeferred();
     void renderDeferred();
     void renderTranslucent();
+    void drawObject(SceneObject* obj, ShaderStack* stack);
 
     QColor      m_colGlobalColour;
     int         m_iShader;

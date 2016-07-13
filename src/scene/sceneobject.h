@@ -63,6 +63,7 @@ public:
 
     virtual bool editable() const;
     virtual void draw(ShaderStack* stack);
+    void drawBoundsGeometry(ShaderStack* stack);
 
     // Assumed to be constant throughout the object's lifetime.
     // If true, object will be rendered in a pre-pass, and will
@@ -83,6 +84,9 @@ public:
 
 	bool hidden() const;
 	void setHidden(bool hide);
+
+    bool drawBounds() const;
+    void setDrawBounds(bool draw);
 
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
@@ -132,6 +136,9 @@ private:
     mutable BoundingBox             m_CachedBounds;
     mutable bool                    m_bBoundsStale;
     bool                            m_bUseCachedBounds;
+
+    mutable QScopedPointer<GeometryData>    m_pBoundsGeom;
+    bool                                    m_bDrawBounds;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(SceneObject::RenderFlags)

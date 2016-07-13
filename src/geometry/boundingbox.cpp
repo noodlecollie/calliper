@@ -5,6 +5,12 @@ const int cornerVertexIndicesX[] = { 1, 3, 7, 5,   0, 4, 6, 2, };
 const int cornerVertexIndicesY[] = { 3, 2, 6, 7,   0, 1, 5, 4, };
 const int cornerVertexIndicesZ[] = { 4, 5, 7, 6,   0, 2, 3, 1, };
 
+QDebug& operator <<(QDebug &debug, const BoundingBox &bbox)
+{
+    debug.nospace() << "BoundingBox(" << bbox.min() << ", " << bbox.max() << ")";
+    return debug.space();
+}
+
 BoundingBox operator *(const QMatrix4x4 &mat, const BoundingBox &bbox)
 {
     return bbox.transformed(mat);
