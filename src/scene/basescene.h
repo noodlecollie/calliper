@@ -91,7 +91,8 @@ signals:
 
 protected:
     SceneObject*        m_pRootObject;
-    QSet<SceneObject*>  m_BackgroundObjects;
+    SceneObject*        m_pInternalObjects;
+    SceneObject*        m_pGeneralObjects;
 
 private:
     void createRoot();

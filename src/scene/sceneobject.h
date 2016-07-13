@@ -22,18 +22,32 @@ class SceneObject : public HierarchicalObject, public IRayDetectable
 public:
     enum RenderFlag
     {
-        NoRenderFlag = 0x0,
-        Translucent = 0x1,
+        NoRenderFlag = 0,
+
+        Translucent = (1<<0),
     };
     Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
     Q_FLAG(RenderFlags)
 
+    // A scene object by default should not have any object flags.
+    // Non-default states should be specified with a flag.
+    // Eg. we should be editable by default, so the flag is NotEditable.
+    enum ObjectFlag
+    {
+        NoObjectFlag = 0,
+
+        NotEditable  = (1<<0),
+    };
+    Q_DECLARE_FLAGS(ObjectFlags, ObjectFlag)
+    Q_FLAG(ObjectFlags)
+
     // Used for filtering different types of scene object.
     enum ObjectMask
     {
-        AllObjectsMask = 0xffffffff,                            // Allow all.
+        AllObjectsMask = ~0,                                    // Allow all.
 
-        NotEditableMask = 0x1,                                  // Allow non-editables.
+        NotEditableMask = (1<<0),                               // Allow non-editables.
+
         EditableOnlyMask = AllObjectsMask & ~NotEditableMask    // Disallow non-editables.
     };
 
@@ -61,14 +75,9 @@ public:
     // (=> it's just for grouping children)
     bool isEmpty() const;
 
-    virtual bool editable() const;
     virtual void draw(ShaderStack* stack);
     void drawBoundsGeometry(ShaderStack* stack);
-
-    // Assumed to be constant throughout the object's lifetime.
-    // If true, object will be rendered in a pre-pass, and will
-    // not affect depth for any objects in the main pass.
-    virtual bool isBackground() const;
+    virtual ObjectFlags objectFlags() const;
 
     RenderFlags renderFlags() const;
     void setRenderFlags(RenderFlags flags);
@@ -115,9 +124,6 @@ protected:
     void drawGeometry(GeometryData* geom, ShaderStack* stack, const int* sections = NULL, int sectionCount = 0);
 
 	BaseScene*						m_pScene;
-    RenderFlags						m_RenderFlags;
-	bool							m_bHidden;
-    bool                            m_bSerialiseGeometry;
     QVector<GeometryDataPointer>    m_GeometryList;
 
 private slots:
@@ -136,11 +142,16 @@ private:
     mutable BoundingBox             m_CachedBounds;
     mutable bool                    m_bBoundsStale;
     bool                            m_bUseCachedBounds;
+    RenderFlags						m_RenderFlags;
+    ObjectFlags                     m_ObjectFlags;
+    bool							m_bHidden;
+    bool                            m_bSerialiseGeometry;
 
     mutable QScopedPointer<GeometryData>    m_pBoundsGeom;
     bool                                    m_bDrawBounds;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(SceneObject::RenderFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(SceneObject::ObjectFlags)
 
 #endif // SCENEOBJECT_H

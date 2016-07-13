@@ -12,7 +12,7 @@ class MapGrid : public SceneObject
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual bool editable() const;
+    virtual ObjectFlags objectFlags() const;
     virtual bool isBackground() const;
     virtual void draw(ShaderStack *stack);
     virtual BoundingBox computeLocalBounds() const;

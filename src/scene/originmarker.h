@@ -8,7 +8,7 @@ class OriginMarker : public SceneObject
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual bool editable() const;
+    virtual ObjectFlags objectFlags() const;
     virtual BoundingBox computeLocalBounds() const;
 
 protected:

@@ -22,7 +22,7 @@
 
 #define STDLINE_LOD_DELTA 128.0f
 
-MapGrid::MapGrid(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
+MapGrid::MapGrid(BaseScene *scene, SceneObject* parent) : SceneObject(scene, parent)
 {
     Q_ASSERT(m_pScene);
     MapScene* s = m_pScene->mapScene();
@@ -72,9 +72,9 @@ void MapGrid::decrementGridPower()
     setGridPower(m_iPowerTwo-1);
 }
 
-bool MapGrid::editable() const
+SceneObject::ObjectFlags MapGrid::objectFlags() const
 {
-    return false;
+    return SceneObject::objectFlags() | NotEditable;
 }
 
 bool MapGrid::isBackground() const
@@ -595,7 +595,6 @@ unsigned int MapGrid::gridMultiple() const
 
 BoundingBox MapGrid::computeLocalBounds() const
 {
-//    return BoundingBox(QVector3D(Math::CoordinateSystem::min(), Math::CoordinateSystem::min(), 0),
-//                       QVector3D(Math::CoordinateSystem::max(), Math::CoordinateSystem::max(), 0));
-    return BoundingBox();
+    return BoundingBox(QVector3D(Math::CoordinateSystem::min(), Math::CoordinateSystem::min(), 0),
+                       QVector3D(Math::CoordinateSystem::max(), Math::CoordinateSystem::max(), 0));
 }

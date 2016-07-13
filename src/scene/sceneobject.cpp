@@ -89,14 +89,9 @@ BaseScene* SceneObject::scene() const
     return m_pScene;
 }
 
-bool SceneObject::editable() const
+SceneObject::ObjectFlags SceneObject::objectFlags() const
 {
-    return true;
-}
-
-bool SceneObject::isBackground() const
-{
-    return false;
+    return NoObjectFlag;
 }
 
 void SceneObject::draw(ShaderStack *stack)
@@ -209,7 +204,7 @@ bool SceneObject::serialiseToJson(QJsonObject &obj) const
     // If we're not editable, we shouldn't be saved to a file.
     // This means that non-editable subclasses don't have to bother
     // with re-implementation of serialisation at all.
-    if ( !editable() )
+    if ( objectFlags().testFlag(NotEditable) )
     {
         return false;
     }
@@ -451,7 +446,7 @@ bool SceneObject::passesObjectMask(int mask) const
 {
     // If we are not editable but the non-editable mask is not set,
     // we should not be picked.
-    if ( (mask & NotEditableMask) != NotEditableMask && !editable() )
+    if ( (mask & NotEditableMask) != NotEditableMask && objectFlags().testFlag(NotEditable) )
         return false;
 
     return true;

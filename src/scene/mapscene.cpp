@@ -121,9 +121,9 @@ bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &seri
 
 void MapScene::insertStandardItems()
 {
-    OriginMarker* o = createSceneObject<OriginMarker>(root());
+    OriginMarker* o = createSceneObject<OriginMarker>(m_pInternalObjects);
     o->setObjectName("origin");
 
-    MapGrid* grid = createSceneObject<MapGrid>(root());
+    MapGrid* grid = createSceneObject<MapGrid>(m_pInternalObjects);
     grid->setObjectName("grid");
 }

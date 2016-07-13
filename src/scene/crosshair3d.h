@@ -8,7 +8,7 @@ class Crosshair3D : public SceneObject
     Q_OBJECT
     friend class BaseScene;
 public:
-    virtual bool editable() const;
+    virtual ObjectFlags objectFlags() const;
 
 protected:
     explicit Crosshair3D(BaseScene* scene, SceneObject *parent);

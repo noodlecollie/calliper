@@ -131,9 +131,9 @@ bool UIManipulator::serialiseToJson(QJsonObject &) const
     return false;
 }
 
-bool UIManipulator::editable() const
+SceneObject::ObjectFlags UIManipulator::objectFlags() const
 {
-    return false;
+    return SceneObject::objectFlags() | NotEditable;
 }
 
 void UIManipulator::draw(ShaderStack *stack)

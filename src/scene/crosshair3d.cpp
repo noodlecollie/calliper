@@ -39,7 +39,7 @@ void Crosshair3D::constructGeometry()
     appendGeometry(geom);
 }
 
-bool Crosshair3D::editable() const
+SceneObject::ObjectFlags Crosshair3D::objectFlags() const
 {
-    return false;
+    return SceneObject::objectFlags() | NotEditable;
 }

@@ -9,6 +9,13 @@ BaseScene::BaseScene(MapDocument *doc) : QObject(doc)
 {
     m_pRootObject = NULL;
     createRoot();
+
+    // The internal objects node groups together things that aren't really
+    // part of the scene, eg. the grid/origin marker.
+    m_pInternalObjects = createSceneObject<SceneObject>(m_pRootObject);
+
+    // The general objects node is for everything else.
+    m_pGeneralObjects = createSceneObject<SceneObject>(m_pRootObject);
 }
 
 BaseScene::~BaseScene()
@@ -109,19 +116,10 @@ void BaseScene::destroySceneObject(SceneObject *obj)
 
 void BaseScene::processAddObject(SceneObject *obj)
 {
-    // If this is a background object, add to our background set.
-    if ( obj->isBackground() )
-    {
-        m_BackgroundObjects.insert(obj);
-    }
+    Q_UNUSED(obj);
 }
 
 void BaseScene::processRemoveObject(SceneObject *obj)
 {
-    // If this is a background object, remove it from the background set.
-    if ( obj->isBackground() )
-    {
-        m_BackgroundObjects.subtract(obj->allChildren().toSet());
-        m_BackgroundObjects.remove(obj);
-    }
+    Q_UNUSED(obj);
 }

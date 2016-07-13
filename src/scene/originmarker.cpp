@@ -17,9 +17,9 @@ OriginMarker::OriginMarker(const OriginMarker &cloneFrom) : SceneObject(cloneFro
 
 }
 
-bool OriginMarker::editable() const
+SceneObject::ObjectFlags OriginMarker::objectFlags() const
 {
-    return false;
+    return SceneObject::objectFlags() | NotEditable;
 }
 
 void OriginMarker::constructGeometry()

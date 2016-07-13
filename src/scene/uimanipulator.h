@@ -17,7 +17,7 @@ public:
     // UI elements should not be serialised.
     virtual bool serialiseToJson(QJsonObject &) const;
 
-    virtual bool editable() const;
+    virtual ObjectFlags objectFlags() const;
     virtual void draw(ShaderStack *stack);
 
     static Math::AxisFlag axisFlagsFromPickColor(QRgb colour);

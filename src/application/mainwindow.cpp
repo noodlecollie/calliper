@@ -224,7 +224,7 @@ void MainWindow::populateSceneTreeRecursive(SceneObject *object, QTreeWidgetItem
     strings.append(object->objectName());
     QTreeWidgetItem* i = new QTreeWidgetItem(parent, strings);
     i->setData(0, Qt::UserRole, QVariant::fromValue<QObject*>(object));
-    if ( !object->editable() )
+    if ( object->objectFlags().testFlag(SceneObject::NotEditable) )
         i->setDisabled(true);
 
     QString iconPath(":/icons/tree_object.png");
