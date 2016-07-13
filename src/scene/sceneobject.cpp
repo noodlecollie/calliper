@@ -9,6 +9,7 @@
 #include "jsonutil.h"
 #include "basescene.h"
 #include "geometryfactory.h"
+#include "pervertexcolorshader.h"
 
 SceneObject::SceneObject(BaseScene* scene, SceneObject *parent) : HierarchicalObject(parent)
 {
@@ -492,7 +493,9 @@ void SceneObject::updateCachedBounds() const
     m_CachedBounds.setToNull();
     unionOfChildBounds(m_CachedBounds);
     m_CachedBounds.unionWith(computeLocalBounds());
+
     m_pBoundsGeom.reset(GeometryFactory::lineCuboid(m_CachedBounds, QColor::fromRgb(0xffff0000)));
+    m_pBoundsGeom->setShaderOverride(PerVertexColorShader::staticName());
 
     m_bBoundsStale = false;
 }
@@ -533,7 +536,6 @@ void SceneObject::drawBoundsGeometry(ShaderStack *stack)
     if ( m_bBoundsStale || !m_bUseCachedBounds )
     {
         updateCachedBounds();
-        qDebug() << "Bounds:" << m_CachedBounds;
     }
 
     drawGeometry(m_pBoundsGeom.data(), stack);

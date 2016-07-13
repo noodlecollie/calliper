@@ -45,6 +45,8 @@ namespace SceneFactory
     MapScene* debugScene(MapDocument *document)
     {
         MapScene* scene = new MapScene(document);
+        scene->root()->setUseCachedBounds(true);
+        scene->root()->setDrawBounds(true);
 
         SceneCamera* c = scene->createSceneObject<SceneCamera>(scene->root());
         c->setObjectName("camera");
@@ -83,7 +85,6 @@ namespace SceneFactory
         block2->setPosition(QVector3D(128,0,0));
         block2->setRenderFlags(SceneObject::Translucent);
         block2->setShouldSerialiseGeometry(true);
-        block2->setDrawBounds(true);
 
         SceneObject* testBlock = scene->createSceneObject<SceneObject>(scene->root());
         testBlock->setObjectName("testBlock");

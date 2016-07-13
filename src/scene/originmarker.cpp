@@ -4,6 +4,7 @@
 
 OriginMarker::OriginMarker(BaseScene *scene, SceneObject *parent) : SceneObject(scene, parent)
 {
+    setUseCachedBounds(true);
     constructGeometry();
 }
 
@@ -42,4 +43,9 @@ void OriginMarker::constructGeometry()
     geom->appendIndex(5);
 
     appendGeometry(geom);
+}
+
+BoundingBox OriginMarker::computeLocalBounds() const
+{
+    return BoundingBox(QVector3D(0,0,0), QVector3D(64,64,64));
 }

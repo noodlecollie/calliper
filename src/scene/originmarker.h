@@ -9,6 +9,7 @@ class OriginMarker : public SceneObject
     friend class BaseScene;
 public:
     virtual bool editable() const;
+    virtual BoundingBox computeLocalBounds() const;
 
 protected:
     explicit OriginMarker(BaseScene* scene, SceneObject* parent);

@@ -121,6 +121,33 @@ namespace Math
     void fuzzyAdjustToUnitGrid(QVector3D &vec);
 
     float distanceFromPointToPlane(const QVector3D &point, const QVector3D &planeNormal, const QVector3D pointOnPlane);
+
+    template<typename T>
+    void updateWithInitCheck(const T &value, T &toUpdate, bool &hasBeenUpdated,
+                             std::function<bool (const T& val, const T& current)> updateFunc)
+    {
+        if ( !hasBeenUpdated || updateFunc(value, toUpdate) )
+        {
+            toUpdate = value;
+            hasBeenUpdated = true;
+        }
+    }
+
+    template<typename T>
+    void updateIfLessThan(const T &value, T &toUpdate, bool &hasBeenUpdated)
+    {
+        return updateWithInitCheck<T>(value, toUpdate, hasBeenUpdated,
+                                   [] (const T &val, const T &current)
+                                      {return val < current;});
+    }
+
+    template<typename T>
+    void updateIfGreaterThan(const T &value, T &toUpdate, bool &hasBeenUpdated)
+    {
+        return updateWithInitCheck<T>(value, toUpdate, hasBeenUpdated,
+                                   [] (const T &val, const T &current)
+                                      {return val > current;});
+    }
 }
 
 uint qHash(const QVector3D &vec);

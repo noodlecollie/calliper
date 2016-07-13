@@ -7,6 +7,7 @@
 #include <QOpenGLTexture>
 #include "jsonutil.h"
 #include "generalutil.h"
+#include "callipermath.h"
 
 QDebug operator<<(QDebug debug, const GeometryData &data)
 {
@@ -547,24 +548,6 @@ void GeometryData::appendIndex(unsigned int i0, unsigned int i1)
     m_bIndicesStale = true;
 }
 
-void GeometryData::setMinHelper(float value, float &toSet, bool &setBefore)
-{
-    if ( !setBefore || value < toSet )
-    {
-        toSet = value;
-        setBefore = true;
-    }
-}
-
-void GeometryData::setMaxHelper(float value, float &toSet, bool &setBefore)
-{
-    if ( !setBefore || value > toSet )
-    {
-        toSet = value;
-        setBefore = true;
-    }
-}
-
 BoundingBox GeometryData::localBounds() const
 {
     float max[3] = { 0, 0, 0 };
@@ -578,8 +561,8 @@ BoundingBox GeometryData::localBounds() const
 
         for ( int j = 0; j < 3; j++ )
         {
-            setMinHelper(pos[j], min[j], minSet[j]);
-            setMaxHelper(pos[j], max[j], maxSet[j]);
+            Math::updateIfLessThan<float>(pos[j], min[j], minSet[j]);
+            Math::updateIfGreaterThan<float>(pos[j], max[j], maxSet[j]);
         }
     }
 

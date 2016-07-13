@@ -112,7 +112,6 @@ public:
     int vertexFormatBytes() const;
 
     // This is generated on demand.
-    // Always includes the origin.
     BoundingBox localBounds() const;
 
     bool append(const GeometryData &other);
@@ -137,8 +136,6 @@ public:
 
 private:
     void initDefaults();
-    static void setMinHelper(float value, float &toSet, bool &setBefore);
-    static void setMaxHelper(float value, float &toSet, bool &setBefore);
 
     QVector<float>          m_Vertices;
     bool                    m_bVerticesStale;

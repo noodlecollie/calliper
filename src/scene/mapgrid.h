@@ -15,6 +15,7 @@ public:
     virtual bool editable() const;
     virtual bool isBackground() const;
     virtual void draw(ShaderStack *stack);
+    virtual BoundingBox computeLocalBounds() const;
 
     int gridPower() const;
     void setGridPower(int power);

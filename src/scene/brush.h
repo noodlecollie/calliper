@@ -25,6 +25,7 @@ public:
     virtual bool serialiseToJson(QJsonObject &obj) const;
     virtual QString serialiseIdentifier() const;
     virtual void draw(ShaderStack *stack);
+    virtual BoundingBox computeLocalBounds() const;
 
     virtual bool computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const;
 

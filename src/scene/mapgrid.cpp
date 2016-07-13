@@ -30,6 +30,8 @@ MapGrid::MapGrid(BaseScene *scene, SceneObject *parent) : SceneObject(scene, par
     Q_ASSERT(!s->m_pGrid);
     s->m_pGrid = this;
 
+    setUseCachedBounds(true);
+
     // Standard Hammer colours
     m_colMajor = QColor(100, 46, 0);
     m_colMinor = QColor(119,119,119);
@@ -589,4 +591,11 @@ int MapGrid::stdLineVertCount(int power)
 unsigned int MapGrid::gridMultiple() const
 {
     return 1 << m_iPowerTwo;
+}
+
+BoundingBox MapGrid::computeLocalBounds() const
+{
+//    return BoundingBox(QVector3D(Math::CoordinateSystem::min(), Math::CoordinateSystem::min(), 0),
+//                       QVector3D(Math::CoordinateSystem::max(), Math::CoordinateSystem::max(), 0));
+    return BoundingBox();
 }

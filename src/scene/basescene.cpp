@@ -21,6 +21,7 @@ void BaseScene::createRoot()
     Q_ASSERT(!m_pRootObject);
     m_pRootObject = new SceneObject(this, NULL);
     m_pRootObject->setObjectName("root");
+    m_pRootObject->setUseCachedBounds(true);
 
 #ifdef LOG_SCENE_OBJECT_LIFETIMES
     qDebug() << "Root scene object" << m_pRootObject << "created";

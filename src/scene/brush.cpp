@@ -252,3 +252,25 @@ bool Brush::computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayC
 
     return hadContact;
 }
+
+BoundingBox Brush::computeLocalBounds() const
+{
+    float min[3] = { 0,0,0 };
+    float max[3] = { 0,0,0 };
+    bool setMin[3] = { false, false, false };
+    bool setMax[3] = { false, false, false };
+
+    for ( int i = 0; i < m_Vertices.count(); i++ )
+    {
+        const QVector3D &vec = m_Vertices.at(i);
+        for ( int j = 0; j < 3; j++ )
+        {
+            float val = vec[j];
+            Math::updateIfLessThan<float>(val, min[j], setMin[j]);
+            Math::updateIfGreaterThan<float>(val, max[j], setMax[j]);
+        }
+    }
+
+    return BoundingBox(QVector3D(min[0], min[1], min[2]),
+                       QVector3D(max[0], max[1], max[2]));
+}
