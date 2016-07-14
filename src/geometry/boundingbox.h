@@ -9,6 +9,14 @@
 class BoundingBox
 {
 public:
+    enum IntersectionType
+    {
+        NoIntersection       = 0,   // The boxes do not intersect.
+        PartialIntersection,        // The boxes intersect partially but not entirely.
+        ContainedWithinOther,       // This box is entirely contained within the other box.
+        ContainsOther,              // The other box is entirely contained within this box.
+    };
+
     BoundingBox();
     BoundingBox(const QVector3D &vMin, const QVector3D &vMax);
 
@@ -52,6 +60,9 @@ public:
     float span(int axis) const;
 
     void sortVectors();
+
+    IntersectionType intersectsWith(const BoundingBox &other) const;
+    bool containsPoint(const QVector3D &point) const;
 
 private:
     QVector3D   m_vecMin;

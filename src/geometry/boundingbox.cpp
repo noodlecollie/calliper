@@ -1,9 +1,36 @@
 #include "boundingbox.h"
 #include <QVector4D>
 
-const int cornerVertexIndicesX[] = { 1, 3, 7, 5,   0, 4, 6, 2, };
-const int cornerVertexIndicesY[] = { 3, 2, 6, 7,   0, 1, 5, 4, };
-const int cornerVertexIndicesZ[] = { 4, 5, 7, 6,   0, 2, 3, 1, };
+namespace
+{
+    const int cornerVertexIndicesX[] = { 1, 3, 7, 5,   0, 4, 6, 2, };
+    const int cornerVertexIndicesY[] = { 3, 2, 6, 7,   0, 1, 5, 4, };
+    const int cornerVertexIndicesZ[] = { 4, 5, 7, 6,   0, 2, 3, 1, };
+
+    inline bool fuzzyGreaterThanOrEqualTo(float v1, float v2)
+    {
+        return qFuzzyCompare(v1, v2) || v1 > v2;
+    }
+
+    inline bool fuzzyLessThanOrEqualTo(float v1, float v2)
+    {
+        return qFuzzyCompare(v1, v2) || v1 < v2;
+    }
+
+    inline bool fuzzyVectorGreaterThanOrEqualTo(const QVector3D &v1, const QVector3D &v2)
+    {
+        return fuzzyGreaterThanOrEqualTo(v1.x(), v2.x()) &&
+                fuzzyGreaterThanOrEqualTo(v1.y(), v2.y()) &&
+                fuzzyGreaterThanOrEqualTo(v1.z(), v2.z());
+    }
+
+    inline bool fuzzyVectorLessThanOrEqualTo(const QVector3D &v1, const QVector3D &v2)
+    {
+        return fuzzyLessThanOrEqualTo(v1.x(), v2.x()) &&
+                fuzzyLessThanOrEqualTo(v1.y(), v2.y()) &&
+                fuzzyLessThanOrEqualTo(v1.z(), v2.z());
+    }
+}
 
 QDebug& operator <<(QDebug &debug, const BoundingBox &bbox)
 {
@@ -264,4 +291,47 @@ void BoundingBox::setToNull()
     m_bIsNull = true;
     m_vecMin = QVector3D();
     m_vecMax = QVector3D();
+}
+
+BoundingBox::IntersectionType BoundingBox::intersectsWith(const BoundingBox &other) const
+{
+    // A null box never intersects with anything.
+    if ( isNull() || other.isNull() )
+        return NoIntersection;
+
+    QVector3D otherMin = other.min();
+    QVector3D otherMax = other.max();
+
+    // If any element of the other min is greater than that of our max,
+    // or vice versa, there's no way we can intersect.
+    if ( !fuzzyLessThanOrEqualTo(otherMin.x(), m_vecMax.x()) ||
+         !fuzzyLessThanOrEqualTo(otherMin.y(), m_vecMax.y()) ||
+         !fuzzyLessThanOrEqualTo(otherMin.z(), m_vecMax.z()) ||
+         !fuzzyGreaterThanOrEqualTo(otherMax.x(), m_vecMin.x()) ||
+         !fuzzyGreaterThanOrEqualTo(otherMax.y(), m_vecMin.y()) ||
+         !fuzzyGreaterThanOrEqualTo(otherMax.z(), m_vecMin.z()))
+    {
+        return NoIntersection;
+    }
+
+    // If both the min and max of one box are within the other,
+    // there is a full enclosure.
+    if ( containsPoint(otherMin) && containsPoint(otherMax) )
+    {
+        return ContainsOther;
+    }
+    else if ( other.containsPoint(m_vecMin) && other.containsPoint(m_vecMax) )
+    {
+        return ContainedWithinOther;
+    }
+
+    // One of min or max is outside us but the other is not.
+    // Therefore there is a partial intersection.
+    return PartialIntersection;
+}
+
+bool BoundingBox::containsPoint(const QVector3D &point) const
+{
+    return fuzzyVectorGreaterThanOrEqualTo(point, m_vecMin) &&
+            fuzzyVectorLessThanOrEqualTo(point, m_vecMax);
 }
