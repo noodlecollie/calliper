@@ -41,15 +41,15 @@ void CreateGeometryTool::vActivate()
 {
     BaseTool::vActivate();
 
-    m_pManipulator = m_pDocument->scene()->createSceneObject<BlockCreationHandle>(m_pDocument->scene()->root());
+    m_pManipulator = m_pDocument->scene()->createSceneObject<BlockCreationHandle>(m_pDocument->scene()->generalObjectsNode());
     m_pManipulator->setObjectName("_geometryCreationHandle");
     m_pManipulator->setHidden(true);
 
-    m_pCrosshair = m_pDocument->scene()->createSceneObject<Crosshair3D>(m_pDocument->scene()->root());
+    m_pCrosshair = m_pDocument->scene()->createSceneObject<Crosshair3D>(m_pDocument->scene()->generalObjectsNode());
     m_pCrosshair->setObjectName("_geometryCreationCrosshair");
     m_pCrosshair->setHidden(true);
 
-    m_pUIBox = m_pDocument->uiScene()->createSceneObject<UIBlockCreationHandle>(m_pDocument->uiScene()->root());
+    m_pUIBox = m_pDocument->uiScene()->createSceneObject<UIBlockCreationHandle>(m_pDocument->uiScene()->generalObjectsNode());
     m_pUIBox->setObjectName("_geometryCreationWBox");
     m_pUIBox->setHidden(true);
 }
@@ -316,6 +316,6 @@ void CreateGeometryTool::createBlockBrush()
         return;
 
     // TODO: Textures.
-    BrushFactory::fromBoundingBox(m_pDocument->scene(), m_pDocument->scene()->root(), bbox, "/textures/dev/dev_purple001", bbox.centroid());
+    BrushFactory::fromBoundingBox(m_pDocument->scene(), m_pDocument->scene()->generalObjectsNode(), bbox, "/textures/dev/dev_purple001", bbox.centroid());
     clearManipulator();
 }

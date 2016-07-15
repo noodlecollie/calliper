@@ -176,7 +176,7 @@ void UIBlockCreationHandle::createScaleHandles()
                 break;
         }
 
-        AxisDragHandle* obj = m_pScene->createSceneObject<AxisDragHandle>(m_pScene->root(), TEXTURE_SQUARE_HANDLE);
+        AxisDragHandle* obj = m_pScene->createSceneObject<AxisDragHandle>(m_pScene->generalObjectsNode(), TEXTURE_SQUARE_HANDLE);
         obj->setObjectName(QString("_blockScaleHandle%0%1%2").arg(x).arg(y).arg(z));
         obj->setAxisConstraints(x,y,z);
         obj->setHidden(true);

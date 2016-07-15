@@ -55,7 +55,7 @@ void DebugTestTool::vActivate()
 {
     BaseTool::vActivate();
 
-    m_pRayVisuals = m_pDocument->scene()->createSceneObject<SceneObject>(m_pDocument->scene()->root());
+    m_pRayVisuals = m_pDocument->scene()->createSceneObject<SceneObject>(m_pDocument->scene()->generalObjectsNode());
     m_pRayVisuals->appendGeometry(new GeometryData());
     m_pRayVisuals->appendGeometry(new GeometryData());
     m_pRayVisuals->appendGeometry(new GeometryData());
@@ -75,7 +75,7 @@ void DebugTestTool::vMousePress(QMouseEvent *e)
     Ray3D ray(cam->position() + (cam->lens()->nearPlane() * rayDir), rayDir);
 
     RayTraceContact contact;
-    SceneObject* hitObject = m_pDocument->scene()->root()->computeRayCastRecursive(ray, contact);
+    SceneObject* hitObject = m_pDocument->scene()->generalObjectsNode()->computeRayCastRecursive(ray, contact);
     if ( hitObject )
     {
         qDebug() << "Ray" << ray << "hit object" << hitObject->objectName() << "at distance" << contact.rayParameter

@@ -34,7 +34,7 @@ namespace SceneFactory
     {
         MapScene* scene = new MapScene(document);
 
-        SceneCamera* c = scene->createSceneObject<SceneCamera>(scene->root());
+        SceneCamera* c = scene->createSceneObject<SceneCamera>(scene->generalObjectsNode());
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAtGlobal(QVector3D(0,0,0));
@@ -45,10 +45,9 @@ namespace SceneFactory
     MapScene* debugScene(MapDocument *document)
     {
         MapScene* scene = new MapScene(document);
-        scene->root()->setUseCachedBounds(true);
-        scene->root()->setDrawBounds(true);
+        scene->generalObjectsNode()->setDrawBounds(true);
 
-        SceneCamera* c = scene->createSceneObject<SceneCamera>(scene->root());
+        SceneCamera* c = scene->createSceneObject<SceneCamera>(scene->generalObjectsNode());
         c->setObjectName("camera");
         c->setPosition(QVector3D(128, 128, 80));
         c->lookAtGlobal(QVector3D(0,0,0));
@@ -57,13 +56,13 @@ namespace SceneFactory
         // For the purposes of debugging, serialise our geometry data.
         // This is pretty damn verbose but it means we can load it back in easily.
 
-        SceneObject* camModel = scene->createSceneObject<SceneObject>(scene->root());
+        SceneObject* camModel = scene->createSceneObject<SceneObject>(scene->generalObjectsNode());
         camModel->setObjectName("camModel");
         camModel->appendGeometry(GeometryFactory::fromObjFile(":/models/editor/camera.obj", 32));
         camModel->setPosition(QVector3D(0,128,0));
         camModel->setShouldSerialiseGeometry(true);
 
-        SceneObject* block = scene->createSceneObject<SceneObject>(scene->root());
+        SceneObject* block = scene->createSceneObject<SceneObject>(scene->generalObjectsNode());
         block->setObjectName("block");
         block->appendGeometry(GeometryFactory::cube(32.0f));
         block->geometryAt(0)->setTexture(0, "/textures/test");
@@ -86,7 +85,7 @@ namespace SceneFactory
         block2->setRenderFlags(SceneObject::Translucent);
         block2->setShouldSerialiseGeometry(true);
 
-        SceneObject* testBlock = scene->createSceneObject<SceneObject>(scene->root());
+        SceneObject* testBlock = scene->createSceneObject<SceneObject>(scene->generalObjectsNode());
         testBlock->setObjectName("testBlock");
         testBlock->appendGeometry(GeometryFactory::cubeSolidColor(96.0f, QColor::fromRgba(0x80ff8800)));
         testBlock->setPosition(QVector3D(0,-256,0));
@@ -98,11 +97,11 @@ namespace SceneFactory
         testBlock2->setPosition(QVector3D(0, -512, 0));
         testBlock->setShouldSerialiseGeometry(true);
 
-        Brush* b = BrushFactory::fromBoundingBox(scene, scene->root(), BoundingBox(QVector3D(0,0,0), QVector3D(256,256,256)), "/textures/test");
+        Brush* b = BrushFactory::fromBoundingBox(scene, scene->generalObjectsNode(), BoundingBox(QVector3D(0,0,0), QVector3D(256,256,256)), "/textures/test");
         b->setObjectName("brush");
         b->setPosition(QVector3D(256,0,0));
 
-        SceneObject* arrow = scene->createSceneObject<SceneObject>(scene->root());
+        SceneObject* arrow = scene->createSceneObject<SceneObject>(scene->generalObjectsNode());
         arrow->appendGeometry(GeometryFactory::hexPin(5, 0.1f));
         arrow->setScale(QVector3D(16,16,16));
         arrow->setPosition(-renderer()->directionalLight() * 128);
@@ -139,7 +138,7 @@ namespace SceneFactory
                 GeometryUtil::clipWindingsWithEachOther(windings);
             }
 
-            Brush* planeBrush = BrushFactory::fromPolygons(scene, scene->root(), polygons);
+            Brush* planeBrush = BrushFactory::fromPolygons(scene, scene->generalObjectsNode(), polygons);
             planeBrush->setObjectName(QString("planeBrush%0").arg(i));
 
             qDeleteAll(polygons);

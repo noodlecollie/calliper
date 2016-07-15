@@ -45,6 +45,7 @@ public:
     const UIScene* uiScene() const;
 
     SceneObject* root() const;
+    SceneObject* generalObjectsNode() const;
     void clear();
     MapDocument* document() const;
 

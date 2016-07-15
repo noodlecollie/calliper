@@ -125,6 +125,7 @@ private:
     bool m_bPicking;
 
     QOpenGLTexture* m_pRayTexture;
+    BoundingBox     m_ScratchCameraBounds;
 };
 
 OpenGLRenderer* renderer();

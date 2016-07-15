@@ -29,7 +29,7 @@ QString ScaleTool::staticName()
 
 UIManipulator* ScaleTool::constructManipulator()
 {
-    ScaleHandle* handle = m_pDocument->uiScene()->createSceneObject<ScaleHandle>(m_pDocument->uiScene()->root());
+    ScaleHandle* handle = m_pDocument->uiScene()->createSceneObject<ScaleHandle>(m_pDocument->uiScene()->generalObjectsNode());
     handle->setObjectName("_scaleHandle");
     return handle;
 }

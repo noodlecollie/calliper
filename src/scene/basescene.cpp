@@ -123,3 +123,8 @@ void BaseScene::processRemoveObject(SceneObject *obj)
 {
     Q_UNUSED(obj);
 }
+
+SceneObject* BaseScene::generalObjectsNode() const
+{
+    return m_pGeneralObjects;
+}

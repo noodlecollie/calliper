@@ -19,7 +19,7 @@ MapScene::~MapScene()
 
 void MapScene::checkIfSceneCleared(SceneObject *obj)
 {
-    if ( obj->isRoot() || obj == m_pGrid )
+    if ( obj->isRoot() || obj == m_pInternalObjects || obj == m_pGrid )
         m_pGrid = NULL;
 }
 

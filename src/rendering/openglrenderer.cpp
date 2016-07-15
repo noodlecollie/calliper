@@ -191,6 +191,16 @@ void OpenGLRenderer::renderTranslucent()
 
 void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
 {
+    BoundingBox oldBounds = m_ScratchCameraBounds;
+    m_ScratchCameraBounds.transform(obj->parentToLocal());
+
+    // If the camera bounds don't intersect with the bounds tree at this level,
+    // don't draw this object or any of its children.
+    BoundingBox objBounds = obj->hierarchicalBounds();
+    if ( !m_ScratchCameraBounds.isNull() && !objBounds.isNull() &&
+         !m_ScratchCameraBounds.intersectsWith(obj->hierarchicalBounds()) )
+        return;
+
     // If the object is hidden, don't draw it or any of its children.
     if ( obj->hidden() )
         return;
@@ -223,6 +233,7 @@ void OpenGLRenderer::renderSceneRecursive(SceneObject *obj, ShaderStack *stack)
     }
 
     stack->modelToWorldPop();
+    m_ScratchCameraBounds = oldBounds;
 }
 
 QVector3D OpenGLRenderer::directionalLight() const
@@ -256,6 +267,8 @@ void OpenGLRenderer::renderScene(BaseScene *scene, const CameraParams &params)
 
     m_pStack->globalColorPush();
     m_pStack->globalColorSetTop(globalColor());
+
+    m_ScratchCameraBounds = params.globalBounds();
 
     // Render the scene.
     renderSceneRecursive(scene->root(), m_pStack);

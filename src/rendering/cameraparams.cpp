@@ -10,15 +10,16 @@ CameraParams::CameraParams() :
 }
 
 CameraParams::CameraParams(const QMatrix4x4 w2c, const QMatrix4x4 proj,
-                           const HierarchicalObject *obj, const CameraLens *lens) :
-    m_matWorldToCameraMatrix(w2c), m_matProjectionMatrix(proj), m_pObject(obj), m_pLens(lens)
+                           const HierarchicalObject *obj, const CameraLens *lens, const BoundingBox &bounds) :
+    m_matWorldToCameraMatrix(w2c), m_matProjectionMatrix(proj), m_pObject(obj), m_pLens(lens), m_GlobalBounds(bounds)
 {
 
 }
 
 CameraParams::CameraParams(const SceneCamera *camera) :
     m_matWorldToCameraMatrix(camera->rootToLocal()), m_matProjectionMatrix(camera->lens()->projectionMatrix()),
-    m_pObject(camera), m_pLens(camera->lens())
+    m_pObject(camera), m_pLens(camera->lens()),
+    m_GlobalBounds(camera->computeLocalBounds().transformed(m_matWorldToCameraMatrix.inverted()))
 {
 
 }
@@ -41,4 +42,9 @@ const HierarchicalObject* CameraParams::hierarchicalObject() const
 const CameraLens* CameraParams::lens() const
 {
     return m_pLens;
+}
+
+const BoundingBox& CameraParams::globalBounds() const
+{
+    return m_GlobalBounds;
 }

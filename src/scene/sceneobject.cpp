@@ -45,7 +45,7 @@ void SceneObject::initDefaults()
     m_bHidden = false;
     m_bSerialiseGeometry = false;
     m_bBoundsStale = true;
-    m_bUseCachedBounds = false;
+    m_bUseCachedBounds = true;
     m_bDrawBounds = false;
 
     connect(this, &HierarchicalObject::orientationChanged, this, &SceneObject::onOrientationChanged);
