@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
     a.setApplicationName("Calliper");
     a.setApplicationDisplayName("Calliper");
     a.setOrganizationName("Infra");
-    a.setOrganizationName("Infra");
 
     {
         QFile f(":qdarkstyle/style.qss");

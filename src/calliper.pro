@@ -1,4 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-	application
+	application \
+    renderer \
+    renderer-sandbox
