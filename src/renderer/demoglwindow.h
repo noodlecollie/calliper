@@ -27,6 +27,8 @@ private:
     GLuint m_projectionUniform;
 
     QOpenGLShaderProgram *m_program;
+
+    QOpenGLBuffer*  m_pVertexBuffer;
 };
 
 #endif // DEMOGLWINDOW_H

@@ -48,6 +48,25 @@ void DemoGLWindow::initializeGL()
     m_worldCameraUniform = m_program->uniformLocation("worldToCamera");
     m_coordTransformUniform = m_program->uniformLocation("hammerToOpenGL");
     m_projectionUniform = m_program->uniformLocation("projection");
+
+    GLfloat atts[] = {
+        0.0f, 0.707f, 0,    // 9 floats for position
+        -0.5f, -0.5f, 0,
+        0.5f, -0.5f, 0,
+
+        1.0f, 0.0f, 0.0f, 1,    // 12 foats for colour
+        0.0f, 1.0f, 0.0f, 1,
+        0.0f, 0.0f, 1.0f, 1,
+
+        0,0,1,  // 9 floats for normal
+        0,0,1,
+        0,0,1,
+    };  // 30 in total
+
+    m_pVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    m_pVertexBuffer->create();
+    m_pVertexBuffer->bind();
+    m_pVertexBuffer->allocate(atts, 30*sizeof(GLfloat));
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -77,27 +96,9 @@ void DemoGLWindow::paintGL()
     m_program->setUniformValue(m_coordTransformUniform, coordTransform);
     m_program->setUniformValue(m_projectionUniform, projection);
 
-    GLfloat vertices[] = {
-        0.0f, 0.707f, 0,
-        -0.5f, -0.5f, 0,
-        0.5f, -0.5f, 0,
-    };
-
-    GLfloat colors[] = {
-        1.0f, 0.0f, 0.0f, 1,
-        0.0f, 1.0f, 0.0f, 1,
-        0.0f, 0.0f, 1.0f, 1,
-    };
-
-    GLfloat normals[] = {
-        0,0,1,
-        0,0,1,
-        0,0,1,
-    };
-
-    glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-    glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, colors);
-    glVertexAttribPointer(m_nrmAttr, 3, GL_FLOAT, GL_FALSE, 0, normals);
+    glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(m_colAttr, 4, GL_FLOAT, GL_FALSE, 0, (void*)(9*sizeof(GLfloat)));
+    glVertexAttribPointer(m_nrmAttr, 3, GL_FLOAT, GL_FALSE, 0, (void*)((9+12)*sizeof(GLfloat)));
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
