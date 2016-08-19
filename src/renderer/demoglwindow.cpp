@@ -67,6 +67,16 @@ void DemoGLWindow::initializeGL()
     m_pVertexBuffer->create();
     m_pVertexBuffer->bind();
     m_pVertexBuffer->allocate(atts, 30*sizeof(GLfloat));
+
+    GLushort indices[] =
+    {
+        0,1,2
+    };
+
+    m_pIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+    m_pIndexBuffer->create();
+    m_pIndexBuffer->bind();
+    m_pIndexBuffer->allocate(indices, 3*sizeof(GLushort));
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -104,7 +114,8 @@ void DemoGLWindow::paintGL()
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+//    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0);
 
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);

@@ -29,6 +29,7 @@ private:
     QOpenGLShaderProgram *m_program;
 
     QOpenGLBuffer*  m_pVertexBuffer;
+    QOpenGLBuffer*  m_pIndexBuffer;
 };
 
 #endif // DEMOGLWINDOW_H
