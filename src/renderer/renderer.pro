@@ -12,11 +12,13 @@ TEMPLATE = lib
 DEFINES += RENDERER_LIBRARY
 
 SOURCES += \
-    demoglwindow.cpp
+    demoglwindow.cpp \
+    shaderprogram.cpp
 
 HEADERS +=\
         renderer_global.h \
-    demoglwindow.h
+    demoglwindow.h \
+    shaderprogram.h
 
 unix {
     target.path = /usr/lib
