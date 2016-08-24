@@ -5,6 +5,7 @@
 #include <QOpenGLWindow>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
+#include "shaderprogram.h"
 
 class RENDERERSHARED_EXPORT DemoGLWindow : public QOpenGLWindow
 {
@@ -25,8 +26,13 @@ private:
     GLuint m_worldCameraUniform;
     GLuint m_coordTransformUniform;
     GLuint m_projectionUniform;
+    GLuint m_vao;
 
     QOpenGLShaderProgram *m_program;
+    PerVertexColorShader* m_NewShader;
+    GLuint m_VertexShaderHandle;
+    GLuint m_FragmentShaderHandle;
+    GLuint m_ShaderHandle;
 
     QOpenGLBuffer*  m_pVertexBuffer;
     QOpenGLBuffer*  m_pIndexBuffer;

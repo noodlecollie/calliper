@@ -8,12 +8,12 @@
 static const char *vertexShaderSource =
         "#version 410 core\n"
         "in vec2 vPosition;"
-        "void main() { gl_Position = vec4(vPosition, -0.5, 1); }"
+        "void main() { gl_Position = vec4(vPosition, 0, 1); }"
     ;
 
 static const char *fragmentShaderSource =
         "#version 410 core\n"
-        "out vec4 color;"
+        "layout(location = 0) out vec4 color;"
         "void main() { color = vec4(1,1,1,1); }"
 
     ;
