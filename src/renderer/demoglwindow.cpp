@@ -1,13 +1,15 @@
 #include "demoglwindow.h"
 #include <QScreen>
-#include <glu.h>
+#include <QOpenGLFunctions_4_1_Core>
+#include "openglerrors.h"
 
 #define GLTRY_EX(_func, _filefunc, _line) \
 { \
     {_func;} \
     QStringList errorList; \
-    for (GLenum ret = glGetError(); ret != GL_NO_ERROR; ret = glGetError()) \
-        errorList.append((const char*)gluErrorString(ret)); \
+    for (GLenum ret = QOpenGLContext::currentContext()->functions()->glGetError(); ret != GL_NO_ERROR; \
+            ret = QOpenGLContext::currentContext()->functions()->glGetError()) \
+        errorList.append(OpenGLErrors::errorString(ret)); \
     if ( !errorList.isEmpty() ) { \
         qDebug() << "OpenGL errors for command '" #_func "' at" << _filefunc << _line << "-" << errorList.join(", "); \
         exit(1); \
@@ -39,8 +41,10 @@ DemoGLWindow::~DemoGLWindow()
 
 void DemoGLWindow::initializeGL()
 {
-    GLTRY(glGenVertexArrays(1, &m_vao))
-    GLTRY(glBindVertexArray(m_vao))
+    QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
+
+    GLTRY(f->glGenVertexArrays(1, &m_vao))
+    GLTRY(f->glBindVertexArray(m_vao))
 
 #if 0
     GLTRY(m_ShaderHandle = glCreateProgram())
@@ -126,10 +130,12 @@ void DemoGLWindow::resizeGL(int w, int h)
 
 void DemoGLWindow::paintGL()
 {
-    const qreal retinaScale = devicePixelRatio();
-    GLTRY(glViewport(0, 0, width() * retinaScale, height() * retinaScale))
+    QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
 
-    GLTRY(glClear(GL_COLOR_BUFFER_BIT))
+    const qreal retinaScale = devicePixelRatio();
+    GLTRY(f->glViewport(0, 0, width() * retinaScale, height() * retinaScale))
+
+    GLTRY(f->glClear(GL_COLOR_BUFFER_BIT))
 
 #if 0
     GLTRY(glUseProgram(m_ShaderHandle))
@@ -140,7 +146,7 @@ void DemoGLWindow::paintGL()
     m_program->enableAttributeArray(m_posAttr);
     m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 2);
 
-    GLTRY(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0))
+    GLTRY(f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0))
 
 #if 0
     GLTRY(glDisableVertexAttribArray(0))

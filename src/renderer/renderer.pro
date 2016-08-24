@@ -13,12 +13,14 @@ DEFINES += RENDERER_LIBRARY
 
 SOURCES += \
     demoglwindow.cpp \
-    shaderprogram.cpp
+    shaderprogram.cpp \
+    openglerrors.cpp
 
 HEADERS +=\
         renderer_global.h \
     demoglwindow.h \
-    shaderprogram.h
+    shaderprogram.h \
+    openglerrors.h
 
 unix {
     target.path = /usr/lib

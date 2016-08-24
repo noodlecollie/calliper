@@ -6,6 +6,7 @@
 #include <QVector2D>
 #include "eulerangle.h"
 #include <QRectF>
+#include <functional>
 
 namespace Math
 {
