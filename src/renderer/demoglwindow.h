@@ -20,16 +20,9 @@ protected:
 
 private:
     GLuint m_posAttr;
-    GLuint m_nrmAttr;
-    GLuint m_colAttr;
-    GLuint m_modelWorldUniform;
-    GLuint m_worldCameraUniform;
-    GLuint m_coordTransformUniform;
-    GLuint m_projectionUniform;
     GLuint m_vao;
 
     QOpenGLShaderProgram *m_program;
-    PerVertexColorShader* m_NewShader;
     GLuint m_VertexShaderHandle;
     GLuint m_FragmentShaderHandle;
     GLuint m_ShaderHandle;

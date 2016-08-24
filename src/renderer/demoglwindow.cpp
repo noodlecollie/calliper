@@ -16,9 +16,6 @@
 
 #define GLTRY(_func) GLTRY_EX(_func, Q_FUNC_INFO, __LINE__)
 
-#define ENABLE_NEW
-
-#ifdef ENABLE_NEW
 static const char *vertexShaderSource =
         "#version 410 core\n"
         "in vec2 vPosition;"
@@ -31,16 +28,6 @@ static const char *fragmentShaderSource =
         "void main() { color = vec4(1,1,1,1); }"
 
     ;
-#else
-static const char *vertexShaderSource =
-        "attribute highp vec2 vPosition;"
-        "void main() { gl_Position = vec4(vPosition, 0, 1); }"
-    ;
-
-static const char *fragmentShaderSource =
-        "void main() { gl_FragColor = vec4(1,1,1,1); }"
-    ;
-#endif
 
 DemoGLWindow::DemoGLWindow()
 {
@@ -52,10 +39,10 @@ DemoGLWindow::~DemoGLWindow()
 
 void DemoGLWindow::initializeGL()
 {
-#ifdef ENABLE_NEW
     GLTRY(glGenVertexArrays(1, &m_vao))
     GLTRY(glBindVertexArray(m_vao))
 
+#if 0
     GLTRY(m_ShaderHandle = glCreateProgram())
 
     {
@@ -101,21 +88,14 @@ void DemoGLWindow::initializeGL()
     GLTRY(glLinkProgram(m_ShaderHandle))
 
     GLTRY(m_posAttr = glGetAttribLocation(m_ShaderHandle, "vPosition"))
+#endif
 
-#else
-    m_program = new QOpenGLShaderProgram(this);
+    m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext());
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
     m_program->link();
+    m_program->bind();
     m_posAttr = m_program->attributeLocation("vPosition");
-    m_colAttr = m_program->attributeLocation("vColor");
-    m_nrmAttr = m_program->attributeLocation("vNormal");
-
-    m_modelWorldUniform = m_program->uniformLocation("modelToWorld");
-    m_worldCameraUniform = m_program->uniformLocation("worldToCamera");
-    m_coordTransformUniform = m_program->uniformLocation("hammerToOpenGL");
-    m_projectionUniform = m_program->uniformLocation("projection");
-#endif
 
     GLfloat atts[] = {
         -1,-1,
@@ -151,23 +131,20 @@ void DemoGLWindow::paintGL()
 
     GLTRY(glClear(GL_COLOR_BUFFER_BIT))
 
-#ifdef ENABLE_NEW
+#if 0
     GLTRY(glUseProgram(m_ShaderHandle))
     GLTRY(glEnableVertexAttribArray(0))
     GLTRY(glVertexAttribPointer(m_posAttr, 2, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<void*>(0)))
-#else
-    m_program->bind();
-
-    glVertexAttribPointer(m_posAttr, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    GLTRY(glEnableVertexAttribArray(0))
 #endif
+
+    m_program->enableAttributeArray(m_posAttr);
+    m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 2);
 
     GLTRY(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0))
 
-#ifdef ENABLE_NEW
+#if 0
     GLTRY(glDisableVertexAttribArray(0))
-#else
-    GLTRY(glDisableVertexAttribArray(0))
-    m_program->release();
 #endif
+
+    m_program->disableAttributeArray(m_posAttr);
 }
