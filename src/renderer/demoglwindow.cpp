@@ -23,13 +23,16 @@ namespace NS_RENDERER
     static const char *vertexShaderSource =
             "#version 410 core\n"
             "in vec2 vPosition;"
-            "void main() { gl_Position = vec4(vPosition, 0, 1); }"
+            "in vec4 vColour;"
+            "out vec4 fColour;"
+            "void main() { gl_Position = vec4(vPosition, 0, 1); fColour = vColour; }"
         ;
 
     static const char *fragmentShaderSource =
             "#version 410 core\n"
+            "in vec4 fColour;"
             "layout(location = 0) out vec4 color;"
-            "void main() { color = vec4(1,1,1,1); }"
+            "void main() { color = fColour; }"
         ;
 
     DemoGLWindow::DemoGLWindow()
@@ -53,17 +56,22 @@ namespace NS_RENDERER
         m_program->link();
         m_program->bind();
         m_posAttr = m_program->attributeLocation("vPosition");
+        m_colAttr = m_program->attributeLocation("vColour");
 
         GLfloat atts[] = {
-            -1,-1,
-            1,-1,
-            0,1,
+            -1,-1,      // 0 1
+            1,-1,       // 2 3
+            0,1,        // 4 5
+
+            1,0,0,1,    // 6 7 8 9
+            0,1,0,1,    // 10 11 12 13
+            0,0,1,1,    // 14 15 16 17
         };
 
         m_pVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
         m_pVertexBuffer->create();
         m_pVertexBuffer->bind();
-        m_pVertexBuffer->allocate(atts, 6*sizeof(GLfloat));
+        m_pVertexBuffer->allocate(atts, 18*sizeof(GLfloat));
 
         GLushort indices[] =
         {
@@ -91,10 +99,14 @@ namespace NS_RENDERER
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT))
 
         m_program->enableAttributeArray(m_posAttr);
-        m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 2);
+        m_program->enableAttributeArray(m_colAttr);
+
+        m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0*sizeof(GLfloat), 2);
+        m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, 6*sizeof(GLfloat), 4);
 
         GLTRY(f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0))
 
         m_program->disableAttributeArray(m_posAttr);
+        m_program->disableAttributeArray(m_colAttr);
     }
 }

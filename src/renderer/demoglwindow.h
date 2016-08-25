@@ -21,6 +21,7 @@ namespace NS_RENDERER
 
     private:
         GLuint m_posAttr;
+        GLuint m_colAttr;
         GLuint m_vao;
 
         QOpenGLShaderProgram *m_program;
@@ -30,6 +31,7 @@ namespace NS_RENDERER
 
         QOpenGLBuffer*  m_pVertexBuffer;
         QOpenGLBuffer*  m_pIndexBuffer;
+        QOpenGLBuffer*  m_pColourBuffer;
     };
 }
 
