@@ -62,16 +62,23 @@ namespace NS_RENDERER
             -1,-1,      // 0 1
             1,-1,       // 2 3
             0,1,        // 4 5
-
-            1,0,0,1,    // 6 7 8 9
-            0,1,0,1,    // 10 11 12 13
-            0,0,1,1,    // 14 15 16 17
         };
 
         m_pVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
         m_pVertexBuffer->create();
         m_pVertexBuffer->bind();
-        m_pVertexBuffer->allocate(atts, 18*sizeof(GLfloat));
+        m_pVertexBuffer->allocate(atts, 6*sizeof(GLfloat));
+
+        GLfloat cols[] = {
+            1,0,0,1,
+            0,1,0,1,
+            0,0,1,1,
+        };
+
+        m_pColourBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+        m_pColourBuffer->create();
+        m_pColourBuffer->bind();
+        m_pColourBuffer->allocate(cols, 12*sizeof(GLfloat));
 
         GLushort indices[] =
         {
@@ -99,10 +106,12 @@ namespace NS_RENDERER
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT))
 
         m_program->enableAttributeArray(m_posAttr);
-        m_program->enableAttributeArray(m_colAttr);
-
+        m_pVertexBuffer->bind();
         m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0*sizeof(GLfloat), 2);
-        m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, 6*sizeof(GLfloat), 4);
+
+        m_program->enableAttributeArray(m_colAttr);
+        m_pColourBuffer->bind();
+        m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, 0*sizeof(GLfloat), 4);
 
         GLTRY(f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0))
 
