@@ -1,6 +1,8 @@
 #include <QApplication>
 #include "demoglwindow.h"
 
+using namespace NS_RENDERER;
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

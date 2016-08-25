@@ -9,6 +9,8 @@
 #  define RENDERERSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
+#define NS_RENDERER Renderer
+
 /*
  * Ideally, we want to be able to get to a scenario where each batch is self-
  * contained with a group of vertex/index/etc. buffers, a shader name and any
