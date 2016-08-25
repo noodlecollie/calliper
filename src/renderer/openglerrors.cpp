@@ -2,10 +2,6 @@
 
 namespace NS_RENDERER
 {
-    OpenGLErrors::OpenGLErrors()
-    {
-    }
-
     QString OpenGLErrors::errorString(GLenum errorCode)
     {
         int enumIndex = staticMetaObject.indexOfEnumerator("OpenGLErrors");

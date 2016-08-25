@@ -4,6 +4,10 @@
 #include "renderer_global.h"
 #include <QObject>
 #include <QtOpenGL>
+#include <QOpenGLContext>
+#include <QtDebug>
+
+#define ENABLE_OPENGL_FAILFIRST
 
 namespace NS_RENDERER
 {
@@ -26,8 +30,42 @@ namespace NS_RENDERER
 
         static QString errorString(GLenum errorCode);
 
-        OpenGLErrors();
+        static inline void glTry(std::function<void(void)> function,
+                          const char* funcName,
+                          const char* file,
+                          int line,
+                          const char* parentFuncName)
+        {
+            function();
+
+            QStringList errorList;
+            for (GLenum ret = QOpenGLContext::currentContext()->functions()->glGetError(); ret != GL_NO_ERROR;
+                    ret = QOpenGLContext::currentContext()->functions()->glGetError())
+            {
+                errorList.append(OpenGLErrors::errorString(ret));
+            }
+            if ( !errorList.isEmpty() )
+            {
+                qFatal("%s", QString("OpenGL Error: in function %1 (%2:%3), '%4' returned the following errors: %5")
+                       .arg(parentFuncName)
+                       .arg(file)
+                       .arg(line)
+                       .arg(funcName)
+                       .arg(errorList.join(", "))
+                       .toLatin1().constData()
+                      );
+            }
+        }
+
+    private:
+        OpenGLErrors()  = delete;
     };
 }
+
+#ifdef QT_DEBUG
+#define GLTRY(_func) OpenGLErrors::glTry([&]{_func;}, #_func, __FILE__, __LINE__, Q_FUNC_INFO)
+#else
+#define GLTRY(_func) _func
+#endif
 
 #endif // OPENGLERRORS_H

@@ -3,21 +3,6 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include "openglerrors.h"
 
-#define GLTRY_EX(_func, _filefunc, _line) \
-{ \
-    {_func;} \
-    QStringList errorList; \
-    for (GLenum ret = QOpenGLContext::currentContext()->functions()->glGetError(); ret != GL_NO_ERROR; \
-            ret = QOpenGLContext::currentContext()->functions()->glGetError()) \
-        errorList.append(OpenGLErrors::errorString(ret)); \
-    if ( !errorList.isEmpty() ) { \
-        qDebug() << "OpenGL errors for command '" #_func "' at" << _filefunc << _line << "-" << errorList.join(", "); \
-        exit(1); \
-    } \
-}
-
-#define GLTRY(_func) GLTRY_EX(_func, Q_FUNC_INFO, __LINE__)
-
 namespace NS_RENDERER
 {
     static const char *vertexShaderSource =
@@ -47,8 +32,8 @@ namespace NS_RENDERER
     {
         QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
 
-        GLTRY(f->glGenVertexArrays(1, &m_vao))
-        GLTRY(f->glBindVertexArray(m_vao))
+        GLTRY(f->glGenVertexArrays(1, &m_vao));
+        GLTRY(f->glBindVertexArray(m_vao));
 
         m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext());
         m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
@@ -101,9 +86,9 @@ namespace NS_RENDERER
         QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
 
         const qreal retinaScale = devicePixelRatio();
-        GLTRY(f->glViewport(0, 0, width() * retinaScale, height() * retinaScale))
+        GLTRY(f->glViewport(0, 0, width() * retinaScale, height() * retinaScale));
 
-        GLTRY(f->glClear(GL_COLOR_BUFFER_BIT))
+        GLTRY(f->glClear(GL_COLOR_BUFFER_BIT));
 
         m_program->enableAttributeArray(m_posAttr);
         m_pVertexBuffer->bind();
@@ -113,7 +98,7 @@ namespace NS_RENDERER
         m_pColourBuffer->bind();
         m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, 0*sizeof(GLfloat), 4);
 
-        GLTRY(f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0))
+        GLTRY(f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (void*)0));
 
         m_program->disableAttributeArray(m_posAttr);
         m_program->disableAttributeArray(m_colAttr);
