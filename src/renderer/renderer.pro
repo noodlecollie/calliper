@@ -20,7 +20,8 @@ HEADERS +=\
         renderer_global.h \
     demoglwindow.h \
     openglerrors.h \
-    rendermodelbatch.h
+    rendermodelbatch.h \
+    shaderdefs.h
 
 unix {
     target.path = /usr/lib
