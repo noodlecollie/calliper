@@ -29,6 +29,8 @@ namespace NS_RENDERER
         Q_ENUM(OpenGLError)
 
         static QString errorString(GLenum errorCode);
+        static QString debugOpenGLCapabilities();
+        static void debugAssertCanSupportShaderDefs();
 
         static inline void glTry(std::function<void(void)> function,
                           const char* funcName,

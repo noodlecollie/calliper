@@ -2,6 +2,7 @@
 #include <QScreen>
 #include <QOpenGLFunctions_4_1_Core>
 #include "openglerrors.h"
+#include <QtDebug>
 
 namespace NS_RENDERER
 {
@@ -30,6 +31,7 @@ namespace NS_RENDERER
 
     void DemoGLWindow::initializeGL()
     {
+        qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
         QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
 
         GLTRY(f->glGenVertexArrays(1, &m_vao));
