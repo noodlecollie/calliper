@@ -26,7 +26,8 @@ HEADERS +=\
     shaderdefs.h \
     rendermodelbatchparams.h \
     openglhelpers.h \
-    rendermodelbatchitem.h
+    rendermodelbatchitem.h \
+    ishaderspec.h
 
 unix {
     target.path = /usr/lib

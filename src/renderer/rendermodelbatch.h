@@ -9,6 +9,8 @@
 
 namespace NS_RENDERER
 {
+    class IShaderSpec;
+
     class RENDERERSHARED_EXPORT RenderModelBatch : public QObject
     {
         Q_OBJECT
@@ -23,10 +25,15 @@ namespace NS_RENDERER
         void destroy();
 
         void addItem(const RenderModelBatchParams &params);
+        int itemCount() const;
+
+        const IShaderSpec* shaderSpec() const;
+        void setShaderSpec(const IShaderSpec* spec);
 
 private:
         static void copyInVertexData(float* &dest, const float* source, int floatCount);
         static void copyInIndexData(quint32* &dest, const quint32* source, int intCount);
+        int maxComponentsFromVertexSpec() const;
 
         GLuint  m_iVAOID;
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
@@ -38,6 +45,8 @@ private:
         QVector<float>  m_VertexBuffer;
         QVector<quint32>  m_IndexBuffer;
         QList<NS_RENDERER::RenderModelBatchItem> m_Items;
+
+        const IShaderSpec*  m_pShaderSpec;
     };
 }
 

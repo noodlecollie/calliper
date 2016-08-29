@@ -2,8 +2,8 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatchParams::RenderModelBatchParams(int vertexCount, float* positions, float* normals, float* colors,
-                                                   float* textureCoordinates, int indexCount, quint32* indices)
+    RenderModelBatchParams::RenderModelBatchParams(int vertexCount, float* positions, int indexCount, quint32* indices,
+                                                   float* normals, float* colors, float* textureCoordinates)
         : m_iVertexCount(vertexCount), m_pPositions(positions), m_pNormals(normals), m_pColors(colors),
           m_pTextureCoordinates(textureCoordinates), m_iIndexCount(indexCount), m_pIndices(indices)
     {

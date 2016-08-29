@@ -3,9 +3,22 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include "openglerrors.h"
 #include <QtDebug>
+#include "rendermodelbatch.h"
+#include "ishaderspec.h"
 
 namespace NS_RENDERER
 {
+    class TempSpec : public IShaderSpec
+    {
+    public:
+        virtual ~TempSpec() {}
+
+        virtual int positionComponents() const { return 2; }
+        virtual int normalComponents() const { return 3; }
+        virtual int colorComponents() const { return 4; }
+        virtual int textureCoordinateComponents() const { return 2; }
+    };
+
     static const char *vertexShaderSource =
             "#version 410 core\n"
             "in vec2 vPosition;"
@@ -76,6 +89,13 @@ namespace NS_RENDERER
         m_pIndexBuffer->create();
         m_pIndexBuffer->bind();
         m_pIndexBuffer->allocate(indices, 3*sizeof(GLushort));
+
+        // Testing - debug here
+        TempSpec tempSpec;
+        RenderModelBatch batch(QOpenGLBuffer::DynamicDraw);
+        batch.setShaderSpec(&tempSpec);
+        GLuint tempIndices[] = {0,1,2};
+        batch.addItem(RenderModelBatchParams(3, atts, 3, tempIndices));
     }
 
     void DemoGLWindow::resizeGL(int w, int h)
