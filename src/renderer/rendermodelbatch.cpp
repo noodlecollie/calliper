@@ -70,19 +70,42 @@ namespace NS_RENDERER
         if ( !m_pShaderSpec )
             return;
 
-        int newBaseOffsetFloats = 0;
+        int newVertexOffset = 0;
         if ( !m_Items.isEmpty() )
         {
-            newBaseOffsetFloats = m_Items.last().offsetFloats() + m_Items.last().countFloats();
+            newVertexOffset = m_Items.last().vertexOffset() + m_Items.last().vertexCount();
         }
 
-        // Calculate how many floats we need to store the vertex data.
-        // This is dependent on how many vertices we have, and how many
-        // components there are per vertex.
-        int newCountFloats = m_pShaderSpec->totalVertexComponents() * params.vertexCount();
+        int oldVertexCount = m_LocalPositionBuffer.count() / m_pShaderSpec->positionComponents();
+        int newVertexCount = params.vertexCount();
 
-        m_LocalVertexBuffer.resize(m_LocalVertexBuffer.count() + newCountFloats);
+        resizeAllBuffers(oldVertexCount + newVertexCount);
+        copyInData(params, oldVertexCount);
 
+        int newIndexOffset = 0;
+        if ( !m_Items.isEmpty() )
+        {
+            newIndexOffset = m_Items.last().indexOffset() + m_Items.last().indexCount();
+        }
+
+        int newIndexCount = params.indexCount();
+        m_LocalIndexBuffer.resize(m_LocalIndexBuffer.count() + newIndexCount);
+
+        memcpy(m_LocalIndexBuffer.data() + newIndexOffset,
+               params.indices(),
+               newIndexCount * sizeof(quint32));
+
+        m_ModelToWorldMatrices.append(params.modelToWorldMatrix());
+
+        m_Items.append(RenderModelBatchItem(newVertexOffset, newVertexCount, newIndexOffset, newIndexCount));
+        m_bDataStale = true;
+    }
+
+    void RenderModelBatch::copyInData(const RenderModelBatchParams &params, int vertexCount)
+    {
+        // Construct some padding zeroes for unspecified data.
+        // We need to set this to match the attribute  with the
+        // largest number of components.
         QVector<float> padding;
         if ( params.someAttributesUnspecified() )
         {
@@ -90,40 +113,31 @@ namespace NS_RENDERER
             padding.insert(0, params.vertexCount() * components, 0);
         }
 
-        float* vertexBufferData = m_LocalVertexBuffer.data() + newBaseOffsetFloats;
-        const float* paddingData = padding.constData();
+        memcpy(m_LocalPositionBuffer.data() + (vertexCount * m_pShaderSpec->positionComponents()),
+               params.positions(),
+               params.vertexCount() * m_pShaderSpec->positionComponents() * sizeof(float));
 
-        copyInVertexData(vertexBufferData,
-                         params.positions(),
-                         params.vertexCount() * m_pShaderSpec->positionComponents());
+        memcpy(m_LocalNormalBuffer.data() + (vertexCount * m_pShaderSpec->normalComponents()),
+               params.hasNormals() ? params.normals() : padding.constData(),
+               params.vertexCount() * m_pShaderSpec->normalComponents() * sizeof(float));
 
-        copyInVertexData(vertexBufferData,
-                         params.hasNormals() ? params.normals() : paddingData,
-                         params.vertexCount() * m_pShaderSpec->normalComponents());
+        memcpy(m_LocalColorBuffer.data() + (vertexCount * m_pShaderSpec->colorComponents()),
+               params.hasColors() ? params.colors() : padding.constData(),
+               params.vertexCount() * m_pShaderSpec->colorComponents() * sizeof(float));
 
-        copyInVertexData(vertexBufferData,
-                         params.hasColors() ? params.colors() : paddingData,
-                         params.vertexCount() * m_pShaderSpec->colorComponents());
+        memcpy(m_LocalTextureCoordinateBuffer.data() + (vertexCount * m_pShaderSpec->textureCoordinateComponents()),
+               params.hasTextureCoordinates() ? params.textureCoordinates() : padding.constData(),
+               params.vertexCount() * m_pShaderSpec->textureCoordinateComponents() * sizeof(float));
+    }
 
-        copyInVertexData(vertexBufferData,
-                         params.hasTextureCoordinates() ? params.textureCoordinates() : paddingData,
-                         params.vertexCount() * m_pShaderSpec->textureCoordinateComponents());
+    void RenderModelBatch::resizeAllBuffers(int numVertices)
+    {
+        Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Shader spec required!");
 
-        int newBaseIndexOffsetInts = 0;
-        if ( !m_Items.isEmpty() )
-        {
-            newBaseIndexOffsetInts = m_Items.last().indexOffsetInts() + m_Items.last().indexCountInts();
-        }
-
-        int newIndexCountInts = params.indexCount();
-        m_LocalIndexBuffer.resize(m_LocalIndexBuffer.count() + newIndexCountInts);
-        quint32* indexData = m_LocalIndexBuffer.data();
-        copyInIndexData(indexData, params.indices(), newIndexCountInts);
-
-        m_ModelToWorldMatrices.append(params.modelToWorldMatrix());
-
-        m_Items.append(RenderModelBatchItem(newBaseOffsetFloats, newCountFloats, newBaseIndexOffsetInts, newIndexCountInts));
-        m_bDataStale = true;
+        m_LocalPositionBuffer.resize(numVertices * m_pShaderSpec->positionComponents());
+        m_LocalNormalBuffer.resize(numVertices * m_pShaderSpec->normalComponents());
+        m_LocalColorBuffer.resize(numVertices * m_pShaderSpec->colorComponents());
+        m_LocalTextureCoordinateBuffer.resize(numVertices * m_pShaderSpec->textureCoordinateComponents());
     }
 
     int RenderModelBatch::maxComponentsFromVertexSpec() const
@@ -145,18 +159,6 @@ namespace NS_RENDERER
         return components;
     }
 
-    void RenderModelBatch::copyInVertexData(float* &dest, const float *source, int floatCount)
-    {
-        memcpy(dest, source, floatCount * sizeof(float));
-        dest += floatCount;
-    }
-
-    void RenderModelBatch::copyInIndexData(quint32 *&dest, const quint32 *source, int intCount)
-    {
-        memcpy(dest, source, intCount * sizeof(quint32));
-        dest += intCount;
-    }
-
     int RenderModelBatch::itemCount() const
     {
         return m_Items.count();
@@ -176,8 +178,7 @@ namespace NS_RENDERER
     {
         if ( force || m_bDataStale )
         {
-            m_GlVertexBuffer.bind();
-            m_GlVertexBuffer.allocate(m_LocalVertexBuffer.constData(), m_LocalVertexBuffer.count() * sizeof(float));
+            uploadVertexData();
 
             m_GlIndexBuffer.bind();
             m_GlIndexBuffer.allocate(m_LocalIndexBuffer.constData(), m_LocalIndexBuffer.count() * sizeof(quint32));
@@ -189,5 +190,54 @@ namespace NS_RENDERER
     bool RenderModelBatch::needsUpload() const
     {
         return m_bDataStale;
+    }
+
+    void RenderModelBatch::uploadVertexData()
+    {
+        int size = (m_LocalPositionBuffer.count()
+                    + m_LocalNormalBuffer.count()
+                    + m_LocalColorBuffer.count()
+                    + m_LocalTextureCoordinateBuffer.count())
+                * sizeof(float);
+
+        m_GlVertexBuffer.bind();
+        m_GlVertexBuffer.allocate(size);
+
+        int offset = 0;
+        writeToGlVertexBuffer(m_LocalPositionBuffer, offset);
+        writeToGlVertexBuffer(m_LocalNormalBuffer, offset);
+        writeToGlVertexBuffer(m_LocalColorBuffer, offset);
+        writeToGlVertexBuffer(m_LocalTextureCoordinateBuffer, offset);
+    }
+
+    void RenderModelBatch::writeToGlVertexBuffer(const QVector<float> &buffer, int &offset)
+    {
+        m_GlVertexBuffer.write(offset, buffer.constData(), buffer.count() * sizeof(float));
+        offset += buffer.count() * sizeof(float);
+    }
+
+    int RenderModelBatch::localPositionCount() const
+    {
+        return m_LocalPositionBuffer.count();
+    }
+
+    int RenderModelBatch::localNormalCount() const
+    {
+        return m_LocalNormalBuffer.count();
+    }
+
+    int RenderModelBatch::localColorCount() const
+    {
+        return m_LocalColorBuffer.count();
+    }
+
+    int RenderModelBatch::localTextureCoordinateCount() const
+    {
+        return m_LocalTextureCoordinateBuffer.count();
+    }
+
+    int RenderModelBatch::localIndexCount() const
+    {
+        return m_LocalIndexBuffer.count();
     }
 }

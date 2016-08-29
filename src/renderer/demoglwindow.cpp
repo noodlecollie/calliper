@@ -141,8 +141,10 @@ namespace NS_RENDERER
         GLTRY(m_program->enableAttributeArray(m_posAttr));
         GLTRY(m_program->enableAttributeArray(m_colAttr));
         GLTRY(v.bind());
-        GLTRY(m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0*sizeof(GLfloat), 2));
-        GLTRY(m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, 15*sizeof(GLfloat), 4));
+        GLTRY(m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0*sizeof(GLfloat), m_pTempSpec->positionComponents()));
+        GLTRY(m_program->setAttributeBuffer(m_colAttr, GL_FLOAT,
+                                            (m_pBatch->localPositionCount() + m_pBatch->localNormalCount())*sizeof(GLfloat),
+                                            m_pTempSpec->colorComponents()));
 
         GLTRY(i.bind());
 

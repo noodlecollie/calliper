@@ -33,14 +33,23 @@ namespace NS_RENDERER
         void upload(bool force = false);
         bool needsUpload() const;
 
+        int localPositionCount() const;
+        int localNormalCount() const;
+        int localColorCount() const;
+        int localTextureCoordinateCount() const;
+        int localIndexCount() const;
+
         // Remove me once we're done testing!
         QOpenGLBuffer vertexBuffer() const { return m_GlVertexBuffer; }
         QOpenGLBuffer indexBuffer() const { return m_GlIndexBuffer; }
 
 private:
-        static void copyInVertexData(float* &dest, const float* source, int floatCount);
         static void copyInIndexData(quint32* &dest, const quint32* source, int intCount);
+        void copyInData(const RenderModelBatchParams &params, int vertexCount);
         int maxComponentsFromVertexSpec() const;
+        void resizeAllBuffers(int numVertices);
+        void uploadVertexData();
+        void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
 
         GLuint  m_iVAOID;
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
@@ -49,10 +58,14 @@ private:
         QOpenGLBuffer   m_GlVertexBuffer;
         QOpenGLBuffer   m_GlIndexBuffer;
 
-        QVector<float>      m_LocalVertexBuffer;
+        QVector<float>      m_LocalPositionBuffer;
+        QVector<float>      m_LocalNormalBuffer;
+        QVector<float>      m_LocalColorBuffer;
+        QVector<float>      m_LocalTextureCoordinateBuffer;
         QVector<quint32>    m_LocalIndexBuffer;
-        QList<NS_RENDERER::RenderModelBatchItem> m_Items;
         QList<QMatrix4x4>   m_ModelToWorldMatrices;
+
+        QList<NS_RENDERER::RenderModelBatchItem> m_Items;
 
         const IShaderSpec*  m_pShaderSpec;
         bool                m_bDataStale;

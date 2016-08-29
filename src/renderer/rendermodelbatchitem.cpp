@@ -2,51 +2,51 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatchItem::RenderModelBatchItem(quint32 offsetFloats, quint32 countFloats,
-                                               quint32 indexOffsetInts, quint32 indexCountInts)
-        : m_iOffsetFloats(offsetFloats), m_iCountFloats(countFloats), m_iIndexOffsetInts(indexOffsetInts),
-          m_iIndexCountInts(indexCountInts)
+    RenderModelBatchItem::RenderModelBatchItem(quint32 vertexOffset, quint32 vertexCount,
+                                               quint32 indexOffset, quint32 indexCount)
+        : m_iVertexOffset(vertexOffset), m_iVertexCount(vertexCount),
+          m_iIndexOffset(indexOffset), m_iIndexCount(indexCount)
     {
 
     }
 
-    quint32 RenderModelBatchItem::offsetFloats() const
+    quint32 RenderModelBatchItem::vertexOffset() const
     {
-        return m_iOffsetFloats;
+        return m_iVertexOffset;
     }
 
-    quint32 RenderModelBatchItem::countFloats() const
+    quint32 RenderModelBatchItem::vertexCount() const
     {
-        return m_iCountFloats;
+        return m_iVertexCount;
     }
 
-    void RenderModelBatchItem::setOffsetFloats(quint32 offset)
+    void RenderModelBatchItem::setVertexOffset(quint32 offset)
     {
-        m_iOffsetFloats = offset;
+        m_iVertexOffset = offset;
     }
 
-    void RenderModelBatchItem::setCountFloats(quint32 count)
+    void RenderModelBatchItem::setVertexCount(quint32 count)
     {
-        m_iCountFloats = count;
+        m_iVertexCount = count;
     }
 
-    quint32 RenderModelBatchItem::indexCountInts() const
+    quint32 RenderModelBatchItem::indexCount() const
     {
-        return m_iIndexCountInts;
+        return m_iIndexCount;
     }
 
-    void RenderModelBatchItem::setIndexCountInts(quint32 indexCount)
+    void RenderModelBatchItem::setIndexCount(quint32 indexCount)
     {
-        m_iIndexCountInts = indexCount;
+        m_iIndexCount = indexCount;
     }
 
-    quint32 RenderModelBatchItem::indexOffsetInts() const
+    quint32 RenderModelBatchItem::indexOffset() const
     {
-        return m_iIndexOffsetInts;
+        return m_iIndexOffset;
     }
 
-    void RenderModelBatchItem::setIndexOffsetInts(quint32 indexOffset)
+    void RenderModelBatchItem::setIndexOffset(quint32 indexOffset)
     {
-        m_iIndexOffsetInts = indexOffset;
+        m_iIndexOffset = indexOffset;
     }
 }
