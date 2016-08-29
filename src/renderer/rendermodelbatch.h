@@ -4,6 +4,8 @@
 #include "renderer_global.h"
 #include <QObject>
 #include <QOpenGLBuffer>
+#include "rendermodelbatchparams.h"
+#include "rendermodelbatchitem.h"
 
 namespace NS_RENDERER
 {
@@ -14,49 +16,29 @@ namespace NS_RENDERER
         RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, QObject* parent = 0);
         ~RenderModelBatch();
 
-        enum AttributeBufferFlag
-        {
-            NoBufferFlag = 0x0,
+        static const int MAX_ITEMS;
 
-            PositionBufferFlag = 0x1,
-            NormalBufferFlag = 0x2,
-            ColorBufferFlag = 0x4,
-            TextureCoordinateBufferFlag = 0x8,
-            IndexBufferFlag = 0x16,
-        };
-        Q_DECLARE_FLAGS(AttributeBufferFlags, AttributeBufferFlag)
-
-        enum AttributeBuffer
-        {
-            PositionBuffer = 0,
-            NormalBuffer,
-            ColorBuffer,
-            TextureCoordinateBuffer,
-            IndexBuffer,
-
-            BufferCount,
-        };
-        Q_ENUMS(AttributeBuffer)
-
-        AttributeBufferFlags errorFlags();
-        QOpenGLBuffer::UsagePattern usagePattern() const;
-
+        GLuint vaoHandle() const;
         bool create();
         void destroy();
 
-        const QOpenGLBuffer& buffer(AttributeBuffer buffer) const;
-        QOpenGLBuffer& buffer(AttributeBuffer buffer);
+        void addItem(const RenderModelBatchParams &params);
 
-    private:
-        void setFlag(AttributeBuffer buffer);
+private:
+        static void copyInVertexData(float* &dest, const float* source, int floatCount);
+        static void copyInIndexData(quint32* &dest, const quint32* source, int intCount);
 
-        AttributeBufferFlags        m_iErrorFlags;
-        QList<QOpenGLBuffer>        m_Buffers;
+        GLuint  m_iVAOID;
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
-        GLuint                      m_iVAOID;
-    };
+        bool    m_bCreated;
 
-    Q_DECLARE_OPERATORS_FOR_FLAGS(RenderModelBatch::AttributeBufferFlags)
+        QOpenGLBuffer   m_GlVertexBuffer;
+        QOpenGLBuffer   m_GlIndexBuffer;
+
+        QVector<float>  m_VertexBuffer;
+        QVector<quint32>  m_IndexBuffer;
+        QList<NS_RENDERER::RenderModelBatchItem> m_Items;
+    };
 }
 
 #endif // RENDERMODELBATCH_H

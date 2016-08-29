@@ -1,105 +1,110 @@
 #include "rendermodelbatch.h"
 #include "openglerrors.h"
-#include <QOpenGLFunctions_4_1_Core>
+#include "openglhelpers.h"
+#include "shaderdefs.h"
 
 namespace NS_RENDERER
 {
+    const int RenderModelBatch::MAX_ITEMS = 8;
+
     RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, QObject *parent)
         : QObject(parent),
-        m_iErrorFlags(NoBufferFlag),
-        m_iUsagePattern(usagePattern),
-        m_iVAOID(0)
+          m_iUsagePattern(usagePattern),
+          m_iVAOID(0)
     {
-        for ( int i = 0; i < BufferCount; i++ )
-        {
-            QOpenGLBuffer buffer(i == IndexBuffer ? QOpenGLBuffer::IndexBuffer : QOpenGLBuffer::VertexBuffer);
-            buffer.setUsagePattern(m_iUsagePattern);
-            m_Buffers.append(buffer);
-        }
     }
 
     RenderModelBatch::~RenderModelBatch()
     {
+        destroy();
     }
 
-    RenderModelBatch::AttributeBufferFlags RenderModelBatch::errorFlags()
+    GLuint RenderModelBatch::vaoHandle() const
     {
-        AttributeBufferFlags flags = m_iErrorFlags;
-        m_iErrorFlags = NoBufferFlag;
-        return flags;
+        return m_iVAOID;
     }
 
     bool RenderModelBatch::create()
     {
-        QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
+        if ( m_bCreated )
+            return true;
+
+        GL_CURRENT_F;
 
         GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
         GLTRY(f->glBindVertexArray(m_iVAOID));
 
-        m_iErrorFlags = NoBufferFlag;
-
-        for ( int i = 0; i < BufferCount; i++ )
-        {
-            if ( !m_Buffers[i].create() )
-                setFlag((AttributeBuffer)i);
-        }
-
-        return m_iErrorFlags == NoBufferFlag;
+        m_bCreated = m_GlVertexBuffer.create() && m_GlIndexBuffer.create();
+        return m_bCreated;
     }
 
     void RenderModelBatch::destroy()
     {
-        QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
+        if ( !m_bCreated )
+            return;
 
-        for ( int i = 0; i < BufferCount; i++ )
-        {
-            m_Buffers[i].destroy();
-        }
+        GL_CURRENT_F;
+
+        m_GlVertexBuffer.destroy();
+        m_GlIndexBuffer.destroy();
 
         GLTRY(f->glDeleteVertexArrays(1, &m_iVAOID));
+
+        m_bCreated = false;
     }
 
-    void RenderModelBatch::setFlag(AttributeBuffer buffer)
+    void RenderModelBatch::addItem(const RenderModelBatchParams &params)
     {
-        switch (buffer)
+        if ( m_Items.count() >= MAX_ITEMS )
+            return;
+
+        int newBaseOffsetFloats = 0;
+        if ( !m_Items.isEmpty() )
         {
-            case PositionBuffer:
-                m_iErrorFlags |= PositionBufferFlag;
-                break;
-
-            case NormalBuffer:
-                m_iErrorFlags |= NormalBufferFlag;
-                break;
-
-            case ColorBuffer:
-                m_iErrorFlags |= ColorBufferFlag;
-                break;
-
-            case TextureCoordinateBuffer:
-                m_iErrorFlags |= TextureCoordinateBufferFlag;
-                break;
-
-            case IndexBuffer:
-                m_iErrorFlags |= IndexBufferFlag;
-                break;
-
-            default:
-                break;
+            newBaseOffsetFloats = m_Items.last().offsetFloats() + m_Items.last().countFloats();
         }
+
+        int newCountFloats = params.vertexCount() * ShaderDefs::VertexAttributeLocationCount;
+
+        m_VertexBuffer.resize(m_VertexBuffer.count() + newCountFloats);
+
+        QVector<float> padding;
+        if ( params.someAttributesUnspecified() )
+        {
+            padding.resize(params.vertexCount());
+            memset(padding.data(), 0, params.vertexCount() * sizeof(float));
+        }
+
+        float* vertexBufferData = m_VertexBuffer.data() + newBaseOffsetFloats;
+
+        copyInVertexData(vertexBufferData, params.positions(), params.vertexCount());
+        copyInVertexData(vertexBufferData, params.hasNormals() ? params.normals() : padding.data(), params.vertexCount());
+        copyInVertexData(vertexBufferData, params.hasColors() ? params.colors() : padding.data(), params.vertexCount());
+        copyInVertexData(vertexBufferData, params.hasTextureCoordinates() ? params.textureCoordinates() : padding.data(), params.vertexCount());
+
+        int newBaseIndexOffsetInts = 0;
+        if ( !m_Items.isEmpty() )
+        {
+            newBaseIndexOffsetInts = m_Items.last().indexOffsetInts() + m_Items.last().indexCountInts();
+        }
+
+        int newIndexCountInts = params.indexCount();
+        m_IndexBuffer.resize(m_IndexBuffer.count() + newIndexCountInts);
+        quint32* indexData = m_IndexBuffer.data();
+        copyInIndexData(indexData, params.indices(), newIndexCountInts);
+
+        m_Items.append(RenderModelBatchItem(newBaseOffsetFloats, newCountFloats, newBaseIndexOffsetInts, newIndexCountInts));
     }
 
-    QOpenGLBuffer::UsagePattern RenderModelBatch::usagePattern() const
+    void RenderModelBatch::copyInVertexData(float* &dest, const float *source, int floatCount)
     {
-        return m_iUsagePattern;
+        memcpy(dest, source, floatCount * sizeof(float));
+        dest += floatCount * sizeof(float);
     }
 
-    const QOpenGLBuffer& RenderModelBatch::buffer(AttributeBuffer buffer) const
+    void RenderModelBatch::copyInIndexData(quint32 *&dest, const quint32 *source, int intCount)
     {
-        return m_Buffers.at(buffer);
-    }
-
-    QOpenGLBuffer& RenderModelBatch::buffer(AttributeBuffer buffer)
-    {
-        return m_Buffers[buffer];
+        memcpy(dest, source, intCount * sizeof(quint32));
+        dest += intCount * sizeof(quint32);
     }
 }

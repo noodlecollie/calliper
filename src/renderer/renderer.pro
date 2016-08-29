@@ -14,14 +14,19 @@ DEFINES += RENDERER_LIBRARY
 SOURCES += \
     demoglwindow.cpp \
     openglerrors.cpp \
-    rendermodelbatch.cpp
+    rendermodelbatch.cpp \
+    rendermodelbatchparams.cpp \
+    rendermodelbatchitem.cpp
 
 HEADERS +=\
         renderer_global.h \
     demoglwindow.h \
     openglerrors.h \
     rendermodelbatch.h \
-    shaderdefs.h
+    shaderdefs.h \
+    rendermodelbatchparams.h \
+    openglhelpers.h \
+    rendermodelbatchitem.h
 
 unix {
     target.path = /usr/lib
