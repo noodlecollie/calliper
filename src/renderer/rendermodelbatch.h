@@ -30,6 +30,13 @@ namespace NS_RENDERER
         const IShaderSpec* shaderSpec() const;
         void setShaderSpec(const IShaderSpec* spec);
 
+        void upload(bool force = false);
+        bool needsUpload() const;
+
+        // Remove me once we're done testing!
+        QOpenGLBuffer vertexBuffer() const { return m_GlVertexBuffer; }
+        QOpenGLBuffer indexBuffer() const { return m_GlIndexBuffer; }
+
 private:
         static void copyInVertexData(float* &dest, const float* source, int floatCount);
         static void copyInIndexData(quint32* &dest, const quint32* source, int intCount);
@@ -42,11 +49,13 @@ private:
         QOpenGLBuffer   m_GlVertexBuffer;
         QOpenGLBuffer   m_GlIndexBuffer;
 
-        QVector<float>  m_VertexBuffer;
-        QVector<quint32>  m_IndexBuffer;
+        QVector<float>      m_LocalVertexBuffer;
+        QVector<quint32>    m_LocalIndexBuffer;
         QList<NS_RENDERER::RenderModelBatchItem> m_Items;
+        QList<QMatrix4x4>   m_ModelToWorldMatrices;
 
         const IShaderSpec*  m_pShaderSpec;
+        bool                m_bDataStale;
     };
 }
 

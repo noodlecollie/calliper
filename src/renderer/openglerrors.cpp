@@ -10,7 +10,8 @@ namespace NS_RENDERER
     {
         int enumIndex = staticMetaObject.indexOfEnumerator("OpenGLErrors");
         QMetaEnum metaEnum = staticMetaObject.enumerator(enumIndex);
-        return QString(metaEnum.valueToKey(errorCode));
+        const char* keyString = metaEnum.valueToKey(errorCode);
+        return keyString ? keyString : QString("Unknown error code %1").arg(errorCode);
     }
 
     QString OpenGLErrors::debugOpenGLCapabilities()

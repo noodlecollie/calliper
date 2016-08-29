@@ -40,12 +40,7 @@ namespace NS_RENDERER
         {
             function();
 
-            QStringList errorList;
-            for (GLenum ret = QOpenGLContext::currentContext()->functions()->glGetError(); ret != GL_NO_ERROR;
-                    ret = QOpenGLContext::currentContext()->functions()->glGetError())
-            {
-                errorList.append(OpenGLErrors::errorString(ret));
-            }
+            QStringList errorList = getErrorList();
             if ( !errorList.isEmpty() )
             {
                 qFatal("%s", QString("OpenGL Error: in function %1 (%2:%3), '%4' returned the following errors: %5")
@@ -57,6 +52,19 @@ namespace NS_RENDERER
                        .toLatin1().constData()
                       );
             }
+        }
+
+        static inline QStringList getErrorList()
+        {
+            QStringList errorList;
+
+            for (GLenum ret = QOpenGLContext::currentContext()->functions()->glGetError(); ret != GL_NO_ERROR;
+                    ret = QOpenGLContext::currentContext()->functions()->glGetError())
+            {
+                errorList.append(OpenGLErrors::errorString(ret));
+            }
+
+            return errorList;
         }
 
     private:

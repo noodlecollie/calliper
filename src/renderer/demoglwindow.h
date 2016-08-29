@@ -8,6 +8,8 @@
 
 namespace NS_RENDERER
 {
+    class RenderModelBatch;
+    class TempSpec;
     class RENDERERSHARED_EXPORT DemoGLWindow : public QOpenGLWindow
     {
     public:
@@ -32,6 +34,8 @@ namespace NS_RENDERER
         QOpenGLBuffer*  m_pVertexBuffer;
         QOpenGLBuffer*  m_pIndexBuffer;
         QOpenGLBuffer*  m_pColourBuffer;
+        RenderModelBatch* m_pBatch;
+        TempSpec*       m_pTempSpec;
     };
 }
 

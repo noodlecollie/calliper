@@ -36,10 +36,13 @@ namespace NS_RENDERER
 
     DemoGLWindow::DemoGLWindow()
     {
+        m_pTempSpec = NULL;
     }
 
     DemoGLWindow::~DemoGLWindow()
     {
+        delete m_pTempSpec;
+        m_pTempSpec = NULL;
     }
 
     void DemoGLWindow::initializeGL()
@@ -50,14 +53,15 @@ namespace NS_RENDERER
         GLTRY(f->glGenVertexArrays(1, &m_vao));
         GLTRY(f->glBindVertexArray(m_vao));
 
-        m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext());
-        m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
-        m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
-        m_program->link();
-        m_program->bind();
-        m_posAttr = m_program->attributeLocation("vPosition");
-        m_colAttr = m_program->attributeLocation("vColour");
+        GLTRY(m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext()));
+        GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource));
+        GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource));
+        GLTRY(m_program->link());
+        GLTRY(m_program->bind());
+        GLTRY(m_posAttr = m_program->attributeLocation("vPosition"));
+        GLTRY(m_colAttr = m_program->attributeLocation("vColour"));
 
+#if 0
         GLfloat atts[] = {
             -1,-1,      // 0 1
             1,-1,       // 2 3
@@ -89,13 +93,18 @@ namespace NS_RENDERER
         m_pIndexBuffer->create();
         m_pIndexBuffer->bind();
         m_pIndexBuffer->allocate(indices, 3*sizeof(GLushort));
+#endif
 
-        // Testing - debug here
-        TempSpec tempSpec;
-        RenderModelBatch batch(QOpenGLBuffer::DynamicDraw);
-        batch.setShaderSpec(&tempSpec);
-        GLuint tempIndices[] = {0,1,2};
-        batch.addItem(RenderModelBatchParams(3, atts, 3, tempIndices));
+        GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, this));
+        m_pTempSpec = new TempSpec();
+        m_pBatch->setShaderSpec(m_pTempSpec);
+        GLTRY(m_pBatch->create());
+
+        GLfloat positions[] = { -1,-1, 1,-1, 0,1, };
+        GLfloat cols[] = { 1,0,0,1, 0,1,0,1, 0,0,1,1 };
+        GLuint indices[] = { 0,1,2 };
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, positions, 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->upload());
     }
 
     void DemoGLWindow::resizeGL(int w, int h)
@@ -111,7 +120,7 @@ namespace NS_RENDERER
         GLTRY(f->glViewport(0, 0, width() * retinaScale, height() * retinaScale));
 
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT));
-
+#if 0
         m_program->enableAttributeArray(m_posAttr);
         m_pVertexBuffer->bind();
         m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0*sizeof(GLfloat), 2);
@@ -124,5 +133,22 @@ namespace NS_RENDERER
 
         m_program->disableAttributeArray(m_posAttr);
         m_program->disableAttributeArray(m_colAttr);
+#endif
+
+        QOpenGLBuffer v = m_pBatch->vertexBuffer();
+        QOpenGLBuffer i = m_pBatch->indexBuffer();
+
+        GLTRY(m_program->enableAttributeArray(m_posAttr));
+        GLTRY(m_program->enableAttributeArray(m_colAttr));
+        GLTRY(v.bind());
+        GLTRY(m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0*sizeof(GLfloat), 2));
+        GLTRY(m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, 15*sizeof(GLfloat), 4));
+
+        GLTRY(i.bind());
+
+        GLTRY(f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0));
+
+        GLTRY(m_program->disableAttributeArray(m_posAttr));
+        GLTRY(m_program->disableAttributeArray(m_colAttr));
     }
 }

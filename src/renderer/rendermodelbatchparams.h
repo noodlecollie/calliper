@@ -9,7 +9,7 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT RenderModelBatchParams
     {
     public:
-        RenderModelBatchParams(int vertexCount, float* positions, int indexCount, quint32* indices,
+        RenderModelBatchParams(int vertexCount, float* positions, int indexCount, quint32* indices, const QMatrix4x4 &modelToWorld,
                                float* normals = NULL, float* colors = NULL, float* textureCoordinates = NULL);
 
         int vertexCount() const;

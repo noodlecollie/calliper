@@ -3,9 +3,11 @@
 namespace NS_RENDERER
 {
     RenderModelBatchParams::RenderModelBatchParams(int vertexCount, float* positions, int indexCount, quint32* indices,
-                                                   float* normals, float* colors, float* textureCoordinates)
+                                                   const QMatrix4x4 &modelToWorld, float* normals, float* colors,
+                                                   float* textureCoordinates)
         : m_iVertexCount(vertexCount), m_pPositions(positions), m_pNormals(normals), m_pColors(colors),
-          m_pTextureCoordinates(textureCoordinates), m_iIndexCount(indexCount), m_pIndices(indices)
+          m_pTextureCoordinates(textureCoordinates), m_matModelToWorld(modelToWorld),
+          m_iIndexCount(indexCount), m_pIndices(indices)
     {
         Q_ASSERT_X(m_pPositions, Q_FUNC_INFO, "Position data must be specified!");
         Q_ASSERT_X(m_pIndices, Q_FUNC_INFO, "Index data must be specified!");
