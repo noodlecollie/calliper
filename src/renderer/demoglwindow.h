@@ -22,9 +22,6 @@ namespace NS_RENDERER
         virtual void paintGL();
 
     private:
-        GLuint m_posAttr;
-        GLuint m_colAttr;
-
         QOpenGLShaderProgram *m_program;
 
         RenderModelBatch* m_pBatch;

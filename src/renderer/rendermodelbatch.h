@@ -6,6 +6,9 @@
 #include <QOpenGLBuffer>
 #include "rendermodelbatchparams.h"
 #include "rendermodelbatchitem.h"
+#include "shaderdefs.h"
+
+class QOpenGLShaderProgram;
 
 namespace NS_RENDERER
 {
@@ -18,7 +21,6 @@ namespace NS_RENDERER
         RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, QObject* parent = 0);
         ~RenderModelBatch();
 
-        GLuint vaoHandle() const;
         bool create();
         void destroy();
 
@@ -29,8 +31,14 @@ namespace NS_RENDERER
         const IShaderSpec* shaderSpec() const;
         void setShaderSpec(const IShaderSpec* spec);
 
+        QOpenGLShaderProgram* shaderProgram() const;
+        void setShaderProgram(QOpenGLShaderProgram* program);
+
         void upload(bool force = false);
         bool needsUpload() const;
+
+        // Assumes upload() has been called!
+        void setAttributePointers();
 
         int localPositionCount() const;
         int localNormalCount() const;
@@ -41,6 +49,7 @@ namespace NS_RENDERER
         // Remove me once we're done testing!
         QOpenGLBuffer vertexBuffer() const { return m_GlVertexBuffer; }
         QOpenGLBuffer indexBuffer() const { return m_GlIndexBuffer; }
+        GLuint vaoHandle() const;
 
 private:
         static void copyInIndexData(quint32* &dest, const quint32* source, int intCount);
@@ -49,6 +58,8 @@ private:
         void resizeAllBuffers(int numVertices);
         void uploadVertexData();
         void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
+        void bindVAO();
+        void trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
 
         GLuint  m_iVAOID;
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
@@ -66,8 +77,9 @@ private:
 
         QList<NS_RENDERER::RenderModelBatchItem> m_Items;
 
-        const IShaderSpec*  m_pShaderSpec;
-        bool                m_bDataStale;
+        const IShaderSpec*      m_pShaderSpec;
+        QOpenGLShaderProgram*   m_pShaderProgram;
+        bool                    m_bDataStale;
     };
 }
 

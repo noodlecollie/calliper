@@ -12,6 +12,8 @@ namespace NS_RENDERER
 
         // Each attribute can have a maximum of 4 components,
         // as each shader location is a vec4.
+        // 0 components indicates that this attribute is not
+        // supported by the shader.
         virtual int positionComponents() const = 0;
         virtual int normalComponents() const = 0;
         virtual int colorComponents() const = 0;
@@ -25,6 +27,7 @@ namespace NS_RENDERER
                     + textureCoordinateComponents();
         }
 
+        // Maximum number of items supported in a batch.
         virtual int maxBatchedItems() const = 0;
     };
 }

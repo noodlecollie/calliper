@@ -1,8 +1,8 @@
 #include "rendermodelbatch.h"
 #include "openglerrors.h"
 #include "openglhelpers.h"
-#include "shaderdefs.h"
 #include "ishaderspec.h"
+#include <QOpenGLShaderProgram>
 
 namespace NS_RENDERER
 {
@@ -14,6 +14,7 @@ namespace NS_RENDERER
           m_GlVertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_GlIndexBuffer(QOpenGLBuffer::IndexBuffer),
           m_pShaderSpec(NULL),
+          m_pShaderProgram(NULL),
           m_bDataStale(false)
     {
     }
@@ -169,6 +170,9 @@ namespace NS_RENDERER
 
     void RenderModelBatch::setShaderSpec(const IShaderSpec *spec)
     {
+        if ( spec == m_pShaderSpec )
+            return;
+
         m_pShaderSpec = spec;
     }
 
@@ -250,5 +254,69 @@ namespace NS_RENDERER
         m_Items.clear();
 
         m_bDataStale = true;
+    }
+
+    QOpenGLShaderProgram* RenderModelBatch::shaderProgram() const
+    {
+        return m_pShaderProgram;
+    }
+
+    void RenderModelBatch::setShaderProgram(QOpenGLShaderProgram *program)
+    {
+        if ( m_pShaderProgram == program )
+            return;
+
+        m_pShaderProgram = program;
+    }
+
+    void RenderModelBatch::setAttributePointers()
+    {
+        Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
+        Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Setting attribute pointers requires a shader program!");
+        Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Setting attribute pointers requires a shader spec!");
+
+        bindVAO();
+        m_GlVertexBuffer.bind();
+
+        int offset = 0;
+
+        trySetAttributeBuffer(offset,
+                              ShaderDefs::PositionAttribute,
+                              m_pShaderSpec->positionComponents(),
+                              m_LocalPositionBuffer.count());
+
+        trySetAttributeBuffer(offset,
+                              ShaderDefs::NormalAttribute,
+                              m_pShaderSpec->normalComponents(),
+                              m_LocalNormalBuffer.count());
+
+        trySetAttributeBuffer(offset,
+                              ShaderDefs::ColorAttribute,
+                              m_pShaderSpec->colorComponents(),
+                              m_LocalColorBuffer.count());
+
+        trySetAttributeBuffer(offset,
+                              ShaderDefs::TextureCoordinateAttribute,
+                              m_pShaderSpec->textureCoordinateComponents(),
+                              m_LocalTextureCoordinateBuffer.count());
+    }
+
+    void RenderModelBatch::trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count)
+    {
+        if ( components > 0 )
+        {
+            m_pShaderProgram->setAttributeBuffer(attribute,
+                                                 GL_FLOAT,
+                                                 offset * sizeof(GLfloat),
+                                                 components);
+            offset += count;
+        }
+    }
+
+    void RenderModelBatch::bindVAO()
+    {
+        GL_CURRENT_F;
+
+        f->glBindVertexArray(m_iVAOID);
     }
 }

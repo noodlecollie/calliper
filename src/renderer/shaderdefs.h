@@ -7,11 +7,13 @@ namespace NS_RENDERER
 {
     namespace ShaderDefs
     {
-        // Canonical locations for vertex inputs.
-        enum VertexAttribute
+        // Canonical array IDs for vertex attributes.
+        // This should be kept below MAX_VERTEX_ATTRIBS.
+        // Each array corresponds to a location in the
+        // vertex shader, and the attribute can use
+        // up to a vec4 per location.
+        enum VertexArrayAttribute
         {
-            VertexAttributeStartLocation = 0,
-
             PositionAttribute           = 0,
             NormalAttribute             = 1,
             ColorAttribute              = 2,
