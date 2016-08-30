@@ -18,14 +18,13 @@ namespace NS_RENDERER
         RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, QObject* parent = 0);
         ~RenderModelBatch();
 
-        static const int MAX_ITEMS;
-
         GLuint vaoHandle() const;
         bool create();
         void destroy();
 
         void addItem(const RenderModelBatchParams &params);
         int itemCount() const;
+        void clearItems();
 
         const IShaderSpec* shaderSpec() const;
         void setShaderSpec(const IShaderSpec* spec);

@@ -6,8 +6,6 @@
 
 namespace NS_RENDERER
 {
-    const int RenderModelBatch::MAX_ITEMS = 8;
-
     RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, QObject *parent)
         : QObject(parent),
           m_iVAOID(0),
@@ -64,10 +62,10 @@ namespace NS_RENDERER
 
     void RenderModelBatch::addItem(const RenderModelBatchParams &params)
     {
-        if ( m_Items.count() >= MAX_ITEMS )
+        if ( !m_pShaderSpec )
             return;
 
-        if ( !m_pShaderSpec )
+        if ( m_Items.count() >= m_pShaderSpec->maxBatchedItems() )
             return;
 
         int newVertexOffset = 0;
@@ -239,5 +237,18 @@ namespace NS_RENDERER
     int RenderModelBatch::localIndexCount() const
     {
         return m_LocalIndexBuffer.count();
+    }
+
+    void RenderModelBatch::clearItems()
+    {
+        m_LocalPositionBuffer.clear();
+        m_LocalNormalBuffer.clear();
+        m_LocalColorBuffer.clear();
+        m_LocalTextureCoordinateBuffer.clear();
+        m_LocalIndexBuffer.clear();
+        m_ModelToWorldMatrices.clear();
+        m_Items.clear();
+
+        m_bDataStale = true;
     }
 }

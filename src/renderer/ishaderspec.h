@@ -24,6 +24,8 @@ namespace NS_RENDERER
                     + colorComponents()
                     + textureCoordinateComponents();
         }
+
+        virtual int maxBatchedItems() const = 0;
     };
 }
 
