@@ -100,10 +100,7 @@ namespace NS_RENDERER
                                             m_pTempSpec->colorComponents()));
 #endif
         GLTRY(m_pBatch->setAttributePointers());
-
-        GLTRY(i.bind());
-
-        GLTRY(f->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0));
+        GLTRY(m_pBatch->draw());
 
         // These should be disabled once the phase with one shader has finished.
         GLTRY(m_program->disableAttributeArray(ShaderDefs::PositionAttribute));

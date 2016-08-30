@@ -37,6 +37,7 @@ namespace NS_RENDERER
 
         // Assumes upload() has been called!
         void setAttributePointers();
+        void draw();
 
         int localPositionCount() const;
         int localNormalCount() const;

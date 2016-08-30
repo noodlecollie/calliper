@@ -304,4 +304,12 @@ namespace NS_RENDERER
 
         f->glBindVertexArray(m_iVAOID);
     }
+
+    void RenderModelBatch::draw()
+    {
+        GL_CURRENT_F;
+
+        m_GlIndexBuffer.bind();
+        f->glDrawElements(GL_TRIANGLES, m_LocalIndexBuffer.count(), GL_UNSIGNED_INT, (void*)0);
+    }
 }
