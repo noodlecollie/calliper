@@ -51,8 +51,6 @@ namespace NS_RENDERER
     {
         qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
 
-        GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, this));
-
         GLTRY(m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext()));
         GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource));
         GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource));
@@ -60,8 +58,8 @@ namespace NS_RENDERER
         GLTRY(m_program->bind());
 
         m_pTempSpec = new TempSpec();
-        m_pBatch->setShaderSpec(m_pTempSpec);
-        m_pBatch->setShaderProgram(m_program);
+
+        GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, m_pTempSpec, m_program, this));
         GLTRY(m_pBatch->create());
 
         GLfloat positions[] = { -1,-1, 1,-1, 0,1, };

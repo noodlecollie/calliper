@@ -18,7 +18,8 @@ namespace NS_RENDERER
     {
         Q_OBJECT
     public:
-        RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, QObject* parent = 0);
+        RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec,
+                         QOpenGLShaderProgram* shaderProgram, QObject* parent = 0);
         ~RenderModelBatch();
 
         bool create();
@@ -29,10 +30,7 @@ namespace NS_RENDERER
         void clearItems();
 
         const IShaderSpec* shaderSpec() const;
-        void setShaderSpec(const IShaderSpec* spec);
-
         QOpenGLShaderProgram* shaderProgram() const;
-        void setShaderProgram(QOpenGLShaderProgram* program);
 
         void upload(bool force = false);
         bool needsUpload() const;

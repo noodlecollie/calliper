@@ -6,17 +6,20 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, QObject *parent)
+    RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec,
+                                       QOpenGLShaderProgram* shaderProgram, QObject* parent)
         : QObject(parent),
           m_iVAOID(0),
           m_iUsagePattern(usagePattern),
           m_bCreated(false),
           m_GlVertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_GlIndexBuffer(QOpenGLBuffer::IndexBuffer),
-          m_pShaderSpec(NULL),
-          m_pShaderProgram(NULL),
+          m_pShaderSpec(shaderSpec),
+          m_pShaderProgram(shaderProgram),
           m_bDataStale(false)
     {
+        Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Shader spec is required!");
+        Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Shader program is required!");
     }
 
     RenderModelBatch::~RenderModelBatch()
@@ -63,11 +66,9 @@ namespace NS_RENDERER
 
     void RenderModelBatch::addItem(const RenderModelBatchParams &params)
     {
-        if ( !m_pShaderSpec )
-            return;
-
-        if ( m_Items.count() >= m_pShaderSpec->maxBatchedItems() )
-            return;
+        Q_ASSERT_X(m_Items.count() < m_pShaderSpec->maxBatchedItems(),
+                   Q_FUNC_INFO,
+                   "Maximum number of batched items has already been reached");
 
         int newVertexOffset = 0;
         if ( !m_Items.isEmpty() )
@@ -168,14 +169,6 @@ namespace NS_RENDERER
         return m_pShaderSpec;
     }
 
-    void RenderModelBatch::setShaderSpec(const IShaderSpec *spec)
-    {
-        if ( spec == m_pShaderSpec )
-            return;
-
-        m_pShaderSpec = spec;
-    }
-
     void RenderModelBatch::upload(bool force)
     {
         if ( force || m_bDataStale )
@@ -259,14 +252,6 @@ namespace NS_RENDERER
     QOpenGLShaderProgram* RenderModelBatch::shaderProgram() const
     {
         return m_pShaderProgram;
-    }
-
-    void RenderModelBatch::setShaderProgram(QOpenGLShaderProgram *program)
-    {
-        if ( m_pShaderProgram == program )
-            return;
-
-        m_pShaderProgram = program;
     }
 
     void RenderModelBatch::setAttributePointers()
