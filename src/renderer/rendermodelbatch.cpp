@@ -89,16 +89,26 @@ namespace NS_RENDERER
         }
 
         int newIndexCount = params.indexCount();
-        m_LocalIndexBuffer.resize(m_LocalIndexBuffer.count() + newIndexCount);
-
-        memcpy(m_LocalIndexBuffer.data() + newIndexOffset,
-               params.indices(),
-               newIndexCount * sizeof(quint32));
+        addIndices(params.indices(), newIndexCount, newIndexOffset);
 
         m_ModelToWorldMatrices.append(params.modelToWorldMatrix());
 
         m_Items.append(RenderModelBatchItem(newVertexOffset, newVertexCount, newIndexOffset, newIndexCount));
         m_bDataStale = true;
+    }
+
+    void RenderModelBatch::addIndices(const quint32 *source, int count, int indexOffset)
+    {
+        quint32 indexValueOffset = (m_LocalPositionBuffer.count()
+                                    / m_pShaderSpec->positionComponents())
+                                    - count;
+        m_LocalIndexBuffer.resize(m_LocalIndexBuffer.count() + count);
+        quint32* destination = m_LocalIndexBuffer.data() + indexOffset;
+
+        for ( int i = 0; i < count; i++ )
+        {
+            destination[i] = source[i] + indexValueOffset;
+        }
     }
 
     void RenderModelBatch::copyInData(const RenderModelBatchParams &params, int vertexCount)

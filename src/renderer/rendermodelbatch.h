@@ -59,6 +59,7 @@ private:
         void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
         void bindVAO();
         void trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
+        void addIndices(const quint32* source, int count, int indexOffset);
 
         GLuint  m_iVAOID;
         QOpenGLBuffer::UsagePattern m_iUsagePattern;

@@ -62,10 +62,12 @@ namespace NS_RENDERER
         GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, m_pTempSpec, m_program, this));
         GLTRY(m_pBatch->create());
 
-        GLfloat positions[] = { -1,-1, 1,-1, 0,1, };
+        GLfloat positions1[] = { -1,-1, 0,-1, -0.5f,1, };
+        GLfloat positions2[] = { 0,-1, 1,-1, 0.5f,1 };
         GLfloat cols[] = { 1,0,0,1, 0,1,0,1, 0,0,1,1 };
         GLuint indices[] = { 0,1,2 };
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, positions, 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, positions1, 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, positions2, 3, indices, QMatrix4x4(), NULL, cols, NULL)));
         GLTRY(m_pBatch->upload());
     }
 
@@ -83,22 +85,10 @@ namespace NS_RENDERER
 
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT));
 
-        QOpenGLBuffer v = m_pBatch->vertexBuffer();
-        QOpenGLBuffer i = m_pBatch->indexBuffer();
-
         // These should be set when beginning a phase with a shader.
         GLTRY(m_program->enableAttributeArray(ShaderDefs::PositionAttribute));
         GLTRY(m_program->enableAttributeArray(ShaderDefs::ColorAttribute));
 
-#if 0
-        GLTRY(v.bind());
-        GLTRY(m_program->setAttributeBuffer(m_posAttr, GL_FLOAT,
-                                            0*sizeof(GLfloat),
-                                            m_pTempSpec->positionComponents()));
-        GLTRY(m_program->setAttributeBuffer(m_colAttr, GL_FLOAT,
-                                            (m_pBatch->localPositionCount() + m_pBatch->localNormalCount())*sizeof(GLfloat),
-                                            m_pTempSpec->colorComponents()));
-#endif
         GLTRY(m_pBatch->setAttributePointers());
         GLTRY(m_pBatch->draw());
 
