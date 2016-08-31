@@ -14,8 +14,9 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT OpenGLErrors
     {
         Q_GADGET
+        OpenGLErrors()  = delete;
     public:
-        enum OpenGLError
+        enum OpenGLError : GLenum
         {
             NoError                     = GL_NO_ERROR,
             InvalidEnum                 = GL_INVALID_ENUM,
@@ -51,6 +52,9 @@ namespace NS_RENDERER
                        .arg(errorList.join(", "))
                        .toLatin1().constData()
                       );
+
+                // For some reason qFatal doesn't kill us on Windows...?
+                Q_ASSERT(false);
             }
         }
 
@@ -66,9 +70,6 @@ namespace NS_RENDERER
 
             return errorList;
         }
-
-    private:
-        OpenGLErrors()  = delete;
     };
 }
 

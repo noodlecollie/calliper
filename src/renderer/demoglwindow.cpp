@@ -6,6 +6,7 @@
 #include "rendermodelbatch.h"
 #include "ishaderspec.h"
 #include "shaderdefs.h"
+#include "openglhelpers.h"
 
 namespace NS_RENDERER
 {
@@ -49,7 +50,7 @@ namespace NS_RENDERER
             "void main()"
             "{\n"
             "   uint id = uint(vPosition.z);\n"
-            "   gl_Position = vec4(vPosition.xy, 0, 1);\n"
+            "   gl_Position = modelToWorldMatrices[id] * vec4(vPosition.xy, 0, 1);\n"
             "   fColour = /*vColour*/ vec4(float(id)/7.0, 1, 1, 1);\n"
             "}\n"
         ;
@@ -70,17 +71,25 @@ namespace NS_RENDERER
     {
         delete m_pTempSpec;
         m_pTempSpec = NULL;
+
+        delete m_program;
+        m_program = NULL;
     }
 
     void DemoGLWindow::initializeGL()
     {
         qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
+        GL_CURRENT_F;
 
         GLTRY(m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext()));
         GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource));
         GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource));
         GLTRY(m_program->link());
         GLTRY(m_program->bind());
+
+        qDebug().nospace() << "Shader block index: " << f->glGetUniformBlockIndex(m_program->programId(), "BatchUniforms")
+                           << " (invalid index is " << GL_INVALID_INDEX << ")";
+        //GLTRY(f->glUniformBlockBinding(m_program->programId(), f->glGetUniformBlockIndex(m_program->programId(), "BatchUniforms"), 0));
 
         m_pTempSpec = new TempSpec();
 

@@ -20,8 +20,6 @@ namespace NS_RENDERER
           m_bDataStale(false),
           m_iBatchIdMask(batchIdMask(m_pShaderSpec->maxBatchedItems()))
     {
-        Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Shader spec is required!");
-        Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Shader program is required!");
     }
 
     RenderModelBatch::~RenderModelBatch()
@@ -36,8 +34,10 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
-        GLTRY(f->glBindVertexArray(m_iVAOID));
+        f->glGenVertexArrays(1, &m_iVAOID);
+        f->glBindVertexArray(m_iVAOID);
+
+        GLTRY(f->glUniformBlockBinding(m_pShaderProgram->programId(), f->glGetUniformBlockIndex(m_pShaderProgram->programId(), "BatchUniforms"), 0));
 
         m_GlVertexBuffer.setUsagePattern(m_iUsagePattern);
         m_GlIndexBuffer.setUsagePattern(m_iUsagePattern);
@@ -58,7 +58,7 @@ namespace NS_RENDERER
         m_GlIndexBuffer.destroy();
         m_GlUniformBuffer.destroy();
 
-        GLTRY(f->glDeleteVertexArrays(1, &m_iVAOID));
+        f->glDeleteVertexArrays(1, &m_iVAOID);
 
         m_bCreated = false;
     }
@@ -343,6 +343,8 @@ namespace NS_RENDERER
 
     void RenderModelBatch::setUniforms()
     {
+        GL_CURRENT_F;
+
         // TODO
     }
 

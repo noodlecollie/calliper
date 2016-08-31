@@ -79,6 +79,22 @@ namespace NS_RENDERER
                     continue;
                 }
 
+                case 6:
+                {
+                    int n;
+                    f->glGetIntegerv(GL_MAX_VERTEX_UNIFORM_BLOCKS, &n);
+                    s << right << PROPS_START << "GL_MAX_VERTEX_UNIFORM_BLOCKS" << VALUES_START << n << FIELDS_END;
+                    continue;
+                }
+
+                case 7:
+                {
+                    int n;
+                    f->glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT , &n);
+                    s << right << PROPS_START << "GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT" << VALUES_START << n << FIELDS_END;
+                    continue;
+                }
+
                 default:
                 {
                     break;

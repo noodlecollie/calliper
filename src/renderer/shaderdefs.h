@@ -2,11 +2,15 @@
 #define SHADERDEFS_H
 
 #include "renderer_global.h"
+#include <QObject>
 
 namespace NS_RENDERER
 {
-    namespace ShaderDefs
+    class ShaderDefs
     {
+        Q_GADGET
+        ShaderDefs() = delete;
+    public:
         // Canonical array IDs for vertex attributes.
         // This should be kept below MAX_VERTEX_ATTRIBS.
         // Each array corresponds to a location in the
@@ -21,6 +25,7 @@ namespace NS_RENDERER
 
             VertexAttributeLocationCount
         };
+        Q_ENUM(VertexArrayAttribute)
 
         // Canonical locations for uniforms.
         enum Uniform
@@ -38,6 +43,7 @@ namespace NS_RENDERER
             CounterScaleUniform                 = 6,
             GlobalColorUniform                  = 7,
         };
+        Q_ENUM(Uniform)
 
         // Canonical locations for uniform arrays.
         // These take up multiple slots.
@@ -50,7 +56,8 @@ namespace NS_RENDERER
 
             UniformLocationCount
         };
-    }
+        Q_ENUM(UniformArrays)
+    };
 }
 
 #endif // SHADERDEFS_H
