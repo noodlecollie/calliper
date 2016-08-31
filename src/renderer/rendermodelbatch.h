@@ -7,6 +7,7 @@
 #include "rendermodelbatchparams.h"
 #include "rendermodelbatchitem.h"
 #include "shaderdefs.h"
+#include "opengluniformbuffer.h"
 
 class QOpenGLShaderProgram;
 
@@ -36,7 +37,9 @@ namespace NS_RENDERER
         bool needsUpload() const;
 
         // Assumes upload() has been called!
+        // These functions should be called in the following order.
         void setAttributePointers();
+        void setUniforms();
         void draw();
 
         int localPositionCount() const;
@@ -45,17 +48,13 @@ namespace NS_RENDERER
         int localTextureCoordinateCount() const;
         int localIndexCount() const;
 
-        // Remove me once we're done testing!
-        QOpenGLBuffer vertexBuffer() const { return m_GlVertexBuffer; }
-        QOpenGLBuffer indexBuffer() const { return m_GlIndexBuffer; }
-        GLuint vaoHandle() const;
-
 private:
         static void copyInIndexData(quint32* &dest, const quint32* source, int intCount);
         void copyInData(const RenderModelBatchParams &params, int vertexCount);
         int maxComponentsFromVertexSpec() const;
         void resizeAllBuffers(int numVertices);
         void uploadVertexData();
+        void uploadUniformData();
         void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
         void bindVAO();
         void trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
@@ -67,6 +66,7 @@ private:
 
         QOpenGLBuffer   m_GlVertexBuffer;
         QOpenGLBuffer   m_GlIndexBuffer;
+        OpenGLUniformBuffer m_GlUniformBuffer;
 
         QVector<float>      m_LocalPositionBuffer;
         QVector<float>      m_LocalNormalBuffer;

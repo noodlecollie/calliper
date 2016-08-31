@@ -42,7 +42,8 @@ namespace NS_RENDERER
             "layout (location=0) in vec2 vPosition;"
             "layout (location=2) in vec4 vColour;"
             "out vec4 fColour;"
-            "void main() { gl_Position = vec4(vPosition, 0, 1); fColour = vColour; }"
+            "/*layout (location=16)*/ uniform mat4 modelToWorld;"
+            "void main() { gl_Position = /*modelToWorld * */vec4(vPosition, 0, 1); fColour = vColour; }"
         ;
 
     static const char *fragmentShaderSource =
@@ -121,6 +122,7 @@ namespace NS_RENDERER
         GLTRY(m_program->enableAttributeArray(ShaderDefs::ColorAttribute));
 
         GLTRY(m_pBatch->setAttributePointers());
+        GLTRY(m_pBatch->setUniforms());
         GLTRY(m_pBatch->draw());
 
         // These should be disabled once the phase with one shader has finished.

@@ -14,6 +14,7 @@ namespace NS_RENDERER
           m_bCreated(false),
           m_GlVertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_GlIndexBuffer(QOpenGLBuffer::IndexBuffer),
+          m_GlUniformBuffer(QOpenGLBuffer::StaticDraw),
           m_pShaderSpec(shaderSpec),
           m_pShaderProgram(shaderProgram),
           m_bDataStale(false)
@@ -25,11 +26,6 @@ namespace NS_RENDERER
     RenderModelBatch::~RenderModelBatch()
     {
         destroy();
-    }
-
-    GLuint RenderModelBatch::vaoHandle() const
-    {
-        return m_iVAOID;
     }
 
     bool RenderModelBatch::create()
@@ -44,8 +40,9 @@ namespace NS_RENDERER
 
         m_GlVertexBuffer.setUsagePattern(m_iUsagePattern);
         m_GlIndexBuffer.setUsagePattern(m_iUsagePattern);
+        m_GlUniformBuffer.setUsagePattern(m_iUsagePattern);
 
-        m_bCreated = m_GlVertexBuffer.create() && m_GlIndexBuffer.create();
+        m_bCreated = m_GlVertexBuffer.create() && m_GlIndexBuffer.create() && m_GlUniformBuffer.create();
         return m_bCreated;
     }
 
@@ -58,6 +55,7 @@ namespace NS_RENDERER
 
         m_GlVertexBuffer.destroy();
         m_GlIndexBuffer.destroy();
+        m_GlUniformBuffer.destroy();
 
         GLTRY(f->glDeleteVertexArrays(1, &m_iVAOID));
 
@@ -187,6 +185,8 @@ namespace NS_RENDERER
 
             m_GlIndexBuffer.bind();
             m_GlIndexBuffer.allocate(m_LocalIndexBuffer.constData(), m_LocalIndexBuffer.count() * sizeof(quint32));
+
+            uploadUniformData();
 
             m_bDataStale = false;
         }
@@ -321,5 +321,26 @@ namespace NS_RENDERER
 
         m_GlIndexBuffer.bind();
         f->glDrawElements(GL_TRIANGLES, m_LocalIndexBuffer.count(), GL_UNSIGNED_INT, (void*)0);
+    }
+
+    void RenderModelBatch::uploadUniformData()
+    {
+        int sizeInBytes = m_ModelToWorldMatrices.count() * 16 * sizeof(float);
+        QVector<float> data;
+        data.resize(sizeInBytes);
+
+        for ( int i = 0; i < m_ModelToWorldMatrices.count(); i++ )
+        {
+            float* dest = data.data() + (16 * i);
+            memcpy(dest, m_ModelToWorldMatrices.at(i).constData(), 16 * sizeof(float));
+        }
+
+        m_GlUniformBuffer.bind();
+        m_GlUniformBuffer.allocate(data.constData(), data.count() * sizeof(float));
+    }
+
+    void RenderModelBatch::setUniforms()
+    {
+        // TODO
     }
 }

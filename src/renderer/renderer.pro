@@ -16,7 +16,8 @@ SOURCES += \
     openglerrors.cpp \
     rendermodelbatch.cpp \
     rendermodelbatchparams.cpp \
-    rendermodelbatchitem.cpp
+    rendermodelbatchitem.cpp \
+    opengluniformbuffer.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -27,7 +28,8 @@ HEADERS +=\
     rendermodelbatchparams.h \
     openglhelpers.h \
     rendermodelbatchitem.h \
-    ishaderspec.h
+    ishaderspec.h \
+    opengluniformbuffer.h
 
 unix {
     target.path = /usr/lib
