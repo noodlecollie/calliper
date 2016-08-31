@@ -17,7 +17,8 @@ namespace NS_RENDERER
           m_GlUniformBuffer(QOpenGLBuffer::StaticDraw),
           m_pShaderSpec(shaderSpec),
           m_pShaderProgram(shaderProgram),
-          m_bDataStale(false)
+          m_bDataStale(false),
+          m_iBatchIdMask(batchIdMask(m_pShaderSpec->maxBatchedItems()))
     {
         Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Shader spec is required!");
         Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Shader program is required!");
@@ -79,6 +80,7 @@ namespace NS_RENDERER
 
         resizeAllBuffers(oldVertexCount + newVertexCount);
         copyInData(params, oldVertexCount);
+        addObjectIdsToPositions(newVertexOffset, newVertexCount, m_Items.count());
 
         int newIndexOffset = 0;
         if ( !m_Items.isEmpty() )
@@ -342,5 +344,35 @@ namespace NS_RENDERER
     void RenderModelBatch::setUniforms()
     {
         // TODO
+    }
+
+    bool RenderModelBatch::shaderSupportsBatching() const
+    {
+        return m_pShaderSpec->maxBatchedItems() > 1;
+    }
+
+    void RenderModelBatch::addObjectIdsToPositions(int vertexOffset, int vertexCount, quint32 id)
+    {
+        Q_ASSERT_X(sizeof(float) == sizeof(quint32), Q_FUNC_INFO, "Size of float and quint32 do not match!");
+
+        if ( !shaderSupportsBatching() )
+            return;
+
+        int numComponents = m_pShaderSpec->positionComponents();
+        float* data = m_LocalPositionBuffer.data() + (vertexOffset * numComponents);
+
+        for ( int i = 0; i < vertexCount; i++ )
+        {
+            // Get to the last component.
+            data += numComponents - 1;
+
+            // Set the bits.
+            quint32 temp = (quint32)(*data);
+            temp |= id & m_iBatchIdMask;
+            *data = (float)temp;
+
+            // Advance past the last component.
+            data++;
+        }
     }
 }

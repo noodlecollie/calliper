@@ -32,6 +32,7 @@ namespace NS_RENDERER
 
         const IShaderSpec* shaderSpec() const;
         QOpenGLShaderProgram* shaderProgram() const;
+        bool shaderSupportsBatching() const;
 
         void upload(bool force = false);
         bool needsUpload() const;
@@ -59,6 +60,12 @@ private:
         void bindVAO();
         void trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
         void addIndices(const quint32* source, int count, int indexOffset);
+        void addObjectIdsToPositions(int vertexOffset, int vertexCount, quint32 id);
+
+        static inline quint32 batchIdMask(int numBits)
+        {
+            return (quint32)(~0) >> ((sizeof(quint32) * 8) - numBits);
+        }
 
         GLuint  m_iVAOID;
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
@@ -80,6 +87,7 @@ private:
         const IShaderSpec*      m_pShaderSpec;
         QOpenGLShaderProgram*   m_pShaderProgram;
         bool                    m_bDataStale;
+        const quint32           m_iBatchIdMask;
     };
 }
 

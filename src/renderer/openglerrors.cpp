@@ -20,8 +20,10 @@ namespace NS_RENDERER
         QString str;
         QTextStream s(&str);
 
-#define PROPS_START qSetFieldWidth(41)
-#define VALUES_START qSetFieldWidth(12)
+        static const int propsWidth = 41;
+        static const int valuesWidth = 12;
+#define PROPS_START qSetFieldWidth(propsWidth)
+#define VALUES_START qSetFieldWidth(valuesWidth)
 #define FIELDS_END qSetFieldWidth(0) << endl
 
         for ( int i = 0; ; i++ )
@@ -36,13 +38,24 @@ namespace NS_RENDERER
 
                 case 1:
                 {
+                    QString str;
+                    for ( int i = 0; i < propsWidth + valuesWidth; i++ )
+                    {
+                        str += "-";
+                    }
+                    s << str << FIELDS_END;
+                    continue;
+                }
+
+                case 2:
+                {
                     int n;
                     f->glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &n);
                     s << right << PROPS_START << "GL_MAX_VERTEX_ATTRIBS" << VALUES_START << n << FIELDS_END;
                     continue;
                 }
 
-                case 2:
+                case 3:
                 {
                     int n;
                     f->glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &n);
@@ -50,11 +63,19 @@ namespace NS_RENDERER
                     continue;
                 }
 
-                case 3:
+                case 4:
                 {
                     int n;
                     f->glGetIntegerv(GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS, &n);
                     s << right << PROPS_START << "GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS" << VALUES_START << n << FIELDS_END;
+                    continue;
+                }
+
+                case 5:
+                {
+                    int n;
+                    f->glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &n);
+                    s << right << PROPS_START << "GL_MAX_UNIFORM_BUFFER_BINDINGS" << VALUES_START << n << FIELDS_END;
                     continue;
                 }
 
