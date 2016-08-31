@@ -9,14 +9,14 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT RenderModelBatchParams
     {
     public:
-        RenderModelBatchParams(int vertexCount, float* positions, int indexCount, quint32* indices, const QMatrix4x4 &modelToWorld,
-                               float* normals = NULL, float* colors = NULL, float* textureCoordinates = NULL);
+        RenderModelBatchParams(int vertexCount, const float* positions, int indexCount, quint32* indices, const QMatrix4x4 &modelToWorld,
+                               const float* normals = NULL, const float* colors = NULL, const float* textureCoordinates = NULL);
 
         int vertexCount() const;
-        float* positions() const;
-        float* normals() const;
-        float* colors() const;
-        float* textureCoordinates() const;
+        const float* positions() const;
+        const float* normals() const;
+        const float* colors() const;
+        const float* textureCoordinates() const;
         QMatrix4x4 modelToWorldMatrix() const;
         int indexCount() const;
         quint32* indices() const;
@@ -28,10 +28,10 @@ namespace NS_RENDERER
 
     private:
         int     m_iVertexCount;
-        float*  m_pPositions;
-        float*  m_pNormals;
-        float*  m_pColors;
-        float*  m_pTextureCoordinates;
+        const float*  m_pPositions;
+        const float*  m_pNormals;
+        const float*  m_pColors;
+        const float*  m_pTextureCoordinates;
         QMatrix4x4  m_matModelToWorld;
         int         m_iIndexCount;
         quint32*    m_pIndices;

@@ -21,6 +21,22 @@ namespace NS_RENDERER
         virtual int maxBatchedItems() const { return 8; }
     };
 
+    QVector<float> triangle(const QVector2D min, const QVector2D max)
+    {
+        QVector<float> v;
+
+        v.append(min.x());
+        v.append(min.y());
+
+        v.append(max.x());
+        v.append(min.y());
+
+        v.append((max.x() + min.x())/2.0f);
+        v.append(max.y());
+
+        return v;
+    }
+
     static const char *vertexShaderSource =
             "#version 410 core\n"
             "layout (location=0) in vec2 vPosition;"
@@ -62,12 +78,27 @@ namespace NS_RENDERER
         GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, m_pTempSpec, m_program, this));
         GLTRY(m_pBatch->create());
 
-        GLfloat positions1[] = { -1,-1, 0,-1, -0.5f,1, };
-        GLfloat positions2[] = { 0,-1, 1,-1, 0.5f,1 };
+        QVector<float> tri1 = triangle(QVector2D(-1, 0), QVector2D(-0.5f, 1));
+        QVector<float> tri2 = triangle(QVector2D(-0.5f, 0), QVector2D(0,1));
+        QVector<float> tri3 = triangle(QVector2D(0, 0), QVector2D(0.5f,1));
+        QVector<float> tri4 = triangle(QVector2D(0.5f, 0), QVector2D(1,1));
+        QVector<float> tri5 = triangle(QVector2D(-1, -1), QVector2D(-0.5f, 0));
+        QVector<float> tri6 = triangle(QVector2D(-0.5f, -1), QVector2D(0,0));
+        QVector<float> tri7 = triangle(QVector2D(0, -1), QVector2D(0.5f,0));
+        QVector<float> tri8 = triangle(QVector2D(0.5f, -1), QVector2D(1,0));
+
         GLfloat cols[] = { 1,0,0,1, 0,1,0,1, 0,0,1,1 };
         GLuint indices[] = { 0,1,2 };
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, positions1, 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, positions2, 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri2.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri3.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri4.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri5.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri6.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri7.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri8.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+
         GLTRY(m_pBatch->upload());
     }
 
