@@ -14,36 +14,49 @@ namespace NS_RENDERER
     public:
         virtual ~TempSpec() {}
 
-        virtual int positionComponents() const { return 2; }
+        virtual int positionComponents() const { return 4; }
         virtual int normalComponents() const { return 0; }
         virtual int colorComponents() const { return 4; }
         virtual int textureCoordinateComponents() const { return 0; }
         virtual int maxBatchedItems() const { return 8; }
     };
 
-    QVector<float> triangle(const QVector2D min, const QVector2D max)
+    QVector<float> triangle(unsigned char batchId, const QVector2D min, const QVector2D max)
     {
+        // Encode the batch ID as a float to put into w.
+        float batchIdFloat = (float)(batchId & 0x7);
+
         QVector<float> v;
 
         v.append(min.x());
         v.append(min.y());
+        v.append(0);
+        v.append(batchIdFloat);
 
         v.append(max.x());
         v.append(min.y());
+        v.append(0);
+        v.append(batchIdFloat);
 
         v.append((max.x() + min.x())/2.0f);
         v.append(max.y());
+        v.append(0);
+        v.append(batchIdFloat);
 
         return v;
     }
 
     static const char *vertexShaderSource =
             "#version 410 core\n"
-            "layout (location=0) in vec2 vPosition;"
-            "layout (location=2) in vec4 vColour;"
-            "out vec4 fColour;"
-            "/*layout (location=16)*/ uniform mat4 modelToWorld;"
-            "void main() { gl_Position = /*modelToWorld * */vec4(vPosition, 0, 1); fColour = vColour; }"
+            "layout (location=0) in vec4 vPosition;\n"
+            "layout (location=2) in vec4 vColour;\n"
+            "out vec4 fColour;\n"
+            "void main()"
+            "{\n"
+            "   uint id = uint(vPosition.w) & 0x7;\n"
+            "   gl_Position = vec4(vPosition.xyz, 1);\n"
+            "   fColour = /*vColour*/ vec4(float(id)/7.0, 1, 1, 1);\n"
+            "}\n"
         ;
 
     static const char *fragmentShaderSource =
@@ -79,14 +92,14 @@ namespace NS_RENDERER
         GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, m_pTempSpec, m_program, this));
         GLTRY(m_pBatch->create());
 
-        QVector<float> tri1 = triangle(QVector2D(-1, 0), QVector2D(-0.5f, 1));
-        QVector<float> tri2 = triangle(QVector2D(-0.5f, 0), QVector2D(0,1));
-        QVector<float> tri3 = triangle(QVector2D(0, 0), QVector2D(0.5f,1));
-        QVector<float> tri4 = triangle(QVector2D(0.5f, 0), QVector2D(1,1));
-        QVector<float> tri5 = triangle(QVector2D(-1, -1), QVector2D(-0.5f, 0));
-        QVector<float> tri6 = triangle(QVector2D(-0.5f, -1), QVector2D(0,0));
-        QVector<float> tri7 = triangle(QVector2D(0, -1), QVector2D(0.5f,0));
-        QVector<float> tri8 = triangle(QVector2D(0.5f, -1), QVector2D(1,0));
+        QVector<float> tri1 = triangle(0, QVector2D(-1, 0), QVector2D(-0.5f, 1));
+        QVector<float> tri2 = triangle(1, QVector2D(-0.5f, 0), QVector2D(0,1));
+        QVector<float> tri3 = triangle(2, QVector2D(0, 0), QVector2D(0.5f,1));
+        QVector<float> tri4 = triangle(3, QVector2D(0.5f, 0), QVector2D(1,1));
+        QVector<float> tri5 = triangle(4, QVector2D(-1, -1), QVector2D(-0.5f, 0));
+        QVector<float> tri6 = triangle(5, QVector2D(-0.5f, -1), QVector2D(0,0));
+        QVector<float> tri7 = triangle(6, QVector2D(0, -1), QVector2D(0.5f,0));
+        QVector<float> tri8 = triangle(7, QVector2D(0.5f, -1), QVector2D(1,0));
 
         GLfloat cols[] = { 1,0,0,1, 0,1,0,1, 0,0,1,1 };
         GLuint indices[] = { 0,1,2 };

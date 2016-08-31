@@ -21,7 +21,7 @@ namespace NS_RENDERER
         QTextStream s(&str);
 
 #define PROPS_START qSetFieldWidth(41)
-#define VALUES_START qSetFieldWidth(10)
+#define VALUES_START qSetFieldWidth(12)
 #define FIELDS_END qSetFieldWidth(0) << endl
 
         for ( int i = 0; ; i++ )
