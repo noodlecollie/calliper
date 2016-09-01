@@ -53,7 +53,10 @@ namespace NS_RENDERER
             "#version 410 core\n"
             "layout (location=0) in vec4 vPosition;\n"
             "layout (location=2) in vec4 vColour;\n"
-            "layout (std140) uniform BatchUniforms { mat4 modelToWorldMatrices[8]; };\n"
+            "layout (std140) uniform BatchUniforms\n"
+            "{\n"
+            "   mat4 modelToWorldMatrices[8];\n"
+            "};\n"
             "out vec4 fColour;\n"
             "void main()"
             "{\n"
@@ -95,7 +98,6 @@ namespace NS_RENDERER
     void DemoGLWindow::initializeGL()
     {
         qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
-        GL_CURRENT_F;
 
         GLTRY(m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext()));
         GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource));
