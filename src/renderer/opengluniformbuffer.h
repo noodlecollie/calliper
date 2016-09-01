@@ -16,6 +16,7 @@ namespace NS_RENDERER
         GLuint bufferId() const;
 
         void bind();
+        void bindToIndex(int bindingPoint);
         void release();
         bool create();
         void destroy();

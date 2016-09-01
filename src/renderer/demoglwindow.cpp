@@ -120,44 +120,16 @@ namespace NS_RENDERER
         GLfloat cols[] = { 1,0,0,1, 0,1,0,1, 0,0,1,1 };
         GLuint indices[] = { 0,1,2 };
 
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri2.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri3.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri4.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri5.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri6.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri7.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri8.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri2.constData(), 3, indices, transMat(0.125f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri3.constData(), 3, indices, transMat(0.25f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri4.constData(), 3, indices, transMat(0.375f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri5.constData(), 3, indices, transMat(0.5f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri6.constData(), 3, indices, transMat(0.625f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri7.constData(), 3, indices, transMat(0.75f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri8.constData(), 3, indices, transMat(0.875f), NULL, cols, NULL)));
 
         GLTRY(m_pBatch->upload());
-
-        // Get the index of the block from the shader. This requires that we know the block name.
-        GLTRY(m_iShaderBlockIndex = f->glGetUniformBlockIndex(m_program->programId(), "BatchUniforms"));
-
-        qDebug().nospace() << "Shader block index: " << m_iShaderBlockIndex
-                           << " (invalid index is " << GL_INVALID_INDEX << ")";
-
-        // Bind the block to binding point 0.
-        GLTRY(f->glUniformBlockBinding(m_program->programId(), m_iShaderBlockIndex, 0));
-
-        // Create and allocate the uniform buffer object.
-        m_pUniformBuffer = new OpenGLUniformBuffer(QOpenGLBuffer::DynamicDraw);
-        GLTRY(m_pUniformBuffer->create());
-        GLTRY(m_pUniformBuffer->bind());
-        GLTRY(m_pUniformBuffer->allocate(8 * 16 * sizeof(float)));
-        GLTRY(m_pUniformBuffer->release());  // Just so we follow this tutorial to the letter.
-
-        // Bind the UBO to point 0.
-        GLTRY(f->glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_pUniformBuffer->bufferId()));
-
-        // Fill the buffer.
-        QMatrix4x4 mat;
-        GLTRY(m_pUniformBuffer->bind());
-        for ( int i = 0; i < 8; i++ )
-        {
-            GLTRY(f->glBufferSubData(GL_UNIFORM_BUFFER, i * 16 * sizeof(float), 16 * sizeof(float), mat.constData()));
-        }
-        GLTRY(m_pUniformBuffer->release());
     }
 
     void DemoGLWindow::resizeGL(int w, int h)
@@ -178,9 +150,10 @@ namespace NS_RENDERER
         GLTRY(m_program->enableAttributeArray(ShaderDefs::PositionAttribute));
         GLTRY(m_program->enableAttributeArray(ShaderDefs::ColorAttribute));
 
+        GLTRY(m_pBatch->beginDraw());
         GLTRY(m_pBatch->setAttributePointers());
-        GLTRY(m_pBatch->setUniforms());
         GLTRY(m_pBatch->draw());
+        GLTRY(m_pBatch->endDraw());
 
         // These should be disabled once the phase with one shader has finished.
         GLTRY(m_program->disableAttributeArray(ShaderDefs::PositionAttribute));

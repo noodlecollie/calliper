@@ -350,14 +350,20 @@ namespace NS_RENDERER
 
     void RenderModelBatch::uploadUniformData()
     {
+        // Not sure if this exact set of steps is required, but it's the
+        // only way I got it to actually work.
+        m_GlUniformBuffer.bind();
+        m_GlUniformBuffer.allocate(m_Items.count() * 16 * sizeof(float));
+        m_GlUniformBuffer.release();
 
-    }
+        m_GlUniformBuffer.bindToIndex(0);
 
-    void RenderModelBatch::setUniforms()
-    {
-        GL_CURRENT_F;
-
-
+        m_GlUniformBuffer.bind();
+        for ( int i = 0; i < m_Items.count(); i++ )
+        {
+            m_GlUniformBuffer.write(i * 16 * sizeof(float), m_ModelToWorldMatrices.at(i).constData(), 16 * sizeof(float));
+        }
+        m_GlUniformBuffer.release();
     }
 
     bool RenderModelBatch::shaderSupportsBatching() const

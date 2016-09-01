@@ -41,7 +41,6 @@ namespace NS_RENDERER
         // These functions should be called in the following order.
         void beginDraw();
         void setAttributePointers();
-        void setUniforms();
         void draw();
         void endDraw();
 

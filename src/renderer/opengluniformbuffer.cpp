@@ -108,4 +108,11 @@ namespace NS_RENDERER
     {
         return m_bCreated;
     }
+
+    void OpenGLUniformBuffer::bindToIndex(int bindingPoint)
+    {
+        GL_CURRENT_F;
+
+        f->glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle);
+    }
 }
