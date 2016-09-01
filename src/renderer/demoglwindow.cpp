@@ -41,6 +41,14 @@ namespace NS_RENDERER
         return v;
     }
 
+    QMatrix4x4 transMat(float x)
+    {
+        return QMatrix4x4(1,0,0,x,
+                          0,1,0,0,
+                          0,0,1,0,
+                          0,0,0,1);
+    }
+
     static const char *vertexShaderSource =
             "#version 410 core\n"
             "layout (location=0) in vec4 vPosition;\n"
@@ -69,7 +77,8 @@ namespace NS_RENDERER
 
     DemoGLWindow::~DemoGLWindow()
     {
-        context()->makeCurrent(this);
+        makeCurrent();
+        Q_ASSERT_X(QOpenGLContext::currentContext(), Q_FUNC_INFO, "Need a current context to clean things up!");
 
         delete m_pBatch;
         m_pBatch = NULL;
@@ -80,7 +89,7 @@ namespace NS_RENDERER
         delete m_program;
         m_program = NULL;
 
-        context()->doneCurrent();
+        doneCurrent();
     }
 
     void DemoGLWindow::initializeGL()

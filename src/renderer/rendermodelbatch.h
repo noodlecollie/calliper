@@ -39,9 +39,11 @@ namespace NS_RENDERER
 
         // Assumes upload() has been called!
         // These functions should be called in the following order.
+        void beginDraw();
         void setAttributePointers();
         void setUniforms();
         void draw();
+        void endDraw();
 
         int localPositionCount() const;
         int localNormalCount() const;
@@ -58,6 +60,7 @@ private:
         void uploadUniformData();
         void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
         void bindVAO();
+        void releaseVAO();
         void trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
         void addIndices(const quint32* source, int count, int indexOffset);
         void addObjectIdsToPositions(int vertexOffset, int vertexCount, quint32 id);

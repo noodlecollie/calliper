@@ -189,6 +189,7 @@ namespace NS_RENDERER
 
             m_GlIndexBuffer.bind();
             m_GlIndexBuffer.allocate(m_LocalIndexBuffer.constData(), m_LocalIndexBuffer.count() * sizeof(quint32));
+            m_GlIndexBuffer.release();
 
             uploadUniformData();
 
@@ -217,6 +218,8 @@ namespace NS_RENDERER
         writeToGlVertexBuffer(m_LocalNormalBuffer, offset);
         writeToGlVertexBuffer(m_LocalColorBuffer, offset);
         writeToGlVertexBuffer(m_LocalTextureCoordinateBuffer, offset);
+
+        m_GlVertexBuffer.release();
     }
 
     void RenderModelBatch::writeToGlVertexBuffer(const QVector<float> &buffer, int &offset)
@@ -268,13 +271,24 @@ namespace NS_RENDERER
         return m_pShaderProgram;
     }
 
+    void RenderModelBatch::beginDraw()
+    {
+        bindVAO();
+    }
+
+    void RenderModelBatch::endDraw()
+    {
+        m_GlIndexBuffer.release();
+        m_GlVertexBuffer.release();
+        releaseVAO();
+    }
+
     void RenderModelBatch::setAttributePointers()
     {
         Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
         Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Setting attribute pointers requires a shader program!");
         Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Setting attribute pointers requires a shader spec!");
 
-        bindVAO();
         m_GlVertexBuffer.bind();
 
         int offset = 0;
@@ -319,6 +333,13 @@ namespace NS_RENDERER
         f->glBindVertexArray(m_iVAOID);
     }
 
+    void RenderModelBatch::releaseVAO()
+    {
+        GL_CURRENT_F;
+
+        f->glBindVertexArray(0);
+    }
+
     void RenderModelBatch::draw()
     {
         GL_CURRENT_F;
@@ -329,25 +350,14 @@ namespace NS_RENDERER
 
     void RenderModelBatch::uploadUniformData()
     {
-        int sizeInFloats = m_ModelToWorldMatrices.count() * 16;
-        QVector<float> data;
-        data.resize(sizeInFloats);
 
-        for ( int i = 0; i < m_ModelToWorldMatrices.count(); i++ )
-        {
-            float* dest = data.data() + (16 * i);
-            memcpy(dest, m_ModelToWorldMatrices.at(i).constData(), 16 * sizeof(float));
-        }
-
-        m_GlUniformBuffer.bind();
-        m_GlUniformBuffer.allocate(data.constData(), data.count() * sizeof(float));
     }
 
     void RenderModelBatch::setUniforms()
     {
         GL_CURRENT_F;
 
-        f->glBindBufferBase(GL_UNIFORM_BUFFER, m_GlUniformBuffer.bufferId(), 0);
+
     }
 
     bool RenderModelBatch::shaderSupportsBatching() const
