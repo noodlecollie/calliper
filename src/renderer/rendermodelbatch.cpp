@@ -58,7 +58,7 @@ namespace NS_RENDERER
 
         m_GlVertexBuffer.destroy();
         m_GlIndexBuffer.destroy();
-        m_GlUniformBuffer.destroy();
+         m_GlUniformBuffer.destroy();
 
         f->glDeleteVertexArrays(1, &m_iVAOID);
 
