@@ -88,6 +88,7 @@ private:
         QOpenGLShaderProgram*   m_pShaderProgram;
         bool                    m_bDataStale;
         const quint32           m_iBatchIdMask;
+        GLuint                  m_iUniformBlockIndex;
     };
 }
 

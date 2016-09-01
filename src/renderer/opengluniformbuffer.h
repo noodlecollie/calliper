@@ -9,6 +9,7 @@ namespace NS_RENDERER
     class OpenGLUniformBuffer
     {
     public:
+        OpenGLUniformBuffer();
         OpenGLUniformBuffer(QOpenGLBuffer::UsagePattern pattern);
         ~OpenGLUniformBuffer();
 
@@ -21,6 +22,7 @@ namespace NS_RENDERER
         bool isCreated() const;
 
         void allocate(const void* data, int count);
+        void allocate(int count);
         void write(int offset, const void *data, int count);
 
         // This should not be called after allocate() or write().

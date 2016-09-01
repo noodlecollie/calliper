@@ -18,7 +18,8 @@ namespace NS_RENDERER
           m_pShaderSpec(shaderSpec),
           m_pShaderProgram(shaderProgram),
           m_bDataStale(false),
-          m_iBatchIdMask(batchIdMask(m_pShaderSpec->maxBatchedItems()))
+          m_iBatchIdMask(batchIdMask(m_pShaderSpec->maxBatchedItems())),
+          m_iUniformBlockIndex(0)
     {
     }
 
@@ -37,7 +38,8 @@ namespace NS_RENDERER
         f->glGenVertexArrays(1, &m_iVAOID);
         f->glBindVertexArray(m_iVAOID);
 
-        GLTRY(f->glUniformBlockBinding(m_pShaderProgram->programId(), f->glGetUniformBlockIndex(m_pShaderProgram->programId(), "BatchUniforms"), 0));
+        m_iUniformBlockIndex = f->glGetUniformBlockIndex(m_pShaderProgram->programId(), ShaderDefs::UNIFORM_BATCH_BLOCK_NAME);
+        f->glUniformBlockBinding(m_pShaderProgram->programId(), m_iUniformBlockIndex, 0);
 
         m_GlVertexBuffer.setUsagePattern(m_iUsagePattern);
         m_GlIndexBuffer.setUsagePattern(m_iUsagePattern);
@@ -327,9 +329,9 @@ namespace NS_RENDERER
 
     void RenderModelBatch::uploadUniformData()
     {
-        int sizeInBytes = m_ModelToWorldMatrices.count() * 16 * sizeof(float);
+        int sizeInFloats = m_ModelToWorldMatrices.count() * 16;
         QVector<float> data;
-        data.resize(sizeInBytes);
+        data.resize(sizeInFloats);
 
         for ( int i = 0; i < m_ModelToWorldMatrices.count(); i++ )
         {
@@ -345,7 +347,7 @@ namespace NS_RENDERER
     {
         GL_CURRENT_F;
 
-        // TODO
+        f->glBindBufferBase(GL_UNIFORM_BUFFER, m_GlUniformBuffer.bufferId(), 0);
     }
 
     bool RenderModelBatch::shaderSupportsBatching() const

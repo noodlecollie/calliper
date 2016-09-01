@@ -5,6 +5,7 @@
 #include <QOpenGLWindow>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
+#include "opengluniformbuffer.h"
 
 namespace NS_RENDERER
 {
@@ -23,6 +24,8 @@ namespace NS_RENDERER
 
     private:
         QOpenGLShaderProgram *m_program;
+        OpenGLUniformBuffer* m_pUniformBuffer;
+        GLuint  m_iShaderBlockIndex;
 
         RenderModelBatch* m_pBatch;
         TempSpec*       m_pTempSpec;

@@ -11,6 +11,11 @@ namespace NS_RENDERER
 
     }
 
+    OpenGLUniformBuffer::OpenGLUniformBuffer() : OpenGLUniformBuffer(QOpenGLBuffer::StaticDraw)
+    {
+
+    }
+
     OpenGLUniformBuffer::~OpenGLUniformBuffer()
     {
         destroy();
@@ -83,6 +88,11 @@ namespace NS_RENDERER
         GL_CURRENT_F;
 
         f->glBufferData(GL_UNIFORM_BUFFER, count, data, m_iUsagePattern);
+    }
+
+    void OpenGLUniformBuffer::allocate(int count)
+    {
+        allocate(NULL, count);
     }
 
     void OpenGLUniformBuffer::write(int offset, const void *data, int count)

@@ -17,7 +17,8 @@ SOURCES += \
     rendermodelbatch.cpp \
     rendermodelbatchparams.cpp \
     rendermodelbatchitem.cpp \
-    opengluniformbuffer.cpp
+    opengluniformbuffer.cpp \
+    shaderdefs.cpp
 
 HEADERS +=\
         renderer_global.h \

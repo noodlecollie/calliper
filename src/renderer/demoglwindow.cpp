@@ -51,7 +51,7 @@ namespace NS_RENDERER
             "{\n"
             "   uint id = uint(vPosition.z);\n"
             "   gl_Position = modelToWorldMatrices[id] * vec4(vPosition.xy, 0, 1);\n"
-            "   fColour = /*vColour*/ vec4(float(id)/7.0, 1, 1, 1);\n"
+            "   fColour = vColour;\n"
             "}\n"
         ;
 
@@ -69,11 +69,18 @@ namespace NS_RENDERER
 
     DemoGLWindow::~DemoGLWindow()
     {
+        context()->makeCurrent(this);
+
+        delete m_pBatch;
+        m_pBatch = NULL;
+
         delete m_pTempSpec;
         m_pTempSpec = NULL;
 
         delete m_program;
         m_program = NULL;
+
+        context()->doneCurrent();
     }
 
     void DemoGLWindow::initializeGL()
@@ -86,10 +93,6 @@ namespace NS_RENDERER
         GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource));
         GLTRY(m_program->link());
         GLTRY(m_program->bind());
-
-        qDebug().nospace() << "Shader block index: " << f->glGetUniformBlockIndex(m_program->programId(), "BatchUniforms")
-                           << " (invalid index is " << GL_INVALID_INDEX << ")";
-        //GLTRY(f->glUniformBlockBinding(m_program->programId(), f->glGetUniformBlockIndex(m_program->programId(), "BatchUniforms"), 0));
 
         m_pTempSpec = new TempSpec();
 
@@ -118,6 +121,34 @@ namespace NS_RENDERER
         GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri8.constData(), 3, indices, QMatrix4x4(), NULL, cols, NULL)));
 
         GLTRY(m_pBatch->upload());
+
+        // Get the index of the block from the shader. This requires that we know the block name.
+        GLTRY(m_iShaderBlockIndex = f->glGetUniformBlockIndex(m_program->programId(), "BatchUniforms"));
+
+        qDebug().nospace() << "Shader block index: " << m_iShaderBlockIndex
+                           << " (invalid index is " << GL_INVALID_INDEX << ")";
+
+        // Bind the block to binding point 0.
+        GLTRY(f->glUniformBlockBinding(m_program->programId(), m_iShaderBlockIndex, 0));
+
+        // Create and allocate the uniform buffer object.
+        m_pUniformBuffer = new OpenGLUniformBuffer(QOpenGLBuffer::DynamicDraw);
+        GLTRY(m_pUniformBuffer->create());
+        GLTRY(m_pUniformBuffer->bind());
+        GLTRY(m_pUniformBuffer->allocate(8 * 16 * sizeof(float)));
+        GLTRY(m_pUniformBuffer->release());  // Just so we follow this tutorial to the letter.
+
+        // Bind the UBO to point 0.
+        GLTRY(f->glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_pUniformBuffer->bufferId()));
+
+        // Fill the buffer.
+        QMatrix4x4 mat;
+        GLTRY(m_pUniformBuffer->bind());
+        for ( int i = 0; i < 8; i++ )
+        {
+            GLTRY(f->glBufferSubData(GL_UNIFORM_BUFFER, i * 16 * sizeof(float), 16 * sizeof(float), mat.constData()));
+        }
+        GLTRY(m_pUniformBuffer->release());
     }
 
     void DemoGLWindow::resizeGL(int w, int h)

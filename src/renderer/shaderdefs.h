@@ -57,6 +57,8 @@ namespace NS_RENDERER
             UniformLocationCount
         };
         Q_ENUM(UniformArrays)
+
+        static const char* UNIFORM_BATCH_BLOCK_NAME;
     };
 }
 
