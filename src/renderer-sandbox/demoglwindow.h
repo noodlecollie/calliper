@@ -12,6 +12,11 @@
 
 class TempSpec;
 
+namespace NS_RENDERER
+{
+    class OpenGLShaderProgram;
+}
+
 class DemoGLWindow : public QOpenGLWindow
 {
 public:
@@ -24,7 +29,6 @@ protected:
     virtual void paintGL();
 
 private:
-    QOpenGLShaderProgram *m_program;
     GLuint  m_iVAOID;
 
     NS_RENDERER::RenderModel*   m_pRenderModel;

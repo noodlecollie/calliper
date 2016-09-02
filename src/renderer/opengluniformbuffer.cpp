@@ -16,6 +16,14 @@ namespace NS_RENDERER
 
     }
 
+    OpenGLUniformBuffer::OpenGLUniformBuffer(const OpenGLUniformBuffer &other)
+        : m_iHandle(other.m_iHandle),
+          m_bCreated(other.m_bCreated),
+          m_iUsagePattern(other.m_iUsagePattern)
+    {
+
+    }
+
     OpenGLUniformBuffer::~OpenGLUniformBuffer()
     {
         destroy();

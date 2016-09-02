@@ -20,7 +20,9 @@ SOURCES += \
     shaderdefs.cpp \
     openglshaderprogram.cpp \
     rendermodelbatchkey.cpp \
-    rendermodel.cpp
+    rendermodel.cpp \
+    shaders/debugscreenspaceshader.cpp \
+    shaderstore.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -34,9 +36,14 @@ HEADERS +=\
     opengluniformbuffer.h \
     openglshaderprogram.h \
     rendermodelbatchkey.h \
-    rendermodel.h
+    rendermodel.h \
+    shaders/debugscreenspaceshader.h \
+    shaderstore.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+RESOURCES += \
+    resource/resource.qrc

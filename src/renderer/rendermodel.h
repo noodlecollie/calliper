@@ -26,10 +26,6 @@ namespace NS_RENDERER
         void debugDraw(QOpenGLTexture* texture);
         void debugUploadAll();
 
-        // Replace me once we've sorted out shader storage!
-        QOpenGLShaderProgram* shaderProgram;
-        IShaderSpec* shaderSpec;
-
     private:
         typedef QMultiHash<RenderModelBatchKey, RenderModelBatch*> RenderModelTable;
 

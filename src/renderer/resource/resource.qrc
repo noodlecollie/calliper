@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/shaders">
+        <file alias="debugscreenspaceshader.frag">shaders/debugscreenspaceshader.frag</file>
+        <file alias="debugscreenspaceshader.vert">shaders/debugscreenspaceshader.vert</file>
+    </qresource>
+</RCC>

@@ -11,7 +11,13 @@ namespace NS_RENDERER
     public:
         OpenGLUniformBuffer();
         OpenGLUniformBuffer(QOpenGLBuffer::UsagePattern pattern);
+        OpenGLUniformBuffer(const OpenGLUniformBuffer &other);
         ~OpenGLUniformBuffer();
+
+        inline bool operator ==(const OpenGLUniformBuffer &other)
+        {
+            return m_iHandle == other.m_iHandle;
+        }
 
         GLuint bufferId() const;
 

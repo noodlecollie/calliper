@@ -33,6 +33,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
+        // Really this shouldn't be dealt with here, it's external to the batch.
         m_iUniformBlockIndex = f->glGetUniformBlockIndex(m_pShaderProgram->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
         f->glUniformBlockBinding(m_pShaderProgram->programId(), m_iUniformBlockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
 
@@ -264,6 +265,7 @@ namespace NS_RENDERER
 
     void RenderModelBatch::setAttributePointers()
     {
+        // TODO: Need to eliminate holding a pointer to the shader.
         Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
         Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Setting attribute pointers requires a shader program!");
         Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Setting attribute pointers requires a shader spec!");

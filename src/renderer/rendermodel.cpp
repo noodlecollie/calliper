@@ -1,10 +1,10 @@
 #include "rendermodel.h"
 #include "openglshaderprogram.h"
+#include "shaderstore.h"
 
 namespace NS_RENDERER
 {
     RenderModel::RenderModel()
-        : shaderProgram(NULL), shaderSpec(NULL)
     {
 
     }
@@ -16,12 +16,17 @@ namespace NS_RENDERER
 
     void RenderModel::addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params, QOpenGLBuffer::UsagePattern usagePattern)
     {
-        // TODO: Actually get shader!
+        Q_ASSERT_X(ShaderStore::getShaderStore(),
+                 Q_FUNC_INFO,
+                 "Shader store not intialised!");
+
+        // TODO: Implement a fallback shader.
+        OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(key.shaderStoreId());
 
         RenderModelBatch* batch = NULL;
         if ( !m_Table.contains(key) || (batch = m_Table.find(key).value())->isFull() )
         {
-            batch = new RenderModelBatch(usagePattern, shaderSpec, shaderProgram);
+            batch = new RenderModelBatch(usagePattern, program, program);
             m_Table.insert(key, batch);
         }
 

@@ -6,6 +6,8 @@
 #include "ishaderspec.h"
 #include "shaderdefs.h"
 #include "openglhelpers.h"
+#include "shaderstore.h"
+#include "shaders/debugscreenspaceshader.h"
 
 using namespace NS_RENDERER;
 
@@ -100,9 +102,6 @@ DemoGLWindow::~DemoGLWindow()
     delete m_pTempSpec;
     m_pTempSpec = NULL;
 
-    delete m_program;
-    m_program = NULL;
-
     GL_CURRENT_F;
     GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
 
@@ -122,17 +121,12 @@ void DemoGLWindow::initializeGL()
     GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
-    GLTRY(m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext()));
-    GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource));
-    GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource));
-    GLTRY(m_program->link());
-    GLTRY(m_program->bind());
-
     m_pTempSpec = new TempSpec();
 
+    ShaderStore* store = new ShaderStore();
+    store->constructShaders();
+
     m_pRenderModel = new RenderModel();
-    m_pRenderModel->shaderProgram = m_program;
-    m_pRenderModel->shaderSpec = m_pTempSpec;
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 
@@ -140,7 +134,7 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    RenderModelBatchKey key(0,0);
+    RenderModelBatchKey key(store->shaderId("DebugScreenSpaceShader"), 0);
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords));
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords));
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords));
@@ -168,15 +162,13 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
-    GLTRY(m_program->enableAttributeArray(ShaderDefs::PositionAttribute));
-    GLTRY(m_program->enableAttributeArray(ShaderDefs::ColorAttribute));
-    GLTRY(m_program->enableAttributeArray(ShaderDefs::TextureCoordinateAttribute));
+    OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(1);
+    program->bind();
+    program->enableAttributeArrays();
 
     m_pRenderModel->debugDraw(m_pTexture);
 
-    GLTRY(m_program->disableAttributeArray(ShaderDefs::PositionAttribute));
-    GLTRY(m_program->disableAttributeArray(ShaderDefs::ColorAttribute));
-    GLTRY(m_program->disableAttributeArray(ShaderDefs::TextureCoordinateAttribute));
+    program->disableAttributeArrays();
 
     GLTRY(f->glBindVertexArray(0));
 }

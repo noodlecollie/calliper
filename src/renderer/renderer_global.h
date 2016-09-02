@@ -10,6 +10,7 @@
 #endif
 
 #define NS_RENDERER Renderer
+#define NS_STR_RENDERER "Renderer"
 
 /*
  * Ideally, we want to be able to get to a scenario where each batch is self-
