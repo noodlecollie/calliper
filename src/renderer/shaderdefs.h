@@ -58,7 +58,15 @@ namespace NS_RENDERER
         };
         Q_ENUM(UniformArrays)
 
-        static const char* UNIFORM_BATCH_BLOCK_NAME;
+        enum UniformBlockBindingPoint
+        {
+            GlobalUniformBlockBindingPoint = 0, // Camera matrices, fog, colour, etc.
+            LocalUniformBlockBindingPoint = 1   // Model to world matrices
+        };
+        Q_ENUM(UniformBlockBindingPoint)
+
+        static const char* GLOBAL_UNIFORM_BLOCK_NAME;
+        static const char* LOCAL_UNIFORM_BLOCK_NAME;
     };
 }
 

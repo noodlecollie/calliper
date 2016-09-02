@@ -2,5 +2,6 @@
 
 namespace NS_RENDERER
 {
-    const char* ShaderDefs::UNIFORM_BATCH_BLOCK_NAME = "BatchUniforms";
+    const char* ShaderDefs::GLOBAL_UNIFORM_BLOCK_NAME = "GlobalUniformBlock";
+    const char* ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME = "LocalUniformBlock";
 }

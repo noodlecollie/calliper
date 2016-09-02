@@ -8,7 +8,7 @@ namespace NS_RENDERER
 {
     QString OpenGLErrors::errorString(GLenum errorCode)
     {
-        int enumIndex = staticMetaObject.indexOfEnumerator("OpenGLErrors");
+        int enumIndex = staticMetaObject.indexOfEnumerator("OpenGLError");
         QMetaEnum metaEnum = staticMetaObject.enumerator(enumIndex);
         const char* keyString = metaEnum.valueToKey(errorCode);
         return keyString ? keyString : QString("Unknown error code %1").arg(errorCode);

@@ -38,7 +38,7 @@ namespace NS_RENDERER
         f->glGenVertexArrays(1, &m_iVAOID);
         f->glBindVertexArray(m_iVAOID);
 
-        m_iUniformBlockIndex = f->glGetUniformBlockIndex(m_pShaderProgram->programId(), ShaderDefs::UNIFORM_BATCH_BLOCK_NAME);
+        m_iUniformBlockIndex = f->glGetUniformBlockIndex(m_pShaderProgram->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
         f->glUniformBlockBinding(m_pShaderProgram->programId(), m_iUniformBlockIndex, 0);
 
         m_GlVertexBuffer.setUsagePattern(m_iUsagePattern);
@@ -274,12 +274,16 @@ namespace NS_RENDERER
     void RenderModelBatch::beginDraw()
     {
         bindVAO();
+        m_pShaderProgram->enableAttributeArray(ShaderDefs::PositionAttribute);
+        m_pShaderProgram->enableAttributeArray(ShaderDefs::ColorAttribute);
     }
 
     void RenderModelBatch::endDraw()
     {
         m_GlIndexBuffer.release();
         m_GlVertexBuffer.release();
+        m_pShaderProgram->disableAttributeArray(ShaderDefs::PositionAttribute);
+        m_pShaderProgram->disableAttributeArray(ShaderDefs::ColorAttribute);
         releaseVAO();
     }
 

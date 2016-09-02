@@ -53,7 +53,7 @@ namespace NS_RENDERER
             "#version 410 core\n"
             "layout (location=0) in vec4 vPosition;\n"
             "layout (location=2) in vec4 vColour;\n"
-            "layout (std140) uniform BatchUniforms\n"
+            "layout (std140) uniform LocalUniformBlock\n"
             "{\n"
             "   mat4 modelToWorldMatrices[8];\n"
             "};\n"
@@ -148,17 +148,9 @@ namespace NS_RENDERER
 
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT));
 
-        // These should be set when beginning a phase with a shader.
-        GLTRY(m_program->enableAttributeArray(ShaderDefs::PositionAttribute));
-        GLTRY(m_program->enableAttributeArray(ShaderDefs::ColorAttribute));
-
         GLTRY(m_pBatch->beginDraw());
         GLTRY(m_pBatch->setAttributePointers());
         GLTRY(m_pBatch->draw());
         GLTRY(m_pBatch->endDraw());
-
-        // These should be disabled once the phase with one shader has finished.
-        GLTRY(m_program->disableAttributeArray(ShaderDefs::PositionAttribute));
-        GLTRY(m_program->disableAttributeArray(ShaderDefs::ColorAttribute));
     }
 }

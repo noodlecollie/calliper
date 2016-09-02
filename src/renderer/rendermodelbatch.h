@@ -34,6 +34,9 @@ namespace NS_RENDERER
         QOpenGLShaderProgram* shaderProgram() const;
         bool shaderSupportsBatching() const;
 
+        void bindVAO();
+        void releaseVAO();
+
         void upload(bool force = false);
         bool needsUpload() const;
 
@@ -58,8 +61,6 @@ private:
         void uploadVertexData();
         void uploadUniformData();
         void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
-        void bindVAO();
-        void releaseVAO();
         void trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
         void addIndices(const quint32* source, int count, int indexOffset);
         void addObjectIdsToPositions(int vertexOffset, int vertexCount, quint32 id);
