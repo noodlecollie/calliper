@@ -274,6 +274,13 @@ namespace NS_RENDERER
     void RenderModelBatch::beginDraw()
     {
         bindVAO();
+
+        // TODO: Really the attribute arrays don't belong in here,
+        // and neither does the VAO. The arrays we use to draw with
+        // are specific to a shader, so we only need to change them
+        // at the beginning and end of a phase. It doesn't really make
+        // sense to enable and disable them after every batch.
+        // Once the actual render manager is in place, move these there.
         m_pShaderProgram->enableAttributeArray(ShaderDefs::PositionAttribute);
         m_pShaderProgram->enableAttributeArray(ShaderDefs::ColorAttribute);
     }
