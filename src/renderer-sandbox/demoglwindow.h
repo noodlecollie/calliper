@@ -6,6 +6,8 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 #include "opengluniformbuffer.h"
+#include <QImage>
+#include <QOpenGLTexture>
 
 namespace NS_RENDERER
 {
@@ -31,6 +33,8 @@ private:
 
     NS_RENDERER::RenderModelBatch* m_pBatch;
     TempSpec*   m_pTempSpec;
+    QImage  m_TextureImage;
+    QOpenGLTexture* m_pTexture;
 };
 
 #endif // DEMOGLWINDOW_H
