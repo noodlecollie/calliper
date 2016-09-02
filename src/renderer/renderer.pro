@@ -12,7 +12,6 @@ TEMPLATE = lib
 DEFINES += RENDERER_LIBRARY
 
 SOURCES += \
-    demoglwindow.cpp \
     openglerrors.cpp \
     rendermodelbatch.cpp \
     rendermodelbatchparams.cpp \
@@ -24,7 +23,6 @@ SOURCES += \
 
 HEADERS +=\
         renderer_global.h \
-    demoglwindow.h \
     openglerrors.h \
     rendermodelbatch.h \
     shaderdefs.h \

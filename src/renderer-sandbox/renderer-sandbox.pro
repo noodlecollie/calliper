@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,9 +12,11 @@ TARGET = renderer-sandbox
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    demoglwindow.cpp
 
-HEADERS  +=
+HEADERS  += \
+    demoglwindow.h
 
 FORMS    +=
 
