@@ -7,10 +7,19 @@
 
 namespace NS_RENDERER
 {
-    class RenderModelBatchKey
+    class RENDERERSHARED_EXPORT RenderModelBatchKey
     {
     public:
         RenderModelBatchKey(quint16 shaderId, quint32 textureId, GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);
+        RenderModelBatchKey(const RenderModelBatchKey &other);
+
+        inline bool operator ==(const RenderModelBatchKey &other) const
+        {
+            return m_iShaderId == other.m_iShaderId &&
+                    m_iTextureId == other.m_iTextureId &&
+                    m_iDrawMode == other.m_iDrawMode &&
+                    m_flDrawWidth == other.m_flDrawWidth;
+        }
 
         quint16 shaderId() const;
         quint32 textureId() const;
@@ -25,6 +34,19 @@ namespace NS_RENDERER
     };
 }
 
-uint qHash(const NS_RENDERER::RenderModelBatchKey &key, uint seed);
+static uint qHash(const NS_RENDERER::RenderModelBatchKey &key, uint seed)
+{
+    QByteArray arr;
+
+    {
+        QDataStream stream(&arr, QIODevice::WriteOnly);
+        stream << key.shaderId()
+               << key.textureId()
+               << key.drawMode()
+               << key.drawWidth();
+    }
+
+    return qHash(arr, seed);
+}
 
 #endif // RENDERMODELBATCHKEY_H

@@ -3,7 +3,6 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include "openglerrors.h"
 #include <QtDebug>
-#include "rendermodelbatch.h"
 #include "ishaderspec.h"
 #include "shaderdefs.h"
 #include "openglhelpers.h"
@@ -95,8 +94,8 @@ DemoGLWindow::~DemoGLWindow()
     delete m_pTexture;
     m_pTexture = NULL;
 
-    delete m_pBatch;
-    m_pBatch = NULL;
+    delete m_pRenderModel;
+    m_pRenderModel = NULL;
 
     delete m_pTempSpec;
     m_pTempSpec = NULL;
@@ -131,8 +130,9 @@ void DemoGLWindow::initializeGL()
 
     m_pTempSpec = new TempSpec();
 
-    GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, m_pTempSpec, m_program, this));
-    GLTRY(m_pBatch->create());
+    m_pRenderModel = new RenderModel();
+    m_pRenderModel->shaderProgram = m_program;
+    m_pRenderModel->shaderSpec = m_pTempSpec;
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 
@@ -140,16 +140,16 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords)));
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords)));
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords)));
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.4f), NULL, cols, textureCoords)));
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.3f), NULL, cols, textureCoords)));
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.2f), NULL, cols, textureCoords)));
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.1f), NULL, cols, textureCoords)));
-    GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0.0f), NULL, cols, textureCoords)));
-
-    GLTRY(m_pBatch->upload());
+    RenderModelBatchKey key(0,0);
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.4f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.3f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.2f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.1f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0.0f), NULL, cols, textureCoords));
+    m_pRenderModel->debugUploadAll();
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -172,12 +172,7 @@ void DemoGLWindow::paintGL()
     GLTRY(m_program->enableAttributeArray(ShaderDefs::ColorAttribute));
     GLTRY(m_program->enableAttributeArray(ShaderDefs::TextureCoordinateAttribute));
 
-    GLTRY(m_pBatch->bindDraw());
-    GLTRY(m_pTexture->bind(0));
-    GLTRY(m_pBatch->setAttributePointers());
-    GLTRY(m_pBatch->draw());
-    GLTRY(m_pTexture->release());
-    GLTRY(m_pBatch->releaseDraw());
+    m_pRenderModel->debugDraw(m_pTexture);
 
     GLTRY(m_program->disableAttributeArray(ShaderDefs::PositionAttribute));
     GLTRY(m_program->disableAttributeArray(ShaderDefs::ColorAttribute));

@@ -19,7 +19,8 @@ SOURCES += \
     opengluniformbuffer.cpp \
     shaderdefs.cpp \
     openglshaderprogram.cpp \
-    rendermodelbatchkey.cpp
+    rendermodelbatchkey.cpp \
+    rendermodel.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -32,7 +33,8 @@ HEADERS +=\
     ishaderspec.h \
     opengluniformbuffer.h \
     openglshaderprogram.h \
-    rendermodelbatchkey.h
+    rendermodelbatchkey.h \
+    rendermodel.h
 
 unix {
     target.path = /usr/lib

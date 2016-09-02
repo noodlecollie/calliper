@@ -1,0 +1,61 @@
+#include "rendermodel.h"
+#include "openglshaderprogram.h"
+
+namespace NS_RENDERER
+{
+    RenderModel::RenderModel()
+        : shaderProgram(NULL), shaderSpec(NULL)
+    {
+
+    }
+
+    RenderModel::~RenderModel()
+    {
+        clear();
+    }
+
+    void RenderModel::addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params, QOpenGLBuffer::UsagePattern usagePattern)
+    {
+        // TODO: Actually get shader!
+
+        RenderModelBatch* batch = NULL;
+        if ( !m_Table.contains(key) || (batch = m_Table.find(key).value())->isFull() )
+        {
+            batch = new RenderModelBatch(usagePattern, shaderSpec, shaderProgram);
+            m_Table.insert(key, batch);
+        }
+
+        // This should never happen, but just to be safe:
+        Q_ASSERT_X(batch, Q_FUNC_INFO, "No render batch pointer acquired!");
+
+        batch->create();
+        batch->addItem(params);
+    }
+
+    void RenderModel::clear()
+    {
+        qDeleteAll(m_Table.values());
+        m_Table.clear();
+    }
+
+    void RenderModel::debugDraw(QOpenGLTexture *texture)
+    {
+        foreach ( RenderModelBatch* batch, m_Table.values() )
+        {
+            batch->bindDraw();
+            texture->bind(0);
+            batch->setAttributePointers();
+            batch->draw();
+            texture->release();
+            batch->releaseDraw();
+        }
+    }
+
+    void RenderModel::debugUploadAll()
+    {
+        foreach ( RenderModelBatch* batch, m_Table.values() )
+        {
+            batch->upload();
+        }
+    }
+}

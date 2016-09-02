@@ -7,9 +7,8 @@
 namespace NS_RENDERER
 {
     RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec,
-                                       QOpenGLShaderProgram* shaderProgram, QObject* parent)
-        : QObject(parent),
-          m_iUsagePattern(usagePattern),
+                                       QOpenGLShaderProgram* shaderProgram)
+        : m_iUsagePattern(usagePattern),
           m_bCreated(false),
           m_GlVertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_GlIndexBuffer(QOpenGLBuffer::IndexBuffer),
@@ -369,5 +368,10 @@ namespace NS_RENDERER
             // Advance past the last component.
             data++;
         }
+    }
+
+    bool RenderModelBatch::isFull() const
+    {
+        return m_Items.count() >= m_pShaderSpec->maxBatchedItems();
     }
 }

@@ -2,7 +2,6 @@
 #define RENDERMODELBATCH_H
 
 #include "renderer_global.h"
-#include <QObject>
 #include <QOpenGLBuffer>
 #include "rendermodelbatchparams.h"
 #include "rendermodelbatchitem.h"
@@ -15,12 +14,11 @@ namespace NS_RENDERER
 {
     class IShaderSpec;
 
-    class RENDERERSHARED_EXPORT RenderModelBatch : public QObject
+    class RenderModelBatch
     {
-        Q_OBJECT
     public:
         RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec,
-                         QOpenGLShaderProgram* shaderProgram, QObject* parent = 0);
+                         QOpenGLShaderProgram* shaderProgram);
         ~RenderModelBatch();
 
         bool create();
@@ -29,6 +27,7 @@ namespace NS_RENDERER
         void addItem(const RenderModelBatchParams &params);
         int itemCount() const;
         void clearItems();
+        bool isFull() const;
 
         const IShaderSpec* shaderSpec() const;
         QOpenGLShaderProgram* shaderProgram() const;

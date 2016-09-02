@@ -8,11 +8,7 @@
 #include "opengluniformbuffer.h"
 #include <QImage>
 #include <QOpenGLTexture>
-
-namespace NS_RENDERER
-{
-    class RenderModelBatch;
-}
+#include "rendermodel.h"
 
 class TempSpec;
 
@@ -31,7 +27,7 @@ private:
     QOpenGLShaderProgram *m_program;
     GLuint  m_iVAOID;
 
-    NS_RENDERER::RenderModelBatch* m_pBatch;
+    NS_RENDERER::RenderModel*   m_pRenderModel;
     TempSpec*   m_pTempSpec;
     QImage  m_TextureImage;
     QOpenGLTexture* m_pTexture;
