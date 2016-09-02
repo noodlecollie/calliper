@@ -34,18 +34,14 @@ namespace NS_RENDERER
         QOpenGLShaderProgram* shaderProgram() const;
         bool shaderSupportsBatching() const;
 
-        void bindVAO();
-        void releaseVAO();
-
         void upload(bool force = false);
         bool needsUpload() const;
 
         // Assumes upload() has been called!
-        // These functions should be called in the following order.
-        void beginDraw();
+        void bindDraw();
         void setAttributePointers();
         void draw();
-        void endDraw();
+        void releaseDraw();
 
         int localPositionCount() const;
         int localNormalCount() const;
@@ -70,7 +66,6 @@ private:
             return (quint32)(~0) >> ((sizeof(quint32) * 8) - numBits);
         }
 
-        GLuint  m_iVAOID;
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
         bool    m_bCreated;
 

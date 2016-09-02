@@ -92,12 +92,19 @@ namespace NS_RENDERER
         delete m_program;
         m_program = NULL;
 
+        GL_CURRENT_F;
+        GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
+
         doneCurrent();
     }
 
     void DemoGLWindow::initializeGL()
     {
         qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
+        GL_CURRENT_F;
+
+        GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
+        GLTRY(f->glBindVertexArray(m_iVAOID));
 
         GLTRY(m_program = new QOpenGLShaderProgram(QOpenGLContext::currentContext()));
         GLTRY(m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource));
@@ -141,16 +148,26 @@ namespace NS_RENDERER
 
     void DemoGLWindow::paintGL()
     {
-        QOpenGLFunctions_4_1_Core* f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_1_Core>();
+        GL_CURRENT_F;
 
         const qreal retinaScale = devicePixelRatio();
         GLTRY(f->glViewport(0, 0, width() * retinaScale, height() * retinaScale));
 
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT));
 
-        GLTRY(m_pBatch->beginDraw());
+        GLTRY(f->glBindVertexArray(m_iVAOID));
+
+        GLTRY(m_program->enableAttributeArray(ShaderDefs::PositionAttribute));
+        GLTRY(m_program->enableAttributeArray(ShaderDefs::ColorAttribute));
+
+        GLTRY(m_pBatch->bindDraw());
         GLTRY(m_pBatch->setAttributePointers());
         GLTRY(m_pBatch->draw());
-        GLTRY(m_pBatch->endDraw());
+        GLTRY(m_pBatch->releaseDraw());
+
+        GLTRY(m_program->disableAttributeArray(ShaderDefs::PositionAttribute));
+        GLTRY(m_program->disableAttributeArray(ShaderDefs::ColorAttribute));
+
+        GLTRY(f->glBindVertexArray(0));
     }
 }

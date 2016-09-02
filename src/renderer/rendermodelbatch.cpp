@@ -9,7 +9,6 @@ namespace NS_RENDERER
     RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec,
                                        QOpenGLShaderProgram* shaderProgram, QObject* parent)
         : QObject(parent),
-          m_iVAOID(0),
           m_iUsagePattern(usagePattern),
           m_bCreated(false),
           m_GlVertexBuffer(QOpenGLBuffer::VertexBuffer),
@@ -35,11 +34,8 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glGenVertexArrays(1, &m_iVAOID);
-        f->glBindVertexArray(m_iVAOID);
-
         m_iUniformBlockIndex = f->glGetUniformBlockIndex(m_pShaderProgram->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
-        f->glUniformBlockBinding(m_pShaderProgram->programId(), m_iUniformBlockIndex, 0);
+        f->glUniformBlockBinding(m_pShaderProgram->programId(), m_iUniformBlockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
 
         m_GlVertexBuffer.setUsagePattern(m_iUsagePattern);
         m_GlIndexBuffer.setUsagePattern(m_iUsagePattern);
@@ -54,13 +50,9 @@ namespace NS_RENDERER
         if ( !m_bCreated )
             return;
 
-        GL_CURRENT_F;
-
         m_GlVertexBuffer.destroy();
         m_GlIndexBuffer.destroy();
-         m_GlUniformBuffer.destroy();
-
-        f->glDeleteVertexArrays(1, &m_iVAOID);
+        m_GlUniformBuffer.destroy();
 
         m_bCreated = false;
     }
@@ -271,36 +263,11 @@ namespace NS_RENDERER
         return m_pShaderProgram;
     }
 
-    void RenderModelBatch::beginDraw()
-    {
-        bindVAO();
-
-        // TODO: Really the attribute arrays don't belong in here,
-        // and neither does the VAO. The arrays we use to draw with
-        // are specific to a shader, so we only need to change them
-        // at the beginning and end of a phase. It doesn't really make
-        // sense to enable and disable them after every batch.
-        // Once the actual render manager is in place, move these there.
-        m_pShaderProgram->enableAttributeArray(ShaderDefs::PositionAttribute);
-        m_pShaderProgram->enableAttributeArray(ShaderDefs::ColorAttribute);
-    }
-
-    void RenderModelBatch::endDraw()
-    {
-        m_GlIndexBuffer.release();
-        m_GlVertexBuffer.release();
-        m_pShaderProgram->disableAttributeArray(ShaderDefs::PositionAttribute);
-        m_pShaderProgram->disableAttributeArray(ShaderDefs::ColorAttribute);
-        releaseVAO();
-    }
-
     void RenderModelBatch::setAttributePointers()
     {
         Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
         Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Setting attribute pointers requires a shader program!");
         Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Setting attribute pointers requires a shader spec!");
-
-        m_GlVertexBuffer.bind();
 
         int offset = 0;
 
@@ -337,26 +304,23 @@ namespace NS_RENDERER
         }
     }
 
-    void RenderModelBatch::bindVAO()
+    void RenderModelBatch::bindDraw()
     {
-        GL_CURRENT_F;
-
-        f->glBindVertexArray(m_iVAOID);
-    }
-
-    void RenderModelBatch::releaseVAO()
-    {
-        GL_CURRENT_F;
-
-        f->glBindVertexArray(0);
+        m_GlVertexBuffer.bind();
+        m_GlIndexBuffer.bind();
     }
 
     void RenderModelBatch::draw()
     {
         GL_CURRENT_F;
 
-        m_GlIndexBuffer.bind();
         f->glDrawElements(GL_TRIANGLES, m_LocalIndexBuffer.count(), GL_UNSIGNED_INT, (void*)0);
+    }
+
+    void RenderModelBatch::releaseDraw()
+    {
+        m_GlIndexBuffer.release();
+        m_GlVertexBuffer.release();
     }
 
     void RenderModelBatch::uploadUniformData()
@@ -367,7 +331,7 @@ namespace NS_RENDERER
         m_GlUniformBuffer.allocate(m_Items.count() * 16 * sizeof(float));
         m_GlUniformBuffer.release();
 
-        m_GlUniformBuffer.bindToIndex(0);
+        m_GlUniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint);
 
         m_GlUniformBuffer.bind();
         for ( int i = 0; i < m_Items.count(); i++ )

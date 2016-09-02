@@ -24,6 +24,7 @@ namespace NS_RENDERER
 
     private:
         QOpenGLShaderProgram *m_program;
+        GLuint  m_iVAOID;
 
         RenderModelBatch* m_pBatch;
         TempSpec*       m_pTempSpec;
