@@ -117,26 +117,19 @@ namespace NS_RENDERER
         GLTRY(m_pBatch = new RenderModelBatch(QOpenGLBuffer::DynamicDraw, m_pTempSpec, m_program, this));
         GLTRY(m_pBatch->create());
 
-        QVector<float> tri1 = triangle(QVector2D(-1, 0), QVector2D(-0.5f, 1));
-        QVector<float> tri2 = triangle(QVector2D(-0.5f, 0), QVector2D(0,1));
-        QVector<float> tri3 = triangle(QVector2D(0, 0), QVector2D(0.5f,1));
-        QVector<float> tri4 = triangle(QVector2D(0.5f, 0), QVector2D(1,1));
-        QVector<float> tri5 = triangle(QVector2D(-1, -1), QVector2D(-0.5f, 0));
-        QVector<float> tri6 = triangle(QVector2D(-0.5f, -1), QVector2D(0,0));
-        QVector<float> tri7 = triangle(QVector2D(0, -1), QVector2D(0.5f,0));
-        QVector<float> tri8 = triangle(QVector2D(0.5f, -1), QVector2D(1,0));
+        QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 
         GLfloat cols[] = { 1,0,0,1, 0,1,0,1, 0,0,1,1 };
         GLuint indices[] = { 0,1,2 };
 
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri2.constData(), 3, indices, transMat(0.125f), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri3.constData(), 3, indices, transMat(0.25f), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri4.constData(), 3, indices, transMat(0.375f), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri5.constData(), 3, indices, transMat(0.5f), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri6.constData(), 3, indices, transMat(0.625f), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri7.constData(), 3, indices, transMat(0.75f), NULL, cols, NULL)));
-        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri8.constData(), 3, indices, transMat(0.875f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.4f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.3f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.2f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.1f), NULL, cols, NULL)));
+        GLTRY(m_pBatch->addItem(RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0.0f), NULL, cols, NULL)));
 
         GLTRY(m_pBatch->upload());
     }
