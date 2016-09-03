@@ -11,34 +11,40 @@ TEMPLATE = lib
 
 DEFINES += RENDERER_LIBRARY
 
+INCLUDEPATH += \
+    opengl \
+    shaders \
+    rendermodel \
+    shaderstore
+
 SOURCES += \
-    openglerrors.cpp \
-    rendermodelbatch.cpp \
-    rendermodelbatchparams.cpp \
-    rendermodelbatchitem.cpp \
-    opengluniformbuffer.cpp \
-    shaderdefs.cpp \
-    openglshaderprogram.cpp \
-    rendermodelbatchkey.cpp \
-    rendermodel.cpp \
+    opengl/openglerrors.cpp \
+    rendermodel/rendermodelbatch.cpp \
+    rendermodel/rendermodelbatchparams.cpp \
+    rendermodel/rendermodelbatchitem.cpp \
+    opengl/opengluniformbuffer.cpp \
+    shaders/shaderdefs.cpp \
+    opengl/openglshaderprogram.cpp \
+    rendermodel/rendermodelbatchkey.cpp \
+    rendermodel/rendermodel.cpp \
     shaders/debugscreenspaceshader.cpp \
-    shaderstore.cpp
+    shaderstore/shaderstore.cpp
 
 HEADERS +=\
         renderer_global.h \
-    openglerrors.h \
-    rendermodelbatch.h \
-    shaderdefs.h \
-    rendermodelbatchparams.h \
-    openglhelpers.h \
-    rendermodelbatchitem.h \
-    ishaderspec.h \
-    opengluniformbuffer.h \
-    openglshaderprogram.h \
-    rendermodelbatchkey.h \
-    rendermodel.h \
+    opengl/openglerrors.h \
+    rendermodel/rendermodelbatch.h \
+    shaders/shaderdefs.h \
+    rendermodel/rendermodelbatchparams.h \
+    opengl/openglhelpers.h \
+    rendermodel/rendermodelbatchitem.h \
+    shaders/ishaderspec.h \
+    opengl/opengluniformbuffer.h \
+    opengl/openglshaderprogram.h \
+    rendermodel/rendermodelbatchkey.h \
+    rendermodel/rendermodel.h \
     shaders/debugscreenspaceshader.h \
-    shaderstore.h
+    shaderstore/shaderstore.h
 
 unix {
     target.path = /usr/lib
