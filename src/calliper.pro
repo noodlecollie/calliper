@@ -3,6 +3,8 @@ TEMPLATE = subdirs
 SUBDIRS += \
 	application \
     renderer \
-    renderer-sandbox
+    renderer-sandbox \
+    model
 
 renderer-sandbox.depends = renderer
+model.depends = renderer
