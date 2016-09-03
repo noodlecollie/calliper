@@ -1,12 +1,12 @@
 #include "demoglwindow.h"
 #include <QScreen>
 #include <QOpenGLFunctions_4_1_Core>
-#include "openglerrors.h"
+#include "opengl/openglerrors.h"
 #include <QtDebug>
-#include "ishaderspec.h"
-#include "shaderdefs.h"
-#include "openglhelpers.h"
-#include "shaderstore.h"
+#include "shaders/ishaderspec.h"
+#include "shaders/shaderdefs.h"
+#include "opengl/openglhelpers.h"
+#include "shaderstore/shaderstore.h"
 #include "shaders/debugscreenspaceshader.h"
 
 using namespace NS_RENDERER;

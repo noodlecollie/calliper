@@ -11,12 +11,6 @@ TEMPLATE = lib
 
 DEFINES += RENDERER_LIBRARY
 
-INCLUDEPATH += \
-    opengl \
-    shaders \
-    rendermodel \
-    shaderstore
-
 SOURCES += \
     opengl/openglerrors.cpp \
     rendermodel/rendermodelbatch.cpp \

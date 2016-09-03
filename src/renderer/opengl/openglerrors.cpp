@@ -2,7 +2,7 @@
 #include <QtDebug>
 #include <QTextStream>
 #include <QOpenGLFunctions_4_1_Core>
-#include "shaderdefs.h"
+#include "shaders/shaderdefs.h"
 
 namespace NS_RENDERER
 {

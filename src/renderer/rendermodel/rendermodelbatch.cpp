@@ -1,7 +1,7 @@
 #include "rendermodelbatch.h"
-#include "openglerrors.h"
-#include "openglhelpers.h"
-#include "ishaderspec.h"
+#include "opengl/openglerrors.h"
+#include "opengl/openglhelpers.h"
+#include "shaders/ishaderspec.h"
 #include <QOpenGLShaderProgram>
 
 namespace NS_RENDERER

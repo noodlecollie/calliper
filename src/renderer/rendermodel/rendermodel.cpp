@@ -1,6 +1,6 @@
 #include "rendermodel.h"
-#include "openglshaderprogram.h"
-#include "shaderstore.h"
+#include "opengl/openglshaderprogram.h"
+#include "shaderstore/shaderstore.h"
 
 namespace NS_RENDERER
 {
@@ -22,12 +22,14 @@ namespace NS_RENDERER
 
         // TODO: Implement a fallback shader.
         OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(key.shaderStoreId());
+        Q_ASSERT_X(program, Q_FUNC_INFO, "Invalid shader specified in key!");
 
         RenderModelBatch* batch = NULL;
         if ( !m_Table.contains(key) || (batch = m_Table.find(key).value())->isFull() )
         {
             batch = new RenderModelBatch(usagePattern, program);
             m_Table.insert(key, batch);
+            m_KeyOrdering.insert(key, 0);
         }
 
         // This should never happen, but just to be safe:
@@ -41,11 +43,12 @@ namespace NS_RENDERER
     {
         qDeleteAll(m_Table.values());
         m_Table.clear();
+        m_KeyOrdering.clear();
     }
 
     void RenderModel::debugDraw(QOpenGLTexture *texture)
     {
-        foreach ( const RenderModelBatchKey key, m_Table.keys() )
+        foreach ( const RenderModelBatchKey &key, m_KeyOrdering.keys() )
         {
             RenderModelBatch* batch = m_Table.value(key);
 

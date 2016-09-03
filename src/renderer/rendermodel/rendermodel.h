@@ -6,6 +6,7 @@
 #include "rendermodelbatchkey.h"
 #include "rendermodelbatch.h"
 #include "rendermodelbatchparams.h"
+#include <QMap>
 
 class QOpenGLTexture;
 
@@ -28,8 +29,10 @@ namespace NS_RENDERER
 
     private:
         typedef QMultiHash<RenderModelBatchKey, RenderModelBatch*> RenderModelTable;
+        typedef QMap<RenderModelBatchKey, char> KeyOrderingMap;
 
         RenderModelTable    m_Table;
+        KeyOrderingMap      m_KeyOrdering;
     };
 }
 

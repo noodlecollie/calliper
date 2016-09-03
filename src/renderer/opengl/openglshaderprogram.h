@@ -3,7 +3,7 @@
 
 #include "renderer_global.h"
 #include <QOpenGLShaderProgram>
-#include "ishaderspec.h"
+#include "shaders/ishaderspec.h"
 
 namespace NS_RENDERER
 {

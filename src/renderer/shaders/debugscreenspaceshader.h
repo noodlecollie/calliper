@@ -2,7 +2,7 @@
 #define DEBUGSCREENSPACESHADER_H
 
 #include "renderer_global.h"
-#include "openglshaderprogram.h"
+#include "opengl/openglshaderprogram.h"
 
 namespace NS_RENDERER
 {

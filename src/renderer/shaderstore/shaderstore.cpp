@@ -1,7 +1,7 @@
-#include "shaderstore.h"
+#include "shaderstore/shaderstore.h"
 #include "shaders/debugscreenspaceshader.h"
-#include "openglhelpers.h"
-#include "shaderdefs.h"
+#include "opengl/openglhelpers.h"
+#include "shaders/shaderdefs.h"
 
 namespace NS_RENDERER
 {

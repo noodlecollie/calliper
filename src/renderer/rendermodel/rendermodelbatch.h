@@ -5,8 +5,8 @@
 #include <QOpenGLBuffer>
 #include "rendermodelbatchparams.h"
 #include "rendermodelbatchitem.h"
-#include "shaderdefs.h"
-#include "opengluniformbuffer.h"
+#include "shaders/shaderdefs.h"
+#include "opengl/opengluniformbuffer.h"
 
 class QOpenGLShaderProgram;
 

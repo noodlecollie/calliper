@@ -1,5 +1,5 @@
 #include "openglshaderprogram.h"
-#include "shaderdefs.h"
+#include "shaders/shaderdefs.h"
 
 namespace NS_RENDERER
 {

@@ -5,10 +5,10 @@
 #include <QOpenGLWindow>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
-#include "opengluniformbuffer.h"
+#include "opengl/opengluniformbuffer.h"
 #include <QImage>
 #include <QOpenGLTexture>
-#include "rendermodel.h"
+#include "rendermodel/rendermodel.h"
 
 class TempSpec;
 
