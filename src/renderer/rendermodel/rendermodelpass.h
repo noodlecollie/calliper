@@ -7,6 +7,8 @@
 #include "rendermodelbatch.h"
 #include "rendermodelbatchparams.h"
 #include <QMap>
+#include "functors/ishaderretrievalfunctor.h"
+#include "functors/itextureretrievalfunctor.h"
 
 class QOpenGLTexture;
 
@@ -17,7 +19,7 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT RenderModelPass
     {
     public:
-        RenderModelPass();
+        RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor);
         ~RenderModelPass();
 
         void addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params,
@@ -33,6 +35,9 @@ namespace NS_RENDERER
 
         RenderModelTable    m_Table;
         KeyOrderingMap      m_KeyOrdering;
+
+        IShaderRetrievalFunctor* const  m_pShaderFunctor;
+        ITextureRetrievalFunctor* const m_pTextureFunctor;
     };
 }
 

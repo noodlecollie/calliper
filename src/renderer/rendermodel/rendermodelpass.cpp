@@ -1,13 +1,13 @@
 #include "rendermodelpass.h"
 #include "opengl/openglshaderprogram.h"
-#include "stores/shaderstore.h"
-#include "stores/texturestore.h"
 
 namespace NS_RENDERER
 {
-    RenderModelPass::RenderModelPass()
+    RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor)
     {
-
+        Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor is required!");
+        Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor is required!");
     }
 
     RenderModelPass::~RenderModelPass()
@@ -17,12 +17,7 @@ namespace NS_RENDERER
 
     void RenderModelPass::addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params, QOpenGLBuffer::UsagePattern usagePattern)
     {
-        Q_ASSERT_X(ShaderStore::getShaderStore(),
-                 Q_FUNC_INFO,
-                 "Shader store not intialised!");
-
-        // TODO: Implement a fallback shader.
-        OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(key.shaderStoreId());
+        OpenGLShaderProgram* program = (*m_pShaderFunctor)(key.shaderStoreId());
         Q_ASSERT_X(program, Q_FUNC_INFO, "Invalid shader specified in key!");
 
         RenderModelBatch* batch = NULL;
@@ -55,7 +50,7 @@ namespace NS_RENDERER
         {
             RenderModelBatch* batch = m_Table.value(key);
 
-            OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(key.shaderStoreId());
+            OpenGLShaderProgram* program = (*m_pShaderFunctor)(key.shaderStoreId());
             if ( program != currentProgram )
             {
                 if ( currentProgram )
@@ -69,7 +64,7 @@ namespace NS_RENDERER
                 currentProgram->enableAttributeArrays();
             }
 
-            OpenGLTexturePointer texture = TextureStore::getTextureStore()->texture(key.textureId());
+            OpenGLTexturePointer texture = (*m_pTextureFunctor)(key.textureId());
             if ( texture != currentTexture )
             {
                 if ( currentTexture )

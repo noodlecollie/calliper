@@ -21,9 +21,7 @@ SOURCES += \
     opengl/openglshaderprogram.cpp \
     rendermodel/rendermodelbatchkey.cpp \
     shaders/debugscreenspaceshader.cpp \
-    stores/shaderstore.cpp \
     rendermodel/rendermodelpass.cpp \
-    stores/texturestore.cpp \
     opengl/opengltexture.cpp
 
 HEADERS +=\
@@ -39,10 +37,10 @@ HEADERS +=\
     opengl/openglshaderprogram.h \
     rendermodel/rendermodelbatchkey.h \
     shaders/debugscreenspaceshader.h \
-    stores/shaderstore.h \
     rendermodel/rendermodelpass.h \
-    stores/texturestore.h \
-    opengl/opengltexture.h
+    opengl/opengltexture.h \
+    functors/ishaderretrievalfunctor.h \
+    functors/itextureretrievalfunctor.h
 
 unix {
     target.path = /usr/lib
