@@ -1,4 +1,4 @@
-#include "shaderstore/shaderstore.h"
+#include "stores/shaderstore.h"
 #include "shaders/debugscreenspaceshader.h"
 #include "opengl/openglhelpers.h"
 #include "shaders/shaderdefs.h"

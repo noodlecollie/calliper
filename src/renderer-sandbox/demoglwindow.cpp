@@ -6,7 +6,7 @@
 #include "shaders/ishaderspec.h"
 #include "shaders/shaderdefs.h"
 #include "opengl/openglhelpers.h"
-#include "shaderstore/shaderstore.h"
+#include "stores/shaderstore.h"
 #include "shaders/debugscreenspaceshader.h"
 
 using namespace NS_RENDERER;

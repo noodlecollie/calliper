@@ -3,4 +3,8 @@
         <file alias="debugscreenspaceshader.frag">shaders/debugscreenspaceshader.frag</file>
         <file alias="debugscreenspaceshader.vert">shaders/debugscreenspaceshader.vert</file>
     </qresource>
+    <qresource prefix="/textures">
+        <file alias="_ERROR_">textures/error.png</file>
+        <file alias="obsolete">textures/obsolete.png</file>
+    </qresource>
 </RCC>

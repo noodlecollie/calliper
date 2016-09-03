@@ -1,6 +1,6 @@
 #include "rendermodelpass.h"
 #include "opengl/openglshaderprogram.h"
-#include "shaderstore/shaderstore.h"
+#include "stores/shaderstore.h"
 
 namespace NS_RENDERER
 {
@@ -52,7 +52,6 @@ namespace NS_RENDERER
         {
             RenderModelBatch* batch = m_Table.value(key);
 
-            // TODO: We need to order this nicely, by frequency of change in attribute.
             OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(key.shaderStoreId());
             program->bind();
             program->enableAttributeArrays();
