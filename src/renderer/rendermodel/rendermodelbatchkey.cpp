@@ -4,6 +4,21 @@
 
 namespace NS_RENDERER
 {
+    uint qHash(const RenderModelBatchKey &key, uint seed)
+    {
+        QByteArray arr;
+
+        {
+            QDataStream stream(&arr, QIODevice::WriteOnly);
+            stream << key.shaderStoreId()
+                   << key.textureId()
+                   << key.drawMode()
+                   << key.drawWidth();
+        }
+
+        return qHash(arr, seed);
+    }
+
     RenderModelBatchKey::RenderModelBatchKey(quint16 shaderStoreId, quint32 textureId, GLenum drawMode, float drawWidth)
         : m_iShaderStoreId(shaderStoreId), m_iTextureId(textureId), m_iDrawMode(drawMode), m_flDrawWidth(drawWidth)
     {

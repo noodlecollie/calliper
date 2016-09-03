@@ -16,7 +16,6 @@ namespace NS_RENDERER
         Q_ASSERT_X(!g_pGlobalTextureStore, Q_FUNC_INFO, "Texture store singleton already created!");
 
         g_pGlobalTextureStore = this;
-        addBuiltInTextures();
     }
 
     TextureStore::~TextureStore()
@@ -38,7 +37,7 @@ namespace NS_RENDERER
             return 0;
         }
 
-        OpenGLTexturePointer texture(new OpenGLTexture(image));
+        OpenGLTexturePointer texture(new OpenGLTexture(image.mirrored()));
 
         quint64 newId = nextTextureId();
         Q_ASSERT_X(newId != 0, Q_FUNC_INFO, "We should never get a new texture ID of 0!");

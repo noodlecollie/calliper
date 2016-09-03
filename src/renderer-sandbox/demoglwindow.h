@@ -33,7 +33,6 @@ private:
 
     NS_RENDERER::RenderModelPass*   m_pRenderModel;
     TempSpec*   m_pTempSpec;
-    QImage  m_TextureImage;
     QOpenGLTexture* m_pTexture;
 };
 

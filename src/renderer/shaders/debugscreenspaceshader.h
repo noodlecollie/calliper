@@ -36,7 +36,7 @@ namespace NS_RENDERER
             return 2;
         }
 
-        virtual int maxBatchedItems() const
+        virtual int maxBatchedItems() const override
         {
             return 8;
         }

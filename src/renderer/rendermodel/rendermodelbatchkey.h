@@ -61,21 +61,8 @@ namespace NS_RENDERER
         GLenum      m_iDrawMode;
         float       m_flDrawWidth;
     };
-}
 
-static uint qHash(const NS_RENDERER::RenderModelBatchKey &key, uint seed)
-{
-    QByteArray arr;
-
-    {
-        QDataStream stream(&arr, QIODevice::WriteOnly);
-        stream << key.shaderStoreId()
-               << key.textureId()
-               << key.drawMode()
-               << key.drawWidth();
-    }
-
-    return qHash(arr, seed);
+    uint RENDERERSHARED_EXPORT qHash(const RenderModelBatchKey &key, uint seed);
 }
 
 #endif // RENDERMODELBATCHKEY_H

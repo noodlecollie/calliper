@@ -51,38 +51,6 @@ QMatrix4x4 transMat(float x)
                       0,0,0,1);
 }
 
-static const char *vertexShaderSource =
-        "#version 410 core\n"
-        "layout (location=0) in vec4 vPosition;\n"
-        "layout (location=2) in vec4 vColour;\n"
-        "layout (location=3) in vec2 vTexCoord;\n"
-        "layout (std140) uniform LocalUniformBlock\n"
-        "{\n"
-        "   mat4 modelToWorldMatrices[8];\n"
-        "};\n"
-        "out vec4 fColour;\n"
-        "out vec2 fTexCoord;\n"
-        "void main()\n"
-        "{\n"
-        "   uint id = uint(vPosition.z);\n"
-        "   gl_Position = modelToWorldMatrices[id] * vec4(vPosition.xy, 0, 1);\n"
-        "   fColour = vColour;\n"
-        "   fTexCoord = vTexCoord;\n"
-        "}\n"
-    ;
-
-static const char *fragmentShaderSource =
-        "#version 410 core\n"
-        "in vec4 fColour;\n"
-        "in vec2 fTexCoord;\n"
-        "layout(location = 0) out vec4 color;\n"
-        "uniform sampler2D tex;\n"
-        "void main()\n"
-        "{\n"
-        "   color = texture(tex, fTexCoord) /* * fColour*/;\n"
-        "}\n"
-    ;
-
 DemoGLWindow::DemoGLWindow()
 {
     m_pTempSpec = NULL;
@@ -113,11 +81,6 @@ void DemoGLWindow::initializeGL()
 {
     qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
     GL_CURRENT_F;
-
-    m_TextureImage = QImage(qApp->applicationDirPath() + "/../../../src/application/resource/textures/dev/obsolete.png");
-    qDebug().nospace() << "Texture image: " << m_TextureImage.width() << "x" << m_TextureImage.height();
-
-    m_pTexture = new QOpenGLTexture(m_TextureImage.mirrored());
 
     GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
     GLTRY(f->glBindVertexArray(m_iVAOID));
