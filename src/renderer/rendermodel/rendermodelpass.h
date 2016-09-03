@@ -1,5 +1,5 @@
-#ifndef RENDERMODEL_H
-#define RENDERMODEL_H
+#ifndef RENDERMODELPASS_H
+#define RENDERMODELPASS_H
 
 #include "renderer_global.h"
 #include <QMultiHash>
@@ -14,11 +14,11 @@ namespace NS_RENDERER
 {
     class OpenGLShaderProgram;
 
-    class RENDERERSHARED_EXPORT RenderModel
+    class RENDERERSHARED_EXPORT RenderModelPass
     {
     public:
-        RenderModel();
-        ~RenderModel();
+        RenderModelPass();
+        ~RenderModelPass();
 
         void addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params,
                      QOpenGLBuffer::UsagePattern usagePattern = QOpenGLBuffer::DynamicDraw);
@@ -36,4 +36,4 @@ namespace NS_RENDERER
     };
 }
 
-#endif // RENDERMODEL_H
+#endif // RENDERMODELPASS_H

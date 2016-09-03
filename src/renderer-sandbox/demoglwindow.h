@@ -8,7 +8,7 @@
 #include "opengl/opengluniformbuffer.h"
 #include <QImage>
 #include <QOpenGLTexture>
-#include "rendermodel/rendermodel.h"
+#include "rendermodel/rendermodelpass.h"
 
 class TempSpec;
 
@@ -31,7 +31,7 @@ protected:
 private:
     GLuint  m_iVAOID;
 
-    NS_RENDERER::RenderModel*   m_pRenderModel;
+    NS_RENDERER::RenderModelPass*   m_pRenderModel;
     TempSpec*   m_pTempSpec;
     QImage  m_TextureImage;
     QOpenGLTexture* m_pTexture;

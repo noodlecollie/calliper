@@ -1,20 +1,20 @@
-#include "rendermodel.h"
+#include "rendermodelpass.h"
 #include "opengl/openglshaderprogram.h"
 #include "shaderstore/shaderstore.h"
 
 namespace NS_RENDERER
 {
-    RenderModel::RenderModel()
+    RenderModelPass::RenderModelPass()
     {
 
     }
 
-    RenderModel::~RenderModel()
+    RenderModelPass::~RenderModelPass()
     {
         clear();
     }
 
-    void RenderModel::addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params, QOpenGLBuffer::UsagePattern usagePattern)
+    void RenderModelPass::addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params, QOpenGLBuffer::UsagePattern usagePattern)
     {
         Q_ASSERT_X(ShaderStore::getShaderStore(),
                  Q_FUNC_INFO,
@@ -39,14 +39,14 @@ namespace NS_RENDERER
         batch->addItem(params);
     }
 
-    void RenderModel::clear()
+    void RenderModelPass::clear()
     {
         qDeleteAll(m_Table.values());
         m_Table.clear();
         m_KeyOrdering.clear();
     }
 
-    void RenderModel::debugDraw(QOpenGLTexture *texture)
+    void RenderModelPass::debugDraw(QOpenGLTexture *texture)
     {
         foreach ( const RenderModelBatchKey &key, m_KeyOrdering.keys() )
         {
@@ -68,7 +68,7 @@ namespace NS_RENDERER
         }
     }
 
-    void RenderModel::debugUploadAll()
+    void RenderModelPass::debugUploadAll()
     {
         foreach ( RenderModelBatch* batch, m_Table.values() )
         {

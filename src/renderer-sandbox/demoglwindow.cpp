@@ -126,7 +126,7 @@ void DemoGLWindow::initializeGL()
     ShaderStore* store = new ShaderStore();
     store->constructShaders();
 
-    m_pRenderModel = new RenderModel();
+    m_pRenderModel = new RenderModelPass();
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 
