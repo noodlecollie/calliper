@@ -6,15 +6,13 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec,
-                                       QOpenGLShaderProgram* shaderProgram)
+    RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec)
         : m_iUsagePattern(usagePattern),
           m_bCreated(false),
           m_GlVertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_GlIndexBuffer(QOpenGLBuffer::IndexBuffer),
           m_GlUniformBuffer(QOpenGLBuffer::StaticDraw),
           m_pShaderSpec(shaderSpec),
-          m_pShaderProgram(shaderProgram),
           m_bDataStale(false),
           m_iBatchIdMask(batchIdMask(m_pShaderSpec->maxBatchedItems())),
           m_iUniformBlockIndex(0)
@@ -30,12 +28,6 @@ namespace NS_RENDERER
     {
         if ( m_bCreated )
             return true;
-
-        GL_CURRENT_F;
-
-        // Really this shouldn't be dealt with here, it's external to the batch.
-        m_iUniformBlockIndex = f->glGetUniformBlockIndex(m_pShaderProgram->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
-        f->glUniformBlockBinding(m_pShaderProgram->programId(), m_iUniformBlockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
 
         m_GlVertexBuffer.setUsagePattern(m_iUsagePattern);
         m_GlIndexBuffer.setUsagePattern(m_iUsagePattern);
@@ -258,46 +250,45 @@ namespace NS_RENDERER
         m_bDataStale = true;
     }
 
-    QOpenGLShaderProgram* RenderModelBatch::shaderProgram() const
-    {
-        return m_pShaderProgram;
-    }
-
-    void RenderModelBatch::setAttributePointers()
+    void RenderModelBatch::setAttributePointers(QOpenGLShaderProgram *shaderProgram)
     {
         // TODO: Need to eliminate holding a pointer to the shader.
         Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
-        Q_ASSERT_X(m_pShaderProgram, Q_FUNC_INFO, "Setting attribute pointers requires a shader program!");
         Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Setting attribute pointers requires a shader spec!");
 
         int offset = 0;
 
-        trySetAttributeBuffer(offset,
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
                               ShaderDefs::PositionAttribute,
                               m_pShaderSpec->positionComponents(),
                               m_LocalPositionBuffer.count());
 
-        trySetAttributeBuffer(offset,
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
                               ShaderDefs::NormalAttribute,
                               m_pShaderSpec->normalComponents(),
                               m_LocalNormalBuffer.count());
 
-        trySetAttributeBuffer(offset,
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
                               ShaderDefs::ColorAttribute,
                               m_pShaderSpec->colorComponents(),
                               m_LocalColorBuffer.count());
 
-        trySetAttributeBuffer(offset,
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
                               ShaderDefs::TextureCoordinateAttribute,
                               m_pShaderSpec->textureCoordinateComponents(),
                               m_LocalTextureCoordinateBuffer.count());
     }
 
-    void RenderModelBatch::trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count)
+    void RenderModelBatch::trySetAttributeBuffer(QOpenGLShaderProgram *shaderProgram, int &offset, ShaderDefs::VertexArrayAttribute attribute,
+                                                 int components, int count)
     {
         if ( components > 0 )
         {
-            m_pShaderProgram->setAttributeBuffer(attribute,
+            shaderProgram->setAttributeBuffer(attribute,
                                                  GL_FLOAT,
                                                  offset * sizeof(GLfloat),
                                                  components);

@@ -17,8 +17,7 @@ namespace NS_RENDERER
     class RenderModelBatch
     {
     public:
-        RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec,
-                         QOpenGLShaderProgram* shaderProgram);
+        RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec);
         ~RenderModelBatch();
 
         bool create();
@@ -30,7 +29,6 @@ namespace NS_RENDERER
         bool isFull() const;
 
         const IShaderSpec* shaderSpec() const;
-        QOpenGLShaderProgram* shaderProgram() const;
         bool shaderSupportsBatching() const;
 
         void upload(bool force = false);
@@ -38,7 +36,7 @@ namespace NS_RENDERER
 
         // Assumes upload() has been called!
         void bindDraw();
-        void setAttributePointers();
+        void setAttributePointers(QOpenGLShaderProgram* shaderProgram);
         void draw();
         void releaseDraw();
 
@@ -56,7 +54,7 @@ private:
         void uploadVertexData();
         void uploadUniformData();
         void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
-        void trySetAttributeBuffer(int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
+        void trySetAttributeBuffer(QOpenGLShaderProgram* shaderProgram, int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
         void addIndices(const quint32* source, int count, int indexOffset);
         void addObjectIdsToPositions(int vertexOffset, int vertexCount, quint32 id);
 
@@ -82,7 +80,6 @@ private:
         QList<NS_RENDERER::RenderModelBatchItem> m_Items;
 
         const IShaderSpec*      m_pShaderSpec;
-        QOpenGLShaderProgram*   m_pShaderProgram;
         bool                    m_bDataStale;
         const quint32           m_iBatchIdMask;
         GLuint                  m_iUniformBlockIndex;

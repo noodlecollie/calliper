@@ -162,13 +162,7 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
-    OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(1);
-    program->bind();
-    program->enableAttributeArrays();
-
     m_pRenderModel->debugDraw(m_pTexture);
-
-    program->disableAttributeArrays();
 
     GLTRY(f->glBindVertexArray(0));
 }

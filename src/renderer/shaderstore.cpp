@@ -1,6 +1,7 @@
 #include "shaderstore.h"
 #include "shaders/debugscreenspaceshader.h"
 #include "openglhelpers.h"
+#include "shaderdefs.h"
 
 namespace NS_RENDERER
 {
@@ -53,6 +54,14 @@ namespace NS_RENDERER
         foreach ( OpenGLShaderProgram* shader, m_ShaderList )
         {
             shader->construct();
+
+            shader->bind();
+            GLuint blockIndex = f->glGetUniformBlockIndex(shader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
+            if ( blockIndex != GL_INVALID_INDEX )
+            {
+                f->glUniformBlockBinding(shader->programId(), blockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
+            }
+            shader->release();
         }
     }
 

@@ -26,7 +26,7 @@ namespace NS_RENDERER
         RenderModelBatch* batch = NULL;
         if ( !m_Table.contains(key) || (batch = m_Table.find(key).value())->isFull() )
         {
-            batch = new RenderModelBatch(usagePattern, program, program);
+            batch = new RenderModelBatch(usagePattern, program);
             m_Table.insert(key, batch);
         }
 
@@ -45,14 +45,23 @@ namespace NS_RENDERER
 
     void RenderModel::debugDraw(QOpenGLTexture *texture)
     {
-        foreach ( RenderModelBatch* batch, m_Table.values() )
+        foreach ( const RenderModelBatchKey key, m_Table.keys() )
         {
+            RenderModelBatch* batch = m_Table.value(key);
+
+            // TODO: We need to order this nicely, by frequency of change in attribute.
+            OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(key.shaderStoreId());
+            program->bind();
+            program->enableAttributeArrays();
+
             batch->bindDraw();
             texture->bind(0);
-            batch->setAttributePointers();
+            batch->setAttributePointers(program);
             batch->draw();
             texture->release();
             batch->releaseDraw();
+
+            program->disableAttributeArrays();
         }
     }
 
