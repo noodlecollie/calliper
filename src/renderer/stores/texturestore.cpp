@@ -38,7 +38,7 @@ namespace NS_RENDERER
             return 0;
         }
 
-        OpenGLTexturePointer texture(new QOpenGLTexture(image));
+        OpenGLTexturePointer texture(new OpenGLTexture(image));
 
         quint64 newId = nextTextureId();
         Q_ASSERT_X(newId != 0, Q_FUNC_INFO, "We should never get a new texture ID of 0!");
@@ -67,15 +67,15 @@ namespace NS_RENDERER
         addBuiltInTexture(":/textures/obsolete");
     }
 
-    void TextureStore::addBuildInTexture(const QString &path)
+    void TextureStore::addBuiltInTexture(const QString &path)
     {
-        createTexture(QImage(path), path.remove(":/textures/"));
+        createTexture(QImage(path), QString(path).remove(":/textures/"));
     }
 
     void TextureStore::createErrorTexture()
     {
         // ID and path will default to 0 and blank.
-        m_pErrorTexture = new OpenGLTexture(QImage(":/textures/_ERROR_"));
+        m_pErrorTexture = OpenGLTexturePointer(new OpenGLTexture(QImage(":/textures/_ERROR_")));
     }
 
     OpenGLTexturePointer TextureStore::texture(quint64 id) const
@@ -91,5 +91,10 @@ namespace NS_RENDERER
     quint64 TextureStore::textureId(const QString &path) const
     {
         return m_TextureNameTable.value(path, 0);
+    }
+
+    void TextureStore::initialise()
+    {
+        addBuiltInTextures();
     }
 }

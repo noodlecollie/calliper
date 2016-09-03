@@ -18,6 +18,8 @@ namespace NS_RENDERER
         TextureStore();
         ~TextureStore();
 
+        void initialise();
+
         quint64 createTexture(const QImage &image, const QString &path);
 
         OpenGLTexturePointer texture(quint64 id) const;

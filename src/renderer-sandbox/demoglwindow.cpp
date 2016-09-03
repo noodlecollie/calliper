@@ -8,6 +8,7 @@
 #include "opengl/openglhelpers.h"
 #include "stores/shaderstore.h"
 #include "shaders/debugscreenspaceshader.h"
+#include "stores/texturestore.h"
 
 using namespace NS_RENDERER;
 
@@ -126,6 +127,9 @@ void DemoGLWindow::initializeGL()
     ShaderStore* store = new ShaderStore();
     store->constructShaders();
 
+    TextureStore* texStore = new TextureStore();
+    texStore->initialise();
+
     m_pRenderModel = new RenderModelPass();
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
@@ -134,7 +138,7 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    RenderModelBatchKey key(store->shaderId("DebugScreenSpaceShader"), 0);
+    RenderModelBatchKey key(store->shaderId("DebugScreenSpaceShader"), texStore->textureId("obsolete"));
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords));
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords));
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords));
@@ -162,7 +166,7 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
-    m_pRenderModel->debugDraw(m_pTexture);
+    m_pRenderModel->debugDraw();
 
     GLTRY(f->glBindVertexArray(0));
 }

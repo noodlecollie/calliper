@@ -1,6 +1,7 @@
 #include "rendermodelpass.h"
 #include "opengl/openglshaderprogram.h"
 #include "stores/shaderstore.h"
+#include "stores/texturestore.h"
 
 namespace NS_RENDERER
 {
@@ -46,25 +47,50 @@ namespace NS_RENDERER
         m_KeyOrdering.clear();
     }
 
-    void RenderModelPass::debugDraw(QOpenGLTexture *texture)
+    void RenderModelPass::debugDraw()
     {
+        OpenGLShaderProgram* currentProgram = NULL;
+        OpenGLTexturePointer currentTexture;
         foreach ( const RenderModelBatchKey &key, m_KeyOrdering.keys() )
         {
             RenderModelBatch* batch = m_Table.value(key);
 
             OpenGLShaderProgram* program = ShaderStore::getShaderStore()->shader(key.shaderStoreId());
-            program->bind();
-            program->enableAttributeArrays();
+            if ( program != currentProgram )
+            {
+                if ( currentProgram )
+                {
+                    currentProgram->disableAttributeArrays();
+                    currentProgram->release();
+                }
+
+                currentProgram = program;
+                currentProgram->bind();
+                currentProgram->enableAttributeArrays();
+            }
+
+            OpenGLTexturePointer texture = TextureStore::getTextureStore()->texture(key.textureId());
+            if ( texture != currentTexture )
+            {
+                if ( currentTexture )
+                {
+                    currentTexture->release();
+                }
+
+                currentTexture = texture;
+                currentTexture->bind(0);
+            }
 
             batch->bindDraw();
-            texture->bind(0);
             batch->setAttributePointers(program);
             batch->draw();
-            texture->release();
             batch->releaseDraw();
-
-            program->disableAttributeArrays();
         }
+
+        currentTexture->release();
+
+        currentProgram->disableAttributeArrays();
+        currentProgram->release();
     }
 
     void RenderModelPass::debugUploadAll()

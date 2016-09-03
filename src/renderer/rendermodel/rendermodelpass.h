@@ -24,7 +24,7 @@ namespace NS_RENDERER
                      QOpenGLBuffer::UsagePattern usagePattern = QOpenGLBuffer::DynamicDraw);
         void clear();
 
-        void debugDraw(QOpenGLTexture* texture);
+        void debugDraw();
         void debugUploadAll();
 
     private:
