@@ -9,7 +9,7 @@
 #  define UTILSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#define NS_UTIL Util
-#define NS_STR_UTIL "Util"
+#define NS_UTIL ModuleUtil
+#define NS_STR_UTIL "ModuleUtil"
 
 #endif // UTIL_GLOBAL_H

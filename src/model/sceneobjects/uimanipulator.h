@@ -2,10 +2,10 @@
 #define UIMANIPULATOR_H
 
 #include "model_global.h"
-#include "sceneobject.h"
+#include "scene/sceneobject.h"
 #include <QList>
 #include <QVector3D>
-#include "callipermath.h"
+#include "math/math.h"
 
 namespace NS_MODEL
 {

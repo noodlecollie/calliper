@@ -2,10 +2,10 @@
 #define MAPSCENE_H
 
 #include "model_global.h"
-#include "basescene.h"
-#include "iserialisable.h"
+#include "scene/basescene.h"
+#include "serialisation/iserialisable.h"
 
-namespace NS_RENDERER
+namespace NS_MODEL
 {
     class MapDocument;
     class MapGrid;

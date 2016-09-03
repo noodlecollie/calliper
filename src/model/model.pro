@@ -32,7 +32,16 @@ SOURCES += \
     sceneobjects/translationhandle.cpp \
     sceneobjects/uiblockcreationhandle.cpp \
     sceneobjects/uimanipulator.cpp \
-    util/util.cpp
+    util/util.cpp \
+    core/eulerangle.cpp \
+    core/plane3d.cpp \
+    core/ray3d.cpp \
+    serialisation/callipermapfile.cpp \
+    serialisation/keyvaluesparser.cpp \
+    serialisation/keyvaluestoken.cpp \
+    serialisation/objfileparser.cpp \
+    serialisation/valvemapfile.cpp \
+    core/boundingbox.cpp
 
 HEADERS +=\
         model_global.h \
@@ -56,9 +65,28 @@ HEADERS +=\
     sceneobjects/translationhandle.h \
     sceneobjects/uiblockcreationhandle.h \
     sceneobjects/uimanipulator.h \
-    util/util.h
+    util/util.h \
+    core/eulerangle.h \
+    core/iraydetectable.h \
+    core/plane3d.h \
+    core/ray3d.h \
+    core/raytracecontact.h \
+    serialisation/callipermapfile.h \
+    serialisation/iserialisable.h \
+    serialisation/keyvaluesparser.h \
+    serialisation/keyvaluestoken.h \
+    serialisation/objfileparser.h \
+    serialisation/valvemapfile.h \
+    core/boundingbox.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../util/release/ -lutil
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../util/debug/ -lutil
+else:unix: LIBS += -L$$OUT_PWD/../util/ -lutil
+
+INCLUDEPATH += $$PWD/../util
+DEPENDPATH += $$PWD/../util

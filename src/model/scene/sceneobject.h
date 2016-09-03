@@ -5,11 +5,11 @@
 #include "hierarchicalobject.h"
 #include "geometrydata.h"
 #include <QMatrix4x4>
-#include "eulerangle.h"
-#include "boundingbox.h"
+#include "core/eulerangle.h"
+#include "core/boundingbox.h"
 #include <QSharedPointer>
 #include <QVector>
-#include "iraydetectable.h"
+#include "core/iraydetectable.h"
 
 namespace NS_MODEL
 {

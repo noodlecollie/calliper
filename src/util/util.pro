@@ -13,12 +13,14 @@ DEFINES += UTIL_LIBRARY
 
 SOURCES += \
     general/generalutil.cpp \
-    math/math.cpp
+    math/math.cpp \
+    json/jsonutil.cpp
 
 HEADERS +=\
         util_global.h \
     general/generalutil.h \
-    math/math.h
+    math/math.h \
+    json/jsonutil.h
 
 unix {
     target.path = /usr/lib

@@ -1,9 +1,9 @@
 #include "mapscene.h"
-#include "scenecamera.h"
+#include "sceneobjects/scenecamera.h"
 #include "sceneobject.h"
-#include "mapgrid.h"
+#include "sceneobjects/mapgrid.h"
 #include <QJsonArray>
-#include "originmarker.h"
+#include "sceneobjects/originmarker.h"
 #include "sceneobjectfactory.h"
 
 namespace NS_MODEL

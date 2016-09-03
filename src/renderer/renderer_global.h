@@ -9,8 +9,8 @@
 #  define RENDERERSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#define NS_RENDERER Renderer
-#define NS_STR_RENDERER "Renderer"
+#define NS_RENDERER ModuleRenderer
+#define NS_STR_RENDERER "ModuleRenderer"
 
 /*
  * Ideally, we want to be able to get to a scenario where each batch is self-

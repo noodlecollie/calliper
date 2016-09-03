@@ -1,6 +1,6 @@
 #include "textureplane.h"
 #include <QQuaternion>
-#include "jsonutil.h"
+#include "json/jsonutil.h"
 
 namespace NS_MODEL
 {
@@ -98,16 +98,16 @@ namespace NS_MODEL
         float z = qAbs(normal.z());
 
         // By default we use Z as the normal.
-        Math::AxisIdentifier normalAxis = Math::AxisZ;
+        NS_UTIL::Math::AxisIdentifier normalAxis = NS_UTIL::Math::AxisZ;
 
         // Simple check: see which value is the largest.
         // If the normal is null (which it shouldn't be!), the axis will be Z.
         if ( x > y && x > z )
-            normalAxis = Math::AxisX;
+            normalAxis = NS_UTIL::Math::AxisX;
         else if ( y > x && y > z )
-            normalAxis = Math::AxisY;
+            normalAxis = NS_UTIL::Math::AxisY;
         else
-            normalAxis = Math::AxisZ;
+            normalAxis = NS_UTIL::Math::AxisZ;
 
         // Get the U and V axes.
         uvAxes(normalAxis, uAxis, vAxis);
@@ -136,7 +136,7 @@ namespace NS_MODEL
         vAxis = qRot.rotatedVector(vAxis);
     }
 
-    void TexturePlane::uvAxes(Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis)
+    void TexturePlane::uvAxes(NS_UTIL::Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis)
     {
         // To match Hammer, the texture is non-mirrored when the normal is one of the following:
         // +X
@@ -145,17 +145,17 @@ namespace NS_MODEL
 
         switch (axis)
         {
-        case Math::AxisX:
+        case NS_UTIL::Math::AxisX:
             uAxis = QVector3D(0,1,0);
             vAxis = QVector3D(0,0,1);
             return;
 
-        case Math::AxisY:
+        case NS_UTIL::Math::AxisY:
             uAxis = QVector3D(1,0,0);
             vAxis = QVector3D(0,0,1);
             return;
 
-        case Math::AxisZ:
+        case NS_UTIL::Math::AxisZ:
             uAxis = QVector3D(1,0,0);
             vAxis = QVector3D(0,1,0);
             return;
@@ -208,11 +208,11 @@ namespace NS_MODEL
         obj.insert("texturePath", QJsonValue(m_szTexturePath));
 
         QJsonArray arrScale;
-        JsonUtil::vector2ToJsonArray<QVector2D>(m_vecScale, arrScale);
+        NS_UTIL::Json::vector2ToJsonArray<QVector2D>(m_vecScale, arrScale);
         obj.insert("scale", QJsonValue(arrScale));
 
         QJsonArray arrTranslation;
-        JsonUtil::vector2ToJsonArray<QVector2D>(m_vecTranslation, arrTranslation);
+        NS_UTIL::Json::vector2ToJsonArray<QVector2D>(m_vecTranslation, arrTranslation);
         obj.insert("translation", QJsonValue(arrTranslation));
 
         obj.insert("rotation", QJsonValue(m_flRotation));
@@ -237,7 +237,7 @@ namespace NS_MODEL
             QJsonArray arrScale = vScale.toArray();
             if ( arrScale.count() >= 2 )
             {
-                m_vecScale = JsonUtil::jsonArrayToVector2<QVector2D>(arrScale);
+                m_vecScale = NS_UTIL::Json::jsonArrayToVector2<QVector2D>(arrScale);
             }
         }
 
@@ -247,7 +247,7 @@ namespace NS_MODEL
             QJsonArray arrTranslation = vTranslation.toArray();
             if ( arrTranslation.count() >= 2 )
             {
-                m_vecTranslation = JsonUtil::jsonArrayToVector2<QVector2D>(arrTranslation);
+                m_vecTranslation = NS_UTIL::Json::jsonArrayToVector2<QVector2D>(arrTranslation);
             }
         }
 

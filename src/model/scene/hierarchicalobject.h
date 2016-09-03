@@ -4,9 +4,9 @@
 #include "model_global.h"
 #include <QObject>
 #include <QVector3D>
-#include "eulerangle.h"
+#include "core/eulerangle.h"
 #include <QMatrix4x4>
-#include "iserialisable.h"
+#include "serialisation/iserialisable.h"
 #include "spatialsnapshot.h"
 
 namespace NS_MODEL

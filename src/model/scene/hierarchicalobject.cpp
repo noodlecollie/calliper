@@ -1,7 +1,7 @@
 #include "hierarchicalobject.h"
-#include "callipermath.h"
+#include "math/math.h"
 #include <cmath>
-#include "jsonutil.h"
+#include "json/jsonutil.h"
 
 namespace NS_MODEL
 {
@@ -50,9 +50,9 @@ namespace NS_MODEL
         // we perform transforms forward.
         // To get from world space to camera space we must
         // perform the camera transforms backward - see Camera class.
-        m_matLocalToParent = Math::matrixTranslate(m_vecPosition)
-                * Math::matrixOrientation(m_angAngles)
-                * Math::matrixScale(m_vecScale);
+        m_matLocalToParent = NS_UTIL::Math::matrixTranslate(m_vecPosition)
+                * Util::matrixOrientation(m_angAngles)
+                * NS_UTIL::Math::matrixScale(m_vecScale);
     }
 
     QMatrix4x4 HierarchicalObject::parentToLocal() const
@@ -117,7 +117,7 @@ namespace NS_MODEL
 
     void HierarchicalObject::translate(const QVector3D &trans)
     {
-        setPosition(position() + (Math::matrixOrientation(m_angAngles)*trans));
+        setPosition(position() + (Util::matrixOrientation(m_angAngles)*trans));
     }
 
     QMatrix4x4 HierarchicalObject::rootToLocal() const
@@ -135,17 +135,17 @@ namespace NS_MODEL
 
     void HierarchicalObject::lookAtLocal(const QVector3D &localSpacePos)
     {
-        setAngles(Math::vectorToAngleSimple(localSpacePos));
+        setAngles(Util::vectorToAngleSimple(localSpacePos));
     }
 
     void HierarchicalObject::lookAtParent(const QVector3D &parentSpacePos)
     {
-        setAngles(Math::vectorToAngleSimple(parentSpacePos - m_vecPosition));
+        setAngles(Util::vectorToAngleSimple(parentSpacePos - m_vecPosition));
     }
 
     void HierarchicalObject::lookAtGlobal(const QVector3D &globalSpacePos)
     {
-        setAngles(Math::vectorToAngleSimple(rootToParent(globalSpacePos) - m_vecPosition));
+        setAngles(Util::vectorToAngleSimple(rootToParent(globalSpacePos) - m_vecPosition));
     }
 
     QVector3D HierarchicalObject::scale() const
@@ -204,15 +204,15 @@ namespace NS_MODEL
 
         // Store the relevant properties.
         QJsonArray arrPos;
-        JsonUtil::vector3ToJsonArray<QVector3D>(position(), arrPos);
+        NS_UTIL::Json::vector3ToJsonArray<QVector3D>(position(), arrPos);
         obj.insert("position", QJsonValue(arrPos));
 
         QJsonArray arrAng;
-        JsonUtil::vector3ToJsonArray<EulerAngle>(angles(), arrAng);
+        NS_UTIL::Json::vector3ToJsonArray<EulerAngle>(angles(), arrAng);
         obj.insert("angles", QJsonValue(arrAng));
 
         QJsonArray arrScl;
-        JsonUtil::vector3ToJsonArray<QVector3D>(scale(), arrScl);
+        NS_UTIL::Json::vector3ToJsonArray<QVector3D>(scale(), arrScl);
         obj.insert("scale", QJsonValue(arrScl));
 
         return true;
@@ -236,7 +236,7 @@ namespace NS_MODEL
         QJsonArray arrPos = serialisedData.value("position").toArray();
         if ( arrPos.count() >= 3 )
         {
-            setPosition(JsonUtil::jsonArrayToVector3<QVector3D>(arrPos));
+            setPosition(NS_UTIL::Json::jsonArrayToVector3<QVector3D>(arrPos));
         }
         else
         {
@@ -246,7 +246,7 @@ namespace NS_MODEL
         QJsonArray arrAng = serialisedData.value("angles").toArray();
         if ( arrAng.count() >= 3 )
         {
-            setAngles(JsonUtil::jsonArrayToVector3<EulerAngle>(arrAng));
+            setAngles(NS_UTIL::Json::jsonArrayToVector3<EulerAngle>(arrAng));
         }
         else
         {
@@ -256,7 +256,7 @@ namespace NS_MODEL
         QJsonArray arrScl = serialisedData.value("scale").toArray();
         if ( arrScl.count() >= 3 )
         {
-            setScale(JsonUtil::jsonArrayToVector3<QVector3D>(arrScl));
+            setScale(NS_UTIL::Json::jsonArrayToVector3<QVector3D>(arrScl));
         }
         else
         {

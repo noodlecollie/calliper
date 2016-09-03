@@ -9,7 +9,7 @@
 #  define MODELSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#define NS_MODEL Model
-#define NS_STR_MODEL "Model"
+#define NS_MODEL ModuleModel
+#define NS_STR_MODEL "ModuleModel"
 
 #endif // MODEL_GLOBAL_H

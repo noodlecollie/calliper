@@ -3,9 +3,9 @@
 
 #include "model_global.h"
 #include <QVector3D>
-#include "eulerangle.h"
+#include "core/eulerangle.h"
 #include <QMatrix4x4>
-#include "callipermath.h"
+#include "util/util.h"
 #include <QtDebug>
 
 namespace NS_MODEL
@@ -30,7 +30,7 @@ namespace NS_MODEL
         SpatialSnapshot transformed(const QMatrix4x4 &mat) const
         {
             return SpatialSnapshot((mat * QVector4D(translation, 1)).toVector3D(),
-                                   Math::vectorToAngleSimple((mat * QVector4D(Math::angleToVectorSimple(rotation), 0)).toVector3D()),
+                                   Util::vectorToAngleSimple((mat * QVector4D(Util::angleToVectorSimple(rotation), 0)).toVector3D()),
                                    (mat * QVector4D(scale, 0).toVector3D()));
         }
 
