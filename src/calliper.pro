@@ -4,7 +4,8 @@ SUBDIRS += \
 	application \
     renderer \
     renderer-sandbox \
-    model
+    model \
+    util
 
 renderer-sandbox.depends = renderer
-model.depends = renderer
+model.depends = renderer util

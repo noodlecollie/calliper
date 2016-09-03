@@ -31,7 +31,8 @@ SOURCES += \
     sceneobjects/scenecamera.cpp \
     sceneobjects/translationhandle.cpp \
     sceneobjects/uiblockcreationhandle.cpp \
-    sceneobjects/uimanipulator.cpp
+    sceneobjects/uimanipulator.cpp \
+    util/util.cpp
 
 HEADERS +=\
         model_global.h \
@@ -54,7 +55,8 @@ HEADERS +=\
     sceneobjects/scenecamera.h \
     sceneobjects/translationhandle.h \
     sceneobjects/uiblockcreationhandle.h \
-    sceneobjects/uimanipulator.h
+    sceneobjects/uimanipulator.h \
+    util/util.h
 
 unix {
     target.path = /usr/lib
