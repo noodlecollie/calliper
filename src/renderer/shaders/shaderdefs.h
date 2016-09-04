@@ -6,7 +6,7 @@
 
 namespace NS_RENDERER
 {
-    class ShaderDefs
+    class RENDERERSHARED_EXPORT ShaderDefs
     {
         Q_GADGET
         ShaderDefs() = delete;
@@ -28,11 +28,9 @@ namespace NS_RENDERER
         Q_ENUM(VertexArrayAttribute)
 
         // Canonical locations for uniforms.
+        // TODO: Do we need these if we're using UBOs?
         enum Uniform
         {
-            // TODO: Change these to take into account multiple locations for matrices
-            UniformStartLocation = 0,
-
             WorldCameraMatrixUniform            = 0,
             CoordinateTransformMatrixUniform    = 1,
             ProjectionMatrixUniform             = 2,
@@ -44,19 +42,6 @@ namespace NS_RENDERER
             GlobalColorUniform                  = 7,
         };
         Q_ENUM(Uniform)
-
-        // Canonical locations for uniform arrays.
-        // These take up multiple slots.
-        enum UniformArrays
-        {
-            ArrayUniformStartLocation = 16,
-
-            ModelWorldMatrixArrayUniform = 16,
-            ModelWorldMatrixArrayUniformLast = 47,   // 8 * 4 = 32 locations used
-
-            UniformLocationCount
-        };
-        Q_ENUM(UniformArrays)
 
         enum UniformBlockBindingPoint
         {

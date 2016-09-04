@@ -16,22 +16,24 @@ namespace NS_RENDERER
 
     void OpenGLShaderProgram::enableAttributeArrays()
     {
-        if ( positionComponents() > 0 )
+        VertexFormat format = vertexFormat();
+
+        if ( format.positionComponents() > 0 )
         {
             enableAttributeArray(ShaderDefs::PositionAttribute);
         }
 
-        if ( normalComponents() > 0 )
+        if ( format.normalComponents() > 0 )
         {
             enableAttributeArray(ShaderDefs::NormalAttribute);
         }
 
-        if ( colorComponents() > 0 )
+        if ( format.colorComponents() > 0 )
         {
             enableAttributeArray(ShaderDefs::ColorAttribute);
         }
 
-        if ( textureCoordinateComponents() > 0 )
+        if ( format.textureCoordinateComponents() > 0 )
         {
             enableAttributeArray(ShaderDefs::TextureCoordinateAttribute);
         }
@@ -39,22 +41,24 @@ namespace NS_RENDERER
 
     void OpenGLShaderProgram::disableAttributeArrays()
     {
-        if ( positionComponents() > 0 )
+        VertexFormat format = vertexFormat();
+
+        if ( format.positionComponents() > 0 )
         {
             disableAttributeArray(ShaderDefs::PositionAttribute);
         }
 
-        if ( normalComponents() > 0 )
+        if ( format.normalComponents() > 0 )
         {
             disableAttributeArray(ShaderDefs::NormalAttribute);
         }
 
-        if ( colorComponents() > 0 )
+        if ( format.colorComponents() > 0 )
         {
             disableAttributeArray(ShaderDefs::ColorAttribute);
         }
 
-        if ( textureCoordinateComponents() > 0 )
+        if ( format.textureCoordinateComponents() > 0 )
         {
             disableAttributeArray(ShaderDefs::TextureCoordinateAttribute);
         }

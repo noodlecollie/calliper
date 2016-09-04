@@ -22,7 +22,10 @@ SOURCES += \
     rendermodel/rendermodelbatchkey.cpp \
     shaders/debugscreenspaceshader.cpp \
     rendermodel/rendermodelpass.cpp \
-    opengl/opengltexture.cpp
+    opengl/opengltexture.cpp \
+    rendermodel/vertex3d.cpp \
+    rendermodel/geometrybuilder.cpp \
+    shaders/vertexformat.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -40,7 +43,10 @@ HEADERS +=\
     rendermodel/rendermodelpass.h \
     opengl/opengltexture.h \
     functors/ishaderretrievalfunctor.h \
-    functors/itextureretrievalfunctor.h
+    functors/itextureretrievalfunctor.h \
+    rendermodel/vertex3d.h \
+    rendermodel/geometrybuilder.h \
+    shaders/vertexformat.h
 
 unix {
     target.path = /usr/lib

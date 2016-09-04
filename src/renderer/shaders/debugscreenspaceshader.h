@@ -15,25 +15,9 @@ namespace NS_RENDERER
 
         virtual void construct() override;
 
-        // IShaderSpec
-        virtual int positionComponents() const override
+        virtual VertexFormat vertexFormat() const override
         {
-            return 3;
-        }
-
-        virtual int normalComponents() const override
-        {
-            return 0;
-        }
-
-        virtual int colorComponents() const override
-        {
-            return 4;
-        }
-
-        virtual int textureCoordinateComponents() const override
-        {
-            return 2;
+            return VertexFormat(3, 0, 4, 2);
         }
 
         virtual int maxBatchedItems() const override

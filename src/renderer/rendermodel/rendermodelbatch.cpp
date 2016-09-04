@@ -55,13 +55,15 @@ namespace NS_RENDERER
                    Q_FUNC_INFO,
                    "Maximum number of batched items has already been reached");
 
+        VertexFormat format = m_pShaderSpec->vertexFormat();
+
         int newVertexOffset = 0;
         if ( !m_Items.isEmpty() )
         {
             newVertexOffset = m_Items.last().vertexOffset() + m_Items.last().vertexCount();
         }
 
-        int oldVertexCount = m_LocalPositionBuffer.count() / m_pShaderSpec->positionComponents();
+        int oldVertexCount = m_LocalPositionBuffer.count() / format.positionComponents();
         int newVertexCount = params.vertexCount();
 
         resizeAllBuffers(oldVertexCount + newVertexCount);
@@ -85,8 +87,10 @@ namespace NS_RENDERER
 
     void RenderModelBatch::addIndices(const quint32 *source, int count, int indexOffset)
     {
+        VertexFormat format = m_pShaderSpec->vertexFormat();
+
         quint32 indexValueOffset = (m_LocalPositionBuffer.count()
-                                    / m_pShaderSpec->positionComponents())
+                                    / format.positionComponents())
                                     - count;
         m_LocalIndexBuffer.resize(m_LocalIndexBuffer.count() + count);
         quint32* destination = m_LocalIndexBuffer.data() + indexOffset;
@@ -99,6 +103,8 @@ namespace NS_RENDERER
 
     void RenderModelBatch::copyInData(const RenderModelBatchParams &params, int vertexCount)
     {
+        VertexFormat format = m_pShaderSpec->vertexFormat();
+
         // Construct some padding zeroes for unspecified data.
         // We need to set this to match the attribute  with the
         // largest number of components.
@@ -109,48 +115,52 @@ namespace NS_RENDERER
             padding.insert(0, params.vertexCount() * components, 0);
         }
 
-        memcpy(m_LocalPositionBuffer.data() + (vertexCount * m_pShaderSpec->positionComponents()),
+        memcpy(m_LocalPositionBuffer.data() + (vertexCount * format.positionComponents()),
                params.positions(),
-               params.vertexCount() * m_pShaderSpec->positionComponents() * sizeof(float));
+               params.vertexCount() * format.positionComponents() * sizeof(float));
 
-        memcpy(m_LocalNormalBuffer.data() + (vertexCount * m_pShaderSpec->normalComponents()),
+        memcpy(m_LocalNormalBuffer.data() + (vertexCount * format.normalComponents()),
                params.hasNormals() ? params.normals() : padding.constData(),
-               params.vertexCount() * m_pShaderSpec->normalComponents() * sizeof(float));
+               params.vertexCount() * format.normalComponents() * sizeof(float));
 
-        memcpy(m_LocalColorBuffer.data() + (vertexCount * m_pShaderSpec->colorComponents()),
+        memcpy(m_LocalColorBuffer.data() + (vertexCount * format.colorComponents()),
                params.hasColors() ? params.colors() : padding.constData(),
-               params.vertexCount() * m_pShaderSpec->colorComponents() * sizeof(float));
+               params.vertexCount() * format.colorComponents() * sizeof(float));
 
-        memcpy(m_LocalTextureCoordinateBuffer.data() + (vertexCount * m_pShaderSpec->textureCoordinateComponents()),
+        memcpy(m_LocalTextureCoordinateBuffer.data() + (vertexCount * format.textureCoordinateComponents()),
                params.hasTextureCoordinates() ? params.textureCoordinates() : padding.constData(),
-               params.vertexCount() * m_pShaderSpec->textureCoordinateComponents() * sizeof(float));
+               params.vertexCount() * format.textureCoordinateComponents() * sizeof(float));
     }
 
     void RenderModelBatch::resizeAllBuffers(int numVertices)
     {
         Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Shader spec required!");
 
-        m_LocalPositionBuffer.resize(numVertices * m_pShaderSpec->positionComponents());
-        m_LocalNormalBuffer.resize(numVertices * m_pShaderSpec->normalComponents());
-        m_LocalColorBuffer.resize(numVertices * m_pShaderSpec->colorComponents());
-        m_LocalTextureCoordinateBuffer.resize(numVertices * m_pShaderSpec->textureCoordinateComponents());
+        VertexFormat format = m_pShaderSpec->vertexFormat();
+
+        m_LocalPositionBuffer.resize(numVertices * format.positionComponents());
+        m_LocalNormalBuffer.resize(numVertices * format.normalComponents());
+        m_LocalColorBuffer.resize(numVertices * format.colorComponents());
+        m_LocalTextureCoordinateBuffer.resize(numVertices * format.textureCoordinateComponents());
     }
 
     int RenderModelBatch::maxComponentsFromVertexSpec() const
     {
+        VertexFormat format = m_pShaderSpec->vertexFormat();
+
         int components = 0;
 
-        if ( m_pShaderSpec->positionComponents() > components )
-            components = m_pShaderSpec->positionComponents();
+        if ( format.positionComponents() > components )
+            components = format.positionComponents();
 
-        if ( m_pShaderSpec->normalComponents() > components )
-            components = m_pShaderSpec->normalComponents();
+        if ( format.normalComponents() > components )
+            components = format.normalComponents();
 
-        if ( m_pShaderSpec->colorComponents() > components )
-            components = m_pShaderSpec->colorComponents();
+        if ( format.colorComponents() > components )
+            components = format.colorComponents();
 
-        if ( m_pShaderSpec->textureCoordinateComponents() > components )
-            components = m_pShaderSpec->textureCoordinateComponents();
+        if ( format.textureCoordinateComponents() > components )
+            components = format.textureCoordinateComponents();
 
         return components;
     }
@@ -256,30 +266,31 @@ namespace NS_RENDERER
         Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
         Q_ASSERT_X(m_pShaderSpec, Q_FUNC_INFO, "Setting attribute pointers requires a shader spec!");
 
+        VertexFormat format = m_pShaderSpec->vertexFormat();
         int offset = 0;
 
         trySetAttributeBuffer(shaderProgram,
                               offset,
                               ShaderDefs::PositionAttribute,
-                              m_pShaderSpec->positionComponents(),
+                              format.positionComponents(),
                               m_LocalPositionBuffer.count());
 
         trySetAttributeBuffer(shaderProgram,
                               offset,
                               ShaderDefs::NormalAttribute,
-                              m_pShaderSpec->normalComponents(),
+                              format.normalComponents(),
                               m_LocalNormalBuffer.count());
 
         trySetAttributeBuffer(shaderProgram,
                               offset,
                               ShaderDefs::ColorAttribute,
-                              m_pShaderSpec->colorComponents(),
+                              format.colorComponents(),
                               m_LocalColorBuffer.count());
 
         trySetAttributeBuffer(shaderProgram,
                               offset,
                               ShaderDefs::TextureCoordinateAttribute,
-                              m_pShaderSpec->textureCoordinateComponents(),
+                              format.textureCoordinateComponents(),
                               m_LocalTextureCoordinateBuffer.count());
     }
 
@@ -345,7 +356,9 @@ namespace NS_RENDERER
         if ( !shaderSupportsBatching() )
             return;
 
-        int numComponents = m_pShaderSpec->positionComponents();
+        VertexFormat format = m_pShaderSpec->vertexFormat();
+
+        int numComponents = format.positionComponents();
         float* data = m_LocalPositionBuffer.data() + (vertexOffset * numComponents);
 
         for ( int i = 0; i < vertexCount; i++ )

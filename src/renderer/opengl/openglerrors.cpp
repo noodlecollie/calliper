@@ -121,11 +121,5 @@ namespace NS_RENDERER
         Q_ASSERT_X(ShaderDefs::VertexAttributeLocationCount <= maxVertexAttribs,
                    Q_FUNC_INFO,
                    "Insufficient OpenGL vertex attribute locations to support rendering.");
-
-        int maxUniformVectors;
-        f->glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &maxUniformVectors);
-        Q_ASSERT_X(ShaderDefs::UniformLocationCount <= maxUniformVectors,
-                   Q_FUNC_INFO,
-                   "Insufficient OpenGL uniform locations to support rendering.");
     }
 }
