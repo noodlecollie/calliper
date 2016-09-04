@@ -25,7 +25,8 @@ SOURCES += \
     opengl/opengltexture.cpp \
     geometry/vertex3d.cpp \
     geometry/geometrybuilder.cpp \
-    shaders/vertexformat.cpp
+    shaders/vertexformat.cpp \
+    geometry/geometrysection.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -46,7 +47,8 @@ HEADERS +=\
     functors/itextureretrievalfunctor.h \
     geometry/vertex3d.h \
     geometry/geometrybuilder.h \
-    shaders/vertexformat.h
+    shaders/vertexformat.h \
+    geometry/geometrysection.h
 
 unix {
     target.path = /usr/lib
