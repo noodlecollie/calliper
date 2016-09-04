@@ -6,9 +6,8 @@
 
 namespace NS_RENDERER
 {
-    class OpenGLTexture : public QOpenGLTexture
+    class RENDERERSHARED_EXPORT OpenGLTexture : public QOpenGLTexture
     {
-        friend class TextureStore;
     public:
         OpenGLTexture(QOpenGLTexture::Target target);
         OpenGLTexture(const QImage &image, QOpenGLTexture::MipMapGeneration genMipMaps = GenerateMipMaps);

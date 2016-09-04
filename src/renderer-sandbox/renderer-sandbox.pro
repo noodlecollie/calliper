@@ -13,10 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    demoglwindow.cpp
+    demoglwindow.cpp \
+    tempshader.cpp
 
 HEADERS  += \
-    demoglwindow.h
+    demoglwindow.h \
+    tempshader.h
 
 FORMS    +=
 
@@ -26,3 +28,6 @@ else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
 
 INCLUDEPATH += $$PWD/../renderer
 DEPENDPATH += $$PWD/../renderer
+
+RESOURCES += \
+    resource.qrc

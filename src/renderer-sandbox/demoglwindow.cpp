@@ -6,23 +6,37 @@
 #include "shaders/ishaderspec.h"
 #include "shaders/shaderdefs.h"
 #include "opengl/openglhelpers.h"
-#include "stores/shaderstore.h"
 #include "shaders/debugscreenspaceshader.h"
-#include "stores/texturestore.h"
+#include "tempshader.h"
 
 using namespace NS_RENDERER;
 
-class TempSpec : public IShaderSpec
+TempShader* debugShader = NULL;
+
+class ShaderFunctor : public IShaderRetrievalFunctor
 {
 public:
-    virtual ~TempSpec() {}
-
-    virtual int positionComponents() const { return 3; }
-    virtual int normalComponents() const { return 0; }
-    virtual int colorComponents() const { return 4; }
-    virtual int textureCoordinateComponents() const { return 2; }
-    virtual int maxBatchedItems() const { return 8; }
+    virtual OpenGLShaderProgram* operator ()(quint16) const override
+    {
+        return debugShader;
+    }
 };
+
+ShaderFunctor* shaderFunctor = NULL;
+
+OpenGLTexturePointer debugTexture;
+
+class TextureFunctor : public ITextureRetrievalFunctor
+{
+public:
+    virtual OpenGLTexturePointer operator ()(quint64) const override
+    {
+        // TODO: Fix me!
+        return debugTexture;
+    }
+};
+
+TextureFunctor* textureFunctor = NULL;
 
 QVector<float> triangle(const QVector2D min, const QVector2D max)
 {
@@ -68,8 +82,14 @@ DemoGLWindow::~DemoGLWindow()
     delete m_pRenderModel;
     m_pRenderModel = NULL;
 
-    delete m_pTempSpec;
-    m_pTempSpec = NULL;
+    delete debugShader;
+    debugShader = NULL;
+
+    delete shaderFunctor;
+    shaderFunctor = NULL;
+
+    delete textureFunctor;
+    textureFunctor = NULL;
 
     GL_CURRENT_F;
     GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
@@ -85,15 +105,12 @@ void DemoGLWindow::initializeGL()
     GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
-    m_pTempSpec = new TempSpec();
+    debugShader = new TempShader();
+    shaderFunctor = new ShaderFunctor();
+    textureFunctor = new TextureFunctor();
+    debugTexture = OpenGLTexturePointer(new OpenGLTexture(QImage(":/obsolete.png").mirrored()));
 
-    ShaderStore* store = new ShaderStore();
-    store->constructShaders();
-
-    TextureStore* texStore = new TextureStore();
-    texStore->initialise();
-
-    m_pRenderModel = new RenderModelPass();
+    m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 
@@ -101,7 +118,7 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    RenderModelBatchKey key(store->shaderId("DebugScreenSpaceShader"), texStore->textureId("obsolete"));
+    RenderModelBatchKey key(0, 0);
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords));
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords));
     m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords));
