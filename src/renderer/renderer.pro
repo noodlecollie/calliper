@@ -23,8 +23,8 @@ SOURCES += \
     shaders/debugscreenspaceshader.cpp \
     rendermodel/rendermodelpass.cpp \
     opengl/opengltexture.cpp \
-    rendermodel/vertex3d.cpp \
-    rendermodel/geometrybuilder.cpp \
+    geometry/vertex3d.cpp \
+    geometry/geometrybuilder.cpp \
     shaders/vertexformat.cpp
 
 HEADERS +=\
@@ -44,8 +44,8 @@ HEADERS +=\
     opengl/opengltexture.h \
     functors/ishaderretrievalfunctor.h \
     functors/itextureretrievalfunctor.h \
-    rendermodel/vertex3d.h \
-    rendermodel/geometrybuilder.h \
+    geometry/vertex3d.h \
+    geometry/geometrybuilder.h \
     shaders/vertexformat.h
 
 unix {
