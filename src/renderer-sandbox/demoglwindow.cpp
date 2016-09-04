@@ -91,6 +91,8 @@ DemoGLWindow::~DemoGLWindow()
     delete textureFunctor;
     textureFunctor = NULL;
 
+    debugTexture.clear();
+
     GL_CURRENT_F;
     GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
 
@@ -106,6 +108,12 @@ void DemoGLWindow::initializeGL()
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
     debugShader = new TempShader();
+    debugShader->construct();
+    debugShader->bind();
+    GLuint blockIndex = f->glGetUniformBlockIndex(debugShader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
+    f->glUniformBlockBinding(debugShader->programId(), blockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
+    debugShader->release();
+
     shaderFunctor = new ShaderFunctor();
     textureFunctor = new TextureFunctor();
     debugTexture = OpenGLTexturePointer(new OpenGLTexture(QImage(":/obsolete.png").mirrored()));
