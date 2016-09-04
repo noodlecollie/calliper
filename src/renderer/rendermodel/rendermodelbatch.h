@@ -7,6 +7,7 @@
 #include "rendermodelbatchitem.h"
 #include "shaders/shaderdefs.h"
 #include "opengl/opengluniformbuffer.h"
+#include "shaders/vertexformat.h"
 
 class QOpenGLShaderProgram;
 
@@ -17,7 +18,7 @@ namespace NS_RENDERER
     class RenderModelBatch
     {
     public:
-        RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, IShaderSpec* shaderSpec);
+        RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, const VertexFormat &vertexFormat, int batchSize);
         ~RenderModelBatch();
 
         bool create();
@@ -28,8 +29,7 @@ namespace NS_RENDERER
         void clearItems();
         bool isFull() const;
 
-        const IShaderSpec* shaderSpec() const;
-        bool shaderSupportsBatching() const;
+        bool supportsBatching() const;
 
         void upload(bool force = false);
         bool needsUpload() const;
@@ -79,7 +79,8 @@ private:
 
         QList<NS_RENDERER::RenderModelBatchItem> m_Items;
 
-        const IShaderSpec*      m_pShaderSpec;
+        VertexFormat            m_VertexFormat;
+        int                     m_iBatchSize;
         bool                    m_bDataStale;
         const quint32           m_iBatchIdMask;
         GLuint                  m_iUniformBlockIndex;

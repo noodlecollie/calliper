@@ -23,7 +23,7 @@ namespace NS_RENDERER
         RenderModelBatch* batch = NULL;
         if ( !m_Table.contains(key) || (batch = m_Table.find(key).value())->isFull() )
         {
-            batch = new RenderModelBatch(usagePattern, program);
+            batch = new RenderModelBatch(usagePattern, program->vertexFormat(), program->maxBatchedItems());
             m_Table.insert(key, batch);
             m_KeyOrdering.insert(key, 0);
         }
