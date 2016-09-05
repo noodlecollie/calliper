@@ -9,7 +9,7 @@ namespace NS_RENDERER
         processSectionList();
     }
 
-    QMatrix4x4 RenderModelBatchParams::modelToWorldMatrix() const
+    const QMatrix4x4& RenderModelBatchParams::modelToWorldMatrix() const
     {
         return m_matModelToWorld;
     }
@@ -60,5 +60,10 @@ namespace NS_RENDERER
             m_bColorsSpecified = m_bColorsSpecified && section.hasColors();
             m_bTexCoordsSpecified = m_bTexCoordsSpecified && section.hasTextureCoordinates();
         }
+    }
+
+    const QList<GeometrySection>& RenderModelBatchParams::sections() const
+    {
+        return m_Sections;
     }
 }

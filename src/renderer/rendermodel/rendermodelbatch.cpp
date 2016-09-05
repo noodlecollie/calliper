@@ -4,6 +4,19 @@
 #include "shaders/ishaderspec.h"
 #include <QOpenGLShaderProgram>
 
+namespace
+{
+    void copyIndices(QVector<quint32> &dest, const QVector<quint32> &source)
+    {
+        int oldCount = dest.count();
+        dest.append(source);
+        for ( int i = oldCount; i < dest.count(); i++ )
+        {
+            dest[i] += oldcount;
+        }
+    }
+}
+
 namespace NS_RENDERER
 {
     RenderModelBatch::RenderModelBatch(QOpenGLBuffer::UsagePattern usagePattern, const VertexFormat &vertexFormat, int batchSize)
@@ -22,6 +35,7 @@ namespace NS_RENDERER
 
     RenderModelBatch::~RenderModelBatch()
     {
+        clear();
         destroy();
     }
 
@@ -50,127 +64,150 @@ namespace NS_RENDERER
         m_bCreated = false;
     }
 
+    bool RenderModelBatch::supportsBatching() const
+    {
+        return m_iBatchSize > 1;
+    }
+
+    void RenderModelBatch::add(const RenderModelBatchParams &params)
+    {
+        const QMatrix4x4 &mat = params.modelToWorldMatrix();
+        RenderModelBatchItem* item = NULL;
+
+        if ( !m_ItemTable.contains(mat) )
+        {
+            if ( m_ItemTable.count() >= m_iBatchSize )
+                return;
+
+            item = new RenderModelBatchItem();
+            m_ItemTable.insert(mat, item);
+        }
+
+        foreach ( const GeometrySection &section, params.sections() )
+        {
+            item->m_Positions.append(section.vertexConstVector(GeometrySection::PositionAttribute));
+            item->m_Positions.append(section.vertexConstVector(GeometrySection::NormalAttribute));
+            item->m_Positions.append(section.vertexConstVector(GeometrySection::ColorAttribute));
+            item->m_Positions.append(section.vertexConstVector(GeometrySection::TextureCoordinateAttribute));
+            copyData(item->m_Indices, section.indexConstVector);
+        }
+
+        m_bDataStale = true;
+    }
+
+    void RenderModelBatch::clear()
+    {
+        qDeleteAll(m_ItemTable.values());
+        m_ItemTable.clear();
+        m_bDataStale = true;
+    }
+
     void RenderModelBatch::upload(bool force)
     {
         if ( force || m_bDataStale )
         {
-            uploadVertexData();
-            uploadIndexData();
+            uploadAllVertexData();
+
+            m_GlIndexBuffer.bind();
+            m_GlIndexBuffer.allocate(m_LocalIndexBuffer.constData(), m_LocalIndexBuffer.count() * sizeof(quint32));
+            m_GlIndexBuffer.release();
+
             uploadUniformData();
 
             m_bDataStale = false;
         }
     }
 
-    bool RenderModelBatch::needsUpload() const
+    int RenderModelBatch::getVertexDataCountInBytes() const
     {
-        return m_bDataStale;
-    }
+        int count = 0;
 
-    void RenderModelBatch::uploadVertexData()
-    {
-        // TODO
-    }
-
-    void RenderModelBatch::uploadIndexData()
-    {
-        // TODO
-    }
-
-    void RenderModelBatch::writeToGlVertexBuffer(const QVector<float> &buffer, int &offset)
-    {
-        m_GlVertexBuffer.write(offset, buffer.constData(), buffer.count() * sizeof(float));
-        offset += buffer.count() * sizeof(float);
-    }
-
-    void RenderModelBatch::setAttributePointers(QOpenGLShaderProgram *shaderProgram)
-    {
-        Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
-
-        int offset = 0;
-
-        trySetAttributeBuffer(shaderProgram,
-                              offset,
-                              ShaderDefs::PositionAttribute,
-                              m_VertexFormat.positionComponents(),
-                              /*TODO*/);
-
-        trySetAttributeBuffer(shaderProgram,
-                              offset,
-                              ShaderDefs::NormalAttribute,
-                              m_VertexFormat.normalComponents(),
-                              /*TODO*/);
-
-        trySetAttributeBuffer(shaderProgram,
-                              offset,
-                              ShaderDefs::ColorAttribute,
-                              m_VertexFormat.colorComponents(),
-                              /*TODO*/);
-
-        trySetAttributeBuffer(shaderProgram,
-                              offset,
-                              ShaderDefs::TextureCoordinateAttribute,
-                              m_VertexFormat.textureCoordinateComponents(),
-                              /*TODO*/);
-    }
-
-    void RenderModelBatch::trySetAttributeBuffer(QOpenGLShaderProgram *shaderProgram, int &offset, ShaderDefs::VertexArrayAttribute attribute,
-                                                 int components, int count)
-    {
-        if ( components > 0 )
+        foreach ( RenderModelBatchItem* item, m_ItemTable.values() )
         {
-            shaderProgram->setAttributeBuffer(attribute,
-                                                 GL_FLOAT,
-                                                 offset * sizeof(GLfloat),
-                                                 components);
-            offset += count;
+            count += item->m_Positions.count() +
+                    item->m_Normals.count() +
+                    item->m_Colors.count() +
+                    item->m_TextureCoordinates.count();
         }
+
+        return count * sizeof(float);
     }
 
-    void RenderModelBatch::bindDraw()
+    int RenderModelBatch::getIndexDataCountInBytes() const
+    {
+        int count = 0;
+
+        foreach ( RenderModelBatchItem* item, m_ItemTable.values() )
+        {
+            count += item->m_Indices.count();
+        }
+
+        return count * sizeof(quint32);
+    }
+
+    void RenderModelBatch::uploadVertexData(const QVector<float> source, int &offsetBytes)
+    {
+        m_GlVertexBuffer.write(offsetBytes, source.constData(), source.count() * sizeof(float));
+        offsetBytes += source.count() * sizeof(float);
+    }
+
+    void RenderModelBatch::uploadAllVertexData()
     {
         m_GlVertexBuffer.bind();
-        m_GlIndexBuffer.bind();
-    }
+        m_GlVertexBuffer.allocate(getVertexDataCountInBytes());
 
-    void RenderModelBatch::draw()
-    {
-        GL_CURRENT_F;
+        int offsetBytes = 0;
 
-        f->glDrawElements(GL_TRIANGLES, m_LocalIndexBuffer.count(), GL_UNSIGNED_INT, (void*)0);
-    }
+        // We're gonna have to do this in passes, because we need to get all of the
+        // position data and then all of the normal data, and then...
+        for ( int i = 0; i < 4; i++ )
+        {
+            foreach ( RenderModelBatchItem* item, m_ItemTable.values() )
+            {
+                switch(i)
+                {
+                    case 0:
+                    {
+                        uploadVertexData(item->m_Positions, offsetBytes);
+                        break;
+                    }
 
-    void RenderModelBatch::releaseDraw()
-    {
-        m_GlIndexBuffer.release();
+                    case 1:
+                    {
+                        uploadVertexData(item->m_Normals, offsetBytes);
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        uploadVertexData(item->m_Colors, offsetBytes);
+                        break;
+                    }
+
+                    case 3:
+                    {
+                        uploadVertexData(item->m_TextureCoordinates, offsetBytes);
+                        break;
+                    }
+
+                    default:
+                        break;
+                }
+            }
+        }
+
         m_GlVertexBuffer.release();
     }
 
-    void RenderModelBatch::uploadUniformData()
+    void RenderModelBatch::uploadAllIndexData()
     {
-        // Not sure if this exact set of steps is required, but it's the
-        // only way I got it to actually work.
-        m_GlUniformBuffer.bind();
-        m_GlUniformBuffer.allocate(m_ItemTable.count() * 16 * sizeof(float));
-        m_GlUniformBuffer.release();
+        m_GlIndexBuffer.bind();
+        m_GlIndexBuffer.allocate(getIndexDataCountInBytes());
 
-        m_GlUniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint);
+        quint32* data = m_GlIndexBuffer.map(QOpenGLBuffer::WriteOnly);
 
-        m_GlUniformBuffer.bind();
-        for ( int i = 0; i < m_Items.count(); i++ )
-        {
-            m_GlUniformBuffer.write(i * 16 * sizeof(float), m_ModelToWorldMatrices.at(i).constData(), 16 * sizeof(float));
-        }
-        m_GlUniformBuffer.release();
-    }
+        // TODO: Finish
 
-    bool RenderModelBatch::supportsBatching() const
-    {
-        return m_iBatchSize > 1;
-    }
-
-    bool RenderModelBatch::isFull() const
-    {
-        return m_Items.count() >= m_iBatchSize;
+        m_GlIndexBuffer.release();
     }
 }

@@ -15,12 +15,14 @@ namespace NS_RENDERER
         int vertexCount() const;
         int indexCount() const;
         quint32* indices() const;
-        QMatrix4x4 modelToWorldMatrix() const;
+        const QMatrix4x4& modelToWorldMatrix() const;
 
         bool someAttributesUnspecified() const;
         bool hasNormals() const;
         bool hasColors() const;
         bool hasTextureCoordinates() const;
+
+        const QList<GeometrySection>& sections() const;
 
     private:
         void processSectionList();

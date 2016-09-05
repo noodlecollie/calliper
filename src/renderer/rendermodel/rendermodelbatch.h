@@ -24,26 +24,15 @@ namespace NS_RENDERER
         bool create();
         void destroy();
 
-        bool isFull() const;
         bool supportsBatching() const;
 
-        void upload(bool force = false);
-        bool needsUpload() const;
+        // If this batch has reached max size and the data requires a new item, add() does nothing.
+        void add(const RenderModelBatchParams &params);
+        void clear();
 
-        // Assumes upload() has been called!
-        void bindDraw();
-        void setAttributePointers(QOpenGLShaderProgram* shaderProgram);
-        void draw();
-        void releaseDraw();
+        void upload(bool force);
 
 private:
-        int maxComponentsFromVertexFormat() const;
-        void uploadVertexData();
-        void uploadUniformData();
-        void uploadIndexData();
-        void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
-        void trySetAttributeBuffer(QOpenGLShaderProgram* shaderProgram, int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
-
         static inline quint32 batchIdMask(int numBits)
         {
             return (quint32)(~0) >> ((sizeof(quint32) * 8) - numBits);
@@ -63,8 +52,14 @@ private:
             return sizeof(quint32)*8;
         }
 
+        void uploadVertexData(const QVector<float> source, int &offsetBytes);
+        int getVertexDataCountInBytes() const;
+        int getIndexDataCountInBytes() const;
+        void uploadAllVertexData();
+        void uploadAllIndexData();
+
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
-        bool    m_bCreated;
+        bool                        m_bCreated;
 
         QOpenGLBuffer   m_GlVertexBuffer;
         QOpenGLBuffer   m_GlIndexBuffer;
@@ -76,7 +71,7 @@ private:
         const quint32           m_iBatchIdMask;
         GLuint                  m_iUniformBlockIndex;
 
-        QHash<QMatrix4x4, RenderModelBatchItem> m_ItemTable;
+        QHash<QMatrix4x4, RenderModelBatchItem*> m_ItemTable;
     };
 }
 
