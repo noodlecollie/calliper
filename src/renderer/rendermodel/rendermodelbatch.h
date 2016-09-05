@@ -24,11 +24,7 @@ namespace NS_RENDERER
         bool create();
         void destroy();
 
-        void addItem(const RenderModelBatchParams &params);
-        int itemCount() const;
-        void clearItems();
         bool isFull() const;
-
         bool supportsBatching() const;
 
         void upload(bool force = false);
@@ -40,27 +36,31 @@ namespace NS_RENDERER
         void draw();
         void releaseDraw();
 
-        int localPositionCount() const;
-        int localNormalCount() const;
-        int localColorCount() const;
-        int localTextureCoordinateCount() const;
-        int localIndexCount() const;
-
 private:
-        static void copyInIndexData(quint32* &dest, const quint32* source, int intCount);
-        void copyInData(const RenderModelBatchParams &params, int vertexCount);
-        int maxComponentsFromVertexSpec() const;
-        void resizeAllBuffers(int numVertices);
+        int maxComponentsFromVertexFormat() const;
         void uploadVertexData();
         void uploadUniformData();
+        void uploadIndexData();
         void writeToGlVertexBuffer(const QVector<float> &buffer, int &offset);
         void trySetAttributeBuffer(QOpenGLShaderProgram* shaderProgram, int &offset, ShaderDefs::VertexArrayAttribute attribute, int components, int count);
-        void addIndices(const quint32* source, int count, int indexOffset);
-        void addObjectIdsToPositions(int vertexOffset, int vertexCount, quint32 id);
 
         static inline quint32 batchIdMask(int numBits)
         {
             return (quint32)(~0) >> ((sizeof(quint32) * 8) - numBits);
+        }
+
+        // TODO: This can probably be improved!
+        static inline quint8 bitsRequired(int maxValue)
+        {
+            for ( int i = 0; i < sizeof(quint32)*8; i++ )
+            {
+                if ( 1 << i >= maxValue )
+                {
+                    return i+1;
+                }
+            }
+
+            return sizeof(quint32)*8;
         }
 
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
@@ -70,20 +70,13 @@ private:
         QOpenGLBuffer   m_GlIndexBuffer;
         OpenGLUniformBuffer m_GlUniformBuffer;
 
-        QVector<float>      m_LocalPositionBuffer;
-        QVector<float>      m_LocalNormalBuffer;
-        QVector<float>      m_LocalColorBuffer;
-        QVector<float>      m_LocalTextureCoordinateBuffer;
-        QVector<quint32>    m_LocalIndexBuffer;
-        QList<QMatrix4x4>   m_ModelToWorldMatrices;
-
-        QList<NS_RENDERER::RenderModelBatchItem> m_Items;
-
         VertexFormat            m_VertexFormat;
         int                     m_iBatchSize;
         bool                    m_bDataStale;
         const quint32           m_iBatchIdMask;
         GLuint                  m_iUniformBlockIndex;
+
+        QHash<QMatrix4x4, RenderModelBatchItem> m_ItemTable;
     };
 }
 

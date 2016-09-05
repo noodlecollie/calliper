@@ -3,23 +3,19 @@
 
 #include "renderer_global.h"
 #include <QMatrix4x4>
+#include "geometry/geometrysection.h"
 
 namespace NS_RENDERER
 {
     class RENDERERSHARED_EXPORT RenderModelBatchParams
     {
     public:
-        RenderModelBatchParams(int vertexCount, const float* positions, int indexCount, quint32* indices, const QMatrix4x4 &modelToWorld,
-                               const float* normals = NULL, const float* colors = NULL, const float* textureCoordinates = NULL);
+        RenderModelBatchParams(const QList<GeometrySection> &sections, const QMatrix4x4 &modelWorldMatrix);
 
         int vertexCount() const;
-        const float* positions() const;
-        const float* normals() const;
-        const float* colors() const;
-        const float* textureCoordinates() const;
-        QMatrix4x4 modelToWorldMatrix() const;
         int indexCount() const;
         quint32* indices() const;
+        QMatrix4x4 modelToWorldMatrix() const;
 
         bool someAttributesUnspecified() const;
         bool hasNormals() const;
@@ -27,14 +23,16 @@ namespace NS_RENDERER
         bool hasTextureCoordinates() const;
 
     private:
-        int     m_iVertexCount;
-        const float*  m_pPositions;
-        const float*  m_pNormals;
-        const float*  m_pColors;
-        const float*  m_pTextureCoordinates;
+        void processSectionList();
+
         QMatrix4x4  m_matModelToWorld;
+        const QList<GeometrySection>&   m_Sections;
+
+        int         m_iVertexCount;
         int         m_iIndexCount;
-        quint32*    m_pIndices;
+        bool        m_bNormalsSpecified;
+        bool        m_bColorsSpecified;
+        bool        m_bTexCoordsSpecified;
     };
 }
 

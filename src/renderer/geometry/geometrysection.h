@@ -55,6 +55,10 @@ namespace NS_RENDERER
         const QVector<float> vertexConstVector(AttributeType type) const;
         const QVector<quint32> indexConstVector() const;
 
+        bool hasNormals() const;
+        bool hasColors() const;
+        bool hasTextureCoordinates() const;
+
     private:
         void init();
 

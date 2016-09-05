@@ -2,35 +2,11 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatchParams::RenderModelBatchParams(int vertexCount, const float* positions, int indexCount, quint32* indices,
-                                                   const QMatrix4x4 &modelToWorld, const float* normals, const float* colors,
-                                                   const float* textureCoordinates)
-        : m_iVertexCount(vertexCount), m_pPositions(positions), m_pNormals(normals), m_pColors(colors),
-          m_pTextureCoordinates(textureCoordinates), m_matModelToWorld(modelToWorld),
-          m_iIndexCount(indexCount), m_pIndices(indices)
+    RenderModelBatchParams::RenderModelBatchParams(const QList<GeometrySection> &sections, const QMatrix4x4 &modelWorldMatrix)
+        : m_matModelToWorld(modelWorldMatrix), m_Sections(sections),
+          m_iVertexCount(0), m_iIndexCount(0), m_bNormalsSpecified(true), m_bColorsSpecified(true), m_bTexCoordsSpecified(true)
     {
-        Q_ASSERT_X(m_pPositions, Q_FUNC_INFO, "Position data must be specified!");
-        Q_ASSERT_X(m_pIndices, Q_FUNC_INFO, "Index data must be specified!");
-    }
-
-    const float* RenderModelBatchParams::positions() const
-    {
-        return m_pPositions;
-    }
-
-    const float* RenderModelBatchParams::normals() const
-    {
-        return m_pNormals;
-    }
-
-    const float* RenderModelBatchParams::colors() const
-    {
-        return m_pColors;
-    }
-
-    const float* RenderModelBatchParams::textureCoordinates() const
-    {
-        return m_pTextureCoordinates;
+        processSectionList();
     }
 
     QMatrix4x4 RenderModelBatchParams::modelToWorldMatrix() const
@@ -71,5 +47,18 @@ namespace NS_RENDERER
     quint32* RenderModelBatchParams::indices() const
     {
         return m_pIndices;
+    }
+
+    void RenderModelBatchParams::processSectionList()
+    {
+        foreach ( const GeometrySection &section, m_Sections )
+        {
+            m_iVertexCount += section.positionCount();
+            m_iIndexCount += section.indexCount();
+
+            m_bNormalsSpecified = m_bColorsSpecified && section.hasNormals();
+            m_bColorsSpecified = m_bColorsSpecified && section.hasColors();
+            m_bTexCoordsSpecified = m_bTexCoordsSpecified && section.hasTextureCoordinates();
+        }
     }
 }

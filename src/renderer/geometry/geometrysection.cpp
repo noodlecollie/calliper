@@ -171,4 +171,19 @@ namespace NS_RENDERER
     {
         return m_iPositionCount;
     }
+
+    bool GeometrySection::hasNormals() const
+    {
+        return !m_Attributes[NormalAttribute].isEmpty();
+    }
+
+    bool GeometrySection::hasColors() const
+    {
+        return !m_Attributes[ColorAttribute].isEmpty();
+    }
+
+    bool GeometrySection::hasTextureCoordinates() const
+    {
+        return !m_Attributes[TextureCoordinateAttribute].isEmpty();
+    }
 }
