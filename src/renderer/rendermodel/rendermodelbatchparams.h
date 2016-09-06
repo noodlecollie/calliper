@@ -14,7 +14,6 @@ namespace NS_RENDERER
 
         int vertexCount() const;
         int indexCount() const;
-        quint32* indices() const;
         const QMatrix4x4& modelToWorldMatrix() const;
 
         bool someAttributesUnspecified() const;

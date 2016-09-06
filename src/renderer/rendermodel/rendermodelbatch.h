@@ -8,6 +8,8 @@
 #include "shaders/shaderdefs.h"
 #include "opengl/opengluniformbuffer.h"
 #include "shaders/vertexformat.h"
+#include <QScopedArrayPointer>
+#include "general/hashfunctions.h"
 
 class QOpenGLShaderProgram;
 
@@ -25,10 +27,12 @@ namespace NS_RENDERER
         void destroy();
 
         bool supportsBatching() const;
+        bool canAddNewItem(const QMatrix4x4 &key) const;
 
         // If this batch has reached max size and the data requires a new item, add() does nothing.
-        void add(const RenderModelBatchParams &params);
+        bool add(const RenderModelBatchParams &params);
         void clear();
+        bool containsKey(const QMatrix4x4 &mat) const;
 
         void upload(bool force);
 
@@ -38,10 +42,9 @@ private:
             return (quint32)(~0) >> ((sizeof(quint32) * 8) - numBits);
         }
 
-        // TODO: This can probably be improved!
         static inline quint8 bitsRequired(int maxValue)
         {
-            for ( int i = 0; i < sizeof(quint32)*8; i++ )
+            for ( quint32 i = 0; i < sizeof(quint32)*8; i++ )
             {
                 if ( 1 << i >= maxValue )
                 {
@@ -55,8 +58,15 @@ private:
         void uploadVertexData(const QVector<float> source, int &offsetBytes);
         int getVertexDataCountInBytes() const;
         int getIndexDataCountInBytes() const;
-        void uploadAllVertexData();
-        void uploadAllIndexData();
+        void uploadVertexData();
+        void uploadIndexData();
+        void uploadUniformData();
+        void addObjectIdsToPositions(RenderModelBatchItem* item);
+        quint32 getNextObjectId();
+        void invalidateObjectId(quint32 id);
+        void trySetAttributeBuffer(QOpenGLShaderProgram *shaderProgram, int &offset,
+                                   ShaderDefs::VertexArrayAttribute attribute,
+                                   int components, int count);
 
         QOpenGLBuffer::UsagePattern m_iUsagePattern;
         bool                        m_bCreated;
@@ -71,7 +81,20 @@ private:
         const quint32           m_iBatchIdMask;
         GLuint                  m_iUniformBlockIndex;
 
+        QScopedArrayPointer<bool>   m_bUsedObjectIds;
+
         QHash<QMatrix4x4, RenderModelBatchItem*> m_ItemTable;
+
+        struct UploadMetadata
+        {
+            int numPositions;
+            int numNormals;
+            int numColors;
+            int numTexCoords;
+            int numIndices;
+        };
+        UploadMetadata m_UploadMetadata;
+        void clearUploadMetadata();
     };
 }
 

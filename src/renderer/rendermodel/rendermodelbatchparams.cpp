@@ -14,26 +14,6 @@ namespace NS_RENDERER
         return m_matModelToWorld;
     }
 
-    bool RenderModelBatchParams::someAttributesUnspecified() const
-    {
-        return !(hasNormals() && hasColors() && hasTextureCoordinates());
-    }
-
-    bool RenderModelBatchParams::hasNormals() const
-    {
-        return m_pNormals != NULL;
-    }
-
-    bool RenderModelBatchParams::hasColors() const
-    {
-        return m_pColors != NULL;
-    }
-
-    bool RenderModelBatchParams::hasTextureCoordinates() const
-    {
-        return m_pTextureCoordinates != NULL;
-    }
-
     int RenderModelBatchParams::vertexCount() const
     {
         return m_iVertexCount;
@@ -44,9 +24,24 @@ namespace NS_RENDERER
         return m_iIndexCount;
     }
 
-    quint32* RenderModelBatchParams::indices() const
+    bool RenderModelBatchParams::hasNormals() const
     {
-        return m_pIndices;
+        return m_bNormalsSpecified;
+    }
+
+    bool RenderModelBatchParams::hasColors() const
+    {
+        return m_bColorsSpecified;
+    }
+
+    bool RenderModelBatchParams::hasTextureCoordinates() const
+    {
+        return m_bTexCoordsSpecified;
+    }
+
+    bool RenderModelBatchParams::someAttributesUnspecified() const
+    {
+        return !(hasNormals() && hasColors() && hasTextureCoordinates());
     }
 
     void RenderModelBatchParams::processSectionList()

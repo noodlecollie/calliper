@@ -15,14 +15,14 @@ SOURCES += \
     general/generalutil.cpp \
     math/math.cpp \
     json/jsonutil.cpp \
-    hashfunctions.cpp
+    general/hashfunctions.cpp
 
 HEADERS +=\
         util_global.h \
     general/generalutil.h \
     math/math.h \
     json/jsonutil.h \
-    hashfunctions.h
+    general/hashfunctions.h
 
 unix {
     target.path = /usr/lib

@@ -7,7 +7,7 @@
 
 namespace NS_RENDERER
 {
-    class RenderModelBatchItem
+    struct RenderModelBatchItem
     {
     public:
         RenderModelBatchItem();
@@ -17,6 +17,7 @@ namespace NS_RENDERER
         QVector<float>      m_Colors;
         QVector<float>      m_TextureCoordinates;
         QVector<quint32>    m_Indices;
+        quint32             m_iObjectId;
     };
 }
 

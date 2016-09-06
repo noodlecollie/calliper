@@ -9,3 +9,4 @@ SUBDIRS += \
 
 renderer-sandbox.depends = renderer
 model.depends = renderer util
+renderer.depends = util

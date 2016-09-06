@@ -57,3 +57,10 @@ unix {
 
 RESOURCES += \
     resource/resource.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../util/release/ -lutil
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../util/debug/ -lutil
+else:unix: LIBS += -L$$OUT_PWD/../util/ -lutil
+
+INCLUDEPATH += $$PWD/../util
+DEPENDPATH += $$PWD/../util

@@ -12,7 +12,7 @@ namespace
         dest.append(source);
         for ( int i = oldCount; i < dest.count(); i++ )
         {
-            dest[i] += oldcount;
+            dest[i] += oldCount;
         }
     }
 }
@@ -29,8 +29,11 @@ namespace NS_RENDERER
           m_iBatchSize(batchSize),
           m_bDataStale(false),
           m_iBatchIdMask(batchIdMask(bitsRequired(m_iBatchSize))),
-          m_iUniformBlockIndex(0)
+          m_iUniformBlockIndex(0),
+          m_bUsedObjectIds(new bool[m_iBatchSize])
     {
+        memset(m_bUsedObjectIds.data(), 0, m_iBatchSize * sizeof(bool));
+        clearUploadMetadata();
     }
 
     RenderModelBatch::~RenderModelBatch()
@@ -69,7 +72,7 @@ namespace NS_RENDERER
         return m_iBatchSize > 1;
     }
 
-    void RenderModelBatch::add(const RenderModelBatchParams &params)
+    bool RenderModelBatch::add(const RenderModelBatchParams &params)
     {
         const QMatrix4x4 &mat = params.modelToWorldMatrix();
         RenderModelBatchItem* item = NULL;
@@ -77,9 +80,10 @@ namespace NS_RENDERER
         if ( !m_ItemTable.contains(mat) )
         {
             if ( m_ItemTable.count() >= m_iBatchSize )
-                return;
+                return false;
 
             item = new RenderModelBatchItem();
+            item->m_iObjectId = getNextObjectId();
             m_ItemTable.insert(mat, item);
         }
 
@@ -89,10 +93,13 @@ namespace NS_RENDERER
             item->m_Positions.append(section.vertexConstVector(GeometrySection::NormalAttribute));
             item->m_Positions.append(section.vertexConstVector(GeometrySection::ColorAttribute));
             item->m_Positions.append(section.vertexConstVector(GeometrySection::TextureCoordinateAttribute));
-            copyData(item->m_Indices, section.indexConstVector);
+            copyIndices(item->m_Indices, section.indexConstVector());
         }
 
+        addObjectIdsToPositions(item);
+
         m_bDataStale = true;
+        return true;
     }
 
     void RenderModelBatch::clear()
@@ -106,12 +113,8 @@ namespace NS_RENDERER
     {
         if ( force || m_bDataStale )
         {
-            uploadAllVertexData();
-
-            m_GlIndexBuffer.bind();
-            m_GlIndexBuffer.allocate(m_LocalIndexBuffer.constData(), m_LocalIndexBuffer.count() * sizeof(quint32));
-            m_GlIndexBuffer.release();
-
+            uploadVertexData();
+            uploadIndexData();
             uploadUniformData();
 
             m_bDataStale = false;
@@ -151,12 +154,13 @@ namespace NS_RENDERER
         offsetBytes += source.count() * sizeof(float);
     }
 
-    void RenderModelBatch::uploadAllVertexData()
+    void RenderModelBatch::uploadVertexData()
     {
         m_GlVertexBuffer.bind();
         m_GlVertexBuffer.allocate(getVertexDataCountInBytes());
 
         int offsetBytes = 0;
+        clearUploadMetadata();
 
         // We're gonna have to do this in passes, because we need to get all of the
         // position data and then all of the normal data, and then...
@@ -168,25 +172,30 @@ namespace NS_RENDERER
                 {
                     case 0:
                     {
+                        addObjectIdsToPositions(item);
                         uploadVertexData(item->m_Positions, offsetBytes);
+                        m_UploadMetadata.numPositions += item->m_Positions.count();
                         break;
                     }
 
                     case 1:
                     {
                         uploadVertexData(item->m_Normals, offsetBytes);
+                        m_UploadMetadata.numNormals += item->m_Normals.count();
                         break;
                     }
 
                     case 2:
                     {
                         uploadVertexData(item->m_Colors, offsetBytes);
+                        m_UploadMetadata.numColors += item->m_Colors.count();
                         break;
                     }
 
                     case 3:
                     {
                         uploadVertexData(item->m_TextureCoordinates, offsetBytes);
+                        m_UploadMetadata.numTexCoords += item->m_TextureCoordinates.count();
                         break;
                     }
 
@@ -199,15 +208,117 @@ namespace NS_RENDERER
         m_GlVertexBuffer.release();
     }
 
-    void RenderModelBatch::uploadAllIndexData()
+    void RenderModelBatch::uploadIndexData()
     {
         m_GlIndexBuffer.bind();
         m_GlIndexBuffer.allocate(getIndexDataCountInBytes());
 
-        quint32* data = m_GlIndexBuffer.map(QOpenGLBuffer::WriteOnly);
+        quint32* data = reinterpret_cast<quint32*>(m_GlIndexBuffer.map(QOpenGLBuffer::WriteOnly));
 
-        // TODO: Finish
+        int delta = 0;
+        foreach ( RenderModelBatchItem* item, m_ItemTable.values() )
+        {
+            for ( int i = 0; i < item->m_Indices.count(); i++ )
+            {
+                *data = item->m_Indices.at(i) + delta;
+            }
+
+            delta += item->m_Indices.count();
+        }
 
         m_GlIndexBuffer.release();
+    }
+
+    void RenderModelBatch::uploadUniformData()
+    {
+        // Not sure if this exact set of steps is required, but it's the
+        // only way I got it to actually work.
+        m_GlUniformBuffer.bind();
+        m_GlUniformBuffer.allocate(m_ItemTable.count() * 16 * sizeof(float));
+        m_GlUniformBuffer.release();
+
+        m_GlUniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint);
+
+        m_GlUniformBuffer.bind();
+        int i = 0;
+        foreach ( const QMatrix4x4 &mat, m_ItemTable.keys() )
+        {
+            m_GlUniformBuffer.write(i * 16 * sizeof(float), mat.constData(), 16 * sizeof(float));
+            i++;
+        }
+        m_GlUniformBuffer.release();
+    }
+
+    void RenderModelBatch::addObjectIdsToPositions(RenderModelBatchItem* item)
+    {
+        Q_ASSERT_X(sizeof(float) == sizeof(quint32), Q_FUNC_INFO, "Size of float and quint32 do not match!");
+
+        int numComponents = m_VertexFormat.positionComponents();
+        float* data = item->m_Positions.data();
+        int vertexCount = item->m_Positions.count() / numComponents;
+
+        for ( int i = 0; i < vertexCount; i++ )
+        {
+            // Get to the last component.
+            data += numComponents - 1;
+
+            // Set the bits.
+            quint32 temp = (quint32)(*data);
+            temp |= item->m_iObjectId & m_iBatchIdMask;
+            *data = (float)temp;
+
+            // Advance past the last component.
+            data++;
+        }
+    }
+
+    // Assumes we've already checked that there is an ID available.
+    quint32 RenderModelBatch::getNextObjectId()
+    {
+        for ( int i = 0; i < m_iBatchSize; i++ )
+        {
+            if ( !m_bUsedObjectIds[i] )
+            {
+                m_bUsedObjectIds[i] = true;
+                return i;
+            }
+        }
+
+        return m_iBatchSize;
+    }
+
+    void RenderModelBatch::invalidateObjectId(quint32 id)
+    {
+        m_bUsedObjectIds[id] = false;
+    }
+
+    void RenderModelBatch::trySetAttributeBuffer(QOpenGLShaderProgram *shaderProgram, int &offset,
+                                                 ShaderDefs::VertexArrayAttribute attribute,
+                                                 int components, int count)
+    {
+        if ( components > 0 )
+        {
+            shaderProgram->setAttributeBuffer(attribute,
+                                                 GL_FLOAT,
+                                                 offset * sizeof(GLfloat),
+                                                 components);
+            offset += count;
+        }
+    }
+
+    void RenderModelBatch::clearUploadMetadata()
+    {
+        memset(&m_UploadMetadata, 0, sizeof(UploadMetadata));
+    }
+
+    bool RenderModelBatch::canAddNewItem(const QMatrix4x4 &key) const
+    {
+        return m_ItemTable.count() < m_iBatchSize
+                || containsKey(key);
+    }
+
+    bool RenderModelBatch::containsKey(const QMatrix4x4 &mat) const
+    {
+        return m_ItemTable.contains(mat);
     }
 }
