@@ -55,4 +55,9 @@ namespace NS_RENDERER
             verticesProcessed += section.positionCount();
         }
     }
+
+    const QList<GeometrySection>& GeometryBuilder::sections() const
+    {
+        return m_Sections;
+    }
 }

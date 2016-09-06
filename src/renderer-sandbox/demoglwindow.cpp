@@ -8,6 +8,7 @@
 #include "opengl/openglhelpers.h"
 #include "shaders/debugscreenspaceshader.h"
 #include "tempshader.h"
+#include "geometry/geometrybuilder.h"
 
 using namespace NS_RENDERER;
 
@@ -126,15 +127,23 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
+    GeometryBuilder builder;
+    GeometrySection& section = builder.currentSection();
+    section.add(GeometrySection::PositionAttribute, tri1.constData(), tri1.count());
+    section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
+    section.add(GeometrySection::ColorAttribute, cols, 12);
+    section.addIndexTriangle(indices[0], indices[1], indices[2]);
+
     RenderModelBatchKey key(0, 0);
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.4f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.3f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.2f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.1f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0.0f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.4f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.3f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.2f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.1f), NULL, cols, textureCoords));
+//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0.0f), NULL, cols, textureCoords));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.7f)));
     m_pRenderModel->debugUploadAll();
 }
 

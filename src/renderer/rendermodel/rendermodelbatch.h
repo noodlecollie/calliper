@@ -34,7 +34,12 @@ namespace NS_RENDERER
         void clear();
         bool containsKey(const QMatrix4x4 &mat) const;
 
-        void upload(bool force);
+        void upload(bool force = false);
+
+        void bindDraw();
+        void setAttributePointers(QOpenGLShaderProgram* program);
+        void draw();
+        void releaseDraw();
 
 private:
         static inline quint32 batchIdMask(int numBits)

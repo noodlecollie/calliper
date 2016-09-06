@@ -321,4 +321,54 @@ namespace NS_RENDERER
     {
         return m_ItemTable.contains(mat);
     }
+
+    void RenderModelBatch::bindDraw()
+    {
+        m_GlVertexBuffer.bind();
+        m_GlIndexBuffer.bind();
+    }
+
+    void RenderModelBatch::draw()
+    {
+        GL_CURRENT_F;
+
+        f->glDrawElements(GL_TRIANGLES, m_UploadMetadata.numIndices, GL_UNSIGNED_INT, (void*)0);
+    }
+
+    void RenderModelBatch::releaseDraw()
+    {
+        m_GlIndexBuffer.release();
+        m_GlVertexBuffer.release();
+    }
+
+    void RenderModelBatch::setAttributePointers(QOpenGLShaderProgram *shaderProgram)
+    {
+        Q_ASSERT_X(!m_bDataStale, Q_FUNC_INFO, "Data not uploaded before setting attribute pointers!");
+
+        int offset = 0;
+
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
+                              ShaderDefs::PositionAttribute,
+                              m_VertexFormat.positionComponents(),
+                              m_UploadMetadata.numPositions);
+
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
+                              ShaderDefs::NormalAttribute,
+                              m_VertexFormat.normalComponents(),
+                              m_UploadMetadata.numNormals);
+
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
+                              ShaderDefs::ColorAttribute,
+                              m_VertexFormat.colorComponents(),
+                              m_UploadMetadata.numColors);
+
+        trySetAttributeBuffer(shaderProgram,
+                              offset,
+                              ShaderDefs::TextureCoordinateAttribute,
+                              m_VertexFormat.textureCoordinateComponents(),
+                              m_UploadMetadata.numTexCoords);
+    }
 }

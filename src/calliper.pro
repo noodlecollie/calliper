@@ -7,6 +7,6 @@ SUBDIRS += \
     model \
     util
 
-renderer-sandbox.depends = renderer
+renderer-sandbox.depends = renderer util
 model.depends = renderer util
 renderer.depends = util

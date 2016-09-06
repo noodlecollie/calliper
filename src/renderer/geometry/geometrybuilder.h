@@ -17,6 +17,7 @@ namespace NS_RENDERER
         const GeometrySection& section(int index) const;
         GeometrySection& createNewSection();
         GeometrySection& currentSection();
+        const QList<GeometrySection>& sections() const;
 
         // Export all data into buffers provided.
         void consolidate(QVector<float> &positions, QVector<float> normals,

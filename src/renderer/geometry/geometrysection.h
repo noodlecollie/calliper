@@ -13,7 +13,7 @@
 
 namespace NS_RENDERER
 {
-    class GeometrySection
+    class RENDERERSHARED_EXPORT GeometrySection
     {
     public:
         enum AttributeType
