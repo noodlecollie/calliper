@@ -66,7 +66,8 @@ private:
         void uploadVertexData();
         void uploadIndexData();
         void uploadUniformData();
-        void addObjectIdsToPositions(RenderModelBatchItem* item);
+        void addObjectIdsToPositions(RenderModelBatchItem* item, int floatOffset, int floatCount);
+        void addObjectIdsToPositions(RenderModelBatchItem *item);
         quint32 getNextObjectId();
         void invalidateObjectId(quint32 id);
         void trySetAttributeBuffer(QOpenGLShaderProgram *shaderProgram, int &offset,

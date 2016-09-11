@@ -88,6 +88,8 @@ namespace NS_RENDERER
             m_ItemTable.insert(mat, item);
         }
 
+        int prevPositionCount = item->m_Positions.count();
+
         foreach ( const GeometrySection &section, params.sections() )
         {
             item->m_Positions.append(section.vertexConstVector(GeometrySection::PositionAttribute));
@@ -97,7 +99,7 @@ namespace NS_RENDERER
             copyIndices(item->m_Indices, section.indexConstVector());
         }
 
-        addObjectIdsToPositions(item);
+        addObjectIdsToPositions(item, prevPositionCount, item->m_Positions.count() - prevPositionCount);
 
         m_bDataStale = true;
         return true;
@@ -173,7 +175,6 @@ namespace NS_RENDERER
                 {
                     case 0:
                     {
-                        addObjectIdsToPositions(item);
                         uploadVertexData(item->m_Positions, offsetBytes);
                         m_UploadMetadata.numPositions += item->m_Positions.count();
                         break;
@@ -250,13 +251,18 @@ namespace NS_RENDERER
         m_GlUniformBuffer.release();
     }
 
-    void RenderModelBatch::addObjectIdsToPositions(RenderModelBatchItem* item)
+    void RenderModelBatch::addObjectIdsToPositions(RenderModelBatchItem *item)
+    {
+        addObjectIdsToPositions(item, 0, item->m_Positions.count());
+    }
+
+    void RenderModelBatch::addObjectIdsToPositions(RenderModelBatchItem* item, int floatOffset, int floatCount)
     {
         Q_ASSERT_X(sizeof(float) == sizeof(quint32), Q_FUNC_INFO, "Size of float and quint32 do not match!");
 
         int numComponents = m_VertexFormat.positionComponents();
-        float* data = item->m_Positions.data();
-        int vertexCount = item->m_Positions.count() / numComponents;
+        float* data = item->m_Positions.data() + floatOffset;
+        int vertexCount = floatCount / numComponents;
 
         for ( int i = 0; i < vertexCount; i++ )
         {
