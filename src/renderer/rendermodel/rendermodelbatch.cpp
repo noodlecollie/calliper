@@ -151,10 +151,16 @@ namespace NS_RENDERER
         return count * sizeof(quint32);
     }
 
-    void RenderModelBatch::uploadVertexData(const QVector<float> source, int &offsetBytes)
+    void RenderModelBatch::uploadVertexData(const QVector<float> &source, int &offsetBytes)
     {
         m_GlVertexBuffer.write(offsetBytes, source.constData(), source.count() * sizeof(float));
         offsetBytes += source.count() * sizeof(float);
+    }
+
+    void RenderModelBatch::uploadVertexDataTemp(const QVector<float> &source, QVector<float> &dest, int &offsetBytes)
+    {
+        memcpy((char*)dest.data() + offsetBytes, source.constData(), source.count() * sizeof(float));
+        offsetBytes +=  source.count() * sizeof(float);
     }
 
     void RenderModelBatch::uploadVertexData()
@@ -164,6 +170,10 @@ namespace NS_RENDERER
 
         int offsetBytes = 0;
         clearUploadMetadata();
+
+        // REMOVE ME
+        QVector<float> debugPositions;
+        debugPositions.resize(getVertexDataCountInBytes() / sizeof(float));
 
         // We're gonna have to do this in passes, because we need to get all of the
         // position data and then all of the normal data, and then...
@@ -175,28 +185,28 @@ namespace NS_RENDERER
                 {
                     case 0:
                     {
-                        uploadVertexData(item->m_Positions, offsetBytes);
+                        uploadVertexDataTemp(item->m_Positions, debugPositions, offsetBytes);
                         m_UploadMetadata.numPositions += item->m_Positions.count();
                         break;
                     }
 
                     case 1:
                     {
-                        uploadVertexData(item->m_Normals, offsetBytes);
+                        uploadVertexDataTemp(item->m_Normals, debugPositions, offsetBytes);
                         m_UploadMetadata.numNormals += item->m_Normals.count();
                         break;
                     }
 
                     case 2:
                     {
-                        uploadVertexData(item->m_Colors, offsetBytes);
+                        uploadVertexDataTemp(item->m_Colors, debugPositions, offsetBytes);
                         m_UploadMetadata.numColors += item->m_Colors.count();
                         break;
                     }
 
                     case 3:
                     {
-                        uploadVertexData(item->m_TextureCoordinates, offsetBytes);
+                        uploadVertexDataTemp(item->m_TextureCoordinates, debugPositions, offsetBytes);
                         m_UploadMetadata.numTexCoords += item->m_TextureCoordinates.count();
                         break;
                     }
@@ -208,6 +218,24 @@ namespace NS_RENDERER
         }
 
         m_GlVertexBuffer.release();
+    }
+
+    void RenderModelBatch::uploadIndexDataTemp(QVector<quint32> &dest)
+    {
+        dest.resize(getIndexDataCountInBytes() / sizeof(quint32));
+        quint32* data = dest.data();
+
+        int delta = 0;
+        foreach ( RenderModelBatchItem* item, m_ItemTable.values() )
+        {
+            for ( int i = 0; i < item->m_Indices.count(); i++ )
+            {
+                *data = item->m_Indices.at(i) + delta;
+                data++;
+            }
+
+            delta += item->m_Indices.count();
+        }
     }
 
     void RenderModelBatch::uploadIndexData()
@@ -223,12 +251,14 @@ namespace NS_RENDERER
             for ( int i = 0; i < item->m_Indices.count(); i++ )
             {
                 *data = item->m_Indices.at(i) + delta;
+                data++;
             }
 
             delta += item->m_Indices.count();
         }
 
         m_GlIndexBuffer.release();
+        m_UploadMetadata.numIndices = delta;
     }
 
     void RenderModelBatch::uploadUniformData()

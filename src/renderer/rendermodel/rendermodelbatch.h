@@ -60,11 +60,13 @@ private:
             return sizeof(quint32)*8;
         }
 
-        void uploadVertexData(const QVector<float> source, int &offsetBytes);
+        void uploadVertexData(const QVector<float> &source, int &offsetBytes);
+        void uploadVertexDataTemp(const QVector<float> &source, QVector<float> &dest, int &offsetBytes);
         int getVertexDataCountInBytes() const;
         int getIndexDataCountInBytes() const;
         void uploadVertexData();
         void uploadIndexData();
+        void uploadIndexDataTemp(QVector<quint32> &dest);
         void uploadUniformData();
         void addObjectIdsToPositions(RenderModelBatchItem* item, int floatOffset, int floatCount);
         void addObjectIdsToPositions(RenderModelBatchItem *item);
