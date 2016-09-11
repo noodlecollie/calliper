@@ -129,7 +129,7 @@ void DemoGLWindow::initializeGL()
 
     GeometryBuilder builder;
     GeometrySection& section = builder.currentSection();
-    section.add(GeometrySection::PositionAttribute, tri1.constData(), tri1.count());
+    section.addPositions(tri1.constData(), tri1.count(), 3);
     section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
     section.add(GeometrySection::ColorAttribute, cols, 12);
     section.addIndexTriangle(indices[0], indices[1], indices[2]);

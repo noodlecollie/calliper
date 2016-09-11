@@ -91,9 +91,9 @@ namespace NS_RENDERER
         foreach ( const GeometrySection &section, params.sections() )
         {
             item->m_Positions.append(section.vertexConstVector(GeometrySection::PositionAttribute));
-            item->m_Positions.append(section.vertexConstVector(GeometrySection::NormalAttribute));
-            item->m_Positions.append(section.vertexConstVector(GeometrySection::ColorAttribute));
-            item->m_Positions.append(section.vertexConstVector(GeometrySection::TextureCoordinateAttribute));
+            item->m_Normals.append(section.vertexConstVector(GeometrySection::NormalAttribute));
+            item->m_Colors.append(section.vertexConstVector(GeometrySection::ColorAttribute));
+            item->m_TextureCoordinates.append(section.vertexConstVector(GeometrySection::TextureCoordinateAttribute));
             copyIndices(item->m_Indices, section.indexConstVector());
         }
 

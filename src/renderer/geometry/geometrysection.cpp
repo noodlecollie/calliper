@@ -186,4 +186,10 @@ namespace NS_RENDERER
     {
         return !m_Attributes[TextureCoordinateAttribute].isEmpty();
     }
+
+    void GeometrySection::addPositions(const float *data, int count, int components)
+    {
+        add(PositionAttribute, data, count);
+        m_iPositionCount += count/components;
+    }
 }
