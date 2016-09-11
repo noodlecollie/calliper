@@ -5,8 +5,8 @@ SUBDIRS += \
     renderer \
     renderer-sandbox \
     model \
-    util
+    calliperutil
 
-renderer-sandbox.depends = renderer util
-model.depends = renderer util
-renderer.depends = util
+renderer-sandbox.depends = renderer calliperutil
+model.depends = renderer calliperutil
+renderer.depends = calliperutil

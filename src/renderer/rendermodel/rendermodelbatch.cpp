@@ -3,6 +3,7 @@
 #include "opengl/openglhelpers.h"
 #include "shaders/ishaderspec.h"
 #include <QOpenGLShaderProgram>
+#include "general/hashfunctions.h"
 
 namespace
 {

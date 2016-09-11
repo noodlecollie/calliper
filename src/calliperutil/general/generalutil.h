@@ -1,11 +1,11 @@
 #ifndef GENERALUTIL_H
 #define GENERALUTIL_H
 
-#include "util_global.h"
+#include "calliperutil_global.h"
 #include <QString>
 #include <QMetaEnum>
 
-namespace NS_UTIL
+namespace NS_CALLIPERUTIL
 {
     namespace General
     {

@@ -1,6 +1,6 @@
 #include "jsonutil.h"
 
-namespace NS_UTIL
+namespace NS_CALLIPERUTIL
 {
     namespace Json
     {

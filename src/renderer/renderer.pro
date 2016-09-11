@@ -58,9 +58,9 @@ unix {
 RESOURCES += \
     resource/resource.qrc
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../util/release/ -lutil
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../util/debug/ -lutil
-else:unix: LIBS += -L$$OUT_PWD/../util/ -lutil
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil
+else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 
-INCLUDEPATH += $$PWD/../util
-DEPENDPATH += $$PWD/../util
+INCLUDEPATH += $$PWD/../calliperutil
+DEPENDPATH += $$PWD/../calliperutil

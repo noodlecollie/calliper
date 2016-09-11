@@ -7,7 +7,7 @@
 #define MATARGS_ROT_Y(_s, _c) (_c),0,(_s),0, 0,1,0,0, -(_s),0,(_c),0, 0,0,0,1
 #define MATARGS_ROT_Z(_s, _c) (_c),-(_s),0,0, (_s),(_c),0,0, 0,0,1,0, 0,0,0,1
 
-namespace NS_UTIL
+namespace NS_CALLIPERUTIL
 {
     uint qHash(const QVector3D &vec, uint seed)
     {

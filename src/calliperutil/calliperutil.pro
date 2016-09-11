@@ -6,7 +6,7 @@
 
 QT       += opengl
 
-TARGET = util
+TARGET = calliperutil
 TEMPLATE = lib
 
 DEFINES += UTIL_LIBRARY
@@ -18,7 +18,7 @@ SOURCES += \
     general/hashfunctions.cpp
 
 HEADERS +=\
-        util_global.h \
+        calliperutil_global.h \
     general/generalutil.h \
     math/math.h \
     json/jsonutil.h \

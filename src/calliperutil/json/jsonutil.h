@@ -1,14 +1,14 @@
 #ifndef JSONUTIL_H
 #define JSONUTIL_H
 
-#include "util_global.h"
+#include "calliperutil_global.h"
 #include <QVector3D>
 #include <QJsonArray>
 #include <QVector>
 #include <QColor>
 #include <QMetaEnum>
 
-namespace NS_UTIL
+namespace NS_CALLIPERUTIL
 {
     namespace Json
     {
@@ -79,8 +79,8 @@ namespace NS_UTIL
             return vec;
         }
 
-        UTILSHARED_EXPORT void colorToJsonArray(const QColor &col, QJsonArray &arr);
-        UTILSHARED_EXPORT QColor jsonArrayToColor(const QJsonArray &arr);
+        CALLIPERUTILSHARED_EXPORT void colorToJsonArray(const QColor &col, QJsonArray &arr);
+        CALLIPERUTILSHARED_EXPORT QColor jsonArrayToColor(const QJsonArray &arr);
 
         template<typename C, typename T>
         void flagsToJsonArray(const T &flags, const QString &flagName, QJsonArray &arr)
@@ -107,7 +107,7 @@ namespace NS_UTIL
             }
         }
 
-        UTILSHARED_EXPORT QString jsonArrayToFlagsString(const QJsonArray &arr);
+        CALLIPERUTILSHARED_EXPORT QString jsonArrayToFlagsString(const QJsonArray &arr);
 
         template<typename C, typename T>
         T jsonArrayToFlags(const QJsonArray &arr, const QString &flagName)
