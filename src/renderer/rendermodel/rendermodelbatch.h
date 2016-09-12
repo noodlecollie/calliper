@@ -10,6 +10,7 @@
 #include "shaders/vertexformat.h"
 #include <QScopedArrayPointer>
 #include "general/hashfunctions.h"
+#include "rendermodelbatchitemkey.h"
 
 class QOpenGLShaderProgram;
 
@@ -32,7 +33,7 @@ namespace NS_RENDERER
         // If this batch has reached max size and the data requires a new item, add() does nothing.
         bool add(const RenderModelBatchParams &params);
         void clear();
-        bool containsKey(const QMatrix4x4 &mat) const;
+        bool containsMatrix(const QMatrix4x4 &mat) const;
 
         void upload(bool force = false);
         void upload(QVector<float> &v, QVector<float> &u, QVector<quint32> &i);
@@ -94,7 +95,8 @@ private:
 
         QScopedArrayPointer<bool>   m_bUsedObjectIds;
 
-        QHash<QMatrix4x4, RenderModelBatchItem*> m_ItemTable;
+        QHash<RenderModelBatchItemKey, RenderModelBatchItem*> m_ItemTable;
+        QHash<QMatrix4x4, quint32> m_MatricesUsed;
 
         struct UploadMetadata
         {

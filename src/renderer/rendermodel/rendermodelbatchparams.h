@@ -10,11 +10,12 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT RenderModelBatchParams
     {
     public:
-        RenderModelBatchParams(const QList<GeometrySection> &sections, const QMatrix4x4 &modelWorldMatrix);
+        RenderModelBatchParams(const QList<GeometrySection> &sections, quint64 objectUniqueId, const QMatrix4x4 &modelWorldMatrix);
 
         int vertexCount() const;
         int indexCount() const;
         const QMatrix4x4& modelToWorldMatrix() const;
+        quint64 objectUniqueId() const;
 
         bool someAttributesUnspecified() const;
         bool hasNormals() const;
@@ -26,6 +27,7 @@ namespace NS_RENDERER
     private:
         void processSectionList();
 
+        quint64 m_iObjectUniqueId;
         QMatrix4x4  m_matModelToWorld;
         const QList<GeometrySection>&   m_Sections;
 

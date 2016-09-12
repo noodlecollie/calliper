@@ -2,8 +2,9 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatchParams::RenderModelBatchParams(const QList<GeometrySection> &sections, const QMatrix4x4 &modelWorldMatrix)
-        : m_matModelToWorld(modelWorldMatrix), m_Sections(sections),
+    RenderModelBatchParams::RenderModelBatchParams(const QList<GeometrySection> &sections, quint64 objectUniqueId,
+                                                   const QMatrix4x4 &modelWorldMatrix)
+        : m_iObjectUniqueId(objectUniqueId), m_matModelToWorld(modelWorldMatrix), m_Sections(sections),
           m_iVertexCount(0), m_iIndexCount(0), m_bNormalsSpecified(true), m_bColorsSpecified(true), m_bTexCoordsSpecified(true)
     {
         processSectionList();
@@ -60,5 +61,10 @@ namespace NS_RENDERER
     const QList<GeometrySection>& RenderModelBatchParams::sections() const
     {
         return m_Sections;
+    }
+
+    quint64 RenderModelBatchParams::objectUniqueId() const
+    {
+        return m_iObjectUniqueId;
     }
 }

@@ -75,18 +75,38 @@ namespace NS_RENDERER
 
     bool RenderModelBatch::add(const RenderModelBatchParams &params)
     {
-        const QMatrix4x4 &mat = params.modelToWorldMatrix();
         RenderModelBatchItem* item = NULL;
+        RenderModelBatchItemKey itemKey(params.modelToWorldMatrix(), params.objectUniqueId());
 
-        if ( !m_ItemTable.contains(mat) )
+        // We've not stored anything with this matrix before.
+        if ( !m_MatricesUsed.contains(itemKey.matrix()) )
         {
-            if ( m_ItemTable.count() >= m_iBatchSize )
+            // We can't store any more if we've maxed out on unique matrices.
+            if ( m_MatricesUsed.count() >= m_iBatchSize )
                 return false;
 
+            // Create a new item.
             item = new RenderModelBatchItem();
             item->m_iObjectId = getNextObjectId();
-            m_ItemTable.insert(mat, item);
+            m_ItemTable.insert(itemKey, item);
+            m_MatricesUsed.insert(itemKey.matrix(), item->m_iObjectId);
         }
+        // We have stored this matrix before.
+        else
+        {
+            // Try to get an item with the given key.
+            item = m_ItemTable.value(itemKey, NULL);
+
+            // If we couldn't get one, create one.
+            if ( !item )
+            {
+                item = new RenderModelBatchItem();
+                item->m_iObjectId = m_MatricesUsed.value(itemKey.matrix());
+                m_ItemTable.insert(itemKey, item);
+            }
+        }
+
+        Q_ASSERT_X(item, Q_FUNC_INFO, "Expected to have an item pointer to work with!");
 
         int prevPositionCount = item->m_Positions.count();
 
@@ -109,6 +129,7 @@ namespace NS_RENDERER
     {
         qDeleteAll(m_ItemTable.values());
         m_ItemTable.clear();
+        m_MatricesUsed.clear();
         m_bDataStale = true;
     }
 
@@ -310,14 +331,14 @@ namespace NS_RENDERER
         // Not sure if this exact set of steps is required, but it's the
         // only way I got it to actually work.
         m_GlUniformBuffer.bind();
-        m_GlUniformBuffer.allocate(m_ItemTable.count() * 16 * sizeof(float));
+        m_GlUniformBuffer.allocate(m_MatricesUsed.count() * 16 * sizeof(float));
         m_GlUniformBuffer.release();
 
         m_GlUniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint);
 
         m_GlUniformBuffer.bind();
         int i = 0;
-        foreach ( const QMatrix4x4 &mat, m_ItemTable.keys() )
+        foreach ( const QMatrix4x4 &mat, m_MatricesUsed.keys() )
         {
             m_GlUniformBuffer.write(i * 16 * sizeof(float), mat.constData(), 16 * sizeof(float));
             i++;
@@ -327,9 +348,9 @@ namespace NS_RENDERER
 
     void RenderModelBatch::uploadUniformDataTemp(QVector<float> &dest)
     {
-        dest.resize(m_ItemTable.count() * 16);
+        dest.resize(m_MatricesUsed.count() * 16);
         float* data = dest.data();
-        foreach ( const QMatrix4x4 &mat, m_ItemTable.keys() )
+        foreach ( const QMatrix4x4 &mat, m_MatricesUsed.keys() )
         {
             memcpy(data, mat.constData(), 16 * sizeof(float));
             data += 16;
@@ -403,15 +424,15 @@ namespace NS_RENDERER
         memset(&m_UploadMetadata, 0, sizeof(UploadMetadata));
     }
 
-    bool RenderModelBatch::canAddNewItem(const QMatrix4x4 &key) const
+    bool RenderModelBatch::canAddNewItem(const QMatrix4x4 &mat) const
     {
-        return m_ItemTable.count() < m_iBatchSize
-                || containsKey(key);
+        return m_MatricesUsed.count() < m_iBatchSize
+                || containsMatrix(mat);
     }
 
-    bool RenderModelBatch::containsKey(const QMatrix4x4 &mat) const
+    bool RenderModelBatch::containsMatrix(const QMatrix4x4 &mat) const
     {
-        return m_ItemTable.contains(mat);
+        return m_MatricesUsed.contains(mat);
     }
 
     void RenderModelBatch::bindDraw()
