@@ -120,6 +120,13 @@ void DemoGLWindow::initializeGL()
     debugTexture = OpenGLTexturePointer(new OpenGLTexture(QImage(":/obsolete.png").mirrored()));
 
     m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);
+    m_pRenderModel->create();
+    m_pRenderModel->setUsagePattern(QOpenGLBuffer::DynamicDraw);
+    m_pRenderModel->setAttributes(RenderModelPassAttributes(
+                QMatrix4x4(2,0,0,0, 0,2,0,0, 0,0,2,0, 1.0f,0,0,1),
+                QMatrix4x4()
+                ));
+    m_pRenderModel->upload();
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 

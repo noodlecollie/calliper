@@ -150,8 +150,6 @@ namespace NS_RENDERER
 
     void RenderModelPass::uploadUniformData()
     {
-        // Not sure if this exact set of steps is required, but it's the
-        // only way I got it to actually work.
         m_GlUniformBuffer.bind();
         m_GlUniformBuffer.allocate(m_Attributes.uniformDataSizeInBytes());
         m_GlUniformBuffer.release();
@@ -165,5 +163,15 @@ namespace NS_RENDERER
         copy(m_GlUniformBuffer, m_Attributes.projectionMatrix, offset);
 
         m_GlUniformBuffer.release();
+    }
+
+    QOpenGLBuffer::UsagePattern RenderModelPass::usagePattern() const
+    {
+        return m_iUsagePattern;
+    }
+
+    void RenderModelPass::setUsagePattern(QOpenGLBuffer::UsagePattern pattern)
+    {
+        m_iUsagePattern = pattern;
     }
 }
