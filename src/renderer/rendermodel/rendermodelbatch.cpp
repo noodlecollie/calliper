@@ -25,7 +25,7 @@ namespace NS_RENDERER
           m_bCreated(false),
           m_GlVertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_GlIndexBuffer(QOpenGLBuffer::IndexBuffer),
-          m_GlUniformBuffer(QOpenGLBuffer::StaticDraw),
+          m_GlUniformBuffer(QOpenGLBuffer::DynamicDraw),
           m_VertexFormat(vertexFormat),
           m_iBatchSize(batchSize),
           m_bDataStale(false),

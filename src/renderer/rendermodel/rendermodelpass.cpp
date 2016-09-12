@@ -1,10 +1,21 @@
 #include "rendermodelpass.h"
 #include "opengl/openglshaderprogram.h"
 
+namespace
+{
+    void copy(NS_RENDERER::OpenGLUniformBuffer &dest, const QMatrix4x4 &src, int &offset)
+    {
+        dest.write(offset, src.constData(), 16 * sizeof(float));
+        offset += 16 * sizeof(float);
+    }
+}
+
 namespace NS_RENDERER
 {
     RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor)
-        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
+          m_iUsagePattern(QOpenGLBuffer::DynamicDraw), m_GlUniformBuffer(m_iUsagePattern),
+          m_bCreated(false)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor is required!");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor is required!");
@@ -13,6 +24,7 @@ namespace NS_RENDERER
     RenderModelPass::~RenderModelPass()
     {
         clear();
+        destroy();
     }
 
     void RenderModelPass::addItem(const RenderModelBatchKey &key, const RenderModelBatchParams &params, QOpenGLBuffer::UsagePattern usagePattern)
@@ -104,5 +116,54 @@ namespace NS_RENDERER
         {
             batch->upload();
         }
+    }
+
+    void RenderModelPass::setAttributes(const RenderModelPassAttributes &attributes)
+    {
+        m_Attributes = attributes;
+    }
+
+    bool RenderModelPass::create()
+    {
+        if ( m_bCreated )
+            return true;
+
+        m_GlUniformBuffer.setUsagePattern(m_iUsagePattern);
+
+        m_bCreated = m_GlUniformBuffer.create();
+        return m_bCreated;
+    }
+
+    void RenderModelPass::destroy()
+    {
+        if ( !m_bCreated )
+            return;
+
+        m_GlUniformBuffer.destroy();
+        m_bCreated = false;
+    }
+
+    void RenderModelPass::upload()
+    {
+        uploadUniformData();
+    }
+
+    void RenderModelPass::uploadUniformData()
+    {
+        // Not sure if this exact set of steps is required, but it's the
+        // only way I got it to actually work.
+        m_GlUniformBuffer.bind();
+        m_GlUniformBuffer.allocate(m_Attributes.uniformDataSizeInBytes());
+        m_GlUniformBuffer.release();
+
+        m_GlUniformBuffer.bindToIndex(ShaderDefs::GlobalUniformBlockBindingPoint);
+
+        m_GlUniformBuffer.bind();
+        int offset = 0;
+
+        copy(m_GlUniformBuffer, m_Attributes.worldToCameraMatrix, offset);
+        copy(m_GlUniformBuffer, m_Attributes.projectionMatrix, offset);
+
+        m_GlUniformBuffer.release();
     }
 }

@@ -1,10 +1,11 @@
 #include "openglshaderprogram.h"
 #include "shaders/shaderdefs.h"
+#include "opengl/openglhelpers.h"
 
 namespace NS_RENDERER
 {
     OpenGLShaderProgram::OpenGLShaderProgram(const QString &name, QObject* parent) : QOpenGLShaderProgram(parent),
-        m_iShaderStoreId(0)
+        m_iShaderStoreId(0), m_iGlobalShaderBlockIndex(GL_INVALID_INDEX)
     {
         setObjectName(name);
     }
@@ -67,5 +68,25 @@ namespace NS_RENDERER
     quint16 OpenGLShaderProgram::shaderStoreId() const
     {
         return m_iShaderStoreId;
+    }
+
+    void OpenGLShaderProgram::setGlobalUniformBlockBinding()
+    {
+        GL_CURRENT_F;
+
+        m_iGlobalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), ShaderDefs::GLOBAL_UNIFORM_BLOCK_NAME);
+        if ( m_iGlobalShaderBlockIndex != GL_INVALID_INDEX )
+        {
+            f->glUniformBlockBinding(programId(), m_iGlobalShaderBlockIndex, ShaderDefs::GlobalUniformBlockBindingPoint);
+        }
+        else
+        {
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Global uniform block not found in shader!");
+        }
+    }
+
+    void OpenGLShaderProgram::setLocalUniformBlockBinding()
+    {
+        // Leave this to subclasses.
     }
 }

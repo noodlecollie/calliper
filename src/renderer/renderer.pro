@@ -26,7 +26,8 @@ SOURCES += \
     geometry/vertex3d.cpp \
     geometry/geometrybuilder.cpp \
     shaders/vertexformat.cpp \
-    geometry/geometrysection.cpp
+    geometry/geometrysection.cpp \
+    rendermodel/rendermodelpassattributes.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -48,7 +49,8 @@ HEADERS +=\
     geometry/vertex3d.h \
     geometry/geometrybuilder.h \
     shaders/vertexformat.h \
-    geometry/geometrysection.h
+    geometry/geometrysection.h \
+    rendermodel/rendermodelpassattributes.h
 
 unix {
     target.path = /usr/lib
