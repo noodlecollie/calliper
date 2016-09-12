@@ -21,7 +21,9 @@ namespace NS_RENDERER
         Q_ASSERT_X(program, Q_FUNC_INFO, "Invalid shader specified in key!");
 
         RenderModelBatch* batch = NULL;
-        if ( !m_Table.contains(key) || (batch = m_Table.find(key).value())->canAddNewItem(params.modelToWorldMatrix()) )
+        if ( !m_Table.contains(key) ||
+             !(batch = m_Table.find(key).value())
+                ->canAddNewItem(params.modelToWorldMatrix()) )
         {
             batch = new RenderModelBatch(usagePattern, program->vertexFormat(), program->maxBatchedItems());
             m_Table.insert(key, batch);

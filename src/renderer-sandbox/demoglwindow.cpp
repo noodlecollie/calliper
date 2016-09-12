@@ -123,7 +123,7 @@ void DemoGLWindow::initializeGL()
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 
-    GLfloat cols[] = { 1,0,0,1, 0,1,0,1, 0,0,1,1 };
+    GLfloat cols[] = { 0,1,1,1, 1,0,1,1, 1,1,0,1 };
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
@@ -135,19 +135,15 @@ void DemoGLWindow::initializeGL()
     section.addIndexTriangle(indices[0], indices[1], indices[2]);
 
     RenderModelBatchKey key(0, 0);
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.7f), NULL, cols, textureCoords));
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.6f), NULL, cols, textureCoords));
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.5f), NULL, cols, textureCoords));
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.4f), NULL, cols, textureCoords));
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.3f), NULL, cols, textureCoords));
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.2f), NULL, cols, textureCoords));
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.1f), NULL, cols, textureCoords));
-//    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0.0f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), QMatrix4x4()));
-    QVector<float> vertexData;
-    QVector<quint32> indexData;
-    QVector<float> uniformData;
-    m_pRenderModel->debugUploadAll(/*vertexData, uniformData, indexData*/);
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.7f)));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.6f)));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.5f)));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.4f)));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.3f)));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.2f)));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.1f)));
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(0.0f)));
+    m_pRenderModel->debugUploadAll();
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
