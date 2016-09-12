@@ -143,8 +143,11 @@ void DemoGLWindow::initializeGL()
 //    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.2f), NULL, cols, textureCoords));
 //    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(-0.1f), NULL, cols, textureCoords));
 //    m_pRenderModel->addItem(key, RenderModelBatchParams(3, tri1.constData(), 3, indices, transMat(0.0f), NULL, cols, textureCoords));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), transMat(-0.7f)));
-    m_pRenderModel->debugUploadAll();
+    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), QMatrix4x4()));
+    QVector<float> vertexData;
+    QVector<quint32> indexData;
+    QVector<float> uniformData;
+    m_pRenderModel->debugUploadAll(/*vertexData, uniformData, indexData*/);
 }
 
 void DemoGLWindow::resizeGL(int w, int h)

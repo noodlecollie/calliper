@@ -88,6 +88,14 @@ namespace NS_RENDERER
         currentProgram->release();
     }
 
+    void RenderModelPass::debugUploadAll(QVector<float> &vertexData, QVector<float> &uniformData, QVector<quint32> &indexData)
+    {
+        foreach ( RenderModelBatch* batch, m_Table.values() )
+        {
+            batch->upload(vertexData, uniformData, indexData);
+        }
+    }
+
     void RenderModelPass::debugUploadAll()
     {
         foreach ( RenderModelBatch* batch, m_Table.values() )

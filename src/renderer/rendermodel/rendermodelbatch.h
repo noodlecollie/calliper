@@ -35,6 +35,7 @@ namespace NS_RENDERER
         bool containsKey(const QMatrix4x4 &mat) const;
 
         void upload(bool force = false);
+        void upload(QVector<float> &v, QVector<float> &u, QVector<quint32> &i);
 
         void bindDraw();
         void setAttributePointers(QOpenGLShaderProgram* program);
@@ -65,9 +66,11 @@ private:
         int getVertexDataCountInBytes() const;
         int getIndexDataCountInBytes() const;
         void uploadVertexData();
+        void uploadVertexDataTemp(QVector<float> &dest);
         void uploadIndexData();
         void uploadIndexDataTemp(QVector<quint32> &dest);
         void uploadUniformData();
+        void uploadUniformDataTemp(QVector<float> &dest);
         void addObjectIdsToPositions(RenderModelBatchItem* item, int floatOffset, int floatCount);
         void addObjectIdsToPositions(RenderModelBatchItem *item);
         quint32 getNextObjectId();

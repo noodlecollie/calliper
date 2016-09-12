@@ -163,17 +163,10 @@ namespace NS_RENDERER
         offsetBytes +=  source.count() * sizeof(float);
     }
 
-    void RenderModelBatch::uploadVertexData()
+    void RenderModelBatch::uploadVertexDataTemp(QVector<float> &dest)
     {
-        m_GlVertexBuffer.bind();
-        m_GlVertexBuffer.allocate(getVertexDataCountInBytes());
-
         int offsetBytes = 0;
-        clearUploadMetadata();
-
-        // REMOVE ME
-        QVector<float> debugPositions;
-        debugPositions.resize(getVertexDataCountInBytes() / sizeof(float));
+        dest.resize(getVertexDataCountInBytes() / sizeof(float));
 
         // We're gonna have to do this in passes, because we need to get all of the
         // position data and then all of the normal data, and then...
@@ -185,28 +178,79 @@ namespace NS_RENDERER
                 {
                     case 0:
                     {
-                        uploadVertexDataTemp(item->m_Positions, debugPositions, offsetBytes);
+                        uploadVertexDataTemp(item->m_Positions, dest, offsetBytes);
                         m_UploadMetadata.numPositions += item->m_Positions.count();
                         break;
                     }
 
                     case 1:
                     {
-                        uploadVertexDataTemp(item->m_Normals, debugPositions, offsetBytes);
+                        uploadVertexDataTemp(item->m_Normals, dest, offsetBytes);
                         m_UploadMetadata.numNormals += item->m_Normals.count();
                         break;
                     }
 
                     case 2:
                     {
-                        uploadVertexDataTemp(item->m_Colors, debugPositions, offsetBytes);
+                        uploadVertexDataTemp(item->m_Colors, dest, offsetBytes);
                         m_UploadMetadata.numColors += item->m_Colors.count();
                         break;
                     }
 
                     case 3:
                     {
-                        uploadVertexDataTemp(item->m_TextureCoordinates, debugPositions, offsetBytes);
+                        uploadVertexDataTemp(item->m_TextureCoordinates, dest, offsetBytes);
+                        m_UploadMetadata.numTexCoords += item->m_TextureCoordinates.count();
+                        break;
+                    }
+
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    void RenderModelBatch::uploadVertexData()
+    {
+        m_GlVertexBuffer.bind();
+        m_GlVertexBuffer.allocate(getVertexDataCountInBytes());
+
+        int offsetBytes = 0;
+        clearUploadMetadata();
+
+        // We're gonna have to do this in passes, because we need to get all of the
+        // position data and then all of the normal data, and then...
+        for ( int i = 0; i < 4; i++ )
+        {
+            foreach ( RenderModelBatchItem* item, m_ItemTable.values() )
+            {
+                switch(i)
+                {
+                    case 0:
+                    {
+                        uploadVertexData(item->m_Positions, offsetBytes);
+                        m_UploadMetadata.numPositions += item->m_Positions.count();
+                        break;
+                    }
+
+                    case 1:
+                    {
+                        uploadVertexData(item->m_Normals, offsetBytes);
+                        m_UploadMetadata.numNormals += item->m_Normals.count();
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        uploadVertexData(item->m_Colors, offsetBytes);
+                        m_UploadMetadata.numColors += item->m_Colors.count();
+                        break;
+                    }
+
+                    case 3:
+                    {
+                        uploadVertexData(item->m_TextureCoordinates, offsetBytes);
                         m_UploadMetadata.numTexCoords += item->m_TextureCoordinates.count();
                         break;
                     }
@@ -279,6 +323,17 @@ namespace NS_RENDERER
             i++;
         }
         m_GlUniformBuffer.release();
+    }
+
+    void RenderModelBatch::uploadUniformDataTemp(QVector<float> &dest)
+    {
+        dest.resize(m_ItemTable.count() * 16);
+        float* data = dest.data();
+        foreach ( const QMatrix4x4 &mat, m_ItemTable.keys() )
+        {
+            memcpy(data, mat.constData(), 16 * sizeof(float));
+            data += 16;
+        }
     }
 
     void RenderModelBatch::addObjectIdsToPositions(RenderModelBatchItem *item)
@@ -407,5 +462,12 @@ namespace NS_RENDERER
                               ShaderDefs::TextureCoordinateAttribute,
                               m_VertexFormat.textureCoordinateComponents(),
                               m_UploadMetadata.numTexCoords);
+    }
+
+    void RenderModelBatch::upload(QVector<float> &v, QVector<float> &u, QVector<quint32> &i)
+    {
+        uploadVertexDataTemp(v);
+        uploadIndexDataTemp(i);
+        uploadUniformDataTemp(u);
     }
 }

@@ -27,6 +27,7 @@ namespace NS_RENDERER
         void clear();
 
         void debugDraw();
+        void debugUploadAll(QVector<float> &vertexData, QVector<float> &uniformData, QVector<quint32> &indexData);
         void debugUploadAll();
 
     private:
