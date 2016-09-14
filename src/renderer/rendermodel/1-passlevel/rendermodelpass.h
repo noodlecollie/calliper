@@ -3,13 +3,13 @@
 
 #include "renderer_global.h"
 #include <QMultiHash>
-#include "rendermodelbatchkey.h"
-#include "rendermodelbatch.h"
-#include "rendermodelbatchparams.h"
+#include "rendermodel/3-batchlevel/rendermodelbatchkey.h"
+#include "rendermodel/3-batchlevel/rendermodelbatch.h"
+#include "rendermodel/3-batchlevel/rendermodelbatchparams.h"
 #include <QMap>
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
-#include "rendermodel/rendermodelpassattributes.h"
+#include "rendermodel/1-passlevel/rendermodelpassattributes.h"
 #include "opengl/opengluniformbuffer.h"
 
 class QOpenGLTexture;

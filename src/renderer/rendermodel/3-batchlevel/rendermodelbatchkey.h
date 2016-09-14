@@ -4,6 +4,7 @@
 #include "renderer_global.h"
 #include <QtOpenGL>
 #include <QHash>
+#include "general/hashfunctions.h"
 
 namespace NS_RENDERER
 {

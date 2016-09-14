@@ -3,7 +3,7 @@
 namespace NS_RENDERER
 {
     RenderModelInputParams::RenderModelInputParams(int passIndex, quint32 shaderId, quint64 textureId, const QMatrix4x4 &modelToWorld,
-                                                   GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f)
+                                                   GLenum drawMode, float drawWidth)
         : m_iPassIndex(passIndex),
           m_iShaderId(shaderId),
           m_iTextureId(textureId),

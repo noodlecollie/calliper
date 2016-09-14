@@ -38,9 +38,17 @@ namespace NS_RENDERER
 
         // Put the new data in the model.
         m_RenderPasses[params.passIndex()]->addItem(
-                    RenderModelBatchKey(params.shaderId(), params.textureId(), params.drawMode(), params.drawWidth()),
+                    RenderModelBatchKey(params.shaderId(), params.textureId(), params.modelToWorldMatrix(),
+                                        params.drawMode(), params.drawWidth()),
                     RenderModelBatchParams(geometry, objectUniqueId, params.modelToWorldMatrix()));
 
+    }
+
+    void RenderModel::removeItem(quint64 objectUniqueId)
+    {
+        // TODO
+        Q_UNUSED(objectUniqueId);
+        Q_ASSERT(false);
     }
 
     IShaderRetrievalFunctor* RenderModel::shaderFunctor()

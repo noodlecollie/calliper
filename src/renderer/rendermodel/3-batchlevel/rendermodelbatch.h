@@ -4,13 +4,13 @@
 #include "renderer_global.h"
 #include <QOpenGLBuffer>
 #include "rendermodelbatchparams.h"
-#include "rendermodelbatchitem.h"
+#include "rendermodel/4-batchitemlevel/rendermodelbatchitem.h"
 #include "shaders/shaderdefs.h"
 #include "opengl/opengluniformbuffer.h"
 #include "shaders/vertexformat.h"
 #include <QScopedArrayPointer>
 #include "general/hashfunctions.h"
-#include "rendermodelbatchitemkey.h"
+#include "rendermodel/4-batchitemlevel/rendermodelbatchitemkey.h"
 
 class QOpenGLShaderProgram;
 

@@ -8,7 +8,7 @@
 #include "opengl/opengluniformbuffer.h"
 #include <QImage>
 #include <QOpenGLTexture>
-#include "rendermodel/rendermodelpass.h"
+#include "rendermodel/1-passlevel/rendermodelpass.h"
 
 class TempSpec;
 

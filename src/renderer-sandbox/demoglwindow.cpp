@@ -141,15 +141,14 @@ void DemoGLWindow::initializeGL()
     section.add(GeometrySection::ColorAttribute, cols, 12);
     section.addIndexTriangle(indices[0], indices[1], indices[2]);
 
-    RenderModelBatchKey key(0, 0);
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 0, transMat(-0.7f)));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 1, transMat(-0.6f)));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 2, transMat(-0.5f)));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 3, transMat(-0.4f)));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 4, transMat(-0.3f)));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 5, transMat(-0.2f)));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 6, transMat(-0.1f)));
-    m_pRenderModel->addItem(key, RenderModelBatchParams(builder.sections(), 7, transMat(0.0f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.7f)), RenderModelBatchParams(builder.sections(), 0, transMat(-0.7f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.6f)), RenderModelBatchParams(builder.sections(), 1, transMat(-0.6f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.5f)), RenderModelBatchParams(builder.sections(), 2, transMat(-0.5f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.4f)), RenderModelBatchParams(builder.sections(), 3, transMat(-0.4f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.3f)), RenderModelBatchParams(builder.sections(), 4, transMat(-0.3f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.2f)), RenderModelBatchParams(builder.sections(), 5, transMat(-0.2f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.1f)), RenderModelBatchParams(builder.sections(), 6, transMat(-0.1f)));
+    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(0.0f)), RenderModelBatchParams(builder.sections(), 7, transMat(0.0f)));
     m_pRenderModel->debugUploadAll();
 }
 

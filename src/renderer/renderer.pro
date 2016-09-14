@@ -13,40 +13,40 @@ DEFINES += RENDERER_LIBRARY
 
 SOURCES += \
     opengl/openglerrors.cpp \
-    rendermodel/rendermodelbatch.cpp \
-    rendermodel/rendermodelbatchparams.cpp \
-    rendermodel/rendermodelbatchitem.cpp \
+    rendermodel/3-batchlevel/rendermodelbatch.cpp \
+    rendermodel/3-batchlevel/rendermodelbatchparams.cpp \
+    rendermodel/4-batchitemlevel/rendermodelbatchitem.cpp \
     opengl/opengluniformbuffer.cpp \
     shaders/shaderdefs.cpp \
     opengl/openglshaderprogram.cpp \
-    rendermodel/rendermodelbatchkey.cpp \
+    rendermodel/3-batchlevel/rendermodelbatchkey.cpp \
     shaders/debugscreenspaceshader.cpp \
-    rendermodel/rendermodelpass.cpp \
+    rendermodel/1-passlevel/rendermodelpass.cpp \
     opengl/opengltexture.cpp \
     geometry/vertex3d.cpp \
     geometry/geometrybuilder.cpp \
     shaders/vertexformat.cpp \
     geometry/geometrysection.cpp \
-    rendermodel/rendermodelpassattributes.cpp \
-    rendermodel/rendermodelbatchitemkey.cpp \
-    rendermodel/rendermodel.cpp \
+    rendermodel/1-passlevel/rendermodelpassattributes.cpp \
+    rendermodel/4-batchitemlevel/rendermodelbatchitemkey.cpp \
+    rendermodel/0-modellevel/rendermodel.cpp \
     renderer.cpp \
-    rendermodel/rendermodelinputparams.cpp
+    rendermodel/0-modellevel/rendermodelinputparams.cpp
 
 HEADERS +=\
         renderer_global.h \
     opengl/openglerrors.h \
-    rendermodel/rendermodelbatch.h \
+    rendermodel/3-batchlevel/rendermodelbatch.h \
     shaders/shaderdefs.h \
-    rendermodel/rendermodelbatchparams.h \
+    rendermodel/3-batchlevel/rendermodelbatchparams.h \
     opengl/openglhelpers.h \
-    rendermodel/rendermodelbatchitem.h \
+    rendermodel/4-batchitemlevel/rendermodelbatchitem.h \
     shaders/ishaderspec.h \
     opengl/opengluniformbuffer.h \
     opengl/openglshaderprogram.h \
-    rendermodel/rendermodelbatchkey.h \
+    rendermodel/3-batchlevel/rendermodelbatchkey.h \
     shaders/debugscreenspaceshader.h \
-    rendermodel/rendermodelpass.h \
+    rendermodel/1-passlevel/rendermodelpass.h \
     opengl/opengltexture.h \
     functors/ishaderretrievalfunctor.h \
     functors/itextureretrievalfunctor.h \
@@ -54,11 +54,11 @@ HEADERS +=\
     geometry/geometrybuilder.h \
     shaders/vertexformat.h \
     geometry/geometrysection.h \
-    rendermodel/rendermodelpassattributes.h \
-    rendermodel/rendermodelbatchitemkey.h \
-    rendermodel/rendermodel.h \
+    rendermodel/1-passlevel/rendermodelpassattributes.h \
+    rendermodel/4-batchitemlevel/rendermodelbatchitemkey.h \
+    rendermodel/0-modellevel/rendermodel.h \
     irenderer.h \
-    rendermodel/rendermodelinputparams.h
+    rendermodel/0-modellevel/rendermodelinputparams.h
 
 unix {
     target.path = /usr/lib

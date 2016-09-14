@@ -2,7 +2,7 @@
 #define IRENDERER_H
 
 #include "renderer_global.h"
-#include "rendermodel/rendermodelinputparams.h"
+#include "rendermodel/0-modellevel/rendermodelinputparams.h"
 #include "geometry/geometrysection.h"
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
