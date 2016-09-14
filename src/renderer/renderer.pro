@@ -28,7 +28,10 @@ SOURCES += \
     shaders/vertexformat.cpp \
     geometry/geometrysection.cpp \
     rendermodel/rendermodelpassattributes.cpp \
-    rendermodel/rendermodelbatchitemkey.cpp
+    rendermodel/rendermodelbatchitemkey.cpp \
+    rendermodel/rendermodel.cpp \
+    renderer.cpp \
+    rendermodel/rendermodelinputparams.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -52,7 +55,10 @@ HEADERS +=\
     shaders/vertexformat.h \
     geometry/geometrysection.h \
     rendermodel/rendermodelpassattributes.h \
-    rendermodel/rendermodelbatchitemkey.h
+    rendermodel/rendermodelbatchitemkey.h \
+    rendermodel/rendermodel.h \
+    irenderer.h \
+    rendermodel/rendermodelinputparams.h
 
 unix {
     target.path = /usr/lib

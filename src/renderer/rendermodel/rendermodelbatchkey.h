@@ -10,7 +10,8 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT RenderModelBatchKey
     {
     public:
-        RenderModelBatchKey(quint16 shaderStoreId, quint32 textureId, GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);
+        RenderModelBatchKey(quint16 shaderStoreId, quint32 textureId, const QMatrix4x4 &mat,
+                            GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);
         RenderModelBatchKey(const RenderModelBatchKey &other);
 
         inline bool operator ==(const RenderModelBatchKey &other) const
@@ -18,7 +19,8 @@ namespace NS_RENDERER
             return m_iShaderStoreId == other.m_iShaderStoreId &&
                     m_iTextureId == other.m_iTextureId &&
                     m_iDrawMode == other.m_iDrawMode &&
-                    m_flDrawWidth == other.m_flDrawWidth;
+                    m_flDrawWidth == other.m_flDrawWidth &&
+                    m_matModelToWorld == other.m_matModelToWorld;
         }
 
         /* Used for things like QMap to order keys.
@@ -47,19 +49,24 @@ namespace NS_RENDERER
             if ( m_iDrawMode != other.m_iDrawMode )
                 return m_iDrawMode < other.m_iDrawMode;
 
-            return m_flDrawWidth < other.m_flDrawWidth;
+            if ( m_flDrawWidth != other.m_flDrawWidth )
+                return m_flDrawWidth < other.m_flDrawWidth;
+
+            return qHash(m_matModelToWorld, 0) < qHash(other.m_matModelToWorld, 0);
         }
 
         quint16 shaderStoreId() const;
         quint32 textureId() const;
         GLenum drawMode() const;
         float drawWidth() const;
+        const QMatrix4x4& modelToWorldMatrix() const;
 
     private:
         quint16     m_iShaderStoreId;
         quint32     m_iTextureId;
         GLenum      m_iDrawMode;
         float       m_flDrawWidth;
+        QMatrix4x4  m_matModelToWorld;
     };
 
     uint RENDERERSHARED_EXPORT qHash(const RenderModelBatchKey &key, uint seed);

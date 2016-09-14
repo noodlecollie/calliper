@@ -67,6 +67,8 @@ namespace NS_RENDERER
         QVector<quint32>        m_Indices;
         int                     m_iPositionCount;
     };
+
+    typedef QList<GeometrySection> GeometrySectionList;
 }
 
 #endif // GEOMETRYSECTION_H
