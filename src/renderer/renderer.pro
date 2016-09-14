@@ -31,7 +31,11 @@ SOURCES += \
     rendermodel/4-batchitemlevel/rendermodelbatchitemkey.cpp \
     rendermodel/0-modellevel/rendermodel.cpp \
     renderer.cpp \
-    rendermodel/0-modellevel/rendermodelinputparams.cpp
+    rendermodel/0-modellevel/rendermodelkey.cpp \
+    rendermodel/4-batchitemlevel/matrixbatchitemkey.cpp \
+    rendermodel/3-batchlevel/matrixbatchkey.cpp \
+    rendermodel/1-passlevel/rendermodelpasskey.cpp \
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -58,7 +62,11 @@ HEADERS +=\
     rendermodel/4-batchitemlevel/rendermodelbatchitemkey.h \
     rendermodel/0-modellevel/rendermodel.h \
     irenderer.h \
-    rendermodel/0-modellevel/rendermodelinputparams.h
+    rendermodel/0-modellevel/rendermodelkey.h \
+    rendermodel/4-batchitemlevel/matrixbatchitemkey.h \
+    rendermodel/3-batchlevel/matrixbatchkey.h \
+    rendermodel/1-passlevel/rendermodelpasskey.h \
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h
 
 unix {
     target.path = /usr/lib
