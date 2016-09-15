@@ -4,7 +4,7 @@
 #include "renderer_global.h"
 #include <QOpenGLBuffer>
 #include "rendermodelbatchparams.h"
-#include "rendermodel/4-batchitemlevel/rendermodelbatchitem.h"
+#include "rendermodel/4-batchitemlevel/matrixbatchitem.h"
 #include "shaders/shaderdefs.h"
 #include "opengl/opengluniformbuffer.h"
 #include "shaders/vertexformat.h"

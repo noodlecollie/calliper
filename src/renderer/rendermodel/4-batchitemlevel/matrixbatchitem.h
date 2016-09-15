@@ -1,5 +1,5 @@
-#ifndef RENDERMODELBATCHITEM_H
-#define RENDERMODELBATCHITEM_H
+#ifndef MATRIXBATCHITEM_H
+#define MATRIXBATCHITEM_H
 
 #include "renderer_global.h"
 #include <QtGlobal>
@@ -7,18 +7,18 @@
 
 namespace NS_RENDERER
 {
-    struct RenderModelBatchItem
+    // This is just a collection of data.
+    // It is up to the managing classes to fill it as they see fit.
+    struct MatrixBatchItem
     {
-    public:
-        RenderModelBatchItem();
+        MatrixBatchItem();
 
         QVector<float>      m_Positions;
         QVector<float>      m_Normals;
         QVector<float>      m_Colors;
         QVector<float>      m_TextureCoordinates;
         QVector<quint32>    m_Indices;
-        quint32             m_iObjectId;
     };
 }
 
-#endif // RENDERMODELBATCHITEM_H
+#endif // MATRIXBATCHITEM_H

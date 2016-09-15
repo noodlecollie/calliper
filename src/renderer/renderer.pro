@@ -15,7 +15,6 @@ SOURCES += \
     opengl/openglerrors.cpp \
     rendermodel/3-batchlevel/rendermodelbatch.cpp \
     rendermodel/3-batchlevel/rendermodelbatchparams.cpp \
-    rendermodel/4-batchitemlevel/rendermodelbatchitem.cpp \
     opengl/opengluniformbuffer.cpp \
     shaders/shaderdefs.cpp \
     opengl/openglshaderprogram.cpp \
@@ -28,14 +27,16 @@ SOURCES += \
     shaders/vertexformat.cpp \
     geometry/geometrysection.cpp \
     rendermodel/1-passlevel/rendermodelpassattributes.cpp \
-    rendermodel/4-batchitemlevel/rendermodelbatchitemkey.cpp \
     rendermodel/0-modellevel/rendermodel.cpp \
     renderer.cpp \
     rendermodel/0-modellevel/rendermodelkey.cpp \
     rendermodel/4-batchitemlevel/matrixbatchitemkey.cpp \
     rendermodel/3-batchlevel/matrixbatchkey.cpp \
     rendermodel/1-passlevel/rendermodelpasskey.cpp \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.cpp
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.cpp \
+    rendermodel/4-batchitemlevel/matrixbatchitem.cpp \
+    rendermodel/3-batchlevel/matrixbatch.cpp \
+    rendermodel/3-batchlevel/openglbatch.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -44,7 +45,6 @@ HEADERS +=\
     shaders/shaderdefs.h \
     rendermodel/3-batchlevel/rendermodelbatchparams.h \
     opengl/openglhelpers.h \
-    rendermodel/4-batchitemlevel/rendermodelbatchitem.h \
     shaders/ishaderspec.h \
     opengl/opengluniformbuffer.h \
     opengl/openglshaderprogram.h \
@@ -59,14 +59,16 @@ HEADERS +=\
     shaders/vertexformat.h \
     geometry/geometrysection.h \
     rendermodel/1-passlevel/rendermodelpassattributes.h \
-    rendermodel/4-batchitemlevel/rendermodelbatchitemkey.h \
     rendermodel/0-modellevel/rendermodel.h \
     irenderer.h \
     rendermodel/0-modellevel/rendermodelkey.h \
     rendermodel/4-batchitemlevel/matrixbatchitemkey.h \
     rendermodel/3-batchlevel/matrixbatchkey.h \
     rendermodel/1-passlevel/rendermodelpasskey.h \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h \
+    rendermodel/4-batchitemlevel/matrixbatchitem.h \
+    rendermodel/3-batchlevel/matrixbatch.h \
+    rendermodel/3-batchlevel/openglbatch.h
 
 unix {
     target.path = /usr/lib
