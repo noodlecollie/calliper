@@ -2,6 +2,7 @@
 #define MATRIXBATCHITEMKEY_H
 
 #include "renderer_global.h"
+#include <QHash>
 
 namespace NS_RENDERER
 {
@@ -31,5 +32,7 @@ namespace NS_RENDERER
         const quint32   m_iObjectId;
     };
 }
+
+RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::MatrixBatchItemKey &key, uint seed = 0);
 
 #endif // MATRIXBATCHITEMKEY_H

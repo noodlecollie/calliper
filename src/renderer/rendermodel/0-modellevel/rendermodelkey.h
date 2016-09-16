@@ -6,6 +6,7 @@
 #include "rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h"
 #include "rendermodel/3-batchlevel/matrixbatchkey.h"
 #include "rendermodel/4-batchitemlevel/matrixbatchitemkey.h"
+#include <QHash>
 
 namespace NS_RENDERER
 {
@@ -27,5 +28,7 @@ namespace NS_RENDERER
         const MatrixBatchItemKey m_MatrixBatchItemKey;
     };
 }
+
+RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::RenderModelKey &key, uint seed = 0);
 
 #endif // RENDERMODELKEY_H

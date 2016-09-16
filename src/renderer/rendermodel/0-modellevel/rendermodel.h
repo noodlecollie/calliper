@@ -2,11 +2,10 @@
 #define RENDERMODEL_H
 
 #include "renderer_global.h"
-#include "rendermodel/1-passlevel/rendermodelpass.h"
-#include <QList>
-#include "geometry/geometrybuilder.h"
 #include "irenderer.h"
-#include <QHash>
+#include <QMap>
+#include "rendermodel/1-passlevel/rendermodelpass.h"
+#include "rendermodel/1-passlevel/rendermodelpasskey.h"
 
 namespace NS_RENDERER
 {
@@ -18,23 +17,21 @@ namespace NS_RENDERER
 
         virtual IShaderRetrievalFunctor* shaderFunctor() override;
         virtual void setShaderFunctor(IShaderRetrievalFunctor *functor) override;
-
         virtual ITextureRetrievalFunctor* textureFunctor() override;
         virtual void setTextureFunctor(ITextureRetrievalFunctor *functor) override;
 
-        void clear();
-        int passCount() const;
-        int createPass();
-
-        virtual void updateItem(quint64 objectUniqueId, const RenderModelInputParams &params, const GeometrySectionList &geometry) override;
-        virtual void removeItem(quint64 objectUniqueId) override;
-
     private:
-        QList<RenderModelPass*> m_RenderPasses;
-        IShaderRetrievalFunctor* m_pShaderFunctor;
-        ITextureRetrievalFunctor* m_pTextureFunctor;
+        typedef QSharedPointer<RenderModelPass> RenderModelPassPointer;
 
-        QHash<quint64, RenderModelInputParams> m_ItemTable;
+        RenderModelPassPointer createRenderPass(const RenderModelPassKey &key);
+        RenderModelPassPointer getRenderPass(const RenderModelPassKey &key) const;
+        void removeRenderPass(const RenderModelPassKey &key);
+        bool containsRenderPass(const RenderModelPassKey &key);
+        void clearRenderPasses();
+
+        IShaderRetrievalFunctor*    m_pShaderFunctor;
+        ITextureRetrievalFunctor*   m_pTextureFunctor;
+        QMap<RenderModelPassKey, RenderModelPassPointer>   m_RenderPasses;
     };
 }
 

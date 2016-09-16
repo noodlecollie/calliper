@@ -1,4 +1,21 @@
 #include "rendermodelkey.h"
+#include <QByteArray>
+#include <QDataStream>
+
+uint qHash(const NS_RENDERER::RenderModelKey &key, uint seed)
+{
+    QByteArray arr;
+
+    {
+        QDataStream stream(&arr, QIODevice::WriteOnly);
+        stream << qHash(key.matrixBatchItemKey(), seed)
+               << qHash(key.matrixBatchKey(), seed)
+               << qHash(key.batchGroupKey(), seed)
+               << qHash(key.passKey(), seed);
+    }
+
+    return qHash(arr, seed);
+}
 
 namespace NS_RENDERER
 {

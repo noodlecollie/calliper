@@ -9,46 +9,34 @@ namespace NS_RENDERER
 
     RenderModel::~RenderModel()
     {
-        clear();
+        clearRenderPasses();
     }
 
-    void RenderModel::clear()
+    RenderModel::RenderModelPassPointer RenderModel::createRenderPass(const RenderModelPassKey &key)
     {
-        qDeleteAll(m_RenderPasses);
+        RenderModelPassPointer pass(new RenderModelPass(m_pShaderFunctor));
+        m_RenderPasses.insert(key, pass);
+        return pass;
+    }
+
+    RenderModel::RenderModelPassPointer RenderModel::getRenderPass(const RenderModelPassKey &key) const
+    {
+        return m_RenderPasses.value(key, RenderModelPassPointer(NULL));
+    }
+
+    void RenderModel::removeRenderPass(const RenderModelPassKey &key)
+    {
+        m_RenderPasses.remove(key);
+    }
+
+    bool RenderModel::containsRenderPass(const RenderModelPassKey &key)
+    {
+        return m_RenderPasses.contains(key);
+    }
+
+    void RenderModel::clearRenderPasses()
+    {
         m_RenderPasses.clear();
-    }
-
-    int RenderModel::createPass()
-    {
-        m_RenderPasses.append(new RenderModelPass(m_pShaderFunctor, m_pTextureFunctor));
-        return m_RenderPasses.count() - 1;
-    }
-
-    int RenderModel::passCount() const
-    {
-        return m_RenderPasses.count();
-    }
-
-    void RenderModel::updateItem(quint64 objectUniqueId, const RenderModelInputParams &params, const GeometrySectionList &geometry)
-    {
-        Q_ASSERT_X(params.passIndex() < 0 || params.passIndex() >= m_RenderPasses.count(), Q_FUNC_INFO, "Pass is out of range!");
-
-        // Update the table entry with the new params.
-        m_ItemTable.insert(objectUniqueId, params);
-
-        // Put the new data in the model.
-        m_RenderPasses[params.passIndex()]->addItem(
-                    RenderModelBatchKey(params.shaderId(), params.textureId(), params.modelToWorldMatrix(),
-                                        params.drawMode(), params.drawWidth()),
-                    RenderModelBatchParams(geometry, objectUniqueId, params.modelToWorldMatrix()));
-
-    }
-
-    void RenderModel::removeItem(quint64 objectUniqueId)
-    {
-        // TODO
-        Q_UNUSED(objectUniqueId);
-        Q_ASSERT(false);
     }
 
     IShaderRetrievalFunctor* RenderModel::shaderFunctor()

@@ -3,6 +3,7 @@
 
 #include "renderer_global.h"
 #include <QOpenGLFunctions>
+#include <QHash>
 
 namespace NS_RENDERER
 {
@@ -50,5 +51,7 @@ namespace NS_RENDERER
         const float         m_flDrawWidth;
     };
 }
+
+RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::RenderModelBatchGroupKey &key, uint seed = 0);
 
 #endif // RENDERMODELBATCHGROUPKEY_H

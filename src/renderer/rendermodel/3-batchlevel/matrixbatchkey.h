@@ -34,4 +34,6 @@ namespace NS_RENDERER
     };
 }
 
+RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::MatrixBatchKey &key, uint seed = 0);
+
 #endif // MATRIXBATCHKEY_H

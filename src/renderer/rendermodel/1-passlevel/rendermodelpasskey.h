@@ -2,6 +2,7 @@
 #define RENDERMODELPASSKEY_H
 
 #include "renderer_global.h"
+#include <QHash>
 
 namespace NS_RENDERER
 {
@@ -31,5 +32,7 @@ namespace NS_RENDERER
         const int m_iPassIndex;
     };
 }
+
+RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::RenderModelPassKey &key, uint seed = 0);
 
 #endif // RENDERMODELPASSKEY_H

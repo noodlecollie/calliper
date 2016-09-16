@@ -27,7 +27,7 @@ namespace NS_RENDERER
 
         QOpenGLBuffer::UsagePattern usagePattern() const;
 
-        MatrixBatch* createMatrixBatch();
+        int createMatrixBatch();
         void destroyMatrixBatch(int index);
         int matrixBatchCount() const;
         bool matrixBatchLimitReached() const;

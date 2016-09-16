@@ -14,13 +14,16 @@ namespace NS_RENDERER
           m_UniformBuffer(m_iUsagePattern)
     {
         Q_ASSERT_X(m_iBatchSize >= 1, Q_FUNC_INFO, "Batch size must be at least 1!");
-        setUsagePattern(m_iUsagePattern);
+
+        m_VertexBuffer.setUsagePattern(m_iUsagePattern);
+        m_IndexBuffer.setUsagePattern(m_iUsagePattern);
+        m_UniformBuffer.setUsagePattern(m_iUsagePattern);
     }
 
     OpenGLBatch::~OpenGLBatch()
     {
-        destroy();
         clearMatrixBatches();
+        destroy();
     }
 
     void OpenGLBatch::create()

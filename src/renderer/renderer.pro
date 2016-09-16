@@ -23,7 +23,6 @@ SOURCES += \
     geometry/geometrybuilder.cpp \
     shaders/vertexformat.cpp \
     geometry/geometrysection.cpp \
-    rendermodel/1-passlevel/rendermodelpassattributes.cpp \
     rendermodel/0-modellevel/rendermodel.cpp \
     renderer.cpp \
     rendermodel/0-modellevel/rendermodelkey.cpp \
@@ -53,7 +52,6 @@ HEADERS +=\
     geometry/geometrybuilder.h \
     shaders/vertexformat.h \
     geometry/geometrysection.h \
-    rendermodel/1-passlevel/rendermodelpassattributes.h \
     rendermodel/0-modellevel/rendermodel.h \
     irenderer.h \
     rendermodel/0-modellevel/rendermodelkey.h \

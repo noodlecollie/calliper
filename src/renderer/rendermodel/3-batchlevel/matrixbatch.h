@@ -19,7 +19,7 @@ namespace NS_RENDERER
         MatrixBatch();
         ~MatrixBatch();
 
-        void clear();
+        void clearItems();
 
         // Creates an item for the given object ID.
         // If an item already exists, it is replaced.
@@ -32,6 +32,8 @@ namespace NS_RENDERER
         // Removes the item for the given object ID.
         // If the item doesn't exist, this function does nothing.
         void removeItem(const MatrixBatchItemKey &key);
+
+        bool containsItem(const MatrixBatchItemKey &key) const;
 
     private:
         QHash<MatrixBatchItemKey, MatrixBatchItemPointer>    m_Items;
