@@ -6,6 +6,7 @@
 #include "opengl/opengluniformbuffer.h"
 #include "shaders/vertexformat.h"
 #include "general/fixedindexpool.h"
+#include "matrixbatch.h"
 
 namespace NS_RENDERER
 {
@@ -26,6 +27,11 @@ namespace NS_RENDERER
 
         QOpenGLBuffer::UsagePattern usagePattern() const;
         void setUsagePattern(QOpenGLBuffer::UsagePattern usagePattern);
+
+        MatrixBatch* createMatrixBatch();
+        void destroyMatrixBatch(int index);
+        int matrixBatchCount() const;
+        bool matrixBatchLimitReached() const;
 
     private:
         static inline quint32 maskFromNumberOfBits(int numBits)
@@ -59,7 +65,7 @@ namespace NS_RENDERER
         QOpenGLBuffer       m_VertexBuffer;
         QOpenGLBuffer       m_IndexBuffer;
         OpenGLUniformBuffer m_UniformBuffer;
-        NS_CALLIPERUTIL::FixedIndexPool m_IndexPool;
+        QList<MatrixBatch*> m_MatrixBatches;
     };
 }
 

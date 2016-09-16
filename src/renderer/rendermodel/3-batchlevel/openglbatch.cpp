@@ -11,8 +11,7 @@ namespace NS_RENDERER
           m_iObjectIdMask(maskFromNumberOfBits(bitsRequired(m_iBatchSize))),
           m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
-          m_UniformBuffer(m_iUsagePattern),
-          m_IndexPool(m_iBatchSize)
+          m_UniformBuffer(m_iUsagePattern)
     {
         Q_ASSERT_X(m_iBatchSize >= 1, Q_FUNC_INFO, "Batch size must be at least 1!");
         setUsagePattern(m_iUsagePattern);
@@ -122,5 +121,31 @@ namespace NS_RENDERER
         // TODO: Upload data
 
         m_UniformBuffer.release();
+    }
+
+    int OpenGLBatch::matrixBatchCount() const
+    {
+        return m_MatrixBatches.count();
+    }
+
+    bool OpenGLBatch::matrixBatchLimitReached() const
+    {
+        return matrixBatchCount() >= m_iBatchSize;
+    }
+
+    MatrixBatch* OpenGLBatch::createMatrixBatch()
+    {
+        Q_ASSERT_X(!matrixBatchLimitReached(), Q_FUNC_INFO, "No more space to add matrix batches!");
+
+        if ( matrixBatchLimitReached() )
+            return NULL;
+
+        m_MatrixBatches.append(new MatrixBatch());
+        return m_MatrixBatches.back();
+    }
+
+    void OpenGLBatch::destroyMatrixBatch(int index)
+    {
+
     }
 }
