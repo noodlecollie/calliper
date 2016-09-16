@@ -26,12 +26,13 @@ namespace NS_RENDERER
         bool isSingleItemBatch() const;
 
         QOpenGLBuffer::UsagePattern usagePattern() const;
-        void setUsagePattern(QOpenGLBuffer::UsagePattern usagePattern);
 
         MatrixBatch* createMatrixBatch();
         void destroyMatrixBatch(int index);
         int matrixBatchCount() const;
         bool matrixBatchLimitReached() const;
+        MatrixBatch* matrixBatchAt(int index) const;
+        void clearMatrixBatches();
 
     private:
         static inline quint32 maskFromNumberOfBits(int numBits)
@@ -56,7 +57,7 @@ namespace NS_RENDERER
         void uploadIndices();
         void uploadUniforms();
 
-        QOpenGLBuffer::UsagePattern m_iUsagePattern;
+        const QOpenGLBuffer::UsagePattern m_iUsagePattern;
         bool m_bCreated;
         const VertexFormat m_VertexFormat;
         const int m_iBatchSize;

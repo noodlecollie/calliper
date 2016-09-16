@@ -13,12 +13,9 @@ DEFINES += RENDERER_LIBRARY
 
 SOURCES += \
     opengl/openglerrors.cpp \
-    rendermodel/3-batchlevel/rendermodelbatch.cpp \
-    rendermodel/3-batchlevel/rendermodelbatchparams.cpp \
     opengl/opengluniformbuffer.cpp \
     shaders/shaderdefs.cpp \
     opengl/openglshaderprogram.cpp \
-    rendermodel/3-batchlevel/rendermodelbatchkey.cpp \
     shaders/debugscreenspaceshader.cpp \
     rendermodel/1-passlevel/rendermodelpass.cpp \
     opengl/opengltexture.cpp \
@@ -36,19 +33,17 @@ SOURCES += \
     rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.cpp \
     rendermodel/4-batchitemlevel/matrixbatchitem.cpp \
     rendermodel/3-batchlevel/matrixbatch.cpp \
-    rendermodel/3-batchlevel/openglbatch.cpp
+    rendermodel/3-batchlevel/openglbatch.cpp \
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.cpp
 
 HEADERS +=\
         renderer_global.h \
     opengl/openglerrors.h \
-    rendermodel/3-batchlevel/rendermodelbatch.h \
     shaders/shaderdefs.h \
-    rendermodel/3-batchlevel/rendermodelbatchparams.h \
     opengl/openglhelpers.h \
     shaders/ishaderspec.h \
     opengl/opengluniformbuffer.h \
     opengl/openglshaderprogram.h \
-    rendermodel/3-batchlevel/rendermodelbatchkey.h \
     shaders/debugscreenspaceshader.h \
     rendermodel/1-passlevel/rendermodelpass.h \
     opengl/opengltexture.h \
@@ -68,7 +63,8 @@ HEADERS +=\
     rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h \
     rendermodel/4-batchitemlevel/matrixbatchitem.h \
     rendermodel/3-batchlevel/matrixbatch.h \
-    rendermodel/3-batchlevel/openglbatch.h
+    rendermodel/3-batchlevel/openglbatch.h \
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h
 
 unix {
     target.path = /usr/lib

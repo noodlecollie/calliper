@@ -17,20 +17,20 @@ namespace NS_RENDERER
         m_Items.clear();
     }
 
-    MatrixBatch::MatrixBatchItemPointer MatrixBatch::insert(quint32 objectId)
+    MatrixBatch::MatrixBatchItemPointer MatrixBatch::createItem(const MatrixBatchItemKey &key)
     {
         // If the object already exists, the old shared pointer will be replaced
         // and will delete the batch item it was holding.
-        m_Items.insert(objectId, MatrixBatchItemPointer(new MatrixBatchItem()));
+        m_Items.insert(key, MatrixBatchItemPointer(new MatrixBatchItem()));
     }
 
-    MatrixBatch::MatrixBatchItemPointer MatrixBatch::get(quint32 objectId) const
+    MatrixBatch::MatrixBatchItemPointer MatrixBatch::getItem(const MatrixBatchItemKey &key) const
     {
-        return m_Items.value(objectId, MatrixBatchItemPointer(NULL));
+        return m_Items.value(key, MatrixBatchItemPointer(NULL));
     }
 
-    void MatrixBatch::remove(quint32 objectId)
+    void MatrixBatch::removeItem(const MatrixBatchItemKey &key)
     {
-        return m_Items.remove(objectId);
+        return m_Items.remove(key);
     }
 }

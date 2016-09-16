@@ -20,6 +20,7 @@ namespace NS_RENDERER
     OpenGLBatch::~OpenGLBatch()
     {
         destroy();
+        clearMatrixBatches();
     }
 
     void OpenGLBatch::create()
@@ -48,16 +49,6 @@ namespace NS_RENDERER
     QOpenGLBuffer::UsagePattern OpenGLBatch::usagePattern() const
     {
         return m_iUsagePattern;
-    }
-
-    void OpenGLBatch::setUsagePattern(QOpenGLBuffer::UsagePattern usagePattern)
-    {
-        Q_ASSERT_X(!m_bCreated, Q_FUNC_INFO, "Cannot be set once batch is created!");
-
-        m_iUsagePattern = usagePattern;
-        m_VertexBuffer.setUsagePattern(m_iUsagePattern);
-        m_IndexBuffer.setUsagePattern(m_iUsagePattern);
-        m_UniformBuffer.setUsagePattern(m_iUsagePattern);
     }
 
     bool OpenGLBatch::isCreated() const
@@ -146,6 +137,20 @@ namespace NS_RENDERER
 
     void OpenGLBatch::destroyMatrixBatch(int index)
     {
+        if ( index < 0 || index >= m_MatrixBatches.count() )
+            return;
 
+        delete m_MatrixBatches.takeAt(index);
+    }
+
+    MatrixBatch* OpenGLBatch::matrixBatchAt(int index) const
+    {
+        return m_MatrixBatches.at(index);
+    }
+
+    void OpenGLBatch::clearMatrixBatches()
+    {
+        qDeleteAll(m_MatrixBatches);
+        m_MatrixBatches.clear();
     }
 }

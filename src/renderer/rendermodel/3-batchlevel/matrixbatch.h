@@ -5,6 +5,7 @@
 #include <QHash>
 #include "rendermodel/4-batchitemlevel/matrixbatchitem.h"
 #include <QSharedPointer>
+#include "rendermodel/4-batchitemlevel/matrixbatchitemkey.h"
 
 namespace NS_RENDERER
 {
@@ -20,20 +21,20 @@ namespace NS_RENDERER
 
         void clear();
 
-        // Adds an item for the given object ID.
+        // Creates an item for the given object ID.
         // If an item already exists, it is replaced.
-        MatrixBatchItemPointer insert(quint32 objectId);
+        MatrixBatchItemPointer createItem(const MatrixBatchItemKey &key);
 
         // Gets the item for the given object ID.
         // If it does not exist, NULL is returned.
-        MatrixBatchItemPointer get(quint32 objectId) const;
+        MatrixBatchItemPointer getItem(const MatrixBatchItemKey &key) const;
 
         // Removes the item for the given object ID.
         // If the item doesn't exist, this function does nothing.
-        void remove(quint32 objectId);
+        void removeItem(const MatrixBatchItemKey &key);
 
     private:
-        QHash<quint32, MatrixBatchItemPointer>    m_Items;
+        QHash<MatrixBatchItemKey, MatrixBatchItemPointer>    m_Items;
     };
 }
 
