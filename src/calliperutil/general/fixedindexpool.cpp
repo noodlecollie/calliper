@@ -1,5 +1,6 @@
 #include "fixedindexpool.h"
 
+#if 0
 namespace NS_CALLIPERUTIL
 {
     FixedIndexPool::FixedIndexPool(int size)
@@ -74,3 +75,4 @@ namespace NS_CALLIPERUTIL
         return m_IndexList[index];
     }
 }
+#endif

@@ -10,13 +10,14 @@
 #include <QOpenGLBuffer>
 #include "shaders/vertexformat.h"
 #include <QPair>
+#include "shaders/ishaderspec.h"
 
 namespace NS_RENDERER
 {
     class RenderModelBatchGroup
     {
     public:
-        RenderModelBatchGroup(QOpenGLBuffer::UsagePattern usagePattern, const VertexFormat &format, int batchSize);
+        RenderModelBatchGroup(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec);
         ~RenderModelBatchGroup();
 
         QOpenGLBuffer::UsagePattern usagePattern() const;
@@ -42,8 +43,7 @@ namespace NS_RENDERER
         QHash<MatrixBatchKey, OpenGLBatchPointerIndex>   m_MatrixBatchMap;
 
         const QOpenGLBuffer::UsagePattern m_iUsagePattern;
-        const VertexFormat m_VertexFormat;
-        const int m_iBatchSize;
+        const IShaderSpec* m_pShaderSpec;
     };
 }
 

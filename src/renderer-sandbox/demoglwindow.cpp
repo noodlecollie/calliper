@@ -119,6 +119,7 @@ void DemoGLWindow::initializeGL()
     textureFunctor = new TextureFunctor();
     debugTexture = OpenGLTexturePointer(new OpenGLTexture(QImage(":/obsolete.png").mirrored()));
 
+    /*
     m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);
     m_pRenderModel->create();
     m_pRenderModel->setUsagePattern(QOpenGLBuffer::DynamicDraw);
@@ -150,6 +151,7 @@ void DemoGLWindow::initializeGL()
     m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.1f)), RenderModelBatchParams(builder.sections(), 6, transMat(-0.1f)));
     m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(0.0f)), RenderModelBatchParams(builder.sections(), 7, transMat(0.0f)));
     m_pRenderModel->debugUploadAll();
+    */
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -168,7 +170,9 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
+    /*
     m_pRenderModel->debugDraw();
+    */
 
     GLTRY(f->glBindVertexArray(0));
 }

@@ -1,12 +1,12 @@
 #include "matrixbatchkey.h"
 
-uint qHash(const NS_RENDERER::MatrixBatchKey &key, uint seed)
-{
-    return qHash(key.modelToWorldMatrix(), seed);
-}
-
 namespace NS_RENDERER
 {
+    uint qHash(const MatrixBatchKey &key, uint seed)
+    {
+        return qHash(key.modelToWorldMatrix(), seed);
+    }
+
     MatrixBatchKey::MatrixBatchKey(const QMatrix4x4 &matrix)
         : m_matModelToWorldMatrix(matrix)
     {

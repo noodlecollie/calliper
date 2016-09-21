@@ -50,8 +50,8 @@ namespace NS_RENDERER
         const GLenum        m_iDrawMode;
         const float         m_flDrawWidth;
     };
-}
 
-RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::RenderModelBatchGroupKey &key, uint seed = 0);
+    RENDERERSHARED_EXPORT uint qHash(const RenderModelBatchGroupKey &key, uint seed = 0);
+}
 
 #endif // RENDERMODELBATCHGROUPKEY_H

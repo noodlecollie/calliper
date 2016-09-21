@@ -1,12 +1,12 @@
 #include "matrixbatchitemkey.h"
 
-uint qHash(const NS_RENDERER::MatrixBatchItemKey &key, uint seed)
-{
-    return qHash(key.objectId(), seed);
-}
-
 namespace NS_RENDERER
 {
+    uint qHash(const MatrixBatchItemKey &key, uint seed)
+    {
+        return ::qHash(key.objectId(), seed);
+    }
+
     MatrixBatchItemKey::MatrixBatchItemKey(quint32 objectId)
         : m_iObjectId(objectId)
     {

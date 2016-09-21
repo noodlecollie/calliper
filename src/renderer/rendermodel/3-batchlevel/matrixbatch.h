@@ -6,6 +6,8 @@
 #include "rendermodel/4-batchitemlevel/matrixbatchitem.h"
 #include <QSharedPointer>
 #include "rendermodel/4-batchitemlevel/matrixbatchitemkey.h"
+#include <QOpenGLBuffer>
+#include <QMatrix4x4>
 
 namespace NS_RENDERER
 {
@@ -16,9 +18,10 @@ namespace NS_RENDERER
     public:
         typedef QSharedPointer<MatrixBatchItem> MatrixBatchItemPointer;
 
-        MatrixBatch();
+        MatrixBatch(const QMatrix4x4 &matrix);
         ~MatrixBatch();
 
+        const QMatrix4x4& matrix() const;
         void clearItems();
 
         // Creates an item for the given object ID.
@@ -35,7 +38,14 @@ namespace NS_RENDERER
 
         bool containsItem(const MatrixBatchItemKey &key) const;
 
+        MatrixBatchItemMetadata buildItemMetadata() const;
+
+        void copyVertexDataIntoBuffer(char* buffer, int size, int& positionOffset, int& normalOffset,
+                                int& colorOffset, int& texCoordOffset) const;
+        void copyIndexDataIntoBuffer(char* buffer, int size, quint32& indexDelta, int& offset);
+
     private:
+        const QMatrix4x4 m_matModelToWorld;
         QHash<MatrixBatchItemKey, MatrixBatchItemPointer>    m_Items;
     };
 }

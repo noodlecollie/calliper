@@ -2,8 +2,8 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatchGroup::RenderModelBatchGroup(QOpenGLBuffer::UsagePattern usagePattern, const VertexFormat &format, int batchSize)
-        : m_iUsagePattern(usagePattern), m_VertexFormat(format), m_iBatchSize(batchSize)
+    RenderModelBatchGroup::RenderModelBatchGroup(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec)
+        : m_iUsagePattern(usagePattern), m_pShaderSpec(shaderSpec)
     {
 
     }
@@ -23,7 +23,7 @@ namespace NS_RENDERER
         if ( !batchIndex.first.isNull() )
         {
             MatrixBatch* matBatch = dereferenceGlBatchIndex(batchIndex);
-            matBatch->clear();
+            matBatch->clearItems();
             return matBatch;
         }
 
@@ -33,7 +33,7 @@ namespace NS_RENDERER
         Q_ASSERT_X(!glBatch->matrixBatchLimitReached(), Q_FUNC_INFO, "OpenGLBatch returned did not have space for a new MatrixBatch!");
 
         // Create the MatrixBatch and keep track of its index.
-        int matrixBatchIndex = glBatch->createMatrixBatch();
+        int matrixBatchIndex = glBatch->createMatrixBatch(key.modelToWorldMatrix());
 
         // Move the OpenGL batch out of the waiting set if we need to.
         if ( glBatch->matrixBatchLimitReached() )
@@ -129,7 +129,7 @@ namespace NS_RENDERER
     {
         if ( m_WaitingBatches.isEmpty() )
         {
-            OpenGLBatch* glBatch = new OpenGLBatch(m_iUsagePattern, m_VertexFormat, m_iBatchSize);
+            OpenGLBatch* glBatch = new OpenGLBatch(m_iUsagePattern, m_pShaderSpec);
             glBatch->create();
             m_WaitingBatches.insert(OpenGLBatchPointer(glBatch));
         }

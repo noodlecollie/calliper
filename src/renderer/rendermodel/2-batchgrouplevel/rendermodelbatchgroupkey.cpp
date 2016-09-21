@@ -2,20 +2,20 @@
 #include <QByteArray>
 #include <QDataStream>
 
-uint qHash(const NS_RENDERER::RenderModelBatchGroupKey &key, uint seed)
-{
-    QByteArray arr;
-
-    {
-        QDataStream stream(&arr, QIODevice::WriteOnly);
-        stream << key.shaderId() << key.textureId() << key.drawMode() << key.drawWidth();
-    }
-
-    return qHash(arr, seed);
-}
-
 namespace NS_RENDERER
 {
+    uint qHash(const RenderModelBatchGroupKey &key, uint seed)
+    {
+        QByteArray arr;
+
+        {
+            QDataStream stream(&arr, QIODevice::WriteOnly);
+            stream << key.shaderId() << key.textureId() << key.drawMode() << key.drawWidth();
+        }
+
+        return qHash(arr, seed);
+    }
+
     RenderModelBatchGroupKey::RenderModelBatchGroupKey(quint16 shaderId, quint16 textureId, GLenum drawMode, float drawWidth)
         : m_iShaderId(shaderId), m_iTextureId(textureId), m_iDrawMode(drawMode), m_flDrawWidth(drawWidth)
     {

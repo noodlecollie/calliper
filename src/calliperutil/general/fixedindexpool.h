@@ -4,6 +4,7 @@
 #include "calliperutil_global.h"
 #include <QScopedArrayPointer>
 
+#if 0
 namespace NS_CALLIPERUTIL
 {
     // Can return indices ranging from 0 to size inclusive.
@@ -28,5 +29,6 @@ namespace NS_CALLIPERUTIL
         int                     m_iOccupiedIndices;
     };
 }
+#endif
 
 #endif // FIXEDINDEXPOOL_H

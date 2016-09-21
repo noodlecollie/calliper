@@ -9,7 +9,7 @@ namespace NS_RENDERER
     class MatrixBatchItemKey
     {
     public:
-        MatrixBatchItemKey(quint32 objectId);
+        explicit MatrixBatchItemKey(quint32 objectId);
 
         quint32 objectId() const;
 
@@ -31,8 +31,8 @@ namespace NS_RENDERER
     private:
         const quint32   m_iObjectId;
     };
-}
 
-RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::MatrixBatchItemKey &key, uint seed = 0);
+    RENDERERSHARED_EXPORT uint qHash(const MatrixBatchItemKey &key, uint seed = 0);
+}
 
 #endif // MATRIXBATCHITEMKEY_H

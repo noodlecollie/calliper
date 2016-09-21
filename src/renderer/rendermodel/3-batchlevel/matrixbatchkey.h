@@ -32,8 +32,8 @@ namespace NS_RENDERER
     private:
         const QMatrix4x4    m_matModelToWorldMatrix;
     };
-}
 
-RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::MatrixBatchKey &key, uint seed = 0);
+    RENDERERSHARED_EXPORT uint qHash(const MatrixBatchKey &key, uint seed = 0);
+}
 
 #endif // MATRIXBATCHKEY_H

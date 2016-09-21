@@ -20,8 +20,7 @@ namespace NS_RENDERER
         RenderModelBatchGroupPointer batchGroup(
             new RenderModelBatchGroup(
                     usagePattern,
-                    shaderProgram->vertexFormat(),
-                    shaderProgram->maxBatchedItems()
+                    shaderProgram
                 ));
 
         m_BatchGroups.insert(key, batchGroup);

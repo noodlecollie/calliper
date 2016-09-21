@@ -7,13 +7,14 @@
 #include "shaders/vertexformat.h"
 #include "general/fixedindexpool.h"
 #include "matrixbatch.h"
+#include "shaders/ishaderspec.h"
 
 namespace NS_RENDERER
 {
     class OpenGLBatch
     {
     public:
-        OpenGLBatch(QOpenGLBuffer::UsagePattern usagePattern, const VertexFormat &format, int batchSize);
+        OpenGLBatch(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec);
         ~OpenGLBatch();
 
         void create();
@@ -21,13 +22,14 @@ namespace NS_RENDERER
         bool isCreated() const;
         void upload();
 
-        const VertexFormat& vertexFormat() const;
+        const IShaderSpec* shaderSpec() const;
+        VertexFormat vertexFormat() const;
         int batchSize() const;
         bool isSingleItemBatch() const;
 
         QOpenGLBuffer::UsagePattern usagePattern() const;
 
-        int createMatrixBatch();
+        int createMatrixBatch(const QMatrix4x4 &mat);
         void destroyMatrixBatch(int index);
         int matrixBatchCount() const;
         bool matrixBatchLimitReached() const;
@@ -56,17 +58,18 @@ namespace NS_RENDERER
         void uploadVertices();
         void uploadIndices();
         void uploadUniforms();
+        void calculateRequiredSizeOfBuffers();
 
         const QOpenGLBuffer::UsagePattern m_iUsagePattern;
         bool m_bCreated;
-        const VertexFormat m_VertexFormat;
-        const int m_iBatchSize;
+        const IShaderSpec* m_pShaderSpec;
         const quint32 m_iObjectIdMask;
 
         QOpenGLBuffer       m_VertexBuffer;
         QOpenGLBuffer       m_IndexBuffer;
         OpenGLUniformBuffer m_UniformBuffer;
         QList<MatrixBatch*> m_MatrixBatches;
+        MatrixBatchItemMetadata m_UploadMetadata;
     };
 }
 
