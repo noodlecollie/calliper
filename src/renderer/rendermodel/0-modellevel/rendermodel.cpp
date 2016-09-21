@@ -1,4 +1,5 @@
 #include "rendermodel.h"
+#include <QtDebug>
 
 namespace NS_RENDERER
 {
@@ -72,6 +73,9 @@ namespace NS_RENDERER
                                 batchItem->m_TextureCoordinates,
                                 batchItem->m_Indices);
         }
+
+        qDebug() << "After updating:";
+        batchItem->printDebugInfo();
     }
 
     MatrixBatch::MatrixBatchItemPointer RenderModel::createOrFetchMatrixBatchItem(const RenderModelKey &key)
@@ -82,6 +86,7 @@ namespace NS_RENDERER
         {
             pass = createRenderPass(key.passKey());
         }
+        pass->printDebugInfo();
 
         // 2: Get the batch group.
         // At some point we'll probably want to deal with usage patterns too.
@@ -90,6 +95,7 @@ namespace NS_RENDERER
         {
             batchGroup = pass->createBatchGroup(key.batchGroupKey());
         }
+        batchGroup->printDebugInfo();
 
         // 3: Get the batch.
         MatrixBatch* matrixBatch = batchGroup->getMatrixBatch(key.matrixBatchKey());
@@ -97,6 +103,7 @@ namespace NS_RENDERER
         {
             matrixBatch = batchGroup->createMatrixBatch(key.matrixBatchKey());
         }
+        matrixBatch->printDebugInfo();
 
         // 4: Get the batch item.
         MatrixBatch::MatrixBatchItemPointer batchItem = matrixBatch->getItem(key.matrixBatchItemKey());
@@ -104,7 +111,13 @@ namespace NS_RENDERER
         {
             batchItem = matrixBatch->createItem(key.matrixBatchItemKey());
         }
+        batchItem->printDebugInfo();
 
         return batchItem;
+    }
+
+    void RenderModel::printDebugInfo() const
+    {
+        qDebug() << "Passes:" << m_RenderPasses.count();
     }
 }

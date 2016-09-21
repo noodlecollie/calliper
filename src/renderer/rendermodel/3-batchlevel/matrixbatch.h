@@ -44,6 +44,8 @@ namespace NS_RENDERER
                                 int& colorOffset, int& texCoordOffset) const;
         void copyIndexDataIntoBuffer(char* buffer, int size, quint32& indexDelta, int& offset);
 
+        void printDebugInfo() const;
+
     private:
         const QMatrix4x4 m_matModelToWorld;
         QHash<MatrixBatchItemKey, MatrixBatchItemPointer>    m_Items;

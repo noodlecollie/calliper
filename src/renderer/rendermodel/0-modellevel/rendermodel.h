@@ -22,6 +22,8 @@ namespace NS_RENDERER
 
         virtual void updateObject(const RendererInputObjectParams &object) override;
 
+        void printDebugInfo() const;
+
     private:
         typedef QSharedPointer<RenderModelPass> RenderModelPassPointer;
 

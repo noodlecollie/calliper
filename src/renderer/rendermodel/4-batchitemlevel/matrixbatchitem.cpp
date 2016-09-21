@@ -1,4 +1,5 @@
 #include "matrixbatchitem.h"
+#include <QtDebug>
 
 namespace NS_RENDERER
 {
@@ -37,5 +38,13 @@ namespace NS_RENDERER
         m_Colors.clear();
         m_TextureCoordinates.clear();
         m_Indices.clear();
+    }
+
+    void MatrixBatchItem::printDebugInfo() const
+    {
+        qDebug() << "Positions:" << m_Positions.count()
+                 << "Normals:" << m_Normals.count()
+                 << "Colors:" << m_Colors.count()
+                 << "Texture coordinates:" << m_TextureCoordinates.count();
     }
 }

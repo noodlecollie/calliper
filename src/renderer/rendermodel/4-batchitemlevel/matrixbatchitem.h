@@ -46,6 +46,8 @@ namespace NS_RENDERER
 
         MatrixBatchItemMetadata buildMetadata() const;
         void clear();
+
+        void printDebugInfo() const;
     };
 }
 

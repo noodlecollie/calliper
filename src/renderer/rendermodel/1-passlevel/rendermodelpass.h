@@ -27,6 +27,8 @@ namespace NS_RENDERER
         bool containsBatchGroup(const RenderModelBatchGroupKey &key) const;
         void clearBatchGroups();
 
+        void printDebugInfo() const;
+
     private:
         IShaderRetrievalFunctor* const  m_pShaderFunctor;
 

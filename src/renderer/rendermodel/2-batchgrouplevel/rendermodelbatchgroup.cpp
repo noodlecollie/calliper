@@ -1,4 +1,5 @@
 #include "rendermodelbatchgroup.h"
+#include <QtDebug>
 
 namespace NS_RENDERER
 {
@@ -135,5 +136,12 @@ namespace NS_RENDERER
         }
 
         return *m_WaitingBatches.begin();
+    }
+
+    void RenderModelBatchGroup::printDebugInfo() const
+    {
+        qDebug() << "Matrix batches:" << m_MatrixBatchMap.count()
+                 << "Full OpenGL batches:" << m_FullBatches.count()
+                 << "Waiting OpenGL batches:" << m_WaitingBatches.count();
     }
 }

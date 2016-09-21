@@ -28,6 +28,8 @@ namespace NS_RENDERER
         bool containsMatrixBatch(const MatrixBatchKey &key) const;
         void clearMatrixBatches();
 
+        void printDebugInfo() const;
+
     private:
         typedef QSharedPointer<OpenGLBatch> OpenGLBatchPointer;
         typedef QPair<OpenGLBatchPointer, int> OpenGLBatchPointerIndex;

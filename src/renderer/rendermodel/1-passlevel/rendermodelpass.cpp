@@ -1,4 +1,5 @@
 #include "rendermodelpass.h"
+#include <QtDebug>
 
 namespace NS_RENDERER
 {
@@ -45,5 +46,10 @@ namespace NS_RENDERER
     void RenderModelPass::clearBatchGroups()
     {
         m_BatchGroups.clear();
+    }
+
+    void RenderModelPass::printDebugInfo() const
+    {
+        qDebug() << "Batch groups:" << m_BatchGroups.count();
     }
 }

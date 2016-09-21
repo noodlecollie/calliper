@@ -1,4 +1,5 @@
 #include "matrixbatch.h"
+#include <QtDebug>
 
 namespace
 {
@@ -113,5 +114,10 @@ namespace NS_RENDERER
     const QMatrix4x4& MatrixBatch::matrix() const
     {
         return m_matModelToWorld;
+    }
+
+    void MatrixBatch::printDebugInfo() const
+    {
+        qDebug() << "Items:" << m_Items.count();
     }
 }
