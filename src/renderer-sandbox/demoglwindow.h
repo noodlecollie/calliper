@@ -31,7 +31,6 @@ protected:
 private:
     GLuint  m_iVAOID;
 
-    NS_RENDERER::RenderModelPass*   m_pRenderModel;
     TempSpec*   m_pTempSpec;
     QOpenGLTexture* m_pTexture;
 };

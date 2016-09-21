@@ -68,6 +68,19 @@ QMatrix4x4 transMat(float x)
                       0,0,0,1);
 }
 
+void rendererUpdateObject(const QMatrix4x4 matrix, quint32 objectId, const GeometryBuilder &builder)
+{
+    Global::renderer()->updateObject(RendererInputObjectParams(
+                               RenderModelKey(
+                                   RenderModelPassKey(IRenderer::PASS_GENERAL),
+                                   RenderModelBatchGroupKey(0, 0),
+                                   MatrixBatchKey(matrix),
+                                   MatrixBatchItemKey(objectId)
+                                   ),
+                               builder
+                               ));
+}
+
 DemoGLWindow::DemoGLWindow()
 {
     m_pTempSpec = NULL;
@@ -138,15 +151,7 @@ void DemoGLWindow::initializeGL()
     section.add(GeometrySection::ColorAttribute, cols, 12);
     section.addIndexTriangle(indices[0], indices[1], indices[2]);
 
-    renderer->updateObject(RendererInputObjectParams(
-                               RenderModelKey(
-                                   RenderModelPassKey(IRenderer::PASS_GENERAL),
-                                   RenderModelBatchGroupKey(0,0),
-                                   MatrixBatchKey(QMatrix4x4()),
-                                   MatrixBatchItemKey(0)
-                                   ),
-                               builder
-                               ));
+    rendererUpdateObject(QMatrix4x4(), 0, builder);
 
     /*
     m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);
