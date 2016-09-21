@@ -84,9 +84,6 @@ DemoGLWindow::~DemoGLWindow()
     delete m_pTexture;
     m_pTexture = NULL;
 
-    delete m_pRenderModel;
-    m_pRenderModel = NULL;
-
     delete debugShader;
     debugShader = NULL;
 

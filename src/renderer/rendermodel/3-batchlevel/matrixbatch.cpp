@@ -28,7 +28,7 @@ namespace
         }
     }
 
-    void copyItemDataIntoBuffer(const NS_RENDERER::MatrixBatchItem* item, char* buffer, int size,
+    void copyItemDataIntoBuffer(const NS_RENDERER::MatrixBatch::MatrixBatchItemPointer &item, char* buffer, int size,
                                 int& positionOffset, int& normalOffset,
                                 int& colorOffset, int& texCoordOffset)
     {
@@ -61,14 +61,14 @@ namespace NS_RENDERER
     {
         // If the object already exists, the old shared pointer will be replaced
         // and will delete the batch item it was holding.
-        MatrixBatchItemPointer item(new MatrixBatchItem());
+        MatrixBatchItemPointer item = MatrixBatchItemPointer::create();
         m_Items.insert(key, item);
         return item;
     }
 
     MatrixBatch::MatrixBatchItemPointer MatrixBatch::getItem(const MatrixBatchItemKey &key) const
     {
-        return m_Items.value(key, MatrixBatchItemPointer(NULL));
+        return m_Items.value(key, MatrixBatchItemPointer());
     }
 
     void MatrixBatch::removeItem(const MatrixBatchItemKey &key)
@@ -96,16 +96,16 @@ namespace NS_RENDERER
     void MatrixBatch::copyVertexDataIntoBuffer(char* buffer, int size, int &positionOffset, int &normalOffset,
                                          int &colorOffset, int &texCoordOffset) const
     {
-        foreach ( MatrixBatchItemPointer item, m_Items.values() )
+        foreach ( const MatrixBatchItemPointer &item, m_Items.values() )
         {
-            copyItemDataIntoBuffer(item.data(), buffer, size,
+            copyItemDataIntoBuffer(item, buffer, size,
                                    positionOffset, normalOffset, colorOffset, texCoordOffset);
         }
     }
 
     void MatrixBatch::copyIndexDataIntoBuffer(char *buffer, int size, quint32 &indexDelta, int &offset)
     {
-        foreach ( MatrixBatchItemPointer item, m_Items.values() )
+        foreach ( const MatrixBatchItemPointer &item, m_Items.values() )
         {
             copyItemDataIntoBuffer(item->m_Indices, buffer, size, indexDelta, offset);
         }

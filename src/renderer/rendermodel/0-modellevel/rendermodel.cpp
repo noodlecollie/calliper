@@ -15,14 +15,14 @@ namespace NS_RENDERER
 
     RenderModel::RenderModelPassPointer RenderModel::createRenderPass(const RenderModelPassKey &key)
     {
-        RenderModelPassPointer pass(new RenderModelPass(m_pShaderFunctor));
+        RenderModelPassPointer pass = RenderModelPassPointer::create(m_pShaderFunctor);
         m_RenderPasses.insert(key, pass);
         return pass;
     }
 
     RenderModel::RenderModelPassPointer RenderModel::getRenderPass(const RenderModelPassKey &key) const
     {
-        return m_RenderPasses.value(key, RenderModelPassPointer(NULL));
+        return m_RenderPasses.value(key, RenderModelPassPointer());
     }
 
     void RenderModel::removeRenderPass(const RenderModelPassKey &key)

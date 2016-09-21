@@ -18,19 +18,14 @@ namespace NS_RENDERER
     {
         OpenGLShaderProgram* shaderProgram = (*m_pShaderFunctor)(key.shaderId());
 
-        RenderModelBatchGroupPointer batchGroup(
-            new RenderModelBatchGroup(
-                    usagePattern,
-                    shaderProgram
-                ));
-
+        RenderModelBatchGroupPointer batchGroup = RenderModelBatchGroupPointer::create(usagePattern, shaderProgram);
         m_BatchGroups.insert(key, batchGroup);
         return batchGroup;
     }
 
     RenderModelPass::RenderModelBatchGroupPointer RenderModelPass::getBatchGroup(const RenderModelBatchGroupKey &key) const
     {
-        return m_BatchGroups.value(key, RenderModelBatchGroupPointer(NULL));
+        return m_BatchGroups.value(key, RenderModelBatchGroupPointer());
     }
 
     void RenderModelPass::removeBatchGroup(const RenderModelBatchGroupKey &key)

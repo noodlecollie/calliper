@@ -17,7 +17,7 @@ namespace NS_RENDERER
     MatrixBatch* RenderModelBatchGroup::createMatrixBatch(const MatrixBatchKey &key)
     {
         // Get the GL batch that the matrix batch lives in.
-        OpenGLBatchPointerIndex batchIndex = m_MatrixBatchMap.value(key, OpenGLBatchPointerIndex(OpenGLBatchPointer(NULL), -1));
+        OpenGLBatchPointerIndex batchIndex = m_MatrixBatchMap.value(key, OpenGLBatchPointerIndex(OpenGLBatchPointer(), -1));
 
         // If we got a valid batch, don't bother removing and re-adding.
         // Just clear it out and return it.
@@ -89,7 +89,7 @@ namespace NS_RENDERER
 
     MatrixBatch* RenderModelBatchGroup::getMatrixBatch(const MatrixBatchKey &key) const
     {
-        OpenGLBatchPointerIndex batchIndex = m_MatrixBatchMap.value(key, OpenGLBatchPointerIndex(OpenGLBatchPointer(NULL), -1));
+        OpenGLBatchPointerIndex batchIndex = m_MatrixBatchMap.value(key, OpenGLBatchPointerIndex(OpenGLBatchPointer(), -1));
         if ( batchIndex.first.isNull() )
             return NULL;
 
@@ -130,9 +130,9 @@ namespace NS_RENDERER
     {
         if ( m_WaitingBatches.isEmpty() )
         {
-            OpenGLBatch* glBatch = new OpenGLBatch(m_iUsagePattern, m_pShaderSpec);
+            OpenGLBatchPointer glBatch = OpenGLBatchPointer::create(m_iUsagePattern, m_pShaderSpec);
             glBatch->create();
-            m_WaitingBatches.insert(OpenGLBatchPointer(glBatch));
+            m_WaitingBatches.insert(glBatch);
         }
 
         return *m_WaitingBatches.begin();
