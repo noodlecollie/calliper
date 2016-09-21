@@ -24,7 +24,6 @@ namespace NS_RENDERER
 
     private:
         typedef QSharedPointer<RenderModelPass> RenderModelPassPointer;
-        void initRenderPasses();
 
         RenderModelPassPointer createRenderPass(const RenderModelPassKey &key);
         RenderModelPassPointer getRenderPass(const RenderModelPassKey &key) const;

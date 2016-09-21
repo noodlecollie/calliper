@@ -5,7 +5,6 @@ namespace NS_RENDERER
     RenderModel::RenderModel()
         : m_pShaderFunctor(NULL), m_pTextureFunctor(NULL)
     {
-        initRenderPasses();
     }
 
     RenderModel::~RenderModel()
@@ -58,16 +57,6 @@ namespace NS_RENDERER
     void RenderModel::setTextureFunctor(ITextureRetrievalFunctor *functor)
     {
         m_pTextureFunctor = functor;
-    }
-
-    void RenderModel::initRenderPasses()
-    {
-        clearRenderPasses();
-
-        for ( int i = 0; i < TOTAL_RENDER_PASSES; i++ )
-        {
-            createRenderPass(RenderModelPassKey(i));
-        }
     }
 
     void RenderModel::updateObject(const RendererInputObjectParams &object)
