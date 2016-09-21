@@ -24,8 +24,6 @@ SOURCES += \
     shaders/vertexformat.cpp \
     geometry/geometrysection.cpp \
     rendermodel/0-modellevel/rendermodel.cpp \
-    renderer.cpp \
-    rendermodel/0-modellevel/rendermodelkey.cpp \
     rendermodel/4-batchitemlevel/matrixbatchitemkey.cpp \
     rendermodel/3-batchlevel/matrixbatchkey.cpp \
     rendermodel/1-passlevel/rendermodelpasskey.cpp \
@@ -33,7 +31,10 @@ SOURCES += \
     rendermodel/4-batchitemlevel/matrixbatchitem.cpp \
     rendermodel/3-batchlevel/matrixbatch.cpp \
     rendermodel/3-batchlevel/openglbatch.cpp \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.cpp
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.cpp \
+    global.cpp \
+    rendermodel/rendererinputobjectparams.cpp \
+    rendermodel/0-modellevel/rendermodelkey.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -54,7 +55,6 @@ HEADERS +=\
     geometry/geometrysection.h \
     rendermodel/0-modellevel/rendermodel.h \
     irenderer.h \
-    rendermodel/0-modellevel/rendermodelkey.h \
     rendermodel/4-batchitemlevel/matrixbatchitemkey.h \
     rendermodel/3-batchlevel/matrixbatchkey.h \
     rendermodel/1-passlevel/rendermodelpasskey.h \
@@ -62,7 +62,9 @@ HEADERS +=\
     rendermodel/4-batchitemlevel/matrixbatchitem.h \
     rendermodel/3-batchlevel/matrixbatch.h \
     rendermodel/3-batchlevel/openglbatch.h \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h
+    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h \
+    rendermodel/rendererinputobjectparams.h \
+    rendermodel/0-modellevel/rendermodelkey.h
 
 unix {
     target.path = /usr/lib

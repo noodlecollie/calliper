@@ -29,30 +29,12 @@ namespace NS_RENDERER
     }
 
     void GeometryBuilder::consolidate(QVector<float> &positions, QVector<float> normals,
-                                      QVector<float> &colors, QVector<float> &textureCoordiates,
+                                      QVector<float> &colors, QVector<float> &textureCoordinates,
                                       QVector<quint32> &indices) const
     {
-        int verticesProcessed = 0;
-
         foreach ( const GeometrySection &section, m_Sections )
         {
-            positions.append(section.vertexConstVector(GeometrySection::PositionAttribute));
-            normals.append(section.vertexConstVector(GeometrySection::NormalAttribute));
-            colors.append(section.vertexConstVector(GeometrySection::ColorAttribute));
-            textureCoordiates.append(section.vertexConstVector(GeometrySection::TextureCoordinateAttribute));
-
-            // We need to renumber the indices from section-specific to global.
-            int oldIndexCount = indices.count();
-            indices.resize(oldIndexCount + section.indexCount());
-            quint32* indexData = indices.data() + oldIndexCount;
-            const quint32* indexSource = section.indexConstData();
-
-            for ( int i = 0; i < section.indexCount(); i++ )
-            {
-                indexData[i] = verticesProcessed + indexSource[i];
-            }
-
-            verticesProcessed += section.positionCount();
+            section.consolidate(positions, normals, colors, textureCoordinates, indices);
         }
     }
 

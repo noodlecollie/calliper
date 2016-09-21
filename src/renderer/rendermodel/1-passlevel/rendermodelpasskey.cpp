@@ -2,7 +2,7 @@
 
 uint qHash(const NS_RENDERER::RenderModelPassKey &key, uint seed)
 {
-    return qHash(key.passIndex());
+    return qHash(key.passIndex(), seed);
 }
 
 namespace NS_RENDERER

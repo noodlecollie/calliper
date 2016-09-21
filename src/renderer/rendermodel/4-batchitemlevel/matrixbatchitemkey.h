@@ -6,7 +6,7 @@
 
 namespace NS_RENDERER
 {
-    class MatrixBatchItemKey
+    class RENDERERSHARED_EXPORT MatrixBatchItemKey
     {
     public:
         explicit MatrixBatchItemKey(quint32 objectId);

@@ -10,7 +10,7 @@
 
 namespace NS_RENDERER
 {
-    class RenderModelKey
+    class RENDERERSHARED_EXPORT RenderModelKey
     {
     public:
         RenderModelKey(const RenderModelPassKey& passKey, const RenderModelBatchGroupKey& batchGroupKey,

@@ -20,14 +20,19 @@ namespace NS_RENDERER
         virtual ITextureRetrievalFunctor* textureFunctor() override;
         virtual void setTextureFunctor(ITextureRetrievalFunctor *functor) override;
 
+        virtual void updateObject(const RendererInputObjectParams &object) override;
+
     private:
         typedef QSharedPointer<RenderModelPass> RenderModelPassPointer;
+        void initRenderPasses();
 
         RenderModelPassPointer createRenderPass(const RenderModelPassKey &key);
         RenderModelPassPointer getRenderPass(const RenderModelPassKey &key) const;
         void removeRenderPass(const RenderModelPassKey &key);
         bool containsRenderPass(const RenderModelPassKey &key);
         void clearRenderPasses();
+
+        MatrixBatch::MatrixBatchItemPointer createOrFetchMatrixBatchItem(const RenderModelKey &key);
 
         IShaderRetrievalFunctor*    m_pShaderFunctor;
         ITextureRetrievalFunctor*   m_pTextureFunctor;

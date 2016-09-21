@@ -45,6 +45,7 @@ namespace NS_RENDERER
         QVector<quint32>    m_Indices;
 
         MatrixBatchItemMetadata buildMetadata() const;
+        void clear();
     };
 }
 

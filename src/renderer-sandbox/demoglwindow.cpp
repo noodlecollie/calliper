@@ -9,6 +9,8 @@
 #include "shaders/debugscreenspaceshader.h"
 #include "tempshader.h"
 #include "geometry/geometrybuilder.h"
+#include "irenderer.h"
+#include "rendermodel/rendererinputobjectparams.h"
 
 using namespace NS_RENDERER;
 
@@ -77,6 +79,8 @@ DemoGLWindow::~DemoGLWindow()
     makeCurrent();
     Q_ASSERT_X(QOpenGLContext::currentContext(), Q_FUNC_INFO, "Need a current context to clean things up!");
 
+    Global::shutdown();
+
     delete m_pTexture;
     m_pTexture = NULL;
 
@@ -119,15 +123,10 @@ void DemoGLWindow::initializeGL()
     textureFunctor = new TextureFunctor();
     debugTexture = OpenGLTexturePointer(new OpenGLTexture(QImage(":/obsolete.png").mirrored()));
 
-    /*
-    m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);
-    m_pRenderModel->create();
-    m_pRenderModel->setUsagePattern(QOpenGLBuffer::DynamicDraw);
-    m_pRenderModel->setAttributes(RenderModelPassAttributes(
-                QMatrix4x4(2,0,0,0, 0,2,0,0, 0,0,2,0, 0,0,0,1),
-                QMatrix4x4()
-                ));
-    m_pRenderModel->upload();
+    Global::initialise();
+    IRenderer* renderer = Global::renderer();
+    renderer->setShaderFunctor(shaderFunctor);
+    renderer->setTextureFunctor(textureFunctor);
 
     QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
 
@@ -141,6 +140,26 @@ void DemoGLWindow::initializeGL()
     section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
     section.add(GeometrySection::ColorAttribute, cols, 12);
     section.addIndexTriangle(indices[0], indices[1], indices[2]);
+
+    renderer->updateObject(RendererInputObjectParams(
+                               RenderModelKey(
+                                   RenderModelPassKey(IRenderer::PASS_GENERAL),
+                                   RenderModelBatchGroupKey(0,0),
+                                   MatrixBatchKey(QMatrix4x4()),
+                                   MatrixBatchItemKey(0)
+                                   ),
+                               builder
+                               ));
+
+    /*
+    m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);
+    m_pRenderModel->create();
+    m_pRenderModel->setUsagePattern(QOpenGLBuffer::DynamicDraw);
+    m_pRenderModel->setAttributes(RenderModelPassAttributes(
+                QMatrix4x4(2,0,0,0, 0,2,0,0, 0,0,2,0, 0,0,0,1),
+                QMatrix4x4()
+                ));
+    m_pRenderModel->upload();
 
     m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.7f)), RenderModelBatchParams(builder.sections(), 0, transMat(-0.7f)));
     m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.6f)), RenderModelBatchParams(builder.sections(), 1, transMat(-0.6f)));

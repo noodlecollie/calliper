@@ -7,7 +7,7 @@
 
 namespace NS_RENDERER
 {
-    class RenderModelBatchGroupKey
+    class RENDERERSHARED_EXPORT RenderModelBatchGroupKey
     {
     public:
         RenderModelBatchGroupKey(quint16 shaderId, quint16 textureId, GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);

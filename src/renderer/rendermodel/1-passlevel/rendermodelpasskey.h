@@ -6,7 +6,7 @@
 
 namespace NS_RENDERER
 {
-    class RenderModelPassKey
+    class RENDERERSHARED_EXPORT RenderModelPassKey
     {
     public:
         RenderModelPassKey(int index);

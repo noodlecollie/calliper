@@ -7,7 +7,7 @@
 
 namespace NS_RENDERER
 {
-    class MatrixBatchKey
+    class RENDERERSHARED_EXPORT MatrixBatchKey
     {
     public:
         MatrixBatchKey(const QMatrix4x4 &matrix);

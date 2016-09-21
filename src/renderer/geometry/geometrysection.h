@@ -60,6 +60,9 @@ namespace NS_RENDERER
         bool hasColors() const;
         bool hasTextureCoordinates() const;
 
+        int consolidate(QVector<float> &positions, QVector<float> &normals, QVector<float> &colors,
+                        QVector<float> &textureCoordinates, QVector<quint32> &indices) const;
+
     private:
         void init();
 

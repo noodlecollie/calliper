@@ -29,4 +29,13 @@ namespace NS_RENDERER
     {
         memset(this, 0, sizeof(MatrixBatchItemMetadata));
     }
+
+    void MatrixBatchItem::clear()
+    {
+        m_Positions.clear();
+        m_Normals.clear();
+        m_Colors.clear();
+        m_TextureCoordinates.clear();
+        m_Indices.clear();
+    }
 }

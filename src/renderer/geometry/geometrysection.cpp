@@ -192,4 +192,26 @@ namespace NS_RENDERER
         add(PositionAttribute, data, count);
         m_iPositionCount += count/components;
     }
+
+    int GeometrySection::consolidate(QVector<float> &positions, QVector<float> &normals, QVector<float> &colors,
+                                      QVector<float> &textureCoordinates, QVector<quint32> &indices) const
+    {
+        positions.append(vertexConstVector(GeometrySection::PositionAttribute));
+        normals.append(vertexConstVector(GeometrySection::NormalAttribute));
+        colors.append(vertexConstVector(GeometrySection::ColorAttribute));
+        textureCoordinates.append(vertexConstVector(GeometrySection::TextureCoordinateAttribute));
+
+        // We need to renumber the indices from section-specific to global.
+        int oldIndexCount = indices.count();
+        indices.resize(oldIndexCount + indexCount());
+        quint32* indexData = indices.data() + oldIndexCount;
+        const quint32* indexSource = indexConstData();
+
+        for ( int i = 0; i < indexCount(); i++ )
+        {
+            indexData[i] = oldIndexCount + indexSource[i];
+        }
+
+        return indexCount();
+    }
 }
