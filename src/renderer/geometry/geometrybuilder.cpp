@@ -3,9 +3,9 @@
 
 namespace NS_RENDERER
 {
-    GeometryBuilder::GeometryBuilder()
+    GeometryBuilder::GeometryBuilder(quint16 shaderId, quint32 textureId)
     {
-        createNewSection();
+        createNewSection(shaderId, textureId);
     }
 
     GeometryBuilder::~GeometryBuilder()
@@ -17,9 +17,9 @@ namespace NS_RENDERER
        return m_Sections.last();
     }
 
-    GeometrySection& GeometryBuilder::createNewSection()
+    GeometrySection& GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId)
     {
-        m_Sections.append(GeometrySection());
+        m_Sections.append(GeometrySection(shaderId, textureId));
         return currentSection();
     }
 

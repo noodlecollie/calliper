@@ -9,13 +9,13 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT GeometryBuilder
     {
     public:
-        GeometryBuilder();
+        GeometryBuilder(quint16 shaderId, quint32 textureId);
         ~GeometryBuilder();
 
         int sectionCount() const;
         GeometrySection& section(int index);
         const GeometrySection& section(int index) const;
-        GeometrySection& createNewSection();
+        GeometrySection& createNewSection(quint16 shaderId, quint32 textureId);
         GeometrySection& currentSection();
         const QList<GeometrySection>& sections() const;
 

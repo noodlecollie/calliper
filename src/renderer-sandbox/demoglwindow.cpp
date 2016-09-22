@@ -144,14 +144,21 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    GeometryBuilder builder;
+    GeometryBuilder builder(0,0);
     GeometrySection& section = builder.currentSection();
     section.addPositions(tri1.constData(), tri1.count(), 3);
     section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
     section.add(GeometrySection::ColorAttribute, cols, 12);
     section.addIndexTriangle(indices[0], indices[1], indices[2]);
 
-    rendererUpdateObject(QMatrix4x4(), 0, builder);
+    rendererUpdateObject(transMat(-0.7f), 0, builder);
+    rendererUpdateObject(transMat(-0.6f), 1, builder);
+    rendererUpdateObject(transMat(-0.5f), 2, builder);
+    rendererUpdateObject(transMat(-0.4f), 3, builder);
+    rendererUpdateObject(transMat(-0.3f), 4, builder);
+    rendererUpdateObject(transMat(-0.2f), 5, builder);
+    rendererUpdateObject(transMat(-0.1f), 6, builder);
+    rendererUpdateObject(transMat(0.0f), 7, builder);
 
     /*
     m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);

@@ -62,8 +62,9 @@ namespace
 
 namespace NS_RENDERER
 {
-    GeometrySection::GeometrySection()
-        : m_iPositionCount(0)
+    GeometrySection::GeometrySection(quint16 shaderId, quint32 textureId)
+        : m_iPositionCount(0), m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
+          m_iShaderId(shaderId), m_iTextureId(textureId)
     {
         init();
     }
@@ -213,5 +214,45 @@ namespace NS_RENDERER
         }
 
         return indexCount();
+    }
+
+    quint16 GeometrySection::shaderId() const
+    {
+        return m_iShaderId;
+    }
+
+    void GeometrySection::setShaderId(quint16 id)
+    {
+        m_iShaderId = id;
+    }
+
+    quint32 GeometrySection::textureId() const
+    {
+        return m_iTextureId;
+    }
+
+    void GeometrySection::setTextureId(quint32 id)
+    {
+        m_iTextureId = id;
+    }
+
+    GLenum GeometrySection::drawMode() const
+    {
+        return m_iDrawMode;
+    }
+
+    void GeometrySection::setDrawMode(GLenum mode)
+    {
+        m_iDrawMode = mode;
+    }
+
+    float GeometrySection::drawWidth() const
+    {
+        return m_flDrawWidth;
+    }
+
+    void GeometrySection::setDrawWidth(float width)
+    {
+        m_flDrawWidth = width;
     }
 }

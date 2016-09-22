@@ -10,6 +10,7 @@
 #include <QList>
 #include <QVector>
 #include "geometry/vertex3d.h"
+#include <QOpenGLFunctions>
 
 namespace NS_RENDERER
 {
@@ -26,7 +27,7 @@ namespace NS_RENDERER
             AttributeTypeCount
         };
 
-        GeometrySection();
+        GeometrySection(quint16 shaderId, quint32 textureId);
 
         // It's assumed that the number of components for each attribute of
         // successive vertices will be the same (eg. 3 floats each time for position).
@@ -63,12 +64,29 @@ namespace NS_RENDERER
         int consolidate(QVector<float> &positions, QVector<float> &normals, QVector<float> &colors,
                         QVector<float> &textureCoordinates, QVector<quint32> &indices) const;
 
+        quint16 shaderId() const;
+        void setShaderId(quint16 id);
+
+        quint32 textureId() const;
+        void setTextureId(quint32 id);
+
+        GLenum drawMode() const;
+        void setDrawMode(GLenum mode);
+
+        float drawWidth() const;
+        void setDrawWidth(float width);
+
     private:
         void init();
 
         QList<QVector<float> >  m_Attributes;
         QVector<quint32>        m_Indices;
         int                     m_iPositionCount;
+
+        GLenum  m_iDrawMode;
+        float   m_flDrawWidth;
+        quint16 m_iShaderId;
+        quint32 m_iTextureId;
     };
 
     typedef QList<GeometrySection> GeometrySectionList;
