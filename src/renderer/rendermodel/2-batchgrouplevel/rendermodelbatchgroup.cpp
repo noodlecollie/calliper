@@ -144,4 +144,9 @@ namespace NS_RENDERER
                  << "Full OpenGL batches:" << m_FullBatches.count()
                  << "Waiting OpenGL batches:" << m_WaitingBatches.count();
     }
+
+    int RenderModelBatchGroup::matrixBatchCount() const
+    {
+        return m_MatrixBatchMap.count();
+    }
 }

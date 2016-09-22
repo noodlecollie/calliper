@@ -62,20 +62,72 @@ namespace NS_RENDERER
 
     void RenderModel::updateObject(const RendererInputObjectParams &object)
     {
-        MatrixBatch::MatrixBatchItemPointer batchItem = createOrFetchMatrixBatchItem(object.renderModelKey());
-        batchItem->clear();
+        if ( m_StoredObjects.contains(object.objectId()) )
+        {
+            RenderModelKeyListPointer keysForObject = m_StoredObjects.take(object.objectId());
+            foreach ( const RenderModelKey &key, *keysForObject.data() )
+            {
+                cleanMatrixBatchItem(key);
+            }
+        }
+
+        RenderModelPassKey passKey(object.passIndex());
+        MatrixBatchItemKey batchItemKey(object.objectId());
 
         foreach ( const GeometrySection &section, object.geometrySectionList() )
         {
+            RenderModelKey key = RenderModelKey(
+                            passKey,
+                            RenderModelBatchGroupKey(
+                                section.shaderId(),
+                                section.textureId(),
+                                section.drawMode(),
+                                section.drawWidth()
+                            ),
+                            MatrixBatchKey(section.modelToWorldMatrix()),
+                            batchItemKey
+                        );
+
+            MatrixBatch::MatrixBatchItemPointer batchItem = createOrFetchMatrixBatchItem(key);
+            batchItem->clear();
+
             section.consolidate(batchItem->m_Positions,
                                 batchItem->m_Normals,
                                 batchItem->m_Colors,
                                 batchItem->m_TextureCoordinates,
                                 batchItem->m_Indices);
+
+            qDebug() << "Updated batch item:";
+            batchItem->printDebugInfo();
+        }
+    }
+
+    bool RenderModel::getModelItems(const RenderModelKey &key,
+                                    RenderModelPassPointer &pass,
+                                    RenderModelPass::RenderModelBatchGroupPointer &batchGroup,
+                                    MatrixBatch *&matrixBatch,
+                                    MatrixBatch::MatrixBatchItemPointer &batchItem) const
+    {
+        pass = getRenderPass(key.passKey());
+        if ( pass.isNull() )
+        {
+            return false;
         }
 
-        qDebug() << "After updating:";
-        batchItem->printDebugInfo();
+        batchGroup = pass->getBatchGroup(key.batchGroupKey());
+        if ( batchGroup.isNull() )
+        {
+            return false;
+        }
+
+        matrixBatch = batchGroup->getMatrixBatch(key.matrixBatchKey());
+        if ( !matrixBatch )
+        {
+            return false;
+        }
+
+        batchItem = matrixBatch->getItem(key.matrixBatchItemKey());
+        return !batchItem.isNull();
     }
 
     MatrixBatch::MatrixBatchItemPointer RenderModel::createOrFetchMatrixBatchItem(const RenderModelKey &key)
@@ -119,5 +171,31 @@ namespace NS_RENDERER
     void RenderModel::printDebugInfo() const
     {
         qDebug() << "Passes:" << m_RenderPasses.count();
+    }
+
+    void RenderModel::cleanMatrixBatchItem(const RenderModelKey &key)
+    {
+        RenderModelPassPointer pass;
+        RenderModelPass::RenderModelBatchGroupPointer batchGroup;
+        MatrixBatch* matrixBatch = NULL;
+        MatrixBatch::MatrixBatchItemPointer batchItem;
+
+        if ( !getModelItems(key, pass, batchGroup, matrixBatch, batchItem) )
+        {
+            return;
+        }
+
+        batchItem.clear();
+        matrixBatch->removeItem(key.matrixBatchItemKey());
+
+        if ( matrixBatch->itemCount() < 1 )
+        {
+            batchGroup->removeMatrixBatch(key.matrixBatchKey());
+        }
+
+        if ( batchGroup->matrixBatchCount() < 1 )
+        {
+            pass->removeBatchGroup(key.batchGroupKey());
+        }
     }
 }

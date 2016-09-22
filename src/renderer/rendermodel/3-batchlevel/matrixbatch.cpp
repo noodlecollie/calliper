@@ -120,4 +120,9 @@ namespace NS_RENDERER
     {
         qDebug() << "Items:" << m_Items.count();
     }
+
+    int MatrixBatch::itemCount() const
+    {
+        return m_Items.count();
+    }
 }

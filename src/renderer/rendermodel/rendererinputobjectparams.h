@@ -12,17 +12,15 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT RendererInputObjectParams
     {
     public:
-        RendererInputObjectParams(const RenderModelKey &modelKey,
-                                  const QList<GeometrySection> &geometry);
+        RendererInputObjectParams(quint32 objectId, int passIndex, const GeometryBuilder &builder);
 
-        RendererInputObjectParams(const RenderModelKey &modelKey,
-                                  const GeometryBuilder &builder);
-
-        const RenderModelKey& renderModelKey() const;
         const QList<GeometrySection>& geometrySectionList() const;
+        quint32 objectId() const;
+        int passIndex() const;
 
     private:
-        const RenderModelKey            m_RenderModelKey;
+        const quint32 m_iObjectId;
+        const int m_iPassIndex;
         const QList<GeometrySection>&   m_SectionListReference;
     };
 }

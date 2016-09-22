@@ -144,7 +144,7 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    GeometryBuilder builder(0,0);
+    GeometryBuilder builder(0,0, QMatrix4x4());
     GeometrySection& section = builder.currentSection();
     section.addPositions(tri1.constData(), tri1.count(), 3);
     section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);

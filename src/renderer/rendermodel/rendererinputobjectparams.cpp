@@ -2,29 +2,24 @@
 
 namespace NS_RENDERER
 {
-    RendererInputObjectParams::RendererInputObjectParams(const RenderModelKey &modelKey,
-                                                         const QList<GeometrySection> &geometry)
-        : m_RenderModelKey(modelKey),
-          m_SectionListReference(geometry)
+    RendererInputObjectParams::RendererInputObjectParams(quint32 objectId, int passIndex, const GeometryBuilder &builder)
+        : m_iObjectId(objectId), m_iPassIndex(passIndex), m_SectionListReference(builder.sections())
     {
 
-    }
-
-    RendererInputObjectParams::RendererInputObjectParams(const RenderModelKey &modelKey,
-                                                         const GeometryBuilder &builder)
-        : m_RenderModelKey(modelKey),
-          m_SectionListReference(builder.sections())
-    {
-
-    }
-
-    const RenderModelKey& RendererInputObjectParams::renderModelKey() const
-    {
-        return m_RenderModelKey;
     }
 
     const QList<GeometrySection>& RendererInputObjectParams::geometrySectionList() const
     {
         return m_SectionListReference;
+    }
+
+    quint32 RendererInputObjectParams::objectId() const
+    {
+        return m_iObjectId;
+    }
+
+    int RendererInputObjectParams::passIndex() const
+    {
+        return m_iPassIndex;
     }
 }

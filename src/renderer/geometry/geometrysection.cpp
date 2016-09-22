@@ -62,9 +62,10 @@ namespace
 
 namespace NS_RENDERER
 {
-    GeometrySection::GeometrySection(quint16 shaderId, quint32 textureId)
+    GeometrySection::GeometrySection(quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix)
         : m_iPositionCount(0), m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
-          m_iShaderId(shaderId), m_iTextureId(textureId)
+          m_iShaderId(shaderId), m_iTextureId(textureId),
+          m_matModelToWorld(modelToWorldMatrix)
     {
         init();
     }
@@ -254,5 +255,15 @@ namespace NS_RENDERER
     void GeometrySection::setDrawWidth(float width)
     {
         m_flDrawWidth = width;
+    }
+
+    const QMatrix4x4& GeometrySection::modelToWorldMatrix() const
+    {
+        return m_matModelToWorld;
+    }
+
+    void GeometrySection::setModelToWorldMatrix(const QMatrix4x4 &matrix)
+    {
+        m_matModelToWorld = matrix;
     }
 }

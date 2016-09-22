@@ -9,15 +9,19 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT GeometryBuilder
     {
     public:
-        GeometryBuilder(quint16 shaderId, quint32 textureId);
+        GeometryBuilder(quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix);
         ~GeometryBuilder();
 
         int sectionCount() const;
         GeometrySection& section(int index);
         const GeometrySection& section(int index) const;
-        GeometrySection& createNewSection(quint16 shaderId, quint32 textureId);
+        GeometrySection& createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix);
+        GeometrySection& createNewSection();
         GeometrySection& currentSection();
         const QList<GeometrySection>& sections() const;
+
+        QMatrix4x4 modelToWorldMatrix() const;
+        void setModelToWorldMatrix(const QMatrix4x4 &matrix);
 
         // Export all data into buffers provided.
         void consolidate(QVector<float> &positions, QVector<float> normals,
@@ -26,6 +30,9 @@ namespace NS_RENDERER
 
     private:
         QList<GeometrySection>  m_Sections;
+        quint16 m_iShaderId;
+        quint32 m_iTextureId;
+        QMatrix4x4  m_matModelToWorld;
     };
 }
 

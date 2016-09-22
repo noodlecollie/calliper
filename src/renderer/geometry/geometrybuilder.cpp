@@ -3,9 +3,10 @@
 
 namespace NS_RENDERER
 {
-    GeometryBuilder::GeometryBuilder(quint16 shaderId, quint32 textureId)
+    GeometryBuilder::GeometryBuilder(quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix)
+        : m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix)
     {
-        createNewSection(shaderId, textureId);
+        createNewSection();
     }
 
     GeometryBuilder::~GeometryBuilder()
@@ -17,9 +18,15 @@ namespace NS_RENDERER
        return m_Sections.last();
     }
 
-    GeometrySection& GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId)
+    GeometrySection& GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix)
     {
-        m_Sections.append(GeometrySection(shaderId, textureId));
+        m_Sections.append(GeometrySection(shaderId, textureId, matrix));
+        return currentSection();
+    }
+
+    GeometrySection& GeometryBuilder::createNewSection()
+    {
+        m_Sections.append(GeometrySection(m_iShaderId, m_iTextureId, m_matModelToWorld));
         return currentSection();
     }
 
@@ -41,5 +48,15 @@ namespace NS_RENDERER
     const QList<GeometrySection>& GeometryBuilder::sections() const
     {
         return m_Sections;
+    }
+
+    QMatrix4x4 GeometryBuilder::modelToWorldMatrix() const
+    {
+        return m_matModelToWorld;
+    }
+
+    void GeometryBuilder::setModelToWorldMatrix(const QMatrix4x4 &matrix)
+    {
+        m_matModelToWorld = matrix;
     }
 }

@@ -11,6 +11,7 @@
 #include <QVector>
 #include "geometry/vertex3d.h"
 #include <QOpenGLFunctions>
+#include <QMatrix4x4>
 
 namespace NS_RENDERER
 {
@@ -27,7 +28,7 @@ namespace NS_RENDERER
             AttributeTypeCount
         };
 
-        GeometrySection(quint16 shaderId, quint32 textureId);
+        GeometrySection(quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix);
 
         // It's assumed that the number of components for each attribute of
         // successive vertices will be the same (eg. 3 floats each time for position).
@@ -76,6 +77,9 @@ namespace NS_RENDERER
         float drawWidth() const;
         void setDrawWidth(float width);
 
+        const QMatrix4x4& modelToWorldMatrix() const;
+        void setModelToWorldMatrix(const QMatrix4x4 &matrix);
+
     private:
         void init();
 
@@ -87,6 +91,7 @@ namespace NS_RENDERER
         float   m_flDrawWidth;
         quint16 m_iShaderId;
         quint32 m_iTextureId;
+        QMatrix4x4 m_matModelToWorld;
     };
 
     typedef QList<GeometrySection> GeometrySectionList;

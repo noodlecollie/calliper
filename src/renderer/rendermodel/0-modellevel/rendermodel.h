@@ -6,6 +6,8 @@
 #include <QMap>
 #include "rendermodel/1-passlevel/rendermodelpass.h"
 #include "rendermodel/1-passlevel/rendermodelpasskey.h"
+#include <QHash>
+#include <QList>
 
 namespace NS_RENDERER
 {
@@ -26,6 +28,7 @@ namespace NS_RENDERER
 
     private:
         typedef QSharedPointer<RenderModelPass> RenderModelPassPointer;
+        typedef QSharedPointer<QList<RenderModelKey> > RenderModelKeyListPointer;
 
         RenderModelPassPointer createRenderPass(const RenderModelPassKey &key);
         RenderModelPassPointer getRenderPass(const RenderModelPassKey &key) const;
@@ -34,10 +37,18 @@ namespace NS_RENDERER
         void clearRenderPasses();
 
         MatrixBatch::MatrixBatchItemPointer createOrFetchMatrixBatchItem(const RenderModelKey &key);
+        void cleanMatrixBatchItem(const RenderModelKey &key);
+        bool getModelItems(const RenderModelKey &key,
+                           RenderModelPassPointer &pass,
+                           RenderModelPass::RenderModelBatchGroupPointer &batchGroup,
+                           MatrixBatch* &matrixBatch,
+                           MatrixBatch::MatrixBatchItemPointer &batchItem) const;
 
         IShaderRetrievalFunctor*    m_pShaderFunctor;
         ITextureRetrievalFunctor*   m_pTextureFunctor;
         QMap<RenderModelPassKey, RenderModelPassPointer>   m_RenderPasses;
+
+        QHash<quint32, RenderModelKeyListPointer> m_StoredObjects;
     };
 }
 

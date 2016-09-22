@@ -26,6 +26,7 @@ namespace NS_RENDERER
         MatrixBatch* getMatrixBatch(const MatrixBatchKey &key) const;
         void removeMatrixBatch(const MatrixBatchKey &key);
         bool containsMatrixBatch(const MatrixBatchKey &key) const;
+        int matrixBatchCount() const;
         void clearMatrixBatches();
 
         void printDebugInfo() const;

@@ -37,6 +37,7 @@ namespace NS_RENDERER
         void removeItem(const MatrixBatchItemKey &key);
 
         bool containsItem(const MatrixBatchItemKey &key) const;
+        int itemCount() const;
 
         MatrixBatchItemMetadata buildItemMetadata() const;
 
