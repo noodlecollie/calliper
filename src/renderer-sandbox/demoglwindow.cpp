@@ -68,19 +68,6 @@ QMatrix4x4 transMat(float x)
                       0,0,0,1);
 }
 
-void rendererUpdateObject(const QMatrix4x4 matrix, quint32 objectId, const GeometryBuilder &builder)
-{
-    Global::renderer()->updateObject(RendererInputObjectParams(
-                               RenderModelKey(
-                                   RenderModelPassKey(IRenderer::PASS_GENERAL),
-                                   RenderModelBatchGroupKey(0, 0),
-                                   MatrixBatchKey(matrix),
-                                   MatrixBatchItemKey(objectId)
-                                   ),
-                               builder
-                               ));
-}
-
 DemoGLWindow::DemoGLWindow()
 {
     m_pTempSpec = NULL;
@@ -144,21 +131,29 @@ void DemoGLWindow::initializeGL()
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    GeometryBuilder builder(0,0, QMatrix4x4());
+    GeometryBuilder builder(1,1, QMatrix4x4());
     GeometrySection& section = builder.currentSection();
     section.addPositions(tri1.constData(), tri1.count(), 3);
     section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
     section.add(GeometrySection::ColorAttribute, cols, 12);
     section.addIndexTriangle(indices[0], indices[1], indices[2]);
 
-    rendererUpdateObject(transMat(-0.7f), 0, builder);
-    rendererUpdateObject(transMat(-0.6f), 1, builder);
-    rendererUpdateObject(transMat(-0.5f), 2, builder);
-    rendererUpdateObject(transMat(-0.4f), 3, builder);
-    rendererUpdateObject(transMat(-0.3f), 4, builder);
-    rendererUpdateObject(transMat(-0.2f), 5, builder);
-    rendererUpdateObject(transMat(-0.1f), 6, builder);
-    rendererUpdateObject(transMat(0.0f), 7, builder);
+    section.setModelToWorldMatrix(transMat(-0.7f));
+    renderer->updateObject(RendererInputObjectParams(0, IRenderer::PASS_GENERAL, builder));
+    section.setModelToWorldMatrix(transMat(-0.6f));
+    renderer->updateObject(RendererInputObjectParams(1, IRenderer::PASS_GENERAL, builder));
+    section.setModelToWorldMatrix(transMat(-0.5f));
+    renderer->updateObject(RendererInputObjectParams(2, IRenderer::PASS_GENERAL, builder));
+    section.setModelToWorldMatrix(transMat(-0.4f));
+    renderer->updateObject(RendererInputObjectParams(3, IRenderer::PASS_GENERAL, builder));
+    section.setModelToWorldMatrix(transMat(-0.3f));
+    renderer->updateObject(RendererInputObjectParams(4, IRenderer::PASS_GENERAL, builder));
+    section.setModelToWorldMatrix(transMat(-0.2f));
+    renderer->updateObject(RendererInputObjectParams(5, IRenderer::PASS_GENERAL, builder));
+    section.setModelToWorldMatrix(transMat(-0.1f));
+    renderer->updateObject(RendererInputObjectParams(6, IRenderer::PASS_GENERAL, builder));
+    section.setModelToWorldMatrix(transMat(0.0f));
+    renderer->updateObject(RendererInputObjectParams(7, IRenderer::PASS_GENERAL, builder));
 
     /*
     m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);

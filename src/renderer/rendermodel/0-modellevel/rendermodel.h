@@ -24,6 +24,8 @@ namespace NS_RENDERER
 
         virtual void updateObject(const RendererInputObjectParams &object) override;
 
+        virtual void draw() override;
+
         void printDebugInfo() const;
 
     private:

@@ -10,7 +10,8 @@ namespace NS_RENDERER
           m_iObjectIdMask(maskFromNumberOfBits(bitsRequired(m_pShaderSpec->maxBatchedItems()))),
           m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
-          m_UniformBuffer(m_iUsagePattern)
+          m_UniformBuffer(m_iUsagePattern),
+          m_bNeedsUpload(true)
     {
         Q_ASSERT(shaderSpec);
 
@@ -196,6 +197,25 @@ namespace NS_RENDERER
         foreach ( MatrixBatch* matBatch, m_MatrixBatches )
         {
             m_UploadMetadata += matBatch->buildItemMetadata();
+        }
+    }
+
+    void OpenGLBatch::setNeedsUpload(bool needsUpload)
+    {
+        m_bNeedsUpload = needsUpload;
+    }
+
+    bool OpenGLBatch::needsUpload() const
+    {
+        return m_bNeedsUpload;
+    }
+
+    void OpenGLBatch::uploadIfRequired()
+    {
+        if ( needsUpload() )
+        {
+            upload();
+            setNeedsUpload(false);
         }
     }
 }

@@ -27,6 +27,8 @@ namespace NS_RENDERER
         virtual void setTextureFunctor(ITextureRetrievalFunctor* functor) = 0;
 
         virtual void updateObject(const RendererInputObjectParams &object) = 0;
+
+        virtual void draw() = 0;
     };
 
     namespace Global

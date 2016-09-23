@@ -36,6 +36,12 @@ namespace NS_RENDERER
         MatrixBatch* matrixBatchAt(int index) const;
         void clearMatrixBatches();
 
+        // The state of this flag must be managed externally.
+        // It's just for convenience.
+        bool needsUpload() const;
+        void setNeedsUpload(bool needsUpload);
+        void uploadIfRequired();
+
     private:
         static inline quint32 maskFromNumberOfBits(int numBits)
         {
@@ -68,6 +74,7 @@ namespace NS_RENDERER
         QOpenGLBuffer       m_VertexBuffer;
         QOpenGLBuffer       m_IndexBuffer;
         OpenGLUniformBuffer m_UniformBuffer;
+        bool                m_bNeedsUpload;
         QList<MatrixBatch*> m_MatrixBatches;
         MatrixBatchItemMetadata m_UploadMetadata;
     };

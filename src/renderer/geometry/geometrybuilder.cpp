@@ -59,4 +59,12 @@ namespace NS_RENDERER
     {
         m_matModelToWorld = matrix;
     }
+
+    void GeometryBuilder::setAllSectionMatrices()
+    {
+        for ( int i = 0; i < m_Sections.count(); i++ )
+        {
+            m_Sections[i].setModelToWorldMatrix(m_matModelToWorld);
+        }
+    }
 }

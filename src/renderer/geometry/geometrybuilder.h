@@ -22,6 +22,7 @@ namespace NS_RENDERER
 
         QMatrix4x4 modelToWorldMatrix() const;
         void setModelToWorldMatrix(const QMatrix4x4 &matrix);
+        void setAllSectionMatrices();
 
         // Export all data into buffers provided.
         void consolidate(QVector<float> &positions, QVector<float> normals,

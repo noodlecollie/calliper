@@ -198,4 +198,9 @@ namespace NS_RENDERER
             pass->removeBatchGroup(key.batchGroupKey());
         }
     }
+
+    void RenderModel::draw()
+    {
+        // TODO
+    }
 }
