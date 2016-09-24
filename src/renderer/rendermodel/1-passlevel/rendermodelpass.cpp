@@ -62,7 +62,7 @@ namespace NS_RENDERER
     {
         OpenGLShaderProgram* shaderProgram = (*m_pShaderFunctor)(key.shaderId());
 
-        RenderModelBatchGroupPointer batchGroup = RenderModelBatchGroupPointer::create(usagePattern, shaderProgram);
+        RenderModelBatchGroupPointer batchGroup = RenderModelBatchGroupPointer::create(key, usagePattern, shaderProgram);
         m_BatchGroups.insert(key, batchGroup);
         return batchGroup;
     }
@@ -106,11 +106,10 @@ namespace NS_RENDERER
         OpenGLShaderProgram* currentShaderProgram = NULL;
         OpenGLTexturePointer currentTexture;
 
-        // Go through the key list so we iterate over things in order.
-        foreach ( const RenderModelBatchGroupKey &key, m_BatchGroups.keys() )
+        foreach ( RenderModelBatchGroupPointer batchGroup, m_BatchGroups.values() )
         {
-            setIfRequired(key, currentShaderProgram, currentTexture);
-            m_BatchGroups.value(key)->drawAllBatches(currentShaderProgram);
+            setIfRequired(batchGroup->key(), currentShaderProgram, currentTexture);
+            batchGroup->drawAllBatches(currentShaderProgram);
         }
 
         changeShaderIfDifferent(currentShaderProgram, NULL);

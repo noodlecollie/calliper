@@ -4,8 +4,10 @@
 
 namespace NS_RENDERER
 {
-    RenderModelBatchGroup::RenderModelBatchGroup(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec)
-        : m_iUsagePattern(usagePattern), m_pShaderSpec(shaderSpec)
+    RenderModelBatchGroup::RenderModelBatchGroup(const RenderModelBatchGroupKey &key,
+                                                 QOpenGLBuffer::UsagePattern usagePattern,
+                                                 const IShaderSpec* shaderSpec)
+        : m_Key(key), m_iUsagePattern(usagePattern), m_pShaderSpec(shaderSpec)
     {
     }
 
@@ -183,5 +185,10 @@ namespace NS_RENDERER
         {
             (*it)->uploadIfRequired();
         }
+    }
+
+    const RenderModelBatchGroupKey& RenderModelBatchGroup::key() const
+    {
+        return m_Key;
     }
 }

@@ -12,16 +12,18 @@
 #include <QPair>
 #include "shaders/ishaderspec.h"
 #include <QOpenGLShaderProgram>
+#include "rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h"
 
 namespace NS_RENDERER
 {
     class RenderModelBatchGroup
     {
     public:
-        RenderModelBatchGroup(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec);
+        RenderModelBatchGroup(const RenderModelBatchGroupKey &key, QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec);
         ~RenderModelBatchGroup();
 
         QOpenGLBuffer::UsagePattern usagePattern() const;
+        const RenderModelBatchGroupKey& key() const;
 
         MatrixBatch* createMatrixBatch(const MatrixBatchKey &key);
         MatrixBatch* getMatrixBatch(const MatrixBatchKey &key) const;
@@ -50,6 +52,7 @@ namespace NS_RENDERER
 
         QHash<MatrixBatchKey, OpenGLBatchPointerIndex>   m_MatrixBatchMap;
 
+        const RenderModelBatchGroupKey m_Key;   // For convenience
         const QOpenGLBuffer::UsagePattern m_iUsagePattern;
         const IShaderSpec* m_pShaderSpec;
     };
