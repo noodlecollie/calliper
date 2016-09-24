@@ -1,12 +1,56 @@
 #include "rendermodelpass.h"
 #include <QtDebug>
 
+namespace
+{
+    void changeShaderIfDifferent(NS_RENDERER::OpenGLShaderProgram* &origShader,
+                                 NS_RENDERER::OpenGLShaderProgram* newShader)
+    {
+        if ( origShader == newShader )
+            return;
+
+        if ( origShader )
+        {
+            origShader->disableAttributeArrays();
+            origShader->release();
+        }
+
+        if ( newShader )
+        {
+            newShader->bind();
+            newShader->enableAttributeArrays();
+        }
+
+        origShader = newShader;
+    }
+
+    void changeTextureIfDifferent(NS_RENDERER::OpenGLTexturePointer &origTexture,
+                                  const NS_RENDERER::OpenGLTexturePointer &newTexture)
+    {
+        if ( origTexture == newTexture )
+            return;
+
+        if ( !origTexture.isNull() )
+        {
+            origTexture->release();
+        }
+
+        if ( !newTexture.isNull() )
+        {
+            newTexture->bind(0);
+        }
+
+        origTexture = newTexture;
+    }
+}
+
 namespace NS_RENDERER
 {
-    RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor)
-        : m_pShaderFunctor(shaderFunctor)
+    RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor should not be null!");
+        Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor should not be null!");
     }
 
     RenderModelPass::~RenderModelPass()
@@ -46,5 +90,30 @@ namespace NS_RENDERER
     void RenderModelPass::printDebugInfo() const
     {
         qDebug() << "Batch groups:" << m_BatchGroups.count();
+    }
+
+    void RenderModelPass::setIfRequired(const RenderModelBatchGroupKey &key, OpenGLShaderProgram *&shaderProgram, OpenGLTexturePointer &texture)
+    {
+        OpenGLShaderProgram* newShaderProgram = (*m_pShaderFunctor)(key.shaderId());
+        changeShaderIfDifferent(shaderProgram, newShaderProgram);
+
+        OpenGLTexturePointer newTexture = (*m_pTextureFunctor)(key.textureId());
+        changeTextureIfDifferent(texture, newTexture);
+    }
+
+    void RenderModelPass::drawAllBatchGroups()
+    {
+        OpenGLShaderProgram* currentShaderProgram = NULL;
+        OpenGLTexturePointer currentTexture;
+
+        // Go through the key list so we iterate over things in order.
+        foreach ( const RenderModelBatchGroupKey &key, m_BatchGroups.keys() )
+        {
+            setIfRequired(key, currentShaderProgram, currentTexture);
+            m_BatchGroups.value(key)->drawAllBatches(currentShaderProgram);
+        }
+
+        changeShaderIfDifferent(currentShaderProgram, NULL);
+        changeTextureIfDifferent(currentTexture, OpenGLTexturePointer());
     }
 }

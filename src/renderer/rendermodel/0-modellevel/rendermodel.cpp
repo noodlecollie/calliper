@@ -15,7 +15,7 @@ namespace NS_RENDERER
 
     RenderModel::RenderModelPassPointer RenderModel::createRenderPass(const RenderModelPassKey &key)
     {
-        RenderModelPassPointer pass = RenderModelPassPointer::create(m_pShaderFunctor);
+        RenderModelPassPointer pass = RenderModelPassPointer::create(m_pShaderFunctor, m_pTextureFunctor);
         m_RenderPasses.insert(key, pass);
         return pass;
     }

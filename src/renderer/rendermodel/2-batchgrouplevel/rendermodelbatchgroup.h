@@ -11,6 +11,7 @@
 #include "shaders/vertexformat.h"
 #include <QPair>
 #include "shaders/ishaderspec.h"
+#include <QOpenGLShaderProgram>
 
 namespace NS_RENDERER
 {
@@ -31,6 +32,8 @@ namespace NS_RENDERER
 
         void printDebugInfo() const;
 
+        void drawAllBatches(QOpenGLShaderProgram* shaderProgram);
+
     private:
         typedef QSharedPointer<OpenGLBatch> OpenGLBatchPointer;
         typedef QPair<OpenGLBatchPointer, int> OpenGLBatchPointerIndex;
@@ -39,6 +42,8 @@ namespace NS_RENDERER
         void setWaiting(const OpenGLBatchPointer &batch);
         static MatrixBatch* dereferenceGlBatchIndex(const OpenGLBatchPointerIndex &index);
         OpenGLBatchPointer getNextWaitingGlBatch();
+        void draw(QSet<OpenGLBatchPointer> &batches, QOpenGLShaderProgram* shaderProgram);
+        void ensureAllBatchesUploaded(QSet<OpenGLBatchPointer> &batches);
 
         QSet<OpenGLBatchPointer>  m_WaitingBatches; // Batches that have space for more matrices.
         QSet<OpenGLBatchPointer>  m_FullBatches;    // Batches that have no more space.

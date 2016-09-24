@@ -1,12 +1,12 @@
 #include "rendermodelbatchgroup.h"
 #include <QtDebug>
+#include "opengl/openglhelpers.h"
 
 namespace NS_RENDERER
 {
     RenderModelBatchGroup::RenderModelBatchGroup(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec)
         : m_iUsagePattern(usagePattern), m_pShaderSpec(shaderSpec)
     {
-
     }
 
     RenderModelBatchGroup::~RenderModelBatchGroup()
@@ -151,5 +151,37 @@ namespace NS_RENDERER
     int RenderModelBatchGroup::matrixBatchCount() const
     {
         return m_MatrixBatchMap.count();
+    }
+
+    void RenderModelBatchGroup::drawAllBatches(QOpenGLShaderProgram *shaderProgram)
+    {
+        ensureAllBatchesUploaded(m_WaitingBatches);
+
+        draw(m_WaitingBatches, shaderProgram);
+        draw(m_FullBatches, shaderProgram);
+    }
+
+    void RenderModelBatchGroup::draw(QSet<OpenGLBatchPointer> &batches, QOpenGLShaderProgram* shaderProgram)
+    {
+        typedef QSet<OpenGLBatchPointer> BatchSet;
+
+        for ( BatchSet::iterator it = batches.begin(); it != batches.end(); ++it )
+        {
+            OpenGLBatchPointer batch = *it;
+            batch->bindAll();
+            batch->setVertexAttributes(shaderProgram);
+            batch->draw();
+            batch->releaseAll();
+        }
+    }
+
+    void RenderModelBatchGroup::ensureAllBatchesUploaded(QSet<OpenGLBatchPointer> &batches)
+    {
+        typedef QSet<OpenGLBatchPointer> BatchSet;
+
+        for ( BatchSet::iterator it = batches.begin(); it != batches.end(); ++it )
+        {
+            (*it)->uploadIfRequired();
+        }
     }
 }

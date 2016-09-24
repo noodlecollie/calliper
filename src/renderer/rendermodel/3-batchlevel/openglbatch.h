@@ -8,6 +8,8 @@
 #include "general/fixedindexpool.h"
 #include "matrixbatch.h"
 #include "shaders/ishaderspec.h"
+#include <QOpenGLShaderProgram>
+#include "shaders/shaderdefs.h"
 
 namespace NS_RENDERER
 {
@@ -42,6 +44,11 @@ namespace NS_RENDERER
         void setNeedsUpload(bool needsUpload);
         void uploadIfRequired();
 
+        void setVertexAttributes(QOpenGLShaderProgram* shaderProgram) const;
+        void bindAll();
+        void draw();
+        void releaseAll();
+
     private:
         static inline quint32 maskFromNumberOfBits(int numBits)
         {
@@ -65,6 +72,9 @@ namespace NS_RENDERER
         void uploadIndices();
         void uploadUniforms();
         void calculateRequiredSizeOfBuffers();
+        void setAttributeBuffer(QOpenGLShaderProgram* shaderProgram,
+                                NS_RENDERER::ShaderDefs::VertexArrayAttribute att,
+                                int &offsetInBytes) const;
 
         const QOpenGLBuffer::UsagePattern m_iUsagePattern;
         bool m_bCreated;

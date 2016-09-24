@@ -1,5 +1,22 @@
 #include "openglbatch.h"
-#include "shaders/shaderdefs.h"
+#include "opengl/openglhelpers.h"
+
+namespace
+{
+    void trySetAttributeBuffer(QOpenGLShaderProgram *shaderProgram,
+                               int offsetInBytes,
+                               NS_RENDERER::ShaderDefs::VertexArrayAttribute attribute,
+                               int components)
+    {
+        if ( components > 0 )
+        {
+            shaderProgram->setAttributeBuffer(attribute,
+                                                 GL_FLOAT,
+                                                 offsetInBytes,
+                                                 components);
+        }
+    }
+}
 
 namespace NS_RENDERER
 {
@@ -217,5 +234,76 @@ namespace NS_RENDERER
             upload();
             setNeedsUpload(false);
         }
+    }
+
+    void OpenGLBatch::setVertexAttributes(QOpenGLShaderProgram *shaderProgram) const
+    {
+        int offset = 0;
+        setAttributeBuffer(shaderProgram, ShaderDefs::PositionAttribute, offset);
+        setAttributeBuffer(shaderProgram, ShaderDefs::NormalAttribute, offset);
+        setAttributeBuffer(shaderProgram, ShaderDefs::ColorAttribute, offset);
+        setAttributeBuffer(shaderProgram, ShaderDefs::TextureCoordinateAttribute, offset);
+    }
+
+    void OpenGLBatch::setAttributeBuffer(QOpenGLShaderProgram *shaderProgram, ShaderDefs::VertexArrayAttribute att, int &offsetInBytes) const
+    {
+        VertexFormat vertexFormat = m_pShaderSpec->vertexFormat();
+
+        switch (att)
+        {
+            case ShaderDefs::PositionAttribute:
+            {
+                trySetAttributeBuffer(shaderProgram, offsetInBytes, att, vertexFormat.positionComponents());
+                offsetInBytes += m_UploadMetadata.m_iPositionBytes;
+                break;
+            }
+
+            case ShaderDefs::NormalAttribute:
+            {
+                trySetAttributeBuffer(shaderProgram, offsetInBytes, att, vertexFormat.normalComponents());
+                offsetInBytes += m_UploadMetadata.m_iNormalBytes;
+                break;
+            }
+
+            case ShaderDefs::ColorAttribute:
+            {
+                trySetAttributeBuffer(shaderProgram, offsetInBytes, att, vertexFormat.colorComponents());
+                offsetInBytes += m_UploadMetadata.m_iColorBytes;
+                break;
+            }
+
+            case ShaderDefs::TextureCoordinateAttribute:
+            {
+                trySetAttributeBuffer(shaderProgram, offsetInBytes, att, vertexFormat.textureCoordinateComponents());
+                offsetInBytes += m_UploadMetadata.m_iTextureCoordinateBytes;
+                break;
+            }
+
+            default:
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unrecognised attribute type!");
+                break;
+            }
+        }
+    }
+
+    void OpenGLBatch::bindAll()
+    {
+        m_VertexBuffer.bind();
+        m_IndexBuffer.bind();
+        m_UniformBuffer.bind();
+    }
+
+    void OpenGLBatch::draw()
+    {
+        GL_CURRENT_F;
+        f->glDrawElements(GL_TRIANGLES, m_UploadMetadata.m_iIndexBytes / sizeof(quint32), GL_UNSIGNED_INT, (void*)0);
+    }
+
+    void OpenGLBatch::releaseAll()
+    {
+        m_VertexBuffer.release();
+        m_IndexBuffer.release();
+        m_UniformBuffer.release();
     }
 }
