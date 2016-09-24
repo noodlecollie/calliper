@@ -96,9 +96,6 @@ namespace NS_RENDERER
                                 batchItem->m_Colors,
                                 batchItem->m_TextureCoordinates,
                                 batchItem->m_Indices);
-
-            qDebug() << "Updated batch item:";
-            batchItem->printDebugInfo();
         }
     }
 
@@ -138,7 +135,6 @@ namespace NS_RENDERER
         {
             pass = createRenderPass(key.passKey());
         }
-        pass->printDebugInfo();
 
         // 2: Get the batch group.
         // At some point we'll probably want to deal with usage patterns too.
@@ -147,7 +143,6 @@ namespace NS_RENDERER
         {
             batchGroup = pass->createBatchGroup(key.batchGroupKey());
         }
-        batchGroup->printDebugInfo();
 
         // 3: Get the batch.
         MatrixBatch* matrixBatch = batchGroup->getMatrixBatch(key.matrixBatchKey());
@@ -155,7 +150,6 @@ namespace NS_RENDERER
         {
             matrixBatch = batchGroup->createMatrixBatch(key.matrixBatchKey());
         }
-        matrixBatch->printDebugInfo();
 
         // 4: Get the batch item.
         MatrixBatch::MatrixBatchItemPointer batchItem = matrixBatch->getItem(key.matrixBatchItemKey());
@@ -163,7 +157,6 @@ namespace NS_RENDERER
         {
             batchItem = matrixBatch->createItem(key.matrixBatchItemKey());
         }
-        batchItem->printDebugInfo();
 
         return batchItem;
     }

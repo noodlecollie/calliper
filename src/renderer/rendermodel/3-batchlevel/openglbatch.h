@@ -49,6 +49,9 @@ namespace NS_RENDERER
         void draw();
         void releaseAll();
 
+        void exportVertexData(QVector<float> &out);
+        void exportIndexData(QVector<quint32> &out);
+
     private:
         static inline quint32 maskFromNumberOfBits(int numBits)
         {

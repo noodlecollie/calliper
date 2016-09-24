@@ -106,6 +106,8 @@ namespace NS_RENDERER
         OpenGLShaderProgram* currentShaderProgram = NULL;
         OpenGLTexturePointer currentTexture;
 
+        qDebug() << "Number of batch groups:" << m_BatchGroups.count();
+
         foreach ( const RenderModelBatchGroupPointer &batchGroup, m_BatchGroups.values() )
         {
             setIfRequired(batchGroup->key(), currentShaderProgram, currentTexture);

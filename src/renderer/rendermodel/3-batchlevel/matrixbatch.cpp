@@ -26,6 +26,8 @@ namespace
         {
             indexBase[i] += indexDelta;
         }
+
+        indexDelta += data.count();
     }
 
     void copyItemDataIntoBuffer(const NS_RENDERER::MatrixBatch::MatrixBatchItemPointer &item, char* buffer, int size,

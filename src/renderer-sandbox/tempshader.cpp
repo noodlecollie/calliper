@@ -20,7 +20,7 @@ static const char *vertexShaderSource =
         "void main()\n"
         "{\n"
         "   uint id = uint(vPosition.z);\n"
-        "   gl_Position = projectionMatrix * worldToCameraMatrix * modelToWorldMatrices[id] * vec4(vPosition.xy, 0, 1);\n"
+        "   gl_Position = /*projectionMatrix * worldToCameraMatrix * modelToWorldMatrices[id] * */vec4(vPosition.xy, 0, 1);\n"
         "   fColour = vColour;\n"
         "   fTexCoord = vTexCoord;\n"
         "}\n"
@@ -34,7 +34,7 @@ static const char *fragmentShaderSource =
         "uniform sampler2D tex;\n"
         "void main()\n"
         "{\n"
-        "   color = texture(tex, fTexCoord) * fColour;\n"
+        "   color = /*texture(tex, fTexCoord) * fColour;*/vec4(1,0,0,1);\n"
         "}\n"
     ;
 

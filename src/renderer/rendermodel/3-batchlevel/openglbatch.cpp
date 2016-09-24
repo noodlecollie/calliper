@@ -16,6 +16,18 @@ namespace
                                                  components);
         }
     }
+
+    template<typename T>
+    void readBufferData(QOpenGLBuffer &buffer, QVector<T> &out)
+    {
+        if ( !buffer.isCreated() )
+            return;
+
+        buffer.bind();
+        out.resize(buffer.size() / sizeof(T));
+        memcpy(out.data(), buffer.map(QOpenGLBuffer::ReadOnly), buffer.size());
+        buffer.unmap();
+    }
 }
 
 namespace NS_RENDERER
@@ -298,6 +310,14 @@ namespace NS_RENDERER
     {
         GL_CURRENT_F;
         f->glDrawElements(GL_TRIANGLES, m_UploadMetadata.m_iIndexBytes / sizeof(quint32), GL_UNSIGNED_INT, (void*)0);
+
+        QVector<float> vData;
+        exportVertexData(vData);
+
+        QVector<quint32> iData;
+        exportIndexData(iData);
+
+        qDebug() << "Drew" << vData.count() << "vertex floats and" << iData.count() << "index ints.";
     }
 
     void OpenGLBatch::releaseAll()
@@ -305,5 +325,15 @@ namespace NS_RENDERER
         m_VertexBuffer.release();
         m_IndexBuffer.release();
         m_UniformBuffer.release();
+    }
+
+    void OpenGLBatch::exportVertexData(QVector<float> &out)
+    {
+        readBufferData<float>(m_VertexBuffer, out);
+    }
+
+    void OpenGLBatch::exportIndexData(QVector<quint32> &out)
+    {
+        readBufferData<quint32>(m_IndexBuffer, out);
     }
 }
