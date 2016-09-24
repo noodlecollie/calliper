@@ -201,7 +201,6 @@ namespace NS_RENDERER
 
     void RenderModel::draw()
     {
-        // Iterate by key so we draw in order.
         foreach ( const RenderModelPassPointer &pass, m_RenderPasses.values() )
         {
             pass->drawAllBatchGroups();

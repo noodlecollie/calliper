@@ -106,7 +106,7 @@ namespace NS_RENDERER
         OpenGLShaderProgram* currentShaderProgram = NULL;
         OpenGLTexturePointer currentTexture;
 
-        foreach ( RenderModelBatchGroupPointer batchGroup, m_BatchGroups.values() )
+        foreach ( const RenderModelBatchGroupPointer &batchGroup, m_BatchGroups.values() )
         {
             setIfRequired(batchGroup->key(), currentShaderProgram, currentTexture);
             batchGroup->drawAllBatches(currentShaderProgram);
