@@ -193,6 +193,8 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
+    Global::renderer()->draw();
+
     /*
     m_pRenderModel->debugDraw();
     */
