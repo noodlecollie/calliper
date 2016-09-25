@@ -115,9 +115,6 @@ namespace NS_RENDERER
     {
         m_WaitingBatches.remove(batch);
         m_FullBatches.insert(batch);
-
-        // Upload the data.
-        batch->uploadIfRequired();
     }
 
     void RenderModelBatchGroup::setWaiting(const OpenGLBatchPointer &batch)
@@ -158,6 +155,7 @@ namespace NS_RENDERER
     void RenderModelBatchGroup::drawAllBatches(QOpenGLShaderProgram *shaderProgram)
     {
         ensureAllBatchesUploaded(m_WaitingBatches);
+        ensureAllBatchesUploaded(m_FullBatches);
 
         draw(m_WaitingBatches, shaderProgram);
         draw(m_FullBatches, shaderProgram);
