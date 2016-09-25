@@ -105,20 +105,20 @@ void buildObjects()
             float yTrans = -1.0f + ((1.8f * (float)j)/9.0f);
             QMatrix4x4 trans = transMat(QVector2D(xTrans, yTrans));
             section.setModelToWorldMatrix(trans * scale);
-//            if ( i == 2 && j == 2 )
-//            {
-//                GeometryBuilder builder2(1,1, QMatrix4x4());
-//                GeometrySection& section2 = builder.currentSection();
-//                section2.addPositions(tri1.constData(), tri1.count(), 3);
-//                section2.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
-//                section2.add(GeometrySection::ColorAttribute, cols2, 12);
-//                section2.addIndexTriangle(indices[0], indices[1], indices[2]);
-//                renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder2));
-//            }
-//            else
-//            {
+            if ( i == 2 && j == 2 )
+            {
+                GeometryBuilder builder2(1,1, trans * scale);
+                GeometrySection& section2 = builder2.currentSection();
+                section2.addPositions(tri1.constData(), tri1.count(), 3);
+                section2.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
+                section2.add(GeometrySection::ColorAttribute, cols2, 12);
+                section2.addIndexTriangle(indices[0], indices[1], indices[2]);
+                renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder2));
+            }
+            else
+            {
                 renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder));
-//            }
+            }
         }
     }
 }
