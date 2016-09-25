@@ -2,8 +2,8 @@
 
 namespace NS_RENDERER
 {
-    DebugScreenSpaceShader::DebugScreenSpaceShader(QObject* parent)
-        : OpenGLShaderProgram(QString(staticMetaObject.className()).remove(NS_STR_RENDERER "::"), parent)
+    DebugScreenSpaceShader::DebugScreenSpaceShader(quint16 id, QObject* parent)
+        : OpenGLShaderProgram(id, QString(staticMetaObject.className()).remove(NS_STR_RENDERER "::"), parent)
     {
 
     }

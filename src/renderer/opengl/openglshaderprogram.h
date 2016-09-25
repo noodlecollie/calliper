@@ -9,9 +9,8 @@ namespace NS_RENDERER
 {
     class RENDERERSHARED_EXPORT OpenGLShaderProgram : public QOpenGLShaderProgram, public IShaderSpec
     {
-        friend class ShaderStore;
     public:
-        OpenGLShaderProgram(const QString &name, QObject* parent = 0);
+        OpenGLShaderProgram(quint16 id, const QString &name, QObject* parent = 0);
         virtual ~OpenGLShaderProgram();
 
         virtual void construct() = 0;
@@ -26,7 +25,7 @@ namespace NS_RENDERER
         quint16 shaderStoreId() const;
 
     private:
-        quint16 m_iShaderStoreId;
+        const quint16 m_iShaderStoreId;
         GLuint m_iGlobalShaderBlockIndex;
     };
 }

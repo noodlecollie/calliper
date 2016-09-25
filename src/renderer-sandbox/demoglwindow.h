@@ -9,6 +9,8 @@
 #include <QImage>
 #include <QOpenGLTexture>
 #include "rendermodel/1-passlevel/rendermodelpass.h"
+#include <QTimer>
+#include <QTime>
 
 class TempSpec;
 
@@ -33,6 +35,9 @@ private:
 
     TempSpec*   m_pTempSpec;
     QOpenGLTexture* m_pTexture;
+    QTimer m_Timer;
+    QTime m_FrameTime;
+    int m_iTris;
 };
 
 #endif // DEMOGLWINDOW_H

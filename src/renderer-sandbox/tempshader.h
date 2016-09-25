@@ -7,7 +7,7 @@ class TempShader : public NS_RENDERER::OpenGLShaderProgram
 {
     Q_OBJECT
 public:
-    TempShader(QObject* parent = 0);
+    TempShader(quint16 id, QObject* parent = 0);
     virtual ~TempShader();
 
     virtual void construct() override;

@@ -76,7 +76,7 @@ QMatrix4x4 scaleMat(const QVector2D &scale)
                       0,0,0,1);
 }
 
-void buildObjects()
+void buildObjects(int dim)
 {
     IRenderer* renderer = Global::renderer();
 
@@ -94,31 +94,18 @@ void buildObjects()
     section.add(GeometrySection::ColorAttribute, cols, 12);
     section.addIndexTriangle(indices[0], indices[1], indices[2]);
 
-    QMatrix4x4 scale = scaleMat(QVector2D(1.0f/5.0f, 1.0f/5.0f));
+    QMatrix4x4 scale = scaleMat(QVector2D(2.0f/(float)dim, 2.0f/(float)dim));
 
     quint32 id = 0;
-    for ( int i = 0; i < 10; i++ )
+    for ( int i = 0; i < dim; i++ )
     {
-        for ( int j = 0; j < 10; j++ )
+        for ( int j = 0; j < dim; j++ )
         {
-            float xTrans = -1.0f + ((1.8f * (float)i)/9.0f);
-            float yTrans = -1.0f + ((1.8f * (float)j)/9.0f);
+            float xTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)i)/(float)(dim-1));
+            float yTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)j)/(float)(dim-1));
             QMatrix4x4 trans = transMat(QVector2D(xTrans, yTrans));
             section.setModelToWorldMatrix(trans * scale);
-            if ( i == 2 && j == 2 )
-            {
-                GeometryBuilder builder2(1,1, trans * scale);
-                GeometrySection& section2 = builder2.currentSection();
-                section2.addPositions(tri1.constData(), tri1.count(), 3);
-                section2.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
-                section2.add(GeometrySection::ColorAttribute, cols2, 12);
-                section2.addIndexTriangle(indices[0], indices[1], indices[2]);
-                renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder2));
-            }
-            else
-            {
-                renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder));
-            }
+            renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder));
         }
     }
 }
@@ -127,6 +114,10 @@ DemoGLWindow::DemoGLWindow()
 {
     m_pTempSpec = NULL;
     m_pTexture = NULL;
+
+    m_Timer.setInterval((int)(10.0f/6.0f));
+    m_Timer.setSingleShot(false);
+    connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 DemoGLWindow::~DemoGLWindow()
@@ -164,7 +155,7 @@ void DemoGLWindow::initializeGL()
     GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
-    debugShader = new TempShader();
+    debugShader = new TempShader(1);
     debugShader->construct();
     debugShader->bind();
     GLuint blockIndex = f->glGetUniformBlockIndex(debugShader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
@@ -173,14 +164,18 @@ void DemoGLWindow::initializeGL()
 
     shaderFunctor = new ShaderFunctor();
     textureFunctor = new TextureFunctor();
-    debugTexture = OpenGLTexturePointer(new OpenGLTexture(QImage(":/obsolete.png").mirrored()));
+    debugTexture = OpenGLTexturePointer(new OpenGLTexture(1, QImage(":/obsolete.png").mirrored()));
 
     Global::initialise();
     IRenderer* renderer = Global::renderer();
     renderer->setShaderFunctor(shaderFunctor);
     renderer->setTextureFunctor(textureFunctor);
 
-    GLTRY(buildObjects());
+    m_iTris = 120;
+    GLTRY(buildObjects(m_iTris));
+
+    m_FrameTime = QTime::currentTime();
+    m_Timer.start();
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -190,6 +185,12 @@ void DemoGLWindow::resizeGL(int w, int h)
 
 void DemoGLWindow::paintGL()
 {
+    QTime curTime = QTime::currentTime();
+    int oldMs = m_FrameTime.msecsSinceStartOfDay();
+    int newMs = curTime.msecsSinceStartOfDay();
+    qDebug() << "FPS:" << (1000.0f/(float)(newMs - oldMs)) << "with" << (m_iTris * m_iTris) << "triangles";
+    m_FrameTime = curTime;
+
     GL_CURRENT_F;
 
     const qreal retinaScale = devicePixelRatio();

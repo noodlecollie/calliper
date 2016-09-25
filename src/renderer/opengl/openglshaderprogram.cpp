@@ -4,9 +4,10 @@
 
 namespace NS_RENDERER
 {
-    OpenGLShaderProgram::OpenGLShaderProgram(const QString &name, QObject* parent) : QOpenGLShaderProgram(parent),
-        m_iShaderStoreId(0), m_iGlobalShaderBlockIndex(GL_INVALID_INDEX)
+    OpenGLShaderProgram::OpenGLShaderProgram(quint16 id, const QString &name, QObject* parent) : QOpenGLShaderProgram(parent),
+        m_iShaderStoreId(id), m_iGlobalShaderBlockIndex(GL_INVALID_INDEX)
     {
+        Q_ASSERT_X(m_iShaderStoreId > 0, Q_FUNC_INFO, "ShaderID should not be zero!");
         setObjectName(name);
     }
 

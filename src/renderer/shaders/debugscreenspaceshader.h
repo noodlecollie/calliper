@@ -10,7 +10,7 @@ namespace NS_RENDERER
     {
         Q_OBJECT
     public:
-        DebugScreenSpaceShader(QObject* parent = 0);
+        DebugScreenSpaceShader(quint16 id, QObject* parent = 0);
         virtual ~DebugScreenSpaceShader();
 
         virtual void construct() override;

@@ -9,16 +9,16 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT OpenGLTexture : public QOpenGLTexture
     {
     public:
-        OpenGLTexture(QOpenGLTexture::Target target);
-        OpenGLTexture(const QImage &image, QOpenGLTexture::MipMapGeneration genMipMaps = GenerateMipMaps);
+        OpenGLTexture(quint32 id, QOpenGLTexture::Target target);
+        OpenGLTexture(quint32 id, const QImage &image, QOpenGLTexture::MipMapGeneration genMipMaps = GenerateMipMaps);
 
-        quint64 textureStoreId() const;
+        quint32 textureStoreId() const;
 
         QString path() const;
         void setPath(const QString &path);
 
     private:
-        quint64 m_iId;
+        quint32 m_iId;
         QString m_szPath;
     };
 }
