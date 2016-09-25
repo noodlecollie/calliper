@@ -27,6 +27,7 @@ namespace
         out.resize(buffer.size() / sizeof(T));
         memcpy(out.data(), buffer.map(QOpenGLBuffer::ReadOnly), buffer.size());
         buffer.unmap();
+        buffer.release();
     }
 }
 
@@ -36,7 +37,8 @@ namespace NS_RENDERER
         : m_iUsagePattern(usagePattern),
           m_bCreated(false),
           m_pShaderSpec(shaderSpec),
-          m_iObjectIdMask(maskFromNumberOfBits(bitsRequired(m_pShaderSpec->maxBatchedItems()))),
+          m_iMaskBitsRequired(bitsRequired(m_pShaderSpec->maxBatchedItems())),
+          m_iObjectIdMask(maskFromNumberOfBits(m_iMaskBitsRequired)),
           m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
           m_UniformBuffer(m_iUsagePattern),
@@ -123,18 +125,58 @@ namespace NS_RENDERER
 
         char* buffer = reinterpret_cast<char*>(m_VertexBuffer.map(QOpenGLBuffer::WriteOnly));
         int size = m_VertexBuffer.size();
-        int positionOffset = 0;
-        int normalOffset = 0;
-        int colorOffset = 0;
-        int texCoordOffset = 0;
-
-        foreach ( MatrixBatch* batch, m_MatrixBatches )
-        {
-            batch->copyVertexDataIntoBuffer(buffer, size, positionOffset, normalOffset, colorOffset, texCoordOffset);
-        }
+        copyAllVertexData(buffer, size);
 
         m_VertexBuffer.unmap();
         m_VertexBuffer.release();
+    }
+
+    void OpenGLBatch::copyAllVertexData(char* buffer, int size)
+    {
+        int offset = 0;
+
+        int positionOffset = offset;
+        offset += m_UploadMetadata.m_iPositionBytes;
+
+        int normalOffset = offset;
+        offset += m_UploadMetadata.m_iNormalBytes;
+
+        int colorOffset = offset;
+        offset += m_UploadMetadata.m_iColorBytes;
+
+        int texCoordOffset = offset;
+        offset += m_UploadMetadata.m_iTextureCoordinateBytes;
+
+        quint32 id = 0;
+        foreach ( MatrixBatch* batch, m_MatrixBatches )
+        {
+            int oldPositionOffset = positionOffset;
+            batch->copyVertexDataIntoBuffer(buffer, size, positionOffset, normalOffset, colorOffset, texCoordOffset);
+            updateObjectIds(buffer, oldPositionOffset, positionOffset - oldPositionOffset, id);
+            id++;
+        }
+    }
+
+    void OpenGLBatch::updateObjectIds(char *buffer, int offset, int numBytes, quint32 id)
+    {
+        int numFloats = numBytes / sizeof(float);
+        float* floatData = reinterpret_cast<float*>(buffer);
+        int numComponents = m_pShaderSpec->vertexFormat().positionComponents();
+        int floatOffset = offset / sizeof(float);
+
+        for ( int i = floatOffset; i < floatOffset + numFloats; i++ )
+        {
+            // Fast forward past the first components.
+            i += numComponents - 1;
+
+            // Set the last component using a mask.
+            // We bit shift down and then up again to set the
+            // lower bits to zero, then OR with the masked ID.
+            quint32 valAsInt = static_cast<quint32>(floatData[i]);
+            valAsInt = ((valAsInt >> m_iMaskBitsRequired) << m_iMaskBitsRequired) | (id & m_iObjectIdMask);
+            float f = static_cast<float>(valAsInt);
+            floatData[i] = f;
+        }
     }
 
     void OpenGLBatch::uploadIndices()

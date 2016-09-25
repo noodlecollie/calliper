@@ -78,10 +78,13 @@ namespace NS_RENDERER
         void setAttributeBuffer(QOpenGLShaderProgram* shaderProgram,
                                 NS_RENDERER::ShaderDefs::VertexArrayAttribute att,
                                 int &offsetInBytes) const;
+        void copyAllVertexData(char* buffer, int size);
+        void updateObjectIds(char* buffer, int offset, int numBytes, quint32 id);
 
         const QOpenGLBuffer::UsagePattern m_iUsagePattern;
         bool m_bCreated;
         const IShaderSpec* m_pShaderSpec;
+        const quint32 m_iMaskBitsRequired;
         const quint32 m_iObjectIdMask;
 
         QOpenGLBuffer       m_VertexBuffer;
