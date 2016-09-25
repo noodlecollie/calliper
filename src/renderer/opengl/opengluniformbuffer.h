@@ -27,10 +27,14 @@ namespace NS_RENDERER
         bool create();
         void destroy();
         bool isCreated() const;
+        int size() const;
 
         void allocate(const void* data, int count);
         void allocate(int count);
         void write(int offset, const void *data, int count);
+        void read(int offset, void *data, int count);
+        void* map(QOpenGLBuffer::Access access);
+        void unmap();
 
         // This should not be called after allocate() or write().
         QOpenGLBuffer::UsagePattern usagePattern() const;

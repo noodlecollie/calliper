@@ -112,6 +112,15 @@ namespace NS_RENDERER
         f->glBufferSubData(GL_UNIFORM_BUFFER, offset, count, data);
     }
 
+    void OpenGLUniformBuffer::read(int offset, void *data, int count)
+    {
+        Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
+
+        GL_CURRENT_F;
+
+        f->glGetBufferSubData(GL_UNIFORM_BUFFER, offset, count, data);
+    }
+
     bool OpenGLUniformBuffer::isCreated() const
     {
         return m_bCreated;
@@ -122,5 +131,34 @@ namespace NS_RENDERER
         GL_CURRENT_F;
 
         f->glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle);
+    }
+
+    int OpenGLUniformBuffer::size() const
+    {
+        Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
+
+        GL_CURRENT_F;
+
+        GLint value = -1;
+        f->glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &value);
+        return value;
+    }
+
+    void* OpenGLUniformBuffer::map(QOpenGLBuffer::Access access)
+    {
+        Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
+
+        GL_CURRENT_F;
+
+        return f->glMapBuffer(GL_UNIFORM_BUFFER, access);
+    }
+
+    void OpenGLUniformBuffer::unmap()
+    {
+        Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
+
+        GL_CURRENT_F;
+
+        f->glUnmapBuffer(GL_UNIFORM_BUFFER);
     }
 }
