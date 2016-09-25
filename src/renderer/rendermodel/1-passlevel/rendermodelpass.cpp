@@ -18,6 +18,8 @@ namespace
         if ( newShader )
         {
             newShader->bind();
+            newShader->setGlobalUniformBlockBinding();
+            newShader->setLocalUniformBlockBinding();
             newShader->enableAttributeArrays();
         }
 

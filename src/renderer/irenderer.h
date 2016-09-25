@@ -5,6 +5,7 @@
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
 #include "rendermodel/rendererinputobjectparams.h"
+#include "rendermodel/rendererdrawparams.h"
 
 namespace NS_RENDERER
 {
@@ -28,7 +29,7 @@ namespace NS_RENDERER
 
         virtual void updateObject(const RendererInputObjectParams &object) = 0;
 
-        virtual void draw() = 0;
+        virtual void draw(const RendererDrawParams &params) = 0;
     };
 
     namespace Global

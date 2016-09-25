@@ -34,7 +34,8 @@ SOURCES += \
     rendermodel/2-batchgrouplevel/rendermodelbatchgroup.cpp \
     global.cpp \
     rendermodel/rendererinputobjectparams.cpp \
-    rendermodel/0-modellevel/rendermodelkey.cpp
+    rendermodel/0-modellevel/rendermodelkey.cpp \
+    rendermodel/rendererdrawparams.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -64,7 +65,8 @@ HEADERS +=\
     rendermodel/3-batchlevel/openglbatch.h \
     rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h \
     rendermodel/rendererinputobjectparams.h \
-    rendermodel/0-modellevel/rendermodelkey.h
+    rendermodel/0-modellevel/rendermodelkey.h \
+    rendermodel/rendererdrawparams.h
 
 unix {
     target.path = /usr/lib

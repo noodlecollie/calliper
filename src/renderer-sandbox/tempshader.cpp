@@ -34,7 +34,7 @@ static const char *fragmentShaderSource =
         "uniform sampler2D tex;\n"
         "void main()\n"
         "{\n"
-        "   color = /*texture(tex, fTexCoord) * fColour;*/vec4(1,0,0,1);\n"
+        "   color = texture(tex, fTexCoord) * fColour;\n"
         "}\n"
     ;
 

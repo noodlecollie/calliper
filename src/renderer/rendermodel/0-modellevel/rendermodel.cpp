@@ -1,16 +1,28 @@
 #include "rendermodel.h"
 #include <QtDebug>
 
+namespace
+{
+    void copy(NS_RENDERER::OpenGLUniformBuffer &dest, const QMatrix4x4 &src, int &offset)
+    {
+        dest.write(offset, src.constData(), 16 * sizeof(float));
+        offset += 16 * sizeof(float);
+    }
+}
+
 namespace NS_RENDERER
 {
     RenderModel::RenderModel()
-        : m_pShaderFunctor(NULL), m_pTextureFunctor(NULL)
+        : m_pShaderFunctor(NULL), m_pTextureFunctor(NULL), m_DrawParams(),
+          m_GlobalUniformBuffer(QOpenGLBuffer::DynamicDraw), m_bUniformDataUploaded(false)
     {
+        m_GlobalUniformBuffer.create();
     }
 
     RenderModel::~RenderModel()
     {
         clearRenderPasses();
+        m_GlobalUniformBuffer.destroy();
     }
 
     RenderModel::RenderModelPassPointer RenderModel::createRenderPass(const RenderModelPassKey &key)
@@ -192,11 +204,41 @@ namespace NS_RENDERER
         }
     }
 
-    void RenderModel::draw()
+    void RenderModel::draw(const RendererDrawParams &params)
     {
+        if ( params != m_DrawParams )
+        {
+            m_DrawParams = params;
+            m_bUniformDataUploaded = false;
+        }
+
+        uploadGlobalUniformData();
+
         foreach ( const RenderModelPassPointer &pass, m_RenderPasses.values() )
         {
             pass->drawAllBatchGroups();
         }
+    }
+
+    void RenderModel::uploadGlobalUniformData()
+    {
+        if ( m_bUniformDataUploaded )
+            return;
+
+        m_GlobalUniformBuffer.bind();
+        m_GlobalUniformBuffer.allocate(m_DrawParams.size());
+        m_GlobalUniformBuffer.release();
+
+        m_GlobalUniformBuffer.bindToIndex(ShaderDefs::GlobalUniformBlockBindingPoint);
+
+        m_GlobalUniformBuffer.bind();
+        int offset = 0;
+
+        copy(m_GlobalUniformBuffer, m_DrawParams.worldToCameraMatrix(), offset);
+        copy(m_GlobalUniformBuffer, m_DrawParams.projectionMatrix(), offset);
+
+        m_GlobalUniformBuffer.release();
+
+        m_bUniformDataUploaded = true;
     }
 }
