@@ -154,11 +154,11 @@ namespace NS_RENDERER
 
     void RenderModelBatchGroup::drawAllBatches(QOpenGLShaderProgram *shaderProgram)
     {
-        ensureAllBatchesUploaded(m_WaitingBatches);
         ensureAllBatchesUploaded(m_FullBatches);
+        ensureAllBatchesUploaded(m_WaitingBatches);
 
-        draw(m_WaitingBatches, shaderProgram);
         draw(m_FullBatches, shaderProgram);
+        draw(m_WaitingBatches, shaderProgram);
     }
 
     void RenderModelBatchGroup::draw(QSet<OpenGLBatchPointer> &batches, QOpenGLShaderProgram* shaderProgram)

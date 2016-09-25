@@ -1,11 +1,14 @@
 #include "rendermodel.h"
 #include <QtDebug>
+#include "opengl/openglerrors.h"
 
 namespace
 {
     void copy(NS_RENDERER::OpenGLUniformBuffer &dest, const QMatrix4x4 &src, int &offset)
     {
-        dest.write(offset, src.constData(), 16 * sizeof(float));
+        using namespace NS_RENDERER;
+
+        GLTRY(dest.write(offset, src.constData(), 16 * sizeof(float)));
         offset += 16 * sizeof(float);
     }
 }
@@ -147,6 +150,7 @@ namespace NS_RENDERER
         {
             pass = createRenderPass(key.passKey());
         }
+        pass->printDebugInfo();
 
         // 2: Get the batch group.
         // At some point we'll probably want to deal with usage patterns too.
@@ -155,6 +159,7 @@ namespace NS_RENDERER
         {
             batchGroup = pass->createBatchGroup(key.batchGroupKey());
         }
+        batchGroup->printDebugInfo();
 
         // 3: Get the batch.
         MatrixBatch* matrixBatch = batchGroup->getMatrixBatch(key.matrixBatchKey());
@@ -162,6 +167,7 @@ namespace NS_RENDERER
         {
             matrixBatch = batchGroup->createMatrixBatch(key.matrixBatchKey());
         }
+        matrixBatch->printDebugInfo();
 
         // 4: Get the batch item.
         MatrixBatch::MatrixBatchItemPointer batchItem = matrixBatch->getItem(key.matrixBatchItemKey());
@@ -169,6 +175,8 @@ namespace NS_RENDERER
         {
             batchItem = matrixBatch->createItem(key.matrixBatchItemKey());
         }
+        batchItem->printDebugInfo();
+        qDebug() << "\n";
 
         return batchItem;
     }
@@ -225,19 +233,19 @@ namespace NS_RENDERER
         if ( m_bUniformDataUploaded )
             return;
 
-        m_GlobalUniformBuffer.bind();
-        m_GlobalUniformBuffer.allocate(m_DrawParams.size());
-        m_GlobalUniformBuffer.release();
+        GLTRY(m_GlobalUniformBuffer.bind());
+        GLTRY(m_GlobalUniformBuffer.allocate(m_DrawParams.size()));
+        GLTRY(m_GlobalUniformBuffer.release());
 
-        m_GlobalUniformBuffer.bindToIndex(ShaderDefs::GlobalUniformBlockBindingPoint);
+        GLTRY(m_GlobalUniformBuffer.bindToIndex(ShaderDefs::GlobalUniformBlockBindingPoint));
 
-        m_GlobalUniformBuffer.bind();
+        GLTRY(m_GlobalUniformBuffer.bind());
         int offset = 0;
 
         copy(m_GlobalUniformBuffer, m_DrawParams.worldToCameraMatrix(), offset);
         copy(m_GlobalUniformBuffer, m_DrawParams.projectionMatrix(), offset);
 
-        m_GlobalUniformBuffer.release();
+        GLTRY(m_GlobalUniformBuffer.release());
 
         m_bUniformDataUploaded = true;
     }

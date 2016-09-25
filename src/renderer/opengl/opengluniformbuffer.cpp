@@ -1,5 +1,6 @@
 #include "opengluniformbuffer.h"
 #include "openglhelpers.h"
+#include "opengl/openglerrors.h"
 
 namespace NS_RENDERER
 {
@@ -36,7 +37,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glGenBuffers(1, &m_iHandle);
+        GLTRY(f->glGenBuffers(1, &m_iHandle));
 
         if ( m_iHandle == 0 )
             return false;
@@ -52,7 +53,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glDeleteBuffers(1, &m_iHandle);
+        GLTRY(f->glDeleteBuffers(1, &m_iHandle));
         m_bCreated = false;
     }
 
@@ -62,7 +63,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glBindBuffer(GL_UNIFORM_BUFFER, m_iHandle);
+        GLTRY(f->glBindBuffer(GL_UNIFORM_BUFFER, m_iHandle));
     }
 
     void OpenGLUniformBuffer::release()
@@ -71,7 +72,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        GLTRY(f->glBindBuffer(GL_UNIFORM_BUFFER, 0));
     }
 
     GLuint OpenGLUniformBuffer::bufferId() const
@@ -95,7 +96,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glBufferData(GL_UNIFORM_BUFFER, count, data, m_iUsagePattern);
+        GLTRY(f->glBufferData(GL_UNIFORM_BUFFER, count, data, m_iUsagePattern));
     }
 
     void OpenGLUniformBuffer::allocate(int count)
@@ -109,7 +110,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glBufferSubData(GL_UNIFORM_BUFFER, offset, count, data);
+        GLTRY(f->glBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
     }
 
     void OpenGLUniformBuffer::read(int offset, void *data, int count)
@@ -118,7 +119,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glGetBufferSubData(GL_UNIFORM_BUFFER, offset, count, data);
+        GLTRY(f->glGetBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
     }
 
     bool OpenGLUniformBuffer::isCreated() const
@@ -130,7 +131,8 @@ namespace NS_RENDERER
     {
         GL_CURRENT_F;
 
-        f->glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle);
+        GLTRY(f->glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle));
+        GLTRY(bind());
     }
 
     int OpenGLUniformBuffer::size() const
@@ -140,7 +142,7 @@ namespace NS_RENDERER
         GL_CURRENT_F;
 
         GLint value = -1;
-        f->glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &value);
+        GLTRY(f->glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &value));
         return value;
     }
 
@@ -150,7 +152,9 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        return f->glMapBuffer(GL_UNIFORM_BUFFER, access);
+        void* ret = NULL;
+        GLTRY(ret = f->glMapBuffer(GL_UNIFORM_BUFFER, access));
+        return ret;
     }
 
     void OpenGLUniformBuffer::unmap()
@@ -159,6 +163,6 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        f->glUnmapBuffer(GL_UNIFORM_BUFFER);
+        GLTRY(f->glUnmapBuffer(GL_UNIFORM_BUFFER));
     }
 }

@@ -60,12 +60,67 @@ QVector<float> triangle(const QVector2D min, const QVector2D max)
     return v;
 }
 
-QMatrix4x4 transMat(float x)
+QMatrix4x4 transMat(const QVector2D &trans)
 {
-    return QMatrix4x4(1,0,0,x,
-                      0,1,0,0,
+    return QMatrix4x4(1,0,0,trans.x(),
+                      0,1,0,trans.y(),
                       0,0,1,0,
                       0,0,0,1);
+}
+
+QMatrix4x4 scaleMat(const QVector2D &scale)
+{
+    return QMatrix4x4(scale.x(),0,0,0,
+                      0,scale.y(),0,0,
+                      0,0,1,0,
+                      0,0,0,1);
+}
+
+void buildObjects()
+{
+    IRenderer* renderer = Global::renderer();
+
+    QVector<float> tri1 = triangle(QVector2D(0, 0), QVector2D(1, 1));
+
+    GLfloat cols[] = { 0,1,1,1, 1,0,1,1, 1,1,0,1 };
+    GLfloat cols2[] = { 1,0,0,1, 1,0,0,1, 1,0,0,1 };
+    GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
+    GLuint indices[] = { 0,1,2 };
+
+    GeometryBuilder builder(1,1, QMatrix4x4());
+    GeometrySection& section = builder.currentSection();
+    section.addPositions(tri1.constData(), tri1.count(), 3);
+    section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
+    section.add(GeometrySection::ColorAttribute, cols, 12);
+    section.addIndexTriangle(indices[0], indices[1], indices[2]);
+
+    QMatrix4x4 scale = scaleMat(QVector2D(1.0f/5.0f, 1.0f/5.0f));
+
+    quint32 id = 0;
+    for ( int i = 0; i < 10; i++ )
+    {
+        for ( int j = 0; j < 10; j++ )
+        {
+            float xTrans = -1.0f + ((1.8f * (float)i)/9.0f);
+            float yTrans = -1.0f + ((1.8f * (float)j)/9.0f);
+            QMatrix4x4 trans = transMat(QVector2D(xTrans, yTrans));
+            section.setModelToWorldMatrix(trans * scale);
+//            if ( i == 2 && j == 2 )
+//            {
+//                GeometryBuilder builder2(1,1, QMatrix4x4());
+//                GeometrySection& section2 = builder.currentSection();
+//                section2.addPositions(tri1.constData(), tri1.count(), 3);
+//                section2.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
+//                section2.add(GeometrySection::ColorAttribute, cols2, 12);
+//                section2.addIndexTriangle(indices[0], indices[1], indices[2]);
+//                renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder2));
+//            }
+//            else
+//            {
+                renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder));
+//            }
+        }
+    }
 }
 
 DemoGLWindow::DemoGLWindow()
@@ -125,56 +180,7 @@ void DemoGLWindow::initializeGL()
     renderer->setShaderFunctor(shaderFunctor);
     renderer->setTextureFunctor(textureFunctor);
 
-    QVector<float> tri1 = triangle(QVector2D(-0.1f, -0.5f), QVector2D(0.1f, 0.5f));
-
-    GLfloat cols[] = { 0,1,1,1, 1,0,1,1, 1,1,0,1 };
-    GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
-    GLuint indices[] = { 0,1,2 };
-
-    GeometryBuilder builder(1,1, QMatrix4x4());
-    GeometrySection& section = builder.currentSection();
-    section.addPositions(tri1.constData(), tri1.count(), 3);
-    section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
-    section.add(GeometrySection::ColorAttribute, cols, 12);
-    section.addIndexTriangle(indices[0], indices[1], indices[2]);
-
-    section.setModelToWorldMatrix(transMat(-0.7f));
-    renderer->updateObject(RendererInputObjectParams(0, IRenderer::PASS_GENERAL, builder));
-    section.setModelToWorldMatrix(transMat(-0.6f));
-    renderer->updateObject(RendererInputObjectParams(1, IRenderer::PASS_GENERAL, builder));
-    section.setModelToWorldMatrix(transMat(-0.5f));
-    renderer->updateObject(RendererInputObjectParams(2, IRenderer::PASS_GENERAL, builder));
-    section.setModelToWorldMatrix(transMat(-0.4f));
-    renderer->updateObject(RendererInputObjectParams(3, IRenderer::PASS_GENERAL, builder));
-    section.setModelToWorldMatrix(transMat(-0.3f));
-    renderer->updateObject(RendererInputObjectParams(4, IRenderer::PASS_GENERAL, builder));
-    section.setModelToWorldMatrix(transMat(-0.2f));
-    renderer->updateObject(RendererInputObjectParams(5, IRenderer::PASS_GENERAL, builder));
-    section.setModelToWorldMatrix(transMat(-0.1f));
-    renderer->updateObject(RendererInputObjectParams(6, IRenderer::PASS_GENERAL, builder));
-    section.setModelToWorldMatrix(transMat(0.0f));
-    renderer->updateObject(RendererInputObjectParams(7, IRenderer::PASS_GENERAL, builder));
-
-    /*
-    m_pRenderModel = new RenderModelPass(shaderFunctor, textureFunctor);
-    m_pRenderModel->create();
-    m_pRenderModel->setUsagePattern(QOpenGLBuffer::DynamicDraw);
-    m_pRenderModel->setAttributes(RenderModelPassAttributes(
-                QMatrix4x4(2,0,0,0, 0,2,0,0, 0,0,2,0, 0,0,0,1),
-                QMatrix4x4()
-                ));
-    m_pRenderModel->upload();
-
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.7f)), RenderModelBatchParams(builder.sections(), 0, transMat(-0.7f)));
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.6f)), RenderModelBatchParams(builder.sections(), 1, transMat(-0.6f)));
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.5f)), RenderModelBatchParams(builder.sections(), 2, transMat(-0.5f)));
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.4f)), RenderModelBatchParams(builder.sections(), 3, transMat(-0.4f)));
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.3f)), RenderModelBatchParams(builder.sections(), 4, transMat(-0.3f)));
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.2f)), RenderModelBatchParams(builder.sections(), 5, transMat(-0.2f)));
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(-0.1f)), RenderModelBatchParams(builder.sections(), 6, transMat(-0.1f)));
-    m_pRenderModel->addItem(RenderModelBatchKey(0,0,transMat(0.0f)), RenderModelBatchParams(builder.sections(), 7, transMat(0.0f)));
-    m_pRenderModel->debugUploadAll();
-    */
+    GLTRY(buildObjects());
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -193,11 +199,7 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
-    Global::renderer()->draw(RendererDrawParams());
-
-    /*
-    m_pRenderModel->debugDraw();
-    */
+    GLTRY(Global::renderer()->draw(RendererDrawParams()));
 
     GLTRY(f->glBindVertexArray(0));
 }

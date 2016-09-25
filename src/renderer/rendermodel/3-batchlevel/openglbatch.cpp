@@ -1,5 +1,6 @@
 #include "openglbatch.h"
 #include "opengl/openglhelpers.h"
+#include "opengl/openglerrors.h"
 
 namespace
 {
@@ -59,9 +60,9 @@ namespace NS_RENDERER
     {
         Q_ASSERT(shaderSpec);
 
-        m_VertexBuffer.setUsagePattern(m_iUsagePattern);
-        m_IndexBuffer.setUsagePattern(m_iUsagePattern);
-        m_UniformBuffer.setUsagePattern(m_iUsagePattern);
+        GLTRY(m_VertexBuffer.setUsagePattern(m_iUsagePattern));
+        GLTRY(m_IndexBuffer.setUsagePattern(m_iUsagePattern));
+        GLTRY(m_UniformBuffer.setUsagePattern(m_iUsagePattern));
     }
 
     OpenGLBatch::~OpenGLBatch()
@@ -75,10 +76,10 @@ namespace NS_RENDERER
         if ( m_bCreated )
             return;
 
-        m_bCreated =
-                m_VertexBuffer.create() &&
-                m_IndexBuffer.create() &&
-                m_UniformBuffer.create();
+        m_bCreated = true;
+        GLTRY(m_bCreated = m_bCreated && m_VertexBuffer.create());
+        GLTRY(m_bCreated = m_bCreated && m_IndexBuffer.create());
+        GLTRY(m_bCreated = m_bCreated && m_UniformBuffer.create());
     }
 
     void OpenGLBatch::destroy()
@@ -86,9 +87,9 @@ namespace NS_RENDERER
         if ( !m_bCreated )
             return;
 
-        m_VertexBuffer.destroy();
-        m_IndexBuffer.destroy();
-        m_UniformBuffer.destroy();
+        GLTRY(m_VertexBuffer.destroy());
+        GLTRY(m_IndexBuffer.destroy());
+        GLTRY(m_UniformBuffer.destroy());
 
         m_bCreated = false;
     }
@@ -133,15 +134,23 @@ namespace NS_RENDERER
 
     void OpenGLBatch::uploadVertices()
     {
-        m_VertexBuffer.bind();
-        m_VertexBuffer.allocate(m_UploadMetadata.totalVertexBytes());
+        bool successfulBind = false;
+        GLTRY(successfulBind = m_VertexBuffer.bind());
+        Q_ASSERT_X(successfulBind, Q_FUNC_INFO, "Could not bind vertex buffer");
 
-        char* buffer = reinterpret_cast<char*>(m_VertexBuffer.map(QOpenGLBuffer::WriteOnly));
-        int size = m_VertexBuffer.size();
+        GLTRY(m_VertexBuffer.allocate(m_UploadMetadata.totalVertexBytes()));
+
+        void* vBuffer = NULL;
+        GLTRY(vBuffer = m_VertexBuffer.map(QOpenGLBuffer::WriteOnly));
+        char* buffer = reinterpret_cast<char*>(vBuffer);
+
+        int size = 0;
+        GLTRY(size = m_VertexBuffer.size());
+
         copyAllVertexData(buffer, size);
 
-        m_VertexBuffer.unmap();
-        m_VertexBuffer.release();
+        GLTRY(m_VertexBuffer.unmap());
+        GLTRY(m_VertexBuffer.release());
     }
 
     void OpenGLBatch::copyAllVertexData(char* buffer, int size)
@@ -194,11 +203,19 @@ namespace NS_RENDERER
 
     void OpenGLBatch::uploadIndices()
     {
-        m_IndexBuffer.bind();
-        m_IndexBuffer.allocate(m_UploadMetadata.m_iIndexBytes);
+        bool successfulBind = false;
+        GLTRY(successfulBind = m_IndexBuffer.bind());
+        Q_ASSERT_X(successfulBind, Q_FUNC_INFO, "Could not bind index buffer");
 
-        char* buffer = reinterpret_cast<char*>(m_IndexBuffer.map(QOpenGLBuffer::WriteOnly));
-        int size = m_IndexBuffer.size();
+        GLTRY(m_IndexBuffer.allocate(m_UploadMetadata.m_iIndexBytes));
+
+        void* vBuffer = NULL;
+        GLTRY(vBuffer = m_IndexBuffer.map(QOpenGLBuffer::WriteOnly));
+        char* buffer = reinterpret_cast<char*>(vBuffer);
+
+        int size = 0;
+        GLTRY(size = m_IndexBuffer.size());
+
         int offset = 0;
         quint32 indexDelta = 0;
 
@@ -207,8 +224,8 @@ namespace NS_RENDERER
             batch->copyIndexDataIntoBuffer(buffer, size, indexDelta, offset);
         }
 
-        m_IndexBuffer.unmap();
-        m_IndexBuffer.release();
+        GLTRY(m_IndexBuffer.unmap());
+        GLTRY(m_IndexBuffer.release());
     }
 
     void OpenGLBatch::uploadUniforms()
@@ -216,22 +233,20 @@ namespace NS_RENDERER
         // Warning: The specific order of these commands may be important.
         // UBOs are finnicky.
 
-        m_UniformBuffer.bind();
-        m_UniformBuffer.allocate(m_pShaderSpec->maxBatchedItems() * 16 * sizeof(float));
-        m_UniformBuffer.release();
+        GLTRY(m_UniformBuffer.bind());
+        GLTRY(m_UniformBuffer.allocate(m_pShaderSpec->maxBatchedItems() * 16 * sizeof(float)));
+        GLTRY(m_UniformBuffer.release());
 
-        m_UniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint);
-
-        m_UniformBuffer.bind();
+        GLTRY(m_UniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint));
 
         int offset = 0;
         foreach ( MatrixBatch* batch, m_MatrixBatches )
         {
-            m_UniformBuffer.write(offset, batch->matrix().constData(), 16 * sizeof(float));
+            GLTRY(m_UniformBuffer.write(offset, batch->matrix().constData(), 16 * sizeof(float)));
             offset += 16 * sizeof(float);
         }
 
-        m_UniformBuffer.release();
+        GLTRY(m_UniformBuffer.release());
     }
 
     int OpenGLBatch::matrixBatchCount() const
@@ -356,15 +371,15 @@ namespace NS_RENDERER
 
     void OpenGLBatch::bindAll()
     {
-        m_VertexBuffer.bind();
-        m_IndexBuffer.bind();
-        m_UniformBuffer.bind();
+        GLTRY(m_VertexBuffer.bind());
+        GLTRY(m_IndexBuffer.bind());
+        GLTRY(m_UniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint));
     }
 
     void OpenGLBatch::draw()
     {
         GL_CURRENT_F;
-        f->glDrawElements(GL_TRIANGLES, m_UploadMetadata.m_iIndexBytes / sizeof(quint32), GL_UNSIGNED_INT, (void*)0);
+        GLTRY(f->glDrawElements(GL_TRIANGLES, m_UploadMetadata.m_iIndexBytes / sizeof(quint32), GL_UNSIGNED_INT, (void*)0));
     }
 
     void OpenGLBatch::releaseAll()
