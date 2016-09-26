@@ -50,7 +50,7 @@ namespace NS_MODEL
         return 0;
     }
 
-    NS_RENDERER::OpenGLShaderProgram ShaderStore::getShaderProgram(const QString &shaderName) const
+    NS_RENDERER::OpenGLShaderProgram* ShaderStore::getShaderProgram(const QString &shaderName) const
     {
         return getShaderProgram(getShaderId(shaderName));
     }

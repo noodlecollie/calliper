@@ -13,97 +13,103 @@ namespace NS_RENDERER
 
     RenderModelBatchGroup::~RenderModelBatchGroup()
     {
-        clearMatrixBatches();
+        clear();
     }
 
-    MatrixBatch* RenderModelBatchGroup::createMatrixBatch(const MatrixBatchKey &key)
+    RenderModelBatchGroup::MatrixBatchPointer RenderModelBatchGroup::createMatrixBatch(const MatrixBatchKey &key)
     {
-        // Get the GL batch that the matrix batch lives in.
-        OpenGLBatchPointerIndex batchIndex = m_MatrixBatchMap.value(key, OpenGLBatchPointerIndex(OpenGLBatchPointer(), -1));
+        // Try and get the matrix batch for this key.
+        MatrixBatchPointer matrixBatch = m_MatrixBatches.value(key, MatrixBatchPointer());
 
-        // If we got a valid batch, don't bother removing and re-adding.
-        // Just clear it out and return it.
-        if ( !batchIndex.first.isNull() )
+        // If it exists already, just clear it out.
+        if ( !matrixBatch.isNull() )
         {
-            MatrixBatch* matBatch = dereferenceGlBatchIndex(batchIndex);
-            matBatch->clearItems();
-            return matBatch;
+            matrixBatch->clearItems();
+        }
+        // Otherwise, we need to create it.
+        else
+        {
+            matrixBatch = MatrixBatchPointer::create(key.modelToWorldMatrix());
+            m_MatrixBatches.insert(key, matrixBatch);
         }
 
-        // If not, this means the key was not present in the map.
-        // In this case we need to create a new MatrixBatch in an appropriate OpenGL batch.
-        OpenGLBatchPointer glBatch = getNextWaitingGlBatch();
-        Q_ASSERT_X(!glBatch->matrixBatchLimitReached(), Q_FUNC_INFO, "OpenGLBatch returned did not have space for a new MatrixBatch!");
-
-        // Create the MatrixBatch and keep track of its index.
-        int matrixBatchIndex = glBatch->createMatrixBatch(key.modelToWorldMatrix());
-
-        // Move the OpenGL batch out of the waiting set if we need to.
-        if ( glBatch->matrixBatchLimitReached() )
+        // Check to see whether the matrix batch has been assigned an OpenGL batch.
+        // We do this regardless of whether we just had to create a new batch.
+        // If we didn't have to create one, it's still possible that it didn't belong
+        // to an OpenGL batch (it could have been set as hidden).
+        if ( !m_MatrixOpenGLMap.contains(key) )
         {
-            setFull(glBatch);
-            Q_ASSERT(m_FullBatches.contains(glBatch));
-            Q_ASSERT(!m_WaitingBatches.contains(glBatch));
+            // Get the next suitable OpenGL batch.
+            OpenGLBatchPointer glBatch = getNextWaitingGlBatch();
+            Q_ASSERT_X(!glBatch->matrixBatchLimitReached(), Q_FUNC_INFO,
+                       "OpenGLBatch returned did not have space for a new MatrixBatch!");
+
+            // Add the matrix batch.
+            glBatch->insertMatrixBatch(key, matrixBatch);
+
+            // Move the OpenGL batch out of the waiting set if we need to.
+            if ( glBatch->matrixBatchLimitReached() )
+            {
+                setFull(glBatch);
+                Q_ASSERT(m_FullBatches.contains(glBatch));
+                Q_ASSERT(!m_WaitingBatches.contains(glBatch));
+            }
+
+            // Make sure we've recorded this mapping.
+            m_MatrixOpenGLMap.insert(key, glBatch);
         }
 
-        // Store this mapping for later use.
-        m_MatrixBatchMap.insert(key, OpenGLBatchPointerIndex(glBatch, matrixBatchIndex));
-
-        // Return the actual MatrixBatch.
-        return glBatch->matrixBatchAt(matrixBatchIndex);
+        return matrixBatch;
     }
 
     void RenderModelBatchGroup::removeMatrixBatch(const MatrixBatchKey &key)
     {
         // If this key isn't stored by us, forget it.
-        if ( !m_MatrixBatchMap.contains(key) )
+        if ( !m_MatrixBatches.contains(key) )
             return;
 
-        // Destroy the matrix batch.
-        OpenGLBatchPointerIndex batchIndex = m_MatrixBatchMap.take(key);
-        OpenGLBatchPointer& glBatch = batchIndex.first;
-        glBatch->destroyMatrixBatch(batchIndex.second);
-
-        // Update the waiting/full sets.
-        if ( m_FullBatches.contains(glBatch) )
+        // See if it belongs to an OpenGL batch and remove it if so.
+        OpenGLBatchPointer glBatch = m_MatrixOpenGLMap.value(key, OpenGLBatchPointer());
+        if ( !glBatch.isNull() )
         {
-            setWaiting(glBatch);
-            Q_ASSERT(!m_FullBatches.contains(glBatch));
-            Q_ASSERT(m_WaitingBatches.contains(glBatch));
-        }
+            glBatch->removeMatrixBatch(key);
 
-        // If the GlBatch is now completely empty, destroy it.
-        // This would be called on destruction, but it's probably
-        // safer to explicitly do it ourselves.
-        if ( glBatch->matrixBatchCount() < 1 )
-        {
-            m_WaitingBatches.remove(glBatch);
-            Q_ASSERT(!m_FullBatches.contains(glBatch));
-            Q_ASSERT(!m_WaitingBatches.contains(glBatch));
-            glBatch->destroy();
+            if ( m_FullBatches.contains(glBatch) )
+            {
+                setWaiting(glBatch);
+                Q_ASSERT(!m_FullBatches.contains(glBatch));
+                Q_ASSERT(m_WaitingBatches.contains(glBatch));
+            }
+
+            // If the GlBatch is now completely empty, destroy it.
+            // This would be called on destruction, but it's probably
+            // safer to explicitly do it ourselves.
+            if ( glBatch->matrixBatchCount() < 1 )
+            {
+                m_WaitingBatches.remove(glBatch);
+                Q_ASSERT(!m_FullBatches.contains(glBatch));
+                Q_ASSERT(!m_WaitingBatches.contains(glBatch));
+                glBatch->destroy();
+            }
         }
     }
 
     bool RenderModelBatchGroup::containsMatrixBatch(const MatrixBatchKey &key) const
     {
-        return m_MatrixBatchMap.contains(key);
+        return m_MatrixBatches.contains(key);
     }
 
-    MatrixBatch* RenderModelBatchGroup::getMatrixBatch(const MatrixBatchKey &key) const
+    RenderModelBatchGroup::MatrixBatchPointer RenderModelBatchGroup::getMatrixBatch(const MatrixBatchKey &key) const
     {
-        OpenGLBatchPointerIndex batchIndex = m_MatrixBatchMap.value(key, OpenGLBatchPointerIndex(OpenGLBatchPointer(), -1));
-        if ( batchIndex.first.isNull() )
-            return NULL;
-
-        return dereferenceGlBatchIndex(batchIndex);
+        return m_MatrixBatches.value(key, MatrixBatchPointer());
     }
 
-    void RenderModelBatchGroup::clearMatrixBatches()
+    void RenderModelBatchGroup::clear()
     {
-        // All the QSharedPointers should take care of the destruction.
-        m_MatrixBatchMap.clear();
         m_WaitingBatches.clear();
         m_FullBatches.clear();
+        m_MatrixOpenGLMap.clear();
+        m_MatrixBatches.clear();
     }
 
     QOpenGLBuffer::UsagePattern RenderModelBatchGroup::usagePattern() const
@@ -123,11 +129,6 @@ namespace NS_RENDERER
         m_WaitingBatches.insert(batch);
     }
 
-    MatrixBatch* RenderModelBatchGroup::dereferenceGlBatchIndex(const OpenGLBatchPointerIndex &index)
-    {
-        return index.first->matrixBatchAt(index.second);
-    }
-
     RenderModelBatchGroup::OpenGLBatchPointer RenderModelBatchGroup::getNextWaitingGlBatch()
     {
         if ( m_WaitingBatches.isEmpty() )
@@ -142,14 +143,15 @@ namespace NS_RENDERER
 
     void RenderModelBatchGroup::printDebugInfo() const
     {
-        qDebug() << "Matrix batches:" << m_MatrixBatchMap.count()
+        qDebug() << "Matrix batches:" << m_MatrixBatches.count()
                  << "Full OpenGL batches:" << m_FullBatches.count()
-                 << "Waiting OpenGL batches:" << m_WaitingBatches.count();
+                 << "Waiting OpenGL batches:" << m_WaitingBatches.count()
+                 << "Matrix batches in use:" << m_MatrixOpenGLMap.count();
     }
 
     int RenderModelBatchGroup::matrixBatchCount() const
     {
-        return m_MatrixBatchMap.count();
+        return m_MatrixBatches.count();
     }
 
     void RenderModelBatchGroup::drawAllBatches(QOpenGLShaderProgram *shaderProgram)
@@ -188,5 +190,10 @@ namespace NS_RENDERER
     const RenderModelBatchGroupKey& RenderModelBatchGroup::key() const
     {
         return m_Key;
+    }
+
+    bool RenderModelBatchGroup::matrixBatchIsMemberOfOpenGLBatch(const MatrixBatchKey &key) const
+    {
+        return m_MatrixOpenGLMap.contains(key);
     }
 }

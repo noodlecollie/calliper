@@ -10,12 +10,16 @@
 #include "shaders/ishaderspec.h"
 #include <QOpenGLShaderProgram>
 #include "shaders/shaderdefs.h"
+#include "matrixbatch.h"
+#include "rendermodel/3-batchlevel/matrixbatchkey.h"
 
 namespace NS_RENDERER
 {
     class OpenGLBatch
     {
     public:
+        typedef QSharedPointer<MatrixBatch> MatrixBatchPointer;
+
         OpenGLBatch(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec);
         ~OpenGLBatch();
 
@@ -31,11 +35,11 @@ namespace NS_RENDERER
 
         QOpenGLBuffer::UsagePattern usagePattern() const;
 
-        int createMatrixBatch(const QMatrix4x4 &mat);
-        void destroyMatrixBatch(int index);
+        void insertMatrixBatch(const MatrixBatchKey &key, const MatrixBatchPointer& batch);
+        void removeMatrixBatch(const MatrixBatchKey &key);
         int matrixBatchCount() const;
         bool matrixBatchLimitReached() const;
-        MatrixBatch* matrixBatchAt(int index) const;
+        MatrixBatchPointer matrixBatchAt(const MatrixBatchKey &key) const;
         void clearMatrixBatches();
 
         // The state of this flag must be managed externally.
@@ -92,7 +96,7 @@ namespace NS_RENDERER
         QOpenGLBuffer       m_IndexBuffer;
         OpenGLUniformBuffer m_UniformBuffer;
         bool                m_bNeedsUpload;
-        QList<MatrixBatch*> m_MatrixBatches;
+        QHash<MatrixBatchKey, MatrixBatchPointer>   m_MatrixBatchTable;
         MatrixBatchItemMetadata m_UploadMetadata;
     };
 }

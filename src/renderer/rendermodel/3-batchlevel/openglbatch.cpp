@@ -170,7 +170,7 @@ namespace NS_RENDERER
         offset += m_UploadMetadata.m_iTextureCoordinateBytes;
 
         quint32 id = 0;
-        foreach ( MatrixBatch* batch, m_MatrixBatches )
+        foreach ( const MatrixBatchPointer& batch, m_MatrixBatchTable )
         {
             int oldPositionOffset = positionOffset;
             batch->copyVertexDataIntoBuffer(buffer, size, positionOffset, normalOffset, colorOffset, texCoordOffset);
@@ -219,7 +219,7 @@ namespace NS_RENDERER
         int offset = 0;
         quint32 indexDelta = 0;
 
-        foreach ( MatrixBatch* batch, m_MatrixBatches )
+        foreach ( const MatrixBatchPointer& batch, m_MatrixBatchTable.values() )
         {
             batch->copyIndexDataIntoBuffer(buffer, size, indexDelta, offset);
         }
@@ -240,7 +240,7 @@ namespace NS_RENDERER
         GLTRY(m_UniformBuffer.bindToIndex(ShaderDefs::LocalUniformBlockBindingPoint));
 
         int offset = 0;
-        foreach ( MatrixBatch* batch, m_MatrixBatches )
+        foreach ( const MatrixBatchPointer& batch, m_MatrixBatchTable.values() )
         {
             GLTRY(m_UniformBuffer.write(offset, batch->matrix().constData(), 16 * sizeof(float)));
             offset += 16 * sizeof(float);
@@ -251,7 +251,7 @@ namespace NS_RENDERER
 
     int OpenGLBatch::matrixBatchCount() const
     {
-        return m_MatrixBatches.count();
+        return m_MatrixBatchTable.count();
     }
 
     bool OpenGLBatch::matrixBatchLimitReached() const
@@ -259,41 +259,36 @@ namespace NS_RENDERER
         return matrixBatchCount() >= batchSize();
     }
 
-    int OpenGLBatch::createMatrixBatch(const QMatrix4x4 &mat)
+    void OpenGLBatch::insertMatrixBatch(const MatrixBatchKey &key, const MatrixBatchPointer& batch)
     {
         Q_ASSERT_X(!matrixBatchLimitReached(), Q_FUNC_INFO, "No more space to add matrix batches!");
 
         if ( matrixBatchLimitReached() )
-            return -1;
-
-        m_MatrixBatches.append(new MatrixBatch(mat));
-        return m_MatrixBatches.count() - 1;
-    }
-
-    void OpenGLBatch::destroyMatrixBatch(int index)
-    {
-        if ( index < 0 || index >= m_MatrixBatches.count() )
             return;
 
-        delete m_MatrixBatches.takeAt(index);
+        m_MatrixBatchTable.insert(key, batch);
     }
 
-    MatrixBatch* OpenGLBatch::matrixBatchAt(int index) const
+    void OpenGLBatch::removeMatrixBatch(const MatrixBatchKey &key)
     {
-        return m_MatrixBatches.at(index);
+        m_MatrixBatchTable.remove(key);
+    }
+
+    OpenGLBatch::MatrixBatchPointer OpenGLBatch::matrixBatchAt(const MatrixBatchKey &key) const
+    {
+        return m_MatrixBatchTable.value(key, MatrixBatchPointer());
     }
 
     void OpenGLBatch::clearMatrixBatches()
     {
-        qDeleteAll(m_MatrixBatches);
-        m_MatrixBatches.clear();
+        m_MatrixBatchTable.clear();
     }
 
     void OpenGLBatch::calculateRequiredSizeOfBuffers()
     {
         m_UploadMetadata.reset();
 
-        foreach ( MatrixBatch* matBatch, m_MatrixBatches )
+        foreach ( const MatrixBatchPointer& matBatch, m_MatrixBatchTable.values() )
         {
             m_UploadMetadata += matBatch->buildItemMetadata();
         }

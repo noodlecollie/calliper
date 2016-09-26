@@ -46,7 +46,7 @@ namespace NS_RENDERER
         bool getModelItems(const RenderModelKey &key,
                            RenderModelPassPointer &pass,
                            RenderModelPass::RenderModelBatchGroupPointer &batchGroup,
-                           MatrixBatch* &matrixBatch,
+                           RenderModelBatchGroup::MatrixBatchPointer &matrixBatch,
                            MatrixBatch::MatrixBatchItemPointer &batchItem) const;
 
         IShaderRetrievalFunctor*    m_pShaderFunctor;

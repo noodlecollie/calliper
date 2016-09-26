@@ -126,7 +126,7 @@ namespace NS_RENDERER
     bool RenderModel::getModelItems(const RenderModelKey &key,
                                     RenderModelPassPointer &pass,
                                     RenderModelPass::RenderModelBatchGroupPointer &batchGroup,
-                                    MatrixBatch *&matrixBatch,
+                                    RenderModelBatchGroup::MatrixBatchPointer &matrixBatch,
                                     MatrixBatch::MatrixBatchItemPointer &batchItem) const
     {
         pass = getRenderPass(key.passKey());
@@ -142,7 +142,7 @@ namespace NS_RENDERER
         }
 
         matrixBatch = batchGroup->getMatrixBatch(key.matrixBatchKey());
-        if ( !matrixBatch )
+        if ( matrixBatch.isNull() )
         {
             return false;
         }
@@ -169,8 +169,8 @@ namespace NS_RENDERER
         }
 
         // 3: Get the batch.
-        MatrixBatch* matrixBatch = batchGroup->getMatrixBatch(key.matrixBatchKey());
-        if ( !matrixBatch )
+        RenderModelBatchGroup::MatrixBatchPointer matrixBatch = batchGroup->getMatrixBatch(key.matrixBatchKey());
+        if ( matrixBatch.isNull() )
         {
             matrixBatch = batchGroup->createMatrixBatch(key.matrixBatchKey());
         }
@@ -194,7 +194,7 @@ namespace NS_RENDERER
     {
         RenderModelPassPointer pass;
         RenderModelPass::RenderModelBatchGroupPointer batchGroup;
-        MatrixBatch* matrixBatch = NULL;
+        RenderModelBatchGroup::MatrixBatchPointer matrixBatch;
         MatrixBatch::MatrixBatchItemPointer batchItem;
 
         if ( !getModelItems(key, pass, batchGroup, matrixBatch, batchItem) )
