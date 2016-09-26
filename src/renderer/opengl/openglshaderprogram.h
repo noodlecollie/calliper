@@ -10,6 +10,7 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT OpenGLShaderProgram : public QOpenGLShaderProgram, public IShaderSpec
     {
     public:
+        // Subclasses should have a constructor which takes a quint16 ID and a default parent argument.
         OpenGLShaderProgram(quint16 id, const QString &name, QObject* parent = 0);
         virtual ~OpenGLShaderProgram();
 
