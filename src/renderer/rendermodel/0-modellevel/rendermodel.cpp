@@ -77,14 +77,11 @@ namespace NS_RENDERER
 
     void RenderModel::updateObject(const RendererInputObjectParams &object)
     {
-        if ( m_StoredObjects.contains(object.objectId()) )
-        {
-            RenderModelKeyListPointer keysForObject = m_StoredObjects.take(object.objectId());
-            foreach ( const RenderModelKey &key, *keysForObject.data() )
-            {
-                cleanMatrixBatchItem(key);
-            }
-        }
+        // This could be optimised by checking whether any keys matched
+        // the ones incoming in this update, and only clearing (not
+        // removing) entries for the ones that match.
+        // For now, we just remove any previous entries.
+        removeObject(object.objectId());
 
         RenderModelPassKey passKey(object.passIndex());
         MatrixBatchItemKey batchItemKey(object.objectId());
@@ -111,6 +108,18 @@ namespace NS_RENDERER
                                 batchItem->m_Colors,
                                 batchItem->m_TextureCoordinates,
                                 batchItem->m_Indices);
+        }
+    }
+
+    void RenderModel::removeObject(quint32 objectId)
+    {
+        if ( m_StoredObjects.contains(objectId) )
+        {
+            RenderModelKeyListPointer keysForObject = m_StoredObjects.take(objectId);
+            foreach ( const RenderModelKey &key, *keysForObject.data() )
+            {
+                cleanMatrixBatchItem(key);
+            }
         }
     }
 

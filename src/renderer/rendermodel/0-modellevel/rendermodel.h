@@ -24,6 +24,7 @@ namespace NS_RENDERER
         virtual void setTextureFunctor(ITextureRetrievalFunctor *functor) override;
 
         virtual void updateObject(const RendererInputObjectParams &object) override;
+        virtual void removeObject(quint32 objectId) override;
 
         virtual void draw(const RendererDrawParams &params) override;
 
