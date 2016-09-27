@@ -31,6 +31,11 @@ namespace NS_RENDERER
         memset(this, 0, sizeof(MatrixBatchItemMetadata));
     }
 
+    MatrixBatchItem::MatrixBatchItem()
+    {
+
+    }
+
     void MatrixBatchItem::clear()
     {
         m_Positions.clear();

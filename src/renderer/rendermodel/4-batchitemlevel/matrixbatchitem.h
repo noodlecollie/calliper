@@ -38,6 +38,8 @@ namespace NS_RENDERER
     class MatrixBatchItem
     {
     public:
+        MatrixBatchItem();
+
         QVector<float>      m_Positions;
         QVector<float>      m_Normals;
         QVector<float>      m_Colors;

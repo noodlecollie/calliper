@@ -6,6 +6,7 @@
 #include "functors/itextureretrievalfunctor.h"
 #include "rendermodel/rendererinputobjectparams.h"
 #include "rendermodel/rendererdrawparams.h"
+#include "rendermodel/rendererobjectflags.h"
 
 namespace NS_RENDERER
 {
@@ -13,13 +14,6 @@ namespace NS_RENDERER
     {
     public:
         virtual ~IRenderer() {}
-
-        enum RenderPasses
-        {
-            PASS_GENERAL,   // Standard, opaque objects.
-
-            TOTAL_RENDER_PASSES
-        };
 
         virtual IShaderRetrievalFunctor* shaderFunctor() = 0;
         virtual void setShaderFunctor(IShaderRetrievalFunctor* functor) = 0;
@@ -31,6 +25,11 @@ namespace NS_RENDERER
         virtual void removeObject(quint32 objectId) = 0;
 
         virtual void draw(const RendererDrawParams &params) = 0;
+
+        // These are set using bitwise OR, not just assignment.
+        virtual void setObjectFlags(quint32 objectId, quint32 flags) = 0;
+        virtual void clearObjectFlags(quint32 objectId, quint32 flags) = 0;
+        virtual quint32 getObjectFlags(quint32 objectId) const = 0;
     };
 
     namespace Global

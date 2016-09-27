@@ -1,6 +1,7 @@
 #include "rendermodel.h"
 #include <QtDebug>
 #include "opengl/openglerrors.h"
+#include "rendermodel/rendererobjectflags.h"
 
 namespace
 {
@@ -109,6 +110,8 @@ namespace NS_RENDERER
                                 batchItem->m_TextureCoordinates,
                                 batchItem->m_Indices);
         }
+
+        m_ObjectFlags.insert(object.objectId(), NoObjectFlag);
     }
 
     void RenderModel::removeObject(quint32 objectId)
@@ -121,6 +124,8 @@ namespace NS_RENDERER
                 cleanMatrixBatchItem(key);
             }
         }
+
+        m_ObjectFlags.remove(objectId);
     }
 
     bool RenderModel::getModelItems(const RenderModelKey &key,
@@ -252,5 +257,28 @@ namespace NS_RENDERER
         GLTRY(m_GlobalUniformBuffer.release());
 
         m_bUniformDataUploaded = true;
+    }
+
+    void RenderModel::setObjectFlags(quint32 objectId, quint32 flags)
+    {
+        quint32 objFlags = m_ObjectFlags.value(objectId, NoObjectFlag);
+        objFlags |= flags;
+        m_ObjectFlags.insert(objectId, objFlags);
+
+        // TODO: Process what flags were set.
+    }
+
+    void RenderModel::clearObjectFlags(quint32 objectId, quint32 flags)
+    {
+        quint32 objFlags = m_ObjectFlags.value(objectId, NoObjectFlag);
+        objFlags &= ~flags;
+        m_ObjectFlags.insert(objectId, objFlags);
+
+        // TODO: Process what flags were unset.
+    }
+
+    quint32 RenderModel::getObjectFlags(quint32 objectId) const
+    {
+        return m_ObjectFlags.value(objectId, NoObjectFlag);
     }
 }

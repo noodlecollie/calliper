@@ -28,6 +28,10 @@ namespace NS_RENDERER
 
         virtual void draw(const RendererDrawParams &params) override;
 
+        virtual void setObjectFlags(quint32 objectId, quint32 flags) override;
+        virtual void clearObjectFlags(quint32 objectId, quint32 flags) override;
+        virtual quint32 getObjectFlags(quint32 objectId) const override;
+
         void printDebugInfo() const;
 
     private:
@@ -58,6 +62,7 @@ namespace NS_RENDERER
 
         QMap<RenderModelPassKey, RenderModelPassPointer>   m_RenderPasses;
         QHash<quint32, RenderModelKeyListPointer> m_StoredObjects;
+        QHash<quint32, quint32> m_ObjectFlags;
     };
 }
 

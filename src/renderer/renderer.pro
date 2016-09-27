@@ -66,7 +66,8 @@ HEADERS +=\
     rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h \
     rendermodel/rendererinputobjectparams.h \
     rendermodel/0-modellevel/rendermodelkey.h \
-    rendermodel/rendererdrawparams.h
+    rendermodel/rendererdrawparams.h \
+    rendermodel/rendererobjectflags.h
 
 unix {
     target.path = /usr/lib

@@ -16,6 +16,11 @@ using namespace NS_RENDERER;
 
 TempShader* debugShader = NULL;
 
+enum Passes
+{
+    PASS_GENERAL = 0
+};
+
 class ShaderFunctor : public IShaderRetrievalFunctor
 {
 public:
@@ -105,7 +110,7 @@ void buildObjects(int dim)
             float yTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)j)/(float)(dim-1));
             QMatrix4x4 trans = transMat(QVector2D(xTrans, yTrans));
             section.setModelToWorldMatrix(trans * scale);
-            renderer->updateObject(RendererInputObjectParams(id++, IRenderer::PASS_GENERAL, builder));
+            renderer->updateObject(RendererInputObjectParams(id++, PASS_GENERAL, builder));
         }
     }
 }
