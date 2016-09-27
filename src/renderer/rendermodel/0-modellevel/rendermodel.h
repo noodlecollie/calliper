@@ -44,6 +44,7 @@ namespace NS_RENDERER
         bool containsRenderPass(const RenderModelPassKey &key);
         void clearRenderPasses();
         void uploadGlobalUniformData();
+        void setObjectHidden(quint32 objectId, bool hidden);
 
         MatrixBatch::MatrixBatchItemPointer createOrFetchMatrixBatchItem(const RenderModelKey &key);
         void cleanMatrixBatchItem(const RenderModelKey &key);

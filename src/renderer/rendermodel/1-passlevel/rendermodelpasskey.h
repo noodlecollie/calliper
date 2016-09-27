@@ -9,7 +9,7 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT RenderModelPassKey
     {
     public:
-        RenderModelPassKey(int index);
+        explicit RenderModelPassKey(int index);
 
         int passIndex() const;
 
@@ -29,7 +29,7 @@ namespace NS_RENDERER
         }
 
     private:
-        const int m_iPassIndex;
+        int m_iPassIndex;
     };
 }
 

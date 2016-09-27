@@ -12,6 +12,21 @@ namespace
         GLTRY(dest.write(offset, src.constData(), 16 * sizeof(float)));
         offset += 16 * sizeof(float);
     }
+
+    inline bool flagIsSet(quint32 value, quint32 flag)
+    {
+        return (value & flag) == flag;
+    }
+
+    inline bool flagWasSet(quint32 before, quint32 after, quint32 flag)
+    {
+        return !flagIsSet(before, flag) && flagIsSet(after, flag);
+    }
+
+    inline bool flagWasUnset(quint32 before, quint32 after, quint32 flag)
+    {
+        return flagWasSet(after, before, flag);
+    }
 }
 
 namespace NS_RENDERER
@@ -87,6 +102,8 @@ namespace NS_RENDERER
         RenderModelPassKey passKey(object.passIndex());
         MatrixBatchItemKey batchItemKey(object.objectId());
 
+        RenderModelKeyListPointer list = RenderModelKeyListPointer::create();
+
         foreach ( const GeometrySection &section, object.geometrySectionList() )
         {
             RenderModelKey key = RenderModelKey(
@@ -109,8 +126,11 @@ namespace NS_RENDERER
                                 batchItem->m_Colors,
                                 batchItem->m_TextureCoordinates,
                                 batchItem->m_Indices);
+
+            list->append(key);
         }
 
+        m_StoredObjects.insert(object.objectId(), list);
         m_ObjectFlags.insert(object.objectId(), NoObjectFlag);
     }
 
@@ -261,24 +281,55 @@ namespace NS_RENDERER
 
     void RenderModel::setObjectFlags(quint32 objectId, quint32 flags)
     {
-        quint32 objFlags = m_ObjectFlags.value(objectId, NoObjectFlag);
-        objFlags |= flags;
-        m_ObjectFlags.insert(objectId, objFlags);
+        if ( !m_ObjectFlags.contains(objectId) )
+            return;
 
-        // TODO: Process what flags were set.
+        quint32 oldObjFlags = m_ObjectFlags.value(objectId);
+        quint32 newObjFlags = oldObjFlags | flags;
+        m_ObjectFlags.insert(objectId, newObjFlags);
+
+        if ( flagWasSet(oldObjFlags, newObjFlags, HiddenObjectFlag) )
+        {
+            setObjectHidden(objectId, true);
+        }
     }
 
     void RenderModel::clearObjectFlags(quint32 objectId, quint32 flags)
     {
-        quint32 objFlags = m_ObjectFlags.value(objectId, NoObjectFlag);
-        objFlags &= ~flags;
-        m_ObjectFlags.insert(objectId, objFlags);
+        if ( !m_ObjectFlags.contains(objectId) )
+            return;
 
-        // TODO: Process what flags were unset.
+        quint32 oldObjFlags = m_ObjectFlags.value(objectId);
+        quint32 newObjFlags = oldObjFlags & ~flags;
+        m_ObjectFlags.insert(objectId, newObjFlags);
+
+        if ( flagWasUnset(oldObjFlags, newObjFlags, HiddenObjectFlag) )
+        {
+            setObjectHidden(objectId, false);
+        }
     }
 
     quint32 RenderModel::getObjectFlags(quint32 objectId) const
     {
         return m_ObjectFlags.value(objectId, NoObjectFlag);
+    }
+
+    void RenderModel::setObjectHidden(quint32 objectId, bool hidden)
+    {
+        Q_ASSERT_X(m_StoredObjects.contains(objectId), Q_FUNC_INFO, "Object does not exist!");
+        RenderModelKeyListPointer list = m_StoredObjects.value(objectId);
+
+        foreach ( const RenderModelKey &key, *(list.data()) )
+        {
+            RenderModelPassPointer pass = getRenderPass(key.passKey());
+            if ( pass.isNull() )
+                continue;
+
+            RenderModelPass::RenderModelBatchGroupPointer batchGroup = pass->getBatchGroup(key.batchGroupKey());
+            if ( batchGroup.isNull() )
+                continue;
+
+            batchGroup->setMatrixBatchDrawable(key.matrixBatchKey(), !hidden);
+        }
     }
 }

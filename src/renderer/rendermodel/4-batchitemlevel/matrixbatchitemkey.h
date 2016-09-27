@@ -29,7 +29,7 @@ namespace NS_RENDERER
         }
 
     private:
-        const quint32   m_iObjectId;
+        quint32   m_iObjectId;
     };
 
     RENDERERSHARED_EXPORT uint qHash(const MatrixBatchItemKey &key, uint seed = 0);

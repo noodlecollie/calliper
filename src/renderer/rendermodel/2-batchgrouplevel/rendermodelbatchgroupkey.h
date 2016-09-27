@@ -45,10 +45,10 @@ namespace NS_RENDERER
         }
 
     private:
-        const quint16       m_iShaderId;
-        const quint32       m_iTextureId;
-        const GLenum        m_iDrawMode;
-        const float         m_flDrawWidth;
+        quint16       m_iShaderId;
+        quint32       m_iTextureId;
+        GLenum        m_iDrawMode;
+        float         m_flDrawWidth;
     };
 
     RENDERERSHARED_EXPORT uint qHash(const RenderModelBatchGroupKey &key, uint seed = 0);

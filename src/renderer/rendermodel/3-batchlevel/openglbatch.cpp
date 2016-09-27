@@ -262,16 +262,21 @@ namespace NS_RENDERER
     void OpenGLBatch::insertMatrixBatch(const MatrixBatchKey &key, const MatrixBatchPointer& batch)
     {
         Q_ASSERT_X(!matrixBatchLimitReached(), Q_FUNC_INFO, "No more space to add matrix batches!");
+        Q_ASSERT_X(!batch.isNull(), Q_FUNC_INFO, "Incoming batch pointer is null!");
 
         if ( matrixBatchLimitReached() )
             return;
 
         m_MatrixBatchTable.insert(key, batch);
+        setNeedsUpload(true);
     }
 
     void OpenGLBatch::removeMatrixBatch(const MatrixBatchKey &key)
     {
-        m_MatrixBatchTable.remove(key);
+        if ( m_MatrixBatchTable.remove(key) > 0 )
+        {
+            setNeedsUpload(true);
+        }
     }
 
     OpenGLBatch::MatrixBatchPointer OpenGLBatch::matrixBatchAt(const MatrixBatchKey &key) const
@@ -282,6 +287,7 @@ namespace NS_RENDERER
     void OpenGLBatch::clearMatrixBatches()
     {
         m_MatrixBatchTable.clear();
+        setNeedsUpload(true);
     }
 
     void OpenGLBatch::calculateRequiredSizeOfBuffers()

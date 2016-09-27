@@ -22,10 +22,10 @@ namespace NS_RENDERER
         const MatrixBatchItemKey matrixBatchItemKey() const;
 
     private:
-        const RenderModelPassKey  m_PassKey;
-        const RenderModelBatchGroupKey m_BatchGroupKey;
-        const MatrixBatchKey m_MatrixBatchKey;
-        const MatrixBatchItemKey m_MatrixBatchItemKey;
+        RenderModelPassKey  m_PassKey;
+        RenderModelBatchGroupKey m_BatchGroupKey;
+        MatrixBatchKey m_MatrixBatchKey;
+        MatrixBatchItemKey m_MatrixBatchItemKey;
     };
 }
 

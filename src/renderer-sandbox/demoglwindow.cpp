@@ -101,7 +101,7 @@ void buildObjects(int dim)
 
     QMatrix4x4 scale = scaleMat(QVector2D(2.0f/(float)dim, 2.0f/(float)dim));
 
-    quint32 id = 0;
+    quint32 id = 1;
     for ( int i = 0; i < dim; i++ )
     {
         for ( int j = 0; j < dim; j++ )
@@ -110,7 +110,8 @@ void buildObjects(int dim)
             float yTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)j)/(float)(dim-1));
             QMatrix4x4 trans = transMat(QVector2D(xTrans, yTrans));
             section.setModelToWorldMatrix(trans * scale);
-            renderer->updateObject(RendererInputObjectParams(id++, PASS_GENERAL, builder));
+            renderer->updateObject(RendererInputObjectParams(id, PASS_GENERAL, builder));
+            id++;
         }
     }
 }
@@ -119,10 +120,16 @@ DemoGLWindow::DemoGLWindow()
 {
     m_pTempSpec = NULL;
     m_pTexture = NULL;
+    m_iCounter = 1;
+    m_iTris = 1;
 
     m_Timer.setInterval((int)(10.0f/6.0f));
     m_Timer.setSingleShot(false);
     connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
+
+    m_HidingTimer.setInterval(50);
+    m_HidingTimer.setSingleShot(false);
+    connect(&m_HidingTimer, &QTimer::timeout, this, &DemoGLWindow::timeout);
 }
 
 DemoGLWindow::~DemoGLWindow()
@@ -176,11 +183,12 @@ void DemoGLWindow::initializeGL()
     renderer->setShaderFunctor(shaderFunctor);
     renderer->setTextureFunctor(textureFunctor);
 
-    m_iTris = 120;
+    m_iTris = 15;
     GLTRY(buildObjects(m_iTris));
 
     m_FrameTime = QTime::currentTime();
     m_Timer.start();
+    m_HidingTimer.start();
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -209,3 +217,20 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glBindVertexArray(0));
 }
+
+void DemoGLWindow::timeout()
+{
+    IRenderer* renderer = Global::renderer();
+    makeCurrent();
+
+    renderer->clearObjectFlags(m_iCounter, HiddenObjectFlag);
+
+    ++m_iCounter;
+    if ( m_iCounter > (m_iTris*m_iTris) )
+    {
+        m_iCounter = 1;
+    }
+
+    renderer->setObjectFlags(m_iCounter, HiddenObjectFlag);
+    doneCurrent();
+};

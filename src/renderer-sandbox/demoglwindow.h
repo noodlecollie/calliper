@@ -30,6 +30,9 @@ protected:
     virtual void resizeGL(int w, int h);
     virtual void paintGL();
 
+private slots:
+    void timeout();
+
 private:
     GLuint  m_iVAOID;
 
@@ -38,6 +41,8 @@ private:
     QTimer m_Timer;
     QTime m_FrameTime;
     int m_iTris;
+    quint32 m_iCounter;
+    QTimer m_HidingTimer;
 };
 
 #endif // DEMOGLWINDOW_H

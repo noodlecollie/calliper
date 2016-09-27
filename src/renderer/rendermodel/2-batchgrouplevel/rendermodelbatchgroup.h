@@ -32,8 +32,9 @@ namespace NS_RENDERER
         void removeMatrixBatch(const MatrixBatchKey &key);
         bool containsMatrixBatch(const MatrixBatchKey &key) const;
         int matrixBatchCount() const;
-        bool matrixBatchIsMemberOfOpenGLBatch(const MatrixBatchKey &key) const;
         void clear();
+        void setMatrixBatchDrawable(const MatrixBatchKey &key, bool drawable);
+        bool matrixBatchDrawable(const MatrixBatchKey &key) const;
 
         void printDebugInfo() const;
 
@@ -47,6 +48,8 @@ namespace NS_RENDERER
         OpenGLBatchPointer getNextWaitingGlBatch();
         void draw(QSet<OpenGLBatchPointer> &batches, QOpenGLShaderProgram* shaderProgram);
         void ensureAllBatchesUploaded(QSet<OpenGLBatchPointer> &batches);
+        void addMatrixBatchToOpenGLBatch(const MatrixBatchKey &key);
+        void removeMatrixBatchFromOpenGLBatch(const MatrixBatchKey &key);
 
         QSet<OpenGLBatchPointer>  m_WaitingBatches; // Batches that have space for more matrices.
         QSet<OpenGLBatchPointer>  m_FullBatches;    // Batches that have no more space.

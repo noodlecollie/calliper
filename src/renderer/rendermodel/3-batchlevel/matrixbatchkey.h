@@ -10,7 +10,7 @@ namespace NS_RENDERER
     class RENDERERSHARED_EXPORT MatrixBatchKey
     {
     public:
-        MatrixBatchKey(const QMatrix4x4 &matrix);
+        explicit MatrixBatchKey(const QMatrix4x4 &matrix);
 
         const QMatrix4x4& modelToWorldMatrix() const;
 
@@ -30,7 +30,7 @@ namespace NS_RENDERER
         }
 
     private:
-        const QMatrix4x4    m_matModelToWorldMatrix;
+        QMatrix4x4    m_matModelToWorldMatrix;
     };
 
     RENDERERSHARED_EXPORT uint qHash(const MatrixBatchKey &key, uint seed = 0);

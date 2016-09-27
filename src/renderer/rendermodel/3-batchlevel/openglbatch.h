@@ -42,8 +42,8 @@ namespace NS_RENDERER
         MatrixBatchPointer matrixBatchAt(const MatrixBatchKey &key) const;
         void clearMatrixBatches();
 
-        // The state of this flag must be managed externally.
-        // It's just for convenience.
+        // The state of this flag must be set externally if the contents
+        // of a referenced matrix batch are changed.
         bool needsUpload() const;
         void setNeedsUpload(bool needsUpload);
         void uploadIfRequired();
