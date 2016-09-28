@@ -101,6 +101,11 @@ namespace NS_RENDERER
 
         RenderModelPassKey passKey(object.passIndex());
         MatrixBatchItemKey batchItemKey(object.objectId());
+        bool drawable = true;
+        if ( m_ObjectFlags.contains(object.objectId()) )
+        {
+            drawable = (m_ObjectFlags.value(object.objectId()) & HiddenObjectFlag) == HiddenObjectFlag;
+        }
 
         RenderModelKeyListPointer list = RenderModelKeyListPointer::create();
 
@@ -118,7 +123,8 @@ namespace NS_RENDERER
                             batchItemKey
                         );
 
-            MatrixBatch::MatrixBatchItemPointer batchItem = createOrFetchMatrixBatchItem(key);
+            RenderModelPass::RenderModelBatchGroupPointer batchGroup;
+            MatrixBatch::MatrixBatchItemPointer batchItem = createOrFetchMatrixBatchItem(key, &batchGroup);
             batchItem->clear();
 
             section.consolidate(batchItem->m_Positions,
@@ -128,6 +134,7 @@ namespace NS_RENDERER
                                 batchItem->m_Indices);
 
             list->append(key);
+            batchGroup->setMatrixBatchDrawable(key.matrixBatchKey(), drawable);
         }
 
         m_StoredObjects.insert(object.objectId(), list);
@@ -176,7 +183,8 @@ namespace NS_RENDERER
         return !batchItem.isNull();
     }
 
-    MatrixBatch::MatrixBatchItemPointer RenderModel::createOrFetchMatrixBatchItem(const RenderModelKey &key)
+    MatrixBatch::MatrixBatchItemPointer RenderModel::createOrFetchMatrixBatchItem(const RenderModelKey &key,
+                                                     RenderModelPass::RenderModelBatchGroupPointer* batchGroupOut)
     {
         // 1: Get the pass.
         RenderModelPassPointer pass = getRenderPass(key.passKey());
@@ -191,6 +199,10 @@ namespace NS_RENDERER
         if ( batchGroup.isNull() )
         {
             batchGroup = pass->createBatchGroup(key.batchGroupKey());
+        }
+        if ( batchGroup )
+        {
+            *batchGroupOut = batchGroup;
         }
 
         // 3: Get the batch.
