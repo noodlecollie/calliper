@@ -12,12 +12,12 @@ TEMPLATE = lib
 DEFINES += MODEL_LIBRARY
 
 SOURCES += \
-    tempremoveme.cpp \
-    stores/shaderstore.cpp
+    stores/shaderstore.cpp \
+    stores/texturestore.cpp
 
 HEADERS += \
-    tempremoveme.h \
-    stores/shaderstore.h
+    stores/shaderstore.h \
+    stores/texturestore.h
 
 unix {
     target.path = /usr/lib

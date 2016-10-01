@@ -22,7 +22,6 @@ namespace NS_MODEL
 
     quint16 ShaderStore::acquireNextShaderId()
     {
-        // At 1 count per second, this should take 136 years to overflow.
         Q_ASSERT_X(m_iNextShaderId + 1 != 0, Q_FUNC_INFO, "Shader ID counter overflow!");
         return m_iNextShaderId++;
     }
