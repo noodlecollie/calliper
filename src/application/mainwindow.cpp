@@ -460,20 +460,28 @@ int MainWindow::getActiveToolFromButtons(MapDocument* doc)
     return doc->toolIndex(toolName);
 }
 
-void MainWindow::createSampleMapDocument()
+void MainWindow::createNewVMFDocument(const QString filename)
 {
     int newIndex = application()->documentCount();
     MapDocument* document = application()->newDocument();
-    ValveMapFile vmf(":/samples/maps/apartment_building.vmf", document);
+    ValveMapFile vmf(filename, document);
 
     if ( !vmf.loadFromFile() )
     {
-        QMessageBox::warning(this, "Error", QString("Unable to load file /samples/maps/apartment_building.vmf"));
+        QMessageBox::warning(this, "Error", QString("Unable to load file: %0").arg(filename));
         application()->closeDocument(newIndex);
         return;
     }
 
-    document->setObjectName("apartment_building.vmf");
+    int lastSlash = filename.lastIndexOf('/');
+    if ( lastSlash >= 0 && filename.length() > lastSlash + 1 )
+    {
+        document->setObjectName(filename.mid(lastSlash+1));
+    }
+    else
+    {
+        document->setObjectName(filename);
+    }
 
     // The new document is created on the end of the list.
     // Switch to it.
@@ -481,4 +489,18 @@ void MainWindow::createSampleMapDocument()
     m_iActiveDocument = application()->documentCount() - 1;
     updateDocumentList(application()->documents());
     changeActiveDocument(oldDoc, activeDocument());
+}
+
+void MainWindow::createSampleMapDocument()
+{
+    createNewVMFDocument(":/samples/maps/apartment_building.vmf");
+}
+
+void MainWindow::debugLoadVMF()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open document", m_szLastLoadDir, "Valve map files (*.vmf)", NULL, FILE_DIALOG_OPTIONS);
+    if ( filename.isNull() )
+        return;
+
+    createNewVMFDocument(filename);
 }

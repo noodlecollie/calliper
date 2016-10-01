@@ -137,6 +137,8 @@ void BrushFace::buildGeometry()
         return;
 
     QVector3D normal = QVector3D::normal(verts.at(0), verts.at(1), verts.at(2));
+    if ( normal.isNull() )
+        return;
 
     // Add all vertices.
     // UVs are calculated later.

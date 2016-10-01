@@ -44,6 +44,7 @@ public slots:
     void saveCurrentDocument();
     void loadDocument();
     void createSampleMapDocument();
+    void debugLoadVMF();
 
 private:
     void setUpConnections();
@@ -54,6 +55,7 @@ private:
     void loadDocument(MapDocument* document, const QString &filename);
     void setUpAction(QAction* action, const QString &linkedTool);
     int getActiveToolFromButtons(MapDocument* doc);
+    void createNewVMFDocument(const QString filename);
 
     Ui::MainWindow *ui;
 

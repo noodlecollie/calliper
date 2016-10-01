@@ -113,6 +113,8 @@ void ResourceManager::setUpBuiltInTextures()
                       MIPMAP(QOpenGLTexture::LinearMipMapLinear));
     addBuiltInTexture(":/textures/uvsample.png", MIPMAP(QOpenGLTexture::NearestMipMapNearest),
                       MIPMAP(QOpenGLTexture::NearestMipMapNearest));
+    addBuiltInTexture(":/textures/white.png", MIPMAP(QOpenGLTexture::NearestMipMapNearest),
+                      MIPMAP(QOpenGLTexture::NearestMipMapNearest));
     addBuiltInTexture(":/textures/debug_crosshair.png", MIPMAP(QOpenGLTexture::NearestMipMapNearest),
                       MIPMAP(QOpenGLTexture::NearestMipMapNearest));
     addBuiltInTexture(":/textures/debug_translucent.png", MIPMAP(QOpenGLTexture::LinearMipMapLinear),

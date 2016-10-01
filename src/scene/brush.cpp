@@ -17,6 +17,7 @@ Brush::~Brush()
 void Brush::initDefaults()
 {
     setUseCachedBounds(true);
+    m_colDebugColor = QColor::fromRgb(0xffffffff);
 }
 
 QVector3D Brush::vertexAt(int index) const
@@ -208,11 +209,16 @@ Brush::Brush(BaseScene* scene, const QJsonObject &serialisedData, SceneObject *p
 
 void Brush::draw(ShaderStack *stack)
 {
+    stack->globalColorPush();
+    stack->globalColorSetTop(m_colDebugColor);
+
     QVector<BrushFace*> faceList = faces();
     foreach ( BrushFace* f , faceList )
     {
         f->draw(stack);
     }
+
+    stack->globalColorPop();
 }
 
 bool Brush::computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const
@@ -273,4 +279,14 @@ BoundingBox Brush::computeLocalBounds() const
 
     return BoundingBox(QVector3D(min[0], min[1], min[2]),
                        QVector3D(max[0], max[1], max[2]));
+}
+
+QColor Brush::debugColor() const
+{
+    return m_colDebugColor;
+}
+
+void Brush::setDebugColor(const QColor &col)
+{
+    m_colDebugColor = col;
 }

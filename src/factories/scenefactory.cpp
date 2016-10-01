@@ -27,6 +27,7 @@
 #include "texturedpolygon.h"
 #include "generalutil.h"
 #include "geometryutil.h"
+#include <QtGlobal>
 
 namespace SceneFactory
 {
@@ -125,7 +126,7 @@ namespace SceneFactory
                 QString plane = sides.at(j).toObject().value("plane").toString();
                 QVector3D v0, v1, v2;
                 GeneralUtil::vectorsFromVmfCoords(plane, v0, v1, v2);
-                polygons.append(new TexturedPolygon(Plane3D(v0, v2, v1), QString()));
+                polygons.append(new TexturedPolygon(Plane3D(v0, v2, v1), QString("/textures/white")));
                 Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
             }
 
@@ -140,6 +141,11 @@ namespace SceneFactory
 
             Brush* planeBrush = BrushFactory::fromPolygons(scene, scene->generalObjectsNode(), polygons);
             planeBrush->setObjectName(QString("planeBrush%0").arg(i));
+            quint8 r = qrand();
+            quint8 g = qrand();
+            quint8 b = qrand();
+            int rgb = 0xff000000 | (r << 16) | (g << 8) | b;
+            planeBrush->setDebugColor(QColor::fromRgb(rgb));
 
             qDeleteAll(polygons);
         }

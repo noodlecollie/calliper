@@ -2,6 +2,7 @@
 #define BRUSH_H
 
 #include "sceneobject.h"
+#include <QColor>
 
 class BrushFace;
 
@@ -29,6 +30,9 @@ public:
 
     virtual bool computeIntersection(const Ray3D &ray, RayTraceContact &contact, RayCoordinateSpace space) const;
 
+    QColor debugColor() const;
+    void setDebugColor(const QColor &col);
+
 protected:
     Brush(BaseScene* scene, SceneObject* parent);
     Brush(BaseScene* scene, const QJsonObject &serialisedData, SceneObject* parent);
@@ -42,6 +46,7 @@ private:
     void updateVertexInChildFaces(int index);
 
     QVector<QVector3D>    m_Vertices;
+    QColor m_colDebugColor;
 };
 
 #endif // BRUSH_H
