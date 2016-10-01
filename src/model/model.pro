@@ -13,11 +13,19 @@ DEFINES += MODEL_LIBRARY
 
 SOURCES += \
     stores/shaderstore.cpp \
-    stores/texturestore.cpp
+    stores/texturestore.cpp \
+    scene/scene.cpp \
+    scene/sceneobject.cpp \
+    scene/hierarchyparams.cpp \
+    math/eulerangle.cpp
 
 HEADERS += \
     stores/shaderstore.h \
-    stores/texturestore.h
+    stores/texturestore.h \
+    scene/scene.h \
+    scene/sceneobject.h \
+    scene/hierarchyparams.h \
+    math/eulerangle.h
 
 unix {
     target.path = /usr/lib
