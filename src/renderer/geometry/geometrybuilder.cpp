@@ -67,4 +67,15 @@ namespace NS_RENDERER
             m_Sections[i].setModelToWorldMatrix(m_matModelToWorld);
         }
     }
+
+    GeometrySection& GeometryBuilder::nextEmptySection()
+    {
+        GeometrySection& current = currentSection();
+        if ( current.positionCount() < 1 && current.indexCount() < 1 )
+        {
+            return current;
+        }
+
+        return createNewSection();
+    }
 }

@@ -266,4 +266,9 @@ namespace NS_RENDERER
     {
         m_matModelToWorld = matrix;
     }
+
+    bool GeometrySection::isEmpty() const
+    {
+        return positionCount() < 1 && indexCount() < 1;
+    }
 }

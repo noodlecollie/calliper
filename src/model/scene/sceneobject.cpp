@@ -27,7 +27,9 @@ namespace NS_MODEL
         m_pHierarchy = new HierarchyState(this);
         connect(m_pHierarchy, &HierarchyState::positionChanged, this, &SceneObject::onOwnPositionChanged);
         connect(m_pHierarchy, &HierarchyState::rotationChanged, this, &SceneObject::onOwnRotationChanged);
-        connect(m_pHierarchy, &HierarchyState::scaleChanged, this, &SceneObject::onOwnScaleChanged);
+        connect(m_pHierarchy, &HierarchyState::scaleChanged, this, &SceneObject::onOwnScaleChanged);\
+
+        m_bNeedsRendererUpdate = true;
     }
 
     void SceneObject::customEvent(QEvent *event)
@@ -84,6 +86,29 @@ namespace NS_MODEL
 
     void SceneObject::handleSpatialConfigurationChange(SpatialConfigurationChange *event)
     {
+        Q_UNUSED(event);
+        flagNeedsRendererUpdate();
+    }
 
+    bool SceneObject::needsRendererUpdate() const
+    {
+        return m_bNeedsRendererUpdate;
+    }
+
+    void SceneObject::flagNeedsRendererUpdate()
+    {
+        m_bNeedsRendererUpdate = true;
+    }
+
+    void SceneObject::rendererUpdate(ModuleRenderer::GeometryBuilder &builder) const
+    {
+        // Call virtual function so that subclasses build their own geometry.
+        bakeGeometry(builder);
+        m_bNeedsRendererUpdate = false;
+    }
+
+    void SceneObject::bakeGeometry(ModuleRenderer::GeometryBuilder &builder) const
+    {
+        Q_UNUSED(builder);
     }
 }

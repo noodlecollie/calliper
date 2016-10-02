@@ -99,6 +99,20 @@ namespace NS_RENDERER
         // For now, we just remove any previous entries.
         removeObject(object.objectId());
 
+        // Don't bother going through all this if we don't actually have any geometry.
+        bool allEmpty = true;
+        foreach ( const GeometrySection &section, object.geometrySectionList() )
+        {
+            if ( !section.isEmpty() )
+            {
+                allEmpty = false;
+                break;
+            }
+        }
+
+        if ( allEmpty )
+            return;
+
         RenderModelPassKey passKey(object.passIndex());
         MatrixBatchItemKey batchItemKey(object.objectId());
         bool drawable = true;

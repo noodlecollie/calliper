@@ -51,6 +51,7 @@ namespace NS_RENDERER
         int floatCount(AttributeType att) const;
         int indexCount() const;
         int positionCount() const;    // How many times addPosition() has been called
+        bool isEmpty() const;
 
         const float* vertexConstData(AttributeType type) const;
         const quint32* indexConstData() const;

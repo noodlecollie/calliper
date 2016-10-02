@@ -17,6 +17,7 @@ namespace NS_RENDERER
         const GeometrySection& section(int index) const;
         GeometrySection& createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix);
         GeometrySection& createNewSection();
+        GeometrySection& nextEmptySection();
         GeometrySection& currentSection();
         const QList<GeometrySection>& sections() const;
 

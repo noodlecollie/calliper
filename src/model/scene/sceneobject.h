@@ -5,6 +5,7 @@
 #include <QObject>
 #include "scene/hierarchystate.h"
 #include "events/spatialconfigurationchange.h"
+#include "geometry/geometrybuilder.h"
 
 namespace NS_MODEL
 {
@@ -21,6 +22,10 @@ namespace NS_MODEL
         HierarchyState& hierarchy();
         const HierarchyState& hierarchy() const;
 
+        bool needsRendererUpdate() const;
+        void flagNeedsRendererUpdate();
+        void rendererUpdate(NS_RENDERER::GeometryBuilder &builder) const;
+
     protected:
         // SceneObject constructors must have a first parameter as a parent Scene pointer
         // to be valid for use with Scene::createSceneObject().
@@ -36,6 +41,7 @@ namespace NS_MODEL
         virtual ~SceneObject();
 
         virtual void customEvent(QEvent *event);
+        virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const;
 
     private slots:
         void onOwnPositionChanged();
@@ -51,6 +57,7 @@ namespace NS_MODEL
         void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
 
         HierarchyState* m_pHierarchy;
+        mutable bool m_bNeedsRendererUpdate;
     };
 }
 
