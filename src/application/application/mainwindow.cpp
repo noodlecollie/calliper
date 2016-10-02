@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pToolButtonGroup = new QActionGroup(ui->menuBar);
 
     m_iActiveDocument = -1;
-    m_pActiveViewport = NULL;
+    m_pActiveViewport = nullptr;
     m_szLastSaveDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     m_szLastLoadDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     m_iLastSaveFormat = CalliperMapFile::IndentedJson;
@@ -116,7 +116,7 @@ void MainWindow::closeActiveDocument()
     if ( m_iActiveDocument < 0 ) return;
 
     MapDocument* oldDoc = activeDocument();
-    MapDocument* newDoc = NULL;
+    MapDocument* newDoc = nullptr;
 
     int old = m_iActiveDocument;
     if ( m_iActiveDocument == application()->documentCount() - 1 )
@@ -156,7 +156,7 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
         }
         else
         {
-            ui->viewport->setCamera(NULL);
+            ui->viewport->setCamera(nullptr);
         }
 
         ui->viewport->installEventFilter(newDoc->inputProcessor());
@@ -165,8 +165,8 @@ void MainWindow::changeActiveDocument(MapDocument *oldDoc, MapDocument *newDoc)
     }
     else
     {
-        ui->viewport->setDocument(NULL);
-        ui->viewport->setCamera(NULL);
+        ui->viewport->setDocument(nullptr);
+        ui->viewport->setCamera(nullptr);
 
         ui->sceneTreeWidget->clear();
     }
@@ -176,7 +176,7 @@ MapDocument* MainWindow::activeDocument() const
 {
     Q_ASSERT(m_iActiveDocument < application()->documentCount());
 
-    return m_iActiveDocument < 0 ? NULL : application()->document(m_iActiveDocument);
+    return m_iActiveDocument < 0 ? nullptr : application()->document(m_iActiveDocument);
 }
 
 void MainWindow::setUpConnections()
@@ -201,7 +201,7 @@ void MainWindow::populateSceneTree(MapScene *scene)
 {
     ui->sceneTreeWidget->clear();
     QList<QTreeWidgetItem*> items;
-    populateSceneTreeRecursive(scene->root(), NULL, items);
+    populateSceneTreeRecursive(scene->root(), nullptr, items);
 
     foreach ( QTreeWidgetItem* item, items )
     {
@@ -386,7 +386,7 @@ void MainWindow::saveCurrentDocumentAs()
     if ( !doc )
         return;
 
-    QString filename = QFileDialog::getSaveFileName(this, "Save document as...", m_szLastSaveDir, "Calliper map files (*.cmf)", NULL, FILE_DIALOG_OPTIONS);
+    QString filename = QFileDialog::getSaveFileName(this, "Save document as...", m_szLastSaveDir, "Calliper map files (*.cmf)", nullptr, FILE_DIALOG_OPTIONS);
     if ( filename.isNull() )
         return;
 
@@ -399,7 +399,7 @@ void MainWindow::saveCurrentDocumentAs()
 
 void MainWindow::loadDocument()
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Open document", m_szLastLoadDir, "Calliper map files (*.cmf)", NULL, FILE_DIALOG_OPTIONS);
+    QString filename = QFileDialog::getOpenFileName(this, "Open document", m_szLastLoadDir, "Calliper map files (*.cmf)", nullptr, FILE_DIALOG_OPTIONS);
     if ( filename.isNull() )
         return;
 

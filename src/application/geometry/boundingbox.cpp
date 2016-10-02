@@ -256,7 +256,7 @@ const int* BoundingBox::cornerVerticesForFace(Math::AxisIdentifier axis)
 
         default:
             Q_ASSERT(false);
-            return NULL;
+            return nullptr;
     }
 }
 

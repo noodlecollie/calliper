@@ -8,7 +8,7 @@
 
 namespace NS_MODEL
 {
-    class TextureStore : public NS_RENDERER::ITextureRetrievalFunctor
+    class MODELSHARED_EXPORT TextureStore : public NS_RENDERER::ITextureRetrievalFunctor
     {
     public:
         TextureStore();

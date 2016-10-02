@@ -17,7 +17,7 @@
 
 DebugTestTool::DebugTestTool(MapDocument *document) : BaseTool(DebugTestTool::staticName(), document)
 {
-    m_pRayVisuals = NULL;
+    m_pRayVisuals = nullptr;
 }
 
 DebugTestTool::~DebugTestTool()
@@ -48,7 +48,7 @@ void DebugTestTool::vDeactivate()
     BaseTool::vDeactivate();
 
     m_pDocument->scene()->destroySceneObject(m_pRayVisuals);
-    m_pRayVisuals = NULL;
+    m_pRayVisuals = nullptr;
 }
 
 void DebugTestTool::vActivate()

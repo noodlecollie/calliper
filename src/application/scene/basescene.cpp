@@ -7,7 +7,7 @@
 
 BaseScene::BaseScene(MapDocument *doc) : QObject(doc)
 {
-    m_pRootObject = NULL;
+    m_pRootObject = nullptr;
     createRoot();
 
     // The internal objects node groups together things that aren't really
@@ -26,7 +26,7 @@ BaseScene::~BaseScene()
 void BaseScene::createRoot()
 {
     Q_ASSERT(!m_pRootObject);
-    m_pRootObject = new SceneObject(this, NULL);
+    m_pRootObject = new SceneObject(this, nullptr);
     m_pRootObject->setObjectName("root");
     m_pRootObject->setUseCachedBounds(true);
 
@@ -47,7 +47,7 @@ void BaseScene::destroyRoot()
 
     emit subtreeDestroyed(m_pRootObject);
     delete m_pRootObject;
-    m_pRootObject = NULL;
+    m_pRootObject = nullptr;
 }
 
 void BaseScene::clear()

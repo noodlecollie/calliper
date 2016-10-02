@@ -46,7 +46,7 @@ void OpenGLRenderer::ObjectPicker::checkDrawnObject(SceneObject *obj)
     }
 }
 
-static OpenGLRenderer* g_pRenderer = NULL;
+static OpenGLRenderer* g_pRenderer = nullptr;
 OpenGLRenderer* renderer()
 {
     return g_pRenderer;
@@ -55,7 +55,7 @@ OpenGLRenderer* renderer()
 OpenGLRenderer::OpenGLRenderer()
 {
     g_pRenderer = this;
-    m_pStack = NULL;
+    m_pStack = nullptr;
     m_bPreparedForRendering = false;
     m_vecDirectionalLight = Math::angleToVectorSimple(EulerAngle(25.0f, -90.0f - 45.0f, 0.0f));
     m_colFogColour = QColor::fromRgb(0xff999999);
@@ -88,7 +88,7 @@ void OpenGLRenderer::shutdown()
 {
     Q_ASSERT(g_pRenderer);
     delete g_pRenderer;
-    g_pRenderer = NULL;
+    g_pRenderer = nullptr;
 }
 
 QColor OpenGLRenderer::globalColor() const
@@ -157,7 +157,7 @@ void OpenGLRenderer::end()
 
     Q_ASSERT(m_pStack->inInitialState());
     delete m_pStack;
-    m_pStack = NULL;
+    m_pStack = nullptr;
 
     m_bPreparedForRendering = false;
 }
@@ -289,7 +289,7 @@ SceneObject* OpenGLRenderer::selectFromDepthBuffer(BaseScene *scene, const Camer
     Q_ASSERT(context);
     QOpenGLFunctions_4_1_Core* f = context->versionFunctions<QOpenGLFunctions_4_1_Core>();
 
-    m_ObjectPicker = ObjectPicker(f, oglPos, pickColor != NULL);
+    m_ObjectPicker = ObjectPicker(f, oglPos, pickColor != nullptr);
     m_bPicking = true;
 
     m_pStack->setCameraParams(params);

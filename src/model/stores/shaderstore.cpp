@@ -28,7 +28,7 @@ namespace NS_MODEL
 
     NS_RENDERER::OpenGLShaderProgram* ShaderStore::getShaderProgram(quint16 shaderId) const
     {
-        return m_ShaderTable.value(shaderId, NULL);
+        return m_ShaderTable.value(shaderId, nullptr);
     }
 
     NS_RENDERER::OpenGLShaderProgram* ShaderStore::operator ()(quint16 shaderId) const

@@ -97,7 +97,7 @@ void MapDocument::setSelectedColor(const QColor &col)
 
 BaseTool* MapDocument::tool(int index) const
 {
-    return index >= 0 && index < m_Tools.count() ? m_Tools.at(index) : NULL;
+    return index >= 0 && index < m_Tools.count() ? m_Tools.at(index) : nullptr;
 }
 
 BaseTool* MapDocument::tool(const QString &name) const
@@ -108,7 +108,7 @@ BaseTool* MapDocument::tool(const QString &name) const
             return t;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 int MapDocument::toolCount() const

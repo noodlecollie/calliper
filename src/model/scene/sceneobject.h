@@ -3,23 +3,23 @@
 
 #include "model_global.h"
 #include <QObject>
-#include "scene/hierarchyparams.h"
+#include "scene/hierarchystate.h"
+#include "events/spatialconfigurationchange.h"
 
 namespace NS_MODEL
 {
     class Scene;
 
-    class SceneObject : public QObject
+    class MODELSHARED_EXPORT SceneObject : public QObject
     {
         friend class Scene;
         Q_OBJECT
     public:
-        virtual ~SceneObject();
         SceneObject* parentObject() const;
         bool isRoot() const;
 
-        HierarchyParams& hierarchy();
-        const HierarchyParams& hierarchy() const;
+        HierarchyState& hierarchy();
+        const HierarchyState& hierarchy() const;
 
     protected:
         // SceneObject constructors must have a first parameter as a parent Scene pointer
@@ -32,6 +32,11 @@ namespace NS_MODEL
         // Clone - only called by Scene::cloneSceneObject().
         explicit SceneObject(const SceneObject* cloneFrom);
 
+        // Only Scenes are allowed to destroy SceneObjects.
+        virtual ~SceneObject();
+
+        virtual void customEvent(QEvent *event);
+
     private slots:
         void onOwnPositionChanged();
         void onOwnRotationChanged();
@@ -43,8 +48,9 @@ namespace NS_MODEL
         SceneObject& operator =(const SceneObject &other) = delete;
 
         void commonInit();
+        void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
 
-        HierarchyParams* m_pHierarchy;
+        HierarchyState* m_pHierarchy;
     };
 }
 

@@ -4,7 +4,7 @@
 #include "scenecamera.h"
 
 CameraParams::CameraParams() :
-    m_matWorldToCameraMatrix(), m_matProjectionMatrix(), m_pObject(NULL), m_pLens(NULL)
+    m_matWorldToCameraMatrix(), m_matProjectionMatrix(), m_pObject(nullptr), m_pLens(nullptr)
 {
 
 }

@@ -47,7 +47,7 @@ namespace NS_RENDERER
         void setObjectHidden(quint32 objectId, bool hidden);
 
         MatrixBatch::MatrixBatchItemPointer createOrFetchMatrixBatchItem(const RenderModelKey &key,
-                                                RenderModelPass::RenderModelBatchGroupPointer* batchGroup = NULL);
+                                                RenderModelPass::RenderModelBatchGroupPointer* batchGroup = nullptr);
         void cleanMatrixBatchItem(const RenderModelKey &key);
         bool getModelItems(const RenderModelKey &key,
                            RenderModelPassPointer &pass,

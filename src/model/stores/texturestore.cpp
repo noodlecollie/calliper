@@ -42,6 +42,7 @@ namespace NS_MODEL
         OpenGLTexturePointer texture = OpenGLTexturePointer::create(id, target);
         m_TextureTable.insert(id, texture);
         m_TexturePathTable.insert(path, id);
+        return texture;
     }
 
     quint32 TextureStore::getTextureId(const QString &path) const

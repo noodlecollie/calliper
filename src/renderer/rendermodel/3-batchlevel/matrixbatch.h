@@ -29,7 +29,7 @@ namespace NS_RENDERER
         MatrixBatchItemPointer createItem(const MatrixBatchItemKey &key);
 
         // Gets the item for the given object ID.
-        // If it does not exist, NULL is returned.
+        // If it does not exist, null is returned.
         MatrixBatchItemPointer getItem(const MatrixBatchItemKey &key) const;
 
         // Removes the item for the given object ID.

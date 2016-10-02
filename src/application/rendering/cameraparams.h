@@ -12,8 +12,8 @@ class CameraParams
 {
 public:
     explicit CameraParams();
-    explicit CameraParams(const QMatrix4x4 w2c, const QMatrix4x4 proj, const HierarchicalObject* obj = NULL,
-                 const CameraLens* lens = NULL, const BoundingBox &bounds = BoundingBox());
+    explicit CameraParams(const QMatrix4x4 w2c, const QMatrix4x4 proj, const HierarchicalObject* obj = nullptr,
+                 const CameraLens* lens = nullptr, const BoundingBox &bounds = BoundingBox());
     explicit CameraParams(const SceneCamera* camera);
 
     const QMatrix4x4& worldToCameraMatrix() const;

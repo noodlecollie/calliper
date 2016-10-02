@@ -38,3 +38,10 @@ else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 
 INCLUDEPATH += $$PWD/../calliperutil
 DEPENDPATH += $$PWD/../calliperutil
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../model/release/ -lmodel
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../model/debug/ -lmodel
+else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
+
+INCLUDEPATH += $$PWD/../model
+DEPENDPATH += $$PWD/../model

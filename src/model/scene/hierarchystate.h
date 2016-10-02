@@ -1,5 +1,5 @@
-#ifndef HIERARCHYPARAMS_H
-#define HIERARCHYPARAMS_H
+#ifndef HIERARCHYSTATE_H
+#define HIERARCHYSTATE_H
 
 #include "model_global.h"
 #include <QObject>
@@ -8,11 +8,11 @@
 
 namespace NS_MODEL
 {
-    class HierarchyParams : public QObject
+    class MODELSHARED_EXPORT HierarchyState : public QObject
     {
         Q_OBJECT
     public:
-        explicit HierarchyParams(QObject* parent = 0);
+        explicit HierarchyState(QObject* parent = 0);
 
         QVector3D position() const;
         void setPosition(const QVector3D &pos);
@@ -36,4 +36,4 @@ namespace NS_MODEL
     };
 }
 
-#endif // HIERARCHYPARAMS_H
+#endif // HIERARCHYSTATE_H

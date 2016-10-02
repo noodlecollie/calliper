@@ -1,8 +1,8 @@
-#include "hierarchyparams.h"
+#include "hierarchystate.h"
 
 namespace NS_MODEL
 {
-    HierarchyParams::HierarchyParams(QObject* parent)
+    HierarchyState::HierarchyState(QObject* parent)
         : QObject(parent),
           m_vecPosition(),
           m_angRotation(),
@@ -11,12 +11,12 @@ namespace NS_MODEL
 
     }
 
-    QVector3D HierarchyParams::position() const
+    QVector3D HierarchyState::position() const
     {
         return m_vecPosition;
     }
 
-    void HierarchyParams::setPosition(const QVector3D &pos)
+    void HierarchyState::setPosition(const QVector3D &pos)
     {
         if ( pos == m_vecPosition )
             return;
@@ -25,26 +25,26 @@ namespace NS_MODEL
         emit positionChanged();
     }
 
-    EulerAngle HierarchyParams::rotation() const
+    EulerAngle HierarchyState::rotation() const
     {
         return m_angRotation;
     }
 
-    void HierarchyParams::setRotation(const EulerAngle &rot)
+    void HierarchyState::setRotation(const EulerAngle &rot)
     {
         if ( rot == m_angRotation )
             return;
 
-        m_angRotation = rotation;
+        m_angRotation = rot;
         emit rotationChanged();
     }
 
-    QVector3D HierarchyParams::scale() const
+    QVector3D HierarchyState::scale() const
     {
         return m_vecScale;
     }
 
-    void HierarchyParams::setScale(const QVector3D &scl)
+    void HierarchyState::setScale(const QVector3D &scl)
     {
         if ( scl == m_vecScale )
             return;
@@ -53,7 +53,7 @@ namespace NS_MODEL
         emit scaleChanged();
     }
 
-    void HierarchyParams::setScale(float scl)
+    void HierarchyState::setScale(float scl)
     {
         setScale(QVector3D(scl, scl, scl));
     }

@@ -16,7 +16,7 @@
 #include <QStandardPaths>
 #include "viewport.h"
 
-BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(NULL)
+BaseTool::BaseTool(const QString &name, MapDocument *document) : QObject(nullptr)
 {
     setObjectName(name);
     m_bActive = false;

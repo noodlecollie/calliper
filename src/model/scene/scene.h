@@ -2,13 +2,11 @@
 #define SCENE_H
 
 #include "model_global.h"
-#include <QObject>
+#include "scene/sceneobject.h"
 
 namespace NS_MODEL
 {
-    class SceneObject;
-
-    class Scene : public QObject
+    class MODELSHARED_EXPORT Scene : public QObject
     {
         Q_OBJECT
     public:

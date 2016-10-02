@@ -35,7 +35,7 @@
 
 namespace NS_MODEL
 {
-    class EulerAngle
+    class MODELSHARED_EXPORT EulerAngle
     {
     public:
         EulerAngle();
@@ -114,6 +114,6 @@ namespace NS_MODEL
     };
 }
 
-QDebug& operator <<(QDebug &debug, const EulerAngle &angle);
+QDebug& operator <<(QDebug &debug, const NS_MODEL::EulerAngle &angle);
 
 #endif // EULERANGLE_H

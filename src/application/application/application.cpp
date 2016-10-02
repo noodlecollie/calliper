@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 #include "tools.h"
 
-static Application* g_pApplication = NULL;
+static Application* g_pApplication = nullptr;
 Application* application()
 {
     return g_pApplication;
@@ -19,7 +19,7 @@ void Application::shutdown()
 {
     Q_ASSERT(g_pApplication);
     delete g_pApplication;
-    g_pApplication = NULL;
+    g_pApplication = nullptr;
 }
 
 Application::Application(MainWindow* win)

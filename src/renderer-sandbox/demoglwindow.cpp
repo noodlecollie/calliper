@@ -11,6 +11,7 @@
 #include "geometry/geometrybuilder.h"
 #include "irenderer.h"
 #include "rendermodel/rendererinputobjectparams.h"
+#include "scene/scene.h"
 
 using namespace NS_RENDERER;
 
@@ -130,6 +131,10 @@ DemoGLWindow::DemoGLWindow()
     m_HidingTimer.setInterval(50);
     m_HidingTimer.setSingleShot(false);
     connect(&m_HidingTimer, &QTimer::timeout, this, &DemoGLWindow::timeout);
+
+    // Testing
+    NS_MODEL::Scene scene;
+    NS_MODEL::SceneObject* sceneObject = scene.createSceneObject<NS_MODEL::SceneObject>(nullptr);
 }
 
 DemoGLWindow::~DemoGLWindow()

@@ -52,7 +52,7 @@ public:
 
     void renderScene(BaseScene* scene, const CameraParams &params);
     SceneObject* selectFromDepthBuffer(BaseScene* scene, const CameraParams &params,
-                                       const QPoint &oglPos, int selectionMask = SceneObject::AllObjectsMask, QRgb* pickColor = NULL);
+                                       const QPoint &oglPos, int selectionMask = SceneObject::AllObjectsMask, QRgb* pickColor = nullptr);
 
     // The quad is assumed to span [(-1,-1) (1,1)] with (0,0) being the centre.
     void drawQuad(GeometryData* quad, const QSize &screen, const QRect &subrect, Qt::Alignment alignment = Qt::AlignCenter,
@@ -80,13 +80,13 @@ private:
     {
     public:
         ObjectPicker() :
-            functions(NULL), selectionPos(), selectedObject(NULL), selectedColour(0xffffffff),
+            functions(nullptr), selectionPos(), selectedObject(nullptr), selectedColour(0xffffffff),
             nearestDepth(1.0f), getPickColour(false)
         {
         }
 
         ObjectPicker(QOpenGLFunctions_4_1_Core* f, const QPoint &p, bool getCol = false) :
-            functions(f), selectionPos(p), selectedObject(NULL), selectedColour(0xffffffff),
+            functions(f), selectionPos(p), selectedObject(nullptr), selectedColour(0xffffffff),
             nearestDepth(1.0f), getPickColour(getCol)
         {
         }

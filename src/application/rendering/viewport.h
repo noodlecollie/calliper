@@ -39,7 +39,7 @@ public:
     bool drawFocusHighlight() const;
     bool drawFPS() const;
 
-    SceneObject* pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, int selectionMask = SceneObject::AllObjectsMask, QRgb* pickColor = NULL);
+    SceneObject* pickObjectFromDepthBuffer(int sceneFlags, const QPoint &pos, int selectionMask = SceneObject::AllObjectsMask, QRgb* pickColor = nullptr);
     bool saveCurrentFrame(const QString &filename);
 
     void repaintHack();

@@ -386,7 +386,7 @@ SceneObject* SceneObject::computeRayCastRecursive(const Ray3D &ray, RayTraceCont
 
     Ray3D localRay = ray.transformed(parentToLocal());
 
-    SceneObject* nearestObject = NULL;
+    SceneObject* nearestObject = nullptr;
     RayTraceContact nearestContact;
     bool hasNearestContact = false;
 
@@ -404,7 +404,7 @@ SceneObject* SceneObject::computeRayCastRecursive(const Ray3D &ray, RayTraceCont
 
     // Now see if any of our children give intersections nearer than us.
     QList<SceneObject*> childList = children();
-    SceneObject* tempObject = NULL;
+    SceneObject* tempObject = nullptr;
     foreach ( SceneObject* child, childList )
     {
         RayTraceContact childContact;
@@ -426,7 +426,7 @@ SceneObject* SceneObject::computeRayCastRecursive(const Ray3D &ray, RayTraceCont
 
 bool SceneObject::isRoot() const
 {
-    return parentObject() == NULL;
+    return parentObject() == nullptr;
 }
 
 QList<SceneObject*> SceneObject::ancestors() const

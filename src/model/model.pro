@@ -16,16 +16,19 @@ SOURCES += \
     stores/texturestore.cpp \
     scene/scene.cpp \
     scene/sceneobject.cpp \
-    scene/hierarchyparams.cpp \
-    math/eulerangle.cpp
+    math/eulerangle.cpp \
+    events/spatialconfigurationchange.cpp \
+    scene/hierarchystate.cpp
 
 HEADERS += \
     stores/shaderstore.h \
     stores/texturestore.h \
     scene/scene.h \
     scene/sceneobject.h \
-    scene/hierarchyparams.h \
-    math/eulerangle.h
+    math/eulerangle.h \
+    events/spatialconfigurationchange.h \
+    events/modeleventtypes.h \
+    scene/hierarchystate.h
 
 unix {
     target.path = /usr/lib

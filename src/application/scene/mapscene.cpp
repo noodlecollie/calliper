@@ -8,7 +8,7 @@
 
 MapScene::MapScene(MapDocument *document) : BaseScene(document)
 {
-    m_pGrid = NULL;
+    m_pGrid = nullptr;
     connect(this, &BaseScene::subtreeDestroyed, this, &MapScene::checkIfSceneCleared);
     insertStandardItems();
 }
@@ -20,7 +20,7 @@ MapScene::~MapScene()
 void MapScene::checkIfSceneCleared(SceneObject *obj)
 {
     if ( obj->isRoot() || obj == m_pInternalObjects || obj == m_pGrid )
-        m_pGrid = NULL;
+        m_pGrid = nullptr;
 }
 
 BaseScene::SceneType MapScene::type() const
@@ -54,7 +54,7 @@ bool MapScene::unserialiseFromJson(const QJsonObject &serialisedData)
         return false;
 
     clear();
-    bool success = unserialiseRecursive(NULL, vRootObject.toObject());
+    bool success = unserialiseRecursive(nullptr, vRootObject.toObject());
     insertStandardItems();
     return success;
 }
@@ -96,7 +96,7 @@ bool MapScene::serialiseRecursive(SceneObject *obj, QJsonObject &jsonParent) con
 
 bool MapScene::unserialiseRecursive(SceneObject *parent, const QJsonObject &serialisedData)
 {
-    SceneObject* obj = NULL;
+    SceneObject* obj = nullptr;
     if ( parent )
     {
         // Unserialise the object and attach it to the parent.

@@ -32,7 +32,7 @@ namespace
 namespace NS_RENDERER
 {
     RenderModel::RenderModel()
-        : m_pShaderFunctor(NULL), m_pTextureFunctor(NULL), m_DrawParams(),
+        : m_pShaderFunctor(nullptr), m_pTextureFunctor(nullptr), m_DrawParams(),
           m_GlobalUniformBuffer(QOpenGLBuffer::DynamicDraw), m_bUniformDataUploaded(false)
     {
         m_GlobalUniformBuffer.create();

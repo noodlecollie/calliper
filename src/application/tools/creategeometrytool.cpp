@@ -17,11 +17,11 @@
 
 CreateGeometryTool::CreateGeometryTool(MapDocument *document) : BaseTool(CreateGeometryTool::staticName(), document)
 {
-    m_pManipulator = NULL;
-    m_pCrosshair = NULL;
-    m_pBeginDragTarget = NULL;
+    m_pManipulator = nullptr;
+    m_pCrosshair = nullptr;
+    m_pBeginDragTarget = nullptr;
     m_flBlockDepth = 64.0f;
-    m_pUIBox = NULL;
+    m_pUIBox = nullptr;
 }
 
 CreateGeometryTool::~CreateGeometryTool()
@@ -57,13 +57,13 @@ void CreateGeometryTool::vActivate()
 void CreateGeometryTool::vDeactivate()
 {
     m_pDocument->scene()->destroySceneObject(m_pManipulator);
-    m_pManipulator = NULL;
+    m_pManipulator = nullptr;
 
     m_pDocument->scene()->destroySceneObject(m_pCrosshair);
-    m_pCrosshair = NULL;
+    m_pCrosshair = nullptr;
 
     m_pDocument->uiScene()->destroySceneObject(m_pUIBox);
-    m_pUIBox = NULL;
+    m_pUIBox = nullptr;
 
     BaseTool::vDeactivate();
 }
@@ -188,7 +188,7 @@ void CreateGeometryTool::updateCrosshairVisibility(const QPoint &mousePos)
 
 void CreateGeometryTool::endDrag()
 {
-    m_pBeginDragTarget = NULL;
+    m_pBeginDragTarget = nullptr;
     m_bInDrag = false;
     updateManipulatorBounds(true);
 

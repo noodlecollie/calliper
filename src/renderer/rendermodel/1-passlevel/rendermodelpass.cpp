@@ -105,7 +105,7 @@ namespace NS_RENDERER
 
     void RenderModelPass::drawAllBatchGroups()
     {
-        OpenGLShaderProgram* currentShaderProgram = NULL;
+        OpenGLShaderProgram* currentShaderProgram = nullptr;
         OpenGLTexturePointer currentTexture;
 
         foreach ( const RenderModelBatchGroupPointer &batchGroup, m_BatchGroups.values() )
@@ -114,7 +114,7 @@ namespace NS_RENDERER
             batchGroup->drawAllBatches(currentShaderProgram);
         }
 
-        changeShaderIfDifferent(currentShaderProgram, NULL);
+        changeShaderIfDifferent(currentShaderProgram, nullptr);
         changeTextureIfDifferent(currentTexture, OpenGLTexturePointer());
     }
 }

@@ -41,12 +41,12 @@ namespace SceneObjectFactory
         initialiseFunctionTable();
         static FactoryFunction defaultFunction = [] (BaseScene*, const QJsonObject&, SceneObject*) -> SceneObject*
         {
-            return NULL;
+            return nullptr;
         };
 
         QString identifier = serialisedData.value(ISerialisable::KEY_IDENTIFIER()).toString();
         if ( identifier.isNull() )
-            return NULL;
+            return nullptr;
 
         return functionTable.value(identifier, defaultFunction)(scene, serialisedData, parent);
     }

@@ -11,7 +11,7 @@
 UIManipulatorTool::UIManipulatorTool(const QString &name, MapDocument *document) :
     BaseTool(name, document)
 {
-    m_pManipulator = NULL;
+    m_pManipulator = nullptr;
     m_bInMove = false;
     m_flHandleCamDist = 0.0f;
     m_iAxisFlags = Math::NoAxisFlag;

@@ -140,7 +140,7 @@ namespace NS_RENDERER
 
         GLTRY(m_VertexBuffer.allocate(m_UploadMetadata.totalVertexBytes()));
 
-        void* vBuffer = NULL;
+        void* vBuffer = nullptr;
         GLTRY(vBuffer = m_VertexBuffer.map(QOpenGLBuffer::WriteOnly));
         char* buffer = reinterpret_cast<char*>(vBuffer);
 
@@ -209,7 +209,7 @@ namespace NS_RENDERER
 
         GLTRY(m_IndexBuffer.allocate(m_UploadMetadata.m_iIndexBytes));
 
-        void* vBuffer = NULL;
+        void* vBuffer = nullptr;
         GLTRY(vBuffer = m_IndexBuffer.map(QOpenGLBuffer::WriteOnly));
         char* buffer = reinterpret_cast<char*>(vBuffer);
 

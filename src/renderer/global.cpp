@@ -5,7 +5,7 @@ namespace NS_RENDERER
 {
     namespace Global
     {
-        IRenderer* g_pRenderer = NULL;
+        IRenderer* g_pRenderer = nullptr;
 
         void initialise()
         {
@@ -17,7 +17,7 @@ namespace NS_RENDERER
         {
             Q_ASSERT_X(g_pRenderer, Q_FUNC_INFO, "Shutdown called when renderer doesn't exist!");
             delete g_pRenderer;
-            g_pRenderer = NULL;
+            g_pRenderer = nullptr;
         }
 
         IRenderer* renderer()

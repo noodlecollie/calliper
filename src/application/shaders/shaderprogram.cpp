@@ -54,7 +54,7 @@ bool ShaderProgram::compile(GLuint* shaderHandle, GLuint shaderType, const char*
     GLint result = GL_FALSE;
     int infoLogLength;
 
-    f->glShaderSource(*shaderHandle, 1, &source , NULL);
+    f->glShaderSource(*shaderHandle, 1, &source , nullptr);
     f->glCompileShader(*shaderHandle);
 
     f->glGetShaderiv(*shaderHandle, GL_COMPILE_STATUS, &result);
@@ -62,7 +62,7 @@ bool ShaderProgram::compile(GLuint* shaderHandle, GLuint shaderType, const char*
     if ( result != GL_TRUE )
     {
         m_LogBuffer.resize(infoLogLength);
-        f->glGetShaderInfoLog(*shaderHandle, infoLogLength, NULL, m_LogBuffer.data());
+        f->glGetShaderInfoLog(*shaderHandle, infoLogLength, nullptr, m_LogBuffer.data());
         qDebug() << "Shader compilation errors:" << m_LogBuffer.constData();
 
         return false;

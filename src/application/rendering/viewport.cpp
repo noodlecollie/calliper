@@ -45,19 +45,19 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f) : QOpenGLWidget(parent, f
 
     m_colBackground = Viewport::defaultBackgroundColor();
     m_bBackgroundColorChanged = true;
-    m_pCamera = NULL;
-    m_pDocument = NULL;
+    m_pCamera = nullptr;
+    m_pDocument = nullptr;
     m_bDrawFocusHighlight = false;
     m_bDrawFPS = false;
     m_iRenderTasks = 0;
-    m_pPickedObject = NULL;
+    m_pPickedObject = nullptr;
     m_iScenePickFlags = 0;
     m_iObjectSelectionMask = SceneObject::AllObjectsMask;
-    m_pHighlightOutline = NULL;
+    m_pHighlightOutline = nullptr;
     setMouseTracking(true);
 
-    m_pEmptyText = NULL;
-    m_pNoCameraText = NULL;
+    m_pEmptyText = nullptr;
+    m_pNoCameraText = nullptr;
 
     m_pToggleOptions = new QPushButton(QIcon(QPixmap::fromImage(QImage(":/icons/viewport_options.png"))), QString(), this);
     m_pToggleOptions->resize(18,14);
@@ -220,7 +220,7 @@ void Viewport::focusInEvent(QFocusEvent *e)
 void Viewport::focusOutEvent(QFocusEvent *e)
 {
     Q_ASSERT(application()->mainWindow()->m_pActiveViewport == this);
-    application()->mainWindow()->m_pActiveViewport = NULL;
+    application()->mainWindow()->m_pActiveViewport = nullptr;
 
     m_Timer.stop();
 
@@ -459,7 +459,7 @@ void Viewport::selectFromDepthBuffer(const QPoint &pos)
     fbo.bind();
 
     m_PickColour = 0xffffffff;
-    m_pPickedObject = NULL;
+    m_pPickedObject = nullptr;
 
     renderer()->begin();
 

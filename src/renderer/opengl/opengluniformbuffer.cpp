@@ -101,7 +101,7 @@ namespace NS_RENDERER
 
     void OpenGLUniformBuffer::allocate(int count)
     {
-        allocate(NULL, count);
+        allocate(nullptr, count);
     }
 
     void OpenGLUniformBuffer::write(int offset, const void *data, int count)
@@ -152,7 +152,7 @@ namespace NS_RENDERER
 
         GL_CURRENT_F;
 
-        void* ret = NULL;
+        void* ret = nullptr;
         GLTRY(ret = f->glMapBuffer(GL_UNIFORM_BUFFER, access));
         return ret;
     }

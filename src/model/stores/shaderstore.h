@@ -8,7 +8,7 @@
 
 namespace NS_MODEL
 {
-    class ShaderStore : public NS_RENDERER::IShaderRetrievalFunctor
+    class MODELSHARED_EXPORT ShaderStore : public NS_RENDERER::IShaderRetrievalFunctor
     {
     public:
         ShaderStore();

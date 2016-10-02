@@ -16,7 +16,7 @@
 #define MIPMAP(_x) (_x)
 #endif
 
-static ResourceManager* g_pResourceManager = NULL;
+static ResourceManager* g_pResourceManager = nullptr;
 ResourceManager* resourceManager()
 {
     return g_pResourceManager;
@@ -32,13 +32,13 @@ void ResourceManager::shutdown()
 {
     Q_ASSERT(g_pResourceManager);
     delete g_pResourceManager;
-    g_pResourceManager = NULL;
+    g_pResourceManager = nullptr;
 }
 
 ResourceManager::ResourceManager()
 {
     g_pResourceManager = this;
-    m_pFramebuffer = NULL;
+    m_pFramebuffer = nullptr;
     m_pSurface = new QOffscreenSurface();
     m_pSurface->setFormat(QSurfaceFormat::defaultFormat());
     m_pSurface->create();
@@ -153,10 +153,10 @@ ResourceManager::~ResourceManager()
     makeCurrent();
 
     delete m_pNumericFont;
-    m_pNumericFont = NULL;
+    m_pNumericFont = nullptr;
 
     delete m_pFramebuffer;
-    m_pFramebuffer = NULL;
+    m_pFramebuffer = nullptr;
 
     qDeleteAll(m_Textures);
     qDeleteAll(m_Shaders);
@@ -198,12 +198,12 @@ ShaderProgram* ResourceManager::shader(const QString &name) const
             return m_Shaders.at(i);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 QOpenGLTexture* ResourceManager::texture(const QString &path) const
 {
-    QOpenGLTexture* tex = m_Textures.value(path, NULL);
+    QOpenGLTexture* tex = m_Textures.value(path, nullptr);
     return tex ? tex : m_pDefaultTexture;
 }
 
