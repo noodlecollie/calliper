@@ -15,7 +15,7 @@
 
 using namespace NS_RENDERER;
 
-TempShader* debugShader = NULL;
+TempShader* debugShader = nullptr;
 
 enum Passes
 {
@@ -31,7 +31,7 @@ public:
     }
 };
 
-ShaderFunctor* shaderFunctor = NULL;
+ShaderFunctor* shaderFunctor = nullptr;
 
 OpenGLTexturePointer debugTexture;
 
@@ -45,7 +45,7 @@ public:
     }
 };
 
-TextureFunctor* textureFunctor = NULL;
+TextureFunctor* textureFunctor = nullptr;
 
 QVector<float> triangle(const QVector2D min, const QVector2D max)
 {
@@ -119,8 +119,8 @@ void buildObjects(int dim)
 
 DemoGLWindow::DemoGLWindow()
 {
-    m_pTempSpec = NULL;
-    m_pTexture = NULL;
+    m_pTempSpec = nullptr;
+    m_pTexture = nullptr;
     m_iCounter = 1;
     m_iTris = 1;
 
@@ -145,16 +145,16 @@ DemoGLWindow::~DemoGLWindow()
     Global::shutdown();
 
     delete m_pTexture;
-    m_pTexture = NULL;
+    m_pTexture = nullptr;
 
     delete debugShader;
-    debugShader = NULL;
+    debugShader = nullptr;
 
     delete shaderFunctor;
-    shaderFunctor = NULL;
+    shaderFunctor = nullptr;
 
     delete textureFunctor;
-    textureFunctor = NULL;
+    textureFunctor = nullptr;
 
     debugTexture.clear();
 

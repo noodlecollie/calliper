@@ -51,7 +51,7 @@ namespace NS_MODEL
 
     bool SceneObject::isRoot() const
     {
-        return parentObject() == NULL;
+        return parentObject() == nullptr;
     }
 
     HierarchyState& SceneObject::hierarchy()
