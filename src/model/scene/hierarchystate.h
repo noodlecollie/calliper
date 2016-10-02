@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QVector3D>
 #include "math/eulerangle.h"
+#include <QMatrix4x4>
 
 namespace NS_MODEL
 {
@@ -24,15 +25,26 @@ namespace NS_MODEL
         void setScale(const QVector3D &scl);
         void setScale(float scl);
 
+        void cloneFrom(const HierarchyState& other);
+
+        QMatrix4x4 parentToLocal() const;
+        QMatrix4x4 localToParent() const;
+
     signals:
         void positionChanged();
         void rotationChanged();
         void scaleChanged();
 
     private:
+        void rebuildMatrices() const;
+
         QVector3D   m_vecPosition;
         EulerAngle  m_angRotation;
         QVector3D   m_vecScale;
+
+        mutable QMatrix4x4 m_matParentToLocal;
+        mutable QMatrix4x4 m_matLocalToParent;
+        mutable bool m_bMatricesStale;
     };
 }
 

@@ -19,7 +19,9 @@ SOURCES += \
     math/eulerangle.cpp \
     events/spatialconfigurationchange.cpp \
     scene/hierarchystate.cpp \
-    factories/geometryfactory.cpp
+    factories/geometryfactory.cpp \
+    sceneobjects/debugcube.cpp \
+    math/modelmath.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -30,7 +32,9 @@ HEADERS += \
     events/spatialconfigurationchange.h \
     events/modeleventtypes.h \
     scene/hierarchystate.h \
-    factories/geometryfactory.h
+    factories/geometryfactory.h \
+    sceneobjects/debugcube.h \
+    math/modelmath.h
 
 unix {
     target.path = /usr/lib

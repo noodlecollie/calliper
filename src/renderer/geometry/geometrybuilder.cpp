@@ -78,4 +78,24 @@ namespace NS_RENDERER
 
         return createNewSection();
     }
+
+    quint16 GeometryBuilder::shaderId() const
+    {
+        return m_iShaderId;
+    }
+
+    void GeometryBuilder::setShaderId(quint16 id)
+    {
+        m_iShaderId = id;
+    }
+
+    quint32 GeometryBuilder::textureId() const
+    {
+        return m_iTextureId;
+    }
+
+    void GeometryBuilder::setTextureId(quint32 id)
+    {
+        m_iTextureId = id;
+    }
 }

@@ -25,6 +25,12 @@ namespace NS_RENDERER
         void setModelToWorldMatrix(const QMatrix4x4 &matrix);
         void setAllSectionMatrices();
 
+        quint16 shaderId() const;
+        void setShaderId(quint16 id);
+
+        quint32 textureId() const;
+        void setTextureId(quint32 id);
+
         // Export all data into buffers provided.
         void consolidate(QVector<float> &positions, QVector<float> normals,
                          QVector<float> &colors, QVector<float> &textureCoordiates,

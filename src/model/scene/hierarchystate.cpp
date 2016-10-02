@@ -1,4 +1,6 @@
 #include "hierarchystate.h"
+#include "math/math.h"
+#include "math/modelmath.h"
 
 namespace NS_MODEL
 {
@@ -6,7 +8,10 @@ namespace NS_MODEL
         : QObject(parent),
           m_vecPosition(),
           m_angRotation(),
-          m_vecScale(1,1,1)
+          m_vecScale(1,1,1),
+          m_matParentToLocal(),
+          m_matLocalToParent(),
+          m_bMatricesStale(true)
     {
 
     }
@@ -22,6 +27,7 @@ namespace NS_MODEL
             return;
 
         m_vecPosition = pos;
+        m_bMatricesStale = true;
         emit positionChanged();
     }
 
@@ -36,6 +42,7 @@ namespace NS_MODEL
             return;
 
         m_angRotation = rot;
+        m_bMatricesStale = true;
         emit rotationChanged();
     }
 
@@ -50,11 +57,47 @@ namespace NS_MODEL
             return;
 
         m_vecScale = scl;
+        m_bMatricesStale = true;
         emit scaleChanged();
     }
 
     void HierarchyState::setScale(float scl)
     {
         setScale(QVector3D(scl, scl, scl));
+    }
+
+    void HierarchyState::cloneFrom(const HierarchyState &other)
+    {
+        setPosition(other.position());
+        setRotation(other.rotation());
+        setScale(other.scale());
+    }
+
+    QMatrix4x4 HierarchyState::parentToLocal() const
+    {
+        if ( m_bMatricesStale )
+            rebuildMatrices();
+
+        return m_matParentToLocal;
+    }
+
+    QMatrix4x4 HierarchyState::localToParent() const
+    {
+        if ( m_bMatricesStale )
+            rebuildMatrices();
+
+        return m_matLocalToParent;
+    }
+
+    void HierarchyState::rebuildMatrices() const
+    {
+        using namespace NS_CALLIPERUTIL;
+
+        m_matLocalToParent = Math::matrixTranslate(m_vecPosition)
+                * ModelMath::matrixOrientation(m_angRotation)
+                * Math::matrixScale(m_vecScale);
+        m_matParentToLocal = m_matLocalToParent.inverted();
+
+        m_bMatricesStale = false;
     }
 }

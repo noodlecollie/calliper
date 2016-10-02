@@ -15,6 +15,9 @@ namespace NS_MODEL
         : QObject(cloneFrom->parentObject())
     {
         commonInit();
+
+        m_pHierarchy->cloneFrom(cloneFrom->hierarchy());
+        m_bNeedsRendererUpdate = cloneFrom->m_bNeedsRendererUpdate;
     }
 
     SceneObject::~SceneObject()
@@ -27,7 +30,7 @@ namespace NS_MODEL
         m_pHierarchy = new HierarchyState(this);
         connect(m_pHierarchy, &HierarchyState::positionChanged, this, &SceneObject::onOwnPositionChanged);
         connect(m_pHierarchy, &HierarchyState::rotationChanged, this, &SceneObject::onOwnRotationChanged);
-        connect(m_pHierarchy, &HierarchyState::scaleChanged, this, &SceneObject::onOwnScaleChanged);\
+        connect(m_pHierarchy, &HierarchyState::scaleChanged, this, &SceneObject::onOwnScaleChanged);
 
         m_bNeedsRendererUpdate = true;
     }

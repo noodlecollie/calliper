@@ -4,7 +4,7 @@ namespace NS_MODEL
 {
     namespace GeometryFactory
     {
-        void cube(NS_RENDERER::GeometryBuilder &builder, float radius)
+        void cube(NS_RENDERER::GeometryBuilder &builder, float radius, const QColor &color)
         {
             using namespace NS_RENDERER;
 
@@ -58,6 +58,11 @@ namespace NS_MODEL
                 section.addNormal(normal);
                 section.addNormal(normal);
                 section.addNormal(normal);
+
+                section.addColor(color);
+                section.addColor(color);
+                section.addColor(color);
+                section.addColor(color);
 
                 section.addTextureCoordinate(QVector2D(0,0));
                 section.addTextureCoordinate(QVector2D(1,0));

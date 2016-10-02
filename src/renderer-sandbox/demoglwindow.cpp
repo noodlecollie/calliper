@@ -12,6 +12,7 @@
 #include "irenderer.h"
 #include "rendermodel/rendererinputobjectparams.h"
 #include "scene/scene.h"
+#include "sceneobjects/debugcube.h"
 
 using namespace NS_RENDERER;
 
@@ -131,10 +132,6 @@ DemoGLWindow::DemoGLWindow()
     m_HidingTimer.setInterval(50);
     m_HidingTimer.setSingleShot(false);
     connect(&m_HidingTimer, &QTimer::timeout, this, &DemoGLWindow::timeout);
-
-    // Testing
-    NS_MODEL::Scene scene;
-    NS_MODEL::SceneObject* sceneObject = scene.createSceneObject<NS_MODEL::SceneObject>(nullptr);
 }
 
 DemoGLWindow::~DemoGLWindow()
@@ -189,7 +186,20 @@ void DemoGLWindow::initializeGL()
     renderer->setTextureFunctor(textureFunctor);
 
     m_iTris = 15;
-    GLTRY(buildObjects(m_iTris));
+//    GLTRY(buildObjects(m_iTris));
+
+    {
+        using namespace NS_MODEL;
+
+        m_pScene = new Scene(this);
+        m_pSceneObject = m_pScene->createSceneObject<DebugCube>(nullptr);
+        m_pSceneObject->setRadius(0.2f);
+        m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, -0.3f));
+
+        GeometryBuilder builder(1,1, m_pSceneObject->hierarchy().parentToLocal());
+        m_pSceneObject->rendererUpdate(builder);
+        renderer->updateObject(RendererInputObjectParams(1, PASS_GENERAL, builder));
+    }
 
     m_FrameTime = QTime::currentTime();
     m_Timer.start();
@@ -238,4 +248,4 @@ void DemoGLWindow::timeout()
 
     renderer->setObjectFlags(m_iCounter, HiddenObjectFlag);
     doneCurrent();
-};
+}
