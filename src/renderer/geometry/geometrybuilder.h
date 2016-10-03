@@ -23,7 +23,6 @@ namespace NS_RENDERER
 
         QMatrix4x4 modelToWorldMatrix() const;
         void setModelToWorldMatrix(const QMatrix4x4 &matrix);
-        void setAllSectionMatrices();
 
         quint16 shaderId() const;
         void setShaderId(quint16 id);
@@ -37,6 +36,8 @@ namespace NS_RENDERER
                          QVector<quint32> &indices) const;
 
     private:
+        void setAllSectionMatrices();
+
         QList<GeometrySection>  m_Sections;
         quint16 m_iShaderId;
         quint32 m_iTextureId;

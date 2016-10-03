@@ -262,11 +262,6 @@ namespace NS_RENDERER
         return m_matModelToWorld;
     }
 
-    void GeometrySection::setModelToWorldMatrix(const QMatrix4x4 &matrix)
-    {
-        m_matModelToWorld = matrix;
-    }
-
     bool GeometrySection::isEmpty() const
     {
         return positionCount() < 1 && indexCount() < 1;

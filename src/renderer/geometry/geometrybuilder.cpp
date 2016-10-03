@@ -58,13 +58,14 @@ namespace NS_RENDERER
     void GeometryBuilder::setModelToWorldMatrix(const QMatrix4x4 &matrix)
     {
         m_matModelToWorld = matrix;
+        setAllSectionMatrices();
     }
 
     void GeometryBuilder::setAllSectionMatrices()
     {
         for ( int i = 0; i < m_Sections.count(); i++ )
         {
-            m_Sections[i].setModelToWorldMatrix(m_matModelToWorld);
+            m_Sections[i].m_matModelToWorld = m_matModelToWorld;
         }
     }
 

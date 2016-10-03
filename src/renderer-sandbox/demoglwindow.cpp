@@ -111,7 +111,7 @@ void buildObjects(int dim)
             float xTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)i)/(float)(dim-1));
             float yTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)j)/(float)(dim-1));
             QMatrix4x4 trans = transMat(QVector2D(xTrans, yTrans));
-            section.setModelToWorldMatrix(trans * scale);
+            builder.setModelToWorldMatrix(trans * scale);
             renderer->updateObject(RendererInputObjectParams(id, PASS_GENERAL, builder));
             id++;
         }

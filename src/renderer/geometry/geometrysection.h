@@ -17,6 +17,7 @@ namespace NS_RENDERER
 {
     class RENDERERSHARED_EXPORT GeometrySection
     {
+        friend class GeometryBuilder;
     public:
         enum AttributeType
         {
@@ -79,7 +80,6 @@ namespace NS_RENDERER
         void setDrawWidth(float width);
 
         const QMatrix4x4& modelToWorldMatrix() const;
-        void setModelToWorldMatrix(const QMatrix4x4 &matrix);
 
     private:
         void init();
