@@ -358,19 +358,4 @@ namespace NS_RENDERER
             batchGroup->setMatrixBatchDrawable(key.matrixBatchKey(), !hidden);
         }
     }
-
-    void RenderModel::updateObject(quint32 objectId, const QMatrix4x4 &matrix)
-    {
-        RenderModelKeyListPointer list = m_StoredObjects.value(objectId, RenderModelKeyListPointer());
-
-        if ( list.isNull() )
-            return;
-
-        foreach ( const RenderModelKey &key, *(list.data()) )
-        {
-            // TODO: Update matrix
-            // Also update insertion procedure for geometry sections, now that
-            // they all have the same matrix
-        }
-    }
 }

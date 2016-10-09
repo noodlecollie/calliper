@@ -10,6 +10,7 @@ namespace NS_MODEL
     namespace GeometryFactory
     {
         void cube(NS_RENDERER::GeometryBuilder &builder, float radius, const QColor &color);
+        void wireframeCube(NS_RENDERER::GeometryBuilder &builder, float radius, const QColor &color);
     }
 }
 

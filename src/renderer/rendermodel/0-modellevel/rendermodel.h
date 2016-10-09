@@ -26,8 +26,6 @@ namespace NS_RENDERER
         virtual void updateObject(const RendererInputObjectParams &object) override;
         virtual void removeObject(quint32 objectId) override;
 
-        virtual void updateObject(quint32 objectId, const QMatrix4x4 &matrix) override;
-
         virtual void draw(const RendererDrawParams &params) override;
 
         virtual void setObjectFlags(quint32 objectId, quint32 flags) override;

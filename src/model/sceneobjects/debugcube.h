@@ -20,10 +20,14 @@ namespace NS_MODEL
 
         virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const;
 
+        bool drawFrame() const;
+        void setDrawFrame(bool draw);
+
     private:
         void commonInit();
 
         float m_flRadius;
+        bool m_bDrawFrame;
     };
 }
 

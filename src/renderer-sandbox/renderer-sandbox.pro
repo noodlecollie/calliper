@@ -14,11 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     demoglwindow.cpp \
-    tempshader.cpp
+    tempshader.cpp \
+    colorshader.cpp
 
 HEADERS  += \
     demoglwindow.h \
-    tempshader.h
+    tempshader.h \
+    colorshader.h
 
 FORMS    +=
 

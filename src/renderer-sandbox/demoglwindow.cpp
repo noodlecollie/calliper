@@ -13,10 +13,12 @@
 #include "rendermodel/rendererinputobjectparams.h"
 #include "scene/scene.h"
 #include "sceneobjects/debugcube.h"
+#include "colorshader.h"
 
 using namespace NS_RENDERER;
 
 TempShader* debugShader = nullptr;
+ColorShader* colourShader = nullptr;
 
 enum Passes
 {
@@ -26,8 +28,11 @@ enum Passes
 class ShaderFunctor : public IShaderRetrievalFunctor
 {
 public:
-    virtual OpenGLShaderProgram* operator ()(quint16) const override
+    virtual OpenGLShaderProgram* operator ()(quint16 id) const override
     {
+        if ( id == 2 )
+            return colourShader;
+
         return debugShader;
     }
 };
@@ -41,7 +46,6 @@ class TextureFunctor : public ITextureRetrievalFunctor
 public:
     virtual OpenGLTexturePointer operator ()(quint64) const override
     {
-        // TODO: Fix me!
         return debugTexture;
     }
 };
@@ -147,6 +151,9 @@ DemoGLWindow::~DemoGLWindow()
     delete debugShader;
     debugShader = nullptr;
 
+    delete colourShader;
+    colourShader = nullptr;
+
     delete shaderFunctor;
     shaderFunctor = nullptr;
 
@@ -169,12 +176,21 @@ void DemoGLWindow::initializeGL()
     GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
+    GLuint blockIndex = 0;
+
     debugShader = new TempShader(1);
     debugShader->construct();
     debugShader->bind();
-    GLuint blockIndex = f->glGetUniformBlockIndex(debugShader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
+    blockIndex = f->glGetUniformBlockIndex(debugShader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
     f->glUniformBlockBinding(debugShader->programId(), blockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
     debugShader->release();
+
+    colourShader = new ColorShader(2);
+    colourShader->construct();
+    colourShader->bind();
+    blockIndex = f->glGetUniformBlockIndex(colourShader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
+    f->glUniformBlockBinding(colourShader->programId(), blockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
+    colourShader->release();
 
     shaderFunctor = new ShaderFunctor();
     textureFunctor = new TextureFunctor();
@@ -185,9 +201,6 @@ void DemoGLWindow::initializeGL()
     renderer->setShaderFunctor(shaderFunctor);
     renderer->setTextureFunctor(textureFunctor);
 
-    m_iTris = 15;
-//    GLTRY(buildObjects(m_iTris));
-
     {
         using namespace NS_MODEL;
 
@@ -196,9 +209,7 @@ void DemoGLWindow::initializeGL()
         m_pSceneObject->setRadius(0.2f);
         m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, -0.3f));
 
-        GeometryBuilder builder(1,1, m_pSceneObject->hierarchy().parentToLocal());
-        m_pSceneObject->rendererUpdate(builder);
-        renderer->updateObject(RendererInputObjectParams(1, PASS_GENERAL, builder));
+        buildCube();
     }
 
     m_FrameTime = QTime::currentTime();
@@ -235,17 +246,23 @@ void DemoGLWindow::paintGL()
 
 void DemoGLWindow::timeout()
 {
-    IRenderer* renderer = Global::renderer();
     makeCurrent();
-
-    renderer->clearObjectFlags(m_iCounter, HiddenObjectFlag);
-
-    ++m_iCounter;
-    if ( m_iCounter > (m_iTris*m_iTris) )
-    {
-        m_iCounter = 1;
-    }
-
-    renderer->setObjectFlags(m_iCounter, HiddenObjectFlag);
+    buildCube();
     doneCurrent();
+}
+
+void DemoGLWindow::buildCube()
+{
+    static float rot = 0.0f;
+
+    using namespace NS_MODEL;
+
+    m_pSceneObject->hierarchy().setRotation(EulerAngle(rot,rot,0));
+    rot += 5.0f;
+    if ( rot >= 360.0f )
+        rot -= 360.0f;
+
+    GeometryBuilder builder(1,1, m_pSceneObject->hierarchy().parentToLocal());
+    m_pSceneObject->rendererUpdate(builder);
+    Global::renderer()->updateObject(RendererInputObjectParams(1, PASS_GENERAL, builder));
 }

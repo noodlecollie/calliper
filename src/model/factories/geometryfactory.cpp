@@ -73,5 +73,46 @@ namespace NS_MODEL
                 section.addIndexTriangle(0,2,3);
             }
         }
+
+        void wireframeCube(ModuleRenderer::GeometryBuilder &builder, float radius, const QColor &color)
+        {
+            using namespace NS_RENDERER;
+
+            GeometrySection &section = builder.nextEmptySection();
+            section.setDrawMode(GL_LINES);
+
+            section.addPosition(QVector3D(-radius, -radius, -radius));
+            section.addPosition(QVector3D(radius,  -radius, -radius));
+            section.addPosition(QVector3D(-radius, radius,  -radius));
+            section.addPosition(QVector3D(radius,  radius,  -radius));
+            section.addPosition(QVector3D(-radius, -radius, radius));
+            section.addPosition(QVector3D(radius,  -radius, radius));
+            section.addPosition(QVector3D(-radius, radius,  radius));
+            section.addPosition(QVector3D(radius,  radius,  radius));
+
+            section.addColor(color);
+            section.addColor(color);
+            section.addColor(color);
+            section.addColor(color);
+            section.addColor(color);
+            section.addColor(color);
+            section.addColor(color);
+            section.addColor(color);
+
+            section.addIndexLine(0,1);
+            section.addIndexLine(1,3);
+            section.addIndexLine(3,2);
+            section.addIndexLine(2,0);
+
+            section.addIndexLine(4,5);
+            section.addIndexLine(5,7);
+            section.addIndexLine(7,6);
+            section.addIndexLine(6,4);
+
+            section.addIndexLine(0,4);
+            section.addIndexLine(1,5);
+            section.addIndexLine(2,6);
+            section.addIndexLine(3,7);
+        }
     }
 }

@@ -41,6 +41,7 @@ private slots:
     void timeout();
 
 private:
+    void buildCube();
     GLuint  m_iVAOID;
 
     TempSpec*   m_pTempSpec;

@@ -45,6 +45,7 @@ namespace NS_RENDERER
         void addColor(const QColor &col);
         void addTextureCoordinate(const QVector2D &coord);
         void addIndex(quint32 idx);
+        void addIndexLine(quint32 i0, quint32 i1);
         void addIndexTriangle(quint32 i0, quint32 i1, quint32 i2);
         void addVertex(const Vertex3D &vertex);
         void addVertex(const Vertex3DValueRef &vertex);
@@ -80,6 +81,7 @@ namespace NS_RENDERER
         void setDrawWidth(float width);
 
         const QMatrix4x4& modelToWorldMatrix() const;
+        void setModelToWorldMatrix(const QMatrix4x4 &mat);
 
     private:
         void init();

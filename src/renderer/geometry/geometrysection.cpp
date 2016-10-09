@@ -133,6 +133,13 @@ namespace NS_RENDERER
         m_Indices.append(i2);
     }
 
+    void GeometrySection::addIndexLine(quint32 i0, quint32 i1)
+    {
+        m_Indices.reserve(m_Indices.count() + 2);
+        m_Indices.append(i0);
+        m_Indices.append(i1);
+    }
+
     void GeometrySection::addVertex(const Vertex3D &vertex)
     {
         addPosition(vertex.position());
@@ -260,6 +267,11 @@ namespace NS_RENDERER
     const QMatrix4x4& GeometrySection::modelToWorldMatrix() const
     {
         return m_matModelToWorld;
+    }
+
+    void GeometrySection::setModelToWorldMatrix(const QMatrix4x4 &mat)
+    {
+        m_matModelToWorld = mat;
     }
 
     bool GeometrySection::isEmpty() const
