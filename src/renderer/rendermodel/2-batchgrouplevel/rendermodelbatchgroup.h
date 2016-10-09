@@ -35,6 +35,7 @@ namespace NS_RENDERER
         void clear();
         void setMatrixBatchDrawable(const MatrixBatchKey &key, bool drawable);
         bool matrixBatchDrawable(const MatrixBatchKey &key) const;
+        void changeMatrix(const MatrixBatchKey &key, const QMatrix4x4 &newMatrix);
 
         void printDebugInfo() const;
 

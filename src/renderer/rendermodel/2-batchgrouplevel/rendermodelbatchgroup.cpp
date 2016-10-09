@@ -229,4 +229,12 @@ namespace NS_RENDERER
             glBatch->destroy();
         }
     }
+
+    void RenderModelBatchGroup::changeMatrix(const MatrixBatchKey &key, const QMatrix4x4 &newMatrix)
+    {
+        // Remove object's data from the matrix batch (remove batch if it's now empty)
+        // Find a new matrix batch that corresponds to this new matrix
+        // Insert the data there
+        // Deal with OpenGL batch admin too
+    }
 }

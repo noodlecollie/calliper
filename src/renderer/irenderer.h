@@ -27,6 +27,9 @@ namespace NS_RENDERER
         virtual void updateObject(const RendererInputObjectParams &object) = 0;
         virtual void removeObject(quint32 objectId) = 0;
 
+        // Update the matrix of the object. It must exist first.
+        virtual void updateObject(quint32 objectId, const QMatrix4x4 &matrix) = 0;
+
         // These are set using bitwise OR, not just assignment.
         virtual void setObjectFlags(quint32 objectId, quint32 flags) = 0;
         virtual void clearObjectFlags(quint32 objectId, quint32 flags) = 0;
