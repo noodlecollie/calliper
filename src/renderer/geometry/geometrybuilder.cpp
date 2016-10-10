@@ -3,8 +3,9 @@
 
 namespace NS_RENDERER
 {
-    GeometryBuilder::GeometryBuilder(quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix)
-        : m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix)
+    GeometryBuilder::GeometryBuilder(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat,
+                                     const QMatrix4x4 &modelToWorldMatrix)
+        : m_iShaderId(shaderId), m_iTextureId(textureId), m_VertexFormat(vertexFormat), m_matModelToWorld(modelToWorldMatrix)
     {
         createNewSection();
     }
@@ -18,15 +19,16 @@ namespace NS_RENDERER
        return m_Sections.last();
     }
 
-    GeometrySection& GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix)
+    GeometrySection& GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat,
+                                                       const QMatrix4x4 &matrix)
     {
-        m_Sections.append(GeometrySection(shaderId, textureId, matrix));
+        m_Sections.append(GeometrySection(shaderId, textureId, vertexFormat, matrix));
         return currentSection();
     }
 
     GeometrySection& GeometryBuilder::createNewSection()
     {
-        m_Sections.append(GeometrySection(m_iShaderId, m_iTextureId, m_matModelToWorld));
+        m_Sections.append(GeometrySection(m_iShaderId, m_iTextureId, m_VertexFormat, m_matModelToWorld));
         return currentSection();
     }
 
@@ -98,5 +100,15 @@ namespace NS_RENDERER
     void GeometryBuilder::setTextureId(quint32 id)
     {
         m_iTextureId = id;
+    }
+
+    VertexFormat GeometryBuilder::vertexFormat() const
+    {
+        return m_VertexFormat;
+    }
+
+    void GeometryBuilder::setVertexFormat(const VertexFormat &format)
+    {
+        m_VertexFormat = format;
     }
 }

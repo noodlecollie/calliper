@@ -98,7 +98,7 @@ void buildObjects(int dim)
     GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
     GLuint indices[] = { 0,1,2 };
 
-    GeometryBuilder builder(1,1, QMatrix4x4());
+    GeometryBuilder builder(1,1, debugShader->vertexFormat(), QMatrix4x4());
     GeometrySection& section = builder.currentSection();
     section.addPositions(tri1.constData(), tri1.count(), 3);
     section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
@@ -262,7 +262,7 @@ void DemoGLWindow::buildCube()
     if ( rot >= 360.0f )
         rot -= 360.0f;
 
-    GeometryBuilder builder(1,1, m_pSceneObject->hierarchy().parentToLocal());
+    GeometryBuilder builder(1,1, debugShader->vertexFormat(), m_pSceneObject->hierarchy().parentToLocal());
     m_pSceneObject->rendererUpdate(builder);
     Global::renderer()->updateObject(RendererInputObjectParams(1, PASS_GENERAL, builder));
 }

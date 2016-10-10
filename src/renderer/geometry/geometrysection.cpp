@@ -62,9 +62,10 @@ namespace
 
 namespace NS_RENDERER
 {
-    GeometrySection::GeometrySection(quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix)
+    GeometrySection::GeometrySection(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat,
+                                     const QMatrix4x4 modelToWorldMatrix)
         : m_iPositionCount(0), m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
-          m_iShaderId(shaderId), m_iTextureId(textureId),
+          m_iShaderId(shaderId), m_iTextureId(textureId), m_VertexFormat(vertexFormat),
           m_matModelToWorld(modelToWorldMatrix)
     {
         init();
@@ -277,5 +278,15 @@ namespace NS_RENDERER
     bool GeometrySection::isEmpty() const
     {
         return positionCount() < 1 && indexCount() < 1;
+    }
+
+    const VertexFormat& GeometrySection::vertexFormat() const
+    {
+        return m_VertexFormat;
+    }
+
+    void GeometrySection::setVertexFormat(const VertexFormat &format)
+    {
+        m_VertexFormat = format;
     }
 }
