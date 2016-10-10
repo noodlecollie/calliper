@@ -43,7 +43,7 @@ namespace NS_RENDERER
 
         void copyVertexDataIntoBuffer(char* buffer, int size, int& positionOffset, int& normalOffset,
                                 int& colorOffset, int& texCoordOffset) const;
-        void copyIndexDataIntoBuffer(char* buffer, int size, quint32& indexDelta, int& offset);
+        void copyIndexDataIntoBuffer(char* buffer, int size, quint32 &indexDelta, int positionComponents, int& offset);
 
         void printDebugInfo() const;
 

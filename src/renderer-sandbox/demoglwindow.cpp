@@ -174,6 +174,8 @@ void DemoGLWindow::initializeGL()
     GL_CURRENT_F;
 
     GLTRY(f->glEnable(GL_DEPTH_TEST));
+    GLTRY(f->glFrontFace(GL_CCW));
+    GLTRY(f->glCullFace(GL_BACK));
 
     GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
     GLTRY(f->glBindVertexArray(m_iVAOID));

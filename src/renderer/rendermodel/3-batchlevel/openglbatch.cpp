@@ -217,11 +217,12 @@ namespace NS_RENDERER
         GLTRY(size = m_IndexBuffer.size());
 
         int offset = 0;
+        int positionComponents = m_pShaderSpec->vertexFormat().positionComponents();
         quint32 indexDelta = 0;
 
         foreach ( const MatrixBatchPointer& batch, m_MatrixBatchTable.values() )
         {
-            batch->copyIndexDataIntoBuffer(buffer, size, indexDelta, offset);
+            batch->copyIndexDataIntoBuffer(buffer, size, indexDelta, positionComponents, offset);
         }
 
         GLTRY(m_IndexBuffer.unmap());

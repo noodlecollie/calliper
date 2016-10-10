@@ -12,7 +12,7 @@ namespace
         offset += dataBytes;
     }
 
-    void copyItemDataIntoBuffer(const QVector<quint32>& data, char* buffer, int size, quint32& indexDelta, int& offset)
+    void copyItemDataIntoBuffer(const QVector<quint32>& data, char* buffer, int size, quint32 indexDelta, int& offset)
     {
         int dataBytes = data.count() * sizeof(quint32);
         Q_ASSERT_X(offset + dataBytes <= size, Q_FUNC_INFO, "GL buffer overflow when copying data!");
@@ -105,11 +105,12 @@ namespace NS_RENDERER
         }
     }
 
-    void MatrixBatch::copyIndexDataIntoBuffer(char *buffer, int size, quint32 &indexDelta, int &offset)
+    void MatrixBatch::copyIndexDataIntoBuffer(char *buffer, int size, quint32 &indexDelta, int positionComponents, int &offset)
     {
         foreach ( const MatrixBatchItemPointer &item, m_Items.values() )
         {
             copyItemDataIntoBuffer(item->m_Indices, buffer, size, indexDelta, offset);
+            indexDelta += item->m_Positions.count() / positionComponents;
         }
     }
 
