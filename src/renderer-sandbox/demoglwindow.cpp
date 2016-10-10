@@ -173,6 +173,8 @@ void DemoGLWindow::initializeGL()
     qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
     GL_CURRENT_F;
 
+    GLTRY(f->glEnable(GL_DEPTH_TEST));
+
     GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
     GLTRY(f->glBindVertexArray(m_iVAOID));
 
@@ -235,7 +237,7 @@ void DemoGLWindow::paintGL()
     const qreal retinaScale = devicePixelRatio();
     GLTRY(f->glViewport(0, 0, width() * retinaScale, height() * retinaScale));
 
-    GLTRY(f->glClear(GL_COLOR_BUFFER_BIT));
+    GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
     GLTRY(f->glBindVertexArray(m_iVAOID));
 

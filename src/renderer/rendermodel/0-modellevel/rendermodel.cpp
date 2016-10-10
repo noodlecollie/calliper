@@ -114,7 +114,6 @@ namespace NS_RENDERER
             return;
 
         RenderModelPassKey passKey(object.passIndex());
-        MatrixBatchItemKey batchItemKey(object.objectId());
         bool drawable = true;
         if ( m_ObjectFlags.contains(object.objectId()) )
         {
@@ -123,6 +122,7 @@ namespace NS_RENDERER
 
         RenderModelKeyListPointer list = RenderModelKeyListPointer::create();
 
+        quint8 sectionId = 0;
         foreach ( const GeometrySection &section, object.geometrySectionList() )
         {
             RenderModelKey key = RenderModelKey(
@@ -134,7 +134,7 @@ namespace NS_RENDERER
                                 section.drawWidth()
                             ),
                             MatrixBatchKey(section.modelToWorldMatrix()),
-                            batchItemKey
+                            MatrixBatchItemKey(object.objectId(), sectionId)
                         );
 
             RenderModelPass::RenderModelBatchGroupPointer batchGroup;
@@ -149,6 +149,8 @@ namespace NS_RENDERER
 
             list->append(key);
             batchGroup->setMatrixBatchDrawable(key.matrixBatchKey(), drawable);
+
+            sectionId++;
         }
 
         m_StoredObjects.insert(object.objectId(), list);
