@@ -2,60 +2,74 @@
 
 namespace
 {
-    void append(QVector<float> &list, const QVector2D &vec)
+    class QColorWrapper
     {
-        int count = list.count();
-        list.resize(count + 2);
-
-        float* data = list.data() + count;
-        data[0] = vec.x();
-        data[1] = vec.y();
-    }
-
-    void append(QVector<float> &list, const QVector3D &vec)
-    {
-        int count = list.count();
-        list.resize(count + 3);
-
-        float* data = list.data() + count;
-        data[0] = vec.x();
-        data[1] = vec.y();
-        data[2] = vec.z();
-    }
-
-    void append(QVector<float> &list, const QVector4D &vec)
-    {
-        int count = list.count();
-        list.resize(count + 4);
-
-        float* data = list.data() + count;
-        data[0] = vec.x();
-        data[1] = vec.y();
-        data[2] = vec.z();
-        data[3] = vec.w();
-    }
-
-    void append(QVector<float> &list, const QColor &col)
-    {
-        int count = list.count();
-        list.resize(count + 4);
-
-        float* data = list.data() + count;
-        data[0] = col.redF();
-        data[1] = col.greenF();
-        data[2] = col.blueF();
-        data[3] = col.alphaF();
-    }
-
-    void append(QVector<float> &list, const float *data, int count)
-    {
-        int listSize = list.count();
-        list.resize(listSize + count);
-
-        float* listData = list.data() + listSize;
-        for ( int i = 0; i < count; i++ )
+    public:
+        QColorWrapper(const QColor &col)
+            : m_Color(col)
         {
-            listData[i] = data[i];
+        }
+
+        qreal operator [](int index) const
+        {
+            switch (index)
+            {
+                case 0:
+                    return m_Color.redF();
+                case 1:
+                    return m_Color.greenF();
+                case 2:
+                    return m_Color.blueF();
+                case 3:
+                    return m_Color.alphaF();
+                default:
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Index out of range");
+                    return 0.0f;
+            }
+        }
+
+    private:
+        const QColor& m_Color;
+    };
+
+    // Component count is how many components per attribute the vertex format expects.
+    // eg. 4 floats for a position.
+    // Anything beyond what the input vector can provide will be left as 0.
+    template<typename T>
+    void append(QVector<float> &list, const T &vec, int vecLength, int componentCount)
+    {
+        int count = list.count();
+        list.resize(count + componentCount);
+
+        float* data = list.data() + count;
+        int min = qMin(componentCount, vecLength);
+        for ( int i = 0; i < min; i++ )
+        {
+                data[i] = vec[i];
+        }
+    }
+
+    void vertexFormatComponents(const NS_RENDERER::VertexFormat &format, NS_RENDERER::GeometrySection::AttributeType att)
+    {
+        using namespace NS_RENDERER;
+
+        switch (att)
+        {
+            case GeometrySection::PositionAttribute:
+                return format.positionComponents();
+
+            case GeometrySection::NormalAttribute:
+                return format.normalComponents();
+
+            case GeometrySection::ColorAttribute:
+                return format.colorComponents();
+
+            case GeometrySection::TextureCoordinateAttribute:
+                return format.textureCoordinateComponents();
+
+            default:
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unrecognised attribute");
+                return 0;
         }
     }
 }
@@ -81,34 +95,40 @@ namespace NS_RENDERER
 
     void GeometrySection::add(AttributeType att, const float *data, int count)
     {
-        append(m_Attributes[att], data, count);
+        append<const float*>(m_Attributes[att], data, count,
+                             vertexFormatComponents(m_VertexFormat, att));
     }
 
     void GeometrySection::addPosition(const QVector3D &pos)
     {
-        append(m_Attributes[PositionAttribute], pos);
+        append<QVector3D>(m_Attributes[PositionAttribute], pos, 3,
+                          vertexFormatComponents(m_VertexFormat, PositionAttribute));
         m_iPositionCount++;
     }
 
     void GeometrySection::addPosition(const QVector4D &pos)
     {
-        append(m_Attributes[PositionAttribute], pos);
+        append<QVector4D>(m_Attributes[PositionAttribute], pos, 4,
+                          vertexFormatComponents(m_VertexFormat, PositionAttribute));
         m_iPositionCount++;
     }
 
     void GeometrySection::addNormal(const QVector3D &vec)
     {
-        append(m_Attributes[NormalAttribute], vec);
+        append<QVector3D>(m_Attributes[NormalAttribute], vec, 3,
+                          vertexFormatComponents(m_VertexFormat, NormalAttribute));
     }
 
     void GeometrySection::addColor(const QColor &col)
     {
-        append(m_Attributes[ColorAttribute], col);
+        append<QColorWrapper>(m_Attributes[ColorAttribute], QColorWrapper(col), 4,
+                          vertexFormatComponents(m_VertexFormat, ColorAttribute));
     }
 
     void GeometrySection::addTextureCoordinate(const QVector2D &coord)
     {
-        append(m_Attributes[TextureCoordinateAttribute], coord);
+        append<QVector2D>(m_Attributes[TextureCoordinateAttribute], coord, 2,
+                          vertexFormatComponents(m_VertexFormat, TextureCoordinateAttribute));
     }
 
     int GeometrySection::floatCount(AttributeType att) const
