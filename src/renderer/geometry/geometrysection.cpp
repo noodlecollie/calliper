@@ -49,7 +49,7 @@ namespace
         }
     }
 
-    void vertexFormatComponents(const NS_RENDERER::VertexFormat &format, NS_RENDERER::GeometrySection::AttributeType att)
+    int vertexFormatComponents(const NS_RENDERER::VertexFormat &format, NS_RENDERER::GeometrySection::AttributeType att)
     {
         using namespace NS_RENDERER;
 
