@@ -59,8 +59,8 @@ namespace NS_RENDERER
         const float* vertexConstData(AttributeType type) const;
         const quint32* indexConstData() const;
 
-        const QVector<float> vertexConstVector(AttributeType type) const;
-        const QVector<quint32> indexConstVector() const;
+        const QVector<float>& vertexConstVector(AttributeType type) const;
+        const QVector<quint32>& indexConstVector() const;
 
         bool hasNormals() const;
         bool hasColors() const;

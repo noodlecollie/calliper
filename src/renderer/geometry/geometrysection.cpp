@@ -187,12 +187,12 @@ namespace NS_RENDERER
         return m_Indices.constData();
     }
 
-    const QVector<float> GeometrySection::vertexConstVector(AttributeType type) const
+    const QVector<float>& GeometrySection::vertexConstVector(AttributeType type) const
     {
         return m_Attributes.at(type);
     }
 
-    const QVector<quint32> GeometrySection::indexConstVector() const
+    const QVector<quint32>& GeometrySection::indexConstVector() const
     {
         return m_Indices;
     }
