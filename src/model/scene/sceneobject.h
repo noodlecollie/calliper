@@ -27,6 +27,10 @@ namespace NS_MODEL
         void flagNeedsRendererUpdate();
         void rendererUpdate(NS_RENDERER::GeometryBuilder &builder) const;
 
+        // Not cached, so could be expensive if called a lot.
+        QMatrix4x4 rootToLocalMatrix() const;
+        QMatrix4x4 localToRootMatrix() const;
+
     protected:
         // SceneObject constructors must have a first parameter as a parent Scene pointer
         // to be valid for use with Scene::createSceneObject().

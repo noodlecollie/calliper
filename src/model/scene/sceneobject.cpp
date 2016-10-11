@@ -133,4 +133,25 @@ namespace NS_MODEL
         delete m_pHierarchy;
         m_pHierarchy = hs;
     }
+
+    QMatrix4x4 SceneObject::localToRootMatrix() const
+    {
+        QMatrix4x4 mat;
+        SceneObject* obj = this;
+
+        do
+        {
+            // We premultiply each matrix to go from the current object to its parent.
+            mat = obj->hierarchy().localToParent() * mat;
+            obj = obj->parentObject();
+        }
+        while ( obj );
+
+        return mat;
+    }
+
+    QMatrix4x4 SceneObject::rootToLocalMatrix() const
+    {
+        return localToRootMatrix().inverted();
+    }
 }
