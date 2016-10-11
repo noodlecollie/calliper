@@ -111,4 +111,15 @@ namespace NS_RENDERER
     {
         m_VertexFormat = format;
     }
+
+    bool GeometryBuilder::isEmpty() const
+    {
+        foreach ( const GeometrySection &section, m_Sections )
+        {
+            if ( !section.isEmpty() )
+                return false;
+        }
+
+        return true;
+    }
 }

@@ -12,6 +12,8 @@ namespace NS_MODEL
     DebugCube::DebugCube(const DebugCube *cloneFrom)
         : SceneObject(cloneFrom)
     {
+        commonInit();
+
         m_flRadius = cloneFrom->m_flRadius;
         m_bDrawFrame = cloneFrom->m_bDrawFrame;
     }

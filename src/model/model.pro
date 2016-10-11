@@ -21,7 +21,8 @@ SOURCES += \
     scene/hierarchystate.cpp \
     factories/geometryfactory.cpp \
     sceneobjects/debugcube.cpp \
-    math/modelmath.cpp
+    math/modelmath.cpp \
+    sceneobjects/scenecamera.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -34,7 +35,8 @@ HEADERS += \
     scene/hierarchystate.h \
     factories/geometryfactory.h \
     sceneobjects/debugcube.h \
-    math/modelmath.h
+    math/modelmath.h \
+    sceneobjects/scenecamera.h
 
 unix {
     target.path = /usr/lib

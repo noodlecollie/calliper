@@ -39,6 +39,9 @@ namespace NS_RENDERER
                          QVector<float> &colors, QVector<float> &textureCoordiates,
                          QVector<quint32> &indices) const;
 
+        // Checks all sections - they must have no positions or indices.
+        bool isEmpty() const;
+
     private:
         void setAllSectionMatrices();
 
