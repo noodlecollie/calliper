@@ -5,14 +5,13 @@
 namespace NS_MODEL
 {
     SceneObject::SceneObject(Scene* parentScene, SceneObject* parentObject)
-        : QObject(parentObject)
+        : QObject(parentObject), m_pParentScene(parentScene)
     {
-        Q_ASSERT_X(parentScene, Q_FUNC_INFO, "Must have a valid parent scene!");
         commonInit();
     }
 
     SceneObject::SceneObject(const SceneObject *cloneFrom)
-        : QObject(cloneFrom->parentObject())
+        : QObject(cloneFrom->parentObject()), m_pParentScene(cloneFrom->m_pScene)
     {
         commonInit();
 
@@ -27,6 +26,7 @@ namespace NS_MODEL
 
     void SceneObject::commonInit()
     {
+        Q_ASSERT_X(m_pParentScene, Q_FUNC_INFO, "Must have a valid parent scene!");
         m_pHierarchy = initHierarchyState(true);
         m_bNeedsRendererUpdate = true;
     }
@@ -153,5 +153,15 @@ namespace NS_MODEL
     QMatrix4x4 SceneObject::rootToLocalMatrix() const
     {
         return localToRootMatrix().inverted();
+    }
+
+    QList<SceneObject*> SceneObject::childSceneObjects() const
+    {
+        return findChildren<SceneObject*>(QString(), Qt::FindDirectChildrenOnly);
+    }
+
+    Scene* SceneObject::parentScene() const
+    {
+        return m_pParentScene;
     }
 }

@@ -18,6 +18,7 @@ namespace NS_MODEL
     public:
         SceneObject* parentObject() const;
         bool isRoot() const;
+        Scene* parentScene() const;
 
         HierarchyState& hierarchy();
         const HierarchyState& hierarchy() const;
@@ -30,6 +31,8 @@ namespace NS_MODEL
         // Not cached, so could be expensive if called a lot.
         QMatrix4x4 rootToLocalMatrix() const;
         QMatrix4x4 localToRootMatrix() const;
+
+        QList<SceneObject*> childSceneObjects() const;
 
     protected:
         // SceneObject constructors must have a first parameter as a parent Scene pointer
@@ -65,6 +68,7 @@ namespace NS_MODEL
         void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
         HierarchyState* initHierarchyState(bool isScalable);
 
+        Scene* m_pParentScene;
         HierarchyState* m_pHierarchy;
         mutable bool m_bNeedsRendererUpdate;
     };

@@ -23,6 +23,7 @@ namespace NS_MODEL
         template<typename T>
         T* cloneSceneObject(const T* cloneFrom)
         {
+            Q_ASSERT_X(cloneFrom->scene() == this, Q_FUNC_INFO, "Cannot clone object from a different scene!");
             T* obj = new T(cloneFrom);
             processSceneObjectCloned(obj);
             return obj;
@@ -30,9 +31,13 @@ namespace NS_MODEL
 
         void destroySceneObject(SceneObject* obj);
 
+        SceneObject* rootObject() const;
+
     private:
         void processSceneObjectCreated(SceneObject* object);
         void processSceneObjectCloned(SceneObject* object);
+
+        SceneObject* m_pRootObject;
     };
 }
 

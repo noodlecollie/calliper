@@ -22,7 +22,8 @@ SOURCES += \
     factories/geometryfactory.cpp \
     sceneobjects/debugcube.cpp \
     math/modelmath.cpp \
-    sceneobjects/scenecamera.cpp
+    sceneobjects/scenecamera.cpp \
+    scenerenderer/scenerenderer.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -36,7 +37,8 @@ HEADERS += \
     factories/geometryfactory.h \
     sceneobjects/debugcube.h \
     math/modelmath.h \
-    sceneobjects/scenecamera.h
+    sceneobjects/scenecamera.h \
+    scenerenderer/scenerenderer.h
 
 unix {
     target.path = /usr/lib
