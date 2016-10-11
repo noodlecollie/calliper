@@ -23,7 +23,8 @@ SOURCES += \
     sceneobjects/debugcube.cpp \
     math/modelmath.cpp \
     sceneobjects/scenecamera.cpp \
-    scenerenderer/scenerenderer.cpp
+    scenerenderer/scenerenderer.cpp \
+    camera/cameralens.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -38,7 +39,8 @@ HEADERS += \
     sceneobjects/debugcube.h \
     math/modelmath.h \
     sceneobjects/scenecamera.h \
-    scenerenderer/scenerenderer.h
+    scenerenderer/scenerenderer.h \
+    camera/cameralens.h
 
 unix {
     target.path = /usr/lib

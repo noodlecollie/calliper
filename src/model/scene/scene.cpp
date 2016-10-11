@@ -24,12 +24,12 @@ namespace NS_MODEL
         // TODO: Emit signals
     }
 
-    void Scene::destroySceneObject(SceneObject *obj)
+    void Scene::destroySceneObject(SceneObject *object)
     {
         Q_ASSERT_X(object->parentScene() == this, Q_FUNC_INFO, "Scene object must belong to this scene!");
 
         // TODO: Make recursive and emit signals
-        delete obj;
+        delete object;
     }
 
     SceneObject* Scene::rootObject() const

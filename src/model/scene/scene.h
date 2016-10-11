@@ -29,7 +29,7 @@ namespace NS_MODEL
             return obj;
         }
 
-        void destroySceneObject(SceneObject* obj);
+        void destroySceneObject(SceneObject* object);
 
         SceneObject* rootObject() const;
 

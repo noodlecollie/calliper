@@ -3,6 +3,7 @@
 
 #include "model_global.h"
 #include "scene/sceneobject.h"
+#include "camera/cameralens.h"
 
 namespace NS_MODEL
 {
@@ -12,6 +13,9 @@ namespace NS_MODEL
     public:
         virtual bool scalable() const override;
 
+        CameraLens lens() const;
+        void setLens(const CameraLens &lens);
+
     protected:
         SceneCamera(Scene* parentScene, SceneObject* parentObject);
         explicit SceneCamera(const SceneCamera* cloneFrom);
@@ -19,6 +23,8 @@ namespace NS_MODEL
 
     private:
         void commonInit();
+
+        CameraLens  m_Lens;
     };
 }
 

@@ -11,7 +11,7 @@ namespace NS_MODEL
     }
 
     SceneObject::SceneObject(const SceneObject *cloneFrom)
-        : QObject(cloneFrom->parentObject()), m_pParentScene(cloneFrom->m_pScene)
+        : QObject(cloneFrom->parentObject()), m_pParentScene(cloneFrom->m_pParentScene)
     {
         commonInit();
 
@@ -137,7 +137,7 @@ namespace NS_MODEL
     QMatrix4x4 SceneObject::localToRootMatrix() const
     {
         QMatrix4x4 mat;
-        SceneObject* obj = this;
+        const SceneObject* obj = this;
 
         do
         {
