@@ -1,5 +1,7 @@
 #include "rendermodelpass.h"
 #include <QtDebug>
+#include "opengl/openglhelpers.h"
+#include "opengl/openglerrors.h"
 
 namespace
 {

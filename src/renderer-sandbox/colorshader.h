@@ -14,7 +14,7 @@ public:
 
     virtual NS_RENDERER::VertexFormat vertexFormat() const override
     {
-        return NS_RENDERER::VertexFormat(3, 0, 4, 0);
+        return NS_RENDERER::VertexFormat(4, 0, 4, 0);
     }
 
     virtual int maxBatchedItems() const override

@@ -60,6 +60,9 @@ namespace NS_RENDERER
         const RenderModelBatchGroupKey m_Key;   // For convenience
         const QOpenGLBuffer::UsagePattern m_iUsagePattern;
         const IShaderSpec* m_pShaderSpec;
+
+        GLenum  m_iDrawMode;
+        float   m_flDrawWidth;
     };
 }
 

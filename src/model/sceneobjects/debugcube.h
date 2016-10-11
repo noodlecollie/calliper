@@ -13,15 +13,15 @@ namespace NS_MODEL
         float radius() const;
         void setRadius(float r);
 
+        bool drawFrame() const;
+        void setDrawFrame(bool draw);
+
     protected:
         DebugCube(Scene* parentScene, SceneObject* parentObject);
         explicit DebugCube(const DebugCube* cloneFrom);
         virtual ~DebugCube();
 
         virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const;
-
-        bool drawFrame() const;
-        void setDrawFrame(bool draw);
 
     private:
         void commonInit();

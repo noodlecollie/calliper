@@ -7,7 +7,8 @@ namespace NS_RENDERER
     RenderModelBatchGroup::RenderModelBatchGroup(const RenderModelBatchGroupKey &key,
                                                  QOpenGLBuffer::UsagePattern usagePattern,
                                                  const IShaderSpec* shaderSpec)
-        : m_Key(key), m_iUsagePattern(usagePattern), m_pShaderSpec(shaderSpec)
+        : m_Key(key), m_iUsagePattern(usagePattern), m_pShaderSpec(shaderSpec), m_iDrawMode(key.drawMode()),
+          m_flDrawWidth(key.drawWidth())
     {
     }
 
@@ -99,6 +100,7 @@ namespace NS_RENDERER
         if ( m_WaitingBatches.isEmpty() )
         {
             OpenGLBatchPointer glBatch = OpenGLBatchPointer::create(m_iUsagePattern, m_pShaderSpec);
+            glBatch->setDrawMode(m_iDrawMode);
             glBatch->create();
             m_WaitingBatches.insert(glBatch);
         }

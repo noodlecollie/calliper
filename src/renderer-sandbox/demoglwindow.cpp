@@ -212,6 +212,7 @@ void DemoGLWindow::initializeGL()
         m_pSceneObject = m_pScene->createSceneObject<DebugCube>(nullptr);
         m_pSceneObject->setRadius(0.2f);
         m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, -0.3f));
+        m_pSceneObject->setDrawFrame(true);
 
         buildCube();
     }
@@ -261,7 +262,7 @@ void DemoGLWindow::buildCube()
 
     using namespace NS_MODEL;
 
-    m_pSceneObject->hierarchy().setRotation(EulerAngle(rot,rot,0));
+    m_pSceneObject->hierarchy().setRotation(EulerAngle(rot,rot,rot));
     rot += 5.0f;
     if ( rot >= 360.0f )
         rot -= 360.0f;

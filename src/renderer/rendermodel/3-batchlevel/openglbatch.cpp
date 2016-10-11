@@ -56,7 +56,8 @@ namespace NS_RENDERER
           m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
           m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
           m_UniformBuffer(m_iUsagePattern),
-          m_bNeedsUpload(true)
+          m_bNeedsUpload(true),
+          m_iDrawMode(GL_TRIANGLES)
     {
         Q_ASSERT(shaderSpec);
 
@@ -381,7 +382,7 @@ namespace NS_RENDERER
     void OpenGLBatch::draw()
     {
         GL_CURRENT_F;
-        GLTRY(f->glDrawElements(GL_TRIANGLES, m_UploadMetadata.m_iIndexBytes / sizeof(quint32), GL_UNSIGNED_INT, (void*)0));
+        GLTRY(f->glDrawElements(m_iDrawMode, m_UploadMetadata.m_iIndexBytes / sizeof(quint32), GL_UNSIGNED_INT, (void*)0));
     }
 
     void OpenGLBatch::releaseAll()
@@ -404,5 +405,15 @@ namespace NS_RENDERER
     void OpenGLBatch::exportUniformData(QVector<float> &out)
     {
         readBufferData<float>(m_UniformBuffer, out);
+    }
+
+    GLenum OpenGLBatch::drawMode() const
+    {
+        return m_iDrawMode;
+    }
+
+    void OpenGLBatch::setDrawMode(GLenum mode)
+    {
+        m_iDrawMode = mode;
     }
 }

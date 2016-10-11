@@ -57,6 +57,9 @@ namespace NS_RENDERER
         void exportIndexData(QVector<quint32> &out);
         void exportUniformData(QVector<float> &out);
 
+        GLenum drawMode() const;
+        void setDrawMode(GLenum mode);
+
     private:
         static inline quint32 maskFromNumberOfBits(int numBits)
         {
@@ -98,6 +101,8 @@ namespace NS_RENDERER
         bool                m_bNeedsUpload;
         QHash<MatrixBatchKey, MatrixBatchPointer>   m_MatrixBatchTable;
         MatrixBatchItemMetadata m_UploadMetadata;
+
+        GLenum m_iDrawMode;
     };
 }
 
