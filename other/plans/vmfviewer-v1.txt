@@ -1,0 +1,8 @@
+Load a VMF, display brushes in varying shades of grey (to tell apart) with basic lighting, move camera around with free look.
+
+Requires:
+- VMF importer (can copy from original project)
+- Brush scene object
+- Camera scene object
+- Scene renderer
+- Keyboard/mouse input to control camera, hard-coded controls
