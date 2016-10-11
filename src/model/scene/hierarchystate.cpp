@@ -4,11 +4,12 @@
 
 namespace NS_MODEL
 {
-    HierarchyState::HierarchyState(QObject* parent)
+    HierarchyState::HierarchyState(bool scalable, QObject* parent)
         : QObject(parent),
           m_vecPosition(),
           m_angRotation(),
           m_vecScale(1,1,1),
+          m_bScalable(scalable),
           m_matParentToLocal(),
           m_matLocalToParent(),
           m_bMatricesStale(true)
@@ -53,7 +54,7 @@ namespace NS_MODEL
 
     void HierarchyState::setScale(const QVector3D &scl)
     {
-        if ( scl == m_vecScale )
+        if ( scl == m_vecScale || !m_bScalable )
             return;
 
         m_vecScale = scl;
@@ -99,5 +100,10 @@ namespace NS_MODEL
         m_matParentToLocal = m_matLocalToParent.inverted();
 
         m_bMatricesStale = false;
+    }
+
+    bool HierarchyState::scalable() const
+    {
+        return m_bScalable;
     }
 }

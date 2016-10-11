@@ -13,7 +13,7 @@ namespace NS_MODEL
     {
         Q_OBJECT
     public:
-        explicit HierarchyState(QObject* parent = 0);
+        explicit HierarchyState(bool scalable = true, QObject* parent = 0);
 
         QVector3D position() const;
         void setPosition(const QVector3D &pos);
@@ -25,7 +25,10 @@ namespace NS_MODEL
         void setScale(const QVector3D &scl);
         void setScale(float scl);
 
+        // If not scalable, scale is not set.
         void cloneFrom(const HierarchyState& other);
+
+        bool scalable() const;
 
         QMatrix4x4 parentToLocal() const;
         QMatrix4x4 localToParent() const;
@@ -41,6 +44,7 @@ namespace NS_MODEL
         QVector3D   m_vecPosition;
         EulerAngle  m_angRotation;
         QVector3D   m_vecScale;
+        bool m_bScalable;
 
         mutable QMatrix4x4 m_matParentToLocal;
         mutable QMatrix4x4 m_matLocalToParent;

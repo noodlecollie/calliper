@@ -21,6 +21,7 @@ namespace NS_MODEL
 
         HierarchyState& hierarchy();
         const HierarchyState& hierarchy() const;
+        virtual bool scalable() const;
 
         bool needsRendererUpdate() const;
         void flagNeedsRendererUpdate();
@@ -43,6 +44,9 @@ namespace NS_MODEL
         virtual void customEvent(QEvent *event);
         virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const;
 
+        // Called by subclasses to convert hierarchy state to non-scalable.
+        void updateScalableState(bool isScalable);
+
     private slots:
         void onOwnPositionChanged();
         void onOwnRotationChanged();
@@ -55,6 +59,7 @@ namespace NS_MODEL
 
         void commonInit();
         void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
+        HierarchyState* initHierarchyState(bool isScalable);
 
         HierarchyState* m_pHierarchy;
         mutable bool m_bNeedsRendererUpdate;

@@ -21,6 +21,12 @@ namespace NS_MODEL
 
     void SceneCamera::commonInit()
     {
+        // Set us not to be scalable.
+        updateScalableState(scalable());
+    }
 
+    bool SceneCamera::scalable() const
+    {
+        return false;
     }
 }

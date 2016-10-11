@@ -10,6 +10,7 @@ namespace NS_MODEL
     {
         friend class Scene;
     public:
+        virtual bool scalable() const override;
 
     protected:
         SceneCamera(Scene* parentScene, SceneObject* parentObject);

@@ -27,12 +27,18 @@ namespace NS_MODEL
 
     void SceneObject::commonInit()
     {
-        m_pHierarchy = new HierarchyState(this);
-        connect(m_pHierarchy, &HierarchyState::positionChanged, this, &SceneObject::onOwnPositionChanged);
-        connect(m_pHierarchy, &HierarchyState::rotationChanged, this, &SceneObject::onOwnRotationChanged);
-        connect(m_pHierarchy, &HierarchyState::scaleChanged, this, &SceneObject::onOwnScaleChanged);
-
+        m_pHierarchy = initHierarchyState(true);
         m_bNeedsRendererUpdate = true;
+    }
+
+    HierarchyState* SceneObject::initHierarchyState(bool isScalable)
+    {
+        HierarchyState* hs = new HierarchyState(isScalable, this);
+        connect(hs, &HierarchyState::positionChanged, this, &SceneObject::onOwnPositionChanged);
+        connect(hs, &HierarchyState::rotationChanged, this, &SceneObject::onOwnRotationChanged);
+        connect(hs, &HierarchyState::scaleChanged, this, &SceneObject::onOwnScaleChanged);
+
+        return hs;
     }
 
     void SceneObject::customEvent(QEvent *event)
@@ -113,5 +119,18 @@ namespace NS_MODEL
     void SceneObject::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
     {
         Q_UNUSED(builder);
+    }
+
+    bool SceneObject::scalable() const
+    {
+        return true;
+    }
+
+    void SceneObject::updateScalableState(bool isScalable)
+    {
+        HierarchyState* hs = initHierarchyState(isScalable);
+        hs->cloneFrom(*m_pHierarchy);
+        delete m_pHierarchy;
+        m_pHierarchy = hs;
     }
 }
