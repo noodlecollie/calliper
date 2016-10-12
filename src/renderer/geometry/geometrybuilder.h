@@ -4,23 +4,25 @@
 #include "renderer_global.h"
 #include "geometry/geometrysection.h"
 #include "shaders/vertexformat.h"
+#include "functors/ishaderretrievalfunctor.h"
+#include "functors/itextureretrievalfunctor.h"
 
 namespace NS_RENDERER
 {
     class RENDERERSHARED_EXPORT GeometryBuilder
     {
     public:
-        GeometryBuilder(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat, const QMatrix4x4 &modelToWorldMatrix);
+        GeometryBuilder(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
+                        quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix);
         ~GeometryBuilder();
 
         int sectionCount() const;
-        GeometrySection& section(int index);
-        const GeometrySection& section(int index) const;
-        GeometrySection& createNewSection(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat, const QMatrix4x4 &matrix);
-        GeometrySection& createNewSection();
-        GeometrySection& nextEmptySection();
-        GeometrySection& currentSection();
-        const QList<GeometrySection>& sections() const;
+        GeometrySection* section(int index);
+        const GeometrySection* section(int index) const;
+        GeometrySection* createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix);
+        GeometrySection* createNewSection();
+        GeometrySection* currentSection();
+        const QList<GeometrySection*>& sections() const;
 
         QMatrix4x4 modelToWorldMatrix() const;
         void setModelToWorldMatrix(const QMatrix4x4 &matrix);
@@ -31,8 +33,8 @@ namespace NS_RENDERER
         quint32 textureId() const;
         void setTextureId(quint32 id);
 
-        VertexFormat vertexFormat() const;
-        void setVertexFormat(const VertexFormat &format);
+        IShaderRetrievalFunctor* shaderFunctor() const;
+        ITextureRetrievalFunctor* textureFunctor() const;
 
         // Export all data into buffers provided.
         void consolidate(QVector<float> &positions, QVector<float> normals,
@@ -45,10 +47,12 @@ namespace NS_RENDERER
     private:
         void setAllSectionMatrices();
 
-        QList<GeometrySection>  m_Sections;
+        QList<GeometrySection*>  m_Sections;
+        IShaderRetrievalFunctor* m_pShaderFunctor;
+        ITextureRetrievalFunctor* m_pTextureFunctor;
+
         quint16 m_iShaderId;
         quint32 m_iTextureId;
-        VertexFormat m_VertexFormat;
         QMatrix4x4  m_matModelToWorld;
     };
 }

@@ -8,7 +8,7 @@ namespace NS_RENDERER
 
     }
 
-    const QList<GeometrySection>& RendererInputObjectParams::geometrySectionList() const
+    const QList<GeometrySection*>& RendererInputObjectParams::geometrySectionList() const
     {
         return m_SectionListReference;
     }

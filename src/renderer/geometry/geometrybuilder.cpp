@@ -3,32 +3,33 @@
 
 namespace NS_RENDERER
 {
-    GeometryBuilder::GeometryBuilder(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat,
-                                     const QMatrix4x4 &modelToWorldMatrix)
-        : m_iShaderId(shaderId), m_iTextureId(textureId), m_VertexFormat(vertexFormat), m_matModelToWorld(modelToWorldMatrix)
+    GeometryBuilder::GeometryBuilder(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
+                                     quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
+          m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix)
     {
         createNewSection();
     }
 
     GeometryBuilder::~GeometryBuilder()
     {
+        qDeleteAll(m_Sections);
     }
 
-    GeometrySection& GeometryBuilder::currentSection()
+    GeometrySection* GeometryBuilder::currentSection()
     {
        return m_Sections.last();
     }
 
-    GeometrySection& GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat,
-                                                       const QMatrix4x4 &matrix)
+    GeometrySection* GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix)
     {
-        m_Sections.append(GeometrySection(shaderId, textureId, vertexFormat, matrix));
+        m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, shaderId, textureId, matrix));
         return currentSection();
     }
 
-    GeometrySection& GeometryBuilder::createNewSection()
+    GeometrySection* GeometryBuilder::createNewSection()
     {
-        m_Sections.append(GeometrySection(m_iShaderId, m_iTextureId, m_VertexFormat, m_matModelToWorld));
+        m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, m_iShaderId, m_iTextureId, m_matModelToWorld));
         return currentSection();
     }
 
@@ -41,13 +42,13 @@ namespace NS_RENDERER
                                       QVector<float> &colors, QVector<float> &textureCoordinates,
                                       QVector<quint32> &indices) const
     {
-        foreach ( const GeometrySection &section, m_Sections )
+        foreach ( GeometrySection* section, m_Sections )
         {
-            section.consolidate(positions, normals, colors, textureCoordinates, indices);
+            section->consolidate(positions, normals, colors, textureCoordinates, indices);
         }
     }
 
-    const QList<GeometrySection>& GeometryBuilder::sections() const
+    const QList<GeometrySection*>& GeometryBuilder::sections() const
     {
         return m_Sections;
     }
@@ -67,19 +68,8 @@ namespace NS_RENDERER
     {
         for ( int i = 0; i < m_Sections.count(); i++ )
         {
-            m_Sections[i].m_matModelToWorld = m_matModelToWorld;
+            m_Sections[i]->m_matModelToWorld = m_matModelToWorld;
         }
-    }
-
-    GeometrySection& GeometryBuilder::nextEmptySection()
-    {
-        GeometrySection& current = currentSection();
-        if ( current.positionCount() < 1 && current.indexCount() < 1 )
-        {
-            return current;
-        }
-
-        return createNewSection();
     }
 
     quint16 GeometryBuilder::shaderId() const
@@ -102,24 +92,24 @@ namespace NS_RENDERER
         m_iTextureId = id;
     }
 
-    VertexFormat GeometryBuilder::vertexFormat() const
-    {
-        return m_VertexFormat;
-    }
-
-    void GeometryBuilder::setVertexFormat(const VertexFormat &format)
-    {
-        m_VertexFormat = format;
-    }
-
     bool GeometryBuilder::isEmpty() const
     {
-        foreach ( const GeometrySection &section, m_Sections )
+        foreach ( GeometrySection* section, m_Sections )
         {
-            if ( !section.isEmpty() )
+            if ( !section->isEmpty() )
                 return false;
         }
 
         return true;
+    }
+
+    IShaderRetrievalFunctor* GeometryBuilder::shaderFunctor() const
+    {
+        return m_pShaderFunctor;
+    }
+
+    ITextureRetrievalFunctor* GeometryBuilder::textureFunctor() const
+    {
+        return m_pTextureFunctor;
     }
 }

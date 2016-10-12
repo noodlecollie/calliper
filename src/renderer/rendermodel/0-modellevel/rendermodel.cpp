@@ -101,9 +101,9 @@ namespace NS_RENDERER
 
         // Don't bother going through all this if we don't actually have any geometry.
         bool allEmpty = true;
-        foreach ( const GeometrySection &section, object.geometrySectionList() )
+        foreach ( GeometrySection* section, object.geometrySectionList() )
         {
-            if ( !section.isEmpty() )
+            if ( !section->isEmpty() )
             {
                 allEmpty = false;
                 break;
@@ -123,17 +123,17 @@ namespace NS_RENDERER
         RenderModelKeyListPointer list = RenderModelKeyListPointer::create();
 
         quint8 sectionId = 0;
-        foreach ( const GeometrySection &section, object.geometrySectionList() )
+        foreach ( GeometrySection* section, object.geometrySectionList() )
         {
             RenderModelKey key = RenderModelKey(
                             passKey,
                             RenderModelBatchGroupKey(
-                                section.shaderId(),
-                                section.textureId(),
-                                section.drawMode(),
-                                section.drawWidth()
+                                section->shaderId(),
+                                section->textureId(),
+                                section->drawMode(),
+                                section->drawWidth()
                             ),
-                            MatrixBatchKey(section.modelToWorldMatrix()),
+                            MatrixBatchKey(section->modelToWorldMatrix()),
                             MatrixBatchItemKey(object.objectId(), sectionId)
                         );
 
@@ -141,7 +141,7 @@ namespace NS_RENDERER
             MatrixBatch::MatrixBatchItemPointer batchItem = createOrFetchMatrixBatchItem(key, &batchGroup);
             batchItem->clear();
 
-            section.consolidate(batchItem->m_Positions,
+            section->consolidate(batchItem->m_Positions,
                                 batchItem->m_Normals,
                                 batchItem->m_Colors,
                                 batchItem->m_TextureCoordinates,

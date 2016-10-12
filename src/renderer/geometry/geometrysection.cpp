@@ -76,11 +76,11 @@ namespace
 
 namespace NS_RENDERER
 {
-    GeometrySection::GeometrySection(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat,
-                                     const QMatrix4x4 modelToWorldMatrix)
+    GeometrySection::GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
+                                     quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix)
         : m_iPositionCount(0), m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
-          m_iShaderId(shaderId), m_iTextureId(textureId), m_VertexFormat(vertexFormat),
-          m_matModelToWorld(modelToWorldMatrix)
+          m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
+          m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix)
     {
         init();
     }
@@ -96,39 +96,39 @@ namespace NS_RENDERER
     void GeometrySection::add(AttributeType att, const float *data, int count)
     {
         append<const float*>(m_Attributes[att], data, count,
-                             vertexFormatComponents(m_VertexFormat, att));
+                             vertexFormatComponents(vertexFormat(), att));
     }
 
     void GeometrySection::addPosition(const QVector3D &pos)
     {
         append<QVector3D>(m_Attributes[PositionAttribute], pos, 3,
-                          vertexFormatComponents(m_VertexFormat, PositionAttribute));
+                          vertexFormatComponents(vertexFormat(), PositionAttribute));
         m_iPositionCount++;
     }
 
     void GeometrySection::addPosition(const QVector4D &pos)
     {
         append<QVector4D>(m_Attributes[PositionAttribute], pos, 4,
-                          vertexFormatComponents(m_VertexFormat, PositionAttribute));
+                          vertexFormatComponents(vertexFormat(), PositionAttribute));
         m_iPositionCount++;
     }
 
     void GeometrySection::addNormal(const QVector3D &vec)
     {
         append<QVector3D>(m_Attributes[NormalAttribute], vec, 3,
-                          vertexFormatComponents(m_VertexFormat, NormalAttribute));
+                          vertexFormatComponents(vertexFormat(), NormalAttribute));
     }
 
     void GeometrySection::addColor(const QColor &col)
     {
         append<QColorWrapper>(m_Attributes[ColorAttribute], QColorWrapper(col), 4,
-                          vertexFormatComponents(m_VertexFormat, ColorAttribute));
+                          vertexFormatComponents(vertexFormat(), ColorAttribute));
     }
 
     void GeometrySection::addTextureCoordinate(const QVector2D &coord)
     {
         append<QVector2D>(m_Attributes[TextureCoordinateAttribute], coord, 2,
-                          vertexFormatComponents(m_VertexFormat, TextureCoordinateAttribute));
+                          vertexFormatComponents(vertexFormat(), TextureCoordinateAttribute));
     }
 
     int GeometrySection::floatCount(AttributeType att) const
@@ -245,6 +245,16 @@ namespace NS_RENDERER
         return indexCount();
     }
 
+    IShaderRetrievalFunctor* GeometrySection::shaderFunctor() const
+    {
+        return m_pShaderFunctor;
+    }
+
+    ITextureRetrievalFunctor* GeometrySection::textureFunctor() const
+    {
+        return m_pTextureFunctor;
+    }
+
     quint16 GeometrySection::shaderId() const
     {
         return m_iShaderId;
@@ -300,13 +310,8 @@ namespace NS_RENDERER
         return positionCount() < 1 && indexCount() < 1;
     }
 
-    const VertexFormat& GeometrySection::vertexFormat() const
+    VertexFormat GeometrySection::vertexFormat() const
     {
-        return m_VertexFormat;
-    }
-
-    void GeometrySection::setVertexFormat(const VertexFormat &format)
-    {
-        m_VertexFormat = format;
+        return (*m_pShaderFunctor)(m_iShaderId)->vertexFormat();
     }
 }

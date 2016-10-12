@@ -13,6 +13,8 @@
 #include <QOpenGLFunctions>
 #include <QMatrix4x4>
 #include "shaders/vertexformat.h"
+#include "functors/ishaderretrievalfunctor.h"
+#include "functors/itextureretrievalfunctor.h"
 
 namespace NS_RENDERER
 {
@@ -30,7 +32,8 @@ namespace NS_RENDERER
             AttributeTypeCount
         };
 
-        GeometrySection(quint16 shaderId, quint32 textureId, const VertexFormat &vertexFormat, const QMatrix4x4 modelToWorldMatrix);
+        GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
+                        quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix);
 
         // It's assumed that the number of components for each attribute of
         // successive vertices will be the same (eg. 3 floats each time for position).
@@ -84,11 +87,12 @@ namespace NS_RENDERER
         const QMatrix4x4& modelToWorldMatrix() const;
         void setModelToWorldMatrix(const QMatrix4x4 &mat);
 
-        const VertexFormat& vertexFormat() const;
-        void setVertexFormat(const VertexFormat &format);
+        IShaderRetrievalFunctor* shaderFunctor() const;
+        ITextureRetrievalFunctor* textureFunctor() const;
 
     private:
         void init();
+        VertexFormat vertexFormat() const;
 
         QList<QVector<float> >  m_Attributes;
         QVector<quint32>        m_Indices;
@@ -96,9 +100,11 @@ namespace NS_RENDERER
 
         GLenum  m_iDrawMode;
         float   m_flDrawWidth;
+
+        IShaderRetrievalFunctor* m_pShaderFunctor;
+        ITextureRetrievalFunctor* m_pTextureFunctor;
         quint16 m_iShaderId;
         quint32 m_iTextureId;
-        VertexFormat m_VertexFormat;
         QMatrix4x4 m_matModelToWorld;
     };
 

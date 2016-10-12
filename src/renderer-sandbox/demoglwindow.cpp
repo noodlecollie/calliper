@@ -87,41 +87,6 @@ QMatrix4x4 scaleMat(const QVector2D &scale)
                       0,0,0,1);
 }
 
-void buildObjects(int dim)
-{
-    IRenderer* renderer = Global::renderer();
-
-    QVector<float> tri1 = triangle(QVector2D(0, 0), QVector2D(1, 1));
-
-    GLfloat cols[] = { 0,1,1,1, 1,0,1,1, 1,1,0,1 };
-    GLfloat cols2[] = { 1,0,0,1, 1,0,0,1, 1,0,0,1 };
-    GLfloat textureCoords[] = { 0,0, 1,0, 0.5f,1, };
-    GLuint indices[] = { 0,1,2 };
-
-    GeometryBuilder builder(1,1, debugShader->vertexFormat(), QMatrix4x4());
-    GeometrySection& section = builder.currentSection();
-    section.addPositions(tri1.constData(), tri1.count(), 3);
-    section.add(GeometrySection::TextureCoordinateAttribute, textureCoords, 6);
-    section.add(GeometrySection::ColorAttribute, cols, 12);
-    section.addIndexTriangle(indices[0], indices[1], indices[2]);
-
-    QMatrix4x4 scale = scaleMat(QVector2D(2.0f/(float)dim, 2.0f/(float)dim));
-
-    quint32 id = 1;
-    for ( int i = 0; i < dim; i++ )
-    {
-        for ( int j = 0; j < dim; j++ )
-        {
-            float xTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)i)/(float)(dim-1));
-            float yTrans = -1.0f + ((((1.0f - (2.0f/(float)dim)) + 1.0f) * (float)j)/(float)(dim-1));
-            QMatrix4x4 trans = transMat(QVector2D(xTrans, yTrans));
-            builder.setModelToWorldMatrix(trans * scale);
-            renderer->updateObject(RendererInputObjectParams(id, PASS_GENERAL, builder));
-            id++;
-        }
-    }
-}
-
 DemoGLWindow::DemoGLWindow()
 {
     m_pTempSpec = nullptr;
@@ -267,7 +232,7 @@ void DemoGLWindow::buildCube()
     if ( rot >= 360.0f )
         rot -= 360.0f;
 
-    GeometryBuilder builder(1,1, debugShader->vertexFormat(), m_pSceneObject->hierarchy().parentToLocal());
+    GeometryBuilder builder(shaderFunctor, textureFunctor, 1,1, m_pSceneObject->hierarchy().parentToLocal());
     m_pSceneObject->rendererUpdate(builder);
     Global::renderer()->updateObject(RendererInputObjectParams(1, PASS_GENERAL, builder));
 }

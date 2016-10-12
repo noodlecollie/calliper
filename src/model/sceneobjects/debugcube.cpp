@@ -32,14 +32,17 @@ namespace NS_MODEL
     void DebugCube::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
     {
         // BAD: Fix shader and texture so they're not hardcoded!
-        builder.nextEmptySection().setShaderId(1);
+        quint16 oldShader = builder.shaderId();
+        builder.setShaderId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));
 
         if ( m_bDrawFrame )
         {
-            builder.nextEmptySection().setShaderId(2);
+            builder.setShaderId(0);
             GeometryFactory::wireframeCube(builder, m_flRadius, QColor::fromRgb(0xffff0000));
         }
+
+        builder.setShaderId(oldShader);
     }
 
     float DebugCube::radius() const
