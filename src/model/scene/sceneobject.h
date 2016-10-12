@@ -6,6 +6,8 @@
 #include "scene/hierarchystate.h"
 #include "events/spatialconfigurationchange.h"
 #include "geometry/geometrybuilder.h"
+#include "sceneobjectinitparams.h"
+#include "sceneobjectcloneparams.h"
 
 namespace NS_MODEL
 {
@@ -37,15 +39,15 @@ namespace NS_MODEL
         QList<SceneObject*> childSceneObjects() const;
 
     protected:
-        // SceneObject constructors must have a first parameter as a parent Scene pointer
+        // SceneObject constructors must have a first parameter as init params
         // to be valid for use with Scene::createSceneObject().
         // Other arguments will be filled in by the variadic std::move.
 
         // Standard constructor for a new SceneObject.
-        SceneObject(Scene* parentScene, SceneObject* parentObject);
+        SceneObject(const SceneObjectInitParams &initParams, SceneObject* parentObject);
 
         // Clone - only called by Scene::cloneSceneObject().
-        explicit SceneObject(const SceneObject* cloneFrom);
+        explicit SceneObject(const SceneObject* cloneFrom, const SceneObjectInitParams &initParams);
 
         // Only Scenes are allowed to destroy SceneObjects.
         virtual ~SceneObject();
@@ -70,8 +72,8 @@ namespace NS_MODEL
         void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
         HierarchyState* initHierarchyState(bool isScalable);
 
-        Scene* m_pParentScene;
-        quint32 m_iObjectId;
+        Scene* const m_pParentScene;
+        const quint32 m_iObjectId;
         HierarchyState* m_pHierarchy;
         mutable bool m_bNeedsRendererUpdate;
     };

@@ -4,14 +4,15 @@
 
 namespace NS_MODEL
 {
-    SceneObject::SceneObject(Scene* parentScene, SceneObject* parentObject)
-        : QObject(parentObject), m_pParentScene(parentScene), m_iObjectId(0)
+    SceneObject::SceneObject(const SceneObjectInitParams &initParams, SceneObject* parentObject)
+        : QObject(parentObject), m_pParentScene(initParams.m_pScene), m_iObjectId(initParams.m_iObjectId)
     {
         commonInit();
     }
 
-    SceneObject::SceneObject(const SceneObject *cloneFrom)
-        : QObject(cloneFrom->parentObject()), m_pParentScene(cloneFrom->m_pParentScene)
+    SceneObject::SceneObject(const SceneObject* cloneFrom, const SceneObjectInitParams &initParams)
+        : QObject(cloneFrom->parentObject()), m_pParentScene(initParams.m_pScene),
+          m_iObjectId(initParams.m_iObjectId)
     {
         commonInit();
 
@@ -163,5 +164,10 @@ namespace NS_MODEL
     Scene* SceneObject::parentScene() const
     {
         return m_pParentScene;
+    }
+
+    quint32 SceneObject::objectId() const
+    {
+        return m_iObjectId;
     }
 }

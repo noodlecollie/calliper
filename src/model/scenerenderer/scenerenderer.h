@@ -7,6 +7,7 @@
 #include "sceneobjects/scenecamera.h"
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
+#include "irenderpassclassifier.h"
 
 namespace NS_MODEL
 {
@@ -15,6 +16,7 @@ namespace NS_MODEL
     public:
         SceneRenderer(NS_RENDERER::IShaderRetrievalFunctor* shaderFunctor,
                       NS_RENDERER::ITextureRetrievalFunctor* textureFunctor,
+                      IRenderPassClassifier* renderPassClassifier,
                       NS_RENDERER::IRenderer* renderer, Scene* scene);
 
         SceneCamera* camera() const;
@@ -28,6 +30,7 @@ namespace NS_MODEL
 
         NS_RENDERER::IShaderRetrievalFunctor* m_pShaderFunctor;
         NS_RENDERER::ITextureRetrievalFunctor* m_pTextureFunctor;
+        IRenderPassClassifier* m_pRenderPassClassifier;
         NS_RENDERER::IRenderer* m_pRenderer;
         Scene* m_pScene;
         SceneCamera* m_pCamera;

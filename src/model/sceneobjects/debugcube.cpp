@@ -3,14 +3,14 @@
 
 namespace NS_MODEL
 {
-    DebugCube::DebugCube(Scene* parentScene, SceneObject* parentObject)
-        : SceneObject(parentScene, parentObject)
+    DebugCube::DebugCube(const SceneObjectInitParams &initParams, SceneObject* parentObject)
+        : SceneObject(initParams, parentObject)
     {
         commonInit();
     }
 
-    DebugCube::DebugCube(const DebugCube *cloneFrom)
-        : SceneObject(cloneFrom)
+    DebugCube::DebugCube(const DebugCube* cloneFrom, const SceneObjectInitParams &initParams)
+        : SceneObject(cloneFrom, initParams)
     {
         commonInit();
 

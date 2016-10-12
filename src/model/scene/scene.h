@@ -3,6 +3,9 @@
 
 #include "model_global.h"
 #include "scene/sceneobject.h"
+#include <QHash>
+#include "sceneobjectinitparams.h"
+#include "sceneobjectcloneparams.h"
 
 namespace NS_MODEL
 {
@@ -15,7 +18,7 @@ namespace NS_MODEL
         template<typename T, typename... Args>
         T* createSceneObject(Args... args)
         {
-            T* obj = new T(this, std::move(args)...);
+            T* obj = new T(SceneObjectInitParams(this, acquireNextObjectId()), std::move(args)...);
             processSceneObjectCreated(obj);
             return obj;
         }
@@ -23,8 +26,9 @@ namespace NS_MODEL
         template<typename T>
         T* cloneSceneObject(const T* cloneFrom)
         {
+            Q_ASSERT_X(cloneFrom, Q_FUNC_INFO, "Object to clone from is null!");
             Q_ASSERT_X(cloneFrom->scene() == this, Q_FUNC_INFO, "Cannot clone object from a different scene!");
-            T* obj = new T(cloneFrom);
+            T* obj = new T(SceneObjectCloneParams(this, acquireNextObjectId(), cloneFrom));
             processSceneObjectCloned(obj);
             return obj;
         }
@@ -36,10 +40,13 @@ namespace NS_MODEL
     private:
         void processSceneObjectCreated(SceneObject* object);
         void processSceneObjectCloned(SceneObject* object);
-        void acquireNextObjectId();
+        quint32 acquireNextObjectId();
+        void addObjectToTable(SceneObject* object);
+        void removeObjectFromTable(SceneObject* object);
 
-        SceneObject* m_pRootObject;
         quint32 m_iObjectIdCounter;
+        SceneObject* m_pRootObject;
+        QHash<quint32, SceneObject*> m_ObjectTable;
     };
 }
 

@@ -4,12 +4,15 @@ namespace NS_MODEL
 {
     SceneRenderer::SceneRenderer(NS_RENDERER::IShaderRetrievalFunctor* shaderFunctor,
                                  NS_RENDERER::ITextureRetrievalFunctor* textureFunctor,
+                                 IRenderPassClassifier* renderPassClassifier,
                                  NS_RENDERER::IRenderer* renderer, Scene* scene)
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
+          m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene), m_pCamera(nullptr)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
+        Q_ASSERT_X(m_pRenderPassClassifier, Q_FUNC_INFO, "Render pass classifier cannot be null");
         Q_ASSERT_X(m_pRenderer, Q_FUNC_INFO, "Renderer cannot be null");
         Q_ASSERT_X(m_pScene, Q_FUNC_INFO, "Scene cannot be null");
     }
@@ -49,7 +52,7 @@ namespace NS_MODEL
             m_pRenderer->updateObject(
                 RendererInputObjectParams(
                     object->objectId(),
-                    0,  // TODO: Pass index
+                    m_pRenderPassClassifier->classify(object->objectId()),
                     builder
                 )
             );

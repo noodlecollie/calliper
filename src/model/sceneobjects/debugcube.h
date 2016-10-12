@@ -17,8 +17,8 @@ namespace NS_MODEL
         void setDrawFrame(bool draw);
 
     protected:
-        DebugCube(Scene* parentScene, SceneObject* parentObject);
-        explicit DebugCube(const DebugCube* cloneFrom);
+        DebugCube(const SceneObjectInitParams &initParams, SceneObject* parentObject);
+        explicit DebugCube(const DebugCube *cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~DebugCube();
 
         virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const;

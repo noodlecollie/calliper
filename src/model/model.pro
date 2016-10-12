@@ -24,7 +24,9 @@ SOURCES += \
     math/modelmath.cpp \
     sceneobjects/scenecamera.cpp \
     scenerenderer/scenerenderer.cpp \
-    camera/cameralens.cpp
+    camera/cameralens.cpp \
+    scene/sceneobjectinitparams.cpp \
+    scene/sceneobjectcloneparams.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -40,7 +42,10 @@ HEADERS += \
     math/modelmath.h \
     sceneobjects/scenecamera.h \
     scenerenderer/scenerenderer.h \
-    camera/cameralens.h
+    camera/cameralens.h \
+    scenerenderer/irenderpassclassifier.h \
+    scene/sceneobjectinitparams.h \
+    scene/sceneobjectcloneparams.h
 
 unix {
     target.path = /usr/lib
