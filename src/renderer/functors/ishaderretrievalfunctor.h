@@ -12,6 +12,9 @@ namespace NS_RENDERER
         virtual ~IShaderRetrievalFunctor() {}
 
         // Get a pointer to a shader by ID.
+        // If the ID is 0, return the default shader.
+        // This could be a fallback, or it could be the current shader
+        // for this frame (eg. lit, wireframe, etc.).
         virtual OpenGLShaderProgram* operator ()(quint16 shaderId) const = 0;
     };
 }

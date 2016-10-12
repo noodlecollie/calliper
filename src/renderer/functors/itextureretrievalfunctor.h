@@ -15,6 +15,7 @@ namespace NS_RENDERER
         virtual ~ITextureRetrievalFunctor() {}
 
         // Get a pointer to a texture by ID.
+        // If the ID is 0, return an error texture.
         virtual OpenGLTexturePointer operator ()(quint64 textureId) const = 0;
     };
 }

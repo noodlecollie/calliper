@@ -20,6 +20,8 @@ namespace NS_MODEL
         bool isRoot() const;
         Scene* parentScene() const;
 
+        quint32 objectId() const;
+
         HierarchyState& hierarchy();
         const HierarchyState& hierarchy() const;
         virtual bool scalable() const;
@@ -69,6 +71,7 @@ namespace NS_MODEL
         HierarchyState* initHierarchyState(bool isScalable);
 
         Scene* m_pParentScene;
+        quint32 m_iObjectId;
         HierarchyState* m_pHierarchy;
         mutable bool m_bNeedsRendererUpdate;
     };

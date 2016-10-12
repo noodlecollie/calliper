@@ -5,7 +5,7 @@
 namespace NS_MODEL
 {
     SceneObject::SceneObject(Scene* parentScene, SceneObject* parentObject)
-        : QObject(parentObject), m_pParentScene(parentScene)
+        : QObject(parentObject), m_pParentScene(parentScene), m_iObjectId(0)
     {
         commonInit();
     }

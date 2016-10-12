@@ -232,7 +232,7 @@ void DemoGLWindow::buildCube()
     if ( rot >= 360.0f )
         rot -= 360.0f;
 
-    GeometryBuilder builder(shaderFunctor, textureFunctor, 1,1, m_pSceneObject->hierarchy().parentToLocal());
+    GeometryBuilder builder(shaderFunctor, textureFunctor, 0,0, m_pSceneObject->hierarchy().parentToLocal());
     m_pSceneObject->rendererUpdate(builder);
     Global::renderer()->updateObject(RendererInputObjectParams(1, PASS_GENERAL, builder));
 }

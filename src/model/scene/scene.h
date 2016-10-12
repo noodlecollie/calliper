@@ -36,8 +36,10 @@ namespace NS_MODEL
     private:
         void processSceneObjectCreated(SceneObject* object);
         void processSceneObjectCloned(SceneObject* object);
+        void acquireNextObjectId();
 
         SceneObject* m_pRootObject;
+        quint32 m_iObjectIdCounter;
     };
 }
 

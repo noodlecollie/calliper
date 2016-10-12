@@ -2,9 +2,14 @@
 
 namespace NS_MODEL
 {
-    SceneRenderer::SceneRenderer(NS_RENDERER::IRenderer* renderer, Scene* scene)
-        : m_pRenderer(renderer), m_pScene(scene), m_pCamera(nullptr)
+    SceneRenderer::SceneRenderer(NS_RENDERER::IShaderRetrievalFunctor* shaderFunctor,
+                                 NS_RENDERER::ITextureRetrievalFunctor* textureFunctor,
+                                 NS_RENDERER::IRenderer* renderer, Scene* scene)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
+          m_pRenderer(renderer), m_pScene(scene), m_pCamera(nullptr)
     {
+        Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
+        Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
         Q_ASSERT_X(m_pRenderer, Q_FUNC_INFO, "Renderer cannot be null");
         Q_ASSERT_X(m_pScene, Q_FUNC_INFO, "Scene cannot be null");
     }
@@ -38,7 +43,16 @@ namespace NS_MODEL
 
         if ( object->needsRendererUpdate() )
         {
-            // TODO: update object and submit update to renderer
+            GeometryBuilder builder(m_pShaderFunctor, m_pTextureFunctor, 0, 0, m_matRecursiveUpdateMatrix);
+            object->rendererUpdate(builder);
+
+            m_pRenderer->updateObject(
+                RendererInputObjectParams(
+                    object->objectId(),
+                    0,  // TODO: Pass index
+                    builder
+                )
+            );
         }
 
         QList<SceneObject*> children = object->childSceneObjects();
@@ -52,6 +66,9 @@ namespace NS_MODEL
 
     void SceneRenderer::drawAllObjects()
     {
-        // TODO: Draw with camera and projection matrices
+        using namespace NS_RENDERER;
+
+        m_pRenderer->draw(RendererDrawParams(m_pCamera->rootToLocalMatrix(),
+                                             m_pCamera->lens().projectionMatrix()));
     }
 }
