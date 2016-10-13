@@ -18,10 +18,10 @@ namespace NS_MODEL
 
     protected:
         DebugCube(const SceneObjectInitParams &initParams, SceneObject* parentObject);
-        explicit DebugCube(const DebugCube *cloneFrom, const SceneObjectInitParams &initParams);
+        DebugCube(const DebugCube *cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~DebugCube();
 
-        virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const override;
 
     private:
         void commonInit();

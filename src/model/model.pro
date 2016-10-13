@@ -22,11 +22,12 @@ SOURCES += \
     factories/geometryfactory.cpp \
     sceneobjects/debugcube.cpp \
     math/modelmath.cpp \
-    sceneobjects/scenecamera.cpp \
+    camera/scenecamera.cpp \
     scenerenderer/scenerenderer.cpp \
     camera/cameralens.cpp \
     scene/sceneobjectinitparams.cpp \
-    scene/sceneobjectcloneparams.cpp
+    genericbrush/genericbrush.cpp \
+    genericbrush/genericbrushface.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -40,12 +41,13 @@ HEADERS += \
     factories/geometryfactory.h \
     sceneobjects/debugcube.h \
     math/modelmath.h \
-    sceneobjects/scenecamera.h \
+    camera/scenecamera.h \
     scenerenderer/scenerenderer.h \
     camera/cameralens.h \
     scenerenderer/irenderpassclassifier.h \
     scene/sceneobjectinitparams.h \
-    scene/sceneobjectcloneparams.h
+    genericbrush/genericbrush.h \
+    genericbrush/genericbrushface.h
 
 unix {
     target.path = /usr/lib

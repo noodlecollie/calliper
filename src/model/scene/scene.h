@@ -5,7 +5,6 @@
 #include "scene/sceneobject.h"
 #include <QHash>
 #include "sceneobjectinitparams.h"
-#include "sceneobjectcloneparams.h"
 
 namespace NS_MODEL
 {

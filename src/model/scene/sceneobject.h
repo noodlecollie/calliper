@@ -7,7 +7,6 @@
 #include "events/spatialconfigurationchange.h"
 #include "geometry/geometrybuilder.h"
 #include "sceneobjectinitparams.h"
-#include "sceneobjectcloneparams.h"
 
 namespace NS_MODEL
 {
@@ -47,7 +46,7 @@ namespace NS_MODEL
         SceneObject(const SceneObjectInitParams &initParams, SceneObject* parentObject);
 
         // Clone - only called by Scene::cloneSceneObject().
-        explicit SceneObject(const SceneObject* cloneFrom, const SceneObjectInitParams &initParams);
+        SceneObject(const SceneObject* cloneFrom, const SceneObjectInitParams &initParams);
 
         // Only Scenes are allowed to destroy SceneObjects.
         virtual ~SceneObject();

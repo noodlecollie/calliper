@@ -3,7 +3,7 @@
 
 #include "model_global.h"
 #include "scene/sceneobject.h"
-#include "camera/cameralens.h"
+#include "cameralens.h"
 
 namespace NS_MODEL
 {

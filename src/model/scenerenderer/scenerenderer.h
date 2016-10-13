@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include "scene/scene.h"
 #include "irenderer.h"
-#include "sceneobjects/scenecamera.h"
+#include "camera/scenecamera.h"
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
 #include "irenderpassclassifier.h"
