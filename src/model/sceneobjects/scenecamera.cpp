@@ -2,14 +2,14 @@
 
 namespace NS_MODEL
 {
-    SceneCamera::SceneCamera(Scene* parentScene, SceneObject* parentObject)
-        : SceneObject(parentScene, parentObject), m_Lens(CameraLens::Perspective)
+    SceneCamera::SceneCamera(const SceneObjectInitParams &initParams, SceneObject* parentObject)
+        : SceneObject(initParams, parentObject), m_Lens(CameraLens::Perspective)
     {
         commonInit();
     }
 
-    SceneCamera::SceneCamera(const SceneCamera *cloneFrom)
-        : SceneObject(cloneFrom), m_Lens(cloneFrom->lens())
+    SceneCamera::SceneCamera(const SceneCamera* cloneFrom, const SceneObjectInitParams &initParams)
+        : SceneObject(cloneFrom, initParams), m_Lens(cloneFrom->lens())
     {
         commonInit();
     }

@@ -17,8 +17,8 @@ namespace NS_MODEL
         void setLens(const CameraLens &lens);
 
     protected:
-        SceneCamera(Scene* parentScene, SceneObject* parentObject);
-        explicit SceneCamera(const SceneCamera* cloneFrom);
+        SceneCamera(const SceneObjectInitParams &initParams, SceneObject* parentObject);
+        explicit SceneCamera(const SceneCamera* cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~SceneCamera();
 
     private:
