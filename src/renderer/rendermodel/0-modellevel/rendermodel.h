@@ -9,6 +9,7 @@
 #include <QHash>
 #include <QList>
 #include "opengl/opengluniformbuffer.h"
+#include "opengl/openglvertexarrayobject.h"
 
 namespace NS_RENDERER
 {
@@ -61,6 +62,7 @@ namespace NS_RENDERER
 
         OpenGLUniformBuffer         m_GlobalUniformBuffer;
         bool                        m_bUniformDataUploaded;
+        OpenGLVertexArrayObject     m_VAO;
 
         QMap<RenderModelPassKey, RenderModelPassPointer>   m_RenderPasses;
         QHash<quint32, RenderModelKeyListPointer> m_StoredObjects;

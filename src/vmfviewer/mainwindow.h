@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QOpenGLWindow>
+#include "scene/scene.h"
+#include "scenerenderer/scenerenderer.h"
 
 class MainWindow : public QOpenGLWindow
 {
@@ -17,7 +19,8 @@ protected:
     virtual void resizeGL(int w, int h) override;
 
 private:
-
+    NS_MODEL::Scene* m_pScene;
+    NS_MODEL::SceneRenderer* m_pSceneRenderer;
 };
 
 #endif // MAINWINDOW_H

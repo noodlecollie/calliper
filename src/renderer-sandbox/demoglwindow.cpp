@@ -127,9 +127,6 @@ DemoGLWindow::~DemoGLWindow()
 
     debugTexture.clear();
 
-    GL_CURRENT_F;
-    GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
-
     doneCurrent();
 }
 
@@ -141,9 +138,6 @@ void DemoGLWindow::initializeGL()
     GLTRY(f->glEnable(GL_DEPTH_TEST));
     GLTRY(f->glFrontFace(GL_CCW));
     GLTRY(f->glCullFace(GL_BACK));
-
-    GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
-    GLTRY(f->glBindVertexArray(m_iVAOID));
 
     GLuint blockIndex = 0;
 
@@ -174,7 +168,7 @@ void DemoGLWindow::initializeGL()
         using namespace NS_MODEL;
 
         m_pScene = new Scene(this);
-        m_pSceneObject = m_pScene->createSceneObject<DebugCube>(nullptr);
+        m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
         m_pSceneObject->setRadius(0.2f);
         m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, -0.3f));
         m_pSceneObject->setDrawFrame(true);
@@ -207,11 +201,7 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-    GLTRY(f->glBindVertexArray(m_iVAOID));
-
     GLTRY(Global::renderer()->draw(RendererDrawParams()));
-
-    GLTRY(f->glBindVertexArray(0));
 }
 
 void DemoGLWindow::timeout()

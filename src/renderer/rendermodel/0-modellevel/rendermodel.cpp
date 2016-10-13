@@ -35,6 +35,7 @@ namespace NS_RENDERER
         : m_pShaderFunctor(nullptr), m_pTextureFunctor(nullptr), m_DrawParams(),
           m_GlobalUniformBuffer(QOpenGLBuffer::DynamicDraw), m_bUniformDataUploaded(false)
     {
+        m_VAO.create();
         m_GlobalUniformBuffer.create();
     }
 
@@ -42,6 +43,7 @@ namespace NS_RENDERER
     {
         clearRenderPasses();
         m_GlobalUniformBuffer.destroy();
+        m_VAO.destroy();
     }
 
     RenderModel::RenderModelPassPointer RenderModel::createRenderPass(const RenderModelPassKey &key)
@@ -277,12 +279,16 @@ namespace NS_RENDERER
             m_bUniformDataUploaded = false;
         }
 
+        m_VAO.bind();
+
         uploadGlobalUniformData();
 
         foreach ( const RenderModelPassPointer &pass, m_RenderPasses.values() )
         {
             pass->drawAllBatchGroups();
         }
+
+        m_VAO.release();
     }
 
     void RenderModel::uploadGlobalUniformData()

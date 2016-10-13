@@ -1,14 +1,18 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow() :
-    QOpenGLWindow()
+    QOpenGLWindow(), m_pScene(NULL), m_pSceneRenderer(NULL)
 {
 
 }
 
 MainWindow::~MainWindow()
 {
+    delete m_pSceneRenderer;
+    m_pSceneRenderer = NULL;
 
+    delete m_pScene;
+    m_pScene = NULL;
 }
 
 

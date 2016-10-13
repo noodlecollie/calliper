@@ -42,7 +42,6 @@ private slots:
 
 private:
     void buildCube();
-    GLuint  m_iVAOID;
 
     TempSpec*   m_pTempSpec;
     QOpenGLTexture* m_pTexture;
