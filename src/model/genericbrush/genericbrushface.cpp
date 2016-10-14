@@ -4,9 +4,11 @@
 namespace NS_MODEL
 {
     GenericBrushFace::GenericBrushFace(GenericBrush* parentBrush)
-        : QObject(parentBrush)
+        : QObject(parentBrush), m_pTexturePlane(new TexturePlane(this))
     {
         Q_ASSERT_X(parentBrush, Q_FUNC_INFO, "Parent brush cannot be null!");
+
+        connect(m_pTexturePlane, &TexturePlane::dataChanged, this, &GenericBrushFace::dataChanged);
     }
 
     GenericBrush* GenericBrushFace::parentBrush() const
@@ -28,6 +30,7 @@ namespace NS_MODEL
     void GenericBrushFace::appendIndex(int i)
     {
         m_BrushVertexIndices.append(i);
+        emit dataChanged();
     }
 
     int GenericBrushFace::indexCount() const
@@ -44,6 +47,7 @@ namespace NS_MODEL
         }
 
         m_BrushVertexIndices.remove(index);
+        emit dataChanged();
     }
 
     QVector<int> GenericBrushFace::indexList() const
@@ -54,15 +58,11 @@ namespace NS_MODEL
     void GenericBrushFace::clearIndices()
     {
         m_BrushVertexIndices.clear();
+        emit dataChanged();
     }
 
     QVector<QVector3D> GenericBrushFace::referencedBrushVertexList() const
     {
         return parentBrush()->brushVertexList(m_BrushVertexIndices);
-    }
-
-    void GenericBrushFace::texturePlaneUpdated()
-    {
-        parentBrush()->flagNeedsRendererUpdate();
     }
 }

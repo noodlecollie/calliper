@@ -41,6 +41,9 @@ namespace NS_MODEL
 
         virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const override;
 
+    private slots:
+        void brushFaceUpdated();
+
     private:
         void commonInit();
 

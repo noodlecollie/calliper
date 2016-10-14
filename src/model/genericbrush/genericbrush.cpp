@@ -113,7 +113,10 @@ namespace NS_MODEL
 
     int GenericBrush::createBrushFace()
     {
-        m_BrushFaces.append(new GenericBrushFace(this));
+        GenericBrushFace* face = new GenericBrushFace(this);
+        connect(face, &GenericBrushFace::dataChanged, this, &GenericBrush::brushFaceUpdated);
+
+        m_BrushFaces.append(face);
         return m_BrushFaces.count() - 1;
     }
 
@@ -141,5 +144,10 @@ namespace NS_MODEL
     int GenericBrush::brushFaceCount() const
     {
         return m_BrushFaces.count();
+    }
+
+    void GenericBrush::brushFaceUpdated()
+    {
+        flagNeedsRendererUpdate();
     }
 }

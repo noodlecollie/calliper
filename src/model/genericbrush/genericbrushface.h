@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QVector3D>
 #include <QObject>
+#include "textureplane.h"
 
 namespace NS_MODEL
 {
@@ -26,11 +27,12 @@ namespace NS_MODEL
         void clearIndices();
         QVector<QVector3D> referencedBrushVertexList() const;
 
-    private slots:
-        void texturePlaneUpdated();
+    signals:
+        void dataChanged();
 
     private:
         QVector<int>    m_BrushVertexIndices;
+        TexturePlane*   m_pTexturePlane;
     };
 }
 
