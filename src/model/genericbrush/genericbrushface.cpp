@@ -4,14 +4,14 @@
 namespace NS_MODEL
 {
     GenericBrushFace::GenericBrushFace(GenericBrush* parentBrush)
-        : m_pParentBrush(parentBrush)
+        : QObject(parentBrush)
     {
-        Q_ASSERT_X(m_pParentBrush, Q_FUNC_INFO, "Parent brush cannot be null!");
+        Q_ASSERT_X(parentBrush, Q_FUNC_INFO, "Parent brush cannot be null!");
     }
 
     GenericBrush* GenericBrushFace::parentBrush() const
     {
-        return m_pParentBrush;
+        return qobject_cast<GenericBrush*>(parent());
     }
 
     int GenericBrushFace::indexAt(int index) const
@@ -58,6 +58,11 @@ namespace NS_MODEL
 
     QVector<QVector3D> GenericBrushFace::referencedBrushVertexList() const
     {
-        return m_pParentBrush->brushVertexList(m_BrushVertexIndices);
+        return parentBrush()->brushVertexList(m_BrushVertexIndices);
+    }
+
+    void GenericBrushFace::texturePlaneUpdated()
+    {
+        parentBrush()->flagNeedsRendererUpdate();
     }
 }

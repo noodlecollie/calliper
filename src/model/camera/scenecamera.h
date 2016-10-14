@@ -10,6 +10,7 @@ namespace NS_MODEL
     class MODELSHARED_EXPORT SceneCamera : public SceneObject
     {
         friend class Scene;
+        Q_OBJECT
     public:
         virtual bool scalable() const override;
 

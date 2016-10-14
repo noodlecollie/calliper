@@ -13,6 +13,7 @@ namespace NS_MODEL
     class MODELSHARED_EXPORT GenericBrush : public SceneObject
     {
         friend class Scene;
+        Q_OBJECT
     public:
         // Faces/edges/etc are independent of the vertices.
         // Removing vertices here may cause faces or edges to become invalid!
@@ -26,11 +27,11 @@ namespace NS_MODEL
         QVector<QVector3D> brushVertexList(const QVector<int> &indices) const;
         void replaceBrushVertex(int index, const QVector3D &v);
 
-        GenericBrushFacePointer brushFaceAt(int index) const;
+        GenericBrushFace* brushFaceAt(int index) const;
         int createBrushFace();
         void destroyBrushFace(int index);
         void clearBrushFaces();
-        const QVector<GenericBrushFacePointer>& brushFaceList() const;
+        const QVector<GenericBrushFace*>& brushFaceList() const;
         int brushFaceCount() const;
 
     protected:
@@ -44,7 +45,7 @@ namespace NS_MODEL
         void commonInit();
 
         QVector<QVector3D>  m_BrushVertices;
-        QVector<GenericBrushFacePointer>   m_BrushFaces;
+        QVector<GenericBrushFace*>   m_BrushFaces;
     };
 }
 

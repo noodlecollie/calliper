@@ -9,6 +9,7 @@ namespace NS_MODEL
     class MODELSHARED_EXPORT DebugCube : public SceneObject
     {
         friend class Scene;
+        Q_OBJECT
     public:
         float radius() const;
         void setRadius(float r);

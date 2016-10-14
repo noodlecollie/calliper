@@ -4,13 +4,15 @@
 #include "model_global.h"
 #include <QVector>
 #include <QVector3D>
+#include <QObject>
 
 namespace NS_MODEL
 {
     class GenericBrush;
 
-    class GenericBrushFace
+    class GenericBrushFace : public QObject
     {
+        Q_OBJECT
     public:
         GenericBrushFace(GenericBrush* parentBrush);
 
@@ -24,13 +26,12 @@ namespace NS_MODEL
         void clearIndices();
         QVector<QVector3D> referencedBrushVertexList() const;
 
-    private:
-        GenericBrush*   m_pParentBrush;
+    private slots:
+        void texturePlaneUpdated();
 
+    private:
         QVector<int>    m_BrushVertexIndices;
     };
-
-    typedef QSharedPointer<GenericBrushFace> GenericBrushFacePointer;
 }
 
 #endif // GENERICBRUSHFACE_H

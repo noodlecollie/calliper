@@ -100,12 +100,12 @@ namespace NS_MODEL
         m_BrushVertices.replace(index, v);
     }
 
-    GenericBrushFacePointer GenericBrush::brushFaceAt(int index) const
+    GenericBrushFace* GenericBrush::brushFaceAt(int index) const
     {
         if ( index < 0 || index >= m_BrushFaces.count() )
         {
             Q_ASSERT_X(false, Q_FUNC_INFO, "Index out of bounds!");
-            return GenericBrushFacePointer();
+            return nullptr;
         }
 
         return m_BrushFaces.at(index);
@@ -113,7 +113,7 @@ namespace NS_MODEL
 
     int GenericBrush::createBrushFace()
     {
-        m_BrushFaces.append(GenericBrushFacePointer::create(this));
+        m_BrushFaces.append(new GenericBrushFace(this));
         return m_BrushFaces.count() - 1;
     }
 
@@ -133,7 +133,7 @@ namespace NS_MODEL
         m_BrushFaces.clear();
     }
 
-    const QVector<GenericBrushFacePointer>& GenericBrush::brushFaceList() const
+    const QVector<GenericBrushFace*>& GenericBrush::brushFaceList() const
     {
         return m_BrushFaces;
     }

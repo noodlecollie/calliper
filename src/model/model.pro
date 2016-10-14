@@ -27,7 +27,8 @@ SOURCES += \
     camera/cameralens.cpp \
     scene/sceneobjectinitparams.cpp \
     genericbrush/genericbrush.cpp \
-    genericbrush/genericbrushface.cpp
+    genericbrush/genericbrushface.cpp \
+    genericbrush/textureplane.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -47,7 +48,8 @@ HEADERS += \
     scenerenderer/irenderpassclassifier.h \
     scene/sceneobjectinitparams.h \
     genericbrush/genericbrush.h \
-    genericbrush/genericbrushface.h
+    genericbrush/genericbrushface.h \
+    genericbrush/textureplane.h
 
 unix {
     target.path = /usr/lib

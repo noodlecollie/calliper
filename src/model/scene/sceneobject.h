@@ -28,7 +28,6 @@ namespace NS_MODEL
         virtual bool scalable() const;
 
         bool needsRendererUpdate() const;
-        void flagNeedsRendererUpdate();
         void rendererUpdate(NS_RENDERER::GeometryBuilder &builder) const;
 
         // Not cached, so could be expensive if called a lot.
@@ -36,6 +35,9 @@ namespace NS_MODEL
         QMatrix4x4 localToRootMatrix() const;
 
         QList<SceneObject*> childSceneObjects() const;
+
+    public slots:
+        void flagNeedsRendererUpdate();
 
     protected:
         // SceneObject constructors must have a first parameter as init params
