@@ -7,7 +7,7 @@ namespace NS_MODEL
 {
     class Scene;
 
-    class SceneObjectInitParams
+    class MODELSHARED_EXPORT SceneObjectInitParams
     {
     public:
         SceneObjectInitParams(Scene* parentScene, quint32 objectId);

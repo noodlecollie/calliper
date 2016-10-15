@@ -6,7 +6,7 @@
 
 namespace NS_MODEL
 {
-    class CameraLens
+    class MODELSHARED_EXPORT CameraLens
     {
     public:
         enum LensType

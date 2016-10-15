@@ -16,76 +16,18 @@
 #include "colorshader.h"
 
 using namespace NS_RENDERER;
+using namespace NS_MODEL;
 
-TempShader* debugShader = nullptr;
-ColorShader* colourShader = nullptr;
-
-enum Passes
-{
-    PASS_GENERAL = 0
-};
-
-class ShaderFunctor : public IShaderRetrievalFunctor
+class Classifier : public IRenderPassClassifier
 {
 public:
-    virtual OpenGLShaderProgram* operator ()(quint16 id) const override
+    virtual int classify(quint32) const
     {
-        if ( id == 2 )
-            return colourShader;
-
-        return debugShader;
+        return 0;
     }
 };
 
-ShaderFunctor* shaderFunctor = nullptr;
-
-OpenGLTexturePointer debugTexture;
-
-class TextureFunctor : public ITextureRetrievalFunctor
-{
-public:
-    virtual OpenGLTexturePointer operator ()(quint64) const override
-    {
-        return debugTexture;
-    }
-};
-
-TextureFunctor* textureFunctor = nullptr;
-
-QVector<float> triangle(const QVector2D min, const QVector2D max)
-{
-    QVector<float> v;
-
-    v.append(min.x());
-    v.append(min.y());
-    v.append(0);
-
-    v.append(max.x());
-    v.append(min.y());
-    v.append(0);
-
-    v.append((max.x() + min.x())/2.0f);
-    v.append(max.y());
-    v.append(0);
-
-    return v;
-}
-
-QMatrix4x4 transMat(const QVector2D &trans)
-{
-    return QMatrix4x4(1,0,0,trans.x(),
-                      0,1,0,trans.y(),
-                      0,0,1,0,
-                      0,0,0,1);
-}
-
-QMatrix4x4 scaleMat(const QVector2D &scale)
-{
-    return QMatrix4x4(scale.x(),0,0,0,
-                      0,scale.y(),0,0,
-                      0,0,1,0,
-                      0,0,0,1);
-}
+Classifier passClassifier;
 
 DemoGLWindow::DemoGLWindow()
 {
@@ -110,22 +52,10 @@ DemoGLWindow::~DemoGLWindow()
 
     Global::shutdown();
 
-    delete m_pTexture;
-    m_pTexture = nullptr;
-
-    delete debugShader;
-    debugShader = nullptr;
-
-    delete colourShader;
-    colourShader = nullptr;
-
-    delete shaderFunctor;
-    shaderFunctor = nullptr;
-
-    delete textureFunctor;
-    textureFunctor = nullptr;
-
-    debugTexture.clear();
+    delete m_pSceneRenderer;
+    delete m_pScene;
+    delete m_pShaderStore;
+    delete m_pTextureStore;
 
     doneCurrent();
 }
@@ -139,42 +69,39 @@ void DemoGLWindow::initializeGL()
     GLTRY(f->glFrontFace(GL_CCW));
     GLTRY(f->glCullFace(GL_BACK));
 
-    GLuint blockIndex = 0;
+    m_pShaderStore = new ShaderStore();
+    m_pTextureStore = new TextureStore();
 
-    debugShader = new TempShader(1);
-    debugShader->construct();
-    debugShader->bind();
-    blockIndex = f->glGetUniformBlockIndex(debugShader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
-    f->glUniformBlockBinding(debugShader->programId(), blockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
-    debugShader->release();
-
-    colourShader = new ColorShader(2);
-    colourShader->construct();
-    colourShader->bind();
-    blockIndex = f->glGetUniformBlockIndex(colourShader->programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
-    f->glUniformBlockBinding(colourShader->programId(), blockIndex, ShaderDefs::LocalUniformBlockBindingPoint);
-    colourShader->release();
-
-    shaderFunctor = new ShaderFunctor();
-    textureFunctor = new TextureFunctor();
-    debugTexture = OpenGLTexturePointer(new OpenGLTexture(1, QImage(":/obsolete.png").mirrored()));
+    m_pShaderStore->addShaderProgram<TempShader>();
+    m_pShaderStore->addShaderProgram<ColorShader>();
 
     Global::initialise();
     IRenderer* renderer = Global::renderer();
-    renderer->setShaderFunctor(shaderFunctor);
-    renderer->setTextureFunctor(textureFunctor);
+    renderer->setShaderFunctor(m_pShaderStore);
+    renderer->setTextureFunctor(m_pTextureStore);
 
-    {
-        using namespace NS_MODEL;
+    m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
+    m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
+    m_pSceneObject->setRadius(0.2f);
+    m_pSceneObject->hierarchy().setPosition(QVector3D(0.3f, 0, 0));
+    m_pSceneObject->setDrawFrame(true);
+    m_pSceneObject->setObjectName("Cube");
 
-        m_pScene = new Scene(this);
-        m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
-        m_pSceneObject->setRadius(0.2f);
-        m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, -0.3f));
-        m_pSceneObject->setDrawFrame(true);
+    buildCube();
 
-        buildCube();
-    }
+    m_pCamera = m_pScene->createSceneObject<SceneCamera>(m_pScene->rootObject());
+    CameraLens lens(CameraLens::Orthographic);
+    lens.setTopPlane(1.0f);
+    lens.setBottomPlane(-1.0f);
+    lens.setLeftPlane(-1.0f);
+    lens.setRightPlane(1.0f);
+    lens.setNearPlane(0.01f);
+    lens.setFarPlane(1.0f);
+    m_pCamera->setLens(lens);
+
+    m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, &passClassifier, renderer, m_pScene);
+    m_pSceneRenderer->setDefaultShaderId(1);
+    m_pSceneRenderer->setDefaultTextureId(1);
 
     m_FrameTime = QTime::currentTime();
     m_Timer.start();
@@ -201,7 +128,7 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-    GLTRY(Global::renderer()->draw(RendererDrawParams()));
+    m_pSceneRenderer->render(QMatrix4x4(), QMatrix4x4());
 }
 
 void DemoGLWindow::timeout()
@@ -215,14 +142,8 @@ void DemoGLWindow::buildCube()
 {
     static float rot = 0.0f;
 
-    using namespace NS_MODEL;
-
     m_pSceneObject->hierarchy().setRotation(EulerAngle(rot,rot,rot));
     rot += 5.0f;
     if ( rot >= 360.0f )
         rot -= 360.0f;
-
-    GeometryBuilder builder(shaderFunctor, textureFunctor, 0,0, m_pSceneObject->hierarchy().parentToLocal());
-    m_pSceneObject->rendererUpdate(builder);
-    Global::renderer()->updateObject(RendererInputObjectParams(1, PASS_GENERAL, builder));
 }

@@ -14,7 +14,7 @@ namespace NS_MODEL
         ShaderStore();
         ~ShaderStore();
 
-        virtual NS_RENDERER::OpenGLShaderProgram* operator ()(quint16 shaderId) const;
+        virtual NS_RENDERER::OpenGLShaderProgram* operator ()(quint16 shaderId) const override;
         NS_RENDERER::OpenGLShaderProgram* getShaderProgram(quint16 shaderId) const;
 
         template<typename T>

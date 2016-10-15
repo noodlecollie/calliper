@@ -12,6 +12,10 @@
 #include <QTimer>
 #include <QTime>
 #include "model_global.h"
+#include "stores/shaderstore.h"
+#include "stores/texturestore.h"
+#include "scenerenderer/scenerenderer.h"
+#include "camera/scenecamera.h"
 
 class TempSpec;
 
@@ -50,9 +54,13 @@ private:
     int m_iTris;
     quint32 m_iCounter;
     QTimer m_HidingTimer;
+    NS_MODEL::ShaderStore* m_pShaderStore;
+    NS_MODEL::TextureStore* m_pTextureStore;
 
     NS_MODEL::DebugCube*    m_pSceneObject;
     NS_MODEL::Scene*        m_pScene;
+    NS_MODEL::SceneRenderer* m_pSceneRenderer;
+    NS_MODEL::SceneCamera* m_pCamera;
 };
 
 #endif // DEMOGLWINDOW_H

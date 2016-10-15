@@ -1,5 +1,6 @@
 #include "genericbrushface.h"
 #include "genericbrush.h"
+#include "scene/scene.h"
 
 namespace NS_MODEL
 {
@@ -64,5 +65,45 @@ namespace NS_MODEL
     QVector<QVector3D> GenericBrushFace::referencedBrushVertexList() const
     {
         return parentBrush()->brushVertexList(m_BrushVertexIndices);
+    }
+
+    void GenericBrushFace::buildFaceGeometry(ModuleRenderer::GeometryBuilder &builder)
+    {
+        using namespace NS_RENDERER;
+
+        GeometrySection* section = builder.createNewSection();
+        QVector<QVector3D> vertices = referencedBrushVertexList();
+
+        section->addPositions(vertices);
+
+        QVector<float> colours;
+        colours.resize(indexCount() * 4);
+        memset(colours.data(), 0xff, indexCount() * 4 * sizeof(float));
+        section->add(GeometrySection::ColorAttribute, colours.constData(), indexCount() * 4 * sizeof(float));
+
+        QVector3D nrm = normal();
+        for ( int i = 0; i < indexCount(); i++ )
+        {
+            section->addNormal(nrm);
+        }
+
+        TextureStore* texStore = parentBrush()->parentScene()->textureStore();
+        OpenGLTexturePointer tex = (*texStore)(m_pTexturePlane->textureId());
+        for ( int i = 0; i < vertices.count(); i++ )
+        {
+            section->addTextureCoordinate(m_pTexturePlane->textureCoordinate(vertices.at(i), tex->size(), nrm));
+        }
+    }
+
+    QVector3D GenericBrushFace::normal() const
+    {
+        if ( indexCount() < 3 )
+            return QVector3D();
+
+        QVector3D v0 = parentBrush()->brushVertexAt(m_BrushVertexIndices.at(0));
+        QVector3D v1 = parentBrush()->brushVertexAt(m_BrushVertexIndices.at(1));
+        QVector3D v2 = parentBrush()->brushVertexAt(m_BrushVertexIndices.at(2));
+
+        return QVector3D::normal(v1-v0, v2-v0);
     }
 }

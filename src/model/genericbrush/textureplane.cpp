@@ -10,20 +10,20 @@ namespace NS_MODEL
 
     void TexturePlane::initDefaults()
     {
+        m_iTextureId = 0;
         m_vecScale = QVector2D(1,1);
         m_vecTranslation = QVector2D(0,0);
         m_flRotation = 0;
     }
 
-    QString TexturePlane::texturePath() const
+    quint32 TexturePlane::textureId() const
     {
-        return m_szTexturePath;
+        return m_iTextureId;
     }
 
-    void TexturePlane::setTexturePath(const QString &path)
+    void TexturePlane::setTextureId(quint32 id)
     {
-        m_szTexturePath = path;
-        emit dataChanged();
+        m_iTextureId = id;
     }
 
     QVector2D TexturePlane::translation() const
@@ -166,7 +166,7 @@ namespace NS_MODEL
         // 1. Divide U and V by the appropriate scale factors.
         // 2. Project the input point to a 2D point by dotting it with both U and V.
         // 3. Convert the translation (in pixels) into texture units by dividing it componentwise by the texture size.
-        //    Note that the texture size Y should be invertex to account for the flipped Y axis between pixels and texture units.
+        //    Note that the texture size Y should be inverted to account for the flipped Y axis between pixels and texture units.
         // 4. Subtract the translation from the projected point.
 
         QVector3D u = uAxis;

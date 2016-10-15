@@ -28,4 +28,9 @@ namespace NS_RENDERER
     {
         m_szPath = path;
     }
+
+    QSize OpenGLTexture::size() const
+    {
+        return QSize(width(), height());
+    }
 }

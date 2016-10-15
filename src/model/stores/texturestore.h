@@ -14,7 +14,7 @@ namespace NS_MODEL
         TextureStore();
         ~TextureStore();
 
-        virtual NS_RENDERER::OpenGLTexturePointer operator ()(quint32 textureId) const;
+        virtual NS_RENDERER::OpenGLTexturePointer operator ()(quint64 textureId) const override;
         NS_RENDERER::OpenGLTexturePointer getTexture(quint32 textureId) const;
         NS_RENDERER::OpenGLTexturePointer createTexture(const QString &path, QOpenGLTexture::Target target = QOpenGLTexture::Target2D);
         quint32 getTextureId(const QString &path) const;

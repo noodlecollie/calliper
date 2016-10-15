@@ -8,7 +8,8 @@ namespace NS_MODEL
                                  NS_RENDERER::IRenderer* renderer, Scene* scene)
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
           m_pRenderPassClassifier(renderPassClassifier),
-          m_pRenderer(renderer), m_pScene(scene), m_pCamera(nullptr)
+          m_pRenderer(renderer), m_pScene(scene),
+          m_iDefaultShader(0), m_iDefaultTexture(0)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
@@ -17,24 +18,21 @@ namespace NS_MODEL
         Q_ASSERT_X(m_pScene, Q_FUNC_INFO, "Scene cannot be null");
     }
 
-    SceneCamera* SceneRenderer::camera() const
+    void SceneRenderer::render(const SceneCamera *camera)
     {
-        return m_pCamera;
-    }
-
-    void SceneRenderer::setCamera(SceneCamera *camera)
-    {
-        Q_ASSERT_X(!camera || camera->parentScene() == m_pScene, Q_FUNC_INFO, "Camera must belong to this scene!");
-        m_pCamera = camera;
-    }
-
-    void SceneRenderer::render()
-    {
-        if ( !m_pCamera )
+        if ( !camera )
             return;
 
         m_matRecursiveUpdateMatrix.setToIdentity();
         updateObjectRecursive(m_pScene->rootObject());
+        drawAllObjects(camera->rootToLocalMatrix(), camera->lens().projectionMatrix());
+    }
+
+    void SceneRenderer::render(const QMatrix4x4 &worldToCamera, const QMatrix4x4 &projection)
+    {
+        m_matRecursiveUpdateMatrix.setToIdentity();
+        updateObjectRecursive(m_pScene->rootObject());
+        drawAllObjects(worldToCamera, projection);
     }
 
     void SceneRenderer::updateObjectRecursive(SceneObject *object)
@@ -46,7 +44,9 @@ namespace NS_MODEL
 
         if ( object->needsRendererUpdate() )
         {
-            GeometryBuilder builder(m_pShaderFunctor, m_pTextureFunctor, 0, 0, m_matRecursiveUpdateMatrix);
+            GeometryBuilder builder(m_pShaderFunctor, m_pTextureFunctor,
+                                    m_iDefaultShader, 0,
+                                    m_matRecursiveUpdateMatrix);
             object->rendererUpdate(builder);
 
             m_pRenderer->updateObject(
@@ -67,11 +67,29 @@ namespace NS_MODEL
         m_matRecursiveUpdateMatrix = oldMatrix;
     }
 
-    void SceneRenderer::drawAllObjects()
+    void SceneRenderer::drawAllObjects(const QMatrix4x4 &worldToCamera, const QMatrix4x4 &projection)
     {
         using namespace NS_RENDERER;
+        m_pRenderer->draw(RendererDrawParams(worldToCamera, projection));
+    }
 
-        m_pRenderer->draw(RendererDrawParams(m_pCamera->rootToLocalMatrix(),
-                                             m_pCamera->lens().projectionMatrix()));
+    quint16 SceneRenderer::defaultShaderId() const
+    {
+        return m_iDefaultShader;
+    }
+
+    void SceneRenderer::setDefaultShaderId(quint16 id)
+    {
+        m_iDefaultShader = id;
+    }
+
+    quint32 SceneRenderer::defaultTextureId() const
+    {
+        return m_iDefaultTexture;
+    }
+
+    void SceneRenderer::setDefaultTextureId(quint32 id)
+    {
+        m_iDefaultTexture = id;
     }
 }

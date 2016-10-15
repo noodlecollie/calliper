@@ -17,6 +17,8 @@ namespace NS_RENDERER
         QString path() const;
         void setPath(const QString &path);
 
+        QSize size() const;
+
     private:
         quint32 m_iId;
         QString m_szPath;

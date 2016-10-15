@@ -24,7 +24,7 @@ namespace NS_MODEL
         return m_TextureTable.value(textureId, NS_RENDERER::OpenGLTexturePointer());
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::operator ()(quint32 textureId) const
+    NS_RENDERER::OpenGLTexturePointer TextureStore::operator ()(quint64 textureId) const
     {
         return getTexture(textureId);
     }

@@ -5,6 +5,8 @@
 #include "scene/sceneobject.h"
 #include <QHash>
 #include "sceneobjectinitparams.h"
+#include "stores/texturestore.h"
+#include "stores/shaderstore.h"
 
 namespace NS_MODEL
 {
@@ -12,7 +14,7 @@ namespace NS_MODEL
     {
         Q_OBJECT
     public:
-        explicit Scene(QObject* parent = 0);
+        explicit Scene(ShaderStore* shaderStore, TextureStore* textureStore, QObject* parent = 0);
 
         template<typename T, typename... Args>
         T* createSceneObject(Args... args)
@@ -35,6 +37,8 @@ namespace NS_MODEL
         void destroySceneObject(SceneObject* object);
 
         SceneObject* rootObject() const;
+        ShaderStore* shaderStore() const;
+        TextureStore* textureStore() const;
 
     private:
         void processSceneObjectCreated(SceneObject* object);
@@ -42,6 +46,9 @@ namespace NS_MODEL
         quint32 acquireNextObjectId();
         void addObjectToTable(SceneObject* object);
         void removeObjectFromTable(SceneObject* object);
+
+        ShaderStore* m_pShaderStore;
+        TextureStore* m_pTextureStore;
 
         quint32 m_iObjectIdCounter;
         SceneObject* m_pRootObject;

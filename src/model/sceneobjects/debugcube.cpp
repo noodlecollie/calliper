@@ -31,18 +31,16 @@ namespace NS_MODEL
 
     void DebugCube::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
     {
-        // BAD: Fix shader and texture so they're not hardcoded!
-        quint16 oldShader = builder.shaderId();
-        builder.setShaderId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));
 
         if ( m_bDrawFrame )
         {
-            builder.setShaderId(0);
+            // BAD: Fix shader and texture so they're not hardcoded!
+            quint16 oldShader = builder.shaderId();
+            builder.setShaderId(2);
             GeometryFactory::wireframeCube(builder, m_flRadius, QColor::fromRgb(0xffff0000));
+            builder.setShaderId(oldShader);
         }
-
-        builder.setShaderId(oldShader);
     }
 
     float DebugCube::radius() const

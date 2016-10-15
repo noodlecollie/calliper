@@ -45,6 +45,7 @@ namespace NS_RENDERER
         void addPosition(const QVector3D &pos);
         void addPosition(const QVector4D &pos);
         void addPositions(const float* data, int count, int components);
+        void addPositions(const QVector<QVector3D> &list);
         void addNormal(const QVector3D &vec);
         void addColor(const QColor &col);
         void addTextureCoordinate(const QVector2D &coord);

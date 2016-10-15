@@ -6,6 +6,7 @@
 #include <QVector3D>
 #include <QObject>
 #include "textureplane.h"
+#include "geometry/geometrybuilder.h"
 
 namespace NS_MODEL
 {
@@ -26,6 +27,10 @@ namespace NS_MODEL
         QVector<int> indexList() const;
         void clearIndices();
         QVector<QVector3D> referencedBrushVertexList() const;
+
+        QVector3D normal() const;
+
+        void buildFaceGeometry(NS_RENDERER::GeometryBuilder &builder);
 
     signals:
         void dataChanged();

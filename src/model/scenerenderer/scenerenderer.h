@@ -11,7 +11,7 @@
 
 namespace NS_MODEL
 {
-    class SceneRenderer
+    class MODELSHARED_EXPORT SceneRenderer
     {
     public:
         SceneRenderer(NS_RENDERER::IShaderRetrievalFunctor* shaderFunctor,
@@ -19,21 +19,26 @@ namespace NS_MODEL
                       IRenderPassClassifier* renderPassClassifier,
                       NS_RENDERER::IRenderer* renderer, Scene* scene);
 
-        SceneCamera* camera() const;
-        void setCamera(SceneCamera* camera);
+        quint16 defaultShaderId() const;
+        void setDefaultShaderId(quint16 id);
 
-        void render();
+        quint32 defaultTextureId() const;
+        void setDefaultTextureId(quint32 id);
+
+        void render(const SceneCamera* camera);
+        void render(const QMatrix4x4& worldToCamera, const QMatrix4x4& projection);
 
     private:
         void updateObjectRecursive(SceneObject* object);
-        void drawAllObjects();
+        void drawAllObjects(const QMatrix4x4& worldToCamera, const QMatrix4x4& projection);
 
         NS_RENDERER::IShaderRetrievalFunctor* m_pShaderFunctor;
         NS_RENDERER::ITextureRetrievalFunctor* m_pTextureFunctor;
         IRenderPassClassifier* m_pRenderPassClassifier;
         NS_RENDERER::IRenderer* m_pRenderer;
         Scene* m_pScene;
-        SceneCamera* m_pCamera;
+        quint16 m_iDefaultShader;
+        quint32 m_iDefaultTexture;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
     };
