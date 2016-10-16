@@ -28,7 +28,8 @@ SOURCES += \
     scene/sceneobjectinitparams.cpp \
     genericbrush/genericbrush.cpp \
     genericbrush/genericbrushface.cpp \
-    genericbrush/textureplane.cpp
+    genericbrush/textureplane.cpp \
+    camera/cameracontroller.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -49,7 +50,8 @@ HEADERS += \
     scene/sceneobjectinitparams.h \
     genericbrush/genericbrush.h \
     genericbrush/genericbrushface.h \
-    genericbrush/textureplane.h
+    genericbrush/textureplane.h \
+    camera/cameracontroller.h
 
 unix {
     target.path = /usr/lib
