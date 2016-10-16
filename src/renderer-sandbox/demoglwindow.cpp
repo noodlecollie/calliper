@@ -75,6 +75,9 @@ void DemoGLWindow::initializeGL()
     m_pShaderStore->addShaderProgram<TempShader>();
     m_pShaderStore->addShaderProgram<ColorShader>();
 
+    OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/obsolete.png");
+    qDebug() << "Texture" << tex->path() << "has ID" << tex->textureStoreId();
+
     Global::initialise();
     IRenderer* renderer = Global::renderer();
     renderer->setShaderFunctor(m_pShaderStore);
@@ -83,11 +86,9 @@ void DemoGLWindow::initializeGL()
     m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
     m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
     m_pSceneObject->setRadius(0.2f);
-    m_pSceneObject->hierarchy().setPosition(QVector3D(0.3f, 0, 0));
+    m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, -0.3f));
     m_pSceneObject->setDrawFrame(true);
     m_pSceneObject->setObjectName("Cube");
-
-    buildCube();
 
     m_pCamera = m_pScene->createSceneObject<SceneCamera>(m_pScene->rootObject());
     CameraLens lens(CameraLens::Orthographic);
@@ -128,7 +129,7 @@ void DemoGLWindow::paintGL()
 
     GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-    m_pSceneRenderer->render(QMatrix4x4(), QMatrix4x4());
+    m_pSceneRenderer->render(m_pCamera);
 }
 
 void DemoGLWindow::timeout()
@@ -142,7 +143,8 @@ void DemoGLWindow::buildCube()
 {
     static float rot = 0.0f;
 
-    m_pSceneObject->hierarchy().setRotation(EulerAngle(rot,rot,rot));
+    m_pCamera->hierarchy().setRotation(EulerAngle(0, rot, 0));
+
     rot += 5.0f;
     if ( rot >= 360.0f )
         rot -= 360.0f;

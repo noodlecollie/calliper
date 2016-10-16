@@ -10,7 +10,11 @@ namespace NS_MODEL
 
     TextureStore::~TextureStore()
     {
-
+        using namespace NS_RENDERER;
+        foreach ( OpenGLTexturePointer tex, m_TextureTable.values() )
+        {
+            tex->destroy();
+        }
     }
 
     quint32 TextureStore::acquireNextTextureId()
@@ -39,7 +43,9 @@ namespace NS_MODEL
         }
 
         quint32 id = acquireNextTextureId();
-        OpenGLTexturePointer texture = OpenGLTexturePointer::create(id, target);
+        OpenGLTexturePointer texture = OpenGLTexturePointer::create(id, QImage(path).mirrored());
+        texture->setPath(path);
+        texture->create();
         m_TextureTable.insert(id, texture);
         m_TexturePathTable.insert(path, id);
         return texture;

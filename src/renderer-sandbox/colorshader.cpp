@@ -18,7 +18,7 @@ static const char *vertexShaderSource =
         "void main()\n"
         "{\n"
         "   uint id = uint(vPosition.w);\n"
-        "   gl_Position = projectionMatrix * worldToCameraMatrix * modelToWorldMatrices[id] * vec4(vPosition.xyz, 1);\n"
+        "   gl_Position = projectionMatrix * coordTransformMatrix * worldToCameraMatrix * modelToWorldMatrices[id] * vec4(vPosition.xyz, 1);\n"
         "   fColour = vColour;\n"
         "}\n"
     ;

@@ -31,6 +31,7 @@ namespace NS_MODEL
 
     void DebugCube::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
     {
+        builder.setTextureId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));
 
         if ( m_bDrawFrame )
