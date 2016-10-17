@@ -29,7 +29,9 @@ SOURCES += \
     genericbrush/genericbrush.cpp \
     genericbrush/genericbrushface.cpp \
     genericbrush/textureplane.cpp \
-    camera/cameracontroller.cpp
+    camera/cameracontroller.cpp \
+    keymap/keysignalsender.cpp \
+    keymap/keymap.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -51,7 +53,9 @@ HEADERS += \
     genericbrush/genericbrush.h \
     genericbrush/genericbrushface.h \
     genericbrush/textureplane.h \
-    camera/cameracontroller.h
+    camera/cameracontroller.h \
+    keymap/keysignalsender.h \
+    keymap/keymap.h
 
 unix {
     target.path = /usr/lib

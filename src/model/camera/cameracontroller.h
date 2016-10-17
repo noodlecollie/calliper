@@ -30,6 +30,7 @@ namespace NS_MODEL
         void moveBackward(bool active);
         void moveLeft(bool active);
         void moveRight(bool active);
+        void clearMovement();
 
     private slots:
         void tick();

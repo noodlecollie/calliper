@@ -120,4 +120,10 @@ namespace NS_MODEL
     {
         modifyMovementState(m_iStrafeState, !active);
     }
+
+    void CameraController::clearMovement()
+    {
+        m_iForwardState = NoMovement;
+        m_iStrafeState = NoMovement;
+    }
 }
