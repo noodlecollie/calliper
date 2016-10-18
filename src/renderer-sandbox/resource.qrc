@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>obsolete.png</file>
+        <file>obsolete-opaque.png</file>
     </qresource>
 </RCC>

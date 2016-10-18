@@ -47,7 +47,7 @@ namespace NS_CALLIPERUTIL
     static const QMatrix4x4 M_ROT_Z_180(MATARGS_ROT_Z(0, -1));
     static const QMatrix4x4 M_ROT_Z_270(MATARGS_ROT_Z(-1, 0));
 
-    QMatrix4x4 _matRotX(float c, float s)
+    inline QMatrix4x4 _matRotX(float c, float s)
     {
         return QMatrix4x4(1, 0, 0, 0,
                           0, c, -s, 0,
@@ -55,7 +55,7 @@ namespace NS_CALLIPERUTIL
                           0, 0, 0, 1);
     }
 
-    QMatrix4x4 _matRotY(float c, float s)
+    inline QMatrix4x4 _matRotY(float c, float s)
     {
         return QMatrix4x4(c, 0, s, 0,
                           0, 1, 0, 0,
@@ -63,7 +63,7 @@ namespace NS_CALLIPERUTIL
                           0, 0, 0, 1);
     }
 
-    QMatrix4x4 _matRotZ(float c, float s)
+    inline QMatrix4x4 _matRotZ(float c, float s)
     {
         return QMatrix4x4(c, -s, 0, 0,
                           s, c, 0, 0,

@@ -8,7 +8,6 @@ namespace NS_RENDERER
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
           m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix)
     {
-        createNewSection();
     }
 
     GeometryBuilder::~GeometryBuilder()

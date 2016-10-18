@@ -75,9 +75,11 @@ void DemoGLWindow::initializeGL()
     qDebug() << OpenGLErrors::debugOpenGLCapabilities().toLatin1().constData();
     GL_CURRENT_F;
 
-    GLTRY(f->glEnable(GL_DEPTH_TEST));
-    GLTRY(f->glFrontFace(GL_CCW));
+    GLTRY(f->glEnable(GL_CULL_FACE));
     GLTRY(f->glCullFace(GL_BACK));
+
+    GLTRY(f->glEnable(GL_DEPTH_TEST));
+    GLTRY(f->glDepthFunc(GL_LESS));
 
     m_pShaderStore = new ShaderStore();
     m_pTextureStore = new TextureStore();
@@ -85,7 +87,7 @@ void DemoGLWindow::initializeGL()
     m_pShaderStore->addShaderProgram<TempShader>();
     m_pShaderStore->addShaderProgram<ColorShader>();
 
-    OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/obsolete.png");
+    OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/obsolete-opaque.png");
     qDebug() << "Texture" << tex->path() << "has ID" << tex->textureStoreId();
 
     Global::initialise();
@@ -96,7 +98,7 @@ void DemoGLWindow::initializeGL()
     m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
     m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
     m_pSceneObject->setRadius(0.2f);
-    m_pSceneObject->hierarchy().setPosition(QVector3D(-0.3f, 0, 0));
+    m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, 0));
     m_pSceneObject->setDrawFrame(true);
     m_pSceneObject->setObjectName("Cube");
 
@@ -106,7 +108,7 @@ void DemoGLWindow::initializeGL()
     lens.setBottomPlane(-1.0f);
     lens.setLeftPlane(-1.0f);
     lens.setRightPlane(1.0f);
-    lens.setNearPlane(0.01f);
+    lens.setNearPlane(-1.0f);
     lens.setFarPlane(1.0f);
     m_pCamera->setLens(lens);
 
@@ -122,9 +124,9 @@ void DemoGLWindow::initializeGL()
 
     m_pKeyMap = new KeyMap(this);
     connect(m_pKeyMap->addKeyMap(Qt::Key_Left), &KeySignalSender::keyEvent,
-            m_pCameraController, &CameraController::moveLeft);
+            m_pCameraController, &CameraController::moveForward);
     connect(m_pKeyMap->addKeyMap(Qt::Key_Right), &KeySignalSender::keyEvent,
-            m_pCameraController, &CameraController::moveRight);
+            m_pCameraController, &CameraController::moveBackward);
     connect(m_pKeyMap->addKeyMap(Qt::Key_Up), &KeySignalSender::keyEvent,
             m_pCameraController, &CameraController::debugIncrementPitch);
 

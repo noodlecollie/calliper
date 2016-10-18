@@ -143,7 +143,7 @@ namespace NS_MODEL
         do
         {
             // We premultiply each matrix to go from the current object to its parent.
-            mat = obj->hierarchy().localToParent() * mat;
+            mat = obj->hierarchy().parentToLocal() * mat;
             obj = obj->parentObject();
         }
         while ( obj );
