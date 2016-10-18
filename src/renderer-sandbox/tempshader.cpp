@@ -14,7 +14,7 @@ static const char *vertexShaderSource =
         "{\n"
         "   mat4 modelToWorldMatrices[8];\n"
         "};\n"
-        "mat4 coordTransformMatrix = mat4(1,0,0,0, 0,0,1,0, 0,-1,0,0, 0,0,0,1);\n"
+        "mat4 coordTransformMatrix = mat4(vec4(1,0,0,0), vec4(0,0,-1,0), vec4(0,1,0,0), vec4(0,0,0,1));\n"
         "out vec4 fColour;\n"
         "out vec2 fTexCoord;\n"
         "void main()\n"

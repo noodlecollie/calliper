@@ -2,6 +2,13 @@
 
 namespace NS_MODEL
 {
+    QDebug operator <<(QDebug debug, const EulerAngle &angle)
+    {
+        QDebugStateSaver stateSaver(debug);
+        debug.nospace() << "EulerAngle(" << angle.pitch() << "," << angle.yaw() << "," << angle.roll() << ")";
+        return debug;
+    }
+
     EulerAngle::EulerAngle()
     {
         m_flPitch = 0;
@@ -45,10 +52,4 @@ namespace NS_MODEL
     {
         m_flRoll = r;
     }
-}
-
-QDebug& operator <<(QDebug &debug, const NS_MODEL::EulerAngle &angle)
-{
-    debug.nospace() << "EulerAngle(" << angle.pitch() << "," << angle.yaw() << "," << angle.roll() << ")";
-    return debug;
 }

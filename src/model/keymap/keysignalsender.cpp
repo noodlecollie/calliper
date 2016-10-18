@@ -7,7 +7,7 @@ namespace NS_MODEL
 
     }
 
-    void KeySignalSender::triggerKeyEvent(Qt::Key key, bool pressed)
+    void KeySignalSender::triggerKeyEvent(int key, bool pressed)
     {
         emit keyEvent(pressed, key);
     }

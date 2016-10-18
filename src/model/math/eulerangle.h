@@ -112,8 +112,8 @@ namespace NS_MODEL
         float   m_flYaw;
         float   m_flRoll;
     };
-}
 
-QDebug& operator <<(QDebug &debug, const NS_MODEL::EulerAngle &angle);
+    MODELSHARED_EXPORT QDebug operator <<(QDebug debug, const EulerAngle &angle);
+}
 
 #endif // EULERANGLE_H

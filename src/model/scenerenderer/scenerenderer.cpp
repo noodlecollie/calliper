@@ -25,7 +25,7 @@ namespace NS_MODEL
 
         m_matRecursiveUpdateMatrix.setToIdentity();
         updateObjectRecursive(m_pScene->rootObject());
-        drawAllObjects(camera->rootToLocalMatrix(), camera->lens().projectionMatrix());
+        drawAllObjects(camera->worldToCameraMarix(), camera->lens().projectionMatrix());
     }
 
     void SceneRenderer::render(const QMatrix4x4 &worldToCamera, const QMatrix4x4 &projection)

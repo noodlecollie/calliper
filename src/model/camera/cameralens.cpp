@@ -176,7 +176,8 @@ namespace NS_MODEL
 
     QMatrix4x4 CameraLens::projectionMatrix() const
     {
-        if ( m_bMatrixDirty ) regenerateMatrix();
+        if ( m_bMatrixDirty )
+            regenerateMatrix();
 
         return m_matProjectionMatrix;
     }

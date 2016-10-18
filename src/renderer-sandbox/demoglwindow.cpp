@@ -14,6 +14,8 @@
 #include "scene/scene.h"
 #include "sceneobjects/debugcube.h"
 #include "colorshader.h"
+#include <QMouseEvent>
+#include <QKeyEvent>
 
 using namespace NS_RENDERER;
 using namespace NS_MODEL;
@@ -35,14 +37,22 @@ DemoGLWindow::DemoGLWindow()
     m_pTexture = nullptr;
     m_iCounter = 1;
     m_iTris = 1;
+    m_bMouseGrab = false;
+
+    m_pCamera = nullptr;
+    m_pCameraController = nullptr;
+    m_pKeyMap = nullptr;
+    m_pScene = nullptr;
+    m_pSceneObject = nullptr;
+    m_pSceneRenderer = nullptr;
+    m_pShaderStore = nullptr;
+    m_pTempSpec = nullptr;
+    m_pTexture = nullptr;
+    m_pTextureStore = nullptr;
 
     m_Timer.setInterval((int)(10.0f/6.0f));
     m_Timer.setSingleShot(false);
     connect(&m_Timer, SIGNAL(timeout()), this, SLOT(update()));
-
-    m_HidingTimer.setInterval(50);
-    m_HidingTimer.setSingleShot(false);
-    connect(&m_HidingTimer, &QTimer::timeout, this, &DemoGLWindow::timeout);
 }
 
 DemoGLWindow::~DemoGLWindow()
@@ -86,7 +96,7 @@ void DemoGLWindow::initializeGL()
     m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
     m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
     m_pSceneObject->setRadius(0.2f);
-    m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, -0.3f));
+    m_pSceneObject->hierarchy().setPosition(QVector3D(-0.3f, 0, 0));
     m_pSceneObject->setDrawFrame(true);
     m_pSceneObject->setObjectName("Cube");
 
@@ -104,9 +114,24 @@ void DemoGLWindow::initializeGL()
     m_pSceneRenderer->setDefaultShaderId(1);
     m_pSceneRenderer->setDefaultTextureId(1);
 
+    m_pCameraController = new CameraController(this);
+    m_pCameraController->setCamera(m_pCamera);
+    m_pCameraController->setStrafeSpeed(0.1f);
+    m_pCameraController->setForwardSpeed(0.1f);
+    m_pCameraController->setEnabled(true);
+
+    m_pKeyMap = new KeyMap(this);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_Left), &KeySignalSender::keyEvent,
+            m_pCameraController, &CameraController::moveLeft);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_Right), &KeySignalSender::keyEvent,
+            m_pCameraController, &CameraController::moveRight);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_Up), &KeySignalSender::keyEvent,
+            m_pCameraController, &CameraController::debugIncrementPitch);
+
+    installEventFilter(m_pKeyMap);
+
     m_FrameTime = QTime::currentTime();
     m_Timer.start();
-    m_HidingTimer.start();
 }
 
 void DemoGLWindow::resizeGL(int w, int h)
@@ -119,7 +144,7 @@ void DemoGLWindow::paintGL()
     QTime curTime = QTime::currentTime();
     int oldMs = m_FrameTime.msecsSinceStartOfDay();
     int newMs = curTime.msecsSinceStartOfDay();
-    qDebug() << "FPS:" << (1000.0f/(float)(newMs - oldMs)) << "with" << (m_iTris * m_iTris) << "triangles";
+    //qDebug() << "FPS:" << (1000.0f/(float)(newMs - oldMs)) << "with" << (m_iTris * m_iTris) << "triangles";
     m_FrameTime = curTime;
 
     GL_CURRENT_F;
@@ -141,11 +166,49 @@ void DemoGLWindow::timeout()
 
 void DemoGLWindow::buildCube()
 {
-    static float rot = 0.0f;
+}
 
-    m_pCamera->hierarchy().setRotation(EulerAngle(0, rot, 0));
+void DemoGLWindow::mouseMoveEvent(QMouseEvent *e)
+{
+    if ( !m_bMouseGrab )
+    {
+        QOpenGLWindow::mouseMoveEvent(e);
+        return;
+    }
 
-    rot += 5.0f;
-    if ( rot >= 360.0f )
-        rot -= 360.0f;
+    if ( !m_pCameraController )
+        return;
+
+    int x = e->pos().x() - m_LastMousePos.x();
+    int y = e->pos().y() - m_LastMousePos.y();
+
+    m_pCameraController->addPitch(y);
+    m_pCameraController->addYaw(x);
+
+    m_LastMousePos = e->pos();
+}
+
+void DemoGLWindow::mousePressEvent(QMouseEvent *e)
+{
+    if ( e->button() == Qt::LeftButton )
+    {
+        m_bMouseGrab = true;
+        m_LastMousePos = e->pos();
+    }
+    else
+    {
+        QOpenGLWindow::mousePressEvent(e);
+    }
+}
+
+void DemoGLWindow::mouseReleaseEvent(QMouseEvent *e)
+{
+    if ( e->button() == Qt::LeftButton )
+    {
+        m_bMouseGrab = false;
+    }
+    else
+    {
+        QOpenGLWindow::mouseReleaseEvent(e);
+    }
 }

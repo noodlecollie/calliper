@@ -16,6 +16,8 @@
 #include "stores/texturestore.h"
 #include "scenerenderer/scenerenderer.h"
 #include "camera/scenecamera.h"
+#include "keymap/keymap.h"
+#include "camera/cameracontroller.h"
 
 class TempSpec;
 
@@ -41,6 +43,10 @@ protected:
     virtual void resizeGL(int w, int h);
     virtual void paintGL();
 
+    virtual void mouseMoveEvent(QMouseEvent *e);
+    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
+
 private slots:
     void timeout();
 
@@ -61,6 +67,11 @@ private:
     NS_MODEL::Scene*        m_pScene;
     NS_MODEL::SceneRenderer* m_pSceneRenderer;
     NS_MODEL::SceneCamera* m_pCamera;
+    NS_MODEL::KeyMap* m_pKeyMap;
+    NS_MODEL::CameraController* m_pCameraController;
+
+    QPoint m_LastMousePos;
+    bool m_bMouseGrab;
 };
 
 #endif // DEMOGLWINDOW_H

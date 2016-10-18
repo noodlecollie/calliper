@@ -7,17 +7,17 @@
 
 namespace NS_MODEL
 {
-    class KeySignalSender : public QObject
+    class MODELSHARED_EXPORT KeySignalSender : public QObject
     {
         Q_OBJECT
     public:
         explicit KeySignalSender(QObject *parent = 0);
 
     signals:
-        void keyEvent(bool pressed, Qt::Key key);
+        void keyEvent(bool pressed, int key);
 
     public slots:
-        void triggerKeyEvent(Qt::Key key, bool pressed);
+        void triggerKeyEvent(int key, bool pressed);
     };
 }
 

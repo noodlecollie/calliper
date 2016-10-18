@@ -1,4 +1,6 @@
 #include "scenecamera.h"
+#include "math/math.h"
+#include <QtMath>
 
 namespace NS_MODEL
 {
@@ -38,5 +40,10 @@ namespace NS_MODEL
     void SceneCamera::setLens(const CameraLens &lens)
     {
         m_Lens = lens;
+    }
+
+    QMatrix4x4 SceneCamera::worldToCameraMarix() const
+    {
+        return rootToLocalMatrix() * NS_CALLIPERUTIL::Math::matrixRotateZ(qDegreesToRadians(90.0f));
     }
 }

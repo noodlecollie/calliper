@@ -7,7 +7,7 @@
 
 namespace NS_MODEL
 {
-    class KeyMap : public QObject
+    class MODELSHARED_EXPORT KeyMap : public QObject
     {
         Q_OBJECT
     public:
@@ -15,12 +15,12 @@ namespace NS_MODEL
 
         bool eventFilter(QObject *watched, QEvent *event) override;
 
-        KeySignalSender* keyMap(Qt::Key key) const;
-        KeySignalSender* addKeyMap(Qt::Key key);
-        void removeKeyMap(Qt::Key key);
+        KeySignalSender* keyMap(int key) const;
+        KeySignalSender* addKeyMap(int key);
+        void removeKeyMap(int key);
 
     private:
-        typedef QHash<Qt::Key, KeySignalSender*> KeyMapTable;
+        typedef QHash<int, KeySignalSender*> KeyMapTable;
 
         KeyMapTable m_KeyMap;
     };

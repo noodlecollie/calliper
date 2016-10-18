@@ -17,6 +17,8 @@ namespace NS_MODEL
         CameraLens lens() const;
         void setLens(const CameraLens &lens);
 
+        QMatrix4x4 worldToCameraMarix() const;
+
     protected:
         SceneCamera(const SceneObjectInitParams &initParams, SceneObject* parentObject);
         explicit SceneCamera(const SceneCamera* cloneFrom, const SceneObjectInitParams &initParams);

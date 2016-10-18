@@ -32,6 +32,11 @@ namespace NS_MODEL
         void moveRight(bool active);
         void clearMovement();
 
+        void addPitch(float pitch);
+        void addYaw(float yaw);
+        void addRoll(float roll);
+        void debugIncrementPitch(bool pressed);
+
     private slots:
         void tick();
 

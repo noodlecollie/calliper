@@ -1,6 +1,7 @@
 #include "keymap.h"
 #include "QEvent"
 #include <QKeyEvent>
+#include <QtDebug>
 
 namespace NS_MODEL
 {
@@ -29,21 +30,28 @@ namespace NS_MODEL
         }
 
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-        Qt::Key keyCode = static_cast<Qt::Key>(keyEvent->key());
+        if ( keyEvent->isAutoRepeat() )
+        {
+            return true;
+        }
+
+        int keyCode = static_cast<Qt::Key>(keyEvent->key());
         KeySignalSender* signalSender = keyMap(keyCode);
         if ( !signalSender )
+        {
             return false;
+        }
 
         signalSender->triggerKeyEvent(keyCode, press);
         return true;
     }
 
-    KeySignalSender* KeyMap::keyMap(Qt::Key key) const
+    KeySignalSender* KeyMap::keyMap(int key) const
     {
         return m_KeyMap.value(key, nullptr);
     }
 
-    KeySignalSender* KeyMap::addKeyMap(Qt::Key key)
+    KeySignalSender* KeyMap::addKeyMap(int key)
     {
         KeySignalSender* sender = m_KeyMap.value(key, nullptr);
 
@@ -56,7 +64,7 @@ namespace NS_MODEL
         return sender;
     }
 
-    void KeyMap::removeKeyMap(Qt::Key key)
+    void KeyMap::removeKeyMap(int key)
     {
         KeySignalSender* sender = m_KeyMap.value(key, nullptr);
         if ( sender )
