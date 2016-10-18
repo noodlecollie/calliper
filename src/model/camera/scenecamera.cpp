@@ -45,6 +45,7 @@ namespace NS_MODEL
     QMatrix4x4 SceneCamera::worldToCameraMarix() const
     {
         // We need to set ourselves up pointing down X.
-        return rootToLocalMatrix() * NS_CALLIPERUTIL::Math::matrixRotateZ(qDegreesToRadians(-90.0f));
+        static const QMatrix4x4 defaultRot = NS_CALLIPERUTIL::Math::StaticMatrix::ROT_Z_270();
+        return rootToLocalMatrix() * defaultRot;
     }
 }
