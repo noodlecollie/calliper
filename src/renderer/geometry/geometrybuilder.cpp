@@ -18,19 +18,22 @@ namespace NS_RENDERER
 
     GeometrySection* GeometryBuilder::currentSection()
     {
-       return m_Sections.last();
+        return m_Sections.count() > 0 ? m_Sections.last() : nullptr;
     }
 
     GeometrySection* GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix)
     {
-        m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, shaderId, textureId, matrix));
+        if ( m_Sections.isEmpty() || currentSection()->positionCount() > 0 )
+        {
+            m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, shaderId, textureId, matrix));
+        }
+        
         return currentSection();
     }
 
     GeometrySection* GeometryBuilder::createNewSection()
     {
-        m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, m_iShaderId, m_iTextureId, m_matModelToWorld));
-        return currentSection();
+        return createNewSection(m_iShaderId, m_iTextureId, m_matModelToWorld);
     }
 
     int GeometryBuilder::sectionCount() const

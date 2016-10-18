@@ -8,7 +8,7 @@
 
 namespace NS_MODEL
 {
-    class CameraController : public QObject
+    class MODELSHARED_EXPORT CameraController : public QObject
     {
     public:
         CameraController(QObject* parent = 0);

@@ -97,6 +97,9 @@ namespace NS_RENDERER
     {
         append<const float*>(m_Attributes[att], data, count,
                              vertexFormatComponents(vertexFormat(), att));
+
+        if (att == PositionAttribute)
+            m_iPositionCount += count / vertexFormat().positionComponents();
     }
 
     void GeometrySection::addPosition(const QVector3D &pos)
