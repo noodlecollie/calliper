@@ -23,8 +23,8 @@ namespace NS_MODEL
 
     void SceneCamera::commonInit()
     {
-        // Set us not to be scalable.
         updateScalableState(scalable());
+        hierarchy().setPreTransform(NS_CALLIPERUTIL::Math::StaticMatrix::ROT_Z_270());
     }
 
     bool SceneCamera::scalable() const
@@ -40,12 +40,5 @@ namespace NS_MODEL
     void SceneCamera::setLens(const CameraLens &lens)
     {
         m_Lens = lens;
-    }
-
-    QMatrix4x4 SceneCamera::worldToCameraMarix() const
-    {
-        // We need to set ourselves up pointing down X.
-        static const QMatrix4x4 defaultRot = NS_CALLIPERUTIL::Math::StaticMatrix::ROT_Z_270();
-        return rootToLocalMatrix() * defaultRot;
     }
 }

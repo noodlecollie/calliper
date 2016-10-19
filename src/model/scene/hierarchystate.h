@@ -33,6 +33,9 @@ namespace NS_MODEL
         QMatrix4x4 parentToLocal() const;
         QMatrix4x4 localToParent() const;
 
+        QMatrix4x4 preTransform() const;
+        void setPreTransform(const QMatrix4x4 &mat);
+
     signals:
         void positionChanged();
         void rotationChanged();
@@ -49,6 +52,8 @@ namespace NS_MODEL
         mutable QMatrix4x4 m_matParentToLocal;
         mutable QMatrix4x4 m_matLocalToParent;
         mutable bool m_bMatricesStale;
+
+        QMatrix4x4 m_matPreTransform;
     };
 }
 

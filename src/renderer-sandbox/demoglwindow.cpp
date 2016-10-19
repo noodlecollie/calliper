@@ -187,7 +187,7 @@ void DemoGLWindow::mouseMoveEvent(QMouseEvent *e)
     int y = e->pos().y() - m_LastMousePos.y();
 
     m_pCameraController->addPitch(y);
-    m_pCameraController->addYaw(x);
+    m_pCameraController->addYaw(-x);
 
     m_LastMousePos = e->pos();
 }
