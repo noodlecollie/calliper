@@ -1,4 +1,5 @@
 #include "geometryfactory.h"
+#include <QtDebug>
 
 namespace NS_MODEL
 {

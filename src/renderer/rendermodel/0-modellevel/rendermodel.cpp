@@ -170,6 +170,8 @@ namespace NS_RENDERER
             }
         }
 
+        // We've already taken from stored objects.
+        // Remove flags record as well.
         m_ObjectFlags.remove(objectId);
     }
 

@@ -1,4 +1,7 @@
 #include "tempshader.h"
+#include "shaders/shaderdefs.h"
+#include "opengl/openglhelpers.h"
+#include "opengl/openglerrors.h"
 
 static const char *vertexShaderSource =
         "#version 410 core\n"

@@ -45,7 +45,7 @@ namespace NS_MODEL
         if ( object->needsRendererUpdate() )
         {
             GeometryBuilder builder(m_pShaderFunctor, m_pTextureFunctor,
-                                    m_iDefaultShader, 0,
+                                    m_iDefaultShader, m_iDefaultTexture,
                                     m_matRecursiveUpdateMatrix);
             object->rendererUpdate(builder);
 

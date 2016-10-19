@@ -65,6 +65,18 @@ namespace NS_MODEL
             return EulerAngle(m_flPitch - other.m_flPitch, m_flYaw - other.m_flYaw, m_flRoll - other.m_flRoll);
         }
 
+        inline EulerAngle& operator +=(const EulerAngle &other)
+        {
+            *this = *this + other;
+            return *this;
+        }
+
+        inline EulerAngle& operator -=(const EulerAngle &other)
+        {
+            *this = *this - other;
+            return *this;
+        }
+
         inline float& operator [](int index)
         {
             static float dummy = 0;

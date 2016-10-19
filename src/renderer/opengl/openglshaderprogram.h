@@ -18,7 +18,8 @@ namespace NS_RENDERER
 
         // Should be bound before calling, and released after!
         virtual void setGlobalUniformBlockBinding();
-        virtual void setLocalUniformBlockBinding();
+        void setLocalUniformBlockBinding();
+        virtual bool hasLocalUniformBlockBinding() const;
 
         void enableAttributeArrays();
         void disableAttributeArrays();
@@ -28,6 +29,7 @@ namespace NS_RENDERER
     private:
         const quint16 m_iShaderStoreId;
         GLuint m_iGlobalShaderBlockIndex;
+        GLuint m_iLocalShaderBlockIndex;
     };
 }
 

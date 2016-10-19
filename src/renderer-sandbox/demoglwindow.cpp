@@ -16,6 +16,7 @@
 #include "colorshader.h"
 #include <QMouseEvent>
 #include <QKeyEvent>
+#include "sceneobjects/debugtriangle.h"
 
 using namespace NS_RENDERER;
 using namespace NS_MODEL;
@@ -97,20 +98,21 @@ void DemoGLWindow::initializeGL()
 
     m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
     m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
-    m_pSceneObject->setRadius(0.2f);
+    m_pSceneObject->setRadius(32.0f);
     m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, 0));
     m_pSceneObject->setDrawFrame(true);
     m_pSceneObject->setObjectName("Cube");
 
     m_pCamera = m_pScene->createSceneObject<SceneCamera>(m_pScene->rootObject());
-    CameraLens lens(CameraLens::Orthographic);
-    lens.setTopPlane(1.0f);
-    lens.setBottomPlane(-1.0f);
-    lens.setLeftPlane(-1.0f);
-    lens.setRightPlane(1.0f);
-    lens.setNearPlane(-1.0f);
-    lens.setFarPlane(1.0f);
-    m_pCamera->setLens(lens);
+    m_pCamera->hierarchy().setPosition(QVector3D(-40,0,0));
+//    CameraLens lens(CameraLens::Orthographic);
+//    lens.setTopPlane(1.0f);
+//    lens.setBottomPlane(-1.0f);
+//    lens.setLeftPlane(-1.0f);
+//    lens.setRightPlane(1.0f);
+//    lens.setNearPlane(-1.0f);
+//    lens.setFarPlane(1.0f);
+//    m_pCamera->setLens(lens);
 
     m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, &passClassifier, renderer, m_pScene);
     m_pSceneRenderer->setDefaultShaderId(1);

@@ -31,7 +31,8 @@ SOURCES += \
     genericbrush/textureplane.cpp \
     camera/cameracontroller.cpp \
     keymap/keysignalsender.cpp \
-    keymap/keymap.cpp
+    keymap/keymap.cpp \
+    sceneobjects/debugtriangle.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -55,7 +56,8 @@ HEADERS += \
     genericbrush/textureplane.h \
     camera/cameracontroller.h \
     keymap/keysignalsender.h \
-    keymap/keymap.h
+    keymap/keymap.h \
+    sceneobjects/debugtriangle.h
 
 unix {
     target.path = /usr/lib

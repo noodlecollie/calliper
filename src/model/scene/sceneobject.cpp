@@ -1,6 +1,7 @@
 #include "sceneobject.h"
 #include <QCoreApplication>
 #include "events/modeleventtypes.h"
+#include <QtDebug>
 
 namespace NS_MODEL
 {

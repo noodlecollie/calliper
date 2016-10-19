@@ -11,6 +11,7 @@ public:
     virtual ~TempShader();
 
     virtual void construct() override;
+    virtual bool hasLocalUniformBlockBinding() const override { return true; }
 
     virtual NS_RENDERER::VertexFormat vertexFormat() const override
     {
