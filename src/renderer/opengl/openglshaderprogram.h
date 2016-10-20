@@ -24,9 +24,13 @@ namespace NS_RENDERER
         void enableAttributeArrays();
         void disableAttributeArrays();
 
+        bool addVertexShaderWithCommonHeaders(const QByteArray &shader);
+        bool addVertexShaderWithCommonHeaders(const char* shader);
+
         quint16 shaderStoreId() const;
 
     private:
+        void cacheCommonHeaders();
         const quint16 m_iShaderStoreId;
         GLuint m_iGlobalShaderBlockIndex;
         GLuint m_iLocalShaderBlockIndex;

@@ -4,27 +4,20 @@
 #include "opengl/openglerrors.h"
 
 static const char *vertexShaderSource =
-        "#version 410 core\n"
         "layout (location=0) in vec4 vPosition;\n"
         "layout (location=2) in vec4 vColour;\n"
         "layout (location=3) in vec2 vTexCoord;\n"
-        "layout (std140) uniform GlobalUniformBlock\n"
-        "{\n"
-        "   mat4 worldToCameraMatrix;\n"
-        "   mat4 projectionMatrix;\n"
-        "};\n"
         "layout (std140) uniform LocalUniformBlock\n"
         "{\n"
         "   mat4 modelToWorldMatrices[8];\n"
         "};\n"
-        "// coord transform * (rotz 270)^-1\n"
-        "mat4 coordTransformMatrix = mat4(vec4(0,0,-1,0), vec4(-1,0,0,0), vec4(0,1,0,0), vec4(0,0,0,1));\n"
         "out vec4 fColour;\n"
         "out vec2 fTexCoord;\n"
         "void main()\n"
         "{\n"
         "   uint id = uint(vPosition.w);\n"
-        "   gl_Position = projectionMatrix * coordTransformMatrix *  worldToCameraMatrix * modelToWorldMatrices[id] * vec4(vPosition.xyz, 1);\n"
+        "   gl_Position = projectionMatrix * COORD_TRANSFORM_HAMMER_OPENGL\n"
+        "       *  worldToCameraMatrix * modelToWorldMatrices[id] * vec4(vPosition.xyz, 1);\n"
         "   fColour = vColour;\n"
         "   fTexCoord = vTexCoord;\n"
         "}\n"
@@ -57,7 +50,7 @@ TempShader::~TempShader()
 
 void TempShader::construct()
 {
-    addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
+    addVertexShaderWithCommonHeaders(vertexShaderSource);
     addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
     link();
 }
