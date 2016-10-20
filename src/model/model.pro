@@ -33,7 +33,8 @@ SOURCES += \
     controller-adapters/keysignalsender.cpp \
     controller-adapters/keymap.cpp \
     sceneobjects/debugtriangle.cpp \
-    controller-adapters/mouseeventmap.cpp
+    controller-adapters/mouseeventmap.cpp \
+    shaders/unlitshader.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -59,7 +60,8 @@ HEADERS += \
     controller-adapters/keysignalsender.h \
     controller-adapters/keymap.h \
     sceneobjects/debugtriangle.h \
-    controller-adapters/mouseeventmap.h
+    controller-adapters/mouseeventmap.h \
+    shaders/unlitshader.h
 
 unix {
     target.path = /usr/lib
@@ -79,3 +81,6 @@ else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
 
 INCLUDEPATH += $$PWD/../renderer
 DEPENDPATH += $$PWD/../renderer
+
+RESOURCES += \
+    resource/resource.qrc

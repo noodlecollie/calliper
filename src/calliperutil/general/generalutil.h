@@ -16,6 +16,18 @@ namespace NS_CALLIPERUTIL
             QMetaEnum metaEnum = T::staticMetaObject.enumerator(enumIndex);
             return QString(metaEnum.valueToKey(value));
         }
+
+        template<typename T>
+        QString nonNamespacedClassName()
+        {
+            QString classname(T::staticMetaObject.className());
+            int colonIndex = classname.lastIndexOf("::");
+
+            if ( colonIndex < 0 )
+                return classname;
+
+            return classname.mid(colonIndex+2);
+        }
     }
 }
 

@@ -117,6 +117,8 @@ namespace NS_MODEL
         QVector3D curPos = m_pCamera->hierarchy().position();
         curPos += localTranslation;
         m_pCamera->hierarchy().setPosition(curPos);
+
+        emit tickFinished();
     }
 
     void CameraController::modifyMovementState(MovementState& member, bool active)

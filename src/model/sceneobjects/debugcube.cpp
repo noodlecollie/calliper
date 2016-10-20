@@ -1,5 +1,6 @@
 #include "debugcube.h"
 #include "factories/geometryfactory.h"
+#include "scene/scene.h"
 
 namespace NS_MODEL
 {
@@ -36,7 +37,7 @@ namespace NS_MODEL
 
         if ( m_bDrawFrame )
         {
-            // BAD: Fix shader and texture so they're not hardcoded!
+            // TODO: Don't hard code this!
             quint16 oldShader = builder.shaderId();
             builder.setShaderId(2);
             GeometryFactory::wireframeCube(builder, m_flRadius, QColor::fromRgb(0xffff0000));

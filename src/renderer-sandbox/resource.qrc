@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/renderer-sandbox">
         <file>obsolete.png</file>
         <file>obsolete-opaque.png</file>
     </qresource>

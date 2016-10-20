@@ -10,6 +10,7 @@ namespace NS_MODEL
 {
     class MODELSHARED_EXPORT CameraController : public QObject
     {
+        Q_OBJECT
     public:
         CameraController(QObject* parent = 0);
 
@@ -27,6 +28,9 @@ namespace NS_MODEL
 
         bool enabled() const;
         void setEnabled(bool enabled);
+
+    signals:
+        void tickFinished();
 
     public slots:
         void moveForward(bool active);

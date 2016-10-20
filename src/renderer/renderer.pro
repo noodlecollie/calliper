@@ -16,7 +16,6 @@ SOURCES += \
     opengl/opengluniformbuffer.cpp \
     shaders/shaderdefs.cpp \
     opengl/openglshaderprogram.cpp \
-    shaders/debugscreenspaceshader.cpp \
     rendermodel/1-passlevel/rendermodelpass.cpp \
     opengl/opengltexture.cpp \
     geometry/vertex3d.cpp \
@@ -46,7 +45,6 @@ HEADERS +=\
     shaders/ishaderspec.h \
     opengl/opengluniformbuffer.h \
     opengl/openglshaderprogram.h \
-    shaders/debugscreenspaceshader.h \
     rendermodel/1-passlevel/rendermodelpass.h \
     opengl/opengltexture.h \
     functors/ishaderretrievalfunctor.h \

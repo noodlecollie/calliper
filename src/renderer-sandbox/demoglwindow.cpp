@@ -6,7 +6,6 @@
 #include "shaders/ishaderspec.h"
 #include "shaders/shaderdefs.h"
 #include "opengl/openglhelpers.h"
-#include "shaders/debugscreenspaceshader.h"
 #include "tempshader.h"
 #include "geometry/geometrybuilder.h"
 #include "irenderer.h"
@@ -88,7 +87,7 @@ void DemoGLWindow::initializeGL()
     m_pShaderStore->addShaderProgram<TempShader>();
     m_pShaderStore->addShaderProgram<ColorShader>();
 
-    OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/obsolete-opaque.png");
+    OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/renderer-sandbox/obsolete-opaque.png");
     qDebug() << "Texture" << tex->path() << "has ID" << tex->textureStoreId();
 
     Global::initialise();
@@ -105,14 +104,6 @@ void DemoGLWindow::initializeGL()
 
     m_pCamera = m_pScene->createSceneObject<SceneCamera>(m_pScene->rootObject());
     m_pCamera->hierarchy().setPosition(QVector3D(-40,0,0));
-//    CameraLens lens(CameraLens::Orthographic);
-//    lens.setTopPlane(1.0f);
-//    lens.setBottomPlane(-1.0f);
-//    lens.setLeftPlane(-1.0f);
-//    lens.setRightPlane(1.0f);
-//    lens.setNearPlane(-1.0f);
-//    lens.setFarPlane(1.0f);
-//    m_pCamera->setLens(lens);
 
     m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, &passClassifier, renderer, m_pScene);
     m_pSceneRenderer->setDefaultShaderId(1);

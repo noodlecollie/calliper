@@ -26,6 +26,7 @@ namespace NS_RENDERER
 
         bool addVertexShaderWithCommonHeaders(const QByteArray &shader);
         bool addVertexShaderWithCommonHeaders(const char* shader);
+        bool addVertexShaderFileWithCommonHeaders(const QString &filePath);
 
         quint16 shaderStoreId() const;
 

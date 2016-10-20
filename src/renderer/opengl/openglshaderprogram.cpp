@@ -150,7 +150,7 @@ namespace NS_RENDERER
         if ( !g_CommonVertexHeaders.isEmpty() )
             return;
 
-        QFile headers(":/shaders/commonvertexheaders.glsl");
+        QFile headers(":/renderer/shaders/commonvertexheaders.glsl");
         if ( headers.open(QIODevice::ReadOnly) )
         {
             g_CommonVertexHeaders = headers.readAll();
@@ -172,5 +172,17 @@ namespace NS_RENDERER
     bool OpenGLShaderProgram::addVertexShaderWithCommonHeaders(const char *shader)
     {
         return addShaderFromSourceCode(QOpenGLShader::Vertex, commonVertexHeaders() + shader);
+    }
+
+    bool OpenGLShaderProgram::addVertexShaderFileWithCommonHeaders(const QString &filePath)
+    {
+        QFile file(filePath);
+        if ( !file.open(QIODevice::ReadOnly) )
+            return false;
+
+        QByteArray arr = file.readAll();
+        file.close();
+
+        return addVertexShaderWithCommonHeaders(arr);
     }
 }
