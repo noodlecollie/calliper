@@ -139,7 +139,13 @@ void DemoGLWindow::initializeGL()
     connect(m_pKeyMap->addKeyMap(Qt::Key_Z), &KeySignalSender::keyEvent,
             m_pCameraController, &CameraController::moveDown);
 
+    m_pMouseMap = new MouseEventMap(this);
+    m_pMouseMap->setHorizontalSensitivity(-1);
+    connect(m_pMouseMap, &MouseEventMap::mouseMovedX, m_pCameraController, &CameraController::addYaw);
+    connect(m_pMouseMap, &MouseEventMap::mouseMovedY, m_pCameraController, &CameraController::addPitch);
+
     installEventFilter(m_pKeyMap);
+    installEventFilter(m_pMouseMap);
 
     m_FrameTime = QTime::currentTime();
     m_Timer.start();
@@ -179,32 +185,11 @@ void DemoGLWindow::buildCube()
 {
 }
 
-void DemoGLWindow::mouseMoveEvent(QMouseEvent *e)
-{
-    if ( !m_bMouseGrab )
-    {
-        QOpenGLWindow::mouseMoveEvent(e);
-        return;
-    }
-
-    if ( !m_pCameraController )
-        return;
-
-    int x = e->pos().x() - m_LastMousePos.x();
-    int y = e->pos().y() - m_LastMousePos.y();
-
-    m_pCameraController->addPitch(y);
-    m_pCameraController->addYaw(-x);
-
-    m_LastMousePos = e->pos();
-}
-
 void DemoGLWindow::mousePressEvent(QMouseEvent *e)
 {
     if ( e->button() == Qt::LeftButton )
     {
-        m_bMouseGrab = true;
-        m_LastMousePos = e->pos();
+        m_pMouseMap->setEnabled(true);
     }
     else
     {
@@ -216,7 +201,7 @@ void DemoGLWindow::mouseReleaseEvent(QMouseEvent *e)
 {
     if ( e->button() == Qt::LeftButton )
     {
-        m_bMouseGrab = false;
+        m_pMouseMap->setEnabled(false);
     }
     else
     {

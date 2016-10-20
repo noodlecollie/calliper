@@ -30,9 +30,10 @@ SOURCES += \
     genericbrush/genericbrushface.cpp \
     genericbrush/textureplane.cpp \
     camera/cameracontroller.cpp \
-    keymap/keysignalsender.cpp \
-    keymap/keymap.cpp \
-    sceneobjects/debugtriangle.cpp
+    controller-adapters/keysignalsender.cpp \
+    controller-adapters/keymap.cpp \
+    sceneobjects/debugtriangle.cpp \
+    controller-adapters/mouseeventmap.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -55,9 +56,10 @@ HEADERS += \
     genericbrush/genericbrushface.h \
     genericbrush/textureplane.h \
     camera/cameracontroller.h \
-    keymap/keysignalsender.h \
-    keymap/keymap.h \
-    sceneobjects/debugtriangle.h
+    controller-adapters/keysignalsender.h \
+    controller-adapters/keymap.h \
+    sceneobjects/debugtriangle.h \
+    controller-adapters/mouseeventmap.h
 
 unix {
     target.path = /usr/lib
