@@ -98,9 +98,6 @@ namespace NS_MODEL
                 * ModelMath::matrixOrientation(m_angRotation)
                 * Math::matrixScale(m_vecScale);
 
-        if ( !m_matPreTransform.isIdentity() )
-            m_matLocalToParent = m_matLocalToParent * m_matPreTransform;
-
         m_matParentToLocal = m_matLocalToParent.inverted();
         m_bMatricesStale = false;
     }
@@ -108,16 +105,5 @@ namespace NS_MODEL
     bool HierarchyState::scalable() const
     {
         return m_bScalable;
-    }
-
-    QMatrix4x4 HierarchyState::preTransform() const
-    {
-        return m_matPreTransform;
-    }
-
-    void HierarchyState::setPreTransform(const QMatrix4x4 &mat)
-    {
-        m_matPreTransform = mat;
-        m_bMatricesStale = true;
     }
 }

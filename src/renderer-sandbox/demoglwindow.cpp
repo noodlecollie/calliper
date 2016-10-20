@@ -120,17 +120,24 @@ void DemoGLWindow::initializeGL()
 
     m_pCameraController = new CameraController(this);
     m_pCameraController->setCamera(m_pCamera);
-    m_pCameraController->setStrafeSpeed(0.1f);
-    m_pCameraController->setForwardSpeed(0.1f);
+    m_pCameraController->setStrafeSpeed(50.0f);
+    m_pCameraController->setForwardSpeed(50.0f);
+    m_pCameraController->setVerticalSpeed(50.0f);
     m_pCameraController->setEnabled(true);
 
     m_pKeyMap = new KeyMap(this);
-    connect(m_pKeyMap->addKeyMap(Qt::Key_Left), &KeySignalSender::keyEvent,
+    connect(m_pKeyMap->addKeyMap(Qt::Key_W), &KeySignalSender::keyEvent,
             m_pCameraController, &CameraController::moveForward);
-    connect(m_pKeyMap->addKeyMap(Qt::Key_Right), &KeySignalSender::keyEvent,
+    connect(m_pKeyMap->addKeyMap(Qt::Key_S), &KeySignalSender::keyEvent,
             m_pCameraController, &CameraController::moveBackward);
-    connect(m_pKeyMap->addKeyMap(Qt::Key_Up), &KeySignalSender::keyEvent,
-            m_pCameraController, &CameraController::debugIncrementPitch);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_A), &KeySignalSender::keyEvent,
+            m_pCameraController, &CameraController::moveLeft);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_D), &KeySignalSender::keyEvent,
+            m_pCameraController, &CameraController::moveRight);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_Q), &KeySignalSender::keyEvent,
+            m_pCameraController, &CameraController::moveUp);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_Z), &KeySignalSender::keyEvent,
+            m_pCameraController, &CameraController::moveDown);
 
     installEventFilter(m_pKeyMap);
 

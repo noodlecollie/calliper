@@ -22,6 +22,9 @@ namespace NS_MODEL
         float strafeSpeed() const;
         void setStrafeSpeed(float speed);
 
+        float verticalSpeed() const;
+        void setVerticalSpeed(float speed);
+
         bool enabled() const;
         void setEnabled(bool enabled);
 
@@ -30,12 +33,13 @@ namespace NS_MODEL
         void moveBackward(bool active);
         void moveLeft(bool active);
         void moveRight(bool active);
+        void moveUp(bool active);
+        void moveDown(bool active);
         void clearMovement();
 
         void addPitch(float pitch);
         void addYaw(float yaw);
         void addRoll(float roll);
-        void debugIncrementPitch(bool pressed);
 
     private slots:
         void tick();
@@ -53,8 +57,10 @@ namespace NS_MODEL
         SceneCamera* m_pCamera;
         float   m_flForwardSpeed;
         float   m_flStrafeSpeed;
+        float   m_flVerticalSpeed;
         MovementState m_iForwardState;
         MovementState m_iStrafeState;
+        MovementState m_iVerticalState;
 
         QTimer m_Timer;
     };

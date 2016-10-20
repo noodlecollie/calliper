@@ -1,5 +1,6 @@
 #include "cameracontroller.h"
 #include <QtDebug>
+#include "math/modelmath.h"
 
 namespace
 {
@@ -30,8 +31,8 @@ namespace
 namespace NS_MODEL
 {
     CameraController::CameraController(QObject* parent) : QObject(parent),
-        m_pCamera(nullptr), m_flForwardSpeed(100), m_flStrafeSpeed(100),
-        m_iForwardState(NoMovement), m_iStrafeState(NoMovement)
+        m_pCamera(nullptr), m_flForwardSpeed(100), m_flStrafeSpeed(100), m_flVerticalSpeed(100),
+        m_iForwardState(NoMovement), m_iStrafeState(NoMovement), m_iVerticalState(NoMovement)
     {
         m_Timer.setSingleShot(false);
         m_Timer.setInterval(TIMER_INTERVAL);
@@ -94,15 +95,28 @@ namespace NS_MODEL
             return;
 
         float secondFrac = 1.0f/static_cast<float>(TIMER_INTERVAL);
+        QMatrix4x4 localToRoot = m_pCamera->localToRootMatrix();
+        QMatrix4x4 rootToParent = m_pCamera->hierarchy().localToParent() * localToRoot.inverted();
+
+        QVector3D worldViewDir = (localToRoot * QVector4D(1,0,0,0)).toVector3D();
+        QVector3D worldLeftDir = (localToRoot * QVector4D(0,1,0,0)).toVector3D();
+        QVector3D worldUpDir(0,0,1);    // Always want to move up/down in world co-ords.
+
+        // TODO: Normalise dirs if not null.
 
         float fwdThisTick = m_iForwardState * m_flForwardSpeed * secondFrac;
         float strafeThisTick = m_iStrafeState * m_flStrafeSpeed * secondFrac;
+        float vertThisTick = m_iVerticalState * m_flVerticalSpeed * secondFrac;
 
-        QVector3D vecFwd(fwdThisTick, 0, 0);
-        QVector3D vecStrafe(0, strafeThisTick, 0);
-        QVector3D currentPos = m_pCamera->hierarchy().position();
-        currentPos += vecFwd + vecStrafe;
-        m_pCamera->hierarchy().setPosition(currentPos);
+        QVector3D vecFwd = fwdThisTick * worldViewDir;
+        QVector3D vecStrafe = strafeThisTick * worldLeftDir;
+        QVector3D vecVert = vertThisTick * worldUpDir;
+        QVector3D worldTranslation = vecFwd + vecStrafe + vecVert;
+        QVector3D localTranslation = (rootToParent * QVector4D(worldTranslation, 0)).toVector3D();
+
+        QVector3D curPos = m_pCamera->hierarchy().position();
+        curPos += localTranslation;
+        m_pCamera->hierarchy().setPosition(curPos);
     }
 
     void CameraController::modifyMovementState(MovementState& member, bool active)
@@ -187,8 +201,23 @@ namespace NS_MODEL
         m_pCamera->hierarchy().setRotation(angles);
     }
 
-    void CameraController::debugIncrementPitch(bool pressed)
+    void CameraController::moveUp(bool active)
     {
-        addPitch(pressed ? 10 : -10);
+        modifyMovementState(m_iVerticalState, active);
+    }
+
+    void CameraController::moveDown(bool active)
+    {
+        modifyMovementState(m_iVerticalState, !active);
+    }
+
+    float CameraController::verticalSpeed() const
+    {
+        return m_flVerticalSpeed;
+    }
+
+    void CameraController::setVerticalSpeed(float speed)
+    {
+        m_flVerticalSpeed = speed;
     }
 }

@@ -24,7 +24,6 @@ namespace NS_MODEL
     void SceneCamera::commonInit()
     {
         updateScalableState(scalable());
-        hierarchy().setPreTransform(NS_CALLIPERUTIL::Math::StaticMatrix::ROT_Z_270());
     }
 
     bool SceneCamera::scalable() const
