@@ -19,6 +19,7 @@
 #include "controller-adapters/keymap.h"
 #include "camera/cameracontroller.h"
 #include "controller-adapters/mouseeventmap.h"
+#include "genericbrush/genericbrush.h"
 
 class TempSpec;
 
@@ -70,6 +71,8 @@ private:
     NS_MODEL::KeyMap* m_pKeyMap;
     NS_MODEL::CameraController* m_pCameraController;
     NS_MODEL::MouseEventMap* m_pMouseMap;
+
+    NS_MODEL::GenericBrush* m_pBrush;
 
     QPoint m_LastMousePos;
     bool m_bMouseGrab;

@@ -28,6 +28,8 @@ namespace NS_MODEL
         void clearIndices();
         QVector<QVector3D> referencedBrushVertexList() const;
 
+        TexturePlane* texturePlane() const;
+
         QVector3D normal() const;
 
         void buildFaceGeometry(NS_RENDERER::GeometryBuilder &builder);

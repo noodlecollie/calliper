@@ -21,7 +21,10 @@ namespace NS_MODEL
 
     void GenericBrush::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
     {
-
+        foreach ( GenericBrushFace* face, m_BrushFaces )
+        {
+            face->buildFaceGeometry(builder);
+        }
     }
 
     void GenericBrush::commonInit()

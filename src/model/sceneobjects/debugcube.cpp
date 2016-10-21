@@ -37,9 +37,8 @@ namespace NS_MODEL
 
         if ( m_bDrawFrame )
         {
-            // TODO: Don't hard code this!
             quint16 oldShader = builder.shaderId();
-            builder.setShaderId(2);
+            builder.setShaderId(parentScene()->shaderStore()->shaderForCategory(ShaderStore::UnlitPerVertexColor));
             GeometryFactory::wireframeCube(builder, m_flRadius, QColor::fromRgb(0xffff0000));
             builder.setShaderId(oldShader);
         }

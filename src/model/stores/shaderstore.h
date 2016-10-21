@@ -5,12 +5,18 @@
 #include <QHash>
 #include "opengl/openglshaderprogram.h"
 #include "functors/ishaderretrievalfunctor.h"
+#include <QHash>
 
 namespace NS_MODEL
 {
     class MODELSHARED_EXPORT ShaderStore : public NS_RENDERER::IShaderRetrievalFunctor
     {
     public:
+        enum ShaderCategory
+        {
+            UnlitPerVertexColor,
+        };
+
         ShaderStore();
         ~ShaderStore();
 
@@ -30,11 +36,17 @@ namespace NS_MODEL
         quint16 getShaderId(const QString shaderName) const;
         NS_RENDERER::OpenGLShaderProgram* getShaderProgram(const QString &shaderName) const;
 
+        void addCategoryMapping(ShaderCategory category, quint16 shader);
+        void removeCategoryMapping(ShaderCategory category);
+        quint16 shaderForCategory(ShaderCategory category) const;
+
     private:
         quint16 acquireNextShaderId();
 
         quint16 m_iNextShaderId;
         QHash<quint16, NS_RENDERER::OpenGLShaderProgram*> m_ShaderTable;
+
+        QHash<ShaderCategory, quint16> m_ShaderCategoryTable;
     };
 }
 

@@ -34,7 +34,8 @@ SOURCES += \
     controller-adapters/keymap.cpp \
     sceneobjects/debugtriangle.cpp \
     controller-adapters/mouseeventmap.cpp \
-    shaders/unlitshader.cpp
+    shaders/unlitshader.cpp \
+    sceneobjects/originmarker.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -61,7 +62,8 @@ HEADERS += \
     controller-adapters/keymap.h \
     sceneobjects/debugtriangle.h \
     controller-adapters/mouseeventmap.h \
-    shaders/unlitshader.h
+    shaders/unlitshader.h \
+    sceneobjects/originmarker.h
 
 unix {
     target.path = /usr/lib

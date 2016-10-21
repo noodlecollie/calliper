@@ -71,15 +71,25 @@ namespace NS_MODEL
     {
         using namespace NS_RENDERER;
 
-        GeometrySection* section = builder.createNewSection();
+        GeometrySection* section = builder.createNewSection(
+                    builder.shaderId(),
+                    texturePlane()->textureId(),
+                    builder.modelToWorldMatrix());
+
         QVector<QVector3D> vertices = referencedBrushVertexList();
 
         section->addPositions(vertices);
 
-        QVector<float> colours;
-        colours.resize(indexCount() * 4);
-        memset(colours.data(), 0xff, indexCount() * 4 * sizeof(float));
-        section->add(GeometrySection::ColorAttribute, colours.constData(), indexCount() * 4 * sizeof(float));
+        for ( int i = 2; i < vertices.count(); ++i )
+        {
+            section->addIndexTriangle(i-2, i-1, i);
+        }
+
+        float col[4] = {1,1,1,1};
+        for ( int i = 0; i < 4; i++ )
+        {
+            section->add(GeometrySection::ColorAttribute, col, 4);
+        }
 
         QVector3D nrm = normal();
         for ( int i = 0; i < indexCount(); i++ )
@@ -105,5 +115,10 @@ namespace NS_MODEL
         QVector3D v2 = parentBrush()->brushVertexAt(m_BrushVertexIndices.at(2));
 
         return QVector3D::normal(v1-v0, v2-v0);
+    }
+
+    TexturePlane* GenericBrushFace::texturePlane() const
+    {
+        return m_pTexturePlane;
     }
 }

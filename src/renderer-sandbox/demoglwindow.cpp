@@ -16,6 +16,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include "sceneobjects/debugtriangle.h"
+#include "sceneobjects/originmarker.h"
 
 using namespace NS_RENDERER;
 using namespace NS_MODEL;
@@ -85,7 +86,8 @@ void DemoGLWindow::initializeGL()
     m_pTextureStore = new TextureStore();
 
     m_pShaderStore->addShaderProgram<TempShader>();
-    m_pShaderStore->addShaderProgram<ColorShader>();
+    quint16 colShader = m_pShaderStore->addShaderProgram<ColorShader>();
+    m_pShaderStore->addCategoryMapping(ShaderStore::UnlitPerVertexColor, colShader);
 
     OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/renderer-sandbox/obsolete-opaque.png");
     qDebug() << "Texture" << tex->path() << "has ID" << tex->textureStoreId();
@@ -96,11 +98,12 @@ void DemoGLWindow::initializeGL()
     renderer->setTextureFunctor(m_pTextureStore);
 
     m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
-    m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
-    m_pSceneObject->setRadius(32.0f);
-    m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, 0));
-    m_pSceneObject->setDrawFrame(true);
-    m_pSceneObject->setObjectName("Cube");
+//    m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
+//    m_pSceneObject->setRadius(32.0f);
+//    m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, 0));
+//    m_pSceneObject->setDrawFrame(true);
+//    m_pSceneObject->setObjectName("Cube");
+    m_pScene->createSceneObject<OriginMarker>(m_pScene->rootObject());
 
     m_pCamera = m_pScene->createSceneObject<SceneCamera>(m_pScene->rootObject());
     m_pCamera->hierarchy().setPosition(QVector3D(-40,0,0));
@@ -138,6 +141,46 @@ void DemoGLWindow::initializeGL()
     installEventFilter(m_pKeyMap);
     installEventFilter(m_pMouseMap);
 
+    m_pBrush = m_pScene->createSceneObject<GenericBrush>(m_pScene->rootObject());
+    m_pBrush->appendBrushVertices(
+                QVector<QVector3D>()
+                << QVector3D(64, 0, 0)
+                << QVector3D(-32, 32, 0)
+                << QVector3D(-32, -32, 0)
+                << QVector3D(0, 0, 10));
+
+    {
+        GenericBrushFace* face = m_pBrush->brushFaceAt(m_pBrush->createBrushFace());
+        face->appendIndex(0);
+        face->appendIndex(2);
+        face->appendIndex(1);
+        face->texturePlane()->setTextureId(1);
+    }
+
+    {
+        GenericBrushFace* face = m_pBrush->brushFaceAt(m_pBrush->createBrushFace());
+        face->appendIndex(0);
+        face->appendIndex(3);
+        face->appendIndex(2);
+        face->texturePlane()->setTextureId(1);
+    }
+
+    {
+        GenericBrushFace* face = m_pBrush->brushFaceAt(m_pBrush->createBrushFace());
+        face->appendIndex(0);
+        face->appendIndex(1);
+        face->appendIndex(3);
+        face->texturePlane()->setTextureId(1);
+    }
+
+    {
+        GenericBrushFace* face = m_pBrush->brushFaceAt(m_pBrush->createBrushFace());
+        face->appendIndex(1);
+        face->appendIndex(2);
+        face->appendIndex(3);
+        face->texturePlane()->setTextureId(1);
+    }
+
     m_FrameTime = QTime::currentTime();
     m_Timer.start();
 }
@@ -145,6 +188,13 @@ void DemoGLWindow::initializeGL()
 void DemoGLWindow::resizeGL(int w, int h)
 {
     QOpenGLWindow::resizeGL(w,h);
+
+    if ( !m_pCamera )
+        return;
+
+    CameraLens lens = m_pCamera->lens();
+    lens.setAspectRatio((float)w/(float)h);
+    m_pCamera->setLens(lens);
 }
 
 void DemoGLWindow::paintGL()

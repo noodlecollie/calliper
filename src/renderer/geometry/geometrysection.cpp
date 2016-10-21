@@ -118,7 +118,7 @@ namespace NS_RENDERER
 
     void GeometrySection::addPositions(const QVector<QVector3D> &list)
     {
-        QVector<float> &posList = m_Attributes[PositionAttribute];
+        QVector<float>& posList = m_Attributes[PositionAttribute];
         posList.reserve(posList.count() + (list.count() * 3));
 
         foreach (const QVector3D &vec, list)
@@ -126,6 +126,8 @@ namespace NS_RENDERER
             append<QVector3D>(posList, vec, 3,
                               vertexFormatComponents(vertexFormat(), PositionAttribute));
         }
+
+        m_iPositionCount += list.count();
     }
 
     void GeometrySection::addNormal(const QVector3D &vec)
