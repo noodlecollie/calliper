@@ -4,13 +4,16 @@
 #include <QOpenGLWindow>
 #include "stores/shaderstore.h"
 #include "stores/texturestore.h"
-#include "scene/scene.h"
+#include "scene/basicscene.h"
 #include "camera/scenecamera.h"
 #include "simplerenderpassclassifier.h"
 #include "scenerenderer/scenerenderer.h"
 #include "camera/cameracontroller.h"
 #include "controller-adapters/keymap.h"
 #include "controller-adapters/mouseeventmap.h"
+
+class QPushButton;
+class QGridLayout;
 
 class MainWindow : public QOpenGLWindow
 {
@@ -44,7 +47,7 @@ private:
     quint16 m_iDefaultShader;
     quint32 m_iDefaultTexture;
 
-    NS_MODEL::Scene* m_pScene;
+    NS_MODEL::BasicScene* m_pScene;
     NS_MODEL::SceneCamera* m_pCamera;
     SimpleRenderPassClassifier m_RenderPassClassifier;
     NS_MODEL::SceneRenderer* m_pSceneRenderer;

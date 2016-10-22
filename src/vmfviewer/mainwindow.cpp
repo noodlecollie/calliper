@@ -1,10 +1,13 @@
 #include "mainwindow.h"
 #include "shaders/unlitshader.h"
+#include "shaders/unlitpervertexcolorshader.h"
 #include "opengl/openglerrors.h"
 #include "opengl/openglhelpers.h"
 #include "irenderer.h"
 #include <QMouseEvent>
 #include "sceneobjects/debugcube.h"
+#include <QPushButton>
+#include <QGridLayout>
 
 using namespace NS_MODEL;
 using namespace NS_RENDERER;
@@ -71,7 +74,7 @@ void MainWindow::initializeGL()
 
     initRenderer();
 
-    m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
+    m_pScene = new BasicScene(m_pShaderStore, m_pTextureStore, this);
     initScene();
 
     m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, &m_RenderPassClassifier,
@@ -108,6 +111,9 @@ void MainWindow::resizeGL(int w, int h)
 void MainWindow::initShaders()
 {
     m_iDefaultShader = m_pShaderStore->addShaderProgram<UnlitShader>();
+
+    quint16 unlitPVC = m_pShaderStore->addShaderProgram<UnlitPerVertexColorShader>();
+    m_pShaderStore->addCategoryMapping(ShaderStore::UnlitPerVertexColor, unlitPVC);
 }
 
 void MainWindow::initTextures()
@@ -136,11 +142,7 @@ void MainWindow::initRenderer()
 
 void MainWindow::initScene()
 {
-    m_pCamera = m_pScene->createSceneObject<SceneCamera>(m_pScene->rootObject());
-
-    DebugCube* cube = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
-    cube->setRadius(32.0f);
-    cube->setObjectName("Cube");
+    m_pCamera = m_pScene->defaultCamera();
 }
 
 void MainWindow::initSceneRenderer()
@@ -174,6 +176,8 @@ void MainWindow::initKeyMap()
             m_pCameraController, &CameraController::moveUp);
     connect(m_pKeyMap->addKeyMap(Qt::Key_Z), &KeySignalSender::keyEvent,
             m_pCameraController, &CameraController::moveDown);
+    connect(m_pKeyMap->addKeyMap(Qt::Key_Escape), &KeySignalSender::keyEvent,
+            this, &MainWindow::close);
 
     installEventFilter(m_pKeyMap);
 }

@@ -35,7 +35,9 @@ SOURCES += \
     sceneobjects/debugtriangle.cpp \
     controller-adapters/mouseeventmap.cpp \
     shaders/unlitshader.cpp \
-    sceneobjects/originmarker.cpp
+    sceneobjects/originmarker.cpp \
+    scene/basicscene.cpp \
+    shaders/unlitpervertexcolorshader.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -63,7 +65,9 @@ HEADERS += \
     sceneobjects/debugtriangle.h \
     controller-adapters/mouseeventmap.h \
     shaders/unlitshader.h \
-    sceneobjects/originmarker.h
+    sceneobjects/originmarker.h \
+    scene/basicscene.h \
+    shaders/unlitpervertexcolorshader.h
 
 unix {
     target.path = /usr/lib
