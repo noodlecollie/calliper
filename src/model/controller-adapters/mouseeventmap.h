@@ -9,7 +9,7 @@ class QMouseEvent;
 
 namespace NS_MODEL
 {
-    class MouseEventMap : public QObject
+    class MODELSHARED_EXPORT MouseEventMap : public QObject
     {
         Q_OBJECT
     public:

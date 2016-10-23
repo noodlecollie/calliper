@@ -10,7 +10,7 @@
 
 namespace NS_MODEL
 {
-    class TexturePlane : public QObject
+    class MODELSHARED_EXPORT TexturePlane : public QObject
     {
         Q_OBJECT
     public:

@@ -7,6 +7,7 @@
 #include "events/spatialconfigurationchange.h"
 #include "geometry/geometrybuilder.h"
 #include "sceneobjectinitparams.h"
+#include "shaders/shaderpalette.h"
 
 namespace NS_MODEL
 {
@@ -28,7 +29,7 @@ namespace NS_MODEL
         virtual bool scalable() const;
 
         bool needsRendererUpdate() const;
-        void rendererUpdate(NS_RENDERER::GeometryBuilder &builder) const;
+        void rendererUpdate(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const;
 
         // Not cached, so could be expensive if called a lot.
         QMatrix4x4 rootToLocalMatrix() const;
@@ -54,7 +55,7 @@ namespace NS_MODEL
         virtual ~SceneObject();
 
         virtual void customEvent(QEvent *event);
-        virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const;
 
         // Called by subclasses to convert hierarchy state to non-scalable.
         void updateScalableState(bool isScalable);

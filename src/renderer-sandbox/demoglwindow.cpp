@@ -85,9 +85,8 @@ void DemoGLWindow::initializeGL()
     m_pShaderStore = new ShaderStore();
     m_pTextureStore = new TextureStore();
 
-    m_pShaderStore->addShaderProgram<TempShader>();
+    quint16 defaultShader = m_pShaderStore->addShaderProgram<TempShader>();
     quint16 colShader = m_pShaderStore->addShaderProgram<ColorShader>();
-    m_pShaderStore->addCategoryMapping(ShaderStore::UnlitPerVertexColor, colShader);
 
     OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/renderer-sandbox/obsolete-opaque.png");
     qDebug() << "Texture" << tex->path() << "has ID" << tex->textureStoreId();
@@ -109,8 +108,12 @@ void DemoGLWindow::initializeGL()
     m_pCamera->hierarchy().setPosition(QVector3D(-40,0,0));
 
     m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, &passClassifier, renderer, m_pScene);
-    m_pSceneRenderer->setDefaultShaderId(1);
     m_pSceneRenderer->setDefaultTextureId(1);
+
+    ShaderPalette shaderPalette;
+    shaderPalette.addItem(ShaderPalette::DefaultShader, defaultShader);
+    shaderPalette.addItem(ShaderPalette::UnlitPerVertexColor, colShader);
+    m_pSceneRenderer->setShaderPalette(shaderPalette);
 
     m_pCameraController = new CameraController(this);
     m_pCameraController->setCamera(m_pCamera);

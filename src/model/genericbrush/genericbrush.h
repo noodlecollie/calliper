@@ -39,7 +39,7 @@ namespace NS_MODEL
         GenericBrush(const GenericBrush* cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~GenericBrush();
 
-        virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const override;
+        virtual void bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const;
 
     private slots:
         void brushFaceUpdated();

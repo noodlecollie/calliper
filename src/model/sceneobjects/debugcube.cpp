@@ -30,7 +30,7 @@ namespace NS_MODEL
         m_bDrawFrame = false;
     }
 
-    void DebugCube::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
+    void DebugCube::bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const
     {
         builder.setTextureId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));
@@ -38,7 +38,7 @@ namespace NS_MODEL
         if ( m_bDrawFrame )
         {
             quint16 oldShader = builder.shaderId();
-            builder.setShaderId(parentScene()->shaderStore()->shaderForCategory(ShaderStore::UnlitPerVertexColor));
+            builder.setShaderId(shaderPalette.shader(ShaderPalette::UnlitPerVertexColor));
             GeometryFactory::wireframeCube(builder, m_flRadius, QColor::fromRgb(0xffff0000));
             builder.setShaderId(oldShader);
         }

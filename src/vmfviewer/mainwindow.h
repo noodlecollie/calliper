@@ -44,13 +44,13 @@ private:
 
     NS_MODEL::ShaderStore* m_pShaderStore;
     NS_MODEL::TextureStore* m_pTextureStore;
-    quint16 m_iDefaultShader;
     quint32 m_iDefaultTexture;
 
     NS_MODEL::BasicScene* m_pScene;
     NS_MODEL::SceneCamera* m_pCamera;
     SimpleRenderPassClassifier m_RenderPassClassifier;
     NS_MODEL::SceneRenderer* m_pSceneRenderer;
+    NS_MODEL::ShaderPalette m_DefaultShaderPalette;
 
     NS_MODEL::CameraController* m_pCameraController;
     NS_MODEL::KeyMap* m_pKeyMap;

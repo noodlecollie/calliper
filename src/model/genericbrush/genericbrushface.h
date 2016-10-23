@@ -7,12 +7,13 @@
 #include <QObject>
 #include "textureplane.h"
 #include "geometry/geometrybuilder.h"
+#include "shaders/shaderpalette.h"
 
 namespace NS_MODEL
 {
     class GenericBrush;
 
-    class GenericBrushFace : public QObject
+    class MODELSHARED_EXPORT GenericBrushFace : public QObject
     {
         Q_OBJECT
     public:
@@ -32,7 +33,7 @@ namespace NS_MODEL
 
         QVector3D normal() const;
 
-        void buildFaceGeometry(NS_RENDERER::GeometryBuilder &builder);
+        void buildFaceGeometry(const ShaderPalette& shaderPalette, NS_RENDERER::GeometryBuilder &builder) const;
 
     signals:
         void dataChanged();

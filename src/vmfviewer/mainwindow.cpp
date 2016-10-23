@@ -16,7 +16,6 @@ MainWindow::MainWindow() :
     QOpenGLWindow(),
     m_pShaderStore(nullptr),
     m_pTextureStore(nullptr),
-    m_iDefaultShader(0),
     m_iDefaultTexture(0),
     m_pScene(nullptr),
     m_pCamera(nullptr),
@@ -110,10 +109,8 @@ void MainWindow::resizeGL(int w, int h)
 
 void MainWindow::initShaders()
 {
-    m_iDefaultShader = m_pShaderStore->addShaderProgram<UnlitShader>();
-
-    quint16 unlitPVC = m_pShaderStore->addShaderProgram<UnlitPerVertexColorShader>();
-    m_pShaderStore->addCategoryMapping(ShaderStore::UnlitPerVertexColor, unlitPVC);
+    m_DefaultShaderPalette.addItem(ShaderPalette::DefaultShader, m_pShaderStore->addShaderProgram<UnlitShader>());
+    m_DefaultShaderPalette.addItem(ShaderPalette::UnlitPerVertexColor, m_pShaderStore->addShaderProgram<UnlitPerVertexColorShader>());
 }
 
 void MainWindow::initTextures()
@@ -147,8 +144,8 @@ void MainWindow::initScene()
 
 void MainWindow::initSceneRenderer()
 {
-    m_pSceneRenderer->setDefaultShaderId(m_iDefaultShader);
     m_pSceneRenderer->setDefaultTextureId(m_iDefaultTexture);
+    m_pSceneRenderer->setShaderPalette(m_DefaultShaderPalette);
 }
 
 void MainWindow::initCameraController()

@@ -6,7 +6,7 @@
 
 namespace NS_MODEL
 {
-    class UnlitShader : public NS_RENDERER::OpenGLShaderProgram
+    class MODELSHARED_EXPORT UnlitShader : public NS_RENDERER::OpenGLShaderProgram
     {
         Q_OBJECT
     public:

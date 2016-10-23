@@ -53,19 +53,4 @@ namespace NS_MODEL
     {
         return getShaderProgram(getShaderId(shaderName));
     }
-
-    void ShaderStore::addCategoryMapping(ShaderCategory category, quint16 shader)
-    {
-        m_ShaderCategoryTable.insert(category, shader);
-    }
-
-    void ShaderStore::removeCategoryMapping(ShaderCategory category)
-    {
-        m_ShaderCategoryTable.remove(category);
-    }
-
-    quint16 ShaderStore::shaderForCategory(ShaderCategory category) const
-    {
-        return m_ShaderCategoryTable.value(category, 0);
-    }
 }

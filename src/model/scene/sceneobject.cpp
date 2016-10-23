@@ -111,15 +111,16 @@ namespace NS_MODEL
         m_bNeedsRendererUpdate = true;
     }
 
-    void SceneObject::rendererUpdate(NS_RENDERER::GeometryBuilder &builder) const
+    void SceneObject::rendererUpdate(const ShaderPalette &shaderPalette, ModuleRenderer::GeometryBuilder &builder) const
     {
         // Call virtual function so that subclasses build their own geometry.
-        bakeGeometry(builder);
+        bakeGeometry(shaderPalette, builder);
         m_bNeedsRendererUpdate = false;
     }
 
-    void SceneObject::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
+    void SceneObject::bakeGeometry(const ShaderPalette &shaderPalette, ModuleRenderer::GeometryBuilder &builder) const
     {
+        Q_UNUSED(shaderPalette);
         Q_UNUSED(builder);
     }
 

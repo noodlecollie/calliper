@@ -19,11 +19,11 @@ namespace NS_MODEL
                       IRenderPassClassifier* renderPassClassifier,
                       NS_RENDERER::IRenderer* renderer, Scene* scene);
 
-        quint16 defaultShaderId() const;
-        void setDefaultShaderId(quint16 id);
-
         quint32 defaultTextureId() const;
         void setDefaultTextureId(quint32 id);
+
+        ShaderPalette shaderPalette() const;
+        void setShaderPalette(const ShaderPalette& palette);
 
         void render(const SceneCamera* camera);
         void render(const QMatrix4x4& worldToCamera, const QMatrix4x4& projection);
@@ -37,10 +37,10 @@ namespace NS_MODEL
         IRenderPassClassifier* m_pRenderPassClassifier;
         NS_RENDERER::IRenderer* m_pRenderer;
         Scene* m_pScene;
-        quint16 m_iDefaultShader;
         quint32 m_iDefaultTexture;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
+        ShaderPalette m_ShaderPalette;
     };
 }
 

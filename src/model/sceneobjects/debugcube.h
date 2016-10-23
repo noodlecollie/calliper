@@ -22,7 +22,7 @@ namespace NS_MODEL
         DebugCube(const DebugCube *cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~DebugCube();
 
-        virtual void bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const override;
+        virtual void bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const override;
 
     private:
         void commonInit();

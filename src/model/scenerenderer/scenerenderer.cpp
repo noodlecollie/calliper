@@ -9,7 +9,7 @@ namespace NS_MODEL
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
           m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene),
-          m_iDefaultShader(0), m_iDefaultTexture(0)
+          m_iDefaultTexture(0)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
@@ -45,9 +45,10 @@ namespace NS_MODEL
         if ( object->needsRendererUpdate() )
         {
             GeometryBuilder builder(m_pShaderFunctor, m_pTextureFunctor,
-                                    m_iDefaultShader, m_iDefaultTexture,
+                                    m_ShaderPalette.shader(ShaderPalette::DefaultShader),
+                                    m_iDefaultTexture,
                                     m_matRecursiveUpdateMatrix);
-            object->rendererUpdate(builder);
+            object->rendererUpdate(m_ShaderPalette, builder);
 
             m_pRenderer->updateObject(
                 RendererInputObjectParams(
@@ -73,16 +74,6 @@ namespace NS_MODEL
         m_pRenderer->draw(RendererDrawParams(worldToCamera, projection));
     }
 
-    quint16 SceneRenderer::defaultShaderId() const
-    {
-        return m_iDefaultShader;
-    }
-
-    void SceneRenderer::setDefaultShaderId(quint16 id)
-    {
-        m_iDefaultShader = id;
-    }
-
     quint32 SceneRenderer::defaultTextureId() const
     {
         return m_iDefaultTexture;
@@ -91,5 +82,15 @@ namespace NS_MODEL
     void SceneRenderer::setDefaultTextureId(quint32 id)
     {
         m_iDefaultTexture = id;
+    }
+
+    ShaderPalette SceneRenderer::shaderPalette() const
+    {
+        return m_ShaderPalette;
+    }
+
+    void SceneRenderer::setShaderPalette(const ShaderPalette &palette)
+    {
+        m_ShaderPalette = palette;
     }
 }

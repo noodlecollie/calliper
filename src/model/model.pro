@@ -37,7 +37,8 @@ SOURCES += \
     shaders/unlitshader.cpp \
     sceneobjects/originmarker.cpp \
     scene/basicscene.cpp \
-    shaders/unlitpervertexcolorshader.cpp
+    shaders/unlitpervertexcolorshader.cpp \
+    shaders/shaderpalette.cpp
 
 HEADERS += \
     stores/shaderstore.h \
@@ -67,7 +68,8 @@ HEADERS += \
     shaders/unlitshader.h \
     sceneobjects/originmarker.h \
     scene/basicscene.h \
-    shaders/unlitpervertexcolorshader.h
+    shaders/unlitpervertexcolorshader.h \
+    shaders/shaderpalette.h
 
 unix {
     target.path = /usr/lib

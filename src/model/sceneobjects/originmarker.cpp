@@ -25,12 +25,12 @@ namespace NS_MODEL
         updateScalableState(scalable());
     }
 
-    void OriginMarker::bakeGeometry(NS_RENDERER::GeometryBuilder &builder) const
+    void OriginMarker::bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const
     {
         using namespace NS_RENDERER;
 
         GeometrySection* section = builder.createNewSection(
-                    parentScene()->shaderStore()->shaderForCategory(ShaderStore::UnlitPerVertexColor),
+                    shaderPalette.shader(ShaderPalette::UnlitPerVertexColor),
                     0,
                     builder.modelToWorldMatrix());
         section->setDrawMode(GL_LINES);
