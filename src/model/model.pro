@@ -39,7 +39,10 @@ SOURCES += \
     scene/basicscene.cpp \
     shaders/unlitpervertexcolorshader.cpp \
     shaders/shaderpalette.cpp \
-    math/plane3d.cpp
+    math/plane3d.cpp \
+    math/windingvertex.cpp \
+    math/winding3d.cpp \
+    math/ray3d.cpp
 
 HEADERS += \
     model_global.h \
@@ -72,7 +75,10 @@ HEADERS += \
     scene/basicscene.h \
     shaders/unlitpervertexcolorshader.h \
     shaders/shaderpalette.h \
-    math/plane3d.h
+    math/plane3d.h \
+    math/windingvertex.h \
+    math/winding3d.h \
+    math/ray3d.h
 
 unix {
     target.path = /usr/lib

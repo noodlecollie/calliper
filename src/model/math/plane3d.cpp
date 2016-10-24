@@ -4,7 +4,7 @@
 
 namespace NS_MODEL
 {
-    QDebug& operator << (QDebug &debug, const Plane3D &plane)
+    QDebug operator << (QDebug debug, const Plane3D &plane)
     {
         debug.nospace() << "Plane3D(" << plane.normal() << ", " << plane.distance() << ")";
         return debug;
