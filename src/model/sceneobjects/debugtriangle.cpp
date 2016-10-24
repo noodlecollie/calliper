@@ -21,7 +21,7 @@ namespace NS_MODEL
 
     }
 
-    void DebugTriangle::bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const
+    void DebugTriangle::bakeGeometry(const ShaderPalette&, NS_RENDERER::GeometryBuilder &builder) const
     {
         using namespace NS_RENDERER;
 

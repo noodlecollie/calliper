@@ -67,7 +67,7 @@ namespace NS_MODEL
         return parentBrush()->brushVertexList(m_BrushVertexIndices);
     }
 
-    void GenericBrushFace::buildFaceGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const
+    void GenericBrushFace::buildFaceGeometry(const ShaderPalette&, NS_RENDERER::GeometryBuilder &builder) const
     {
         using namespace NS_RENDERER;
 

@@ -38,9 +38,11 @@ SOURCES += \
     sceneobjects/originmarker.cpp \
     scene/basicscene.cpp \
     shaders/unlitpervertexcolorshader.cpp \
-    shaders/shaderpalette.cpp
+    shaders/shaderpalette.cpp \
+    math/plane3d.cpp
 
 HEADERS += \
+    model_global.h \
     stores/shaderstore.h \
     stores/texturestore.h \
     scene/scene.h \
@@ -69,7 +71,8 @@ HEADERS += \
     sceneobjects/originmarker.h \
     scene/basicscene.h \
     shaders/unlitpervertexcolorshader.h \
-    shaders/shaderpalette.h
+    shaders/shaderpalette.h \
+    math/plane3d.h
 
 unix {
     target.path = /usr/lib
