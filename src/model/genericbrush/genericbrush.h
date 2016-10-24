@@ -33,6 +33,7 @@ namespace NS_MODEL
         void clearBrushFaces();
         const QVector<GenericBrushFace*>& brushFaceList() const;
         int brushFaceCount() const;
+        GenericBrushFace* createAndObtainBrushFace();
 
     protected:
         GenericBrush(const SceneObjectInitParams &initParams, SceneObject* parentObject);

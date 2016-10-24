@@ -43,7 +43,9 @@ SOURCES += \
     math/windingvertex.cpp \
     math/winding3d.cpp \
     math/ray3d.cpp \
-    math/texturedwinding.cpp
+    math/texturedwinding.cpp \
+    factories/genericbrushfactory.cpp \
+    math/fuzzyvertexmap.cpp
 
 HEADERS += \
     model_global.h \
@@ -80,7 +82,9 @@ HEADERS += \
     math/windingvertex.h \
     math/winding3d.h \
     math/ray3d.h \
-    math/texturedwinding.h
+    math/texturedwinding.h \
+    factories/genericbrushfactory.h \
+    math/fuzzyvertexmap.h
 
 unix {
     target.path = /usr/lib

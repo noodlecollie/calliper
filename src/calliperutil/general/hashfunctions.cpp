@@ -13,3 +13,15 @@ uint qHash(const QMatrix4x4 &mat, uint seed)
 
     return qHash(arr, seed);
 }
+
+uint qHash(const QVector3D &vec, uint seed)
+{
+    QByteArray arr;
+
+    {
+        QDataStream stream(&arr, QIODevice::WriteOnly);
+        stream << vec.x() << vec.y() << vec.z();
+    }
+
+    return qHash(arr, seed);
+}

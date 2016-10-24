@@ -153,4 +153,9 @@ namespace NS_MODEL
     {
         flagNeedsRendererUpdate();
     }
+
+    GenericBrushFace* GenericBrush::createAndObtainBrushFace()
+    {
+        return brushFaceAt(createBrushFace());
+    }
 }

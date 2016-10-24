@@ -4,6 +4,7 @@
 #include "model_global.h"
 #include <QMatrix4x4>
 #include "eulerangle.h"
+#include "winding3d.h"
 
 namespace NS_MODEL
 {
@@ -19,6 +20,9 @@ namespace NS_MODEL
 
         // Assumes vectors are normalised and perpendicular.
         EulerAngle vectorsToAngle(const QVector3D &fwd, const QVector3D &up);
+
+        QList<QVector3D> windingsToVertices(QList<Winding3D*> &windings);
+        void clipWindingsWithEachOther(QList<Winding3D*> windings);
     }
 }
 
