@@ -42,7 +42,8 @@ SOURCES += \
     math/plane3d.cpp \
     math/windingvertex.cpp \
     math/winding3d.cpp \
-    math/ray3d.cpp
+    math/ray3d.cpp \
+    math/texturedwinding.cpp
 
 HEADERS += \
     model_global.h \
@@ -78,7 +79,8 @@ HEADERS += \
     math/plane3d.h \
     math/windingvertex.h \
     math/winding3d.h \
-    math/ray3d.h
+    math/ray3d.h \
+    math/texturedwinding.h
 
 unix {
     target.path = /usr/lib

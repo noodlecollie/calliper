@@ -153,11 +153,11 @@ namespace NS_MODEL
             calculateEdgeSplit(clipPlane, itV0, itV1);
 
             // Increment the iterators.
-            itV0++;
+            ++itV0;
             if ( itV0 == m_Vertices.end() )
                 itV0 = m_Vertices.begin();
 
-            itV1++;
+            ++itV1;
             if ( itV1 == m_Vertices.end() )
                 itV1 = m_Vertices.begin();
 
