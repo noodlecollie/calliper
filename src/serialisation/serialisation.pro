@@ -10,13 +10,15 @@ TEMPLATE = lib
 DEFINES += SERIALISATION_LIBRARY
 
 SOURCES += \
-    keyvaluesparser.cpp \
-    keyvaluestoken.cpp
+    keyvalues/keyvaluesparser.cpp \
+    keyvalues/keyvaluestoken.cpp \
+    vmf/vmf.cpp
 
 HEADERS +=\
         serialisation_global.h \
-    keyvaluesparser.h \
-    keyvaluestoken.h
+    keyvalues/keyvaluesparser.h \
+    keyvalues/keyvaluestoken.h \
+    vmf/vmf.h
 
 unix {
     target.path = /usr/lib
@@ -29,3 +31,17 @@ else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
 
 INCLUDEPATH += $$PWD/../model
 DEPENDPATH += $$PWD/../model
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../renderer/release/ -lrenderer
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../renderer/debug/ -lrenderer
+else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
+
+INCLUDEPATH += $$PWD/../renderer
+DEPENDPATH += $$PWD/../renderer
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil
+else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
+
+INCLUDEPATH += $$PWD/../calliperutil
+DEPENDPATH += $$PWD/../calliperutil

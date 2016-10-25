@@ -6,21 +6,15 @@ namespace NS_MODEL
 {
     namespace GenericBrushFactory
     {
-        GenericBrush* createBrushFromWindingGroup(SceneObject* parent, const QList<TexturedWinding*> windings)
+        GenericBrush* createBrushFromWindingGroup(SceneObject* parent, QList<TexturedWinding*>& windings)
         {
             Q_ASSERT_X(parent, Q_FUNC_INFO, "Parent object must be provided!");
 
             Scene* scene = parent->parentScene();
             Q_ASSERT_X(scene, Q_FUNC_INFO, "Scene must be valid!");
 
-            // Get a collection of vertices.
-            QList<Winding3D*> baseWindings;
-            foreach ( TexturedWinding* p, windings )
-            {
-                baseWindings.append(p);
-            }
-
-            QList<QVector3D> vertices = ModelMath::windingsToVertices(baseWindings);
+            ModelMath::clipWindingsWithEachOther<TexturedWinding>(windings);
+            QList<QVector3D> vertices = ModelMath::windingsToVertices<TexturedWinding>(windings);
 
             GenericBrush* b = scene->createSceneObject<GenericBrush>(parent);
             if ( vertices.count() < 1 )
