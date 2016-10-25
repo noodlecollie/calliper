@@ -15,6 +15,7 @@ namespace NS_RENDERER
         virtual ~OpenGLShaderProgram();
 
         virtual void construct() = 0;
+        virtual bool link() override;
 
         // Should be bound before calling, and released after!
         virtual void setGlobalUniformBlockBinding();

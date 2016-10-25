@@ -5,15 +5,18 @@
 #include "opengl/openglhelpers.h"
 #include "irenderer.h"
 #include <QMouseEvent>
-#include "sceneobjects/debugcube.h"
-#include <QPushButton>
-#include <QGridLayout>
+#include <QFile>
+#include "keyvalues/keyvaluesparser.h"
+#include "vmf/vmf.h"
+#include <QtDebug>
+#include "shaders/errorshader.h"
 
 using namespace NS_MODEL;
 using namespace NS_RENDERER;
 
-MainWindow::MainWindow() :
+MainWindow::MainWindow(const QString& filename) :
     QOpenGLWindow(),
+    m_strFilename(filename),
     m_pShaderStore(nullptr),
     m_pTextureStore(nullptr),
     m_iDefaultTexture(0),
@@ -88,6 +91,8 @@ void MainWindow::initializeGL()
 
     m_pMouseEventMap = new MouseEventMap(this);
     initMouseEventMap();
+
+    loadVMF();
 }
 
 void MainWindow::paintGL()
@@ -109,13 +114,16 @@ void MainWindow::resizeGL(int w, int h)
 
 void MainWindow::initShaders()
 {
-    m_DefaultShaderPalette.addItem(ShaderPalette::DefaultShader, m_pShaderStore->addShaderProgram<UnlitShader>());
+    quint16 errorShader = m_pShaderStore->addShaderProgram<ErrorShader>();
+    quint16 defaultShader = m_pShaderStore->addShaderProgram<UnlitShader>();
+
+    m_DefaultShaderPalette.addItem(ShaderPalette::DefaultShader, errorShader);
     m_DefaultShaderPalette.addItem(ShaderPalette::UnlitPerVertexColor, m_pShaderStore->addShaderProgram<UnlitPerVertexColorShader>());
 }
 
 void MainWindow::initTextures()
 {
-    OpenGLTexturePointer tex = m_pTextureStore->createTexture(":model/textures/_ERROR_");
+    OpenGLTexturePointer tex = m_pTextureStore->createDefaultTexture(":model/textures/_ERROR_");
     m_iDefaultTexture = tex->textureStoreId();
 }
 
@@ -212,4 +220,35 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *e)
     {
         QOpenGLWindow::mousePressEvent(e);
     }
+}
+
+void MainWindow::loadVMF()
+{
+    using namespace NS_SERIALISATION;
+
+    if ( m_strFilename.isNull() || m_strFilename.isEmpty() )
+    {
+        qDebug() << "No VMF file provided.";
+        return;
+    }
+
+    QFile file(m_strFilename);
+    if ( !file.open(QIODevice::ReadOnly) )
+    {
+        qDebug() << "Could not open VMF file" << m_strFilename;
+        return;
+    }
+
+    QByteArray fileData = file.readAll();
+    file.close();
+
+    QJsonDocument vmfDoc;
+
+    {
+        KeyValuesParser kvParser(fileData);
+        vmfDoc = kvParser.toJsonDocument();
+    }
+
+    VMF::createBrushes(vmfDoc, m_pScene->rootObject());
+    qDebug() << "VMF" << m_strFilename << "loaded";
 }

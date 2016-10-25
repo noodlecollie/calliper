@@ -185,4 +185,11 @@ namespace NS_RENDERER
 
         return addVertexShaderWithCommonHeaders(arr);
     }
+
+    bool OpenGLShaderProgram::link()
+    {
+        bool success = QOpenGLShaderProgram::link();
+        Q_ASSERT_X(success, Q_FUNC_INFO, "Shader did not link correctly!");
+        return success;
+    }
 }

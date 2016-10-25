@@ -33,7 +33,7 @@ namespace NS_MODEL
         return getTexture(textureId);
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::createTexture(const QString &path, QOpenGLTexture::Target target)
+    NS_RENDERER::OpenGLTexturePointer TextureStore::createTexture(const QString &path)
     {
         using namespace NS_RENDERER;
 
@@ -42,7 +42,30 @@ namespace NS_MODEL
             return getTexture(m_TexturePathTable.value(path));
         }
 
-        quint32 id = acquireNextTextureId();
+        return createTextureInternal(path, acquireNextTextureId());
+    }
+
+    NS_RENDERER::OpenGLTexturePointer TextureStore::createDefaultTexture(const QString &path)
+    {
+        using namespace NS_RENDERER;
+
+        if ( m_TextureTable.contains(0) )
+        {
+            return m_TextureTable.value(0);
+        }
+
+        if ( m_TexturePathTable.contains(path) )
+        {
+            return getTexture(path);
+        }
+
+        return createTextureInternal(path, 0);
+    }
+
+    NS_RENDERER::OpenGLTexturePointer TextureStore::createTextureInternal(const QString &path, quint32 id)
+    {
+        using namespace NS_RENDERER;
+
         OpenGLTexturePointer texture = OpenGLTexturePointer::create(id, QImage(path).mirrored());
         texture->setPath(path);
         texture->create();

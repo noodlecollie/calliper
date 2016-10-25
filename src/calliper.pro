@@ -9,8 +9,8 @@ SUBDIRS += \
     vmfviewer \
     serialisation
 
-renderer-sandbox.depends = renderer calliperutil model
+renderer-sandbox.depends = renderer calliperutil model serialisation
 model.depends = renderer calliperutil
 renderer.depends = calliperutil
-vmfviewer.depends = calliperutil renderer model
+vmfviewer.depends = calliperutil renderer model serialisation
 serialisation.depends = model renderer calliperutil

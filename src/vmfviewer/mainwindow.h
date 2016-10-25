@@ -20,7 +20,7 @@ class MainWindow : public QOpenGLWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow();
+    explicit MainWindow(const QString& filename);
     ~MainWindow();
 
 protected:
@@ -41,6 +41,10 @@ private:
     void initCameraController();
     void initKeyMap();
     void initMouseEventMap();
+
+    void loadVMF();
+
+    QString m_strFilename;
 
     NS_MODEL::ShaderStore* m_pShaderStore;
     NS_MODEL::TextureStore* m_pTextureStore;

@@ -1,9 +1,31 @@
 #include "mainwindow.h"
 #include <QApplication>
+#include <QCommandLineParser>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QCoreApplication::setApplicationName("vmfviewer");
+    QCoreApplication::setApplicationVersion("1.0");
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription("VMF Viewer");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("file", "VMF file to read");
+    parser.process(a);
+
+    QStringList cmdArgs = parser.positionalArguments();
+    QString filename;
+    if ( !cmdArgs.isEmpty() )
+    {
+        filename = cmdArgs.at(0);
+    }
+    else
+    {
+        qCritical() << "No VMF file specified!";
+        return 1;
+    }
 
     QSurfaceFormat format;
     format.setMajorVersion(4);
@@ -20,7 +42,7 @@ int main(int argc, char *argv[])
     format.setStencilBufferSize(8);
     QSurfaceFormat::setDefaultFormat(format);
 
-    MainWindow w;
+    MainWindow w(filename);
     w.show();
 
     return a.exec();

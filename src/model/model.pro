@@ -45,7 +45,8 @@ SOURCES += \
     math/ray3d.cpp \
     math/texturedwinding.cpp \
     factories/genericbrushfactory.cpp \
-    math/fuzzyvertexmap.cpp
+    math/fuzzyvertexmap.cpp \
+    shaders/errorshader.cpp
 
 HEADERS += \
     model_global.h \
@@ -84,7 +85,8 @@ HEADERS += \
     math/ray3d.h \
     math/texturedwinding.h \
     factories/genericbrushfactory.h \
-    math/fuzzyvertexmap.h
+    math/fuzzyvertexmap.h \
+    shaders/errorshader.h
 
 unix {
     target.path = /usr/lib

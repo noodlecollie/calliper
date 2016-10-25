@@ -41,3 +41,10 @@ else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
 
 INCLUDEPATH += $$PWD/../model
 DEPENDPATH += $$PWD/../model
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../serialisation/release/ -lserialisation
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../serialisation/debug/ -lserialisation
+else:unix: LIBS += -L$$OUT_PWD/../serialisation/ -lserialisation
+
+INCLUDEPATH += $$PWD/../serialisation
+DEPENDPATH += $$PWD/../serialisation
