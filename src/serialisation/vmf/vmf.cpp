@@ -6,6 +6,7 @@
 #include "factories/genericbrushfactory.h"
 #include <QJsonObject>
 #include <QJsonArray>
+#include "json/jsonarraywrapper.h"
 
 namespace NS_SERIALISATION
 {
@@ -46,7 +47,7 @@ namespace NS_SERIALISATION
             using namespace NS_MODEL;
 
             QJsonObject world = doc.object().value("world").toObject();
-            QJsonArray solids = world.value("solid").toArray();
+            Json::JsonArrayWrapper solids = world.value("solid");
 
             for ( int i = 0; i < solids.count(); i++ )
             {

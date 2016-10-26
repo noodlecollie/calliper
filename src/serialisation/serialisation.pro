@@ -12,13 +12,17 @@ DEFINES += SERIALISATION_LIBRARY
 SOURCES += \
     keyvalues/keyvaluesparser.cpp \
     keyvalues/keyvaluestoken.cpp \
-    vmf/vmf.cpp
+    vmf/vmf.cpp \
+    json/jsonarraywrapper.cpp \
+    json/jsonutil.cpp
 
 HEADERS +=\
         serialisation_global.h \
     keyvalues/keyvaluesparser.h \
     keyvalues/keyvaluestoken.h \
-    vmf/vmf.h
+    vmf/vmf.h \
+    json/jsonarraywrapper.h \
+    json/jsonutil.h
 
 unix {
     target.path = /usr/lib

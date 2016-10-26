@@ -114,10 +114,7 @@ void MainWindow::resizeGL(int w, int h)
 
 void MainWindow::initShaders()
 {
-    quint16 errorShader = m_pShaderStore->addShaderProgram<ErrorShader>();
-    quint16 defaultShader = m_pShaderStore->addShaderProgram<UnlitShader>();
-
-    m_DefaultShaderPalette.addItem(ShaderPalette::DefaultShader, errorShader);
+    m_DefaultShaderPalette.addItem(ShaderPalette::DefaultShader, m_pShaderStore->addShaderProgram<UnlitShader>());
     m_DefaultShaderPalette.addItem(ShaderPalette::UnlitPerVertexColor, m_pShaderStore->addShaderProgram<UnlitPerVertexColorShader>());
 }
 
