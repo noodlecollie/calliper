@@ -34,6 +34,18 @@ namespace NS_MODEL
         emit dataChanged();
     }
 
+    void GenericBrushFace::appendIndices(const QVector<int> &indices)
+    {
+        m_BrushVertexIndices.reserve(m_BrushVertexIndices.count() + indices.count());
+
+        for ( int i = 0; i < indices.count(); i++ )
+        {
+            m_BrushVertexIndices.append(indices.at(i));
+        }
+
+        emit dataChanged();
+    }
+
     int GenericBrushFace::indexCount() const
     {
         return m_BrushVertexIndices.count();

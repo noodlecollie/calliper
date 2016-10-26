@@ -23,6 +23,7 @@ namespace NS_MODEL
 
         int indexAt(int index) const;
         void appendIndex(int i);
+        void appendIndices(const QVector<int>& indices);
         int indexCount() const;
         void removeIndex(int index);
         QVector<int> indexList() const;

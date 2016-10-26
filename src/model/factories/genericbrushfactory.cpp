@@ -30,6 +30,7 @@ namespace NS_MODEL
 
                 GenericBrushFace* face = b->createAndObtainBrushFace();
                 face->texturePlane()->setTextureId(windingFace->textureId());
+                face->appendIndices(windingFace->vertexIndices().toVector());
             }
 
             return b;
