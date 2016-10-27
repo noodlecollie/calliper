@@ -21,11 +21,6 @@ int main(int argc, char *argv[])
     {
         filename = cmdArgs.at(0);
     }
-    else
-    {
-        qCritical() << "No VMF file specified!";
-        return 1;
-    }
 
     QSurfaceFormat format;
     format.setMajorVersion(4);

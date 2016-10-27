@@ -12,6 +12,7 @@
 #include "shaders/errorshader.h"
 #include "genericbrush/genericbrush.h"
 #include "shaders/simplelitshader.h"
+#include <QMessageBox>
 
 using namespace NS_MODEL;
 using namespace NS_RENDERER;
@@ -232,6 +233,7 @@ void MainWindow::loadVMF()
     if ( m_strFilename.isNull() || m_strFilename.isEmpty() )
     {
         qDebug() << "No VMF file provided.";
+        QMessageBox::critical(nullptr, "Error", "No VMF file provided.");
         return;
     }
 
@@ -239,6 +241,7 @@ void MainWindow::loadVMF()
     if ( !file.open(QIODevice::ReadOnly) )
     {
         qDebug() << "Could not open VMF file" << m_strFilename;
+        QMessageBox::critical(nullptr, "Error", QString("Could not open VMF file ") + m_strFilename);
         return;
     }
 
