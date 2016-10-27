@@ -43,6 +43,7 @@ private:
     void initMouseEventMap();
 
     void loadVMF();
+    void processBrushes();
 
     QString m_strFilename;
 

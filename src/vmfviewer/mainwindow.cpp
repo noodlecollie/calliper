@@ -10,6 +10,7 @@
 #include "vmf/vmf.h"
 #include <QtDebug>
 #include "shaders/errorshader.h"
+#include "genericbrush/genericbrush.h"
 
 using namespace NS_MODEL;
 using namespace NS_RENDERER;
@@ -93,6 +94,7 @@ void MainWindow::initializeGL()
     initMouseEventMap();
 
     loadVMF();
+    processBrushes();
 }
 
 void MainWindow::paintGL()
@@ -120,8 +122,11 @@ void MainWindow::initShaders()
 
 void MainWindow::initTextures()
 {
-    OpenGLTexturePointer tex = m_pTextureStore->createDefaultTexture(":model/textures/_ERROR_");
-    m_iDefaultTexture = tex->textureStoreId();
+    m_pTextureStore->createDefaultTexture(":model/textures/_ERROR_");
+
+    OpenGLTexturePointer defaultTexture = m_pTextureStore->createTexture(":model/textures/dev/devwhite");
+    Q_ASSERT_X(!defaultTexture.isNull(), Q_FUNC_INFO, "Unable to create default texture!");
+    m_iDefaultTexture = defaultTexture->textureStoreId();
 }
 
 void MainWindow::initLocalOpenGlSettings()
@@ -248,4 +253,18 @@ void MainWindow::loadVMF()
 
     VMF::createBrushes(vmfDoc, m_pScene->rootObject());
     qDebug() << "VMF" << m_strFilename << "loaded";
+}
+
+void MainWindow::processBrushes()
+{
+    QList<GenericBrush*> brushes = m_pScene->rootObject()->findChildren<GenericBrush*>();
+
+    foreach ( GenericBrush* brush, brushes )
+    {
+        for ( int i = 0; i < brush->brushFaceCount(); i++ )
+        {
+            GenericBrushFace* face = brush->brushFaceAt(i);
+            face->texturePlane()->setTextureId(m_iDefaultTexture);
+        }
+    }
 }
