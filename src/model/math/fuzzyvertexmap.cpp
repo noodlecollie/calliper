@@ -1,11 +1,28 @@
 #include "fuzzyvertexmap.h"
 #include "math/math.h"
+#include <QtMath>
 
 namespace NS_MODEL
 {
+    namespace
+    {
+        inline bool floatsCloseEnough(float f1, float f2, float tolerance)
+        {
+            return qFabs(f1-f2) < tolerance;
+        }
+
+        inline bool vectorsCloseEnough(const QVector3D& vec1, const QVector3D& vec2, float tolerance)
+        {
+            return floatsCloseEnough(vec1.x(), vec2.x(), tolerance) &&
+                    floatsCloseEnough(vec1.y(), vec2.y(), tolerance) &&
+                    floatsCloseEnough(vec1.z(), vec2.z(), tolerance);
+        }
+    }
+
     FuzzyVertexMap::FuzzyVertexMap()
     {
         m_iNextIndex = 0;
+        m_flTolerance = 0.01f;
     }
 
     int FuzzyVertexMap::count() const
@@ -21,11 +38,9 @@ namespace NS_MODEL
 
     int FuzzyVertexMap::mapToIndex(const QVector3D &vec)
     {
-        bool isNull = NS_CALLIPERUTIL::Math::fuzzyVectorIsNull(vec);
-
         for ( VertexMap::const_iterator it = m_Map.cbegin(); it != m_Map.cend(); ++it )
         {
-            if ( (isNull && NS_CALLIPERUTIL::Math::fuzzyVectorIsNull(it.key())) || NS_CALLIPERUTIL::Math::fuzzyVectorEquals(vec, it.key()) )
+            if ( vectorsCloseEnough(vec, it.key(), m_flTolerance) )
                 return it.value();
         }
 
@@ -49,5 +64,15 @@ namespace NS_MODEL
         }
 
         return list;
+    }
+
+    float FuzzyVertexMap::tolerance() const
+    {
+        return m_flTolerance;
+    }
+
+    void FuzzyVertexMap::setTolerance(float t)
+    {
+        m_flTolerance = t;
     }
 }

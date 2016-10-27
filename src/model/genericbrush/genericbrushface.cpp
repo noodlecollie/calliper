@@ -94,7 +94,7 @@ namespace NS_MODEL
 
         for ( int i = 2; i < vertices.count(); ++i )
         {
-            section->addIndexTriangle(i-2, i-1, i);
+            section->addIndexTriangle(0, i-1, i);
         }
 
         float col[4] = {1,1,1,1};

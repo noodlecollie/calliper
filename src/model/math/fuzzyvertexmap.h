@@ -17,6 +17,9 @@ namespace NS_MODEL
         void clear();
         int count() const;
 
+        float tolerance() const;
+        void setTolerance(float t);
+
         QList<QVector3D> vertexList() const;
 
     private:
@@ -24,6 +27,7 @@ namespace NS_MODEL
 
         VertexMap   m_Map;
         int         m_iNextIndex;
+        float       m_flTolerance;
     };
 }
 
