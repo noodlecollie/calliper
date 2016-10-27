@@ -16,7 +16,7 @@ namespace NS_RENDERER
 
         inline bool operator <(const MatrixBatchKey &other) const
         {
-            return qHash(m_matModelToWorldMatrix, 0) < qHash(other.m_matModelToWorldMatrix, 0);
+            return qHash(m_matModelToWorldMatrix) < qHash(other.m_matModelToWorldMatrix);
         }
 
         inline bool operator ==(const MatrixBatchKey &other) const

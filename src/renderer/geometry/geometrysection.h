@@ -93,7 +93,6 @@ namespace NS_RENDERER
 
     private:
         void init();
-        VertexFormat vertexFormat() const;
 
         QList<QVector<float> >  m_Attributes;
         QVector<quint32>        m_Indices;
@@ -107,6 +106,7 @@ namespace NS_RENDERER
         quint16 m_iShaderId;
         quint32 m_iTextureId;
         QMatrix4x4 m_matModelToWorld;
+        const VertexFormat m_VertexFormat;
     };
 
     typedef QList<GeometrySection> GeometrySectionList;
