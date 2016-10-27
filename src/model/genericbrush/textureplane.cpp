@@ -70,7 +70,14 @@ namespace NS_MODEL
 
     void TexturePlane::uvAxes(const QVector3D &normal, QVector3D &uAxis, QVector3D &vAxis) const
     {
-        Q_ASSERT(!normal.isNull());
+        if ( normal.isNull() )
+        {
+            qWarning() << "Null normal provided to TexturePlane::uvAxes()!";
+            //Q_ASSERT_X(false, Q_FUNC_INFO, "Texture plane should not have a null normal!");
+            uAxis = QVector3D(1,0,0);
+            vAxis = QVector3D(0,1,0);
+            return;
+        }
 
         // Order of operations:
         // - Translation applied before rotation

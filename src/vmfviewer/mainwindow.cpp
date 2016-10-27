@@ -11,6 +11,7 @@
 #include <QtDebug>
 #include "shaders/errorshader.h"
 #include "genericbrush/genericbrush.h"
+#include "shaders/simplelitshader.h"
 
 using namespace NS_MODEL;
 using namespace NS_RENDERER;
@@ -116,7 +117,7 @@ void MainWindow::resizeGL(int w, int h)
 
 void MainWindow::initShaders()
 {
-    m_DefaultShaderPalette.addItem(ShaderPalette::DefaultShader, m_pShaderStore->addShaderProgram<UnlitShader>());
+    m_DefaultShaderPalette.addItem(ShaderPalette::DefaultShader, m_pShaderStore->addShaderProgram<SimpleLitShader>());
     m_DefaultShaderPalette.addItem(ShaderPalette::UnlitPerVertexColor, m_pShaderStore->addShaderProgram<UnlitPerVertexColorShader>());
 }
 

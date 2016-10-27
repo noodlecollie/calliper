@@ -6,6 +6,8 @@
         <file alias="unlitpervertexcolorshader.vert">shaders/unlitpervertexcolorshader.vert</file>
         <file alias="errorshader.frag">shaders/errorshader.frag</file>
         <file alias="errorshader.vert">shaders/errorshader.vert</file>
+        <file alias="simplelitshader.frag">shaders/simplelitshader.frag</file>
+        <file alias="simplelitshader.vert">shaders/simplelitshader.vert</file>
     </qresource>
     <qresource prefix="/model/textures">
         <file alias="_ERROR_">textures/error.png</file>
