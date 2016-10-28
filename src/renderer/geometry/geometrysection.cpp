@@ -81,7 +81,7 @@ namespace NS_RENDERER
 {
     GeometrySection::GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
                                      quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix)
-        : m_iPositionCount(0), m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
+        : m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
           m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
           m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix),
           m_VertexFormat((*shaderFunctor)(shaderId)->vertexFormat())
@@ -101,23 +101,18 @@ namespace NS_RENDERER
     {
         append<const float*>(m_Attributes[att], data, count,
                              vertexFormatComponents(m_VertexFormat, att));
-
-        if (att == PositionAttribute)
-            m_iPositionCount += count / m_VertexFormat.positionComponents();
     }
 
     void GeometrySection::addPosition(const QVector3D &pos)
     {
         append<QVector3D>(m_Attributes[PositionAttribute], pos, 3,
                           vertexFormatComponents(m_VertexFormat, PositionAttribute));
-        m_iPositionCount++;
     }
 
     void GeometrySection::addPosition(const QVector4D &pos)
     {
         append<QVector4D>(m_Attributes[PositionAttribute], pos, 4,
                           vertexFormatComponents(m_VertexFormat, PositionAttribute));
-        m_iPositionCount++;
     }
 
     void GeometrySection::addPositions(const QVector<QVector3D> &list)
@@ -130,8 +125,6 @@ namespace NS_RENDERER
             append<QVector3D>(posList, vec, 3,
                               vertexFormatComponents(m_VertexFormat, PositionAttribute));
         }
-
-        m_iPositionCount += list.count();
     }
 
     void GeometrySection::addNormal(const QVector3D &vec)
@@ -218,9 +211,9 @@ namespace NS_RENDERER
         return m_Indices;
     }
 
-    int GeometrySection::positionCount() const
+    int GeometrySection::attributeCount(AttributeType att) const
     {
-        return m_iPositionCount;
+        return m_Attributes[att].count() / vertexFormatComponents(m_VertexFormat, att);
     }
 
     bool GeometrySection::hasNormals() const
@@ -238,10 +231,9 @@ namespace NS_RENDERER
         return !m_Attributes[TextureCoordinateAttribute].isEmpty();
     }
 
-    void GeometrySection::addPositions(const float *data, int count, int components)
+    void GeometrySection::addPositions(const float *data, int count)
     {
         add(PositionAttribute, data, count);
-        m_iPositionCount += count/components;
     }
 
     int GeometrySection::consolidate(QVector<float> &positions, QVector<float> &normals, QVector<float> &colors,
@@ -328,6 +320,17 @@ namespace NS_RENDERER
 
     bool GeometrySection::isEmpty() const
     {
-        return positionCount() < 1 && indexCount() < 1;
+        // Positions considered canonical for vertex data count.
+        return attributeCount(PositionAttribute) < 1 && indexCount() < 1;
+    }
+
+    void GeometrySection::clearAttribute(AttributeType att)
+    {
+        m_Attributes[att].clear();
+    }
+
+    VertexFormat GeometrySection::vertexFormat() const
+    {
+        return m_VertexFormat;
     }
 }

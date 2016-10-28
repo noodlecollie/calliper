@@ -30,6 +30,7 @@ namespace NS_MODEL
     {
         Q_ASSERT_X(m_pParentScene, Q_FUNC_INFO, "Must have a valid parent scene!");
         m_pHierarchy = initHierarchyState(true);
+        m_colColor = QColor::fromRgb(0xffffffff);
         m_bNeedsRendererUpdate = true;
     }
 
@@ -115,6 +116,12 @@ namespace NS_MODEL
     {
         // Call virtual function so that subclasses build their own geometry.
         bakeGeometry(shaderPalette, builder);
+
+        if ( !customVertexColours() )
+        {
+            updateGeometryColours(builder);
+        }
+
         m_bNeedsRendererUpdate = false;
     }
 
@@ -171,5 +178,48 @@ namespace NS_MODEL
     quint32 SceneObject::objectId() const
     {
         return m_iObjectId;
+    }
+
+    bool SceneObject::customVertexColours() const
+    {
+        return false;
+    }
+
+    void SceneObject::updateGeometryColours(NS_RENDERER::GeometryBuilder &builder) const
+    {
+        using namespace NS_RENDERER;
+
+        for ( int i = 0; i < builder.sectionCount(); i++ )
+        {
+            updateGeometryColours(builder.section(i));
+        }
+    }
+
+    void SceneObject::updateGeometryColours(NS_RENDERER::GeometrySection *section) const
+    {
+        using namespace NS_RENDERER;
+
+        section->clearAttribute(GeometrySection::ColorAttribute);
+        if ( section->vertexFormat().colorComponents() < 1 )
+            return;
+
+        while ( section->attributeCount(GeometrySection::ColorAttribute) < section->attributeCount(GeometrySection::PositionAttribute) )
+        {
+            section->addColor(m_colColor);
+        }
+    }
+
+    QColor SceneObject::color() const
+    {
+        return m_colColor;
+    }
+
+    void SceneObject::setColor(const QColor &col)
+    {
+        if ( col == m_colColor )
+            return;
+
+        m_colColor = col;
+        flagNeedsRendererUpdate();
     }
 }

@@ -22,7 +22,7 @@ namespace NS_RENDERER
 
     GeometrySection* GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix)
     {
-        if ( m_Sections.isEmpty() || currentSection()->positionCount() > 0 )
+        if ( m_Sections.isEmpty() || currentSection()->attributeCount(GeometrySection::PositionAttribute) > 0 )
         {
             m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, shaderId, textureId, matrix));
         }
@@ -113,5 +113,15 @@ namespace NS_RENDERER
     ITextureRetrievalFunctor* GeometryBuilder::textureFunctor() const
     {
         return m_pTextureFunctor;
+    }
+
+    GeometrySection* GeometryBuilder::section(int index)
+    {
+        return m_Sections.at(index);
+    }
+
+    const GeometrySection* GeometryBuilder::section(int index) const
+    {
+        return m_Sections.at(index);
     }
 }

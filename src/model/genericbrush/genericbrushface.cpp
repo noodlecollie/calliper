@@ -97,12 +97,6 @@ namespace NS_MODEL
             section->addIndexTriangle(0, i-1, i);
         }
 
-        float col[4] = {1,1,1,1};
-        for ( int i = 0; i < 4; i++ )
-        {
-            section->add(GeometrySection::ColorAttribute, col, 4);
-        }
-
         QVector3D nrm = normal();
         for ( int i = 0; i < indexCount(); i++ )
         {

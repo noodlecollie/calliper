@@ -44,7 +44,7 @@ namespace NS_RENDERER
 
         void addPosition(const QVector3D &pos);
         void addPosition(const QVector4D &pos);
-        void addPositions(const float* data, int count, int components);
+        void addPositions(const float* data, int count);
         void addPositions(const QVector<QVector3D> &list);
         void addNormal(const QVector3D &vec);
         void addColor(const QColor &col);
@@ -55,9 +55,11 @@ namespace NS_RENDERER
         void addVertex(const Vertex3D &vertex);
         void addVertex(const Vertex3DValueRef &vertex);
 
+        void clearAttribute(AttributeType att);
+
         int floatCount(AttributeType att) const;
         int indexCount() const;
-        int positionCount() const;    // How many times addPosition() has been called
+        int attributeCount(AttributeType att) const;
         bool isEmpty() const;
 
         const float* vertexConstData(AttributeType type) const;
@@ -90,13 +92,13 @@ namespace NS_RENDERER
 
         IShaderRetrievalFunctor* shaderFunctor() const;
         ITextureRetrievalFunctor* textureFunctor() const;
+        VertexFormat vertexFormat() const;
 
     private:
         void init();
 
         QList<QVector<float> >  m_Attributes;
         QVector<quint32>        m_Indices;
-        int                     m_iPositionCount;
 
         GLenum  m_iDrawMode;
         float   m_flDrawWidth;

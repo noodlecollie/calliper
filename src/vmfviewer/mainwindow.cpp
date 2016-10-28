@@ -13,6 +13,7 @@
 #include "genericbrush/genericbrush.h"
 #include "shaders/simplelitshader.h"
 #include <QMessageBox>
+#include <QtGlobal>
 
 using namespace NS_MODEL;
 using namespace NS_RENDERER;
@@ -163,9 +164,9 @@ void MainWindow::initSceneRenderer()
 void MainWindow::initCameraController()
 {
     m_pCameraController->setCamera(m_pCamera);
-    m_pCameraController->setStrafeSpeed(50.0f);
-    m_pCameraController->setForwardSpeed(50.0f);
-    m_pCameraController->setVerticalSpeed(50.0f);
+    m_pCameraController->setStrafeSpeed(100.0f);
+    m_pCameraController->setForwardSpeed(100.0f);
+    m_pCameraController->setVerticalSpeed(100.0f);
     m_pCameraController->setEnabled(true);
 
     connect(m_pCameraController, SIGNAL(tickFinished()), this, SLOT(update()));
@@ -265,6 +266,12 @@ void MainWindow::processBrushes()
 
     foreach ( GenericBrush* brush, brushes )
     {
+        float rand = (float)qrand()/(float)RAND_MAX;
+        rand = 0.5f + (0.5f * rand);
+        unsigned char randChar = (unsigned char)(rand * 0xff);
+        QRgb col = (0xff << 24) | (randChar << 16) | (randChar << 8) | randChar;
+        brush->setColor(QColor::fromRgb(col));
+
         for ( int i = 0; i < brush->brushFaceCount(); i++ )
         {
             GenericBrushFace* face = brush->brushFaceAt(i);
