@@ -7,7 +7,7 @@ namespace NS_CALLIPERUTIL
 {
     namespace General
     {
-        // TODO: Put things here.
+        // Nothing yet
     }
 }
 

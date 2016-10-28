@@ -27,22 +27,6 @@ namespace NS_RENDERER
         };
         Q_ENUM(VertexArrayAttribute)
 
-        // Canonical locations for uniforms.
-        // TODO: Do we need these if we're using UBOs?
-        enum Uniform
-        {
-            WorldCameraMatrixUniform            = 0,
-            CoordinateTransformMatrixUniform    = 1,
-            ProjectionMatrixUniform             = 2,
-
-            FogBeginUniform                     = 3,
-            FogEndUniform                       = 4,
-            FogColorUniform                     = 5,
-            CounterScaleUniform                 = 6,
-            GlobalColorUniform                  = 7,
-        };
-        Q_ENUM(Uniform)
-
         enum UniformBlockBindingPoint
         {
             GlobalUniformBlockBindingPoint = 0, // Camera matrices, fog, colour, etc.
