@@ -26,6 +26,12 @@ namespace
 
         angles[index] = newAngle;
     }
+
+    inline void normaliseIfNotNull(QVector3D& vec)
+    {
+        if ( !vec.isNull() )
+            vec.normalize();
+    }
 }
 
 namespace NS_MODEL
@@ -102,7 +108,9 @@ namespace NS_MODEL
         QVector3D worldLeftDir = (localToRoot * QVector4D(0,1,0,0)).toVector3D();
         QVector3D worldUpDir(0,0,1);    // Always want to move up/down in world co-ords.
 
-        // TODO: Normalise dirs if not null.
+        normaliseIfNotNull(worldViewDir);
+        normaliseIfNotNull(worldLeftDir);
+        normaliseIfNotNull(worldUpDir);
 
         float fwdThisTick = m_iForwardState * m_flForwardSpeed * secondFrac;
         float strafeThisTick = m_iStrafeState * m_flStrafeSpeed * secondFrac;
