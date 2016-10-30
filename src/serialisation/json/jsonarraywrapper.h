@@ -8,7 +8,7 @@ namespace NS_SERIALISATION
 {
     namespace Json
     {
-        class JsonArrayWrapper : public QJsonArray
+        class SERIALISATIONSHARED_EXPORT JsonArrayWrapper : public QJsonArray
         {
         public:
             // For automatic conversion.

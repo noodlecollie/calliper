@@ -7,7 +7,7 @@
 
 namespace NS_CALLIPERUTIL
 {
-    class CalliperException : public QException
+    class CALLIPERUTILSHARED_EXPORT CalliperException : public QException
     {
     public:
         virtual void raise() const override;

@@ -5,6 +5,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include "exceptions/calliperexception.h"
+#include <QtDebug>
 
 namespace NS_SERIALISATION
 {
@@ -54,7 +55,7 @@ namespace NS_SERIALISATION
         return -1;
     }
 
-    void KeyValuesParser::keyValuesToIntermediateJson(QByteArray &intJson)
+    void KeyValuesParser::keyValuesToIntermediateJson_x(QByteArray &intJson)
     {
         // The depthTokens stack helps to keep track of what delimiters we should
         // be inserting into the output stream (eg. ':' between keys and values,
@@ -103,7 +104,8 @@ namespace NS_SERIALISATION
                 else
                 {
                     // We've had a push before a corresponding key.
-                    throw InvalidSyntaxException();
+                    throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
+                                                 "'{' encountered before a key.");
                 }
 
                 depthTokens.push(0);
@@ -119,16 +121,16 @@ namespace NS_SERIALISATION
                     }
                     else
                     {
-                        // TODO: Error handling.
                         // We've had more pops than pushes.
-                        Q_ASSERT(false);
+                        throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
+                                                     "'}' encountered without being matched with a beginning '{'.");
                     }
                 }
                 else
                 {
-                    // TODO: Error handling.
                     // We've had more pops than pushes.
-                    Q_ASSERT(false);
+                    throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
+                                                 "'}' encountered without being matched with a beginning '{'.");
                 }
             }
             else if ( token.isString() )
@@ -146,9 +148,9 @@ namespace NS_SERIALISATION
                 }
                 else
                 {
-                    // TODO: Error handling.
                     // We've had more pops than pushes.
-                    Q_ASSERT(false);
+                    throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
+                                                 "'}' encountered without being matched with a beginning '{'.");
                 }
             }
 
@@ -224,10 +226,27 @@ namespace NS_SERIALISATION
         convertNonUniqueKeysToArrays(obj);
     }
 
-    QJsonDocument KeyValuesParser::toJsonDocument()
+    QJsonDocument KeyValuesParser::toJsonDocument(QString* errorString)
     {
         QByteArray intermediate;
-        keyValuesToIntermediateJson(intermediate);
+
+        try
+        {
+            keyValuesToIntermediateJson_x(intermediate);
+        }
+        catch (NS_CALLIPERUTIL::CalliperException& exception)
+        {
+            if ( errorString )
+                *errorString = exception.errorHint();
+        }
+        catch (...)
+        {
+            QString err("ERROR: Unknown exception thrown when parsing keyvalues file!");
+            qCritical() << err;
+
+            if ( errorString )
+                *errorString = err;
+        }
 
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(intermediate, &error);

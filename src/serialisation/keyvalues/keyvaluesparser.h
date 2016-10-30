@@ -25,7 +25,7 @@
 
 namespace NS_SERIALISATION
 {
-    class KeyValuesParser
+    class SERIALISATIONSHARED_EXPORT KeyValuesParser
     {
     public:
         class InvalidSyntaxException;
@@ -33,11 +33,11 @@ namespace NS_SERIALISATION
         KeyValuesParser(const QByteArray &input);
 
         // TODO: Catch exceptions
-        QJsonDocument toJsonDocument();
+        QJsonDocument toJsonDocument(QString* errorString = nullptr);
 
     private:
         int nextNonWhitespaceCharacter(int from) const;
-        void keyValuesToIntermediateJson(QByteArray &intJson);
+        void keyValuesToIntermediateJson_x(QByteArray &intJson);
 
         static void convertNonUniqueKeysToArrays(QJsonObject &obj);
         static void convertNonUniqueKeysToArraysRecursive(QJsonObject &obj);

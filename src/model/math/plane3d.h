@@ -8,7 +8,7 @@
 
 namespace NS_MODEL
 {
-    class Plane3D
+    class MODELSHARED_EXPORT Plane3D
     {
         Q_GADGET
     public:

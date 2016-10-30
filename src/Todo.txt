@@ -1,8 +1,5 @@
 Move directional light from shaders to global uniforms
 Implement error checking in VMF parsing
-Implement error checking in Keyvalues parsing - in progress
-Rename Keyvalues parsing functions that throw exceptions
-Catch the Keyvalues parsing exceptions
 Implement emitting signals when creating/destroying scene objects,
   and deleting objects recursively
 

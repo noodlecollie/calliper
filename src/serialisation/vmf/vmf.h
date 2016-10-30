@@ -8,7 +8,7 @@ namespace NS_SERIALISATION
 {
     namespace VMF
     {
-        void createBrushes(const QJsonDocument &doc, NS_MODEL::SceneObject* parent);
+        SERIALISATIONSHARED_EXPORT void createBrushes(const QJsonDocument &doc, NS_MODEL::SceneObject* parent);
     }
 }
 

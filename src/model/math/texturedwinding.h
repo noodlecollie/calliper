@@ -6,7 +6,7 @@
 
 namespace NS_MODEL
 {
-    class TexturedWinding : public Winding3D
+    class MODELSHARED_EXPORT TexturedWinding : public Winding3D
     {
     public:
         TexturedWinding(const Plane3D &plane, quint32 textureId);

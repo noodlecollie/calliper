@@ -10,7 +10,7 @@ namespace NS_MODEL
 {
     namespace GenericBrushFactory
     {
-        GenericBrush* createBrushFromWindingGroup(SceneObject* parent, QList<TexturedWinding*>& windings);
+        MODELSHARED_EXPORT GenericBrush* createBrushFromWindingGroup(SceneObject* parent, QList<TexturedWinding*>& windings);
     }
 }
 

@@ -253,7 +253,14 @@ void MainWindow::loadVMF()
 
     {
         KeyValuesParser kvParser(fileData);
-        vmfDoc = kvParser.toJsonDocument();
+        QString err;
+        vmfDoc = kvParser.toJsonDocument(&err);
+
+        if ( !err.isEmpty() )
+        {
+            qDebug().nospace() << "Error loading " << m_strFilename << ": " << err;
+            return;
+        }
     }
 
     VMF::createBrushes(vmfDoc, m_pScene->rootObject());
