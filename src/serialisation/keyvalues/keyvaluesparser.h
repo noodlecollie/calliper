@@ -28,7 +28,11 @@ namespace NS_SERIALISATION
     class KeyValuesParser
     {
     public:
+        class InvalidSyntaxException;
+
         KeyValuesParser(const QByteArray &input);
+
+        // TODO: Catch exceptions
         QJsonDocument toJsonDocument();
 
     private:

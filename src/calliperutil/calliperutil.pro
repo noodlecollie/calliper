@@ -15,14 +15,16 @@ SOURCES += \
     general/generalutil.cpp \
     math/math.cpp \
     general/hashfunctions.cpp \
-    general/fixedindexpool.cpp
+    general/fixedindexpool.cpp \
+    exceptions/calliperexception.cpp
 
 HEADERS +=\
         calliperutil_global.h \
     general/generalutil.h \
     math/math.h \
     general/hashfunctions.h \
-    general/fixedindexpool.h
+    general/fixedindexpool.h \
+    exceptions/calliperexception.h
 
 unix {
     target.path = /usr/lib

@@ -4,9 +4,40 @@
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include "exceptions/calliperexception.h"
 
 namespace NS_SERIALISATION
 {
+    namespace
+    {
+        // This is relatively expensive, as it scans the entire byte
+        // array prefix for newline characters. It's intended only to
+        // be called in the case of an exception, in order to provide
+        // the line number of the given index.
+        inline int numberOfNewlinesBeforeIndex(const QByteArray& arr, int index)
+        {
+            return arr.left(index).count('\n') + 1; // No newlines before means we're on line 1.
+        }
+    }
+
+    class KeyValuesParser::InvalidSyntaxException : public NS_CALLIPERUTIL::CalliperException
+    {
+    public:
+        void raise() const override { throw *this; }
+        InvalidSyntaxException* clone() const override { return new InvalidSyntaxException(*this); }
+
+        InvalidSyntaxException(int line, const QString& errorHint)
+            : CalliperException()
+        {
+            m_strErrorHint = QString("Syntax error at line %1: %2")
+                    .arg(line)
+                    .arg(errorHint);
+        }
+
+    private:
+        QString m_strErrorHint;
+    };
+
     KeyValuesParser::KeyValuesParser(const QByteArray &input) :
         m_Input(input)
     {
@@ -71,9 +102,8 @@ namespace NS_SERIALISATION
                 }
                 else
                 {
-                    // TODO: Error handling.
                     // We've had a push before a corresponding key.
-                    Q_ASSERT(false);
+                    throw InvalidSyntaxException();
                 }
 
                 depthTokens.push(0);
