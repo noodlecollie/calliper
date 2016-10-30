@@ -45,7 +45,7 @@ namespace NS_SERIALISATION
                 s = s.left(s.length()-1);
             }
 
-            QStringList list = coord.split(" ");
+            QStringList list = s.split(" ");
             if ( list.count() < 3 )
                 throw InvalidCoordSyntaxException(coord, "Co-ordinate has too few components.");
 
@@ -55,30 +55,30 @@ namespace NS_SERIALISATION
             success = false;
             x = list.at(0).toFloat(&success);
             if ( !success )
-                throw InvalidCoordSyntaxException(coord, "First co-ordinate component could not be converted to a number.");
+                throw InvalidCoordSyntaxException(coord, QString("First co-ordinate component %1 could not be converted to a number.").arg(list.at(0)));
 
             success = false;
             y = list.at(1).toFloat(&success);
             if ( !success )
-                throw InvalidCoordSyntaxException(coord, "Second co-ordinate component could not be converted to a number.");
+                throw InvalidCoordSyntaxException(coord, QString("Second co-ordinate component %1 could not be converted to a number.").arg(list.at(1)));
 
             success = false;
             z = list.at(2).toFloat(&success);
             if ( !success )
-                throw InvalidCoordSyntaxException(coord, "Third co-ordinate component could not be converted to a number.");
+                throw InvalidCoordSyntaxException(coord, QString("Third co-ordinate component %1 could not be converted to a number.").arg(list.at(2)));
 
             return QVector3D(x,y,z);
         }
 
         void vectorsFromVmfCoords_x(const QString &coords, QVector3D &v0, QVector3D &v1, QVector3D &v2)
         {
-            QStringList coordStrings = coords.trimmed().split(" ");
-            if ( coordStrings.count() != 3 )
-                throw InvalidCoordSyntaxException(coords, "Expected three co-ordinates in group.");
+            QStringList fragments = coords.split(" ");
+            if ( fragments.count() != 9 )
+                throw InvalidCoordSyntaxException(coords, "Unable to determine co-ordinate triple.");
 
-            v0 = vectorFromVmfCoord_x(coordStrings.at(0));
-            v1 = vectorFromVmfCoord_x(coordStrings.at(1));
-            v2 = vectorFromVmfCoord_x(coordStrings.at(2));
+            v0 = vectorFromVmfCoord_x(fragments.at(0) + " " + fragments.at(1) + " " + fragments.at(2));
+            v1 = vectorFromVmfCoord_x(fragments.at(3) + " " + fragments.at(4) + " " + fragments.at(5));
+            v2 = vectorFromVmfCoord_x(fragments.at(6) + " " + fragments.at(7) + " " + fragments.at(8));
         }
     }
 
