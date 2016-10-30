@@ -13,6 +13,8 @@ namespace NS_CALLIPERUTIL
         virtual void raise() const override;
         virtual CalliperException* clone() const override;
 
+        explicit CalliperException(const QString& errHint);
+
         QString errorHint() const;
 
     protected:

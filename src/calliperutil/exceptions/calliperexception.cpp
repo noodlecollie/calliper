@@ -12,6 +12,12 @@ namespace NS_CALLIPERUTIL
         return new CalliperException(*this);
     }
 
+    CalliperException::CalliperException(const QString &errHint)
+        : QException(), m_strErrorHint(errHint)
+    {
+
+    }
+
     QString CalliperException::errorHint() const
     {
         return m_strErrorHint;

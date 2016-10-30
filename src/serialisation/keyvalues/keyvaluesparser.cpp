@@ -28,11 +28,10 @@ namespace NS_SERIALISATION
         InvalidSyntaxException* clone() const override { return new InvalidSyntaxException(*this); }
 
         InvalidSyntaxException(int line, const QString& errorHint)
-            : CalliperException()
+            : CalliperException(QString("Syntax error at line %1: %2")
+                                .arg(line)
+                                .arg(errorHint))
         {
-            m_strErrorHint = QString("Syntax error at line %1: %2")
-                    .arg(line)
-                    .arg(errorHint);
         }
 
     private:

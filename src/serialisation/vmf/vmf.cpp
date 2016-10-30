@@ -7,36 +7,78 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "json/jsonarraywrapper.h"
+#include "exceptions/calliperexception.h"
+#include <QtDebug>
 
 namespace NS_SERIALISATION
 {
     namespace
     {
-        // TODO: Error handling.
-        QVector3D vectorFromVmfCoord(const QString &coord)
+        class InvalidCoordSyntaxException : public NS_CALLIPERUTIL::CalliperException
         {
-            QStringList list = coord.split(" ");
-            list[0] = list[0].right(list[0].length() - 1);
-            list[2] = list[2].left(list[2].length() - 1);
+        public:
+            void raise() const override { throw *this; }
+            InvalidCoordSyntaxException* clone() const override { return new InvalidCoordSyntaxException(*this); }
 
-            return QVector3D(list.at(0).toFloat(),
-                             list.at(1).toFloat(),
-                             list.at(2).toFloat());
+            InvalidCoordSyntaxException(const QString &coord, const QString &err)
+                : NS_CALLIPERUTIL::CalliperException(QString("'%1' %2").arg(coord).arg(err))
+            {
+            }
+        };
+
+        QVector3D vectorFromVmfCoord_x(const QString &coord)
+        {
+            QString s = coord.trimmed();
+            if ( s.startsWith("(") )
+            {
+                if ( s.length() < 2 )
+                    throw InvalidCoordSyntaxException(coord, "Co-ordinate not long enough.");
+
+                s = s.right(s.length()-1);
+            }
+
+            if ( s.endsWith(")") )
+            {
+                if ( s.length() < 2 )
+                    throw InvalidCoordSyntaxException(coord, "Co-ordinate not long enough.");
+
+                s = s.left(s.length()-1);
+            }
+
+            QStringList list = coord.split(" ");
+            if ( list.count() < 3 )
+                throw InvalidCoordSyntaxException(coord, "Co-ordinate has too few components.");
+
+            bool success;
+            float x, y, z;
+
+            success = false;
+            x = list.at(0).toFloat(&success);
+            if ( !success )
+                throw InvalidCoordSyntaxException(coord, "First co-ordinate component could not be converted to a number.");
+
+            success = false;
+            y = list.at(1).toFloat(&success);
+            if ( !success )
+                throw InvalidCoordSyntaxException(coord, "Second co-ordinate component could not be converted to a number.");
+
+            success = false;
+            z = list.at(2).toFloat(&success);
+            if ( !success )
+                throw InvalidCoordSyntaxException(coord, "Third co-ordinate component could not be converted to a number.");
+
+            return QVector3D(x,y,z);
         }
 
-        // TODO: Error handling.
-        void vectorsFromVmfCoords(const QString &coords, QVector3D &v0, QVector3D &v1, QVector3D &v2)
+        void vectorsFromVmfCoords_x(const QString &coords, QVector3D &v0, QVector3D &v1, QVector3D &v2)
         {
-            int sep1 = coords.indexOf(')') + 1;
-            int sep2 = coords.indexOf(')', sep1) + 1;
+            QStringList coordStrings = coords.trimmed().split(" ");
+            if ( coordStrings.count() != 3 )
+                throw InvalidCoordSyntaxException(coords, "Expected three co-ordinates in group.");
 
-            QString coord0 = coords.mid(0, sep1);
-            QString coord1 = coords.mid(sep1+1, sep2-sep1-1);
-            QString coord2 = coords.mid(sep2+1);
-
-            v0 = vectorFromVmfCoord(coord0);
-            v1 = vectorFromVmfCoord(coord1);
-            v2 = vectorFromVmfCoord(coord2);
+            v0 = vectorFromVmfCoord_x(coordStrings.at(0));
+            v1 = vectorFromVmfCoord_x(coordStrings.at(1));
+            v2 = vectorFromVmfCoord_x(coordStrings.at(2));
         }
     }
 
@@ -55,14 +97,35 @@ namespace NS_SERIALISATION
 
                 QJsonObject solid = solids.at(i).toObject();
                 QJsonArray sides = solid.value("side").toArray();
+                bool success = true;
                 for ( int j = 0; j < sides.count(); j++ )
                 {
                     QString plane = sides.at(j).toObject().value("plane").toString();
                     QVector3D v0, v1, v2;
-                    vectorsFromVmfCoords(plane, v0, v1, v2);
+
+                    try
+                    {
+                        vectorsFromVmfCoords_x(plane, v0, v1, v2);
+                    }
+                    catch ( NS_CALLIPERUTIL::CalliperException& exception )
+                    {
+                        qWarning() << "Error parsing plane co-ordinates:" << exception.errorHint();
+                        success = false;
+                        break;
+                    }
+                    catch (...)
+                    {
+                        qCritical() << "Unexpected exception occurred when parsing plane co-ordinates!";
+                        success = false;
+                        break;
+                    }
+
                     polygons.append(new TexturedWinding(Plane3D(v0, v2, v1), 0));   // TODO: Proper texture
                     Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
                 }
+
+                if ( !success )
+                    continue;
 
                 GenericBrush* planeBrush = GenericBrushFactory::createBrushFromWindingGroup(parent, polygons);
                 planeBrush->setObjectName(QString("planeBrush%0").arg(i));
