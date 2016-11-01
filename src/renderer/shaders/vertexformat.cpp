@@ -8,7 +8,10 @@ namespace NS_RENDERER
           m_iColorComponents(colors),
           m_iTextureCoordinateComponents(texCoords)
     {
-
+        Q_ASSERT_X(positions >= 0 && positions <= 4, Q_FUNC_INFO, "Positions value must be between 0 and 4");
+        Q_ASSERT_X(normals >= 0 && normals <= 4, Q_FUNC_INFO, "Normals value must be between 0 and 4");
+        Q_ASSERT_X(colors >= 0 && colors <= 4, Q_FUNC_INFO, "Colours value must be between 0 and 4");
+        Q_ASSERT_X(texCoords >= 0 && texCoords <= 4, Q_FUNC_INFO, "Texture coordinates value must be between 0 and 4");
     }
 
     int VertexFormat::positionComponents() const
