@@ -15,3 +15,4 @@ model.depends = renderer calliperutil
 renderer.depends = calliperutil
 vmfviewer.depends = calliperutil renderer model serialisation
 serialisation.depends = model renderer calliperutil
+vpkinfo.depends = serialisation

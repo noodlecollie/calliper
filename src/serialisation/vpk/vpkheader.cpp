@@ -12,7 +12,7 @@ namespace NS_SERIALISATION
         }
     }
 
-    class VPKHeader::Data
+    struct VPKHeader::Data
     {
         quint32 signature;
         quint32 version;
@@ -27,7 +27,12 @@ namespace NS_SERIALISATION
     VPKHeader::VPKHeader()
         : m_pData(new VPKHeader::Data())
     {
-        memset(m_pData.data(), 0, sizeof(VPKHeader::Data));
+        memset(m_pData, 0, sizeof(VPKHeader::Data));
+    }
+
+    VPKHeader::~VPKHeader()
+    {
+        delete m_pData;
     }
 
     bool VPKHeader::populate(QDataStream &stream, QString *errorHint)
@@ -40,7 +45,7 @@ namespace NS_SERIALISATION
         }
 
         stream >> d.signature;
-        if ( signature != 0x55aa1234 )
+        if ( d.signature != 0x55aa1234 )
         {
             setErrorString(errorHint, "Incorrect VPK signature.");
             return false;

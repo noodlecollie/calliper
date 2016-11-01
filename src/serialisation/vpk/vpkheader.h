@@ -11,6 +11,7 @@ namespace NS_SERIALISATION
     {
     public:
         VPKHeader();
+        ~VPKHeader();
 
     bool populate(QDataStream& stream, QString* errorHint = nullptr);
 
@@ -25,7 +26,7 @@ namespace NS_SERIALISATION
 
     private:
         struct Data;
-        QScopedPointer<Data> m_pData;
+        Data* m_pData;
     };
 }
 
