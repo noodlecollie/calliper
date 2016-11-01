@@ -10,36 +10,32 @@ namespace NS_RENDERER
     {
     public:
         RendererDrawParams();
-        RendererDrawParams(const QMatrix4x4 &worldToCameraMatrix, const QMatrix4x4 &projectionMatrix);
-        RendererDrawParams(const RendererDrawParams &other);
 
         const QMatrix4x4& worldToCameraMatrix() const;
-        const QMatrix4x4& projectionMatrix() const;
+        void setWorldToCameraMatrix(const QMatrix4x4& mat);
 
-        inline bool operator ==(const RendererDrawParams &other) const
+        const QMatrix4x4& projectionMatrix() const;
+        void setProjectionMatrix(const QMatrix4x4& mat);
+
+        const QVector3D& directionalLight() const;
+        void setDirectionalLight(const QVector3D& vec);
+
+        inline bool operator ==(const RendererDrawParams& other) const
         {
             return m_matWorldToCamera == other.m_matWorldToCamera &&
-                    m_matProjection == other.m_matProjection;
+                    m_matProjection == other.m_matProjection &&
+                    m_vecDirectionalLight == other.m_vecDirectionalLight;
         }
 
-        inline bool operator !=(const RendererDrawParams &other) const
+        inline bool operator !=(const RendererDrawParams& other) const
         {
             return !(*this == other);
         }
 
-        inline RendererDrawParams& operator =(const RendererDrawParams &other)
-        {
-            m_matWorldToCamera = other.m_matWorldToCamera;
-            m_matProjection = other.m_matProjection;
-
-            return *this;
-        }
-
-        int size() const;
-
     private:
         QMatrix4x4 m_matWorldToCamera;
         QMatrix4x4 m_matProjection;
+        QVector3D m_vecDirectionalLight;
     };
 }
 

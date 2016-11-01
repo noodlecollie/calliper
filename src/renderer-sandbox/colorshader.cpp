@@ -42,7 +42,7 @@ ColorShader::~ColorShader()
 
 void ColorShader::construct()
 {
-    addVertexShaderWithCommonHeaders(vertexShaderSource);
+    addShaderWithCommonHeaders(QOpenGLShader::Vertex, vertexShaderSource);
     addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
     link();
 }

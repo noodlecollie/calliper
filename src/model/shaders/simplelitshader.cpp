@@ -17,8 +17,8 @@ namespace NS_MODEL
 
     void SimpleLitShader::construct()
     {
-        addVertexShaderFileWithCommonHeaders(":/model/shaders/simplelitshader.vert");
-        addShaderFromSourceFile(QOpenGLShader::Fragment, ":/model/shaders/simplelitshader.frag");
+        addShaderFileWithCommonHeaders(QOpenGLShader::Vertex, ":/model/shaders/simplelitshader.vert");
+        addShaderFileWithCommonHeaders(QOpenGLShader::Fragment, ":/model/shaders/simplelitshader.frag");
         link();
     }
 

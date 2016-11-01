@@ -9,7 +9,7 @@ namespace NS_MODEL
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
           m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene),
-          m_iDefaultTexture(0)
+          m_iDefaultTexture(0), m_vecDirectionalLight(QVector3D(1,1,1).normalized())
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
@@ -71,7 +71,13 @@ namespace NS_MODEL
     void SceneRenderer::drawAllObjects(const QMatrix4x4 &worldToCamera, const QMatrix4x4 &projection)
     {
         using namespace NS_RENDERER;
-        m_pRenderer->draw(RendererDrawParams(worldToCamera, projection));
+
+        RendererDrawParams params;
+        params.setWorldToCameraMatrix(worldToCamera);
+        params.setProjectionMatrix(projection);
+        params.setDirectionalLight(m_vecDirectionalLight);
+
+        m_pRenderer->draw(params);
     }
 
     quint32 SceneRenderer::defaultTextureId() const
@@ -92,5 +98,15 @@ namespace NS_MODEL
     void SceneRenderer::setShaderPalette(const ShaderPalette &palette)
     {
         m_ShaderPalette = palette;
+    }
+
+    QVector3D SceneRenderer::directionalLight() const
+    {
+        return m_vecDirectionalLight;
+    }
+
+    void SceneRenderer::setDirectionalLight(const QVector3D &dir)
+    {
+        m_vecDirectionalLight = dir;
     }
 }

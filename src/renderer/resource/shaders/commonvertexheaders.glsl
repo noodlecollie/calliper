@@ -33,4 +33,5 @@ layout (std140) uniform GlobalUniformBlock
 {
     mat4 worldToCameraMatrix;
     mat4 projectionMatrix;
+    vec3 directionalLight;
 };

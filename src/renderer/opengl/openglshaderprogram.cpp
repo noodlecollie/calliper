@@ -164,17 +164,17 @@ namespace NS_RENDERER
         }
     }
 
-    bool OpenGLShaderProgram::addVertexShaderWithCommonHeaders(const QByteArray &shader)
+    bool OpenGLShaderProgram::addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const QByteArray &shader)
     {
-        return addShaderFromSourceCode(QOpenGLShader::Vertex, commonVertexHeaders() + shader);
+        return addShaderFromSourceCode(type, commonVertexHeaders() + shader);
     }
 
-    bool OpenGLShaderProgram::addVertexShaderWithCommonHeaders(const char *shader)
+    bool OpenGLShaderProgram::addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const char *shader)
     {
-        return addShaderFromSourceCode(QOpenGLShader::Vertex, commonVertexHeaders() + shader);
+        return addShaderFromSourceCode(type, commonVertexHeaders() + shader);
     }
 
-    bool OpenGLShaderProgram::addVertexShaderFileWithCommonHeaders(const QString &filePath)
+    bool OpenGLShaderProgram::addShaderFileWithCommonHeaders(QOpenGLShader::ShaderType type, const QString &filePath)
     {
         QFile file(filePath);
         if ( !file.open(QIODevice::ReadOnly) )
@@ -183,7 +183,7 @@ namespace NS_RENDERER
         QByteArray arr = file.readAll();
         file.close();
 
-        return addVertexShaderWithCommonHeaders(arr);
+        return addShaderWithCommonHeaders(type, arr);
     }
 
     bool OpenGLShaderProgram::link()

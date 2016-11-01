@@ -25,9 +25,9 @@ namespace NS_RENDERER
         void enableAttributeArrays();
         void disableAttributeArrays();
 
-        bool addVertexShaderWithCommonHeaders(const QByteArray &shader);
-        bool addVertexShaderWithCommonHeaders(const char* shader);
-        bool addVertexShaderFileWithCommonHeaders(const QString &filePath);
+        bool addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const QByteArray &shader);
+        bool addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const char* shader);
+        bool addShaderFileWithCommonHeaders(QOpenGLShader::ShaderType type, const QString &filePath);
 
         quint16 shaderStoreId() const;
 

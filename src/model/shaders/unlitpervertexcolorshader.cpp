@@ -16,7 +16,7 @@ namespace NS_MODEL
 
     void UnlitPerVertexColorShader::construct()
     {
-        addVertexShaderFileWithCommonHeaders(":/model/shaders/unlitpervertexcolorshader.vert");
+        addShaderFileWithCommonHeaders(QOpenGLShader::Vertex, ":/model/shaders/unlitpervertexcolorshader.vert");
         addShaderFromSourceFile(QOpenGLShader::Fragment, ":/model/shaders/unlitpervertexcolorshader.frag");
         link();
     }

@@ -5,14 +5,6 @@
 
 namespace
 {
-    void copy(NS_RENDERER::OpenGLUniformBuffer &dest, const QMatrix4x4 &src, int &offset)
-    {
-        using namespace NS_RENDERER;
-
-        GLTRY(dest.write(offset, src.constData(), 16 * sizeof(float)));
-        offset += 16 * sizeof(float);
-    }
-
     inline bool flagIsSet(quint32 value, quint32 flag)
     {
         return (value & flag) == flag;
@@ -33,16 +25,17 @@ namespace NS_RENDERER
 {
     RenderModel::RenderModel()
         : m_pShaderFunctor(nullptr), m_pTextureFunctor(nullptr), m_DrawParams(),
-          m_GlobalUniformBuffer(QOpenGLBuffer::DynamicDraw), m_bUniformDataUploaded(false)
+          m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
     {
         m_VAO.create();
-        m_GlobalUniformBuffer.create();
+        m_GlobalShaderUniforms.create();
+        updateGlobalShaderUniforms();
     }
 
     RenderModel::~RenderModel()
     {
         clearRenderPasses();
-        m_GlobalUniformBuffer.destroy();
+        m_GlobalShaderUniforms.destroy();
         m_VAO.destroy();
     }
 
@@ -278,12 +271,12 @@ namespace NS_RENDERER
         if ( params != m_DrawParams )
         {
             m_DrawParams = params;
-            m_bUniformDataUploaded = false;
+            updateGlobalShaderUniforms();
         }
 
         m_VAO.bind();
 
-        uploadGlobalUniformData();
+        uploadGlobalShaderUniforms();
 
         foreach ( const RenderModelPassPointer &pass, m_RenderPasses.values() )
         {
@@ -293,26 +286,16 @@ namespace NS_RENDERER
         m_VAO.release();
     }
 
-    void RenderModel::uploadGlobalUniformData()
+    void RenderModel::uploadGlobalShaderUniforms()
     {
-        if ( m_bUniformDataUploaded )
-            return;
+        m_GlobalShaderUniforms.upload();
+    }
 
-        GLTRY(m_GlobalUniformBuffer.bind());
-        GLTRY(m_GlobalUniformBuffer.allocate(m_DrawParams.size()));
-        GLTRY(m_GlobalUniformBuffer.release());
-
-        GLTRY(m_GlobalUniformBuffer.bindToIndex(ShaderDefs::GlobalUniformBlockBindingPoint));
-
-        GLTRY(m_GlobalUniformBuffer.bind());
-        int offset = 0;
-
-        copy(m_GlobalUniformBuffer, m_DrawParams.worldToCameraMatrix(), offset);
-        copy(m_GlobalUniformBuffer, m_DrawParams.projectionMatrix(), offset);
-
-        GLTRY(m_GlobalUniformBuffer.release());
-
-        m_bUniformDataUploaded = true;
+    void RenderModel::updateGlobalShaderUniforms()
+    {
+        m_GlobalShaderUniforms.setWorldToCameraMatrix(m_DrawParams.worldToCameraMatrix());
+        m_GlobalShaderUniforms.setProjectionMatrix(m_DrawParams.projectionMatrix());
+        // TODO: Set directional light.
     }
 
     void RenderModel::setObjectFlags(quint32 objectId, quint32 flags)

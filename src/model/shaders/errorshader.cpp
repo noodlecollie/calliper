@@ -16,7 +16,7 @@ namespace NS_MODEL
 
     void ErrorShader::construct()
     {
-        addVertexShaderFileWithCommonHeaders(":/model/shaders/errorshader.vert");
+        addShaderFileWithCommonHeaders(QOpenGLShader::Vertex, ":/model/shaders/errorshader.vert");
         addShaderFromSourceFile(QOpenGLShader::Fragment, ":/model/shaders/errorshader.frag");
         link();
     }

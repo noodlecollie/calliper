@@ -25,6 +25,9 @@ namespace NS_MODEL
         ShaderPalette shaderPalette() const;
         void setShaderPalette(const ShaderPalette& palette);
 
+        QVector3D directionalLight() const;
+        void setDirectionalLight(const QVector3D& dir);
+
         void render(const SceneCamera* camera);
         void render(const QMatrix4x4& worldToCamera, const QMatrix4x4& projection);
 
@@ -41,6 +44,7 @@ namespace NS_MODEL
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
         ShaderPalette m_ShaderPalette;
+        QVector3D m_vecDirectionalLight;
     };
 }
 

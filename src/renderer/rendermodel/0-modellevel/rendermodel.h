@@ -8,7 +8,7 @@
 #include "rendermodel/1-passlevel/rendermodelpasskey.h"
 #include <QHash>
 #include <QList>
-#include "opengl/opengluniformbuffer.h"
+#include "shaders/globalshaderuniforms.h"
 #include "opengl/openglvertexarrayobject.h"
 
 namespace NS_RENDERER
@@ -44,7 +44,8 @@ namespace NS_RENDERER
         void removeRenderPass(const RenderModelPassKey &key);
         bool containsRenderPass(const RenderModelPassKey &key);
         void clearRenderPasses();
-        void uploadGlobalUniformData();
+        void uploadGlobalShaderUniforms();
+        void updateGlobalShaderUniforms();
         void setObjectHidden(quint32 objectId, bool hidden);
 
         MatrixBatch::MatrixBatchItemPointer createOrFetchMatrixBatchItem(const RenderModelKey &key,
@@ -60,8 +61,7 @@ namespace NS_RENDERER
         ITextureRetrievalFunctor*   m_pTextureFunctor;
         RendererDrawParams          m_DrawParams;
 
-        OpenGLUniformBuffer         m_GlobalUniformBuffer;
-        bool                        m_bUniformDataUploaded;
+        GlobalShaderUniforms        m_GlobalShaderUniforms;
         OpenGLVertexArrayObject     m_VAO;
 
         QMap<RenderModelPassKey, RenderModelPassPointer>   m_RenderPasses;

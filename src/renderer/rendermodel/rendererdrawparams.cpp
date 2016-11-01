@@ -2,20 +2,7 @@
 
 namespace NS_RENDERER
 {
-    RendererDrawParams::RendererDrawParams(const QMatrix4x4 &worldToCameraMatrix, const QMatrix4x4 &projectionMatrix)
-        : m_matWorldToCamera(worldToCameraMatrix), m_matProjection(projectionMatrix)
-    {
-
-    }
-
     RendererDrawParams::RendererDrawParams()
-        : RendererDrawParams(QMatrix4x4(), QMatrix4x4())
-    {
-
-    }
-
-    RendererDrawParams::RendererDrawParams(const RendererDrawParams &other)
-        : m_matWorldToCamera(other.m_matWorldToCamera), m_matProjection(other.m_matProjection)
     {
 
     }
@@ -25,13 +12,28 @@ namespace NS_RENDERER
         return m_matWorldToCamera;
     }
 
+    void RendererDrawParams::setWorldToCameraMatrix(const QMatrix4x4 &mat)
+    {
+        m_matWorldToCamera = mat;
+    }
+
     const QMatrix4x4& RendererDrawParams::projectionMatrix() const
     {
         return m_matProjection;
     }
 
-    int RendererDrawParams::size() const
+    void RendererDrawParams::setProjectionMatrix(const QMatrix4x4 &mat)
     {
-        return 2 * 16 * sizeof(float);
+        m_matProjection = mat;
+    }
+
+    const QVector3D& RendererDrawParams::directionalLight() const
+    {
+        return m_vecDirectionalLight;
+    }
+
+    void RendererDrawParams::setDirectionalLight(const QVector3D &vec)
+    {
+        m_vecDirectionalLight = vec;
     }
 }

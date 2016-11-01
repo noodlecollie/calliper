@@ -35,7 +35,8 @@ SOURCES += \
     rendermodel/rendererinputobjectparams.cpp \
     rendermodel/0-modellevel/rendermodelkey.cpp \
     rendermodel/rendererdrawparams.cpp \
-    opengl/openglvertexarrayobject.cpp
+    opengl/openglvertexarrayobject.cpp \
+    shaders/globalshaderuniforms.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -67,7 +68,8 @@ HEADERS +=\
     rendermodel/0-modellevel/rendermodelkey.h \
     rendermodel/rendererdrawparams.h \
     rendermodel/rendererobjectflags.h \
-    opengl/openglvertexarrayobject.h
+    opengl/openglvertexarrayobject.h \
+    shaders/globalshaderuniforms.h
 
 unix {
     target.path = /usr/lib
