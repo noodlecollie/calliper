@@ -14,7 +14,8 @@ SOURCES += \
     keyvalues/keyvaluestoken.cpp \
     vmf/vmf.cpp \
     json/jsonarraywrapper.cpp \
-    json/jsonutil.cpp
+    json/jsonutil.cpp \
+    vpk/vpkheader.cpp
 
 HEADERS +=\
         serialisation_global.h \
@@ -22,7 +23,8 @@ HEADERS +=\
     keyvalues/keyvaluestoken.h \
     vmf/vmf.h \
     json/jsonarraywrapper.h \
-    json/jsonutil.h
+    json/jsonutil.h \
+    vpk/vpkheader.h
 
 unix {
     target.path = /usr/lib

@@ -7,7 +7,8 @@ SUBDIRS += \
     model \
     calliperutil \
     vmfviewer \
-    serialisation
+    serialisation \
+    vpkinfo
 
 renderer-sandbox.depends = renderer calliperutil model serialisation
 model.depends = renderer calliperutil
