@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/renderer/shaders">
+        <file alias="commonvertexheaders.glsl">shaders/commonvertexheaders.glsl</file>
+    </qresource>
+</RCC>

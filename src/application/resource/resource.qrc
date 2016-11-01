@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/minimum.frag</file>
+        <file>shaders/minimum.vert</file>
+        <file>textures/error.png</file>
+        <file>textures/test.png</file>
+        <file>textures/uvsample.png</file>
+        <file>shaders/minimum_textured.frag</file>
+        <file>shaders/minimum_textured.vert</file>
+        <file>shaders/unlit.frag</file>
+        <file>shaders/unlit.vert</file>
+        <file>shaders/pervertexcolor.frag</file>
+        <file>shaders/pervertexcolor.vert</file>
+        <file>shaders/basiclit.frag</file>
+        <file>shaders/basiclit.vert</file>
+        <file>icons/tree_camera.png</file>
+        <file>icons/tree_origin.png</file>
+        <file>icons/tree_object.png</file>
+        <file>icons/viewport_options.png</file>
+        <file>fonts/numbers_small.png</file>
+        <file>shaders/selectionmask.frag</file>
+        <file>shaders/selectionmask.vert</file>
+        <file>textures/debug_crosshair.png</file>
+        <file>models/editor/camera.mtl</file>
+        <file>models/editor/camera.obj</file>
+        <file>shaders/pervertexcolor_screenspace.vert</file>
+        <file>textures/debug_translucent.png</file>
+        <file>icons/tool_debug.png</file>
+        <file>icons/tool_rotate.png</file>
+        <file>icons/tool_scale.png</file>
+        <file>icons/tool_translate.png</file>
+        <file>icons/icon_rotate_new.png</file>
+        <file>icons/icon-scale-new.png</file>
+        <file>icons/icon-translate-new.png</file>
+        <file>icons/tool_create_brush.png</file>
+        <file>textures/ui/square-handle.png</file>
+        <file>textures/ui/circle-handle.png</file>
+        <file>textures/dev/dev_purple001.png</file>
+        <file>samples/maps/apartment_building.vmf</file>
+        <file>textures/dev/obsolete.png</file>
+    </qresource>
+</RCC>

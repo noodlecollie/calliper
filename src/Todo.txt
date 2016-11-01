@@ -1,0 +1,3 @@
+Proposed improvements:
+Create a new module for input handling - make this separate from the model
+Preprocess shader files - would then allow for #include, etc.
