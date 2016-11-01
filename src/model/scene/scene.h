@@ -40,12 +40,17 @@ namespace NS_MODEL
         ShaderStore* shaderStore() const;
         TextureStore* textureStore() const;
 
+    signals:
+        void objectCreated(SceneObject*);
+        void objectDestroyed(SceneObject*);
+
     private:
         void processSceneObjectCreated(SceneObject* object);
         void processSceneObjectCloned(SceneObject* object);
         quint32 acquireNextObjectId();
         void addObjectToTable(SceneObject* object);
         void removeObjectFromTable(SceneObject* object);
+        void deleteObjectsRecursive(SceneObject* object);
 
         ShaderStore* m_pShaderStore;
         TextureStore* m_pTextureStore;

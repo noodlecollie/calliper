@@ -22,7 +22,7 @@ namespace NS_MODEL
 
         addObjectToTable(object);
 
-        // TODO: Emit signals
+        emit objectCreated(object);
     }
 
     void Scene::processSceneObjectCloned(SceneObject *object)
@@ -33,15 +33,28 @@ namespace NS_MODEL
 
         addObjectToTable(object);
 
-        // TODO: Emit signals
+        emit objectCreated(object);
     }
 
     void Scene::destroySceneObject(SceneObject *object)
     {
         Q_ASSERT_X(object->parentScene() == this, Q_FUNC_INFO, "Scene object must belong to this scene!");
         Q_ASSERT_X(object != m_pRootObject, Q_FUNC_INFO, "Cannot delete the root object!");
+        if ( object->parentScene() != this || object == m_pRootObject )
+            return;
 
-        // TODO: Make recursive and emit signals
+        deleteObjectsRecursive(object);
+    }
+
+    void Scene::deleteObjectsRecursive(SceneObject *object)
+    {
+        QList<SceneObject*> children = object->childSceneObjects();
+        foreach ( SceneObject* object, children )
+        {
+            deleteObjectsRecursive(object);
+        }
+
+        emit objectDestroyed(object);
         removeObjectFromTable(object);
         delete object;
     }
