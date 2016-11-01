@@ -8,7 +8,7 @@
 
 namespace NS_RENDERER
 {
-    class GlobalShaderUniforms
+    class RENDERERSHARED_EXPORT GlobalShaderUniforms
     {
     public:
         GlobalShaderUniforms(QOpenGLBuffer::UsagePattern usagePattern);
