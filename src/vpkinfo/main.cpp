@@ -14,7 +14,16 @@ int main(int argc, char *argv[])
     parser.setApplicationDescription("VPK Info");
     parser.addHelpOption();
     parser.addVersionOption();
+
+    QCommandLineOption optAll(QStringList() << "a" << "all", "Outputs all information. Overrides other flags. "
+                              "If no flags are set, all information is output by default.");
+    parser.addOption(optAll);
+
+    QCommandLineOption optHeader(QStringList() << "h" << "header", "Output header information.");
+    parser.addOption(optHeader);
+
     parser.addPositionalArgument("file", "VPK file to read");
+
     parser.process(a);
 
     QStringList cmdArgs = parser.positionalArguments();
@@ -44,7 +53,17 @@ int main(int argc, char *argv[])
 
     VPKInfo vpk;
     vpk.read(in);
-    vpk.print();
+    if ( !vpk.errorString().isEmpty() )
+    {
+        qDebug() << "Error reading VPK:" << vpk.errorString();
+        return 1;
+    }
+
+    bool outputAll = parser.isSet(optAll) ||
+            (!parser.isSet(optHeader) /*&& !others*/);
+
+    if ( outputAll || parser.isSet(optHeader) )
+        vpk.printHeaderData();
 
     return 0;
 }

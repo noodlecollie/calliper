@@ -26,19 +26,14 @@ void VPKInfo::read(QDataStream &in)
     }
 }
 
-void VPKInfo::print() const
+QString VPKInfo::errorString() const
 {
-    if ( !m_strErrorHint.isEmpty() )
-    {
-        qDebug() << "Error reading VPK:" << m_strErrorHint;
-        return;
-    }
-
-    printHeaderData();
+    return m_strErrorHint;
 }
 
 void VPKInfo::printHeaderData() const
 {
+
     QString string;
     QTextStream s(&string);
 

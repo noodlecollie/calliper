@@ -10,10 +10,11 @@ public:
     VPKInfo();
 
     void read(QDataStream& in);
-    void print() const;
+
+    QString errorString() const;
+    void printHeaderData() const;
 
 private:
-    void printHeaderData() const;
 
     QString m_strErrorHint;
     FileFormats::VPKHeader m_Header;
