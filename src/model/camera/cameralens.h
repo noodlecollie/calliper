@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include <QMatrix4x4>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT CameraLens
     {

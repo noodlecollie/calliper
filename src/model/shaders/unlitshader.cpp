@@ -1,7 +1,7 @@
 #include "unlitshader.h"
 #include "general/generalutil.h"
 
-namespace NS_MODEL
+namespace Model
 {
     UnlitShader::UnlitShader(quint16 id, QObject* parent)
         : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<UnlitShader>(), parent)

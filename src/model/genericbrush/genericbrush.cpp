@@ -1,6 +1,6 @@
 #include "genericbrush.h"
 
-namespace NS_MODEL
+namespace Model
 {
     GenericBrush::GenericBrush(const SceneObjectInitParams &initParams, SceneObject* parentObject)
         : SceneObject(initParams, parentObject)

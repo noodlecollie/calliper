@@ -3,7 +3,7 @@
 #include <QtMath>
 #include "fuzzyvertexmap.h"
 
-namespace NS_MODEL
+namespace Model
 {
     namespace ModelMath
     {

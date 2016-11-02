@@ -6,7 +6,7 @@
 #include "opengl/opengltexture.h"
 #include "functors/itextureretrievalfunctor.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT TextureStore : public Renderer::ITextureRetrievalFunctor
     {

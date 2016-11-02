@@ -2,7 +2,7 @@
 #include "math/math.h"
 #include "general/generalutil.h"
 
-namespace NS_MODEL
+namespace Model
 {
     QDebug operator << (QDebug debug, const Plane3D &plane)
     {

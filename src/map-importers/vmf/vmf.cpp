@@ -84,9 +84,9 @@ namespace MapImporters
 
     namespace VMF
     {
-        void createBrushes(const QJsonDocument &doc, NS_MODEL::SceneObject *parent)
+        void createBrushes(const QJsonDocument &doc, Model::SceneObject *parent)
         {
-            using namespace NS_MODEL;
+            using namespace Model;
             using namespace CalliperUtil;
 
             QJsonObject world = doc.object().value("world").toObject();

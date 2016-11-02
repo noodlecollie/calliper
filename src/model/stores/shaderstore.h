@@ -7,7 +7,7 @@
 #include "functors/ishaderretrievalfunctor.h"
 #include <QHash>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT ShaderStore : public Renderer::IShaderRetrievalFunctor
     {

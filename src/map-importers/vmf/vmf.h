@@ -8,7 +8,7 @@ namespace MapImporters
 {
     namespace VMF
     {
-        MAPIMPORTERSSHARED_EXPORT void createBrushes(const QJsonDocument &doc, NS_MODEL::SceneObject* parent);
+        MAPIMPORTERSSHARED_EXPORT void createBrushes(const QJsonDocument &doc, Model::SceneObject* parent);
     }
 }
 

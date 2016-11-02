@@ -2,7 +2,7 @@
 #include <QtMath>
 #include "plane3d.h"
 
-namespace NS_MODEL
+namespace Model
 {
     QDebug operator <<(QDebug debug, const Ray3D &ray)
     {

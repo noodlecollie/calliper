@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include <QVector3D>
 
-namespace NS_MODEL
+namespace Model
 {
     class WindingVertex
     {

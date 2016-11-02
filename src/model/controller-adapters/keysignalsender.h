@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QHash>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT KeySignalSender : public QObject
     {

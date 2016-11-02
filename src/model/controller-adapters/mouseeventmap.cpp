@@ -2,7 +2,7 @@
 #include <QEvent>
 #include <QMouseEvent>
 
-namespace NS_MODEL
+namespace Model
 {
     MouseEventMap::MouseEventMap(QObject *parent) : QObject(parent),
         m_bEnabled(false), m_flHorizontalSensitivity(1), m_flVerticalSensitivity(1),

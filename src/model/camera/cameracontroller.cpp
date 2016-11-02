@@ -9,7 +9,7 @@ namespace
     const float MAX_PITCH_DELTA = 89.0f;
     const float MAX_ROLL_DELTA = 179.0f;
 
-    void setAnglesAndClamp(NS_MODEL::EulerAngle& angles, float delta, int index, float limit)
+    void setAnglesAndClamp(Model::EulerAngle& angles, float delta, int index, float limit)
     {
         float newAngle = angles[index] + delta;
 
@@ -34,7 +34,7 @@ namespace
     }
 }
 
-namespace NS_MODEL
+namespace Model
 {
     CameraController::CameraController(QObject* parent) : QObject(parent),
         m_pCamera(nullptr), m_flForwardSpeed(100), m_flStrafeSpeed(100), m_flVerticalSpeed(100),

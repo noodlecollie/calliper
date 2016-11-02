@@ -1,6 +1,6 @@
 #include "scene.h"
 
-namespace NS_MODEL
+namespace Model
 {
     Scene::Scene(ShaderStore* shaderStore, TextureStore* textureStore, QObject* parent)
         : QObject(parent),

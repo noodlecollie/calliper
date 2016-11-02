@@ -2,7 +2,7 @@
 #include "math/math.h"
 #include <QtMath>
 
-namespace NS_MODEL
+namespace Model
 {
     DebugTriangle::DebugTriangle(const SceneObjectInitParams &initParams, SceneObject* parentObject)
         : SceneObject(initParams, parentObject)

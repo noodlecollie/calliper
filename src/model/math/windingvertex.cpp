@@ -1,7 +1,7 @@
 #include "windingvertex.h"
 #include "math/math.h"
 
-namespace NS_MODEL
+namespace Model
 {
     WindingVertex::WindingVertex(const QVector3D &vec, bool prevEdgeOriginal, bool nextEdgeOriginal) :
         m_vecPosition(vec), m_bShouldDiscard(false), m_bPrevEdgeOriginal(prevEdgeOriginal),

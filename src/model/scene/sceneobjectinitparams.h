@@ -3,7 +3,7 @@
 
 #include "model_global.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class Scene;
 

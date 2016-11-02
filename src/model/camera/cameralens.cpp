@@ -1,7 +1,7 @@
 #include "cameralens.h"
 #include <QtMath>
 
-namespace NS_MODEL
+namespace Model
 {
     CameraLens::CameraLens(LensType type)
     {

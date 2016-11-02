@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include "winding3d.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT TexturedWinding : public Winding3D
     {

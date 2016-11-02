@@ -2,7 +2,7 @@
 #include "math/modelmath.h"
 #include "scene/scene.h"
 
-namespace NS_MODEL
+namespace Model
 {
     namespace GenericBrushFactory
     {

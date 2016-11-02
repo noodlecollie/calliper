@@ -6,7 +6,7 @@
 #include <QtDebug>
 #include <QObject>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT Plane3D
     {

@@ -6,7 +6,7 @@
 #include "math/texturedwinding.h"
 #include <QVector>
 
-namespace NS_MODEL
+namespace Model
 {
     namespace GenericBrushFactory
     {

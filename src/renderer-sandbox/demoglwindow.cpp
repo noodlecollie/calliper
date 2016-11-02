@@ -19,7 +19,7 @@
 #include "sceneobjects/originmarker.h"
 
 using namespace Renderer;
-using namespace NS_MODEL;
+using namespace Model;
 
 class Classifier : public IRenderPassClassifier
 {

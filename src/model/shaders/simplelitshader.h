@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include "opengl/openglshaderprogram.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT SimpleLitShader : public Renderer::OpenGLShaderProgram
     {

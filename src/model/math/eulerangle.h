@@ -33,7 +33,7 @@
 #include "model_global.h"
 #include <QtDebug>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT EulerAngle
     {

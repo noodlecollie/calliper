@@ -1,6 +1,6 @@
 #include "texturedwinding.h"
 
-namespace NS_MODEL
+namespace Model
 {
     TexturedWinding::TexturedWinding(const Plane3D &plane, quint32 textureId) :
         Winding3D(plane), m_iTextureId(textureId)

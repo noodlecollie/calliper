@@ -5,7 +5,7 @@
 #include <QObject>
 #include "keysignalsender.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT KeyMap : public QObject
     {

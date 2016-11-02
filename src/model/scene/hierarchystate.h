@@ -7,7 +7,7 @@
 #include "math/eulerangle.h"
 #include <QMatrix4x4>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT HierarchyState : public QObject
     {

@@ -1,6 +1,6 @@
 #include "keysignalsender.h"
 
-namespace NS_MODEL
+namespace Model
 {
     KeySignalSender::KeySignalSender(QObject *parent) : QObject(parent)
     {

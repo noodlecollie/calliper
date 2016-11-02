@@ -1,7 +1,7 @@
 #include "errorshader.h"
 #include "general/generalutil.h"
 
-namespace NS_MODEL
+namespace Model
 {
     ErrorShader::ErrorShader(quint16 id, QObject* parent)
         : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<ErrorShader>(), parent)

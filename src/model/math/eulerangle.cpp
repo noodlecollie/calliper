@@ -1,6 +1,6 @@
 #include "eulerangle.h"
 
-namespace NS_MODEL
+namespace Model
 {
     QDebug operator <<(QDebug debug, const EulerAngle &angle)
     {

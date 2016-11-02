@@ -10,7 +10,7 @@
 #include "shaders/shaderpalette.h"
 #include <QColor>
 
-namespace NS_MODEL
+namespace Model
 {
     class Scene;
 

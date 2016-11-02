@@ -9,7 +9,7 @@
 #include <QLinkedList>
 #include "fuzzyvertexmap.h"
 
-namespace NS_MODEL
+namespace Model
 {
     namespace ModelMath
     {

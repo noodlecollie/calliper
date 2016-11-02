@@ -6,7 +6,7 @@
 #include <QVector3D>
 #include "math/eulerangle.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class SpatialConfigurationChange : public QEvent
     {

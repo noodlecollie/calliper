@@ -9,7 +9,7 @@
 #include "geometry/geometrybuilder.h"
 #include "shaders/shaderpalette.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class GenericBrush;
 

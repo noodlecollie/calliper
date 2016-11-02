@@ -8,7 +8,7 @@
 #include "genericbrushface.h"
 #include <QSharedPointer>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT GenericBrush : public SceneObject
     {

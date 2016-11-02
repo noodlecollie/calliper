@@ -5,7 +5,7 @@
 #include <QVector3D>
 #include "math/math.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class Plane3D;
 

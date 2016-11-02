@@ -6,7 +6,7 @@
 #include <QTimer>
 #include <QObject>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT CameraController : public QObject
     {

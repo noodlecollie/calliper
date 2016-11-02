@@ -3,7 +3,7 @@
 
 #include "scenerenderer/irenderpassclassifier.h"
 
-class SimpleRenderPassClassifier : public NS_MODEL::IRenderPassClassifier
+class SimpleRenderPassClassifier : public Model::IRenderPassClassifier
 {
 public:
     SimpleRenderPassClassifier();

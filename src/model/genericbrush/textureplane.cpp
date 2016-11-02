@@ -1,7 +1,7 @@
 #include "textureplane.h"
 #include <QQuaternion>
 
-namespace NS_MODEL
+namespace Model
 {
     TexturePlane::TexturePlane(QObject *parent) : QObject(parent)
     {

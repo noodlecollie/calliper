@@ -15,7 +15,7 @@
 #include <QMessageBox>
 #include <QtGlobal>
 
-using namespace NS_MODEL;
+using namespace Model;
 using namespace Renderer;
 
 MainWindow::MainWindow(const QString& filename) :

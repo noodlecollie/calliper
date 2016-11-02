@@ -2,7 +2,7 @@
 #include "math/math.h"
 #include "math/modelmath.h"
 
-namespace NS_MODEL
+namespace Model
 {
     HierarchyState::HierarchyState(bool scalable, QObject* parent)
         : QObject(parent),

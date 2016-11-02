@@ -1,6 +1,6 @@
 #include "scenerenderer.h"
 
-namespace NS_MODEL
+namespace Model
 {
     SceneRenderer::SceneRenderer(Renderer::IShaderRetrievalFunctor* shaderFunctor,
                                  Renderer::ITextureRetrievalFunctor* textureFunctor,

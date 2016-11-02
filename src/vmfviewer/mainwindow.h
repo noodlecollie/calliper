@@ -47,19 +47,19 @@ private:
 
     QString m_strFilename;
 
-    NS_MODEL::ShaderStore* m_pShaderStore;
-    NS_MODEL::TextureStore* m_pTextureStore;
+    Model::ShaderStore* m_pShaderStore;
+    Model::TextureStore* m_pTextureStore;
     quint32 m_iDefaultTexture;
 
-    NS_MODEL::BasicScene* m_pScene;
-    NS_MODEL::SceneCamera* m_pCamera;
+    Model::BasicScene* m_pScene;
+    Model::SceneCamera* m_pCamera;
     SimpleRenderPassClassifier m_RenderPassClassifier;
-    NS_MODEL::SceneRenderer* m_pSceneRenderer;
-    NS_MODEL::ShaderPalette m_DefaultShaderPalette;
+    Model::SceneRenderer* m_pSceneRenderer;
+    Model::ShaderPalette m_DefaultShaderPalette;
 
-    NS_MODEL::CameraController* m_pCameraController;
-    NS_MODEL::KeyMap* m_pKeyMap;
-    NS_MODEL::MouseEventMap* m_pMouseEventMap;
+    Model::CameraController* m_pCameraController;
+    Model::KeyMap* m_pKeyMap;
+    Model::MouseEventMap* m_pMouseEventMap;
 };
 
 #endif // MAINWINDOW_H

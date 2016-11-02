@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include "scene/sceneobject.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT OriginMarker : public SceneObject
     {

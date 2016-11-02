@@ -9,7 +9,7 @@
 #include "functors/itextureretrievalfunctor.h"
 #include "irenderpassclassifier.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT SceneRenderer
     {

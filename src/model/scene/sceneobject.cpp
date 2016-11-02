@@ -3,7 +3,7 @@
 #include "events/modeleventtypes.h"
 #include <QtDebug>
 
-namespace NS_MODEL
+namespace Model
 {
     SceneObject::SceneObject(const SceneObjectInitParams &initParams, SceneObject* parentObject)
         : QObject(parentObject), m_pParentScene(initParams.m_pScene), m_iObjectId(initParams.m_iObjectId)

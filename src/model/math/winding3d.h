@@ -10,7 +10,7 @@
 #include <QPair>
 #include "windingvertex.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class Winding3D
     {

@@ -3,7 +3,7 @@
 #include <QKeyEvent>
 #include <QtDebug>
 
-namespace NS_MODEL
+namespace Model
 {
     KeyMap::KeyMap(QObject *parent) : QObject(parent)
     {

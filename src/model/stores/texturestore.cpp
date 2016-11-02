@@ -1,6 +1,6 @@
 #include "texturestore.h"
 
-namespace NS_MODEL
+namespace Model
 {
     TextureStore::TextureStore()
         : m_iNextTextureId(1)

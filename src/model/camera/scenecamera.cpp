@@ -2,7 +2,7 @@
 #include "math/math.h"
 #include <QtMath>
 
-namespace NS_MODEL
+namespace Model
 {
     SceneCamera::SceneCamera(const SceneObjectInitParams &initParams, SceneObject* parentObject)
         : SceneObject(initParams, parentObject), m_Lens(CameraLens::Perspective)

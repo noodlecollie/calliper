@@ -5,7 +5,7 @@
 #include "geometry/geometrybuilder.h"
 #include <QColor>
 
-namespace NS_MODEL
+namespace Model
 {
     namespace GeometryFactory
     {

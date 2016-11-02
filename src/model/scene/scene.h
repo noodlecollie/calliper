@@ -8,7 +8,7 @@
 #include "stores/texturestore.h"
 #include "stores/shaderstore.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT Scene : public QObject
     {

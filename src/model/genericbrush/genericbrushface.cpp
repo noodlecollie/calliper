@@ -2,7 +2,7 @@
 #include "genericbrush.h"
 #include "scene/scene.h"
 
-namespace NS_MODEL
+namespace Model
 {
     GenericBrushFace::GenericBrushFace(GenericBrush* parentBrush)
         : QObject(parentBrush), m_pTexturePlane(new TexturePlane(this))

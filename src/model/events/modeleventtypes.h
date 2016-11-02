@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include <QEvent>
 
-namespace NS_MODEL
+namespace Model
 {
     enum ModelEventType
     {

@@ -4,7 +4,7 @@
 
 using namespace CalliperUtil;
 
-namespace NS_MODEL
+namespace Model
 {
     Winding3D::Winding3D(const Plane3D &plane) :
         m_Plane(plane)

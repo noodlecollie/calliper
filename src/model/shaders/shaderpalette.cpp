@@ -1,6 +1,6 @@
 #include "shaderpalette.h"
 
-namespace NS_MODEL
+namespace Model
 {
     ShaderPalette::ShaderPalette()
     {

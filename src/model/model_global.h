@@ -9,7 +9,9 @@
 #  define MODELSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#define NS_MODEL ModuleModel
-#define NS_STR_MODEL "ModuleModel"
+namespace Model
+{
+    static const char* STR_NAMESPACE = "Model";
+}
 
 #endif // MODEL_GLOBAL_H

@@ -8,7 +8,7 @@
 #include <QVector2D>
 #include <QString>
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT TexturePlane : public QObject
     {

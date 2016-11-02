@@ -6,7 +6,7 @@
 #include <QHash>
 #include "general/hashfunctions.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class FuzzyVertexMap
     {

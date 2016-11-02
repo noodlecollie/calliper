@@ -28,7 +28,7 @@ namespace Renderer
     class OpenGLShaderProgram;
 }
 
-namespace NS_MODEL
+namespace Model
 {
     class Scene;
     class DebugCube;
@@ -61,18 +61,18 @@ private:
     int m_iTris;
     quint32 m_iCounter;
     QTimer m_HidingTimer;
-    NS_MODEL::ShaderStore* m_pShaderStore;
-    NS_MODEL::TextureStore* m_pTextureStore;
+    Model::ShaderStore* m_pShaderStore;
+    Model::TextureStore* m_pTextureStore;
 
-    NS_MODEL::DebugCube*    m_pSceneObject;
-    NS_MODEL::Scene*        m_pScene;
-    NS_MODEL::SceneRenderer* m_pSceneRenderer;
-    NS_MODEL::SceneCamera* m_pCamera;
-    NS_MODEL::KeyMap* m_pKeyMap;
-    NS_MODEL::CameraController* m_pCameraController;
-    NS_MODEL::MouseEventMap* m_pMouseMap;
+    Model::DebugCube*    m_pSceneObject;
+    Model::Scene*        m_pScene;
+    Model::SceneRenderer* m_pSceneRenderer;
+    Model::SceneCamera* m_pCamera;
+    Model::KeyMap* m_pKeyMap;
+    Model::CameraController* m_pCameraController;
+    Model::MouseEventMap* m_pMouseMap;
 
-    NS_MODEL::GenericBrush* m_pBrush;
+    Model::GenericBrush* m_pBrush;
 
     QPoint m_LastMousePos;
     bool m_bMouseGrab;

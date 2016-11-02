@@ -1,6 +1,6 @@
 #include "shaderstore.h"
 
-namespace NS_MODEL
+namespace Model
 {
     ShaderStore::ShaderStore()
         : m_iNextShaderId(1)

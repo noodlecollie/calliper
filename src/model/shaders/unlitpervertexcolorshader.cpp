@@ -1,7 +1,7 @@
 #include "unlitpervertexcolorshader.h"
 #include "general/generalutil.h"
 
-namespace NS_MODEL
+namespace Model
 {
     UnlitPerVertexColorShader::UnlitPerVertexColorShader(quint16 id, QObject* parent)
         : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<UnlitPerVertexColorShader>(), parent)

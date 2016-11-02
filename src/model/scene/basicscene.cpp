@@ -2,7 +2,7 @@
 #include "camera/scenecamera.h"
 #include "sceneobjects/originmarker.h"
 
-namespace NS_MODEL
+namespace Model
 {
     BasicScene::BasicScene(ShaderStore* shaderStore, TextureStore* textureStore, QObject* parent)
         : Scene(shaderStore, textureStore, parent)

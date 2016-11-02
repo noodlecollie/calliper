@@ -5,7 +5,7 @@
 #include "scene/sceneobject.h"
 #include "cameralens.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class MODELSHARED_EXPORT SceneCamera : public SceneObject
     {

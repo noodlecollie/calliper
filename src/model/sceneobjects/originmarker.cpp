@@ -1,7 +1,7 @@
 #include "originmarker.h"
 #include "scene/scene.h"
 
-namespace NS_MODEL
+namespace Model
 {
     OriginMarker::OriginMarker(const SceneObjectInitParams &initParams, SceneObject* parentObject)
         : SceneObject(initParams, parentObject)

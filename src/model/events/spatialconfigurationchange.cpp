@@ -1,7 +1,7 @@
 #include "spatialconfigurationchange.h"
 #include "modeleventtypes.h"
 
-namespace NS_MODEL
+namespace Model
 {
     SpatialConfigurationChange::SpatialConfigurationChange(ChangeType changeType)
         : QEvent(static_cast<QEvent::Type>(SpatialConfigurationChangeEvent)),

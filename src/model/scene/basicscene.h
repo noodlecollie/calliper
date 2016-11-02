@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include "scene.h"
 
-namespace NS_MODEL
+namespace Model
 {
     class SceneCamera;
     class OriginMarker;
