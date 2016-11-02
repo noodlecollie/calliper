@@ -6,9 +6,9 @@
 namespace
 {
     template<typename T>
-    inline QString toHex(const T& val)
+    inline QString toHex(const T& val, bool leading0x = false)
     {
-        return QString("%1").arg(val, sizeof(T)*2, 16);
+        return QString(leading0x ? "0x%1" : "%1").arg(val, sizeof(T)*2, 16);
     }
 }
 
@@ -41,12 +41,16 @@ void VPKInfo::printHeaderData() const
 {
     QString string;
     QTextStream s(&string);
-    s << right;
+
+    s << "======================================\n"
+      << "=               Header               =\n"
+      << "======================================\n";
 
 #define HEADER_FIELD(_key, _value) \
-    qSetFieldWidth(32) << (_key) << ":" << qSetFieldWidth(32) << (_value) << qSetFieldWidth(0) << endl
+    qSetFieldWidth(21) << QString("%1:").arg(_key).toLatin1().constData() <<\
+    qSetFieldWidth(18) << (_value) << qSetFieldWidth(0) << endl
 
-    s << HEADER_FIELD("File signature", m_Header.signature());
+    s << HEADER_FIELD("File signature", toHex<quint32>(m_Header.signature(), true));
     s << HEADER_FIELD("Version",        m_Header.version());
     s << HEADER_FIELD("Tree size",      QString("%1 bytes").arg(m_Header.signature()));
 
@@ -59,4 +63,7 @@ void VPKInfo::printHeaderData() const
     s << HEADER_FIELD("Signature section",      QString("%1 bytes").arg(m_Header.signatureSectionSize()));
 
 #undef HEADER_FIELD
+
+    s.flush();
+    qDebug() << string.toLatin1().constData();
 }
