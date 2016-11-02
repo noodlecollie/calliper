@@ -30,7 +30,7 @@ namespace NS_MODEL
         virtual bool scalable() const;
 
         bool needsRendererUpdate() const;
-        void rendererUpdate(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const;
+        void rendererUpdate(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
 
         // Not cached, so could be expensive if called a lot.
         QMatrix4x4 rootToLocalMatrix() const;
@@ -59,7 +59,7 @@ namespace NS_MODEL
         virtual ~SceneObject();
 
         virtual void customEvent(QEvent *event);
-        virtual void bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
 
         // Called by subclasses to convert hierarchy state to non-scalable.
         void updateScalableState(bool isScalable);
@@ -83,8 +83,8 @@ namespace NS_MODEL
         void commonInit();
         void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
         HierarchyState* initHierarchyState(bool isScalable);
-        void updateGeometryColours(NS_RENDERER::GeometryBuilder &builder) const;
-        void updateGeometryColours(NS_RENDERER::GeometrySection* section) const;
+        void updateGeometryColours(Renderer::GeometryBuilder &builder) const;
+        void updateGeometryColours(Renderer::GeometrySection* section) const;
 
         Scene* const m_pParentScene;
         const quint32 m_iObjectId;

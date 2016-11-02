@@ -16,7 +16,7 @@
 #include <QtGlobal>
 
 using namespace NS_MODEL;
-using namespace NS_RENDERER;
+using namespace Renderer;
 
 MainWindow::MainWindow(const QString& filename) :
     QOpenGLWindow(),

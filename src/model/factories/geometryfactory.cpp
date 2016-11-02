@@ -5,9 +5,9 @@ namespace NS_MODEL
 {
     namespace GeometryFactory
     {
-        void cube(NS_RENDERER::GeometryBuilder &builder, float radius, const QColor &color)
+        void cube(Renderer::GeometryBuilder &builder, float radius, const QColor &color)
         {
-            using namespace NS_RENDERER;
+            using namespace Renderer;
 
             for (int i = 0; i < 6; i++)
             {
@@ -75,9 +75,9 @@ namespace NS_MODEL
             }
         }
 
-        void wireframeCube(ModuleRenderer::GeometryBuilder &builder, float radius, const QColor &color)
+        void wireframeCube(Renderer::GeometryBuilder &builder, float radius, const QColor &color)
         {
-            using namespace NS_RENDERER;
+            using namespace Renderer;
 
             GeometrySection* section = builder.createNewSection();
             section->setDrawMode(GL_LINES);

@@ -1,6 +1,6 @@
 #include "vertex3d.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     Vertex3D::Vertex3D()
         : m_vecPosition(),

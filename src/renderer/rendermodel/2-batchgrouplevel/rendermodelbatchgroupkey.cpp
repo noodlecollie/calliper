@@ -2,7 +2,7 @@
 #include <QByteArray>
 #include <QDataStream>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     uint qHash(const RenderModelBatchGroupKey &key, uint seed)
     {

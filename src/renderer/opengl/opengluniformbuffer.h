@@ -4,7 +4,7 @@
 #include "renderer_global.h"
 #include <QOpenGLBuffer>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class OpenGLUniformBuffer
     {

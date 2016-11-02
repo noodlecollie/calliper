@@ -30,7 +30,7 @@ namespace NS_MODEL
         m_bDrawFrame = false;
     }
 
-    void DebugCube::bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const
+    void DebugCube::bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
     {
         builder.setTextureId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));

@@ -10,7 +10,7 @@
 #include "functors/itextureretrievalfunctor.h"
 #include <QOpenGLBuffer>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RenderModelPass
     {

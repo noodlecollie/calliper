@@ -2,7 +2,7 @@
 #include "openglerrors.h"
 #include "openglhelpers.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     OpenGLVertexArrayObject::OpenGLVertexArrayObject()
         : m_iVAOID(0)

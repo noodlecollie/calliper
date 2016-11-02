@@ -26,9 +26,9 @@ namespace NS_MODEL
         return true;
     }
 
-    NS_RENDERER::VertexFormat UnlitShader::vertexFormat() const
+    Renderer::VertexFormat UnlitShader::vertexFormat() const
     {
-        return NS_RENDERER::VertexFormat(4, 0, 4, 2);
+        return Renderer::VertexFormat(4, 0, 4, 2);
     }
 
     int UnlitShader::maxBatchedItems() const

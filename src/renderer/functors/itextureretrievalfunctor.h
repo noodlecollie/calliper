@@ -5,7 +5,7 @@
 #include <QSharedPointer>
 #include "opengl/opengltexture.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     typedef QSharedPointer<OpenGLTexture> OpenGLTexturePointer;
 

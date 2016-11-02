@@ -3,7 +3,7 @@
 
 #include "renderer_global.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT VertexFormat
     {

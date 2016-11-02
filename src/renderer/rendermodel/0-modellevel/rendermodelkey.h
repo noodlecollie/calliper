@@ -8,7 +8,7 @@
 #include "rendermodel/4-batchitemlevel/matrixbatchitemkey.h"
 #include <QHash>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT RenderModelKey
     {
@@ -29,6 +29,6 @@ namespace NS_RENDERER
     };
 }
 
-RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::RenderModelKey &key, uint seed = 0);
+RENDERERSHARED_EXPORT uint qHash(const Renderer::RenderModelKey &key, uint seed = 0);
 
 #endif // RENDERMODELKEY_H

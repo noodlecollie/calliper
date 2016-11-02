@@ -13,7 +13,7 @@
 #include "matrixbatch.h"
 #include "rendermodel/3-batchlevel/matrixbatchkey.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class OpenGLBatch
     {
@@ -84,7 +84,7 @@ namespace NS_RENDERER
         void uploadUniforms();
         void calculateRequiredSizeOfBuffers();
         void setAttributeBuffer(QOpenGLShaderProgram* shaderProgram,
-                                NS_RENDERER::ShaderDefs::VertexArrayAttribute att,
+                                Renderer::ShaderDefs::VertexArrayAttribute att,
                                 int &offsetInBytes) const;
         void copyAllVertexData(char* buffer, int size);
         void updateObjectIds(char* buffer, int offset, int numBytes, quint32 id);

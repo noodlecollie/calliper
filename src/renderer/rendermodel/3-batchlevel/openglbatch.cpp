@@ -6,7 +6,7 @@ namespace
 {
     void trySetAttributeBuffer(QOpenGLShaderProgram *shaderProgram,
                                int offsetInBytes,
-                               NS_RENDERER::ShaderDefs::VertexArrayAttribute attribute,
+                               Renderer::ShaderDefs::VertexArrayAttribute attribute,
                                int components)
     {
         if ( components > 0 )
@@ -32,7 +32,7 @@ namespace
     }
 
     template<typename T>
-    void readBufferData(NS_RENDERER::OpenGLUniformBuffer &buffer, QVector<T> &out)
+    void readBufferData(Renderer::OpenGLUniformBuffer &buffer, QVector<T> &out)
     {
         if ( !buffer.isCreated() )
             return;
@@ -45,7 +45,7 @@ namespace
     }
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     OpenGLBatch::OpenGLBatch(QOpenGLBuffer::UsagePattern usagePattern, const IShaderSpec* shaderSpec)
         : m_iUsagePattern(usagePattern),

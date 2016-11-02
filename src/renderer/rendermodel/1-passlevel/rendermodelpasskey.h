@@ -4,7 +4,7 @@
 #include "renderer_global.h"
 #include <QHash>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT RenderModelPassKey
     {
@@ -33,6 +33,6 @@ namespace NS_RENDERER
     };
 }
 
-RENDERERSHARED_EXPORT uint qHash(const NS_RENDERER::RenderModelPassKey &key, uint seed = 0);
+RENDERERSHARED_EXPORT uint qHash(const Renderer::RenderModelPassKey &key, uint seed = 0);
 
 #endif // RENDERMODELPASSKEY_H

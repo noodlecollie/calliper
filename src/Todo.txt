@@ -1,7 +1,4 @@
 To do:
-Replace namespace macros with plain text, and include the namespace string in the global module header.
-Modify serialisation module so it doesn't rely on model. Perhaps split out the bits that actually
-	populate the scenes into a different, higher-level module.
 
 Proposed improvements:
 Create a new module for input handling - make this separate from the model

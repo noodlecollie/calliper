@@ -17,7 +17,7 @@ namespace NS_MODEL
         DebugTriangle(const DebugTriangle* cloneFrom, const SceneObjectInitParams& initParams);
         virtual ~DebugTriangle();
 
-        virtual void bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
 
     private:
         void commonInit();

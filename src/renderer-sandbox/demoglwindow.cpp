@@ -18,7 +18,7 @@
 #include "sceneobjects/debugtriangle.h"
 #include "sceneobjects/originmarker.h"
 
-using namespace NS_RENDERER;
+using namespace Renderer;
 using namespace NS_MODEL;
 
 class Classifier : public IRenderPassClassifier

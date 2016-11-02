@@ -52,9 +52,9 @@ namespace
         }
     }
 
-    int vertexFormatComponents(const NS_RENDERER::VertexFormat &format, NS_RENDERER::GeometrySection::AttributeType att)
+    int vertexFormatComponents(const Renderer::VertexFormat &format, Renderer::GeometrySection::AttributeType att)
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         switch (att)
         {
@@ -77,7 +77,7 @@ namespace
     }
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     GeometrySection::GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
                                      quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix)

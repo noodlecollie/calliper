@@ -30,7 +30,7 @@ namespace
         indexDelta += data.count();
     }
 
-    void copyItemDataIntoBuffer(const NS_RENDERER::MatrixBatch::MatrixBatchItemPointer &item, char* buffer, int size,
+    void copyItemDataIntoBuffer(const Renderer::MatrixBatch::MatrixBatchItemPointer &item, char* buffer, int size,
                                 int& positionOffset, int& normalOffset,
                                 int& colorOffset, int& texCoordOffset)
     {
@@ -41,7 +41,7 @@ namespace
     }
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     MatrixBatch::MatrixBatch(const QMatrix4x4 &matrix)
         : m_matModelToWorld(matrix)

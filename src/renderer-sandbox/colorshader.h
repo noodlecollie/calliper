@@ -3,7 +3,7 @@
 
 #include "opengl/openglshaderprogram.h"
 
-class ColorShader : public NS_RENDERER::OpenGLShaderProgram
+class ColorShader : public Renderer::OpenGLShaderProgram
 {
     Q_OBJECT
 public:
@@ -13,9 +13,9 @@ public:
     virtual void construct() override;
     virtual bool hasLocalUniformBlockBinding() const override { return true; }
 
-    virtual NS_RENDERER::VertexFormat vertexFormat() const override
+    virtual Renderer::VertexFormat vertexFormat() const override
     {
-        return NS_RENDERER::VertexFormat(4, 0, 4, 0);
+        return Renderer::VertexFormat(4, 0, 4, 0);
     }
 
     virtual int maxBatchedItems() const override

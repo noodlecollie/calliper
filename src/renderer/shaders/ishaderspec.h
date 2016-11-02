@@ -4,7 +4,7 @@
 #include "renderer_global.h"
 #include "vertexformat.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class IShaderSpec
     {

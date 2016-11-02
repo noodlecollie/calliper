@@ -7,7 +7,7 @@
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT GeometryBuilder
     {

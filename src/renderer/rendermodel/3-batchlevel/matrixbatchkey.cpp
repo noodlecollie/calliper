@@ -1,6 +1,6 @@
 #include "matrixbatchkey.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     uint qHash(const MatrixBatchKey &key, uint seed)
     {

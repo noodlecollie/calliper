@@ -10,7 +10,7 @@ namespace NS_MODEL
 
     ShaderStore::~ShaderStore()
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         foreach ( OpenGLShaderProgram* shaderProgram, m_ShaderTable.values() )
         {
@@ -26,19 +26,19 @@ namespace NS_MODEL
         return m_iNextShaderId++;
     }
 
-    NS_RENDERER::OpenGLShaderProgram* ShaderStore::getShaderProgram(quint16 shaderId) const
+    Renderer::OpenGLShaderProgram* ShaderStore::getShaderProgram(quint16 shaderId) const
     {
         return m_ShaderTable.value(shaderId, nullptr);
     }
 
-    NS_RENDERER::OpenGLShaderProgram* ShaderStore::operator ()(quint16 shaderId) const
+    Renderer::OpenGLShaderProgram* ShaderStore::operator ()(quint16 shaderId) const
     {
         return getShaderProgram(shaderId);
     }
 
     quint16 ShaderStore::getShaderId(const QString shaderName) const
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         foreach ( OpenGLShaderProgram* shaderProgram, m_ShaderTable.values() )
         {
@@ -49,7 +49,7 @@ namespace NS_MODEL
         return 0;
     }
 
-    NS_RENDERER::OpenGLShaderProgram* ShaderStore::getShaderProgram(const QString &shaderName) const
+    Renderer::OpenGLShaderProgram* ShaderStore::getShaderProgram(const QString &shaderName) const
     {
         return getShaderProgram(getShaderId(shaderName));
     }

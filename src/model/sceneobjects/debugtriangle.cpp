@@ -21,9 +21,9 @@ namespace NS_MODEL
 
     }
 
-    void DebugTriangle::bakeGeometry(const ShaderPalette&, NS_RENDERER::GeometryBuilder &builder) const
+    void DebugTriangle::bakeGeometry(const ShaderPalette&, Renderer::GeometryBuilder &builder) const
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         GeometrySection* section =
                 builder.createNewSection();

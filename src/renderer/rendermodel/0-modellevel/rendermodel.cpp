@@ -21,7 +21,7 @@ namespace
     }
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     RenderModel::RenderModel()
         : m_pShaderFunctor(nullptr), m_pTextureFunctor(nullptr), m_DrawParams(),

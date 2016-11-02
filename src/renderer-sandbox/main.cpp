@@ -1,7 +1,7 @@
 #include <QApplication>
 #include "demoglwindow.h"
 
-using namespace NS_RENDERER;
+using namespace Renderer;
 
 int main(int argc, char *argv[])
 {

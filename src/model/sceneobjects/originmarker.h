@@ -18,7 +18,7 @@ namespace NS_MODEL
         OriginMarker(const OriginMarker *cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~OriginMarker();
 
-        virtual void bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const override;
+        virtual void bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const override;
         virtual bool customVertexColours() const override { return true; }
 
     private:

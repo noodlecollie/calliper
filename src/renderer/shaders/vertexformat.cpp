@@ -1,6 +1,6 @@
 #include "vertexformat.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     VertexFormat::VertexFormat(int positions, int normals, int colors, int texCoords)
         : m_iPositionComponents(positions),

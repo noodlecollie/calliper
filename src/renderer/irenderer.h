@@ -8,7 +8,7 @@
 #include "rendermodel/rendererdrawparams.h"
 #include "rendermodel/rendererobjectflags.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class IRenderer
     {

@@ -9,7 +9,7 @@
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     // This class groups all vertex data that is related to the same
     // model-to-world matrix.

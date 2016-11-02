@@ -4,7 +4,7 @@
 #include "renderer_global.h"
 #include "opengl/openglshaderprogram.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class IShaderRetrievalFunctor
     {

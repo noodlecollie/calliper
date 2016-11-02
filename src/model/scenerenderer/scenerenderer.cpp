@@ -2,10 +2,10 @@
 
 namespace NS_MODEL
 {
-    SceneRenderer::SceneRenderer(NS_RENDERER::IShaderRetrievalFunctor* shaderFunctor,
-                                 NS_RENDERER::ITextureRetrievalFunctor* textureFunctor,
+    SceneRenderer::SceneRenderer(Renderer::IShaderRetrievalFunctor* shaderFunctor,
+                                 Renderer::ITextureRetrievalFunctor* textureFunctor,
                                  IRenderPassClassifier* renderPassClassifier,
-                                 NS_RENDERER::IRenderer* renderer, Scene* scene)
+                                 Renderer::IRenderer* renderer, Scene* scene)
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
           m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene),
@@ -37,7 +37,7 @@ namespace NS_MODEL
 
     void SceneRenderer::updateObjectRecursive(SceneObject *object)
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         QMatrix4x4 oldMatrix = m_matRecursiveUpdateMatrix;
         m_matRecursiveUpdateMatrix = object->hierarchy().parentToLocal() * m_matRecursiveUpdateMatrix;
@@ -70,7 +70,7 @@ namespace NS_MODEL
 
     void SceneRenderer::drawAllObjects(const QMatrix4x4 &worldToCamera, const QMatrix4x4 &projection)
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         RendererDrawParams params;
         params.setWorldToCameraMatrix(worldToCamera);

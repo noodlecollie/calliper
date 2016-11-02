@@ -4,7 +4,7 @@
 #include "renderer_global.h"
 #include <QMatrix4x4>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT RendererDrawParams
     {

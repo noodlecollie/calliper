@@ -4,7 +4,7 @@
 #include <QOpenGLFunctions_4_1_Core>
 #include "shaders/shaderdefs.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     QString OpenGLErrors::errorString(GLenum errorCode)
     {

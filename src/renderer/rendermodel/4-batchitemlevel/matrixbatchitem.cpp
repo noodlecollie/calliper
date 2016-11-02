@@ -1,7 +1,7 @@
 #include "matrixbatchitem.h"
 #include <QtDebug>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     MatrixBatchItemMetadata::MatrixBatchItemMetadata()
     {

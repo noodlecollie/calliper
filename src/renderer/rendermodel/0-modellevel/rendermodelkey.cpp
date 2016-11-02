@@ -2,7 +2,7 @@
 #include <QByteArray>
 #include <QDataStream>
 
-uint qHash(const NS_RENDERER::RenderModelKey &key, uint seed)
+uint qHash(const Renderer::RenderModelKey &key, uint seed)
 {
     QByteArray arr;
 
@@ -17,7 +17,7 @@ uint qHash(const NS_RENDERER::RenderModelKey &key, uint seed)
     return qHash(arr, seed);
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     RenderModelKey::RenderModelKey(const RenderModelPassKey& passKey, const RenderModelBatchGroupKey& batchGroupKey,
                                    const MatrixBatchKey& matrixBatchKey, const MatrixBatchItemKey& matrixBatchItemKey)

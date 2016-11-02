@@ -2,7 +2,7 @@
 #include "openglhelpers.h"
 #include "opengl/openglerrors.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     OpenGLUniformBuffer::OpenGLUniformBuffer(QOpenGLBuffer::UsagePattern pattern)
         : m_iHandle(0),

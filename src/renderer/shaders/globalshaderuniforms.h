@@ -6,7 +6,7 @@
 #include <QVector3D>
 #include "opengl/opengluniformbuffer.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT GlobalShaderUniforms
     {

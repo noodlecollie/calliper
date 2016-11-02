@@ -2,15 +2,15 @@
 #include "opengl/openglerrors.h"
 #include "shaders/shaderdefs.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     namespace
     {
         const int DATA_SIZE = (2 * 16 * sizeof(float)) + (3 * sizeof(float));
 
-        int copy(NS_RENDERER::OpenGLUniformBuffer &dest, const char* source, int offset, int byteCount)
+        int copy(Renderer::OpenGLUniformBuffer &dest, const char* source, int offset, int byteCount)
         {
-            using namespace NS_RENDERER;
+            using namespace Renderer;
 
             GLTRY(dest.write(offset, source, byteCount));
             return byteCount;

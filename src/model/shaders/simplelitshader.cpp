@@ -27,9 +27,9 @@ namespace NS_MODEL
         return true;
     }
 
-    NS_RENDERER::VertexFormat SimpleLitShader::vertexFormat() const
+    Renderer::VertexFormat SimpleLitShader::vertexFormat() const
     {
-        return NS_RENDERER::VertexFormat(4, 3, 4, 2);
+        return Renderer::VertexFormat(4, 3, 4, 2);
     }
 
     int SimpleLitShader::maxBatchedItems() const

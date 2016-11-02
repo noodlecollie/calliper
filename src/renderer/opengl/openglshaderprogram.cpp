@@ -39,7 +39,7 @@ namespace
     }
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     OpenGLShaderProgram::OpenGLShaderProgram(quint16 id, const QString &name, QObject* parent) : QOpenGLShaderProgram(parent),
         m_iShaderStoreId(id), m_iGlobalShaderBlockIndex(GL_INVALID_INDEX), m_iLocalShaderBlockIndex(GL_INVALID_INDEX)

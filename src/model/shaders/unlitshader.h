@@ -6,7 +6,7 @@
 
 namespace NS_MODEL
 {
-    class MODELSHARED_EXPORT UnlitShader : public NS_RENDERER::OpenGLShaderProgram
+    class MODELSHARED_EXPORT UnlitShader : public Renderer::OpenGLShaderProgram
     {
         Q_OBJECT
     public:
@@ -15,7 +15,7 @@ namespace NS_MODEL
 
         virtual void construct() override;
         virtual bool hasLocalUniformBlockBinding() const override;
-        virtual NS_RENDERER::VertexFormat vertexFormat() const override;
+        virtual Renderer::VertexFormat vertexFormat() const override;
         virtual int maxBatchedItems() const override;
     };
 }

@@ -1,6 +1,6 @@
 #include "rendererinputobjectparams.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     RendererInputObjectParams::RendererInputObjectParams(quint32 objectId, int passIndex, const GeometryBuilder &builder)
         : m_iObjectId(objectId), m_iPassIndex(passIndex), m_SectionListReference(builder.sections())

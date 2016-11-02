@@ -35,10 +35,10 @@ static const char *fragmentShaderSource =
         "}\n"
     ;
 
-using namespace NS_RENDERER;
+using namespace Renderer;
 
 TempShader::TempShader(quint16 id, QObject* parent)
-    : OpenGLShaderProgram(id, QString(staticMetaObject.className()).remove(NS_STR_RENDERER "::"), parent)
+    : OpenGLShaderProgram(id, QString(staticMetaObject.className()).remove(Renderer::STR_NAMESPACE).remove("::"), parent)
 {
 
 }

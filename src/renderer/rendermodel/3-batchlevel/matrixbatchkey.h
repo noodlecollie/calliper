@@ -5,7 +5,7 @@
 #include <QMatrix4x4>
 #include "general/hashfunctions.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT MatrixBatchKey
     {

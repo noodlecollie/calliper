@@ -1,6 +1,6 @@
 #include "opengltexture.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     OpenGLTexture::OpenGLTexture(quint32 id, QOpenGLTexture::Target target) :
         QOpenGLTexture(target), m_iId(id)

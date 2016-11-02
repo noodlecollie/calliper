@@ -2,7 +2,7 @@
 #include <QtDebug>
 #include "opengl/openglhelpers.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     RenderModelBatchGroup::RenderModelBatchGroup(const RenderModelBatchGroupKey &key,
                                                  QOpenGLBuffer::UsagePattern usagePattern,

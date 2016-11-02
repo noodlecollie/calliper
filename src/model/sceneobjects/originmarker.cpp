@@ -25,9 +25,9 @@ namespace NS_MODEL
         updateScalableState(scalable());
     }
 
-    void OriginMarker::bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const
+    void OriginMarker::bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         GeometrySection* section = builder.createNewSection(
                     shaderPalette.shader(ShaderPalette::UnlitPerVertexColor),

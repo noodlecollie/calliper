@@ -5,7 +5,7 @@
 #include <QOpenGLFunctions>
 #include <QHash>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT RenderModelBatchGroupKey
     {

@@ -11,7 +11,7 @@
 #include "shaders/globalshaderuniforms.h"
 #include "opengl/openglvertexarrayobject.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RenderModel : public IRenderer
     {

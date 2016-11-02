@@ -23,7 +23,7 @@
 
 class TempSpec;
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class OpenGLShaderProgram;
 }

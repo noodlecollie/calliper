@@ -10,7 +10,7 @@ namespace NS_MODEL
 
     TextureStore::~TextureStore()
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
         foreach ( OpenGLTexturePointer tex, m_TextureTable.values() )
         {
             tex->destroy();
@@ -23,19 +23,19 @@ namespace NS_MODEL
         return m_iNextTextureId++;
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::getTexture(quint32 textureId) const
+    Renderer::OpenGLTexturePointer TextureStore::getTexture(quint32 textureId) const
     {
-        return m_TextureTable.value(textureId, NS_RENDERER::OpenGLTexturePointer());
+        return m_TextureTable.value(textureId, Renderer::OpenGLTexturePointer());
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::operator ()(quint64 textureId) const
+    Renderer::OpenGLTexturePointer TextureStore::operator ()(quint64 textureId) const
     {
         return getTexture(textureId);
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::createTexture(const QString &path)
+    Renderer::OpenGLTexturePointer TextureStore::createTexture(const QString &path)
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         if ( m_TexturePathTable.contains(path) )
         {
@@ -45,9 +45,9 @@ namespace NS_MODEL
         return createTextureInternal(path, acquireNextTextureId());
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::createDefaultTexture(const QString &path)
+    Renderer::OpenGLTexturePointer TextureStore::createDefaultTexture(const QString &path)
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         if ( m_TextureTable.contains(0) )
         {
@@ -62,9 +62,9 @@ namespace NS_MODEL
         return createTextureInternal(path, 0);
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::createTextureInternal(const QString &path, quint32 id)
+    Renderer::OpenGLTexturePointer TextureStore::createTextureInternal(const QString &path, quint32 id)
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         OpenGLTexturePointer texture = OpenGLTexturePointer::create(id, QImage(path).mirrored());
         texture->setPath(path);
@@ -79,7 +79,7 @@ namespace NS_MODEL
         return m_TexturePathTable.value(path, 0);
     }
 
-    NS_RENDERER::OpenGLTexturePointer TextureStore::getTexture(const QString &path) const
+    Renderer::OpenGLTexturePointer TextureStore::getTexture(const QString &path) const
     {
         return getTexture(getTextureId(path));
     }

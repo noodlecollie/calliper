@@ -1,7 +1,7 @@
 #include "geometrybuilder.h"
 #include <QVector4D>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     GeometryBuilder::GeometryBuilder(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
                                      quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix)

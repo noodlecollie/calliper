@@ -19,7 +19,7 @@ namespace NS_MODEL
 
     }
 
-    void GenericBrush::bakeGeometry(const ShaderPalette &shaderPalette, NS_RENDERER::GeometryBuilder &builder) const
+    void GenericBrush::bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
     {
         foreach ( GenericBrushFace* face, m_BrushFaces )
         {

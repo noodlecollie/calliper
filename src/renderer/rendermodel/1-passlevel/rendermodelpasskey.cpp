@@ -1,11 +1,11 @@
 #include "rendermodelpasskey.h"
 
-uint qHash(const NS_RENDERER::RenderModelPassKey &key, uint seed)
+uint qHash(const Renderer::RenderModelPassKey &key, uint seed)
 {
     return qHash(key.passIndex(), seed);
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     RenderModelPassKey::RenderModelPassKey(int index)
         : m_iPassIndex(index)

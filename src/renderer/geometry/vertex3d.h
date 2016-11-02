@@ -6,7 +6,7 @@
 #include <QVector3D>
 #include <QColor>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT Vertex3D
     {

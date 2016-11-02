@@ -9,8 +9,8 @@ namespace NS_MODEL
 {
     namespace GeometryFactory
     {
-        MODELSHARED_EXPORT void cube(NS_RENDERER::GeometryBuilder &builder, float radius, const QColor &color);
-        MODELSHARED_EXPORT void wireframeCube(NS_RENDERER::GeometryBuilder &builder, float radius, const QColor &color);
+        MODELSHARED_EXPORT void cube(Renderer::GeometryBuilder &builder, float radius, const QColor &color);
+        MODELSHARED_EXPORT void wireframeCube(Renderer::GeometryBuilder &builder, float radius, const QColor &color);
     }
 }
 

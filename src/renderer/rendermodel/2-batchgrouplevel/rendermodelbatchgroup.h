@@ -14,7 +14,7 @@
 #include <QOpenGLShaderProgram>
 #include "rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RenderModelBatchGroup
     {

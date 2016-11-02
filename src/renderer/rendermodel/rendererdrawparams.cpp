@@ -1,6 +1,6 @@
 #include "rendererdrawparams.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     RendererDrawParams::RendererDrawParams()
     {

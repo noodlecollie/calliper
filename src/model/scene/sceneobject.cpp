@@ -112,7 +112,7 @@ namespace NS_MODEL
         m_bNeedsRendererUpdate = true;
     }
 
-    void SceneObject::rendererUpdate(const ShaderPalette &shaderPalette, ModuleRenderer::GeometryBuilder &builder) const
+    void SceneObject::rendererUpdate(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
     {
         // Call virtual function so that subclasses build their own geometry.
         bakeGeometry(shaderPalette, builder);
@@ -125,7 +125,7 @@ namespace NS_MODEL
         m_bNeedsRendererUpdate = false;
     }
 
-    void SceneObject::bakeGeometry(const ShaderPalette &shaderPalette, ModuleRenderer::GeometryBuilder &builder) const
+    void SceneObject::bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
     {
         Q_UNUSED(shaderPalette);
         Q_UNUSED(builder);
@@ -185,9 +185,9 @@ namespace NS_MODEL
         return false;
     }
 
-    void SceneObject::updateGeometryColours(NS_RENDERER::GeometryBuilder &builder) const
+    void SceneObject::updateGeometryColours(Renderer::GeometryBuilder &builder) const
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         for ( int i = 0; i < builder.sectionCount(); i++ )
         {
@@ -195,9 +195,9 @@ namespace NS_MODEL
         }
     }
 
-    void SceneObject::updateGeometryColours(NS_RENDERER::GeometrySection *section) const
+    void SceneObject::updateGeometryColours(Renderer::GeometrySection *section) const
     {
-        using namespace NS_RENDERER;
+        using namespace Renderer;
 
         section->clearAttribute(GeometrySection::ColorAttribute);
         if ( section->vertexFormat().colorComponents() < 1 )

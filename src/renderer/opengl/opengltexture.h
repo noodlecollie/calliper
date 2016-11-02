@@ -4,7 +4,7 @@
 #include "renderer_global.h"
 #include <QOpenGLTexture>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT OpenGLTexture : public QOpenGLTexture
     {

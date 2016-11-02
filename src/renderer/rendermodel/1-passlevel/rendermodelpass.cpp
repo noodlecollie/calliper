@@ -5,8 +5,8 @@
 
 namespace
 {
-    void changeShaderIfDifferent(NS_RENDERER::OpenGLShaderProgram* &origShader,
-                                 NS_RENDERER::OpenGLShaderProgram* newShader)
+    void changeShaderIfDifferent(Renderer::OpenGLShaderProgram* &origShader,
+                                 Renderer::OpenGLShaderProgram* newShader)
     {
         if ( origShader == newShader )
             return;
@@ -28,8 +28,8 @@ namespace
         origShader = newShader;
     }
 
-    void changeTextureIfDifferent(NS_RENDERER::OpenGLTexturePointer &origTexture,
-                                  const NS_RENDERER::OpenGLTexturePointer &newTexture)
+    void changeTextureIfDifferent(Renderer::OpenGLTexturePointer &origTexture,
+                                  const Renderer::OpenGLTexturePointer &newTexture)
     {
         if ( origTexture == newTexture )
             return;
@@ -48,7 +48,7 @@ namespace
     }
 }
 
-namespace NS_RENDERER
+namespace Renderer
 {
     RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor)
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor)

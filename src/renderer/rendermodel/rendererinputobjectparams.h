@@ -7,7 +7,7 @@
 #include "geometry/geometrybuilder.h"
 #include <QList>
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT RendererInputObjectParams
     {

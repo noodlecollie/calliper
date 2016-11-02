@@ -9,14 +9,14 @@
 
 namespace NS_MODEL
 {
-    class MODELSHARED_EXPORT ShaderStore : public NS_RENDERER::IShaderRetrievalFunctor
+    class MODELSHARED_EXPORT ShaderStore : public Renderer::IShaderRetrievalFunctor
     {
     public:
         ShaderStore();
         ~ShaderStore();
 
-        virtual NS_RENDERER::OpenGLShaderProgram* operator ()(quint16 shaderId) const override;
-        NS_RENDERER::OpenGLShaderProgram* getShaderProgram(quint16 shaderId) const;
+        virtual Renderer::OpenGLShaderProgram* operator ()(quint16 shaderId) const override;
+        Renderer::OpenGLShaderProgram* getShaderProgram(quint16 shaderId) const;
 
         template<typename T>
         quint16 addShaderProgram()
@@ -29,13 +29,13 @@ namespace NS_MODEL
         }
 
         quint16 getShaderId(const QString shaderName) const;
-        NS_RENDERER::OpenGLShaderProgram* getShaderProgram(const QString &shaderName) const;
+        Renderer::OpenGLShaderProgram* getShaderProgram(const QString &shaderName) const;
 
     private:
         quint16 acquireNextShaderId();
 
         quint16 m_iNextShaderId;
-        QHash<quint16, NS_RENDERER::OpenGLShaderProgram*> m_ShaderTable;
+        QHash<quint16, Renderer::OpenGLShaderProgram*> m_ShaderTable;
     };
 }
 

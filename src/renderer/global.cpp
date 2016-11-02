@@ -1,7 +1,7 @@
 #include "irenderer.h"
 #include "rendermodel/0-modellevel/rendermodel.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     namespace Global
     {

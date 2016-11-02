@@ -5,7 +5,7 @@
 #include <QOpenGLShaderProgram>
 #include "shaders/ishaderspec.h"
 
-namespace NS_RENDERER
+namespace Renderer
 {
     class RENDERERSHARED_EXPORT OpenGLShaderProgram : public QOpenGLShaderProgram, public IShaderSpec
     {
