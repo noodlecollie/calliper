@@ -1,13 +1,13 @@
 #ifndef VPKHEADER_H
 #define VPKHEADER_H
 
-#include "serialisation_global.h"
+#include "file-formats_global.h"
 #include <QScopedPointer>
 #include <QDataStream>
 
-namespace NS_SERIALISATION
+namespace FileFormats
 {
-    class SERIALISATIONSHARED_EXPORT VPKHeader
+    class FILEFORMATSSHARED_EXPORT VPKHeader
     {
     public:
         VPKHeader();

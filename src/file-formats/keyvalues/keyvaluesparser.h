@@ -1,7 +1,7 @@
 #ifndef KEYVALUESPARSER_H
 #define KEYVALUESPARSER_H
 
-#include "serialisation_global.h"
+#include "file-formats_global.h"
 #include <QByteArray>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -23,9 +23,9 @@
 //   allowed in JSON. These should be converted to arrays.
 
 
-namespace NS_SERIALISATION
+namespace FileFormats
 {
-    class SERIALISATIONSHARED_EXPORT KeyValuesParser
+    class FILEFORMATSSHARED_EXPORT KeyValuesParser
     {
     public:
         class InvalidSyntaxException;

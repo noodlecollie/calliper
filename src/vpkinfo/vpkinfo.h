@@ -16,7 +16,7 @@ private:
     void printHeaderData() const;
 
     QString m_strErrorHint;
-    NS_SERIALISATION::VPKHeader m_Header;
+    FileFormats::VPKHeader m_Header;
 };
 
 #endif // VPKINFO_H

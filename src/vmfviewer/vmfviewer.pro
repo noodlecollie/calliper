@@ -42,9 +42,16 @@ else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
 INCLUDEPATH += $$PWD/../model
 DEPENDPATH += $$PWD/../model
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../serialisation/release/ -lserialisation
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../serialisation/debug/ -lserialisation
-else:unix: LIBS += -L$$OUT_PWD/../serialisation/ -lserialisation
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../file-formats/release/ -lfile-formats
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../file-formats/debug/ -lfile-formats
+else:unix: LIBS += -L$$OUT_PWD/../file-formats/ -lfile-formats
 
-INCLUDEPATH += $$PWD/../serialisation
-DEPENDPATH += $$PWD/../serialisation
+INCLUDEPATH += $$PWD/../file-formats
+DEPENDPATH += $$PWD/../file-formats
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../map-importers/release/ -lmap-importers
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../map-importers/debug/ -lmap-importers
+else:unix: LIBS += -L$$OUT_PWD/../map-importers/ -lmap-importers
+
+INCLUDEPATH += $$PWD/../map-importers
+DEPENDPATH += $$PWD/../map-importers

@@ -12,12 +12,12 @@ TEMPLATE = app
 SOURCES += main.cpp \
     vpkinfo.cpp
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../serialisation/release/ -lserialisation
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../serialisation/debug/ -lserialisation
-else:unix: LIBS += -L$$OUT_PWD/../serialisation/ -lserialisation
-
-INCLUDEPATH += $$PWD/../serialisation
-DEPENDPATH += $$PWD/../serialisation
-
 HEADERS += \
     vpkinfo.h
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../file-formats/release/ -lfile-formats
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../file-formats/debug/ -lfile-formats
+else:unix: LIBS += -L$$OUT_PWD/../file-formats/ -lfile-formats
+
+INCLUDEPATH += $$PWD/../file-formats
+DEPENDPATH += $$PWD/../file-formats

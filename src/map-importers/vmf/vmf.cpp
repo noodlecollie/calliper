@@ -10,7 +10,7 @@
 #include "exceptions/calliperexception.h"
 #include <QtDebug>
 
-namespace NS_SERIALISATION
+namespace MapImporters
 {
     namespace
     {
@@ -87,6 +87,7 @@ namespace NS_SERIALISATION
         void createBrushes(const QJsonDocument &doc, NS_MODEL::SceneObject *parent)
         {
             using namespace NS_MODEL;
+            using namespace NS_CALLIPERUTIL;
 
             QJsonObject world = doc.object().value("world").toObject();
             Json::JsonArrayWrapper solids = world.value("solid");

@@ -1,30 +1,22 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-10-24T17:44:53
+# Project created by QtCreator 2016-11-02T08:27:28
 #
 #-------------------------------------------------
 
-TARGET = serialisation
+QT       += gui
+
+TARGET = map-importers
 TEMPLATE = lib
 
-DEFINES += SERIALISATION_LIBRARY
+DEFINES += MAPIMPORTERS_LIBRARY
 
 SOURCES += \
-    keyvalues/keyvaluesparser.cpp \
-    keyvalues/keyvaluestoken.cpp \
-    vmf/vmf.cpp \
-    json/jsonarraywrapper.cpp \
-    json/jsonutil.cpp \
-    vpk/vpkheader.cpp
+    vmf/vmf.cpp
 
 HEADERS +=\
-        serialisation_global.h \
-    keyvalues/keyvaluesparser.h \
-    keyvalues/keyvaluestoken.h \
-    vmf/vmf.h \
-    json/jsonarraywrapper.h \
-    json/jsonutil.h \
-    vpk/vpkheader.h
+        map-importers_global.h \
+    vmf/vmf.h
 
 unix {
     target.path = /usr/lib

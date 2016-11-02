@@ -1,6 +1,6 @@
 #include "jsonarraywrapper.h"
 
-namespace NS_SERIALISATION
+namespace NS_CALLIPERUTIL
 {
     namespace Json
     {

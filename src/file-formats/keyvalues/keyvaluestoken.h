@@ -1,10 +1,10 @@
 #ifndef KEYVALUESTOKEN_H
 #define KEYVALUESTOKEN_H
 
-#include "serialisation_global.h"
+#include "file-formats_global.h"
 #include <QByteArray>
 
-namespace NS_SERIALISATION
+namespace FileFormats
 {
     class KeyValuesToken
     {

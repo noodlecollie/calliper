@@ -1,7 +1,7 @@
 #include "keyvaluestoken.h"
 #include <QString>
 
-namespace NS_SERIALISATION
+namespace FileFormats
 {
     namespace
     {

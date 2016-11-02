@@ -1,7 +1,7 @@
 #include "vpkheader.h"
 #include <QtDebug>
 
-namespace NS_SERIALISATION
+namespace FileFormats
 {
     namespace
     {
