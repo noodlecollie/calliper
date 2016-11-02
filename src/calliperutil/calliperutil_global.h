@@ -9,7 +9,9 @@
 #  define CALLIPERUTILSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#define NS_CALLIPERUTIL ModuleCalliperUtil
-#define NS_STR_CALLIPERUTIL "ModuleCalliperUtil"
+namespace CalliperUtil
+{
+    static const char* STR_NAMESPACE = "CalliperUtil";
+}
 
 #endif // CALLIPERUTIL_GLOBAL_H

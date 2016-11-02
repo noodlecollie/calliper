@@ -4,7 +4,7 @@
 namespace NS_MODEL
 {
     UnlitShader::UnlitShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, NS_CALLIPERUTIL::General::nonNamespacedClassName<UnlitShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<UnlitShader>(), parent)
     {
 
     }

@@ -21,7 +21,7 @@ namespace FileFormats
         }
     }
 
-    class KeyValuesParser::InvalidSyntaxException : public NS_CALLIPERUTIL::CalliperException
+    class KeyValuesParser::InvalidSyntaxException : public CalliperUtil::CalliperException
     {
     public:
         void raise() const override { throw *this; }
@@ -233,7 +233,7 @@ namespace FileFormats
         {
             keyValuesToIntermediateJson_x(intermediate);
         }
-        catch (NS_CALLIPERUTIL::CalliperException& exception)
+        catch (CalliperUtil::CalliperException& exception)
         {
             if ( errorString )
                 *errorString = exception.errorHint();

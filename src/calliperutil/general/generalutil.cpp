@@ -3,7 +3,7 @@
 #include <QVector3D>
 #include <QStringList>
 
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     namespace General
     {

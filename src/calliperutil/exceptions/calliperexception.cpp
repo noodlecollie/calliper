@@ -1,6 +1,6 @@
 #include "calliperexception.h"
 
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     void CalliperException::raise() const
     {

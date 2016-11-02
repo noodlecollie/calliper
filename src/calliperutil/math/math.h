@@ -8,7 +8,7 @@
 #include <QRectF>
 #include <functional>
 
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     namespace Math
     {

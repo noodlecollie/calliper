@@ -92,7 +92,7 @@ namespace NS_MODEL
 
     void HierarchyState::rebuildMatrices() const
     {
-        using namespace NS_CALLIPERUTIL;
+        using namespace CalliperUtil;
 
         m_matLocalToParent = Math::matrixTranslate(m_vecPosition)
                 * ModelMath::matrixOrientation(m_angRotation)

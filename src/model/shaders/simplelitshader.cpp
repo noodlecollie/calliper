@@ -5,7 +5,7 @@
 namespace NS_MODEL
 {
     SimpleLitShader::SimpleLitShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, NS_CALLIPERUTIL::General::nonNamespacedClassName<SimpleLitShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<SimpleLitShader>(), parent)
     {
 
     }

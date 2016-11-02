@@ -4,7 +4,7 @@
 #include "calliperutil_global.h"
 #include <QJsonArray>
 
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     namespace Json
     {

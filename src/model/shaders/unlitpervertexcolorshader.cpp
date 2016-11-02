@@ -4,7 +4,7 @@
 namespace NS_MODEL
 {
     UnlitPerVertexColorShader::UnlitPerVertexColorShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, NS_CALLIPERUTIL::General::nonNamespacedClassName<UnlitPerVertexColorShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<UnlitPerVertexColorShader>(), parent)
     {
 
     }

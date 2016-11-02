@@ -4,7 +4,7 @@
 namespace NS_MODEL
 {
     ErrorShader::ErrorShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, NS_CALLIPERUTIL::General::nonNamespacedClassName<ErrorShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<ErrorShader>(), parent)
     {
 
     }

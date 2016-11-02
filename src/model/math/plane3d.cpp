@@ -23,7 +23,7 @@ namespace NS_MODEL
     Plane3D::Plane3D(const QVector3D &v0, const QVector3D &v1, const QVector3D &v2)
     {
         setNormal(QVector3D::crossProduct(v1-v0, v2-v0));
-        m_flDistance = -NS_CALLIPERUTIL::Math::distanceFromPointToPlane(QVector3D(0,0,0), normal(), v0);
+        m_flDistance = -CalliperUtil::Math::distanceFromPointToPlane(QVector3D(0,0,0), normal(), v0);
     }
 
     QVector3D Plane3D::normal() const
@@ -69,7 +69,7 @@ namespace NS_MODEL
 
     bool Plane3D::fuzzyNormalEquals(const Plane3D &other) const
     {
-        return NS_CALLIPERUTIL::Math::fuzzyVectorEquals(m_vecNormal, other.m_vecNormal);
+        return CalliperUtil::Math::fuzzyVectorEquals(m_vecNormal, other.m_vecNormal);
     }
 
     bool Plane3D::distanceEquals(const Plane3D &other) const

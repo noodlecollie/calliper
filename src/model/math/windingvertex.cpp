@@ -62,8 +62,8 @@ namespace NS_MODEL
 
     bool WindingVertex::fuzzyEquals(const WindingVertex &other) const
     {
-        return ((NS_CALLIPERUTIL::Math::fuzzyVectorIsNull(m_vecPosition) && NS_CALLIPERUTIL::Math::fuzzyVectorIsNull(other.m_vecPosition)) ||
-                NS_CALLIPERUTIL::Math::fuzzyVectorEquals(m_vecPosition, other.m_vecPosition)) &&
+        return ((CalliperUtil::Math::fuzzyVectorIsNull(m_vecPosition) && CalliperUtil::Math::fuzzyVectorIsNull(other.m_vecPosition)) ||
+                CalliperUtil::Math::fuzzyVectorEquals(m_vecPosition, other.m_vecPosition)) &&
                 m_bShouldDiscard == other.m_bShouldDiscard &&
                 m_bPrevEdgeOriginal == other.m_bPrevEdgeOriginal &&
                 m_bNextEdgeOriginal == other.m_bNextEdgeOriginal &&

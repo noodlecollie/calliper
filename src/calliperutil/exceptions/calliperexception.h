@@ -5,7 +5,7 @@
 #include <QException>
 #include <QString>
 
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     class CALLIPERUTILSHARED_EXPORT CalliperException : public QException
     {

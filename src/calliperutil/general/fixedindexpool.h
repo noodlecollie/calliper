@@ -5,7 +5,7 @@
 #include <QScopedArrayPointer>
 
 #if 0
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     // Can return indices ranging from 0 to size inclusive.
     // -1 is returned if no more indices are available.

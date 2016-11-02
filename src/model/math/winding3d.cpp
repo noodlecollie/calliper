@@ -2,7 +2,7 @@
 #include "math/math.h"
 #include "general/generalutil.h"
 
-using namespace NS_CALLIPERUTIL;
+using namespace CalliperUtil;
 
 namespace NS_MODEL
 {

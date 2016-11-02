@@ -1,7 +1,7 @@
 #include "fixedindexpool.h"
 
 #if 0
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     FixedIndexPool::FixedIndexPool(int size)
         : m_iSize(size),

@@ -99,16 +99,16 @@ namespace NS_MODEL
         float z = qAbs(normal.z());
 
         // By default we use Z as the normal.
-        NS_CALLIPERUTIL::Math::AxisIdentifier normalAxis = NS_CALLIPERUTIL::Math::AxisZ;
+        CalliperUtil::Math::AxisIdentifier normalAxis = CalliperUtil::Math::AxisZ;
 
         // Simple check: see which value is the largest.
         // If the normal is null (which it shouldn't be!), the axis will be Z.
         if ( x > y && x > z )
-            normalAxis = NS_CALLIPERUTIL::Math::AxisX;
+            normalAxis = CalliperUtil::Math::AxisX;
         else if ( y > x && y > z )
-            normalAxis = NS_CALLIPERUTIL::Math::AxisY;
+            normalAxis = CalliperUtil::Math::AxisY;
         else
-            normalAxis = NS_CALLIPERUTIL::Math::AxisZ;
+            normalAxis = CalliperUtil::Math::AxisZ;
 
         // Get the U and V axes.
         uvAxes(normalAxis, uAxis, vAxis);
@@ -137,7 +137,7 @@ namespace NS_MODEL
         vAxis = qRot.rotatedVector(vAxis);
     }
 
-    void TexturePlane::uvAxes(NS_CALLIPERUTIL::Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis)
+    void TexturePlane::uvAxes(CalliperUtil::Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis)
     {
         // To match Hammer, the texture is non-mirrored when the normal is one of the following:
         // +X
@@ -146,17 +146,17 @@ namespace NS_MODEL
 
         switch (axis)
         {
-        case NS_CALLIPERUTIL::Math::AxisX:
+        case CalliperUtil::Math::AxisX:
             uAxis = QVector3D(0,1,0);
             vAxis = QVector3D(0,0,1);
             return;
 
-        case NS_CALLIPERUTIL::Math::AxisY:
+        case CalliperUtil::Math::AxisY:
             uAxis = QVector3D(1,0,0);
             vAxis = QVector3D(0,0,1);
             return;
 
-        case NS_CALLIPERUTIL::Math::AxisZ:
+        case CalliperUtil::Math::AxisZ:
             uAxis = QVector3D(1,0,0);
             vAxis = QVector3D(0,1,0);
             return;

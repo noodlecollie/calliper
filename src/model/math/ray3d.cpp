@@ -46,7 +46,7 @@ namespace NS_MODEL
         return m_vecOrigin + (t * m_vecDirection);
     }
 
-    QVector3D Ray3D::parameterise(NS_CALLIPERUTIL::Math::AxisIdentifier axis, float value, IntersectionType *intersection) const
+    QVector3D Ray3D::parameterise(CalliperUtil::Math::AxisIdentifier axis, float value, IntersectionType *intersection) const
     {
         // We don't want a null ray, but if the ray is null then this check will catch it anyway.
         if ( qFuzzyIsNull(m_vecDirection[axis]) )
@@ -91,7 +91,7 @@ namespace NS_MODEL
 
     bool Ray3D::fuzzyDirectionEquals(const Ray3D &other) const
     {
-        return NS_CALLIPERUTIL::Math::fuzzyVectorEquals(m_vecDirection, other.m_vecDirection);
+        return CalliperUtil::Math::fuzzyVectorEquals(m_vecDirection, other.m_vecDirection);
     }
 
     bool Ray3D::originEquals(const Ray3D &other) const
@@ -101,7 +101,7 @@ namespace NS_MODEL
 
     bool Ray3D::fuzzyOriginEquals(const Ray3D &other) const
     {
-        return NS_CALLIPERUTIL::Math::fuzzyVectorEquals(m_vecOrigin, other.m_vecOrigin);
+        return CalliperUtil::Math::fuzzyVectorEquals(m_vecOrigin, other.m_vecOrigin);
     }
 
     bool Ray3D::isParallelTo(const Ray3D &other) const
@@ -175,7 +175,7 @@ namespace NS_MODEL
 
     bool Ray3D::fuzzyIsNull() const
     {
-        return NS_CALLIPERUTIL::Math::fuzzyVectorIsNull(m_vecDirection);
+        return CalliperUtil::Math::fuzzyVectorIsNull(m_vecDirection);
     }
 
     QVector3D Ray3D::atDistanceFromOrigin(float distance) const

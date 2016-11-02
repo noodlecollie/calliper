@@ -1,6 +1,6 @@
 #include "jsonarraywrapper.h"
 
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     namespace Json
     {

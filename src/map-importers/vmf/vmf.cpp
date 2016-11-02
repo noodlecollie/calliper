@@ -14,14 +14,14 @@ namespace MapImporters
 {
     namespace
     {
-        class InvalidCoordSyntaxException : public NS_CALLIPERUTIL::CalliperException
+        class InvalidCoordSyntaxException : public CalliperUtil::CalliperException
         {
         public:
             void raise() const override { throw *this; }
             InvalidCoordSyntaxException* clone() const override { return new InvalidCoordSyntaxException(*this); }
 
             InvalidCoordSyntaxException(const QString &coord, const QString &err)
-                : NS_CALLIPERUTIL::CalliperException(QString("'%1' %2").arg(coord).arg(err))
+                : CalliperUtil::CalliperException(QString("'%1' %2").arg(coord).arg(err))
             {
             }
         };
@@ -87,7 +87,7 @@ namespace MapImporters
         void createBrushes(const QJsonDocument &doc, NS_MODEL::SceneObject *parent)
         {
             using namespace NS_MODEL;
-            using namespace NS_CALLIPERUTIL;
+            using namespace CalliperUtil;
 
             QJsonObject world = doc.object().value("world").toObject();
             Json::JsonArrayWrapper solids = world.value("solid");
@@ -108,7 +108,7 @@ namespace MapImporters
                     {
                         vectorsFromVmfCoords_x(plane, v0, v1, v2);
                     }
-                    catch ( NS_CALLIPERUTIL::CalliperException& exception )
+                    catch ( CalliperUtil::CalliperException& exception )
                     {
                         qWarning() << "Error parsing plane co-ordinates:" << exception.errorHint();
                         success = false;

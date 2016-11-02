@@ -34,7 +34,7 @@ namespace NS_MODEL
         void setDirection(const QVector3D &direction);
 
         // Returns ray where axis=value (ie. ray intersection with plane of this type).
-        QVector3D parameterise(NS_CALLIPERUTIL::Math::AxisIdentifier axis, float value, IntersectionType* intersection = nullptr) const;
+        QVector3D parameterise(CalliperUtil::Math::AxisIdentifier axis, float value, IntersectionType* intersection = nullptr) const;
         QVector3D parameterise(float t) const;
         QVector3D parameterise(const Plane3D &plane, IntersectionType* intersection = nullptr) const;
         float distanceFrom(const QVector3D &point, bool* success = nullptr) const;

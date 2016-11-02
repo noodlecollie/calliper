@@ -9,9 +9,9 @@ namespace NS_MODEL
     {
         QMatrix4x4 matrixOrientation(const EulerAngle &angle)
         {
-            return NS_CALLIPERUTIL::Math::matrixRotateZ(qDegreesToRadians(angle.yaw()))
-                    * NS_CALLIPERUTIL::Math::matrixRotateY(qDegreesToRadians(angle.pitch()))
-                    * NS_CALLIPERUTIL::Math::matrixRotateX(qDegreesToRadians(angle.roll()));
+            return CalliperUtil::Math::matrixRotateZ(qDegreesToRadians(angle.yaw()))
+                    * CalliperUtil::Math::matrixRotateY(qDegreesToRadians(angle.pitch()))
+                    * CalliperUtil::Math::matrixRotateX(qDegreesToRadians(angle.roll()));
         }
 
         QVector3D angleToVectorSimple(const EulerAngle &angle)

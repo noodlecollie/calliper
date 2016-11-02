@@ -53,7 +53,7 @@ namespace NS_MODEL
         void setRotation(float rot);
 
         // Returns the default U and V vectors for a plane with a normal along the given positive axis.
-        static void uvAxes(NS_CALLIPERUTIL::Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis);
+        static void uvAxes(CalliperUtil::Math::AxisIdentifier axis, QVector3D &uAxis, QVector3D &vAxis);
 
         // Returns the U and V vectors for the plane, with the provided normal.
         // U and V are unit vectors rotated correctly according to the texture rotation.

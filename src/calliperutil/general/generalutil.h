@@ -5,7 +5,7 @@
 #include <QString>
 #include <QMetaEnum>
 
-namespace NS_CALLIPERUTIL
+namespace CalliperUtil
 {
     namespace General
     {
