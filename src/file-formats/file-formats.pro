@@ -15,14 +15,20 @@ SOURCES += \
     keyvalues/keyvaluestoken.cpp \
     keyvalues/keyvaluesparser.cpp \
     vpk/vpkheader.cpp \
-    vpk/vpkindextreeitem.cpp
+    vpk/vpkindextreeitem.cpp \
+    vpk/vpkindex.cpp \
+    vpk/vpkindextreerecord.cpp \
+    vpk/vpkparser.cpp
 
 HEADERS +=\
         file-formats_global.h \
     keyvalues/keyvaluestoken.h \
     keyvalues/keyvaluesparser.h \
     vpk/vpkheader.h \
-    vpk/vpkindextreeitem.h
+    vpk/vpkindextreeitem.h \
+    vpk/vpkindex.h \
+    vpk/vpkindextreerecord.h \
+    vpk/vpkparser.h
 
 unix {
     target.path = /usr/lib
