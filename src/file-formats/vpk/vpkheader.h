@@ -2,7 +2,6 @@
 #define VPKHEADER_H
 
 #include "file-formats_global.h"
-#include <QScopedPointer>
 #include <QDataStream>
 
 namespace FileFormats
@@ -23,6 +22,8 @@ namespace FileFormats
     quint32 archiveMD5SectionSize() const;
     quint32 otherMD5SectionSize() const;
     quint32 signatureSectionSize() const;
+
+    quint32 size() const;
 
     private:
         struct Data;

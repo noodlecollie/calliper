@@ -14,13 +14,15 @@ DEFINES += FILEFORMATS_LIBRARY
 SOURCES += \
     keyvalues/keyvaluestoken.cpp \
     keyvalues/keyvaluesparser.cpp \
-    vpk/vpkheader.cpp
+    vpk/vpkheader.cpp \
+    vpk/vpkindextreeitem.cpp
 
 HEADERS +=\
         file-formats_global.h \
     keyvalues/keyvaluestoken.h \
     keyvalues/keyvaluesparser.h \
-    vpk/vpkheader.h
+    vpk/vpkheader.h \
+    vpk/vpkindextreeitem.h
 
 unix {
     target.path = /usr/lib

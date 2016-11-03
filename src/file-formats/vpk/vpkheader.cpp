@@ -35,6 +35,13 @@ namespace FileFormats
         delete m_pData;
     }
 
+    quint32 VPKHeader::size() const
+    {
+        // Can't just return sizeof(VPKHeader::Data) because of padding!
+        // Might not match exactly.
+        return 7 * sizeof(quint32);
+    }
+
     bool VPKHeader::populate(QDataStream &stream, QString *errorHint)
     {
         VPKHeader::Data& d = *m_pData;
