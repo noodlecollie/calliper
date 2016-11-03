@@ -1,5 +1,4 @@
-#include "vpkparser.h"
-#include <QDataStream>
+#include "vpkfile.h"
 
 namespace FileFormats
 {
@@ -12,52 +11,45 @@ namespace FileFormats
         }
     }
 
-    VPKParser::VPKParser(const QString &filename)
+    VPKFile::VPKFile(const QString &filename)
         : m_File(filename)
     {
 
     }
 
-    bool VPKParser::open()
+    bool VPKFile::read(QString *errorHint)
     {
-        return m_File.open(QIODevice::ReadOnly);
-    }
-
-    void VPKParser::close()
-    {
-        if ( !m_File.isOpen() )
-            return;
-
-        m_File.close();
-    }
-
-    bool VPKParser::isOpen() const
-    {
-        return m_File.isOpen();
-    }
-
-    bool VPKParser::createIndex(VPKIndex &index, QString *errorHint)
-    {
-        if ( !isOpen() )
+        if ( !m_File.open(QIODevice::ReadOnly) )
         {
-            setErrorString(errorHint, "VPK file is not open yet.");
+            setErrorString(errorHint, "Could not open " + m_File.fileName());
             return false;
         }
 
-        QDataStream stream(&m_File);
-        stream.setByteOrder(QDataStream::LittleEndian);
+        {
+            QDataStream stream(&m_File);
+            stream.setByteOrder(QDataStream::LittleEndian);
 
+            createIndex(stream, errorHint);
+        }
+
+        m_File.close();
+        return true;
+    }
+
+    bool VPKFile::createIndex(QDataStream& stream, QString *errorHint)
+    {
         if ( !m_Header.populate(stream, errorHint) )
             return false;
 
         m_strCurrentExtension = QString();
         m_strCurrentPath = QString();
         m_strCurrentFilename = QString();
+        m_Index.clear();
 
-        return populateIndex(index, stream, errorHint);
+        return populateIndex(stream, errorHint);
     }
 
-    bool VPKParser::populateIndex(VPKIndex &index, QDataStream &stream, QString* errorHint)
+    bool VPKFile::populateIndex(QDataStream &stream, QString* errorHint)
     {
         while ( true )
         {
@@ -77,7 +69,7 @@ namespace FileFormats
                     if ( m_strCurrentFilename.isEmpty() )
                         break;
 
-                    if ( !createRecord(index, stream, errorHint) )
+                    if ( !createRecord(stream, errorHint) )
                         return false;
                 }
             }
@@ -86,7 +78,7 @@ namespace FileFormats
         return true;
     }
 
-    bool VPKParser::createRecord(VPKIndex &index, QDataStream &stream, QString* errorHint)
+    bool VPKFile::createRecord(QDataStream &stream, QString* errorHint)
     {
         VPKIndexTreeRecordPointer record =
                 VPKIndexTreeRecordPointer::create(m_strCurrentPath, m_strCurrentFilename, m_strCurrentExtension);
@@ -94,7 +86,17 @@ namespace FileFormats
         if ( !record->item()->populate(stream, errorHint) )
             return false;
 
-        index.addRecord(record);
+        m_Index.addRecord(record);
         return true;
+    }
+
+    const VPKHeader& VPKFile::header() const
+    {
+        return m_Header;
+    }
+
+    const VPKIndex& VPKFile::index() const
+    {
+        return m_Index;
     }
 }

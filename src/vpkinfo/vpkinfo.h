@@ -3,21 +3,12 @@
 
 #include <QDataStream>
 #include "vpk/vpkheader.h"
+#include "vpk/vpkindex.h"
 
-class VPKInfo
+namespace VPKInfo
 {
-public:
-    VPKInfo();
-
-    void read(QDataStream& in);
-
-    QString errorString() const;
-    void printHeaderData() const;
-
-private:
-
-    QString m_strErrorHint;
-    FileFormats::VPKHeader m_Header;
-};
+    void printHeaderData(const FileFormats::VPKHeader& header);
+    void printIndexData(const FileFormats::VPKIndex& index);
+}
 
 #endif // VPKINFO_H

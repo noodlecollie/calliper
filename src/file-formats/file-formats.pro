@@ -18,7 +18,7 @@ SOURCES += \
     vpk/vpkindextreeitem.cpp \
     vpk/vpkindex.cpp \
     vpk/vpkindextreerecord.cpp \
-    vpk/vpkparser.cpp
+    vpk/vpkfile.cpp
 
 HEADERS +=\
         file-formats_global.h \
@@ -28,7 +28,7 @@ HEADERS +=\
     vpk/vpkindextreeitem.h \
     vpk/vpkindex.h \
     vpk/vpkindextreerecord.h \
-    vpk/vpkparser.h
+    vpk/vpkfile.h
 
 unix {
     target.path = /usr/lib

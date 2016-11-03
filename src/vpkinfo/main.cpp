@@ -3,6 +3,7 @@
 #include <QtDebug>
 #include <QFile>
 #include "vpkinfo.h"
+#include "vpk/vpkfile.h"
 
 int main(int argc, char *argv[])
 {
@@ -48,14 +49,11 @@ int main(int argc, char *argv[])
 
     qDebug() << "Reading file" << filename;
 
-    QDataStream in(&file);
-    in.setByteOrder(QDataStream::LittleEndian);
-
-    VPKInfo vpk;
-    vpk.read(in);
-    if ( !vpk.errorString().isEmpty() )
+    FileFormats::VPKFile vpkFile(filename);
+    QString error;
+    if ( !vpkFile.read(&error) )
     {
-        qDebug() << "Error reading VPK:" << vpk.errorString();
+        qDebug() << "Error reading file:" << error;
         return 1;
     }
 
@@ -63,7 +61,7 @@ int main(int argc, char *argv[])
             (!parser.isSet(optHeader) /*&& !others*/);
 
     if ( outputAll || parser.isSet(optHeader) )
-        vpk.printHeaderData();
+        VPKInfo::printHeaderData(vpkFile.header());
 
     return 0;
 }
