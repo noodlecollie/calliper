@@ -23,6 +23,9 @@ int main(int argc, char *argv[])
     QCommandLineOption optHeader(QStringList() << "h" << "header", "Output header information.");
     parser.addOption(optHeader);
 
+    QCommandLineOption optIndex(QStringList() << "i" << "index", "Output index information.");
+    parser.addOption(optIndex);
+
     parser.addPositionalArgument("file", "VPK file to read");
 
     parser.process(a);
@@ -58,10 +61,14 @@ int main(int argc, char *argv[])
     }
 
     bool outputAll = parser.isSet(optAll) ||
-            (!parser.isSet(optHeader) /*&& !others*/);
+            (!parser.isSet(optHeader) &&
+             !parser.isSet(optIndex) );
 
     if ( outputAll || parser.isSet(optHeader) )
         VPKInfo::printHeaderData(vpkFile.header());
+
+    if ( outputAll || parser.isSet(optIndex) )
+        VPKInfo::printIndexData(vpkFile.index());
 
     return 0;
 }

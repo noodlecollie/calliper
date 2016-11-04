@@ -1,13 +1,38 @@
 #include "vpkfile.h"
+#include <QtDebug>
+#include <QDir>
+#include <QFileInfo>
+#include <QRegularExpression>
 
 namespace FileFormats
 {
     namespace
     {
+        static const char* VPK_DIR_SUFFIX = "_dir";
+
         inline void setErrorString(QString* errorString, const QString& msg)
         {
             if ( errorString )
                 *errorString = msg;
+        }
+
+        inline void getNullTerminatedString(QDataStream& stream, QString& strOut)
+        {
+            strOut.clear();
+            char data[9];
+            memset(data, 0, 9);
+
+            stream.startTransaction();
+
+            do
+            {
+                stream.readRawData(data, 8);
+                strOut += data;
+            }
+            while ( strlen(data) == 8 );
+
+            stream.rollbackTransaction();
+            stream.skipRawData(strOut.length() + 1);
         }
     }
 
@@ -53,19 +78,19 @@ namespace FileFormats
     {
         while ( true )
         {
-            stream >> m_strCurrentExtension;
+            getNullTerminatedString(stream, m_strCurrentExtension);
             if ( m_strCurrentExtension.isEmpty() )
                 break;
 
             while ( true )
             {
-                stream >> m_strCurrentPath;
+                getNullTerminatedString(stream, m_strCurrentPath);
                 if ( m_strCurrentPath.isEmpty() )
                     break;
 
                 while ( true )
                 {
-                    stream >> m_strCurrentFilename;
+                    getNullTerminatedString(stream, m_strCurrentFilename);
                     if ( m_strCurrentFilename.isEmpty() )
                         break;
 
@@ -98,5 +123,34 @@ namespace FileFormats
     const VPKIndex& VPKFile::index() const
     {
         return m_Index;
+    }
+
+    QStringList VPKFile::siblingArchives() const
+    {
+        QFileInfo fileInfo(m_File.fileName());
+        QString baseName = fileInfo.baseName();
+        if ( !baseName.endsWith(VPK_DIR_SUFFIX) )
+        {
+            return QStringList();
+        }
+
+        baseName = baseName.left(baseName.length() - strlen(VPK_DIR_SUFFIX));
+
+        QDir dir = fileInfo.dir();
+        QStringList list = dir.entryList(QStringList() << (baseName + "*"), QDir::Files, QDir::Name);
+
+        QRegularExpression regex(baseName + "_[0-9]+\.vpk");
+
+        QStringList outList;
+
+        foreach ( const QString& str, list )
+        {
+            if ( regex.match(str).hasMatch() )
+            {
+                outList << str;
+            }
+        }
+
+        return outList;
     }
 }

@@ -3,6 +3,7 @@
 
 #include "file-formats_global.h"
 #include <QHash>
+#include <QMap>
 #include "vpkindextreerecord.h"
 #include <QSharedPointer>
 
@@ -18,12 +19,15 @@ namespace FileFormats
 
         void addRecord(const VPKIndexTreeRecordPointer& record);
         VPKIndexTreeRecordPointer recordAt(const QString& path) const;
+        int recordCount() const;
 
         QList<VPKIndexTreeRecordPointer> recordsByExtension(const QString& extension) const;
+        int recordCountForExtension(const QString& extension) const;
+        QStringList extensions() const;
 
     private:
         QHash<QString, VPKIndexTreeRecordPointer> m_Records;
-        QMultiHash<QString, VPKIndexTreeRecordPointer> m_RecordsByFileExtension;
+        QMultiMap<QString, VPKIndexTreeRecordPointer> m_RecordsByFileExtension;
     };
 }
 

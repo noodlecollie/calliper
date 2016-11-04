@@ -25,14 +25,13 @@ namespace VPKInfo
           << "=               Header               =\n"
           << "======================================\n";
 
-    #define HEADER_FIELD(_key, _value) \
+#define HEADER_FIELD(_key, _value) \
         qSetFieldWidth(21) << QString("%1:").arg(_key).toLatin1().constData() <<\
-        qSetFieldWidth(18) << (_value) << qSetFieldWidth(0)
+        qSetFieldWidth(17) << (_value) << qSetFieldWidth(0)
 
         s << HEADER_FIELD("File signature", toHex<quint32>(header.signature(), true)) << endl;
         s << HEADER_FIELD("Version",        header.version()) << endl;
-        s << HEADER_FIELD("Tree size",      QString("%1 bytes").arg(header.treeSize()))
-          << QString(" (%1 KB)").arg(static_cast<float>(header.treeSize()) / 1024.0f) << endl;
+        s << HEADER_FIELD("Tree size",      QString("%1 bytes").arg(header.treeSize())) << endl;
 
         if ( header.version() != 2 )
             return;
@@ -42,7 +41,7 @@ namespace VPKInfo
         s << HEADER_FIELD("Other MD5 section",      QString("%1 bytes").arg(header.otherMD5SectionSize())) << endl;
         s << HEADER_FIELD("Signature section",      QString("%1 bytes").arg(header.signatureSectionSize())) << endl;
 
-    #undef HEADER_FIELD
+#undef HEADER_FIELD
 
         s.flush();
         qDebug() << string.toLatin1().constData();
@@ -50,6 +49,28 @@ namespace VPKInfo
 
     void printIndexData(const FileFormats::VPKIndex &index)
     {
+        QString string;
+        QTextStream s(&string);
 
+        s << "======================================\n"
+          << "=               Index                =\n"
+          << "======================================\n";
+
+        QStringList extensions = index.extensions();
+        s << "Files: " << index.recordCount() << ", extensions: " << extensions.count() << endl << endl;
+
+#define FIELD(_key, _value) \
+        qSetFieldWidth(8) << QString("%1:").arg(_key).toLatin1().constData() <<\
+        qSetFieldWidth(12) << (_value) << qSetFieldWidth(0)
+
+        foreach ( const QString& str, extensions )
+        {
+            s << FIELD(str, QString("%1 files").arg(index.recordCountForExtension(str))) << endl;
+        }
+
+#undef FIELD
+
+        s.flush();
+        qDebug() << string.toLatin1().constData();
     }
 }

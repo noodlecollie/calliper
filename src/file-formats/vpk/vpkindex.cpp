@@ -26,6 +26,21 @@ namespace FileFormats
         return m_RecordsByFileExtension.values(extension);
     }
 
+    int VPKIndex::recordCountForExtension(const QString &extension) const
+    {
+        return m_RecordsByFileExtension.count(extension);
+    }
+
+    QStringList VPKIndex::extensions() const
+    {
+        return m_RecordsByFileExtension.uniqueKeys();
+    }
+
+    int VPKIndex::recordCount() const
+    {
+        return m_Records.count();
+    }
+
     void VPKIndex::clear()
     {
         m_RecordsByFileExtension.clear();

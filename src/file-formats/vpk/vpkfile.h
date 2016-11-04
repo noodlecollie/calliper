@@ -15,6 +15,8 @@ namespace FileFormats
     public:
         VPKFile(const QString& filename);
 
+        QStringList siblingArchives() const;
+
         bool read(QString* errorHint = nullptr);
 
         const VPKHeader& header() const;
