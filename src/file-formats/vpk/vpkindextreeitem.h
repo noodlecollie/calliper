@@ -13,6 +13,7 @@ namespace FileFormats
         ~VPKIndexTreeItem();
 
         bool populate(QDataStream& stream, QString* errorHint = nullptr);
+        bool populate(const char* data, int length, QString* errorHint = nullptr);
 
         quint32 crc() const;
         quint16 preloadBytes() const;

@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QRegularExpression>
 #include <QScopedArrayPointer>
+#include <QByteArray>
 
 namespace FileFormats
 {
@@ -107,10 +108,26 @@ namespace FileFormats
                     if ( m_strCurrentFilename.isEmpty() )
                         break;
 
-                    if ( !createRecord(stream, errorHint) )
-                        return false;
+                    if ( currentString + VPKIndexTreeItem::staticSize() > base + m_Header.treeSize() )
+                    {
+                        setErrorString(errorHint,
+                                       QString("Expected index entry of %1 bytes but was only able to read %2 bytes.")
+                                       .arg(VPKIndexTreeItem::staticSize())
+                                       .arg(reinterpret_cast<quint64>(base) + m_Header.treeSize()
+                                            - reinterpret_cast<quint64>(currentString)));
 
+                        return false;
+                    }
+
+                    QByteArray data;
+                    data.append(currentString, VPKIndexTreeItem::staticSize());
                     currentString += VPKIndexTreeItem::staticSize();
+
+                    QDataStream dataStream(&data, QIODevice::ReadOnly);
+                    dataStream.setByteOrder(QDataStream::LittleEndian);
+
+                    if ( !createRecord(dataStream, errorHint) )
+                        return false;
                 }
             }
         }
