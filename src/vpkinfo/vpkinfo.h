@@ -7,7 +7,7 @@
 
 namespace VPKInfo
 {
-    void printHeaderData(const FileFormats::VPKHeader& header);
+    void printHeaderData(const FileFormats::VPKHeader& header, const QStringList& siblingArchives);
     void printIndexData(const FileFormats::VPKIndex& index);
 }
 

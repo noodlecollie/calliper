@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
              !parser.isSet(optIndex) );
 
     if ( outputAll || parser.isSet(optHeader) )
-        VPKInfo::printHeaderData(vpkFile.header());
+        VPKInfo::printHeaderData(vpkFile.header(), vpkFile.siblingArchives());
 
     if ( outputAll || parser.isSet(optIndex) )
         VPKInfo::printIndexData(vpkFile.index());

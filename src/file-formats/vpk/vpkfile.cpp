@@ -139,7 +139,7 @@ namespace FileFormats
         QDir dir = fileInfo.dir();
         QStringList list = dir.entryList(QStringList() << (baseName + "*"), QDir::Files, QDir::Name);
 
-        QRegularExpression regex(baseName + "_[0-9]+\.vpk");
+        QRegularExpression regex(baseName + "_[0-9]+\\.vpk");
 
         QStringList outList;
 

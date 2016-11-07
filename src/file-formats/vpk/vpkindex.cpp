@@ -21,7 +21,7 @@ namespace FileFormats
         return m_Records.value(path, VPKIndexTreeRecordPointer());
     }
 
-    QList<VPKIndexTreeRecordPointer> VPKIndex::recordsByExtension(const QString &extension) const
+    QList<VPKIndexTreeRecordPointer> VPKIndex::recordsForExtension(const QString &extension) const
     {
         return m_RecordsByFileExtension.values(extension);
     }

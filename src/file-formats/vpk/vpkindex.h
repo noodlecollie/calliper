@@ -21,7 +21,7 @@ namespace FileFormats
         VPKIndexTreeRecordPointer recordAt(const QString& path) const;
         int recordCount() const;
 
-        QList<VPKIndexTreeRecordPointer> recordsByExtension(const QString& extension) const;
+        QList<VPKIndexTreeRecordPointer> recordsForExtension(const QString& extension) const;
         int recordCountForExtension(const QString& extension) const;
         QStringList extensions() const;
 

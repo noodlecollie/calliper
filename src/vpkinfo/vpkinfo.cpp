@@ -15,7 +15,7 @@ namespace VPKInfo
         }
     }
 
-    void printHeaderData(const FileFormats::VPKHeader &header)
+    void printHeaderData(const FileFormats::VPKHeader &header, const QStringList& siblingArchives)
     {
 
         QString string;
@@ -42,6 +42,17 @@ namespace VPKInfo
         s << HEADER_FIELD("Signature section",      QString("%1 bytes").arg(header.signatureSectionSize())) << endl;
 
 #undef HEADER_FIELD
+
+        s << endl;
+        s << "Sibling archives detected:";
+        if ( siblingArchives.count() < 1 )
+        {
+            s << " none." << endl;
+        }
+        else
+        {
+            s << endl << siblingArchives.join("\n") << endl;
+        }
 
         s.flush();
         qDebug() << string.toLatin1().constData();

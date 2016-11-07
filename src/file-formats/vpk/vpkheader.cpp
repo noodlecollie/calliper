@@ -5,6 +5,8 @@ namespace FileFormats
 {
     namespace
     {
+        const quint32 VPK_SIGNATURE = 0x55aa1234;
+
         inline void setErrorString(QString* errorString, const QString& msg)
         {
             if ( errorString )
@@ -46,34 +48,29 @@ namespace FileFormats
     {
         VPKHeader::Data& d = *m_pData;
 
-        if ( stream.byteOrder() != QDataStream::LittleEndian )
+        stream >> d.signature >> d.version;
+
+        if ( d.version == 2 )
         {
-            qWarning() << "Byte order of VPK input stream is not little endian, reading will probably fail!";
+            stream
+                    >> d.treeSize
+                    >> d.fileDataSectionSize
+                    >> d.archiveMD5SectionSize
+                    >> d.otherMD5SectionSize
+                    >> d.signatureSectionSize;
         }
 
-        stream >> d.signature;
-        if ( d.signature != 0x55aa1234 )
+        if ( !signatureValid() )
         {
-            setErrorString(errorHint, "Incorrect VPK signature.");
+            setErrorString(errorHint, QString("Invalid VPK signature 0x%1.").arg(d.signature, 4, 16));
             return false;
         }
 
-        stream >> d.version;
-        if ( d.version == 1 )
-            return true;
-
-        if ( d.version != 2 )
+        if ( d.version < 1 || d.version > 2 )
         {
             setErrorString(errorHint, QString("Unexpected VPK version '%1'.").arg(d.version));
             return false;
         }
-
-        stream
-                >> d.treeSize
-                >> d.fileDataSectionSize
-                >> d.archiveMD5SectionSize
-                >> d.otherMD5SectionSize
-                >> d.signatureSectionSize;
 
         return true;
     }
@@ -111,5 +108,10 @@ namespace FileFormats
     quint32 VPKHeader::signatureSectionSize() const
     {
         return m_pData->signatureSectionSize;
+    }
+
+    bool VPKHeader::signatureValid() const
+    {
+        return m_pData->signature == VPK_SIGNATURE;
     }
 }

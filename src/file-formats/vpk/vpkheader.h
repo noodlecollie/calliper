@@ -24,6 +24,7 @@ namespace FileFormats
     quint32 signatureSectionSize() const;
 
     quint32 size() const;
+    bool signatureValid() const;
 
     private:
         struct Data;
