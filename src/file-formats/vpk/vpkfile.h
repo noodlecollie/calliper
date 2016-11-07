@@ -10,7 +10,7 @@
 
 namespace FileFormats
 {
-    class VPKFile
+    class FILEFORMATSSHARED_EXPORT VPKFile
     {
     public:
         VPKFile(const QString& filename);

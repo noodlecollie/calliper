@@ -38,7 +38,7 @@ namespace FileFormats
         delete m_pData;
     }
 
-    quint32 VPKIndexTreeItem::size() const
+    quint32 VPKIndexTreeItem::staticSize()
     {
         return (3 * sizeof(quint32)) + (3 * sizeof(quint16));
     }

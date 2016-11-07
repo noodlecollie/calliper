@@ -20,7 +20,7 @@ namespace FileFormats
         quint32 entryOffset() const;
         quint32 entryLength() const;
 
-        quint32 size() const;
+        static quint32 staticSize();
 
     private:
         struct Data;

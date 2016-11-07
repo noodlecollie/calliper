@@ -11,7 +11,7 @@ namespace FileFormats
 {
     typedef QSharedPointer<VPKIndexTreeRecord> VPKIndexTreeRecordPointer;
 
-    class VPKIndex
+    class FILEFORMATSSHARED_EXPORT VPKIndex
     {
     public:
         VPKIndex();

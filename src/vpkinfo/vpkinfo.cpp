@@ -44,12 +44,8 @@ namespace VPKInfo
 #undef HEADER_FIELD
 
         s << endl;
-        s << "Sibling archives detected:";
-        if ( siblingArchives.count() < 1 )
-        {
-            s << " none." << endl;
-        }
-        else
+        s << siblingArchives.count() << " sibling archives detected.";
+        if ( siblingArchives.count() > 0 )
         {
             s << endl << siblingArchives.join("\n") << endl;
         }

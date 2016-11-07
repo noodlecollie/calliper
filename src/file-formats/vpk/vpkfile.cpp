@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QRegularExpression>
+#include <QScopedArrayPointer>
 
 namespace FileFormats
 {
@@ -16,23 +17,12 @@ namespace FileFormats
                 *errorString = msg;
         }
 
-        inline void getNullTerminatedString(QDataStream& stream, QString& strOut)
+        // We assume we'll always be null-terminated.
+        inline QString getString(char*& buffer)
         {
-            strOut.clear();
-            char data[9];
-            memset(data, 0, 9);
-
-            stream.startTransaction();
-
-            do
-            {
-                stream.readRawData(data, 8);
-                strOut += data;
-            }
-            while ( strlen(data) == 8 );
-
-            stream.rollbackTransaction();
-            stream.skipRawData(strOut.length() + 1);
+            QString str(buffer);
+            buffer += str.length() + 1;
+            return str;
         }
     }
 
@@ -76,26 +66,51 @@ namespace FileFormats
 
     bool VPKFile::populateIndex(QDataStream &stream, QString* errorHint)
     {
-        while ( true )
+        if ( m_Header.treeSize() < 1 )
         {
-            getNullTerminatedString(stream, m_strCurrentExtension);
+            setErrorString(errorHint,
+                           QString("Index tree is empty."));
+            return false;
+        }
+
+        QScopedArrayPointer<char> buffer(new char[m_Header.treeSize()]);
+
+        char* base = &buffer[0];
+        int bytesRead = stream.readRawData(base, m_Header.treeSize());
+        if ( bytesRead != m_Header.treeSize() )
+        {
+            setErrorString(errorHint,
+                           QString("Expected an index tree of %1 bytes but was only able to read %2 bytes.")
+                           .arg(m_Header.treeSize())
+                           .arg(bytesRead));
+
+            return false;
+        }
+
+        char* currentString = base;
+
+        while ( currentString < base + m_Header.treeSize() )
+        {
+            m_strCurrentExtension = getString(currentString);
             if ( m_strCurrentExtension.isEmpty() )
                 break;
 
-            while ( true )
+            while ( currentString < base + m_Header.treeSize() )
             {
-                getNullTerminatedString(stream, m_strCurrentPath);
+                m_strCurrentPath = getString(currentString);
                 if ( m_strCurrentPath.isEmpty() )
                     break;
 
-                while ( true )
+                while ( currentString < base + m_Header.treeSize() )
                 {
-                    getNullTerminatedString(stream, m_strCurrentFilename);
+                    m_strCurrentFilename = getString(currentString);
                     if ( m_strCurrentFilename.isEmpty() )
                         break;
 
                     if ( !createRecord(stream, errorHint) )
                         return false;
+
+                    currentString += VPKIndexTreeItem::staticSize();
                 }
             }
         }
@@ -134,7 +149,7 @@ namespace FileFormats
             return QStringList();
         }
 
-        baseName = baseName.left(baseName.length() - strlen(VPK_DIR_SUFFIX));
+        baseName = baseName.left(baseName.length() - static_cast<int>(strlen(VPK_DIR_SUFFIX)));
 
         QDir dir = fileInfo.dir();
         QStringList list = dir.entryList(QStringList() << (baseName + "*"), QDir::Files, QDir::Name);
