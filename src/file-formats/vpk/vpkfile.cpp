@@ -45,7 +45,13 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            createIndex(stream, errorHint);
+            if ( !m_Header.populate(stream, errorHint) )
+                return false;
+
+            m_SiblingArchives = findSiblingArchives();
+
+            if ( !createIndex(stream, errorHint) )
+                return false;
         }
 
         m_File.close();
@@ -54,19 +60,8 @@ namespace FileFormats
 
     bool VPKFile::createIndex(QDataStream& stream, QString *errorHint)
     {
-        if ( !m_Header.populate(stream, errorHint) )
-            return false;
-
-        m_strCurrentExtension = QString();
-        m_strCurrentPath = QString();
-        m_strCurrentFilename = QString();
         m_Index.clear();
 
-        return populateIndex(stream, errorHint);
-    }
-
-    bool VPKFile::populateIndex(QDataStream &stream, QString* errorHint)
-    {
         if ( m_Header.treeSize() < 1 )
         {
             setErrorString(errorHint,
@@ -78,7 +73,7 @@ namespace FileFormats
 
         char* base = &buffer[0];
         int bytesRead = stream.readRawData(base, m_Header.treeSize());
-        if ( bytesRead != m_Header.treeSize() )
+        if ( static_cast<quint32>(bytesRead) != m_Header.treeSize() )
         {
             setErrorString(errorHint,
                            QString("Expected an index tree of %1 bytes but was only able to read %2 bytes.")
@@ -90,22 +85,26 @@ namespace FileFormats
 
         char* currentString = base;
 
+        QString currentExtension;
+        QString currentPath;
+        QString currentFilename;
+
         while ( currentString < base + m_Header.treeSize() )
         {
-            m_strCurrentExtension = getString(currentString);
-            if ( m_strCurrentExtension.isEmpty() )
+            currentExtension = getString(currentString);
+            if ( currentExtension.isEmpty() )
                 break;
 
             while ( currentString < base + m_Header.treeSize() )
             {
-                m_strCurrentPath = getString(currentString);
-                if ( m_strCurrentPath.isEmpty() )
+                currentPath = getString(currentString);
+                if ( currentPath.isEmpty() )
                     break;
 
                 while ( currentString < base + m_Header.treeSize() )
                 {
-                    m_strCurrentFilename = getString(currentString);
-                    if ( m_strCurrentFilename.isEmpty() )
+                    currentFilename = getString(currentString);
+                    if ( currentFilename.isEmpty() )
                         break;
 
                     if ( currentString + VPKIndexTreeItem::staticSize() > base + m_Header.treeSize() )
@@ -126,7 +125,8 @@ namespace FileFormats
                     QDataStream dataStream(&data, QIODevice::ReadOnly);
                     dataStream.setByteOrder(QDataStream::LittleEndian);
 
-                    if ( !createRecord(dataStream, errorHint) )
+                    if ( !createRecord(dataStream, currentPath, currentFilename,
+                                       currentExtension, errorHint) )
                         return false;
                 }
             }
@@ -135,10 +135,11 @@ namespace FileFormats
         return true;
     }
 
-    bool VPKFile::createRecord(QDataStream &stream, QString* errorHint)
+    bool VPKFile::createRecord(QDataStream &stream, const QString &path, const QString &filename,
+                               const QString &extension, QString *errorHint)
     {
         VPKIndexTreeRecordPointer record =
-                VPKIndexTreeRecordPointer::create(m_strCurrentPath, m_strCurrentFilename, m_strCurrentExtension);
+                VPKIndexTreeRecordPointer::create(path, filename, extension);
 
         if ( !record->item()->populate(stream, errorHint) )
             return false;
@@ -157,7 +158,7 @@ namespace FileFormats
         return m_Index;
     }
 
-    QStringList VPKFile::siblingArchives() const
+    QStringList VPKFile::findSiblingArchives() const
     {
         QFileInfo fileInfo(m_File.fileName());
         QString baseName = fileInfo.baseName();
@@ -184,5 +185,10 @@ namespace FileFormats
         }
 
         return outList;
+    }
+
+    QStringList VPKFile::siblingArchives() const
+    {
+        return m_SiblingArchives;
     }
 }

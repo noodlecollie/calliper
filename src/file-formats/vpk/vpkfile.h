@@ -24,16 +24,14 @@ namespace FileFormats
 
     private:
         bool createIndex(QDataStream& stream, QString* errorHint);
-        bool populateIndex(QDataStream& stream, QString* errorHint);
-        bool createRecord(QDataStream& stream, QString* errorHint);
+        bool createRecord(QDataStream& stream, const QString& path, const QString& filename,
+                          const QString& extension, QString* errorHint);
+        QStringList findSiblingArchives() const;
 
         QFile m_File;
         VPKHeader m_Header;
         VPKIndex m_Index;
-
-        QString m_strCurrentExtension;
-        QString m_strCurrentPath;
-        QString m_strCurrentFilename;
+        QStringList m_SiblingArchives;
     };
 }
 
