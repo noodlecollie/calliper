@@ -28,7 +28,8 @@ namespace FileFormats
     }
 
     VPKFile::VPKFile(const QString &filename)
-        : m_File(filename)
+        : m_File(filename),
+          m_iCurrentArchive(-1)
     {
 
     }
@@ -190,5 +191,51 @@ namespace FileFormats
     QStringList VPKFile::siblingArchives() const
     {
         return m_SiblingArchives;
+    }
+
+    bool VPKFile::openArchive(int index)
+    {
+        if ( index < 0 || index >= m_SiblingArchives.count() || m_Archive.isOpen() )
+            return false;
+
+        m_Archive.setFileName(m_SiblingArchives.at(index));
+
+        if ( !m_Archive.open(QIODevice::ReadOnly) )
+            return false;
+
+        m_iCurrentArchive = index;
+        return true;
+    }
+
+    bool VPKFile::isArchiveOpen() const
+    {
+        return m_Archive.isOpen();
+    }
+
+    void VPKFile::closeArchive()
+    {
+        if ( isArchiveOpen() )
+            return;
+
+        m_Archive.close();
+        m_iCurrentArchive = -1;
+    }
+
+    QByteArray VPKFile::readFromCurrentArchive(const VPKIndexTreeItem* item)
+    {
+        // TODO: We don't currently check for preload bytes.
+        // How should these be handled? Should they be kept in the index?
+        if ( !isArchiveOpen() || item->archiveIndex() != m_iCurrentArchive )
+            return QByteArray();
+
+        if ( !m_Archive.seek(item->entryOffset()) )
+            return QByteArray();
+
+        return m_Archive.read(item->entryLength());
+    }
+
+    int VPKFile::currentArchiveIndex() const
+    {
+        return m_iCurrentArchive;
     }
 }

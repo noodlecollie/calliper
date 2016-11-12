@@ -63,4 +63,29 @@ namespace FileFormats
 
         return true;
     }
+
+    quint32 VPKIndexTreeItem::crc() const
+    {
+        return m_pData->crc;
+    }
+
+    quint16 VPKIndexTreeItem::preloadBytes() const
+    {
+        return m_pData->preloadBytes;
+    }
+
+    quint16 VPKIndexTreeItem::archiveIndex() const
+    {
+        return m_pData->archiveIndex;
+    }
+
+    quint32 VPKIndexTreeItem::entryOffset() const
+    {
+        return m_pData->entryOffset;
+    }
+
+    quint32 VPKIndexTreeItem::entryLength() const
+    {
+        return m_pData->entryLength;
+    }
 }

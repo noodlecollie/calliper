@@ -22,6 +22,12 @@ namespace FileFormats
         const VPKHeader& header() const;
         const VPKIndex& index() const;
 
+        bool openArchive(int index);
+        bool isArchiveOpen() const;
+        void closeArchive();
+        QByteArray readFromCurrentArchive(const VPKIndexTreeItem* item);
+        int currentArchiveIndex() const;
+
     private:
         bool createIndex(QDataStream& stream, QString* errorHint);
         bool createRecord(QDataStream& stream, const QString& path, const QString& filename,
@@ -31,7 +37,10 @@ namespace FileFormats
         QFile m_File;
         VPKHeader m_Header;
         VPKIndex m_Index;
+
         QStringList m_SiblingArchives;
+        QFile m_Archive;
+        int m_iCurrentArchive;
     };
 }
 
