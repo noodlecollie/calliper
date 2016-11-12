@@ -47,12 +47,17 @@ namespace FileFormats
     {
         VPKIndexTreeItem::Data& d = *m_pData;
 
+        beginRead(stream);
+
         stream >> d.crc
                 >> d.preloadBytes
                 >> d.archiveIndex
                 >> d.entryOffset
                 >> d.entryLength
                 >> d.terminator;
+
+        if ( !endRead(stream, errorHint) )
+            return false;
 
         // Double check this just in case.
         if ( d.terminator != 0xffff )
@@ -87,5 +92,10 @@ namespace FileFormats
     quint32 VPKIndexTreeItem::entryLength() const
     {
         return m_pData->entryLength;
+    }
+
+    QString VPKIndexTreeItem::containerName() const
+    {
+        return "VPK Index Tree Item";
     }
 }

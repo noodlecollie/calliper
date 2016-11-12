@@ -49,6 +49,8 @@ namespace FileFormats
     {
         VPKHeader::Data& d = *m_pData;
 
+        beginRead(stream);
+
         stream >> d.signature >> d.version;
 
         if ( d.version == 2 )
@@ -60,6 +62,9 @@ namespace FileFormats
                     >> d.otherMD5SectionSize
                     >> d.signatureSectionSize;
         }
+
+        if ( !endRead(stream, errorHint) )
+            return false;
 
         if ( !signatureValid() )
         {
@@ -114,5 +119,10 @@ namespace FileFormats
     bool VPKHeader::signatureValid() const
     {
         return m_pData->signature == VPK_SIGNATURE;
+    }
+
+    QString VPKHeader::containerName() const
+    {
+        return "VPK Header";
     }
 }

@@ -2,18 +2,18 @@
 #define VPKINDEXTREEITEM_H
 
 #include "file-formats_global.h"
+#include "streamdatacontainer.h"
 #include <QDataStream>
 
 namespace FileFormats
 {
-    class VPKIndexTreeItem
+    class FILEFORMATSSHARED_EXPORT VPKIndexTreeItem : public StreamDataContainer
     {
     public:
         VPKIndexTreeItem();
         ~VPKIndexTreeItem();
 
-        bool populate(QDataStream& stream, QString* errorHint = nullptr);
-        bool populate(const char* data, int length, QString* errorHint = nullptr);
+        virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
 
         quint32 crc() const;
         quint16 preloadBytes() const;
@@ -22,6 +22,9 @@ namespace FileFormats
         quint32 entryLength() const;
 
         static quint32 staticSize();
+
+    protected:
+        virtual QString containerName() const override;
 
     private:
         struct Data;
