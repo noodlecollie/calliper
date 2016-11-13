@@ -5,6 +5,7 @@
 #include <QRegularExpression>
 #include <QScopedArrayPointer>
 #include <QByteArray>
+#include "vpkarchivemd5item.h"
 
 namespace FileFormats
 {
@@ -34,11 +35,34 @@ namespace FileFormats
 
     }
 
-    bool VPKFile::read(QString *errorHint)
+    VPKFile::~VPKFile()
     {
-        if ( !m_File.open(QIODevice::ReadOnly) )
+        close();
+    }
+
+    bool VPKFile::open()
+    {
+        return m_File.open(QIODevice::ReadOnly);
+    }
+
+    void VPKFile::close()
+    {
+        if ( !m_File.isOpen() )
+            return;
+
+        m_File.close();
+    }
+
+    bool VPKFile::isOpen() const
+    {
+        return m_File.isOpen();
+    }
+
+    bool VPKFile::readIndex(QString *errorHint)
+    {
+        if ( !isOpen() )
         {
-            setErrorString(errorHint, "Could not open " + m_File.fileName());
+            setErrorString(errorHint, "File is not open.");
             return false;
         }
 
@@ -46,7 +70,8 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !m_Header.populate(stream, errorHint) )
+            if ( !m_Header.populate(stream, errorHint) ||
+                 !validateHeader(errorHint))
                 return false;
 
             m_SiblingArchives = findSiblingArchives();
@@ -55,7 +80,39 @@ namespace FileFormats
                 return false;
         }
 
-        m_File.close();
+        return true;
+    }
+
+    bool VPKFile::readArchiveMD5(QString *errorHint)
+    {
+        if ( !isOpen() )
+        {
+            setErrorString(errorHint, "File is not open.");
+            return false;
+        }
+
+        if ( !m_Header.signatureValid() )
+        {
+            setErrorString(errorHint, "File header is not valid.");
+            return false;
+        }
+
+        if ( m_Header.version() != 2 )
+        {
+            setErrorString(errorHint, QString("VPK version %1 does not include an archive MD5 section.").arg(m_Header.version()));
+            return false;
+        }
+
+        m_File.seek(m_Header.archiveMD5SectionAbsOffset());
+
+        {
+            QDataStream stream(&m_File);
+            stream.setByteOrder(QDataStream::LittleEndian);
+
+            if ( !readArchiveMD5s(stream, errorHint) )
+                return false;
+        }
+
         return true;
     }
 
@@ -223,8 +280,6 @@ namespace FileFormats
 
     QByteArray VPKFile::readFromCurrentArchive(const VPKIndexTreeItem* item)
     {
-        // TODO: We don't currently check for preload bytes.
-        // How should these be handled? Should they be kept in the index?
         if ( !isArchiveOpen() || item->archiveIndex() != m_iCurrentArchive )
             return QByteArray();
 
@@ -237,5 +292,48 @@ namespace FileFormats
     int VPKFile::currentArchiveIndex() const
     {
         return m_iCurrentArchive;
+    }
+
+    bool VPKFile::validateHeader(QString *errorHint) const
+    {
+        if ( m_Header.archiveMD5SectionSize() % VPKArchiveMD5Item::staticSize() != 0 )
+        {
+            setErrorString(errorHint,
+                           QString("Expected archive MD5 section (%1 bytes) to be a multiple of %2 bytes.")
+                           .arg(m_Header.archiveMD5SectionSize())
+                           .arg(VPKArchiveMD5Item::staticSize()));
+            return false;
+        }
+
+        return true;
+    }
+
+    bool VPKFile::readArchiveMD5s(QDataStream &stream, QString *errorHint)
+    {
+        m_ArchiveMD5s.clear();
+
+        for ( quint32 bytesRead = 0; bytesRead < m_Header.archiveMD5SectionSize(); bytesRead += VPKArchiveMD5Item::staticSize() )
+        {
+            VPKArchiveMD5ItemPointer md5 = VPKArchiveMD5ItemPointer::create();
+            if ( !md5->populate(stream, errorHint) )
+            {
+                m_ArchiveMD5s.clear();
+                return false;
+            }
+
+            m_ArchiveMD5s.append(md5);
+        }
+
+        return true;
+    }
+
+    int VPKFile::archiveMD5Count() const
+    {
+        return m_ArchiveMD5s.count();
+    }
+
+    QSharedPointer<const VPKArchiveMD5Item> VPKFile::archiveMD5(int index) const
+    {
+        return m_ArchiveMD5s.at(index).constCast<const VPKArchiveMD5Item>();
     }
 }

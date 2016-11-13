@@ -19,7 +19,7 @@ namespace FileFormats
         quint32 count() const;
         QByteArray md5() const;
 
-        static quint32 size();
+        static quint32 staticSize();
 
     protected:
         virtual QString containerName() const override;

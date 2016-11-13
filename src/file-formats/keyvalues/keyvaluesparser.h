@@ -31,8 +31,6 @@ namespace FileFormats
         class InvalidSyntaxException;
 
         KeyValuesParser(const QByteArray &input);
-
-        // TODO: Catch exceptions
         QJsonDocument toJsonDocument(QString* errorString = nullptr);
 
     private:

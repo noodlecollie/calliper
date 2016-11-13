@@ -21,7 +21,17 @@ namespace FileFormats
         quint32 entryOffset() const;
         quint32 entryLength() const;
 
+        QByteArray preloadData() const;
+
+        // Size of entries excluding any preload data.
         static quint32 staticSize();
+
+        // Size of all data, including preload bytes.
+        quint32 totalSize() const;
+
+        // Size of the file this item represents.
+        // This is preloadBytes + entryLength.
+        quint32 fileSize() const;
 
     protected:
         virtual QString containerName() const override;

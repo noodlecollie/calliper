@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     FileFormats::VPKFile vpkFile(filename);
     QString error;
-    if ( !vpkFile.read(&error) )
+    if ( !vpkFile.readIndex(&error) )
     {
         qDebug() << "Error reading file:" << error;
         return 1;

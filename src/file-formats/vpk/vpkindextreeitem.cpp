@@ -25,6 +25,8 @@ namespace FileFormats
         quint32 entryOffset;
         quint32 entryLength;
         quint16 terminator;     // Should always be 0xffff.
+
+        QByteArray preloadData;
     };
 
     VPKIndexTreeItem::VPKIndexTreeItem()
@@ -43,6 +45,16 @@ namespace FileFormats
         return (3 * sizeof(quint32)) + (3 * sizeof(quint16));
     }
 
+    quint32 VPKIndexTreeItem::totalSize() const
+    {
+        return staticSize() + m_pData->preloadData.length();
+    }
+
+    quint32 VPKIndexTreeItem::fileSize() const
+    {
+        return m_pData->preloadBytes + m_pData->entryLength;
+    }
+
     bool VPKIndexTreeItem::populate(QDataStream &stream, QString *errorHint)
     {
         VPKIndexTreeItem::Data& d = *m_pData;
@@ -55,6 +67,12 @@ namespace FileFormats
                 >> d.entryOffset
                 >> d.entryLength
                 >> d.terminator;
+
+        if ( d.preloadBytes > 0 )
+        {
+            d.preloadData.resize(d.preloadBytes);
+            stream.readRawData(d.preloadData.data(), d.preloadBytes);
+        }
 
         if ( !endRead(stream, errorHint) )
             return false;
@@ -92,6 +110,11 @@ namespace FileFormats
     quint32 VPKIndexTreeItem::entryLength() const
     {
         return m_pData->entryLength;
+    }
+
+    QByteArray VPKIndexTreeItem::preloadData() const
+    {
+        return m_pData->preloadData;
     }
 
     QString VPKIndexTreeItem::containerName() const

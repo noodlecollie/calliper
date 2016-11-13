@@ -125,4 +125,33 @@ namespace FileFormats
     {
         return "VPK Header";
     }
+
+    quint32 VPKHeader::treeAbsOffset() const
+    {
+        return size();
+    }
+
+    quint32 VPKHeader::fileDataSectionAbsOffset() const
+    {
+        return treeAbsOffset()
+                + m_pData->treeSize;
+    }
+
+    quint32 VPKHeader::archiveMD5SectionAbsOffset() const
+    {
+        return fileDataSectionAbsOffset()
+                + m_pData->fileDataSectionSize;
+    }
+
+    quint32 VPKHeader::otherMD5SectionAbsOffset() const
+    {
+        return archiveMD5SectionAbsOffset()
+                + m_pData->archiveMD5SectionSize;
+    }
+
+    quint32 VPKHeader::signatureSectionAbsOffset() const
+    {
+        return otherMD5SectionAbsOffset()
+                + m_pData->otherMD5SectionSize;
+    }
 }

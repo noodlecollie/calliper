@@ -27,6 +27,15 @@ namespace FileFormats
         quint32 size() const;
         bool signatureValid() const;
 
+        // Convenience functions for calculating absolute offsets
+        // of sections from the beginning of the file.
+        // These only apply if the VPK version supports them!
+        quint32 treeAbsOffset() const;
+        quint32 fileDataSectionAbsOffset() const;
+        quint32 archiveMD5SectionAbsOffset() const;
+        quint32 otherMD5SectionAbsOffset() const;
+        quint32 signatureSectionAbsOffset() const;
+
     protected:
         virtual QString containerName() const override;
 

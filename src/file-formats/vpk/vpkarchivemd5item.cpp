@@ -39,7 +39,7 @@ namespace FileFormats
         return true;
     }
 
-    quint32 VPKArchiveMD5Item::size()
+    quint32 VPKArchiveMD5Item::staticSize()
     {
         return (3 * sizeof(quint32)) + (16 * sizeof(char));
     }
