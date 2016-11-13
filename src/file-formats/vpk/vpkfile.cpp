@@ -28,7 +28,7 @@ namespace FileFormats
         }
 
         template<typename T>
-        bool readMD5s(QList<QSharedPointer<T> >& list, QDataStream &stream, QString *errorHint, quint32 sectionSize, quint32 itemSize)
+        bool readMD5s(QList<QSharedPointer<T> >& list, QDataStream &stream, quint32 sectionSize, quint32 itemSize, QString *errorHint)
         {
             list.clear();
 
@@ -129,9 +129,10 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !readMD5s<VPKArchiveMD5Item>(m_ArchiveMD5s, stream, errorHint,
+            if ( !readMD5s<VPKArchiveMD5Item>(m_ArchiveMD5s, stream,
                                               m_Header.archiveMD5SectionSize(),
-                                              VPKArchiveMD5Item::staticSize()) )
+                                              VPKArchiveMD5Item::staticSize(),
+                                              errorHint) )
                 return false;
         }
 
@@ -164,9 +165,10 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !readMD5s<VPKOtherMD5Item>(m_OtherMD5s, stream, errorHint,
+            if ( !readMD5s<VPKOtherMD5Item>(m_OtherMD5s, stream,
                                               m_Header.otherMD5SectionSize(),
-                                              VPKOtherMD5Item::staticSize()) )
+                                              VPKOtherMD5Item::staticSize(),
+                                              errorHint) )
                 return false;
         }
 
@@ -374,25 +376,6 @@ namespace FileFormats
         return true;
     }
 
-    bool VPKFile::readArchiveMD5s(QDataStream &stream, QString *errorHint)
-    {
-        m_ArchiveMD5s.clear();
-
-        for ( quint32 bytesRead = 0; bytesRead < m_Header.archiveMD5SectionSize(); bytesRead += VPKArchiveMD5Item::staticSize() )
-        {
-            VPKArchiveMD5ItemPointer md5 = VPKArchiveMD5ItemPointer::create();
-            if ( !md5->populate(stream, errorHint) )
-            {
-                m_ArchiveMD5s.clear();
-                return false;
-            }
-
-            m_ArchiveMD5s.append(md5);
-        }
-
-        return true;
-    }
-
     int VPKFile::archiveMD5Count() const
     {
         return m_ArchiveMD5s.count();
@@ -401,25 +384,6 @@ namespace FileFormats
     QSharedPointer<const VPKArchiveMD5Item> VPKFile::archiveMD5(int index) const
     {
         return m_ArchiveMD5s.at(index).constCast<const VPKArchiveMD5Item>();
-    }
-
-    bool VPKFile::readOtherMD5s(QDataStream &stream, QString *errorHint)
-    {
-        m_OtherMD5s.clear();
-
-        for ( quint32 bytesRead = 0; bytesRead < m_Header.otherMD5SectionSize(); bytesRead += VPKOtherMD5Item::staticSize() )
-        {
-            VPKOtherMD5ItemPointer md5 = VPKOtherMD5ItemPointer::create();
-            if ( !md5->populate(stream, errorHint) )
-            {
-                m_OtherMD5s.clear();
-                return false;
-            }
-
-            m_OtherMD5s.append(md5);
-        }
-
-        return true;
     }
 
     int VPKFile::otherMD5Count() const

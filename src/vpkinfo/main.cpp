@@ -43,22 +43,26 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QFile file(filename);
-    if ( !file.open(QIODevice::ReadOnly) )
+    qDebug() << "Reading file" << filename;
+
+    FileFormats::VPKFile vpkFile(filename);
+
+    if ( !vpkFile.open() )
     {
         qCritical() << "Unable to open file" << filename;
         return 1;
     }
 
-    qDebug() << "Reading file" << filename;
-
-    FileFormats::VPKFile vpkFile(filename);
     QString error;
-    if ( !vpkFile.readIndex(&error) )
+    if ( !vpkFile.readIndex(&error) ||
+         !vpkFile.readArchiveMD5(&error) ||
+         !vpkFile.readOtherMD5(&error) )
     {
         qDebug() << "Error reading file:" << error;
         return 1;
     }
+
+    vpkFile.close();
 
     bool outputAll = parser.isSet(optAll) ||
             (!parser.isSet(optHeader) &&

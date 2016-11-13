@@ -52,8 +52,6 @@ namespace FileFormats
                           const QString& extension, QString* errorHint);
         QStringList findSiblingArchives() const;
         bool validateHeader(QString* errorHint) const;
-        bool readArchiveMD5s(QDataStream& stream, QString* errorHint);
-        bool readOtherMD5s(QDataStream& stream, QString* errorHint);
 
         QFile m_File;
         VPKHeader m_Header;
