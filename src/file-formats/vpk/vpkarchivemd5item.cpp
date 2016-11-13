@@ -12,7 +12,8 @@ namespace FileFormats
     };
 
     VPKArchiveMD5Item::VPKArchiveMD5Item()
-        : m_pData(new VPKArchiveMD5Item::Data())
+        : StreamDataContainer(),
+          m_pData(new VPKArchiveMD5Item::Data())
     {
         memset(m_pData, 0, sizeof(VPKArchiveMD5Item::Data));
     }

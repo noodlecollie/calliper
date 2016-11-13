@@ -30,7 +30,8 @@ namespace FileFormats
     };
 
     VPKIndexTreeItem::VPKIndexTreeItem()
-        : m_pData(new VPKIndexTreeItem::Data())
+        : StreamDataContainer(),
+          m_pData(new VPKIndexTreeItem::Data())
     {
         memset(m_pData, 0, sizeof(VPKIndexTreeItem::Data));
     }

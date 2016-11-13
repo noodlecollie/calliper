@@ -26,6 +26,26 @@ namespace FileFormats
             buffer += str.length() + 1;
             return str;
         }
+
+        template<typename T>
+        bool readMD5s(QList<QSharedPointer<T> >& list, QDataStream &stream, QString *errorHint, quint32 sectionSize, quint32 itemSize)
+        {
+            list.clear();
+
+            for ( quint32 bytesRead = 0; bytesRead < sectionSize; bytesRead += itemSize )
+            {
+                QSharedPointer<T> md5 = QSharedPointer<T>::create();
+                if ( !md5->populate(stream, errorHint) )
+                {
+                    list.clear();
+                    return false;
+                }
+
+                list.append(md5);
+            }
+
+            return true;
+        }
     }
 
     VPKFile::VPKFile(const QString &filename)
@@ -109,7 +129,44 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !readArchiveMD5s(stream, errorHint) )
+            if ( !readMD5s<VPKArchiveMD5Item>(m_ArchiveMD5s, stream, errorHint,
+                                              m_Header.archiveMD5SectionSize(),
+                                              VPKArchiveMD5Item::staticSize()) )
+                return false;
+        }
+
+        return true;
+    }
+
+    bool VPKFile::readOtherMD5(QString *errorHint)
+    {
+        if ( !isOpen() )
+        {
+            setErrorString(errorHint, "File is not open.");
+            return false;
+        }
+
+        if ( !m_Header.signatureValid() )
+        {
+            setErrorString(errorHint, "File header is not valid.");
+            return false;
+        }
+
+        if ( m_Header.version() != 2 )
+        {
+            setErrorString(errorHint, QString("VPK version %1 does not include an \"Other MD5\" section.").arg(m_Header.version()));
+            return false;
+        }
+
+        m_File.seek(m_Header.otherMD5SectionAbsOffset());
+
+        {
+            QDataStream stream(&m_File);
+            stream.setByteOrder(QDataStream::LittleEndian);
+
+            if ( !readMD5s<VPKOtherMD5Item>(m_OtherMD5s, stream, errorHint,
+                                              m_Header.otherMD5SectionSize(),
+                                              VPKOtherMD5Item::staticSize()) )
                 return false;
         }
 
@@ -305,6 +362,15 @@ namespace FileFormats
             return false;
         }
 
+        if ( m_Header.otherMD5SectionSize() % VPKOtherMD5Item::staticSize() != 0 )
+        {
+            setErrorString(errorHint,
+                           QString("Expected other MD5 section (%1 bytes) to be a multiple of %2 bytes.")
+                           .arg(m_Header.otherMD5SectionSize())
+                           .arg(VPKOtherMD5Item::staticSize()));
+            return false;
+        }
+
         return true;
     }
 
@@ -335,5 +401,34 @@ namespace FileFormats
     QSharedPointer<const VPKArchiveMD5Item> VPKFile::archiveMD5(int index) const
     {
         return m_ArchiveMD5s.at(index).constCast<const VPKArchiveMD5Item>();
+    }
+
+    bool VPKFile::readOtherMD5s(QDataStream &stream, QString *errorHint)
+    {
+        m_OtherMD5s.clear();
+
+        for ( quint32 bytesRead = 0; bytesRead < m_Header.otherMD5SectionSize(); bytesRead += VPKOtherMD5Item::staticSize() )
+        {
+            VPKOtherMD5ItemPointer md5 = VPKOtherMD5ItemPointer::create();
+            if ( !md5->populate(stream, errorHint) )
+            {
+                m_OtherMD5s.clear();
+                return false;
+            }
+
+            m_OtherMD5s.append(md5);
+        }
+
+        return true;
+    }
+
+    int VPKFile::otherMD5Count() const
+    {
+        return m_OtherMD5s.count();
+    }
+
+    QSharedPointer<const VPKOtherMD5Item> VPKFile::otherMD5(int index) const
+    {
+        return m_OtherMD5s.at(index).constCast<const VPKOtherMD5Item>();
     }
 }

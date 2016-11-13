@@ -8,6 +8,7 @@
 #include <QDataStream>
 #include <QList>
 #include "vpkarchivemd5item.h"
+#include "vpkothermd5item.h"
 
 namespace FileFormats
 {
@@ -25,6 +26,7 @@ namespace FileFormats
 
         bool readIndex(QString* errorHint = nullptr);
         bool readArchiveMD5(QString* errorHint = nullptr);
+        bool readOtherMD5(QString* errorHint = nullptr);
 
         const VPKHeader& header() const;
         const VPKIndex& index() const;
@@ -38,8 +40,12 @@ namespace FileFormats
         int archiveMD5Count() const;
         QSharedPointer<const VPKArchiveMD5Item> archiveMD5(int index) const;
 
+        int otherMD5Count() const;
+        QSharedPointer<const VPKOtherMD5Item> otherMD5(int index) const;
+
     private:
         typedef QSharedPointer<VPKArchiveMD5Item> VPKArchiveMD5ItemPointer;
+        typedef QSharedPointer<VPKOtherMD5Item> VPKOtherMD5ItemPointer;
 
         bool createIndex(QDataStream& stream, QString* errorHint);
         bool createRecord(QDataStream& stream, const QString& path, const QString& filename,
@@ -47,6 +53,7 @@ namespace FileFormats
         QStringList findSiblingArchives() const;
         bool validateHeader(QString* errorHint) const;
         bool readArchiveMD5s(QDataStream& stream, QString* errorHint);
+        bool readOtherMD5s(QDataStream& stream, QString* errorHint);
 
         QFile m_File;
         VPKHeader m_Header;
@@ -57,6 +64,7 @@ namespace FileFormats
         int m_iCurrentArchive;
 
         QList<VPKArchiveMD5ItemPointer> m_ArchiveMD5s;
+        QList<VPKOtherMD5ItemPointer> m_OtherMD5s;
     };
 }
 

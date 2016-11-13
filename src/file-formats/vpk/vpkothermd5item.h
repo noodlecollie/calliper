@@ -14,6 +14,12 @@ namespace FileFormats
 
         virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
 
+        QByteArray treeChecksum() const;
+        QByteArray archiveMD5SectionChecksum() const;
+        QByteArray unknownProperty1() const;
+
+        static quint32 staticSize();
+
     protected:
         virtual QString containerName() const override;
 

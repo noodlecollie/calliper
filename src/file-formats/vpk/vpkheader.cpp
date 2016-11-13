@@ -27,7 +27,8 @@ namespace FileFormats
     };
 
     VPKHeader::VPKHeader()
-        : m_pData(new VPKHeader::Data())
+        : StreamDataContainer(),
+          m_pData(new VPKHeader::Data())
     {
         memset(m_pData, 0, sizeof(VPKHeader::Data));
     }
