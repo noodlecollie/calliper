@@ -28,20 +28,20 @@ namespace FileFormats
         }
 
         template<typename T>
-        bool readMD5s(QList<QSharedPointer<T> >& list, QDataStream &stream, quint32 sectionSize, quint32 itemSize, QString *errorHint)
+        bool readMD5s(SimpleItemCollection<T>& list, QDataStream &stream, quint32 sectionSize, quint32 itemSize, QString *errorHint)
         {
-            list.clear();
+            list.clearItems();
 
             for ( quint32 bytesRead = 0; bytesRead < sectionSize; bytesRead += itemSize )
             {
                 QSharedPointer<T> md5 = QSharedPointer<T>::create();
                 if ( !md5->populate(stream, errorHint) )
                 {
-                    list.clear();
+                    list.clearItems();
                     return false;
                 }
 
-                list.append(md5);
+                list.addItem(md5);
             }
 
             return true;
@@ -129,7 +129,7 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !readMD5s<VPKArchiveMD5Item>(m_ArchiveMD5s, stream,
+            if ( !readMD5s<VPKArchiveMD5Item>(m_ArchiveMD5Collection, stream,
                                               m_Header.archiveMD5SectionSize(),
                                               VPKArchiveMD5Item::staticSize(),
                                               errorHint) )
@@ -165,7 +165,7 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !readMD5s<VPKOtherMD5Item>(m_OtherMD5s, stream,
+            if ( !readMD5s<VPKOtherMD5Item>(m_OtherMD5Collection, stream,
                                               m_Header.otherMD5SectionSize(),
                                               VPKOtherMD5Item::staticSize(),
                                               errorHint) )
@@ -376,23 +376,13 @@ namespace FileFormats
         return true;
     }
 
-    int VPKFile::archiveMD5Count() const
+    const VPKArchiveMD5Collection& VPKFile::archiveMD5Collection() const
     {
-        return m_ArchiveMD5s.count();
+        return m_ArchiveMD5Collection;
     }
 
-    QSharedPointer<const VPKArchiveMD5Item> VPKFile::archiveMD5(int index) const
+    const VPKOtherMD5Collection& VPKFile::otherMD5Collection() const
     {
-        return m_ArchiveMD5s.at(index).constCast<const VPKArchiveMD5Item>();
-    }
-
-    int VPKFile::otherMD5Count() const
-    {
-        return m_OtherMD5s.count();
-    }
-
-    QSharedPointer<const VPKOtherMD5Item> VPKFile::otherMD5(int index) const
-    {
-        return m_OtherMD5s.at(index).constCast<const VPKOtherMD5Item>();
+        return m_OtherMD5Collection;
     }
 }

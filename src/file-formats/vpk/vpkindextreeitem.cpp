@@ -4,12 +4,6 @@ namespace FileFormats
 {
     namespace
     {
-        inline void setErrorString(QString* errorString, const QString& msg)
-        {
-            if ( errorString )
-                *errorString = msg;
-        }
-
         template<typename T>
         inline QString toHex(const T& val, bool leading0x = false)
         {

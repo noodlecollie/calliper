@@ -80,4 +80,14 @@ namespace VPKInfo
         s.flush();
         qDebug() << string.toLatin1().constData();
     }
+
+    void printArchiveMD5Data(const FileFormats::VPKArchiveMD5Collection &collection)
+    {
+
+    }
+
+    void printOtherMD5Data(const FileFormats::VPKOtherMD5Collection &collection)
+    {
+
+    }
 }

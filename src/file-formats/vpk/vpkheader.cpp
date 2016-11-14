@@ -6,12 +6,6 @@ namespace FileFormats
     namespace
     {
         const quint32 VPK_SIGNATURE = 0x55aa1234;
-
-        inline void setErrorString(QString* errorString, const QString& msg)
-        {
-            if ( errorString )
-                *errorString = msg;
-        }
     }
 
     struct VPKHeader::Data

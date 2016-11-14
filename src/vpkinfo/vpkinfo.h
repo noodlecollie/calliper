@@ -4,11 +4,15 @@
 #include <QDataStream>
 #include "vpk/vpkheader.h"
 #include "vpk/vpkindex.h"
+#include "vpk/vpkarchivemd5collection.h"
+#include "vpk/vpkothermd5collection.h"
 
 namespace VPKInfo
 {
     void printHeaderData(const FileFormats::VPKHeader& header, const QStringList& siblingArchives);
     void printIndexData(const FileFormats::VPKIndex& index);
+    void printArchiveMD5Data(const FileFormats::VPKArchiveMD5Collection& collection);
+    void printOtherMD5Data(const FileFormats::VPKOtherMD5Collection& collection);
 }
 
 #endif // VPKINFO_H

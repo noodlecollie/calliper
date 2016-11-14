@@ -7,8 +7,8 @@
 #include "vpkheader.h"
 #include <QDataStream>
 #include <QList>
-#include "vpkarchivemd5item.h"
-#include "vpkothermd5item.h"
+#include "vpkarchivemd5collection.h"
+#include "vpkothermd5collection.h"
 
 namespace FileFormats
 {
@@ -30,18 +30,14 @@ namespace FileFormats
 
         const VPKHeader& header() const;
         const VPKIndex& index() const;
+        const VPKArchiveMD5Collection& archiveMD5Collection() const;
+        const VPKOtherMD5Collection& otherMD5Collection() const;
 
         bool openArchive(int index);
         bool isArchiveOpen() const;
         void closeArchive();
         QByteArray readFromCurrentArchive(const VPKIndexTreeItem* item);
         int currentArchiveIndex() const;
-
-        int archiveMD5Count() const;
-        QSharedPointer<const VPKArchiveMD5Item> archiveMD5(int index) const;
-
-        int otherMD5Count() const;
-        QSharedPointer<const VPKOtherMD5Item> otherMD5(int index) const;
 
     private:
         typedef QSharedPointer<VPKArchiveMD5Item> VPKArchiveMD5ItemPointer;
@@ -56,13 +52,12 @@ namespace FileFormats
         QFile m_File;
         VPKHeader m_Header;
         VPKIndex m_Index;
+        VPKArchiveMD5Collection m_ArchiveMD5Collection;
+        VPKOtherMD5Collection m_OtherMD5Collection;
 
         QStringList m_SiblingArchives;
         QFile m_Archive;
         int m_iCurrentArchive;
-
-        QList<VPKArchiveMD5ItemPointer> m_ArchiveMD5s;
-        QList<VPKOtherMD5ItemPointer> m_OtherMD5s;
     };
 }
 
