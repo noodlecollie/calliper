@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
         VPKInfo::printIndexData(vpkFile.index());
 
     if ( outputArchiveMD5 )
-        VPKInfo::printArchiveMD5Data(vpkFile.archiveMD5Collection());
+        VPKInfo::printArchiveMD5Data(vpkFile.archiveMD5Collection(), vpkFile.siblingArchives());
 
     if ( outputOtherMD5 )
         VPKInfo::printOtherMD5Data(vpkFile.otherMD5Collection());

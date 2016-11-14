@@ -3,6 +3,7 @@
 #include <QtDebug>
 #include <QTextStream>
 #include "vpk/vpkfile.h"
+#include <QCryptographicHash>
 
 namespace VPKInfo
 {
@@ -81,9 +82,87 @@ namespace VPKInfo
         qDebug() << string.toLatin1().constData();
     }
 
-    void printArchiveMD5Data(const FileFormats::VPKArchiveMD5Collection &collection)
+    void printArchiveMD5Data(const FileFormats::VPKArchiveMD5Collection &collection, const QStringList& archives)
     {
+        using namespace FileFormats;
 
+        qDebug() << "======================================\n"
+                 << "=       Archive MD5 Checksums        =\n"
+                 << "======================================\n";
+
+        if ( collection.itemCount() < 1 )
+        {
+            qDebug() << "No checksums present.\n";
+            return;
+        }
+
+        quint32 currentArchive = ~0;
+        QFile archive;
+        bool hasFail = false;
+        for (int i = 0; i < collection.itemCount(); i++)
+        {
+            VPKArchiveMD5ItemPointer item = collection.itemAt(i);
+
+            if ( item->archiveIndex() >= static_cast<quint32>(archives.count()) )
+            {
+                qCritical() << "Archive index" << item->archiveIndex() << "is invalid.\n";
+                return;
+            }
+
+            if ( item->archiveIndex() != currentArchive )
+            {
+                archive.close();
+
+                currentArchive = item->archiveIndex();
+                archive.setFileName(archives.at(currentArchive));
+                if ( !archive.open(QIODevice::ReadOnly) )
+                {
+                    qCritical().nospace() << "Could not open archive " << currentArchive
+                                << " (" << archive.fileName() << ").\n";
+                    return;
+                }
+            }
+
+            archive.seek(item->startingOffset());
+            QByteArray inputData = archive.read(item->count());
+
+            if ( static_cast<quint32>(inputData.length()) != item->count() )
+            {
+                qCritical() << "Expected to read" << item->count()
+                            << "bytes from archive" << item->archiveIndex()
+                            << "for verifying checksum, but could only read"
+                            << inputData.length() << "bytes.\n";
+                return;
+            }
+
+            QString line = QString("Computing checksum for archive %1, offset %2, count %3...")
+                    .arg(currentArchive)
+                    .arg(item->startingOffset())
+                    .arg(item->count());
+
+            if ( QCryptographicHash::hash(inputData, QCryptographicHash::Md5) == item->md5() )
+            {
+                line += " PASS.";
+            }
+            else
+            {
+                line += " FAIL.";
+                hasFail = true;
+            }
+
+            qDebug() << line.toLatin1().constData();
+        }
+
+        archive.close();
+
+        if ( hasFail )
+        {
+            qDebug() << "One or more checksum verifications failed.\n";
+        }
+        else
+        {
+            qDebug() << "All checksum verifications passed.\n";
+        }
     }
 
     void printOtherMD5Data(const FileFormats::VPKOtherMD5Collection &collection)
