@@ -5,6 +5,23 @@
 #include "vpkinfo.h"
 #include "vpk/vpkfile.h"
 
+namespace
+{
+    typedef bool (FileFormats::VPKFile::* VPKReadFunc)(QString*);
+
+    bool tryReadFile(FileFormats::VPKFile& file, VPKReadFunc function)
+    {
+        QString error;
+        if ( !(file.*function)(&error) )
+        {
+            qCritical() << "Error reading file:" << error;
+            return false;
+        }
+
+        return true;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -25,6 +42,12 @@ int main(int argc, char *argv[])
 
     QCommandLineOption optIndex(QStringList() << "i" << "index", "Output index information.");
     parser.addOption(optIndex);
+
+    QCommandLineOption optArchiveMD5(QStringList() << "r" << "archive-md5", "Output archive MD5 information.");
+    parser.addOption(optArchiveMD5);
+
+    QCommandLineOption optOtherMD5(QStringList() << "o" << "other-md5", "Output other MD5 information.");
+    parser.addOption(optOtherMD5);
 
     parser.addPositionalArgument("file", "VPK file to read");
 
@@ -53,25 +76,44 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QString error;
-    if ( !vpkFile.readIndex(&error) ||
-         !vpkFile.readArchiveMD5(&error) ||
-         !vpkFile.readOtherMD5(&error) )
+    if ( !tryReadFile(vpkFile, &FileFormats::VPKFile::readIndex) )
     {
-        qDebug() << "Error reading file:" << error;
         return 1;
+    }
+
+    bool outputAll = parser.isSet(optAll) ||
+            (!parser.isSet(optHeader) &&
+             !parser.isSet(optIndex) &&
+             !parser.isSet(optArchiveMD5) &&
+             !parser.isSet(optOtherMD5));
+
+    bool outputHeader = outputAll || parser.isSet(optHeader);
+    bool outputIndex = outputAll || parser.isSet(optIndex);
+    bool outputArchiveMD5 = outputAll || parser.isSet(optArchiveMD5);
+    bool outputOtherMD5 = outputAll || parser.isSet(optOtherMD5);
+
+    if ( outputArchiveMD5 )
+    {
+        if ( !tryReadFile(vpkFile, &FileFormats::VPKFile::readArchiveMD5) )
+        {
+            return 1;
+        }
+    }
+
+    if ( outputOtherMD5 )
+    {
+        if ( !tryReadFile(vpkFile, &FileFormats::VPKFile::readOtherMD5) )
+        {
+            return 1;
+        }
     }
 
     vpkFile.close();
 
-    bool outputAll = parser.isSet(optAll) ||
-            (!parser.isSet(optHeader) &&
-             !parser.isSet(optIndex) );
-
-    if ( outputAll || parser.isSet(optHeader) )
+    if ( outputHeader )
         VPKInfo::printHeaderData(vpkFile.header(), vpkFile.siblingArchives());
 
-    if ( outputAll || parser.isSet(optIndex) )
+    if ( outputIndex )
         VPKInfo::printIndexData(vpkFile.index());
 
     return 0;
