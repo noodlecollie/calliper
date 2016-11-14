@@ -43,8 +43,10 @@ int main(int argc, char *argv[])
     QCommandLineOption optIndex(QStringList() << "i" << "index", "Output index information.");
     parser.addOption(optIndex);
 
-    QCommandLineOption optArchiveMD5(QStringList() << "r" << "archive-md5", "Output archive MD5 information.");
+    QCommandLineOption optArchiveMD5(QStringList() << "r" << "archive-md5", "Verify archive MD5 checksums.");
     parser.addOption(optArchiveMD5);
+    QCommandLineOption optArchiveMD5Verbose(QStringList() << "archive-verbose", "Output verbose information when verifying archive MD5 checksums.");
+    parser.addOption(optArchiveMD5Verbose);
 
     QCommandLineOption optOtherMD5(QStringList() << "o" << "other-md5", "Output other MD5 information.");
     parser.addOption(optOtherMD5);
@@ -117,7 +119,7 @@ int main(int argc, char *argv[])
         VPKInfo::printIndexData(vpkFile.index());
 
     if ( outputArchiveMD5 )
-        VPKInfo::printArchiveMD5Data(vpkFile.archiveMD5Collection(), vpkFile.siblingArchives());
+        VPKInfo::printArchiveMD5Data(vpkFile.archiveMD5Collection(), vpkFile.siblingArchives(), parser.isSet(optArchiveMD5Verbose));
 
     if ( outputOtherMD5 )
         VPKInfo::printOtherMD5Data(vpkFile.otherMD5Collection());

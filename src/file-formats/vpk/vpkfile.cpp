@@ -292,12 +292,13 @@ namespace FileFormats
         QRegularExpression regex(baseName + "_[0-9]+\\.vpk");
 
         QStringList outList;
+        QString prefix = fileInfo.canonicalPath() + "/";
 
         foreach ( const QString& str, list )
         {
             if ( regex.match(str).hasMatch() )
             {
-                outList << str;
+                outList << prefix + str;
             }
         }
 

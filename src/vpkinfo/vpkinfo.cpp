@@ -52,7 +52,7 @@ namespace VPKInfo
         }
 
         s.flush();
-        qDebug() << string.toLatin1().constData();
+        qInfo() << string.toLatin1().constData();
     }
 
     void printIndexData(const FileFormats::VPKIndex &index)
@@ -79,32 +79,32 @@ namespace VPKInfo
 #undef FIELD
 
         s.flush();
-        qDebug() << string.toLatin1().constData();
+        qInfo() << string.toLatin1().constData();
     }
 
-    void printArchiveMD5Data(const FileFormats::VPKArchiveMD5Collection &collection, const QStringList& archives)
+    void printArchiveMD5Data(const FileFormats::VPKArchiveMD5Collection &collection, const QStringList& archives, bool verbose)
     {
         using namespace FileFormats;
 
-        qDebug() << "======================================\n"
-                 << "=       Archive MD5 Checksums        =\n"
-                 << "======================================\n";
+        qInfo() << "======================================";
+        qInfo() << "=       Archive MD5 Checksums        =";
+        qInfo() << "======================================\n";
 
         if ( collection.itemCount() < 1 )
         {
-            qDebug() << "No checksums present.\n";
+            qInfo() << "No checksums present.\n";
             return;
         }
 
         if ( archives.count() < 1 )
         {
-            qDebug() << "No sibling archives present in directory, cannot verify checksums.\n";
+            qCritical() << "No sibling archives present in directory, cannot verify checksums.\n";
             return;
         }
 
         QSet<quint32> indices = collection.archiveIndices();
 
-        qDebug() << "VPK contains" << collection.itemCount() << "MD5 checksums across"
+        qInfo() << "VPK contains" << collection.itemCount() << "MD5 checksums across"
                  << indices.count() << "sibling archives.";
 
         if ( indices.count() != archives.count() )
@@ -114,7 +114,7 @@ namespace VPKInfo
                        << "were detected in the directory.";
         }
 
-        qDebug() << "";
+        qInfo() << "Verifying checksums...";
 
         quint32 currentArchive = ~0;
         QFile archive;
@@ -141,6 +141,9 @@ namespace VPKInfo
                                 << " (" << archive.fileName() << ").\n";
                     return;
                 }
+
+                if ( verbose )
+                    qInfo() << "";
             }
 
             archive.seek(item->startingOffset());
@@ -155,33 +158,46 @@ namespace VPKInfo
                 return;
             }
 
-            QString line = QString("Computing checksum for archive %1, offset %2, count %3...")
-                    .arg(currentArchive)
-                    .arg(item->startingOffset())
-                    .arg(item->count());
-
-            if ( QCryptographicHash::hash(inputData, QCryptographicHash::Md5) == item->md5() )
+            QString line;
+            if ( verbose )
             {
-                line += " PASS.";
+                line = QString("Computing checksum for archive %1, offset %2, count %3...")
+                        .arg(currentArchive)
+                        .arg(item->startingOffset())
+                        .arg(item->count());
+            }
+
+            bool hashMatched = QCryptographicHash::hash(inputData, QCryptographicHash::Md5) == item->md5();
+
+            if ( hashMatched )
+            {
+                if ( verbose )
+                    line += " PASS.";
             }
             else
             {
-                line += " FAIL.";
+                if ( verbose )
+                    line += " FAIL.";
+
                 hasFail = true;
             }
 
-            qDebug() << line.toLatin1().constData();
+            if ( verbose )
+                qInfo() << line.toLatin1().constData();
         }
 
         archive.close();
 
+        if ( verbose )
+            qInfo() << "";
+
         if ( hasFail )
         {
-            qDebug() << "One or more checksum verifications failed.\n";
+            qInfo() << "One or more checksum verifications failed.\n";
         }
         else
         {
-            qDebug() << "All checksum verifications passed.\n";
+            qInfo() << "All checksum verifications passed.\n";
         }
     }
 
