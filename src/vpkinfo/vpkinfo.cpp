@@ -96,6 +96,26 @@ namespace VPKInfo
             return;
         }
 
+        if ( archives.count() < 1 )
+        {
+            qDebug() << "No sibling archives present in directory, cannot verify checksums.\n";
+            return;
+        }
+
+        QSet<quint32> indices = collection.archiveIndices();
+
+        qDebug() << "VPK contains" << collection.itemCount() << "MD5 checksums across"
+                 << indices.count() << "sibling archives.";
+
+        if ( indices.count() != archives.count() )
+        {
+            qWarning() << "Warning: checksums reference" << indices.count()
+                       << "sibling archives but" << archives.count()
+                       << "were detected in the directory.";
+        }
+
+        qDebug() << "";
+
         quint32 currentArchive = ~0;
         QFile archive;
         bool hasFail = false;

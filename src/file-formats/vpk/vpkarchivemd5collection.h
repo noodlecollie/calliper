@@ -4,6 +4,7 @@
 #include "file-formats_global.h"
 #include "collection/simpleitemcollection.h"
 #include "vpkarchivemd5item.h"
+#include <QSet>
 
 namespace FileFormats
 {
@@ -15,6 +16,8 @@ namespace FileFormats
         VPKArchiveMD5Collection() : SimpleItemCollection<VPKArchiveMD5Item>()
         {
         }
+
+        QSet<quint32> archiveIndices() const;
     };
 }
 

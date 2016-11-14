@@ -35,7 +35,7 @@ namespace FileFormats
             m_Items.clear();
         }
 
-    private:
+    protected:
         QList<QSharedPointer<T> > m_Items;
     };
 }
