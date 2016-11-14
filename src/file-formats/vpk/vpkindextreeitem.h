@@ -39,6 +39,7 @@ namespace FileFormats
     private:
         struct Data;
         Data* m_pData;
+        QByteArray m_PreloadData;
     };
 }
 
