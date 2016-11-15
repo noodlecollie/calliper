@@ -201,8 +201,51 @@ namespace VPKInfo
         }
     }
 
-    void printOtherMD5Data(const FileFormats::VPKOtherMD5Collection &collection)
+    void printOtherMD5Data(const FileFormats::VPKOtherMD5Item &md5s,
+                           const QByteArray &treeData, const QByteArray &archiveMD5Data)
     {
+        using namespace FileFormats;
 
+        qInfo() << "======================================";
+        qInfo() << "=         Other MD5 Checksums        =";
+        qInfo() << "======================================\n";
+
+        if ( treeData.length() < 1 )
+        {
+            qCritical() << "No tree data to validate against checksum.";
+            return;
+        }
+
+        if ( archiveMD5Data.length() < 1 )
+        {
+            qCritical() << "No archive MD5 data to validate against checksum.";
+            return;
+        }
+
+        QString str = "Validating tree data checksum...";
+
+        if ( QCryptographicHash::hash(treeData, QCryptographicHash::Md5) == md5s.treeChecksum() )
+        {
+            str += " PASS.";
+        }
+        else
+        {
+            str += " FAIL.";
+        }
+
+        qInfo() << str.toLatin1().constData();
+
+        str = "Validating archive MD5 data checksum...";
+
+        if ( QCryptographicHash::hash(archiveMD5Data, QCryptographicHash::Md5) == md5s.archiveMD5SectionChecksum() )
+        {
+            str += " PASS.";
+        }
+        else
+        {
+            str += " FAIL.";
+        }
+
+        qInfo() << str.toLatin1().constData() << "";
     }
 }

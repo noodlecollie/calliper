@@ -37,8 +37,7 @@ HEADERS +=\
     vpk/streamdatacontainer.h \
     vpk/vpkothermd5item.h \
     vpk/vpkarchivemd5collection.h \
-    collection/simpleitemcollection.h \
-    vpk/vpkothermd5collection.h
+    collection/simpleitemcollection.h
 
 unix {
     target.path = /usr/lib

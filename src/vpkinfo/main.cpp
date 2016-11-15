@@ -102,12 +102,18 @@ int main(int argc, char *argv[])
         }
     }
 
+    QByteArray treeData;
+    QByteArray archiveMD5Data;
+
     if ( outputOtherMD5 )
     {
         if ( !tryReadFile(vpkFile, &FileFormats::VPKFile::readOtherMD5) )
         {
             return 1;
         }
+
+        treeData = vpkFile.treeData();
+        archiveMD5Data = vpkFile.archiveMD5Data();
     }
 
     vpkFile.close();
@@ -122,7 +128,7 @@ int main(int argc, char *argv[])
         VPKInfo::printArchiveMD5Data(vpkFile.archiveMD5Collection(), vpkFile.siblingArchives(), parser.isSet(optArchiveMD5Verbose));
 
     if ( outputOtherMD5 )
-        VPKInfo::printOtherMD5Data(vpkFile.otherMD5Collection());
+        VPKInfo::printOtherMD5Data(vpkFile.otherMD5s(), treeData, archiveMD5Data);
 
     return 0;
 }

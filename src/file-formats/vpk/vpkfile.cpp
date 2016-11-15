@@ -165,10 +165,7 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !readMD5s<VPKOtherMD5Item>(m_OtherMD5Collection, stream,
-                                              m_Header.otherMD5SectionSize(),
-                                              VPKOtherMD5Item::staticSize(),
-                                              errorHint) )
+            if ( !m_OtherMD5s.populate(stream, errorHint) )
                 return false;
         }
 
@@ -365,15 +362,6 @@ namespace FileFormats
             return false;
         }
 
-        if ( m_Header.otherMD5SectionSize() % VPKOtherMD5Item::staticSize() != 0 )
-        {
-            setErrorString(errorHint,
-                           QString("Expected other MD5 section (%1 bytes) to be a multiple of %2 bytes.")
-                           .arg(m_Header.otherMD5SectionSize())
-                           .arg(VPKOtherMD5Item::staticSize()));
-            return false;
-        }
-
         return true;
     }
 
@@ -382,8 +370,26 @@ namespace FileFormats
         return m_ArchiveMD5Collection;
     }
 
-    const VPKOtherMD5Collection& VPKFile::otherMD5Collection() const
+    const VPKOtherMD5Item& VPKFile::otherMD5s() const
     {
-        return m_OtherMD5Collection;
+        return m_OtherMD5s;
+    }
+
+    QByteArray VPKFile::treeData()
+    {
+        if ( !isOpen() || !m_Header.signatureValid() )
+            return QByteArray();
+
+        m_File.seek(m_Header.treeAbsOffset());
+        return m_File.read(m_Header.treeSize());
+    }
+
+    QByteArray VPKFile::archiveMD5Data()
+    {
+        if ( !isOpen() || !m_Header.signatureValid() )
+            return QByteArray();
+
+        m_File.seek(m_Header.archiveMD5SectionAbsOffset());
+        return m_File.read(m_Header.archiveMD5SectionSize());
     }
 }

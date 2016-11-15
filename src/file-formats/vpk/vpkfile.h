@@ -8,7 +8,7 @@
 #include <QDataStream>
 #include <QList>
 #include "vpkarchivemd5collection.h"
-#include "vpkothermd5collection.h"
+#include "vpkothermd5item.h"
 
 namespace FileFormats
 {
@@ -31,13 +31,17 @@ namespace FileFormats
         const VPKHeader& header() const;
         const VPKIndex& index() const;
         const VPKArchiveMD5Collection& archiveMD5Collection() const;
-        const VPKOtherMD5Collection& otherMD5Collection() const;
+        const VPKOtherMD5Item& otherMD5s() const;
 
         bool openArchive(int index);
         bool isArchiveOpen() const;
         void closeArchive();
         QByteArray readFromCurrentArchive(const VPKIndexTreeItem* item);
         int currentArchiveIndex() const;
+
+        // Read from file on demand.
+        QByteArray treeData();
+        QByteArray archiveMD5Data();
 
     private:
         typedef QSharedPointer<VPKArchiveMD5Item> VPKArchiveMD5ItemPointer;
@@ -53,7 +57,7 @@ namespace FileFormats
         VPKHeader m_Header;
         VPKIndex m_Index;
         VPKArchiveMD5Collection m_ArchiveMD5Collection;
-        VPKOtherMD5Collection m_OtherMD5Collection;
+        VPKOtherMD5Item m_OtherMD5s;
 
         QStringList m_SiblingArchives;
         QFile m_Archive;
