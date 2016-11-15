@@ -26,26 +26,6 @@ namespace FileFormats
             buffer += str.length() + 1;
             return str;
         }
-
-        template<typename T>
-        bool readMD5s(SimpleItemCollection<T>& list, QDataStream &stream, quint32 sectionSize, quint32 itemSize, QString *errorHint)
-        {
-            list.clearItems();
-
-            for ( quint32 bytesRead = 0; bytesRead < sectionSize; bytesRead += itemSize )
-            {
-                QSharedPointer<T> md5 = QSharedPointer<T>::create();
-                if ( !md5->populate(stream, errorHint) )
-                {
-                    list.clearItems();
-                    return false;
-                }
-
-                list.addItem(md5);
-            }
-
-            return true;
-        }
     }
 
     VPKFile::VPKFile(const QString &filename)
@@ -129,10 +109,7 @@ namespace FileFormats
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
 
-            if ( !readMD5s<VPKArchiveMD5Item>(m_ArchiveMD5Collection, stream,
-                                              m_Header.archiveMD5SectionSize(),
-                                              VPKArchiveMD5Item::staticSize(),
-                                              errorHint) )
+            if ( !readMD5s(stream, errorHint) )
                 return false;
         }
 
@@ -391,5 +368,24 @@ namespace FileFormats
 
         m_File.seek(m_Header.archiveMD5SectionAbsOffset());
         return m_File.read(m_Header.archiveMD5SectionSize());
+    }
+
+    bool VPKFile::readMD5s(QDataStream &stream, QString *errorHint)
+    {
+        m_ArchiveMD5Collection.clear();
+
+        for ( quint32 bytesRead = 0; bytesRead < m_Header.archiveMD5SectionSize(); bytesRead += VPKArchiveMD5Item::staticSize() )
+        {
+            VPKArchiveMD5ItemPointer md5 = VPKArchiveMD5ItemPointer::create();
+            if ( !md5->populate(stream, errorHint) )
+            {
+                m_ArchiveMD5Collection.clear();
+                return false;
+            }
+
+            m_ArchiveMD5Collection.addItem(md5);
+        }
+
+        return true;
     }
 }

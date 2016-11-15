@@ -90,7 +90,7 @@ namespace VPKInfo
         qInfo() << "=       Archive MD5 Checksums        =";
         qInfo() << "======================================\n";
 
-        if ( collection.itemCount() < 1 )
+        if ( collection.count() < 1 )
         {
             qInfo() << "No checksums present.\n";
             return;
@@ -104,7 +104,7 @@ namespace VPKInfo
 
         QSet<quint32> indices = collection.archiveIndices();
 
-        qInfo() << "VPK contains" << collection.itemCount() << "MD5 checksums across"
+        qInfo() << "VPK contains" << collection.count() << "MD5 checksums across"
                  << indices.count() << "sibling archives.";
 
         if ( indices.count() != archives.count() )
@@ -119,7 +119,7 @@ namespace VPKInfo
         quint32 currentArchive = ~0;
         QFile archive;
         bool hasFail = false;
-        for (int i = 0; i < collection.itemCount(); i++)
+        for (int i = 0; i < collection.count(); i++)
         {
             VPKArchiveMD5ItemPointer item = collection.itemAt(i);
 
