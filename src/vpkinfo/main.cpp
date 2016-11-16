@@ -45,11 +45,15 @@ int main(int argc, char *argv[])
 
     QCommandLineOption optArchiveMD5(QStringList() << "r" << "archive-md5", "Verify archive MD5 checksums.");
     parser.addOption(optArchiveMD5);
-    QCommandLineOption optArchiveMD5Verbose(QStringList() << "archive-verbose", "Output verbose information when verifying archive MD5 checksums.");
+    QCommandLineOption optArchiveMD5Verbose(QStringList() << "archive-verbose",
+                                            "Output verbose information when verifying archive MD5 checksums.");
     parser.addOption(optArchiveMD5Verbose);
 
     QCommandLineOption optOtherMD5(QStringList() << "o" << "other-md5", "Output other MD5 information.");
     parser.addOption(optOtherMD5);
+
+    QCommandLineOption optListFiles(QStringList() << "l" << "list-files", "List all files within VPK.");
+    parser.addOption(optListFiles);
 
     parser.addPositionalArgument("file", "VPK file to read");
 
@@ -87,12 +91,14 @@ int main(int argc, char *argv[])
             (!parser.isSet(optHeader) &&
              !parser.isSet(optIndex) &&
              !parser.isSet(optArchiveMD5) &&
-             !parser.isSet(optOtherMD5));
+             !parser.isSet(optOtherMD5) &&
+             !parser.isSet(optListFiles));
 
     bool outputHeader = outputAll || parser.isSet(optHeader);
     bool outputIndex = outputAll || parser.isSet(optIndex);
     bool outputArchiveMD5 = outputAll || parser.isSet(optArchiveMD5);
     bool outputOtherMD5 = outputAll || parser.isSet(optOtherMD5);
+    bool listFiles = outputAll || parser.isSet(optListFiles);
 
     if ( outputArchiveMD5 )
     {
@@ -123,6 +129,9 @@ int main(int argc, char *argv[])
 
     if ( outputIndex )
         VPKInfo::printIndexData(vpkFile.index());
+
+    if ( listFiles )
+        VPKInfo::listFiles(vpkFile.index());
 
     if ( outputArchiveMD5 )
         VPKInfo::printArchiveMD5Data(vpkFile.archiveMD5Collection(), vpkFile.siblingArchives(), parser.isSet(optArchiveMD5Verbose));

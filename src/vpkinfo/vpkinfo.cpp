@@ -82,6 +82,21 @@ namespace VPKInfo
         qInfo() << string.toLatin1().constData();
     }
 
+    void listFiles(const FileFormats::VPKIndex &index)
+    {
+        qInfo() << "======================================";
+        qInfo() << "=               Files                =";
+        qInfo() << "======================================\n";
+
+        QStringList paths = index.recordPaths();
+        foreach ( const QString& str, paths )
+        {
+            qInfo().noquote() << str;
+        }
+
+        qInfo() << "";
+    }
+
     void printArchiveMD5Data(const FileFormats::VPKArchiveMD5Collection &collection, const QStringList& archives, bool verbose)
     {
         using namespace FileFormats;

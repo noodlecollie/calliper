@@ -46,4 +46,9 @@ namespace FileFormats
         m_RecordsByFileExtension.clear();
         m_Records.clear();
     }
+
+    QStringList VPKIndex::recordPaths() const
+    {
+        return m_Records.keys();
+    }
 }

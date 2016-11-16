@@ -20,6 +20,7 @@ namespace FileFormats
         void addRecord(const VPKIndexTreeRecordPointer& record);
         VPKIndexTreeRecordPointer recordAt(const QString& path) const;
         int recordCount() const;
+        QStringList recordPaths() const;
 
         QList<VPKIndexTreeRecordPointer> recordsForExtension(const QString& extension) const;
         int recordCountForExtension(const QString& extension) const;
