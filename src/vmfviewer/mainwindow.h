@@ -23,6 +23,8 @@ public:
     explicit MainWindow(const QString& filename);
     ~MainWindow();
 
+    void setVpkPath(const QString& path);
+
 protected:
     virtual void initializeGL() override;
     virtual void paintGL() override;
@@ -46,6 +48,7 @@ private:
     void processBrushes();
 
     QString m_strFilename;
+    QString m_strVpkPath;
 
     Model::ShaderStore* m_pShaderStore;
     Model::TextureStore* m_pTextureStore;

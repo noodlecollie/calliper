@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QCommandLineOption>
 
 int main(int argc, char *argv[])
 {
@@ -12,15 +13,13 @@ int main(int argc, char *argv[])
     parser.setApplicationDescription("VMF Viewer");
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("file", "VMF file to read");
-    parser.process(a);
 
-    QStringList cmdArgs = parser.positionalArguments();
-    QString filename;
-    if ( !cmdArgs.isEmpty() )
-    {
-        filename = cmdArgs.at(0);
-    }
+    QCommandLineOption opVpkPath("vpkpath", "Path where VPK content is stored.", "path");
+    parser.addOption(opVpkPath);
+
+    parser.addPositionalArgument("file", "VMF file to read.");
+
+    parser.process(a);
 
     QSurfaceFormat format;
     format.setMajorVersion(4);
@@ -37,7 +36,15 @@ int main(int argc, char *argv[])
     format.setStencilBufferSize(8);
     QSurfaceFormat::setDefaultFormat(format);
 
+    QString filename;
+    QStringList opts = parser.positionalArguments();
+    if ( !opts.isEmpty() )
+    {
+        filename = opts.at(0);
+    }
+
     MainWindow w(filename);
+    w.setVpkPath(parser.value(opVpkPath));
     w.show();
 
     return a.exec();

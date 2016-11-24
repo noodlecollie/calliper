@@ -287,3 +287,8 @@ void MainWindow::processBrushes()
         }
     }
 }
+
+void MainWindow::setVpkPath(const QString &path)
+{
+    m_strVpkPath = path;
+}
