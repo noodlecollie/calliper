@@ -4,6 +4,7 @@
 #include <QFile>
 #include "vpkinfo.h"
 #include "vpk/vpkfile.h"
+#include <iostream>
 
 namespace
 {
@@ -138,6 +139,9 @@ int main(int argc, char *argv[])
 
     if ( outputOtherMD5 )
         VPKInfo::printOtherMD5Data(vpkFile.otherMD5s(), treeData, archiveMD5Data);
+
+    qInfo() << "Finished.";
+    std::cin.get();
 
     return 0;
 }

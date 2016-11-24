@@ -1,10 +1,35 @@
 #include "vpkfilecollection.h"
+#include <QDir>
 
 namespace FileFormats
 {
     VPKFileCollection::VPKFileCollection()
     {
 
+    }
+
+    VPKFileCollection::VPKFileCollection(const QString &path)
+    {
+        QDir dir(path);
+
+        QFileInfoList vpkFiles = dir.entryInfoList(
+                    QStringList() << "*_dir.vpk",
+                    QDir::Files);
+
+        foreach ( const QFileInfo& file, vpkFiles )
+        {
+            VPKFilePointer filePointer = VPKFilePointer::create(file.canonicalFilePath());
+
+            if ( !filePointer->open() )
+                continue;
+
+            if ( filePointer->readIndex() )
+            {
+                addFile(filePointer);
+            }
+
+            filePointer->close();
+        }
     }
 
     VPKFileCollection::~VPKFileCollection()
