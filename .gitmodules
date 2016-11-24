@@ -1,3 +1,4 @@
 [submodule "submodules/FlameGraph"]
 	path = submodules/FlameGraph
 	url = https://github.com/brendangregg/FlameGraph.git
+	ignore = dirty
