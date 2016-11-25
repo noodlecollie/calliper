@@ -23,6 +23,7 @@ namespace FileFormats
         bool open();
         void close();
         bool isOpen() const;
+        QString fileName() const;
 
         bool readIndex(QString* errorHint = nullptr);
         bool readArchiveMD5(QString* errorHint = nullptr);

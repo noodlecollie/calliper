@@ -21,6 +21,8 @@ namespace FileFormats
 
         // Assumes file index is loaded before being added.
         void addFile(const VPKFilePointer& file);
+        void addFilesFromDirectory(const QString& path);
+        void clear();
 
         QSet<VPKFilePointer> filesContainingExtension(const QString& extension) const;
 

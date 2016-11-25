@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
                               "If no flags are set, all information is output by default.");
     parser.addOption(optAll);
 
-    QCommandLineOption optHeader(QStringList() << "h" << "header", "Output header information.");
+    QCommandLineOption optHeader(QStringList() << "d" << "header", "Output header information.");
     parser.addOption(optHeader);
 
     QCommandLineOption optIndex(QStringList() << "i" << "index", "Output index information.");
@@ -139,9 +139,6 @@ int main(int argc, char *argv[])
 
     if ( outputOtherMD5 )
         VPKInfo::printOtherMD5Data(vpkFile.otherMD5s(), treeData, archiveMD5Data);
-
-    qInfo() << "Finished.";
-    std::cin.get();
 
     return 0;
 }

@@ -22,6 +22,7 @@ namespace FileFormats
         int recordCount() const;
         QStringList recordPaths() const;
 
+        // TODO: Return a map where entries are ordered by archive number.
         QList<VPKIndexTreeRecordPointer> recordsForExtension(const QString& extension) const;
         int recordCountForExtension(const QString& extension) const;
         QStringList extensions() const;

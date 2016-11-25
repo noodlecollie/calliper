@@ -9,6 +9,8 @@
 #include "json/jsonarraywrapper.h"
 #include "exceptions/calliperexception.h"
 #include <QtDebug>
+#include "scene/scene.h"
+#include "stores/texturestore.h"
 
 namespace MapImporters
 {
@@ -89,6 +91,8 @@ namespace MapImporters
             using namespace Model;
             using namespace CalliperUtil;
 
+            TextureStore* textureStore = parent->parentScene()->textureStore();
+
             QJsonObject world = doc.object().value("world").toObject();
             Json::JsonArrayWrapper solids = world.value("solid");
 
@@ -101,7 +105,10 @@ namespace MapImporters
                 bool success = true;
                 for ( int j = 0; j < sides.count(); j++ )
                 {
-                    QString plane = sides.at(j).toObject().value("plane").toString();
+                    QJsonObject side = sides.at(j).toObject();
+                    QString texturePath = side.value("material").toString();
+                    QString plane = side.value("plane").toString();
+
                     QVector3D v0, v1, v2;
 
                     try
@@ -121,7 +128,7 @@ namespace MapImporters
                         break;
                     }
 
-                    polygons.append(new TexturedWinding(Plane3D(v0, v2, v1), 0));   // TODO: Proper texture
+                    polygons.append(new TexturedWinding(Plane3D(v0, v2, v1), textureStore->getTextureId(texturePath)));
                     Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
                 }
 

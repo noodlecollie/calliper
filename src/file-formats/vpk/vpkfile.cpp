@@ -388,4 +388,9 @@ namespace FileFormats
 
         return true;
     }
+
+    QString VPKFile::fileName() const
+    {
+        return m_File.fileName();
+    }
 }

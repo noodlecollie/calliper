@@ -11,6 +11,7 @@
 #include "camera/cameracontroller.h"
 #include "controller-adapters/keymap.h"
 #include "controller-adapters/mouseeventmap.h"
+#include "vpk/vpkfilecollection.h"
 
 class QPushButton;
 class QGridLayout;
@@ -63,6 +64,8 @@ private:
     Model::CameraController* m_pCameraController;
     Model::KeyMap* m_pKeyMap;
     Model::MouseEventMap* m_pMouseEventMap;
+
+    FileFormats::VPKFileCollection m_VpkFiles;
 };
 
 #endif // MAINWINDOW_H

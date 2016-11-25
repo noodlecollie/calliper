@@ -10,26 +10,7 @@ namespace FileFormats
 
     VPKFileCollection::VPKFileCollection(const QString &path)
     {
-        QDir dir(path);
-
-        QFileInfoList vpkFiles = dir.entryInfoList(
-                    QStringList() << "*_dir.vpk",
-                    QDir::Files);
-
-        foreach ( const QFileInfo& file, vpkFiles )
-        {
-            VPKFilePointer filePointer = VPKFilePointer::create(file.canonicalFilePath());
-
-            if ( !filePointer->open() )
-                continue;
-
-            if ( filePointer->readIndex() )
-            {
-                addFile(filePointer);
-            }
-
-            filePointer->close();
-        }
+        addFilesFromDirectory(path);
     }
 
     VPKFileCollection::~VPKFileCollection()
@@ -68,5 +49,35 @@ namespace FileFormats
             return QSet<VPKFilePointer>();
 
         return *m_FilesContainingExtensions.value(extension);
+    }
+
+    void VPKFileCollection::addFilesFromDirectory(const QString &path)
+    {
+        QDir dir(path);
+
+        QFileInfoList vpkFiles = dir.entryInfoList(
+                    QStringList() << "*_dir.vpk",
+                    QDir::Files);
+
+        foreach ( const QFileInfo& file, vpkFiles )
+        {
+            VPKFilePointer filePointer = VPKFilePointer::create(file.canonicalFilePath());
+
+            if ( !filePointer->open() )
+                continue;
+
+            if ( filePointer->readIndex() )
+            {
+                addFile(filePointer);
+            }
+
+            filePointer->close();
+        }
+    }
+
+    void VPKFileCollection::clear()
+    {
+        m_Files.clear();
+        m_FilesContainingExtensions.clear();
     }
 }
