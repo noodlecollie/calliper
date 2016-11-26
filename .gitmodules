@@ -6,3 +6,4 @@
 	path = submodules/qvtf
 	url = https://github.com/panzi/qvtf.git
 	ignore = dirty
+removeme
