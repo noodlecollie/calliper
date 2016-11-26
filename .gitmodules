@@ -2,3 +2,7 @@
 	path = submodules/FlameGraph
 	url = https://github.com/brendangregg/FlameGraph.git
 	ignore = dirty
+[submodule "submodules/qvtf"]
+	path = submodules/qvtf
+	url = https://github.com/panzi/qvtf.git
+	ignore = dirty
