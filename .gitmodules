@@ -6,3 +6,6 @@
 	path = submodules/qvtf
 	url = https://github.com/panzi/qvtf.git
 	ignore = dirty
+[submodule "submodules/VTFLib"]
+	path = submodules/VTFLib
+	url = https://github.com/panzi/VTFLib.git
