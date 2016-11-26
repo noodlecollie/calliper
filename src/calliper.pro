@@ -9,7 +9,9 @@ SUBDIRS += \
     vmfviewer \
     vpkinfo \
     file-formats \
-    map-importers
+    map-importers \
+    external-dependencies/dep-vtflib \
+    external-dependencies/dep-qvtf
 
 renderer-sandbox.depends = renderer calliperutil model
 model.depends = renderer calliperutil
