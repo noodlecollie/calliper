@@ -2,7 +2,7 @@
 #define VPKARCHIVEMD5ITEM_H
 
 #include "file-formats_global.h"
-#include "streamdatacontainer.h"
+#include "common/streamdatacontainer.h"
 
 namespace FileFormats
 {

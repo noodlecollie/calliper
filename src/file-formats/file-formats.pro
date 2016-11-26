@@ -20,10 +20,11 @@ SOURCES += \
     vpk/vpkindextreerecord.cpp \
     vpk/vpkfile.cpp \
     vpk/vpkarchivemd5item.cpp \
-    vpk/streamdatacontainer.cpp \
+    common/streamdatacontainer.cpp \
     vpk/vpkothermd5item.cpp \
     vpk/vpkarchivemd5collection.cpp \
-    vpk/vpkfilecollection.cpp
+    vpk/vpkfilecollection.cpp \
+    vtf/vtfheader.cpp
 
 HEADERS +=\
         file-formats_global.h \
@@ -35,11 +36,12 @@ HEADERS +=\
     vpk/vpkindextreerecord.h \
     vpk/vpkfile.h \
     vpk/vpkarchivemd5item.h \
-    vpk/streamdatacontainer.h \
+    common/streamdatacontainer.h \
     vpk/vpkothermd5item.h \
     vpk/vpkarchivemd5collection.h \
     collection/simpleitemcollection.h \
-    vpk/vpkfilecollection.h
+    vpk/vpkfilecollection.h \
+    vtf/vtfheader.h
 
 unix {
     target.path = /usr/lib

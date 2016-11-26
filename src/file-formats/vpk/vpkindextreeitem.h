@@ -2,7 +2,7 @@
 #define VPKINDEXTREEITEM_H
 
 #include "file-formats_global.h"
-#include "streamdatacontainer.h"
+#include "common/streamdatacontainer.h"
 #include <QDataStream>
 
 namespace FileFormats
