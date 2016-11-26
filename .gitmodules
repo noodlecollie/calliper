@@ -5,6 +5,8 @@
 [submodule "src/external-dependencies/VTFLib"]
 	path = src/external-dependencies/VTFLib
 	url = https://github.com/panzi/VTFLib.git
+	ignore = dirty
 [submodule "src/external-dependencies/qvtf"]
 	path = src/external-dependencies/qvtf
 	url = https://github.com/panzi/qvtf.git
+	ignore = dirty
