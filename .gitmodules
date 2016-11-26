@@ -2,3 +2,9 @@
 	path = other-submodules/FlameGraph
 	url = https://github.com/brendangregg/FlameGraph.git
 	ignore = dirty
+[submodule "src/external-dependencies/VTFLib"]
+	path = src/external-dependencies/VTFLib
+	url = https://github.com/panzi/VTFLib.git
+[submodule "src/external-dependencies/qvtf"]
+	path = src/external-dependencies/qvtf
+	url = https://github.com/panzi/qvtf.git
