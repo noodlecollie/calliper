@@ -23,8 +23,7 @@ SOURCES += \
     common/streamdatacontainer.cpp \
     vpk/vpkothermd5item.cpp \
     vpk/vpkarchivemd5collection.cpp \
-    vpk/vpkfilecollection.cpp \
-    vtf/vtfheader.cpp
+    vpk/vpkfilecollection.cpp
 
 HEADERS +=\
         file-formats_global.h \
@@ -40,8 +39,7 @@ HEADERS +=\
     vpk/vpkothermd5item.h \
     vpk/vpkarchivemd5collection.h \
     collection/simpleitemcollection.h \
-    vpk/vpkfilecollection.h \
-    vtf/vtfheader.h
+    vpk/vpkfilecollection.h
 
 unix {
     target.path = /usr/lib

@@ -12,7 +12,7 @@ namespace FileFormats
 {
     typedef QSharedPointer<VPKFile> VPKFilePointer;
 
-    class VPKFileCollection
+    class FILEFORMATSSHARED_EXPORT VPKFileCollection
     {
     public:
         VPKFileCollection();

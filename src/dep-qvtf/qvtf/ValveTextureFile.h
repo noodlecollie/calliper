@@ -20,12 +20,15 @@
 #define QVTF_LOAD_VALVE_TEXTURE_FILE_H
 
 #include <QImageIOPlugin>
-#include <VTFFile.h>
+#include "VTFLib/src/VTFFile.h"
+
+#define ValveTextureFilePlugin_iid "org.calliper.ValveTextureFilePlugin"
 
 class ValveTextureFilePlugin : public QImageIOPlugin {
     Q_OBJECT
     Q_CLASSINFO("author", "Mathias Panzenböck")
     Q_CLASSINFO("url", "https://github.com/panzi/qvtf")
+    Q_PLUGIN_METADATA(IID ValveTextureFilePlugin_iid FILE "ValveTextureFilePlugin.json")
 
 public:
 

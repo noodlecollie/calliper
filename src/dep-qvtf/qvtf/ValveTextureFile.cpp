@@ -18,12 +18,9 @@
 
 #include "ValveTextureFile.h"
 
-#include <VTFLib.h>
+#include "VTFLib/src/VTFLib.h"
 #include <QImage>
 #include <QVariant>
-
-Q_EXPORT_STATIC_PLUGIN(ValveTextureFilePlugin)
-Q_EXPORT_PLUGIN2(ValveTextureFile, ValveTextureFilePlugin)
 
 QImageIOPlugin::Capabilities ValveTextureFilePlugin::capabilities(QIODevice *device, const QByteArray &format) const {
     if (format.isNull() && !device) {
