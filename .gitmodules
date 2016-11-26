@@ -1,11 +1,4 @@
-[submodule "submodules/FlameGraph"]
-	path = submodules/FlameGraph
+[submodule "other-submodules/FlameGraph"]
+	path = other-submodules/FlameGraph
 	url = https://github.com/brendangregg/FlameGraph.git
 	ignore = dirty
-[submodule "submodules/qvtf"]
-	path = submodules/qvtf
-	url = https://github.com/panzi/qvtf.git
-	ignore = dirty
-[submodule "submodules/VTFLib"]
-	path = submodules/VTFLib
-	url = https://github.com/panzi/VTFLib.git
