@@ -28,34 +28,16 @@ namespace
 
         origShader = newShader;
     }
-
-    void changeTextureIfDifferent(Renderer::OpenGLTexturePointer &origTexture,
-                                  const Renderer::OpenGLTexturePointer &newTexture)
-    {
-        if ( origTexture == newTexture )
-            return;
-
-        if ( !origTexture.isNull() )
-        {
-            origTexture->release();
-        }
-
-        if ( !newTexture.isNull() )
-        {
-            newTexture->bind(Renderer::ShaderDefs::MainTexture);
-        }
-
-        origTexture = newTexture;
-    }
 }
 
 namespace Renderer
 {
-    RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor)
-        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor)
+    RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor, IMaterialRetrievalFunctor* materialFunctor)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor), m_pMaterialFunctor(materialFunctor)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor should not be null!");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor should not be null!");
+        Q_ASSERT_X(m_pMaterialFunctor, Q_FUNC_INFO, "Material functor should not be null!");
     }
 
     RenderModelPass::~RenderModelPass()
@@ -97,27 +79,71 @@ namespace Renderer
         qDebug() << "Batch groups:" << m_BatchGroups.count();
     }
 
-    void RenderModelPass::setIfRequired(const RenderModelBatchGroupKey &key, OpenGLShaderProgram *&shaderProgram, OpenGLTexturePointer &texture)
+    void RenderModelPass::setIfRequired(const RenderModelBatchGroupKey &key, OpenGLShaderProgram *&shaderProgram, RenderMaterialPointer &material)
     {
         OpenGLShaderProgram* newShaderProgram = (*m_pShaderFunctor)(key.shaderId());
         changeShaderIfDifferent(shaderProgram, newShaderProgram);
 
-        OpenGLTexturePointer newTexture = (*m_pTextureFunctor)(key.textureId());
-        changeTextureIfDifferent(texture, newTexture);
+        RenderMaterialPointer newMaterial = (*m_pMaterialFunctor)(key.materialId());
+        changeMaterialIfDifferent(material, newMaterial);
     }
 
     void RenderModelPass::drawAllBatchGroups()
     {
         OpenGLShaderProgram* currentShaderProgram = nullptr;
-        OpenGLTexturePointer currentTexture;
+        RenderMaterialPointer currentMaterial;
 
         foreach ( const RenderModelBatchGroupPointer &batchGroup, m_BatchGroups.values() )
         {
-            setIfRequired(batchGroup->key(), currentShaderProgram, currentTexture);
+            setIfRequired(batchGroup->key(), currentShaderProgram, currentMaterial);
             batchGroup->drawAllBatches(currentShaderProgram);
         }
 
         changeShaderIfDifferent(currentShaderProgram, nullptr);
-        changeTextureIfDifferent(currentTexture, OpenGLTexturePointer());
+        changeMaterialIfDifferent(currentMaterial, RenderMaterialPointer());
+    }
+
+    void RenderModelPass::changeMaterialIfDifferent(Renderer::RenderMaterialPointer &origMaterial,
+                                  const Renderer::RenderMaterialPointer &newMaterial)
+    {
+        if ( origMaterial == newMaterial )
+            return;
+
+        if ( newMaterial.isNull() )
+        {
+            setTextureUnitMap(QMap<ShaderDefs::TextureUnit, quint32>());
+        }
+        else
+        {
+            setTextureUnitMap(newMaterial->textureUnitMap());
+        }
+
+        origMaterial = newMaterial;
+    }
+
+    void RenderModelPass::setTextureUnitMap(const QMap<ShaderDefs::TextureUnit, quint32> &map)
+    {
+        typedef QMap<ShaderDefs::TextureUnit, quint32> TextureUnitMap;
+
+        foreach ( quint32 texture, m_TextureUnitMap.values() )
+        {
+            OpenGLTexturePointer tex = (*m_pTextureFunctor)(texture);
+            if ( tex.isNull() )
+                continue;
+
+            tex->release();
+        }
+
+        m_TextureUnitMap.clear();
+        m_TextureUnitMap = map;
+
+        for ( TextureUnitMap::const_iterator it = m_TextureUnitMap.constBegin(); it != m_TextureUnitMap.constEnd(); ++it )
+        {
+            OpenGLTexturePointer tex = (*m_pTextureFunctor)(it.value());
+            if ( tex.isNull() )
+                continue;
+
+            tex->bind(it.key());
+        }
     }
 }

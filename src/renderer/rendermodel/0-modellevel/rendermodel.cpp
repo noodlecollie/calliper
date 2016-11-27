@@ -41,7 +41,7 @@ namespace Renderer
 
     RenderModel::RenderModelPassPointer RenderModel::createRenderPass(const RenderModelPassKey &key)
     {
-        RenderModelPassPointer pass = RenderModelPassPointer::create(m_pShaderFunctor, m_pTextureFunctor);
+        RenderModelPassPointer pass = RenderModelPassPointer::create(m_pShaderFunctor, m_pTextureFunctor, m_pMaterialFunctor);
         m_RenderPasses.insert(key, pass);
         return pass;
     }
@@ -66,7 +66,7 @@ namespace Renderer
         m_RenderPasses.clear();
     }
 
-    IShaderRetrievalFunctor* RenderModel::shaderFunctor()
+    IShaderRetrievalFunctor* RenderModel::shaderFunctor() const
     {
         return m_pShaderFunctor;
     }
@@ -76,7 +76,7 @@ namespace Renderer
         m_pShaderFunctor = functor;
     }
 
-    ITextureRetrievalFunctor* RenderModel::textureFunctor()
+    ITextureRetrievalFunctor* RenderModel::textureFunctor() const
     {
         return m_pTextureFunctor;
     }
@@ -84,6 +84,16 @@ namespace Renderer
     void RenderModel::setTextureFunctor(ITextureRetrievalFunctor *functor)
     {
         m_pTextureFunctor = functor;
+    }
+
+    IMaterialRetrievalFunctor* RenderModel::materialFunctor() const
+    {
+        return m_pMaterialFunctor;
+    }
+
+    void RenderModel::setMaterialFunctor(IMaterialRetrievalFunctor *functor)
+    {
+        m_pMaterialFunctor = functor;
     }
 
     void RenderModel::updateObject(const RendererInputObjectParams &object)

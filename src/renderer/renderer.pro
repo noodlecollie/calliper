@@ -71,7 +71,8 @@ HEADERS +=\
     rendermodel/rendererobjectflags.h \
     opengl/openglvertexarrayobject.h \
     shaders/globalshaderuniforms.h \
-    materials/rendermaterial.h
+    materials/rendermaterial.h \
+    functors/imaterialretrievalfunctor.h
 
 unix {
     target.path = /usr/lib

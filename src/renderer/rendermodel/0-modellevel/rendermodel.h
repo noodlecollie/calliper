@@ -19,10 +19,12 @@ namespace Renderer
         RenderModel();
         ~RenderModel();
 
-        virtual IShaderRetrievalFunctor* shaderFunctor() override;
+        virtual IShaderRetrievalFunctor* shaderFunctor() const override;
         virtual void setShaderFunctor(IShaderRetrievalFunctor *functor) override;
-        virtual ITextureRetrievalFunctor* textureFunctor() override;
+        virtual ITextureRetrievalFunctor* textureFunctor() const override;
         virtual void setTextureFunctor(ITextureRetrievalFunctor *functor) override;
+        virtual IMaterialRetrievalFunctor* materialFunctor() const override;
+        virtual void setMaterialFunctor(IMaterialRetrievalFunctor* functor) override;
 
         virtual void updateObject(const RendererInputObjectParams &object) override;
         virtual void removeObject(quint32 objectId) override;
@@ -59,6 +61,7 @@ namespace Renderer
 
         IShaderRetrievalFunctor*    m_pShaderFunctor;
         ITextureRetrievalFunctor*   m_pTextureFunctor;
+        IMaterialRetrievalFunctor*  m_pMaterialFunctor;
         RendererDrawParams          m_DrawParams;
 
         GlobalShaderUniforms        m_GlobalShaderUniforms;

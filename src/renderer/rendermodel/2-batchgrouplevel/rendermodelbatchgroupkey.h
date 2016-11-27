@@ -10,10 +10,10 @@ namespace Renderer
     class RENDERERSHARED_EXPORT RenderModelBatchGroupKey
     {
     public:
-        RenderModelBatchGroupKey(quint16 shaderId, quint32 textureId, GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);
+        RenderModelBatchGroupKey(quint16 shaderId, quint32 materialId, GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);
 
         quint16 shaderId() const;
-        quint32 textureId() const;
+        quint32 materialId() const;
         GLenum drawMode() const;
         float drawWidth() const;
 
@@ -22,8 +22,8 @@ namespace Renderer
             if ( m_iShaderId != other.m_iShaderId )
                 return m_iShaderId < other.m_iShaderId;
 
-            if ( m_iTextureId != other.m_iTextureId )
-                return m_iTextureId < other.m_iTextureId;
+            if ( m_iMaterialId != other.m_iMaterialId )
+                return m_iMaterialId < other.m_iMaterialId;
 
             if ( m_iDrawMode != other.m_iDrawMode )
                 return m_iDrawMode < other.m_iDrawMode;
@@ -34,7 +34,7 @@ namespace Renderer
         inline bool operator ==(const RenderModelBatchGroupKey &other) const
         {
             return m_iShaderId == other.m_iShaderId &&
-                    m_iTextureId == other.m_iTextureId &&
+                    m_iMaterialId == other.m_iMaterialId &&
                     m_iDrawMode == other.m_iDrawMode &&
                     m_flDrawWidth == other.m_flDrawWidth;
         }
@@ -46,7 +46,7 @@ namespace Renderer
 
     private:
         quint16       m_iShaderId;
-        quint32       m_iTextureId;
+        quint32       m_iMaterialId;
         GLenum        m_iDrawMode;
         float         m_flDrawWidth;
     };

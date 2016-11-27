@@ -4,6 +4,7 @@
 #include "renderer_global.h"
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
+#include "functors/imaterialretrievalfunctor.h"
 #include "rendermodel/rendererinputobjectparams.h"
 #include "rendermodel/rendererdrawparams.h"
 #include "rendermodel/rendererobjectflags.h"
@@ -16,12 +17,17 @@ namespace Renderer
         virtual ~IRenderer() {}
 
         // Shader functor - for getting shader program objects given a shader ID.
-        virtual IShaderRetrievalFunctor* shaderFunctor() = 0;
+        virtual IShaderRetrievalFunctor* shaderFunctor() const = 0;
         virtual void setShaderFunctor(IShaderRetrievalFunctor* functor) = 0;
 
         // Texture functor - for getting texture objects given a texture ID.
-        virtual ITextureRetrievalFunctor* textureFunctor() = 0;
+        virtual ITextureRetrievalFunctor* textureFunctor() const = 0;
         virtual void setTextureFunctor(ITextureRetrievalFunctor* functor) = 0;
+
+        // Material functor - for getting material objects given a material ID.
+        // These contain mappings to one or more texture IDs.
+        virtual IMaterialRetrievalFunctor* materialFunctor() const = 0;
+        virtual void setMaterialFunctor(IMaterialRetrievalFunctor* functor) = 0;
 
         // Object modification properties. These are independent of rendering frames.
         virtual void updateObject(const RendererInputObjectParams &object) = 0;
