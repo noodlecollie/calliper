@@ -28,7 +28,7 @@ namespace Model
         return m_TextureTable.value(textureId, Renderer::OpenGLTexturePointer());
     }
 
-    Renderer::OpenGLTexturePointer TextureStore::operator ()(quint64 textureId) const
+    Renderer::OpenGLTexturePointer TextureStore::operator ()(quint32 textureId) const
     {
         return getTexture(textureId);
     }

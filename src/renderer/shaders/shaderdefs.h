@@ -30,9 +30,18 @@ namespace Renderer
         enum UniformBlockBindingPoint
         {
             GlobalUniformBlockBindingPoint = 0, // Camera matrices, fog, colour, etc.
-            LocalUniformBlockBindingPoint = 1   // Model to world matrices
+            LocalUniformBlockBindingPoint  = 1, // Model to world matrices
         };
         Q_ENUM(UniformBlockBindingPoint)
+
+        // Canonical texture units for different purposes.
+        enum TextureUnit
+        {
+            MainTexture         = 0,
+            SecondaryTexture    = 1,
+            NormalMap           = 2,
+        };
+        Q_ENUM(TextureUnit)
 
         static const char* GLOBAL_UNIFORM_BLOCK_NAME;
         static const char* LOCAL_UNIFORM_BLOCK_NAME;

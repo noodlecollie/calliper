@@ -47,6 +47,7 @@ private:
 
     void loadVMF();
     void processBrushes();
+    void importTextures();
 
     QString m_strFilename;
     QString m_strVpkPath;

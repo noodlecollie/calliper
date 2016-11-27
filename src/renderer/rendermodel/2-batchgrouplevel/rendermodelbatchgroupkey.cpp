@@ -16,7 +16,7 @@ namespace Renderer
         return qHash(arr, seed);
     }
 
-    RenderModelBatchGroupKey::RenderModelBatchGroupKey(quint16 shaderId, quint16 textureId, GLenum drawMode, float drawWidth)
+    RenderModelBatchGroupKey::RenderModelBatchGroupKey(quint16 shaderId, quint32 textureId, GLenum drawMode, float drawWidth)
         : m_iShaderId(shaderId), m_iTextureId(textureId), m_iDrawMode(drawMode), m_flDrawWidth(drawWidth)
     {
 

@@ -10,7 +10,7 @@ namespace Renderer
     class RENDERERSHARED_EXPORT RenderModelBatchGroupKey
     {
     public:
-        RenderModelBatchGroupKey(quint16 shaderId, quint16 textureId, GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);
+        RenderModelBatchGroupKey(quint16 shaderId, quint32 textureId, GLenum drawMode = GL_TRIANGLES, float drawWidth = 1.0f);
 
         quint16 shaderId() const;
         quint32 textureId() const;

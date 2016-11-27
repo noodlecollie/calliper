@@ -1,5 +1,6 @@
 #include "vpkfilecollection.h"
 #include <QDir>
+#include <QtDebug>
 
 namespace FileFormats
 {

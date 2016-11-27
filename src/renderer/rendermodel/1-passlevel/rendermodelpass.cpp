@@ -2,6 +2,7 @@
 #include <QtDebug>
 #include "opengl/openglhelpers.h"
 #include "opengl/openglerrors.h"
+#include "shaders/shaderdefs.h"
 
 namespace
 {
@@ -41,7 +42,7 @@ namespace
 
         if ( !newTexture.isNull() )
         {
-            newTexture->bind(0);
+            newTexture->bind(Renderer::ShaderDefs::MainTexture);
         }
 
         origTexture = newTexture;

@@ -14,6 +14,8 @@
 #include "shaders/simplelitshader.h"
 #include <QMessageBox>
 #include <QtGlobal>
+#include <QMap>
+#include "vpk/vpkindextreerecord.h"
 
 using namespace Model;
 using namespace Renderer;
@@ -113,6 +115,7 @@ void MainWindow::initializeGL()
     m_pMouseEventMap = new MouseEventMap(this);
     initMouseEventMap();
 
+    importTextures();
     loadVMF();
     processBrushes();
 }
@@ -312,6 +315,9 @@ void MainWindow::setVpkPath(const QString &path)
     m_VpkFiles.addFilesFromDirectory(path);
 
     qDebug() << "VPK path:" << m_strVpkPath;
-    printVpkInfo(m_VpkFiles, "vmt");
-    printVpkInfo(m_VpkFiles, "vtf");
+}
+
+void MainWindow::importTextures()
+{
+    // TODO
 }

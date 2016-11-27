@@ -14,7 +14,7 @@ namespace Model
         TextureStore();
         ~TextureStore();
 
-        virtual Renderer::OpenGLTexturePointer operator ()(quint64 textureId) const override;
+        virtual Renderer::OpenGLTexturePointer operator ()(quint32 textureId) const override;
         Renderer::OpenGLTexturePointer getTexture(quint32 textureId) const;
         Renderer::OpenGLTexturePointer createTexture(const QString &path);
         quint32 getTextureId(const QString &path) const;
