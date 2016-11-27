@@ -20,6 +20,9 @@ namespace Renderer
         const QVector3D& directionalLight() const;
         void setDirectionalLight(const QVector3D& vec);
 
+        quint32 defaultTextureId() const;
+        void setDefaultTextureId(quint32 id);
+
         inline bool operator ==(const RendererDrawParams& other) const
         {
             return m_matWorldToCamera == other.m_matWorldToCamera &&
@@ -36,6 +39,7 @@ namespace Renderer
         QMatrix4x4 m_matWorldToCamera;
         QMatrix4x4 m_matProjection;
         QVector3D m_vecDirectionalLight;
+        quint32 m_iDefaultTextureId;
     };
 }
 

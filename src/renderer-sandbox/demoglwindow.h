@@ -20,6 +20,7 @@
 #include "camera/cameracontroller.h"
 #include "controller-adapters/mouseeventmap.h"
 #include "genericbrush/genericbrush.h"
+#include "stores/materialstore.h"
 
 class TempSpec;
 
@@ -63,6 +64,7 @@ private:
     QTimer m_HidingTimer;
     Model::ShaderStore* m_pShaderStore;
     Model::TextureStore* m_pTextureStore;
+    Model::MaterialStore* m_pMaterialStore;
 
     Model::DebugCube*    m_pSceneObject;
     Model::Scene*        m_pScene;

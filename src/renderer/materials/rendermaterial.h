@@ -7,10 +7,13 @@
 
 namespace Renderer
 {
-    class RenderMaterial
+    class RENDERERSHARED_EXPORT RenderMaterial
     {
     public:
-        RenderMaterial();
+        RenderMaterial(quint32 id, const QString& path);
+
+        quint32 materialStoreId() const;
+        QString path() const;
 
         void addTexture(ShaderDefs::TextureUnit textureUnit, quint32 textureStoreId);
         quint32 texture(ShaderDefs::TextureUnit textureUnit) const;
@@ -22,6 +25,8 @@ namespace Renderer
         const QMap<ShaderDefs::TextureUnit, quint32>& textureUnitMap() const;
 
     private:
+        quint32 m_iId;
+        QString m_strPath;
         QMap<ShaderDefs::TextureUnit, quint32> m_TextureUnitToIdMap;
     };
 }

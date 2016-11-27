@@ -30,7 +30,7 @@ namespace Renderer
 
         void printDebugInfo() const;
 
-        void drawAllBatchGroups();
+        void drawAllBatchGroups(quint32 defaultTextureId);
 
     private:
         void setIfRequired(const RenderModelBatchGroupKey &key, OpenGLShaderProgram* &shaderProgram, RenderMaterialPointer &material);
@@ -42,6 +42,7 @@ namespace Renderer
         ITextureRetrievalFunctor* const m_pTextureFunctor;
         IMaterialRetrievalFunctor* const m_pMaterialFunctor;
 
+        quint32 m_iDrawDefaultTextureId;
         QMap<RenderModelBatchGroupKey, RenderModelBatchGroupPointer>  m_BatchGroups;
         QMap<ShaderDefs::TextureUnit, quint32> m_TextureUnitMap;
     };

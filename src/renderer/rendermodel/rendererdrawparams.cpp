@@ -36,4 +36,14 @@ namespace Renderer
     {
         m_vecDirectionalLight = vec;
     }
+
+    quint32 RendererDrawParams::defaultTextureId() const
+    {
+        return m_iDefaultTextureId;
+    }
+
+    void RendererDrawParams::setDefaultTextureId(quint32 id)
+    {
+        m_iDefaultTextureId = id;
+    }
 }

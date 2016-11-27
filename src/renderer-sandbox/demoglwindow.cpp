@@ -67,6 +67,7 @@ DemoGLWindow::~DemoGLWindow()
     delete m_pScene;
     delete m_pShaderStore;
     delete m_pTextureStore;
+    delete m_pMaterialStore;
 
     doneCurrent();
 }
@@ -84,6 +85,7 @@ void DemoGLWindow::initializeGL()
 
     m_pShaderStore = new ShaderStore();
     m_pTextureStore = new TextureStore();
+    m_pMaterialStore = new MaterialStore();
 
     quint16 defaultShader = m_pShaderStore->addShaderProgram<TempShader>();
     quint16 colShader = m_pShaderStore->addShaderProgram<ColorShader>();
@@ -95,8 +97,9 @@ void DemoGLWindow::initializeGL()
     IRenderer* renderer = Global::renderer();
     renderer->setShaderFunctor(m_pShaderStore);
     renderer->setTextureFunctor(m_pTextureStore);
+    renderer->setMaterialFunctor(m_pMaterialStore);
 
-    m_pScene = new Scene(m_pShaderStore, m_pTextureStore, this);
+    m_pScene = new Scene(m_pShaderStore, m_pTextureStore, m_pMaterialStore, this);
 //    m_pSceneObject = m_pScene->createSceneObject<DebugCube>(m_pScene->rootObject());
 //    m_pSceneObject->setRadius(32.0f);
 //    m_pSceneObject->hierarchy().setPosition(QVector3D(0, 0, 0));
@@ -107,7 +110,7 @@ void DemoGLWindow::initializeGL()
     m_pCamera = m_pScene->createSceneObject<SceneCamera>(m_pScene->rootObject());
     m_pCamera->hierarchy().setPosition(QVector3D(-40,0,0));
 
-    m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, &passClassifier, renderer, m_pScene);
+    m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, m_pMaterialStore, &passClassifier, renderer, m_pScene);
     m_pSceneRenderer->setDefaultTextureId(1);
 
     ShaderPalette shaderPalette;

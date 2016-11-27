@@ -4,6 +4,7 @@
 #include <QOpenGLWindow>
 #include "stores/shaderstore.h"
 #include "stores/texturestore.h"
+#include "stores/materialstore.h"
 #include "scene/basicscene.h"
 #include "camera/scenecamera.h"
 #include "simplerenderpassclassifier.h"
@@ -37,6 +38,7 @@ private:
     void destroy();
     void initShaders();
     void initTextures();
+    void initMaterials();
     void initLocalOpenGlSettings();
     void initRenderer();
     void initScene();
@@ -54,7 +56,9 @@ private:
 
     Model::ShaderStore* m_pShaderStore;
     Model::TextureStore* m_pTextureStore;
-    quint32 m_iDefaultTexture;
+    Model::MaterialStore* m_pMaterialStore;
+    quint32 m_iPlaceholderMaterial;
+    quint32 m_iErrorTextureId;
 
     Model::BasicScene* m_pScene;
     Model::SceneCamera* m_pCamera;

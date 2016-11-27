@@ -4,15 +4,19 @@ namespace Model
 {
     SceneRenderer::SceneRenderer(Renderer::IShaderRetrievalFunctor* shaderFunctor,
                                  Renderer::ITextureRetrievalFunctor* textureFunctor,
+                                 Renderer::IMaterialRetrievalFunctor* materialFunctor,
                                  IRenderPassClassifier* renderPassClassifier,
                                  Renderer::IRenderer* renderer, Scene* scene)
-        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
+        : m_pShaderFunctor(shaderFunctor),
+          m_pTextureFunctor(textureFunctor),
+          m_pMaterialFunctor(materialFunctor),
           m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene),
           m_iDefaultTexture(0), m_vecDirectionalLight(QVector3D(1,1,1).normalized())
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
+        Q_ASSERT_X(m_pMaterialFunctor, Q_FUNC_INFO, "Material functor cannot be null");
         Q_ASSERT_X(m_pRenderPassClassifier, Q_FUNC_INFO, "Render pass classifier cannot be null");
         Q_ASSERT_X(m_pRenderer, Q_FUNC_INFO, "Renderer cannot be null");
         Q_ASSERT_X(m_pScene, Q_FUNC_INFO, "Scene cannot be null");

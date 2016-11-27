@@ -47,7 +47,8 @@ SOURCES += \
     factories/genericbrushfactory.cpp \
     math/fuzzyvertexmap.cpp \
     shaders/errorshader.cpp \
-    shaders/simplelitshader.cpp
+    shaders/simplelitshader.cpp \
+    stores/materialstore.cpp
 
 HEADERS += \
     model_global.h \
@@ -88,7 +89,8 @@ HEADERS += \
     factories/genericbrushfactory.h \
     math/fuzzyvertexmap.h \
     shaders/errorshader.h \
-    shaders/simplelitshader.h
+    shaders/simplelitshader.h \
+    stores/materialstore.h
 
 unix {
     target.path = /usr/lib

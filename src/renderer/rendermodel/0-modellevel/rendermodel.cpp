@@ -290,7 +290,7 @@ namespace Renderer
 
         foreach ( const RenderModelPassPointer &pass, m_RenderPasses.values() )
         {
-            pass->drawAllBatchGroups();
+            pass->drawAllBatchGroups(params.defaultTextureId());
         }
 
         m_VAO.release();

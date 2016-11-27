@@ -33,7 +33,8 @@ namespace
 namespace Renderer
 {
     RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor, IMaterialRetrievalFunctor* materialFunctor)
-        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor), m_pMaterialFunctor(materialFunctor)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor), m_pMaterialFunctor(materialFunctor),
+          m_iDrawDefaultTextureId(0)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor should not be null!");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor should not be null!");
@@ -88,8 +89,9 @@ namespace Renderer
         changeMaterialIfDifferent(material, newMaterial);
     }
 
-    void RenderModelPass::drawAllBatchGroups()
+    void RenderModelPass::drawAllBatchGroups(quint32 defaultTextureId)
     {
+        m_iDrawDefaultTextureId = defaultTextureId;
         OpenGLShaderProgram* currentShaderProgram = nullptr;
         RenderMaterialPointer currentMaterial;
 
@@ -111,7 +113,9 @@ namespace Renderer
 
         if ( newMaterial.isNull() )
         {
-            setTextureUnitMap(QMap<ShaderDefs::TextureUnit, quint32>());
+            QMap<ShaderDefs::TextureUnit, quint32> defaultMap;
+            defaultMap.insert(ShaderDefs::MainTexture, m_iDrawDefaultTextureId);
+            setTextureUnitMap(defaultMap);
         }
         else
         {

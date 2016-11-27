@@ -13,7 +13,7 @@ namespace Model
     {
         Q_OBJECT
     public:
-        explicit BasicScene(ShaderStore* shaderStore, TextureStore* textureStore, QObject* parent = 0);
+        explicit BasicScene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent = 0);
 
         SceneCamera* defaultCamera() const;
 

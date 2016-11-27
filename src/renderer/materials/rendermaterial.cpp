@@ -2,9 +2,20 @@
 
 namespace Renderer
 {
-    RenderMaterial::RenderMaterial()
+    RenderMaterial::RenderMaterial(quint32 id, const QString &path)
+        : m_iId(id), m_strPath(path)
     {
 
+    }
+
+    QString RenderMaterial::path() const
+    {
+        return m_strPath;
+    }
+
+    quint32 RenderMaterial::materialStoreId() const
+    {
+        return m_iId;
     }
 
     void RenderMaterial::addTexture(ShaderDefs::TextureUnit textureUnit, quint32 textureStoreId)

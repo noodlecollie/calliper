@@ -2,10 +2,11 @@
 
 namespace Model
 {
-    Scene::Scene(ShaderStore* shaderStore, TextureStore* textureStore, QObject* parent)
+    Scene::Scene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent)
         : QObject(parent),
           m_pShaderStore(shaderStore),
           m_pTextureStore(textureStore),
+          m_pMaterialStore(materialStore),
           m_iObjectIdCounter(0),
           m_pRootObject(new SceneObject(SceneObjectInitParams(this, acquireNextObjectId()), nullptr))
     {

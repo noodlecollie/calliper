@@ -42,7 +42,9 @@ MainWindow::MainWindow(const QString& filename) :
     m_strFilename(filename),
     m_pShaderStore(nullptr),
     m_pTextureStore(nullptr),
-    m_iDefaultTexture(0),
+    m_pMaterialStore(nullptr),
+    m_iPlaceholderMaterial(0),
+    m_iErrorTextureId(0),
     m_pScene(nullptr),
     m_pCamera(nullptr),
     m_pSceneRenderer(nullptr),
@@ -85,6 +87,9 @@ void MainWindow::destroy()
 
     delete m_pTextureStore;
     m_pTextureStore = nullptr;
+
+    delete m_pMaterialStore;
+    m_pMaterialStore = nullptr;
 }
 
 void MainWindow::initializeGL()
@@ -97,12 +102,15 @@ void MainWindow::initializeGL()
     m_pTextureStore = new TextureStore();
     initTextures();
 
+    m_pMaterialStore = new MaterialStore();
+    initMaterials();
+
     initRenderer();
 
-    m_pScene = new BasicScene(m_pShaderStore, m_pTextureStore, this);
+    m_pScene = new BasicScene(m_pShaderStore, m_pTextureStore, m_pMaterialStore, this);
     initScene();
 
-    m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, &m_RenderPassClassifier,
+    m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, m_pMaterialStore, &m_RenderPassClassifier,
                                          Global::renderer(), m_pScene);
     initSceneRenderer();
 
@@ -145,11 +153,20 @@ void MainWindow::initShaders()
 
 void MainWindow::initTextures()
 {
-    m_pTextureStore->createDefaultTexture(":model/textures/_ERROR_");
-
-    OpenGLTexturePointer defaultTexture = m_pTextureStore->createTexture(":model/textures/dev/devwhite");
+    OpenGLTexturePointer defaultTexture = m_pTextureStore->createTexture(":model/textures/_ERROR_");
     Q_ASSERT_X(!defaultTexture.isNull(), Q_FUNC_INFO, "Unable to create default texture!");
-    m_iDefaultTexture = defaultTexture->textureStoreId();
+    m_iErrorTextureId = defaultTexture->textureStoreId();
+
+    m_pTextureStore->createTexture(":model/textures/dev/devwhite");
+}
+
+void MainWindow::initMaterials()
+{
+    // For now the string must be identical.
+    Renderer::RenderMaterialPointer material = m_pMaterialStore->createMaterial(":model/textures/dev/devwhite");
+    m_iPlaceholderMaterial = material->materialStoreId();
+
+    material->addTexture(ShaderDefs::MainTexture, m_pTextureStore->getTextureId(":model/textures/dev/devwhite"));
 }
 
 void MainWindow::initLocalOpenGlSettings()
@@ -168,6 +185,7 @@ void MainWindow::initRenderer()
     Global::initialise();
     Global::renderer()->setShaderFunctor(m_pShaderStore);
     Global::renderer()->setTextureFunctor(m_pTextureStore);
+    Global::renderer()->setMaterialFunctor(m_pMaterialStore);
 }
 
 void MainWindow::initScene()
@@ -177,7 +195,7 @@ void MainWindow::initScene()
 
 void MainWindow::initSceneRenderer()
 {
-    m_pSceneRenderer->setDefaultTextureId(m_iDefaultTexture);
+    m_pSceneRenderer->setDefaultTextureId(m_iErrorTextureId);
     m_pSceneRenderer->setShaderPalette(m_DefaultShaderPalette);
 }
 
@@ -303,7 +321,7 @@ void MainWindow::processBrushes()
         for ( int i = 0; i < brush->brushFaceCount(); i++ )
         {
             GenericBrushFace* face = brush->brushFaceAt(i);
-            face->texturePlane()->setTextureId(m_iDefaultTexture);
+            face->texturePlane()->setTextureId(m_iPlaceholderMaterial);
         }
     }
 }

@@ -4,8 +4,8 @@
 
 namespace Model
 {
-    BasicScene::BasicScene(ShaderStore* shaderStore, TextureStore* textureStore, QObject* parent)
-        : Scene(shaderStore, textureStore, parent)
+    BasicScene::BasicScene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent)
+        : Scene(shaderStore, textureStore, materialStore, parent)
     {
         m_pDefaultCamera = createSceneObject<SceneCamera>(rootObject());
         m_pDefaultCamera->hierarchy().setPosition(QVector3D(-64,0,0));

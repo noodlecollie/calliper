@@ -7,6 +7,7 @@
 #include "sceneobjectinitparams.h"
 #include "stores/texturestore.h"
 #include "stores/shaderstore.h"
+#include "stores/materialstore.h"
 
 namespace Model
 {
@@ -14,7 +15,7 @@ namespace Model
     {
         Q_OBJECT
     public:
-        explicit Scene(ShaderStore* shaderStore, TextureStore* textureStore, QObject* parent = 0);
+        explicit Scene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent = 0);
 
         template<typename T, typename... Args>
         T* createSceneObject(Args... args)
@@ -54,6 +55,7 @@ namespace Model
 
         ShaderStore* m_pShaderStore;
         TextureStore* m_pTextureStore;
+        MaterialStore* m_pMaterialStore;
 
         quint32 m_iObjectIdCounter;
         SceneObject* m_pRootObject;

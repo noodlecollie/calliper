@@ -20,8 +20,6 @@ namespace Model
         quint32 getTextureId(const QString &path) const;
         Renderer::OpenGLTexturePointer getTexture(const QString &path) const;
 
-        Renderer::OpenGLTexturePointer createDefaultTexture(const QString& path);
-
     private:
         quint32 acquireNextTextureId();
         Renderer::OpenGLTexturePointer createTextureInternal(const QString &path, quint32 id);

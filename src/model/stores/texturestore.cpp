@@ -45,23 +45,6 @@ namespace Model
         return createTextureInternal(path, acquireNextTextureId());
     }
 
-    Renderer::OpenGLTexturePointer TextureStore::createDefaultTexture(const QString &path)
-    {
-        using namespace Renderer;
-
-        if ( m_TextureTable.contains(0) )
-        {
-            return m_TextureTable.value(0);
-        }
-
-        if ( m_TexturePathTable.contains(path) )
-        {
-            return getTexture(path);
-        }
-
-        return createTextureInternal(path, 0);
-    }
-
     Renderer::OpenGLTexturePointer TextureStore::createTextureInternal(const QString &path, quint32 id)
     {
         using namespace Renderer;

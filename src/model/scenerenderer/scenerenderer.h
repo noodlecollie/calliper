@@ -7,6 +7,7 @@
 #include "camera/scenecamera.h"
 #include "functors/ishaderretrievalfunctor.h"
 #include "functors/itextureretrievalfunctor.h"
+#include "functors/imaterialretrievalfunctor.h"
 #include "irenderpassclassifier.h"
 
 namespace Model
@@ -16,6 +17,7 @@ namespace Model
     public:
         SceneRenderer(Renderer::IShaderRetrievalFunctor* shaderFunctor,
                       Renderer::ITextureRetrievalFunctor* textureFunctor,
+                      Renderer::IMaterialRetrievalFunctor* materialFunctor,
                       IRenderPassClassifier* renderPassClassifier,
                       Renderer::IRenderer* renderer, Scene* scene);
 
@@ -37,6 +39,7 @@ namespace Model
 
         Renderer::IShaderRetrievalFunctor* m_pShaderFunctor;
         Renderer::ITextureRetrievalFunctor* m_pTextureFunctor;
+        Renderer::IMaterialRetrievalFunctor* m_pMaterialFunctor;
         IRenderPassClassifier* m_pRenderPassClassifier;
         Renderer::IRenderer* m_pRenderer;
         Scene* m_pScene;
