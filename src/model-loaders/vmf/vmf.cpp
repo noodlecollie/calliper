@@ -12,7 +12,7 @@
 #include "scene/scene.h"
 #include "stores/texturestore.h"
 
-namespace MapImporters
+namespace ModelLoaders
 {
     namespace
     {

@@ -82,7 +82,6 @@ vlSSize CFileReader::Seek(vlOffset lOffset, VLSeekMode uiMode)
 
 	return (vlSSize)SetFilePointer(this->hFile, lOffset, NULL, (vlUInt)uiMode);
 }
-#endif
 
 vlBool CFileReader::Read(vlChar &cChar)
 {
@@ -117,3 +116,4 @@ vlSize CFileReader::Read(vlVoid *vData, vlSize uiBytes)
 
 	return (vlSize)ulBytesRead;
 }
+#endif

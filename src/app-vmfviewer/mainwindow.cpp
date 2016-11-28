@@ -268,7 +268,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *e)
 void MainWindow::loadVMF()
 {
     using namespace FileFormats;
-    using namespace MapImporters;
+    using namespace ModelLoaders;
 
     if ( m_strFilename.isNull() || m_strFilename.isEmpty() )
     {

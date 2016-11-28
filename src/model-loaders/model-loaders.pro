@@ -6,17 +6,17 @@
 
 QT       += gui
 
-TARGET = map-importers
+TARGET = model-loaders
 TEMPLATE = lib
 
-DEFINES += MAPIMPORTERS_LIBRARY
+DEFINES += MODELLOADERS_LIBRARY
 
 SOURCES += \
     vmf/vmf.cpp
 
 HEADERS +=\
-        map-importers_global.h \
-    vmf/vmf.h
+    vmf/vmf.h \
+    model-loaders_global.h
 
 unix {
     target.path = /usr/lib
