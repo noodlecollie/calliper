@@ -1,4 +1,4 @@
-#include "vmf.h"
+#include "vmfloader.h"
 #include <QJsonDocument>
 #include "math/texturedwinding.h"
 #include "math/modelmath.h"
@@ -84,7 +84,7 @@ namespace ModelLoaders
         }
     }
 
-    namespace VMF
+    namespace VMFLoader
     {
         void createBrushes(const QJsonDocument &doc, Model::SceneObject *parent)
         {

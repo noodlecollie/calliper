@@ -12,11 +12,13 @@ TEMPLATE = lib
 DEFINES += MODELLOADERS_LIBRARY
 
 SOURCES += \
-    vmf/vmf.cpp
+    vmf/vmfloader.cpp \
+    vtf/vtfloader.cpp
 
 HEADERS +=\
-    vmf/vmf.h \
-    model-loaders_global.h
+    model-loaders_global.h \
+    vmf/vmfloader.h \
+    vtf/vtfloader.h
 
 unix {
     target.path = /usr/lib
@@ -43,3 +45,17 @@ else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 
 INCLUDEPATH += $$PWD/../calliperutil
 DEPENDPATH += $$PWD/../calliperutil
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../file-formats/release/ -lfile-formats
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../file-formats/debug/ -lfile-formats
+else:unix: LIBS += -L$$OUT_PWD/../file-formats/ -lfile-formats
+
+INCLUDEPATH += $$PWD/../file-formats
+DEPENDPATH += $$PWD/../file-formats
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../dep-vtflib/release/ -ldep-vtflib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../dep-vtflib/debug/ -ldep-vtflib
+else:unix: LIBS += -L$$OUT_PWD/../dep-vtflib/ -ldep-vtflib
+
+INCLUDEPATH += $$PWD/../dep-vtflib
+DEPENDPATH += $$PWD/../dep-vtflib

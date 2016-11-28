@@ -19,5 +19,5 @@ renderer.depends = calliperutil
 app-vmfviewer.depends = calliperutil renderer model file-formats model-loaders
 app-vpkinfo.depends = file-formats calliperutil
 file-formats.depends = calliperutil
-model-loaders.depends = model renderer calliperutil
+model-loaders.depends = model renderer calliperutil file-formats dep-vtflib
 dep-qvtf.depends = dep-vtflib

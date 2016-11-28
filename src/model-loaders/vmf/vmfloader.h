@@ -1,15 +1,15 @@
-#ifndef VMF_H
-#define VMF_H
+#ifndef VMFLOADER_H
+#define VMFLOADER_H
 
 #include "model-loaders_global.h"
 #include "scene/sceneobject.h"
 
 namespace ModelLoaders
 {
-    namespace VMF
+    namespace VMFLoader
     {
         MODELLOADERSSHARED_EXPORT void createBrushes(const QJsonDocument &doc, Model::SceneObject* parent);
     }
 }
 
-#endif // VMF_H
+#endif // VMFLOADER_H

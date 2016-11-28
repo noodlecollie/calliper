@@ -7,7 +7,7 @@
 #include <QMouseEvent>
 #include <QFile>
 #include "keyvalues/keyvaluesparser.h"
-#include "vmf/vmf.h"
+#include "vmf/vmfloader.h"
 #include <QtDebug>
 #include "shaders/errorshader.h"
 #include "genericbrush/genericbrush.h"
@@ -16,6 +16,7 @@
 #include <QtGlobal>
 #include <QMap>
 #include "vpk/vpkindextreerecord.h"
+#include "vtf/vtfloader.h"
 
 using namespace Model;
 using namespace Renderer;
@@ -302,7 +303,7 @@ void MainWindow::loadVMF()
         }
     }
 
-    VMF::createBrushes(vmfDoc, m_pScene->rootObject());
+    VMFLoader::createBrushes(vmfDoc, m_pScene->rootObject());
     qDebug() << "VMF" << m_strFilename << "loaded";
 }
 
@@ -337,5 +338,5 @@ void MainWindow::setVpkPath(const QString &path)
 
 void MainWindow::importTextures()
 {
-    // TODO
+    ModelLoaders::VTFLoader::debugVmtLoading();
 }

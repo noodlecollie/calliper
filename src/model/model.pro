@@ -48,7 +48,8 @@ SOURCES += \
     math/fuzzyvertexmap.cpp \
     shaders/errorshader.cpp \
     shaders/simplelitshader.cpp \
-    stores/materialstore.cpp
+    stores/materialstore.cpp \
+    stores/materialresourcemanager.cpp
 
 HEADERS += \
     model_global.h \
@@ -90,7 +91,8 @@ HEADERS += \
     math/fuzzyvertexmap.h \
     shaders/errorshader.h \
     shaders/simplelitshader.h \
-    stores/materialstore.h
+    stores/materialstore.h \
+    stores/materialresourcemanager.h
 
 unix {
     target.path = /usr/lib

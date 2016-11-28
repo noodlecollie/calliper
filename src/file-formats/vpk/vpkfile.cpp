@@ -286,8 +286,11 @@ namespace FileFormats
 
     bool VPKFile::openArchive(int index)
     {
-        if ( index < 0 || index >= m_SiblingArchives.count() || m_Archive.isOpen() )
+        if ( index < 0 || index >= m_SiblingArchives.count() )
             return false;
+
+        if ( isArchiveOpen() )
+            closeArchive();
 
         m_Archive.setFileName(m_SiblingArchives.at(index));
 
@@ -305,7 +308,7 @@ namespace FileFormats
 
     void VPKFile::closeArchive()
     {
-        if ( isArchiveOpen() )
+        if ( !isArchiveOpen() )
             return;
 
         m_Archive.close();
