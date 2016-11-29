@@ -21,23 +21,6 @@
 using namespace Model;
 using namespace Renderer;
 
-namespace
-{
-    void printVpkInfo(const FileFormats::VPKFileCollection& collection, const QString& extension)
-    {
-        QSet<FileFormats::VPKFilePointer> vpks = collection.filesContainingExtension(extension);
-
-        qDebug().nospace() << vpks.count() << " VPK files containing extension " << extension << ":";
-
-        foreach ( const FileFormats::VPKFilePointer& file, vpks )
-        {
-            qDebug().nospace() << file->fileName()
-                               << " (" << file->index().recordCountForExtension(extension)
-                               << " " << extension.toLatin1().constData() << " files)";
-        }
-    }
-}
-
 MainWindow::MainWindow(const QString& filename) :
     QOpenGLWindow(),
     m_strFilename(filename),
@@ -333,10 +316,17 @@ void MainWindow::setVpkPath(const QString &path)
     m_VpkFiles.clear();
     m_VpkFiles.addFilesFromDirectory(path);
 
-    qDebug() << "VPK path:" << m_strVpkPath;
+    if ( !m_strVpkPath.isEmpty() )
+    {
+        qDebug() << "VPK path:" << m_strVpkPath;
+    }
+    else
+    {
+        qDebug() << "VPK path is empty.";
+    }
 }
 
 void MainWindow::importTextures()
 {
-    ModelLoaders::VTFLoader::debugVmtLoading();
+    ModelLoaders::VTFLoader::loadMaterials(m_VpkFiles, m_pMaterialStore, m_pTextureStore);
 }

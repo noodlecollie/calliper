@@ -13,8 +13,6 @@ namespace ModelLoaders
         MODELLOADERSSHARED_EXPORT void loadMaterials(const FileFormats::VPKFileCollection& vpkFiles,
                                                      Model::MaterialStore* materialStore,
                                                      Model::TextureStore* textureStore);
-
-        MODELLOADERSSHARED_EXPORT void debugVmtLoading();
     }
 }
 

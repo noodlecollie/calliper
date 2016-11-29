@@ -9,17 +9,31 @@ namespace ModelLoaders
 {
     namespace
     {
+        typedef QHash<QString, Renderer::ShaderDefs::TextureUnit> VmtPropertyTable;
+
+        const VmtPropertyTable& getVmtPropertyTable()
+        {
+            using namespace Renderer;
+
+            static VmtPropertyTable vmtPropertyToShaderDef;
+
+            if ( vmtPropertyToShaderDef.isEmpty() )
+            {
+                vmtPropertyToShaderDef.insert("$basetexture", ShaderDefs::MainTexture);
+            }
+
+            return vmtPropertyToShaderDef;
+        }
+
         void getTexturesFromVmtRecursive(const VTFLib::Nodes::CVMTNode* node,
                                 QHash<Renderer::ShaderDefs::TextureUnit, QString>& textureTable)
         {
-            qDebug() << "Node name:" << node->GetName();
-
             switch ( node->GetType() )
             {
                 case NODE_TYPE_GROUP:
                 {
+                    // Recursively explore this group.
                     const VTFLib::Nodes::CVMTGroupNode* groupNode = dynamic_cast<const VTFLib::Nodes::CVMTGroupNode*>(node);
-
                     for ( quint32 i = 0; i < groupNode->GetNodeCount(); i++ )
                     {
                         getTexturesFromVmtRecursive(groupNode->GetNode(i), textureTable);
@@ -28,6 +42,22 @@ namespace ModelLoaders
                     return;
                 }
 
+                case NODE_TYPE_STRING:
+                {
+                    const VTFLib::Nodes::CVMTStringNode* stringNode = dynamic_cast<const VTFLib::Nodes::CVMTStringNode*>(node);
+                    const VmtPropertyTable& propTable = getVmtPropertyTable();
+
+                    QString nodeName = QString(stringNode->GetName()).toLower();
+                    if ( !propTable.contains(nodeName) )
+                        return;
+
+                    QString texturePath = stringNode->GetValue();
+                    texturePath.replace('\\', '/');
+                    textureTable.insert(propTable.value(nodeName), texturePath);
+                    return;
+                }
+
+                // For now, this is all we support.
                 default:
                 {
                     return;
@@ -76,21 +106,6 @@ namespace ModelLoaders
 
                 file->closeArchive();
             }
-        }
-
-        void debugVmtLoading()
-        {
-            const char* vmtData =
-                    "LightmappedGeneric\n"
-                    "{\n"
-                    "    $basetexture coast\\shingle_01\n"
-                    "    $surfaceprop gravel\n"
-                    "}\n";
-
-            VTFLib::CVMTFile vmtFile;
-            vmtFile.Load(vmtData, strlen(vmtData));
-            QHash<Renderer::ShaderDefs::TextureUnit, QString> textureTable;
-            getTexturesFromVmtRecursive(vmtFile.GetRoot(), textureTable);
         }
     }
 }
