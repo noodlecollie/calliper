@@ -7,6 +7,9 @@
 #include "general/generalutil.h"
 #include <QImageReader>
 #include <QBuffer>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
 
 namespace ModelLoaders
 {
@@ -66,6 +69,56 @@ namespace ModelLoaders
                 }
             }
         }
+
+        void getTexturesFromVmtRecursive(const QString& key, const QJsonValue value,
+                                QHash<Renderer::ShaderDefs::TextureUnit, QString>& textureTable)
+        {
+            if ( value.isString() )
+            {
+                const VmtPropertyTable& propTable = getVmtPropertyTable();
+                if ( !propTable.contains(key) )
+                    return;
+
+                QString texturePath = CalliperUtil::General::normaliseResourcePathSeparators(value.toString());
+                textureTable.insert(propTable.value(key), texturePath);
+                return;
+            }
+
+            if ( value.isObject() )
+            {
+                QJsonObject object = value.toObject();
+
+                for ( QJsonObject::const_iterator it = object.constBegin();
+                      it != object.constEnd();
+                      ++it )
+                {
+                    getTexturesFromVmtRecursive(it.key(), it.value(), textureTable);
+                }
+
+                return;
+            }
+
+            if ( value.isArray() )
+            {
+                QJsonArray array = value.toArray();
+
+                for ( QJsonArray::const_iterator it = array.constBegin();
+                      it != array.constEnd();
+                      ++it )
+                {
+                    // Arrays can be produced from multiple KV items with the same key,
+                    // so essentially all items here have the same key
+                    // (ie. the one that was passed in).
+                    // TODO: Is this -always- what we want?
+                    getTexturesFromVmtRecursive(key, it.value(), textureTable);
+                }
+
+                return;
+            }
+
+            // We don't care about anything else right now.
+            return;
+        }
     }
 
     namespace VTFLoader
@@ -100,6 +153,9 @@ namespace ModelLoaders
                     if ( vmtData.isEmpty() )
                         continue;
 
+                    qDebug() << "Reading VMT file:" << record->fullPath();
+
+                    /*
                     VTFLib::CVMTFile vmtFile;
                     if ( !vmtFile.Load(vmtData.constData(), vmtData.length()) )
                         continue;
@@ -107,6 +163,9 @@ namespace ModelLoaders
                     typedef QHash<ShaderDefs::TextureUnit, QString> TextureUnitToPathTable;
                     TextureUnitToPathTable textureTable;
                     getTexturesFromVmtRecursive(vmtFile.GetRoot(), textureTable);
+                    */
+
+                    // TODO: Use our own KV parser here.
 
                     RenderMaterialPointer material = materialStore->createMaterial(record->fullPath());
 

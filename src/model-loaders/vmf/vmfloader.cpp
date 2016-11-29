@@ -11,6 +11,7 @@
 #include <QtDebug>
 #include "scene/scene.h"
 #include "stores/texturestore.h"
+#include "general/generalutil.h"
 
 namespace ModelLoaders
 {
@@ -106,7 +107,7 @@ namespace ModelLoaders
                 for ( int j = 0; j < sides.count(); j++ )
                 {
                     QJsonObject side = sides.at(j).toObject();
-                    QString texturePath = side.value("material").toString();
+                    QString texturePath = CalliperUtil::General::normaliseResourcePathSeparators(side.value("material").toString());
                     QString plane = side.value("plane").toString();
 
                     QVector3D v0, v1, v2;

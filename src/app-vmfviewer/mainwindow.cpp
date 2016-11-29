@@ -109,7 +109,7 @@ void MainWindow::initializeGL()
 
     importTextures();
     loadVMF();
-    processBrushes();
+    //processBrushes();
 }
 
 void MainWindow::paintGL()

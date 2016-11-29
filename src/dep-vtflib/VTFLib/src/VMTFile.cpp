@@ -271,7 +271,7 @@ private:
 		{
 			this->NextToken = new CToken(TOKEN_NEWLINE, cChar);
 		}
-		else if(isspace(cChar))
+        else if(isspace(static_cast<unsigned char>(cChar)))
 		{
 			this->NextToken = new CToken(TOKEN_WHITESPACE, cChar);
 		}
@@ -712,6 +712,10 @@ vlBool CVMTFile::Load(IO::Readers::IReader *Reader)
 	{
 		LastError.SetFormatted("Error parsing material on line %u (%s).", Tokenizer.GetLine(), cErrorMessage);
 	}
+    catch(...)
+    {
+        LastError.Set("Unknown exception occurred.");
+    }
 
 	Reader->Close();
 
