@@ -21,6 +21,11 @@ namespace Model
         quint32 getTextureId(const QString &path) const;
         Renderer::OpenGLTexturePointer getTexture(const QString &path) const;
 
+        // This calls destroy() on the OpenGL texture and removes it from the store.
+        // The object itself may not die if other shared pointers are still referencing it.
+        void destroyTexture(quint32 textureId);
+        void destroyTexture(const QString& path);
+
     private:
         quint32 acquireNextTextureId();
         void processCreatedTexture(const Renderer::OpenGLTexturePointer& texture, const QString& path);

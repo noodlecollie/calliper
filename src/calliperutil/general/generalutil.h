@@ -28,6 +28,10 @@ namespace CalliperUtil
 
             return classname.mid(colonIndex+2);
         }
+
+        // As a general rule, this should be called as early as possible on an imported resource path,
+        // so that the rest of the code can assume the separators are normalised.
+        CALLIPERUTILSHARED_EXPORT QString normaliseResourcePathSeparators(const QString& originalPath);
     }
 }
 

@@ -4,6 +4,9 @@
 #include "materials/rendermaterial.h"
 #include "VTFLib/src/VMTNode.h"
 #include <QtDebug>
+#include "general/generalutil.h"
+#include <QImageReader>
+#include <QBuffer>
 
 namespace ModelLoaders
 {
@@ -51,8 +54,7 @@ namespace ModelLoaders
                     if ( !propTable.contains(nodeName) )
                         return;
 
-                    QString texturePath = stringNode->GetValue();
-                    texturePath.replace('\\', '/');
+                    QString texturePath = CalliperUtil::General::normaliseResourcePathSeparators(stringNode->GetValue());
                     textureTable.insert(propTable.value(nodeName), texturePath);
                     return;
                 }
@@ -68,6 +70,7 @@ namespace ModelLoaders
 
     namespace VTFLoader
     {
+        // TODO: Clean up this function, it's sprawling.
         void loadMaterials(const FileFormats::VPKFileCollection &vpkFiles,
                            Model::MaterialStore *materialStore,
                            Model::TextureStore *textureStore)
@@ -85,7 +88,7 @@ namespace ModelLoaders
                 QList<VPKIndexTreeRecordPointer> records = file->index().recordsForExtension("vmt");
                 quint16 currentArchiveIndex = ~0;
 
-                foreach ( const VPKIndexTreeRecordPointer record, records )
+                foreach ( const VPKIndexTreeRecordPointer& record, records )
                 {
                     if ( record->item()->archiveIndex() != currentArchiveIndex )
                     {
@@ -112,8 +115,66 @@ namespace ModelLoaders
                           ++it )
                     {
                         QString path = it.value();
-                        referencedVtfs.insert(path, textureStore->createEmptyTexture(path)->textureStoreId());
+
+                        // This will just return a pre-existing texture if the path is the same.
+                        // In this case the ID will be the same as well.
+                        quint32 textureId = textureStore->createEmptyTexture(path)->textureStoreId();
+                        referencedVtfs.insert(path, textureId);
+
+                        material->addTexture(it.key(), textureId);
                     }
+                }
+
+                file->closeArchive();
+            }
+
+
+            // Now we have created all materials and hooked them up with their appropriate texture IDs.
+            // Next, go through each VMT that was referenced and load it.
+            QSet<VPKFilePointer> vtfVpks = vpkFiles.filesContainingExtension("vtf");
+            foreach ( const VPKFilePointer& file, vtfVpks )
+            {
+                QList<VPKIndexTreeRecordPointer> records = file->index().recordsForExtension("vtf");
+                quint16 currentArchiveIndex = ~0;
+
+                foreach ( const VPKIndexTreeRecordPointer& record, records )
+                {
+                    if ( !referencedVtfs.contains(record->fullPath()) )
+                        continue;
+
+                    quint32 textureId = referencedVtfs.value(record->fullPath());
+
+                    if ( record->item()->archiveIndex() != currentArchiveIndex )
+                    {
+                        currentArchiveIndex = record->item()->archiveIndex();
+                        file->openArchive(currentArchiveIndex);
+                    }
+
+                    QByteArray vtfData = file->readFromCurrentArchive(record->item());
+                    if ( vtfData.isEmpty() )
+                    {
+                        textureStore->destroyTexture(referencedVtfs.value(record->fullPath()));
+                        continue;
+                    }
+
+                    QBuffer vtfDataBuffer(&vtfData);
+                    QImageReader imageReader(&vtfDataBuffer, "vtf");
+                    QImage image = imageReader.read();
+                    if ( image.isNull() )
+                    {
+                        qDebug() << "Failed to read" << record->fullPath() << "into a QImage";
+                        textureStore->destroyTexture(textureId);
+                        continue;
+                    }
+
+                    OpenGLTexturePointer texture = textureStore->getTexture(textureId);
+                    if ( texture->textureStoreId() != textureId )
+                    {
+                        Q_ASSERT_X(false, Q_FUNC_INFO, "Texture ID mismatch, should never happen!");
+                        continue;
+                    }
+
+                    texture->setData(image);
                 }
 
                 file->closeArchive();

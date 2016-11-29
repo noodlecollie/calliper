@@ -6,6 +6,7 @@
 #include <QScopedArrayPointer>
 #include <QByteArray>
 #include "vpkarchivemd5item.h"
+#include "general/generalutil.h"
 
 namespace FileFormats
 {
@@ -191,6 +192,8 @@ namespace FileFormats
                 currentPath = getString(currentString);
                 if ( currentPath.isEmpty() )
                     break;
+
+                currentPath = CalliperUtil::General::normaliseResourcePathSeparators(currentPath);
 
                 while ( currentString < base + m_Header.treeSize() )
                 {

@@ -78,4 +78,23 @@ namespace Model
     {
         return getTexture(getTextureId(path));
     }
+
+    void TextureStore::destroyTexture(quint32 textureId)
+    {
+        using namespace Renderer;
+
+        if ( !m_TextureTable.contains(textureId) )
+            return;
+
+        OpenGLTexturePointer texture = getTexture(textureId);
+
+        m_TextureTable.remove(textureId);
+        m_TexturePathTable.remove(texture->path());
+        texture->destroy();
+    }
+
+    void TextureStore::destroyTexture(const QString &path)
+    {
+        destroyTexture(getTextureId(path));
+    }
 }

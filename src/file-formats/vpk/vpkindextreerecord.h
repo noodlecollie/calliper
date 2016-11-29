@@ -7,7 +7,7 @@
 
 namespace FileFormats
 {
-    class VPKIndexTreeRecord
+    class FILEFORMATSSHARED_EXPORT VPKIndexTreeRecord
     {
     public:
         VPKIndexTreeRecord(const QString& path, const QString& filename, const QString& extension);
