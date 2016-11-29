@@ -137,11 +137,11 @@ void MainWindow::initShaders()
 
 void MainWindow::initTextures()
 {
-    OpenGLTexturePointer defaultTexture = m_pTextureStore->createTexture(":model/textures/_ERROR_");
+    OpenGLTexturePointer defaultTexture = m_pTextureStore->createTextureFromFile(":model/textures/_ERROR_");
     Q_ASSERT_X(!defaultTexture.isNull(), Q_FUNC_INFO, "Unable to create default texture!");
     m_iErrorTextureId = defaultTexture->textureStoreId();
 
-    m_pTextureStore->createTexture(":model/textures/dev/devwhite");
+    m_pTextureStore->createTextureFromFile(":model/textures/dev/devwhite");
 }
 
 void MainWindow::initMaterials()

@@ -75,9 +75,10 @@ namespace ModelLoaders
             using namespace FileFormats;
             using namespace Renderer;
 
-            QSet<QString> referencedVtfs;
+            QHash<QString, quint32> referencedVtfs;
             QSet<VPKFilePointer> vmtVpks = vpkFiles.filesContainingExtension("vmt");
 
+            // Read all the VMTs and keep track of all the VTFs they reference.
             foreach ( const VPKFilePointer& file, vmtVpks )
             {
                 // These are ordered by archive number.
@@ -100,8 +101,19 @@ namespace ModelLoaders
                     if ( !vmtFile.Load(vmtData.constData(), vmtData.length()) )
                         continue;
 
-                    QHash<ShaderDefs::TextureUnit, QString> textureTable;
+                    typedef QHash<ShaderDefs::TextureUnit, QString> TextureUnitToPathTable;
+                    TextureUnitToPathTable textureTable;
                     getTexturesFromVmtRecursive(vmtFile.GetRoot(), textureTable);
+
+                    RenderMaterialPointer material = materialStore->createMaterial(record->fullPath());
+
+                    for ( TextureUnitToPathTable::const_iterator it = textureTable.constBegin();
+                          it != textureTable.constEnd();
+                          ++it )
+                    {
+                        QString path = it.value();
+                        referencedVtfs.insert(path, textureStore->createEmptyTexture(path)->textureStoreId());
+                    }
                 }
 
                 file->closeArchive();

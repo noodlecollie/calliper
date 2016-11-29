@@ -90,7 +90,7 @@ void DemoGLWindow::initializeGL()
     quint16 defaultShader = m_pShaderStore->addShaderProgram<TempShader>();
     quint16 colShader = m_pShaderStore->addShaderProgram<ColorShader>();
 
-    OpenGLTexturePointer tex = m_pTextureStore->createTexture(":/renderer-sandbox/obsolete-opaque.png");
+    OpenGLTexturePointer tex = m_pTextureStore->createTextureFromFile(":/renderer-sandbox/obsolete-opaque.png");
     qDebug() << "Texture" << tex->path() << "has ID" << tex->textureStoreId();
 
     Global::initialise();

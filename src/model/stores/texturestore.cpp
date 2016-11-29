@@ -33,7 +33,7 @@ namespace Model
         return getTexture(textureId);
     }
 
-    Renderer::OpenGLTexturePointer TextureStore::createTexture(const QString &path)
+    Renderer::OpenGLTexturePointer TextureStore::createTextureFromFile(const QString &path)
     {
         using namespace Renderer;
 
@@ -42,19 +42,31 @@ namespace Model
             return getTexture(m_TexturePathTable.value(path));
         }
 
-        return createTextureInternal(path, acquireNextTextureId());
+        OpenGLTexturePointer texture = OpenGLTexturePointer::create(acquireNextTextureId(), QImage(path).mirrored());
+        texture->create();
+        processCreatedTexture(texture, path);
+        return texture;
     }
 
-    Renderer::OpenGLTexturePointer TextureStore::createTextureInternal(const QString &path, quint32 id)
+    Renderer::OpenGLTexturePointer TextureStore::createEmptyTexture(const QString &path)
     {
         using namespace Renderer;
 
-        OpenGLTexturePointer texture = OpenGLTexturePointer::create(id, QImage(path).mirrored());
-        texture->setPath(path);
-        texture->create();
-        m_TextureTable.insert(id, texture);
-        m_TexturePathTable.insert(path, id);
+        if ( m_TexturePathTable.contains(path) )
+        {
+            return getTexture(m_TexturePathTable.value(path));
+        }
+
+        OpenGLTexturePointer texture = OpenGLTexturePointer::create(acquireNextTextureId(), QOpenGLTexture::Target2D);
+        processCreatedTexture(texture, path);
         return texture;
+    }
+
+    void TextureStore::processCreatedTexture(const Renderer::OpenGLTexturePointer &texture, const QString& path)
+    {
+        texture->setPath(path);
+        m_TextureTable.insert(texture->textureStoreId(), texture);
+        m_TexturePathTable.insert(path, texture->textureStoreId());
     }
 
     quint32 TextureStore::getTextureId(const QString &path) const
