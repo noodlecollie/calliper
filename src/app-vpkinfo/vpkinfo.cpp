@@ -263,4 +263,38 @@ namespace VPKInfo
 
         qInfo() << str.toLatin1().constData() << "";
     }
+
+    void printInfoAboutFile(const FileFormats::VPKIndex &index, const QString &filename)
+    {
+        using namespace FileFormats;
+
+        VPKIndexTreeRecordPointer record = index.recordAt(filename);
+
+        if ( record.isNull() )
+        {
+            qInfo() << "File" << filename << "not found in VPK.";
+            return;
+        }
+
+        QString string;
+        QTextStream s(&string);
+        s << "File: " << record->fullPath() << endl;
+
+        VPKIndexTreeItem* item = record->item();
+
+#define PRINT_PAIR(_key, _value) \
+    left << qSetFieldWidth(15) << (_key) << qSetFieldWidth(0) << (_value)
+
+        s << PRINT_PAIR("Path:", record->path()) << endl;
+        s << PRINT_PAIR("Name:", record->filename()) << endl;
+        s << PRINT_PAIR("Extension:", record->extension()) << endl;
+        s << PRINT_PAIR("Archive index:", item->archiveIndex()) << endl;
+        s << PRINT_PAIR("Offset:", item->entryOffset()) << endl;
+        s << PRINT_PAIR("Length:", item->entryLength()) << endl;
+
+#undef PRINT_PAIR
+
+        s.flush();
+        qInfo() << string.toLatin1().constData();
+    }
 }

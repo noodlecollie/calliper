@@ -93,7 +93,12 @@ namespace FileFormats
             KeyValuesToken token(m_Input, from);
 
             // Do things depending on the type.
-            if ( token == KeyValuesToken::TokenPush )
+            if ( !token.isValid() )
+            {
+                throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
+                                             "Invalid syntax encountered.");
+            }
+            else if ( token == KeyValuesToken::TokenPush )
             {
                 // Insert ':' if we've already had a key.
                 if ( depthTokens.top() % 2 != 0 )
@@ -249,6 +254,14 @@ namespace FileFormats
 
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(intermediate, &error);
+
+        if ( error.error != QJsonParseError::NoError )
+        {
+            if ( errorString )
+                *errorString = error.errorString();
+
+            return QJsonDocument();
+        }
 
         Q_ASSERT_X(doc.isObject(), Q_FUNC_INFO, "Expected JSON document to have a root object.");
 

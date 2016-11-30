@@ -10,6 +10,7 @@
 #include <QJsonValue>
 #include <QJsonObject>
 #include <QJsonArray>
+#include "keyvalues/keyvaluesparser.h"
 
 namespace ModelLoaders
 {
@@ -31,49 +32,10 @@ namespace ModelLoaders
             return vmtPropertyToShaderDef;
         }
 
-        void getTexturesFromVmtRecursive(const VTFLib::Nodes::CVMTNode* node,
-                                QHash<Renderer::ShaderDefs::TextureUnit, QString>& textureTable)
-        {
-            switch ( node->GetType() )
-            {
-                case NODE_TYPE_GROUP:
-                {
-                    // Recursively explore this group.
-                    const VTFLib::Nodes::CVMTGroupNode* groupNode = dynamic_cast<const VTFLib::Nodes::CVMTGroupNode*>(node);
-                    for ( quint32 i = 0; i < groupNode->GetNodeCount(); i++ )
-                    {
-                        getTexturesFromVmtRecursive(groupNode->GetNode(i), textureTable);
-                    }
-
-                    return;
-                }
-
-                case NODE_TYPE_STRING:
-                {
-                    const VTFLib::Nodes::CVMTStringNode* stringNode = dynamic_cast<const VTFLib::Nodes::CVMTStringNode*>(node);
-                    const VmtPropertyTable& propTable = getVmtPropertyTable();
-
-                    QString nodeName = QString(stringNode->GetName()).toLower();
-                    if ( !propTable.contains(nodeName) )
-                        return;
-
-                    QString texturePath = CalliperUtil::General::normaliseResourcePathSeparators(stringNode->GetValue());
-                    textureTable.insert(propTable.value(nodeName), texturePath);
-                    return;
-                }
-
-                // For now, this is all we support.
-                default:
-                {
-                    return;
-                }
-            }
-        }
-
         void getTexturesFromVmtRecursive(const QString& key, const QJsonValue value,
                                 QHash<Renderer::ShaderDefs::TextureUnit, QString>& textureTable)
         {
-            if ( value.isString() )
+            if ( value.isString() && !key.isNull() && !key.isEmpty() )
             {
                 const VmtPropertyTable& propTable = getVmtPropertyTable();
                 if ( !propTable.contains(key) )
@@ -110,7 +72,7 @@ namespace ModelLoaders
                     // so essentially all items here have the same key
                     // (ie. the one that was passed in).
                     // TODO: Is this -always- what we want?
-                    getTexturesFromVmtRecursive(key, it.value(), textureTable);
+                    getTexturesFromVmtRecursive(key, *it, textureTable);
                 }
 
                 return;
@@ -131,8 +93,15 @@ namespace ModelLoaders
             using namespace FileFormats;
             using namespace Renderer;
 
-            QHash<QString, quint32> referencedVtfs;
             QSet<VPKFilePointer> vmtVpks = vpkFiles.filesContainingExtension("vmt");
+            QSet<VPKFilePointer> vtfVpks = vpkFiles.filesContainingExtension("vtf");
+
+            if ( vmtVpks.count() < 1 || vtfVpks.count() < 1 )
+            {
+                return;
+            }
+
+            QHash<QString, quint32> referencedVtfs;
 
             // Read all the VMTs and keep track of all the VTFs they reference.
             foreach ( const VPKFilePointer& file, vmtVpks )
@@ -141,6 +110,7 @@ namespace ModelLoaders
                 QList<VPKIndexTreeRecordPointer> records = file->index().recordsForExtension("vmt");
                 quint16 currentArchiveIndex = ~0;
 
+                quint32 fileNumber = 0;
                 foreach ( const VPKIndexTreeRecordPointer& record, records )
                 {
                     if ( record->item()->archiveIndex() != currentArchiveIndex )
@@ -151,21 +121,27 @@ namespace ModelLoaders
 
                     QByteArray vmtData = file->readFromCurrentArchive(record->item());
                     if ( vmtData.isEmpty() )
+                    {
+                        fileNumber++;
                         continue;
+                    }
 
-                    qDebug() << "Reading VMT file:" << record->fullPath();
+                    qDebug() << "Reading VMT file" << fileNumber << "of" << records.count() << record->fullPath();
+                    qDebug() << vmtData.constData();
 
                     /*
-                    VTFLib::CVMTFile vmtFile;
-                    if ( !vmtFile.Load(vmtData.constData(), vmtData.length()) )
+                    KeyValuesParser parser(vmtData);
+                    QString error;
+                    QJsonDocument doc = parser.toJsonDocument(&error);
+                    if ( !error.isEmpty() )
+                    {
+                        fileNumber++;
                         continue;
+                    }
 
                     typedef QHash<ShaderDefs::TextureUnit, QString> TextureUnitToPathTable;
                     TextureUnitToPathTable textureTable;
-                    getTexturesFromVmtRecursive(vmtFile.GetRoot(), textureTable);
-                    */
-
-                    // TODO: Use our own KV parser here.
+                    getTexturesFromVmtRecursive(QString(), doc.object(), textureTable);
 
                     RenderMaterialPointer material = materialStore->createMaterial(record->fullPath());
 
@@ -182,15 +158,17 @@ namespace ModelLoaders
 
                         material->addTexture(it.key(), textureId);
                     }
+                    */
+
+                    fileNumber++;
                 }
 
                 file->closeArchive();
             }
 
-
+            /*
             // Now we have created all materials and hooked them up with their appropriate texture IDs.
             // Next, go through each VMT that was referenced and load it.
-            QSet<VPKFilePointer> vtfVpks = vpkFiles.filesContainingExtension("vtf");
             foreach ( const VPKFilePointer& file, vtfVpks )
             {
                 QList<VPKIndexTreeRecordPointer> records = file->index().recordsForExtension("vtf");
@@ -201,7 +179,10 @@ namespace ModelLoaders
                     if ( !referencedVtfs.contains(record->fullPath()) )
                         continue;
 
-                    quint32 textureId = referencedVtfs.value(record->fullPath());
+                    QString fullPath = record->fullPath();
+                    qDebug() << "Reading VTF file:" << fullPath;
+
+                    quint32 textureId = referencedVtfs.value(fullPath);
 
                     if ( record->item()->archiveIndex() != currentArchiveIndex )
                     {
@@ -212,7 +193,8 @@ namespace ModelLoaders
                     QByteArray vtfData = file->readFromCurrentArchive(record->item());
                     if ( vtfData.isEmpty() )
                     {
-                        textureStore->destroyTexture(referencedVtfs.value(record->fullPath()));
+                        textureStore->destroyTexture(textureId);
+                        referencedVtfs.remove(fullPath);
                         continue;
                     }
 
@@ -223,6 +205,7 @@ namespace ModelLoaders
                     {
                         qDebug() << "Failed to read" << record->fullPath() << "into a QImage";
                         textureStore->destroyTexture(textureId);
+                        referencedVtfs.remove(fullPath);
                         continue;
                     }
 
@@ -234,10 +217,20 @@ namespace ModelLoaders
                     }
 
                     texture->setData(image);
+                    referencedVtfs.remove(fullPath);
                 }
 
                 file->closeArchive();
             }
+            */
+
+            /*
+            // Clean up any remaining VTFs - the files could have referenced some that don't actually exist.
+            foreach ( quint32 textureId, referencedVtfs.values() )
+            {
+                textureStore->destroyTexture(textureId);
+            }
+            */
         }
     }
 }

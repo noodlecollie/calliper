@@ -93,8 +93,7 @@ namespace FileFormats
                 break;
         }
 
-        // Check if it's alphanumeric.
-        if ( isAlphaNumeric(ch) )
+        if ( isValidForNonQuotedString(ch) )
         {
             token = TokenStringUnquoted;
             return true;
@@ -145,6 +144,14 @@ namespace FileFormats
                ch == '_';
     }
 
+    // Keep an eye on this - perhaps it'll need to be refined in the future.
+    bool KeyValuesToken::isValidForNonQuotedString(char ch)
+    {
+        return ch == '!' || ch == '|' || ch == '~' ||
+                (ch >= '$' && ch <= 'z');
+
+    }
+
     // Position is the beginning position of the first delimiter.
     // Offset is how long the first delimiter is, in chars.
     // The length returned is all of the characters in the token,
@@ -190,13 +197,13 @@ namespace FileFormats
                 break;
         }
 
-        // If it's an unquoted string, we need to find the next non-alphanumeric character.
+        // If it's an unquoted string, we need to find the next invalid character.
         if ( type == TokenStringUnquoted )
         {
             int next = position+1;
             while ( next < arr.length() )
             {
-                if ( !isAlphaNumeric(arr.at(next)) )
+                if ( !isValidForNonQuotedString(arr.at(next)) )
                     break;
 
                 next++;
@@ -243,11 +250,11 @@ namespace FileFormats
     {
         if ( is(TokenStringQuoted) )
         {
-            return QByteArray(input.constData() + m_iBeginPos + 1, m_iLength - 2);
+            return input.mid(m_iBeginPos + 1, m_iLength - 2);
         }
         else
         {
-            return QByteArray(input.constData() + m_iBeginPos, m_iLength);
+            return input.mid(m_iBeginPos, m_iLength);
         }
     }
 

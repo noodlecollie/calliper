@@ -56,6 +56,9 @@ int main(int argc, char *argv[])
     QCommandLineOption optListFiles(QStringList() << "l" << "list-files", "List all files within VPK.");
     parser.addOption(optListFiles);
 
+    QCommandLineOption optFileInfo(QStringList() << "info", "List information about a given file.", "infofile");
+    parser.addOption(optFileInfo);
+
     parser.addPositionalArgument("file", "VPK file to read");
 
     parser.process(a);
@@ -93,13 +96,15 @@ int main(int argc, char *argv[])
              !parser.isSet(optIndex) &&
              !parser.isSet(optArchiveMD5) &&
              !parser.isSet(optOtherMD5) &&
-             !parser.isSet(optListFiles));
+             !parser.isSet(optListFiles) &&
+             !parser.isSet(optFileInfo));
 
     bool outputHeader = outputAll || parser.isSet(optHeader);
     bool outputIndex = outputAll || parser.isSet(optIndex);
     bool outputArchiveMD5 = outputAll || parser.isSet(optArchiveMD5);
     bool outputOtherMD5 = outputAll || parser.isSet(optOtherMD5);
     bool listFiles = outputAll || parser.isSet(optListFiles);
+    bool printIndividualFileInformation = parser.isSet(optFileInfo);
 
     if ( outputArchiveMD5 )
     {
@@ -139,6 +144,9 @@ int main(int argc, char *argv[])
 
     if ( outputOtherMD5 )
         VPKInfo::printOtherMD5Data(vpkFile.otherMD5s(), treeData, archiveMD5Data);
+
+    if ( printIndividualFileInformation )
+        VPKInfo::printInfoAboutFile(vpkFile.index(), parser.value(optFileInfo));
 
     return 0;
 }

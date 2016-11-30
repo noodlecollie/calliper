@@ -17,6 +17,7 @@ namespace VPKInfo
                              const QStringList& archives, bool verbose = false);
     void printOtherMD5Data(const FileFormats::VPKOtherMD5Item& md5s,
                            const QByteArray& treeData, const QByteArray& archiveMD5Data);
+    void printInfoAboutFile(const FileFormats::VPKIndex& index, const QString& filename);
 }
 
 #endif // VPKINFO_H

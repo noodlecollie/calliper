@@ -37,6 +37,7 @@ namespace FileFormats
 
         static bool isWhitespace(char ch);
         static bool isAlphaNumeric(char ch);
+        static bool isValidForNonQuotedString(char ch);
 
         inline bool operator == (const TokenType &type) const
         {
