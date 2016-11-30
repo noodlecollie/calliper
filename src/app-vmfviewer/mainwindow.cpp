@@ -328,5 +328,6 @@ void MainWindow::setVpkPath(const QString &path)
 
 void MainWindow::importTextures()
 {
-    ModelLoaders::VTFLoader::loadMaterials(m_VpkFiles, m_pMaterialStore, m_pTextureStore);
+    ModelLoaders::VTFLoader loader(m_pMaterialStore, m_pTextureStore);
+    loader.loadMaterials(m_VpkFiles);
 }

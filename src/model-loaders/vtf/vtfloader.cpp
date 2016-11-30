@@ -83,6 +83,7 @@ namespace ModelLoaders
         }
     }
 
+    /*
     namespace VTFLoader
     {
         // TODO: Clean up this function, it's sprawling.
@@ -126,10 +127,6 @@ namespace ModelLoaders
                         continue;
                     }
 
-                    qDebug() << "Reading VMT file" << fileNumber << "of" << records.count() << record->fullPath();
-                    qDebug() << vmtData.constData();
-
-                    /*
                     KeyValuesParser parser(vmtData);
                     QString error;
                     QJsonDocument doc = parser.toJsonDocument(&error);
@@ -158,7 +155,6 @@ namespace ModelLoaders
 
                         material->addTexture(it.key(), textureId);
                     }
-                    */
 
                     fileNumber++;
                 }
@@ -166,7 +162,6 @@ namespace ModelLoaders
                 file->closeArchive();
             }
 
-            /*
             // Now we have created all materials and hooked them up with their appropriate texture IDs.
             // Next, go through each VMT that was referenced and load it.
             foreach ( const VPKFilePointer& file, vtfVpks )
@@ -222,15 +217,76 @@ namespace ModelLoaders
 
                 file->closeArchive();
             }
-            */
 
-            /*
             // Clean up any remaining VTFs - the files could have referenced some that don't actually exist.
             foreach ( quint32 textureId, referencedVtfs.values() )
             {
                 textureStore->destroyTexture(textureId);
             }
-            */
         }
+    }
+    */
+
+    VTFLoader::VTFLoader(Model::MaterialStore *materialStore, Model::TextureStore *textureStore)
+        : m_pMaterialStore(materialStore),
+          m_pTextureStore(textureStore)
+    {
+        Q_ASSERT_X(m_pMaterialStore, Q_FUNC_INFO, "Material store cannot be null!");
+        Q_ASSERT_X(m_pTextureStore, Q_FUNC_INFO, "Texture store cannot be null!");
+    }
+
+    void VTFLoader::loadMaterials(const FileFormats::VPKFileCollection &vpkFiles)
+    {
+        m_VmtFileSet = vpkFiles.filesContainingExtension("vmt");
+        m_VtfFileSet = vpkFiles.filesContainingExtension("vtf");
+
+        if ( m_VmtFileSet.isEmpty() || m_VtfFileSet.isEmpty() )
+        {
+            return;
+        }
+
+        findReferencedVtfs();
+    }
+
+    void VTFLoader::findReferencedVtfs()
+    {
+        m_ReferencedVtfs.clear();
+
+        foreach ( const FileFormats::VPKFilePointer& vpk, m_VmtFileSet )
+        {
+            // These are ordered by archive number.
+            m_CurrentRecordSet = vpk->index().recordsForExtension("vmt");
+            m_iCurrentArchiveIndex = ~0;
+
+            foreach ( const FileFormats::VPKIndexTreeRecordPointer& record, m_CurrentRecordSet )
+            {
+                QByteArray vmtData = getVmtData(vpk, record);
+                if ( vmtData.isEmpty() )
+                {
+                    qDebug() << "VMT data is empty";
+                    continue;
+                }
+
+                FileFormats::KeyValuesParser parser(vmtData);
+                QString error;
+                QJsonDocument doc = parser.toJsonDocument(&error);
+                if ( doc.isNull() )
+                {
+                    qDebug() << "Error parsing" << record->fullPath() << "-" << error;
+                    continue;
+                }
+            }
+        }
+    }
+
+    QByteArray VTFLoader::getVmtData(const FileFormats::VPKFilePointer &vpk, const FileFormats::VPKIndexTreeRecordPointer &record)
+    {
+        if ( record->item()->archiveIndex() != m_iCurrentArchiveIndex )
+        {
+            m_iCurrentArchiveIndex = record->item()->archiveIndex();
+            vpk->openArchive(m_iCurrentArchiveIndex);
+        }
+
+        return vpk->readFromCurrentArchive(record->item());
     }
 }

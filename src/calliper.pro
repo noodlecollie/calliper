@@ -11,7 +11,8 @@ SUBDIRS += \
     file-formats \
     model-loaders \
     dep-vtflib \
-    dep-qvtf
+    dep-qvtf \
+    tst-keyvaluesparser
 
 renderer-sandbox.depends = renderer calliperutil model
 model.depends = renderer calliperutil
@@ -21,3 +22,4 @@ app-vpkinfo.depends = file-formats calliperutil
 file-formats.depends = calliperutil
 model-loaders.depends = model renderer calliperutil file-formats dep-vtflib dep-qvtf
 dep-qvtf.depends = dep-vtflib
+tst-keyvaluesparser.depends = file-formats calliperutil
