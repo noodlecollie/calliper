@@ -1,32 +1,7 @@
 #include <QString>
 #include <QtTest>
 #include "keyvalues/keyvaluesparser.h"
-
-namespace
-{
-    const char* comment = "/* Comment*/";
-
-    const char* vmt1 =
-    "\"VertexLitGeneric\"\n"
-    "{\n"
-    "    \"$basetexture\" \"Models/props_spytech/raygun001\"\n"
-    "    \"$selfillum\" 	1\n"
-    "\n"
-    "    // Use separate self-illum mask on Pre DX9 hardware\n"
-    "    \">=DX90\"\n"
-    "    {\n"
-    "        \"$baseTexture\" 		\"Models/props_spytech/raygun001_noalpha\"\n"
-    "        \"$selfillummask\" 	\"Models/props_spytech/raygun001_selfillum\"\n"
-    "    }\n"
-    "\n"
-    "    // Use redundant self-illum in base alpha on Pre DX9 hardware\n"
-    "    \"<DX90\"\n"
-    "    {\n"
-    "        \"$baseTexture\" 	\"Models/props_spytech/raygun001\"\n"
-    "    }\n"
-    "}\n"
-    ;
-}
+#include <QFile>
 
 class TestKeyValuesParser : public QObject
 {
@@ -37,6 +12,20 @@ public:
 
 private Q_SLOTS:
     void testSampleVmt1();
+
+private:
+    bool loadResource(const QString &filename, QByteArray& data)
+    {
+        QFile file(filename);
+        if ( !file.open(QIODevice::ReadOnly) )
+        {
+            return false;
+        }
+
+        data = file.readAll();
+        file.close();
+        return true;
+    }
 };
 
 TestKeyValuesParser::TestKeyValuesParser()
@@ -45,7 +34,10 @@ TestKeyValuesParser::TestKeyValuesParser()
 
 void TestKeyValuesParser::testSampleVmt1()
 {
-    QByteArray data(vmt1);
+    QByteArray data;
+    QVERIFY2(loadResource(":/resource/materials.models.props_coalmine.replacements.vmt", data),
+             "Could not load test resource.");
+
     FileFormats::KeyValuesParser parser(data);
     QString error;
     QJsonDocument doc = parser.toJsonDocument(&error);

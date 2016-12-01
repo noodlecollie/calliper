@@ -29,3 +29,6 @@ else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 
 INCLUDEPATH += $$PWD/../calliperutil
 DEPENDPATH += $$PWD/../calliperutil
+
+RESOURCES += \
+    resource.qrc
