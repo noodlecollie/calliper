@@ -41,6 +41,10 @@ void TestKeyValuesParser::testSampleVmt1()
     FileFormats::KeyValuesParser parser(data);
     QString error;
     QJsonDocument doc = parser.toJsonDocument(&error);
+    if ( !error.isNull() )
+    {
+        qDebug() << "Import error:" << error;
+    }
 
     QVERIFY2(!doc.isNull(), "JSON document should not be null.");
 }

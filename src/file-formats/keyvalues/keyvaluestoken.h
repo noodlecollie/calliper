@@ -51,6 +51,8 @@ namespace FileFormats
             return !is(type);
         }
 
+        static bool isWhitespace(char ch);
+
     private:
         void validateToken();
         static TokenType getToken(const QByteArray &arr, int position);

@@ -47,8 +47,8 @@ namespace FileFormats
 
             char ch = array.at(position);
 
-            // No control chars.
-            if ( ch < 32 || ch > 126 )
+            // No control chars or whitespace.
+            if ( ch < 32 || ch > 126 || KeyValuesToken::isWhitespace(ch) )
                 return false;
 
             return !isSingleCharDelimeter(ch) && !isTwoCharacterDelimeter(array, position);
@@ -125,6 +125,21 @@ namespace FileFormats
     bool KeyValuesToken::isIncomplete() const
     {
         return isValid() && m_iLength < 1;
+    }
+
+    bool KeyValuesToken::isWhitespace(char ch)
+    {
+        switch (ch)
+        {
+            case ' ':
+            case '\t':
+            case '\r':
+            case '\n':
+                return true;
+
+            default:
+                return false;
+        }
     }
 
     // Assumes the position is valid.

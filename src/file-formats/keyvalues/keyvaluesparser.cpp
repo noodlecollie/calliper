@@ -19,21 +19,6 @@ namespace FileFormats
         {
             return arr.left(index).count('\n') + 1; // No newlines before means we're on line 1.
         }
-
-        bool isWhitespace(char ch)
-        {
-            switch (ch)
-            {
-                case ' ':
-                case '\t':
-                case '\r':
-                case '\n':
-                    return true;
-
-                default:
-                    return false;
-            }
-        }
     }
 
     class KeyValuesParser::InvalidSyntaxException : public CalliperUtil::CalliperException
@@ -62,7 +47,7 @@ namespace FileFormats
     {
         for ( int i = from; i < m_Input.length(); i++ )
         {
-            if ( !isWhitespace(m_Input.at(i)) )
+            if ( !KeyValuesToken::isWhitespace(m_Input.at(i)) )
                 return i;
         }
 
