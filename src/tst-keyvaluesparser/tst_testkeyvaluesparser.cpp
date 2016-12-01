@@ -45,7 +45,7 @@ TestKeyValuesParser::TestKeyValuesParser()
 
 void TestKeyValuesParser::testSampleVmt1()
 {
-    QByteArray data(comment);
+    QByteArray data(vmt1);
     FileFormats::KeyValuesParser parser(data);
     QString error;
     QJsonDocument doc = parser.toJsonDocument(&error);

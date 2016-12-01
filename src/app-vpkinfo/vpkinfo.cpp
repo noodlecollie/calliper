@@ -157,8 +157,7 @@ namespace VPKInfo
                     return;
                 }
 
-                if ( verbose )
-                    qInfo() << "";
+                qInfo().nospace() << "Verifying archive " << currentArchive << "...";
             }
 
             archive.seek(item->startingOffset());

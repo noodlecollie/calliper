@@ -34,10 +34,6 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption optAll(QStringList() << "a" << "all", "Outputs all information. Overrides other flags. "
-                              "If no flags are set, all information is output by default.");
-    parser.addOption(optAll);
-
     QCommandLineOption optHeader(QStringList() << "d" << "header", "Output header information.");
     parser.addOption(optHeader);
 
@@ -46,7 +42,7 @@ int main(int argc, char *argv[])
 
     QCommandLineOption optArchiveMD5(QStringList() << "r" << "archive-md5", "Verify archive MD5 checksums.");
     parser.addOption(optArchiveMD5);
-    QCommandLineOption optArchiveMD5Verbose(QStringList() << "archive-verbose",
+    QCommandLineOption optArchiveMD5Verbose(QStringList() << "md5-verbose",
                                             "Output verbose information when verifying archive MD5 checksums.");
     parser.addOption(optArchiveMD5Verbose);
 
@@ -91,19 +87,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    bool outputAll = parser.isSet(optAll) ||
-            (!parser.isSet(optHeader) &&
-             !parser.isSet(optIndex) &&
-             !parser.isSet(optArchiveMD5) &&
-             !parser.isSet(optOtherMD5) &&
-             !parser.isSet(optListFiles) &&
-             !parser.isSet(optFileInfo));
-
-    bool outputHeader = outputAll || parser.isSet(optHeader);
-    bool outputIndex = outputAll || parser.isSet(optIndex);
-    bool outputArchiveMD5 = outputAll || parser.isSet(optArchiveMD5);
-    bool outputOtherMD5 = outputAll || parser.isSet(optOtherMD5);
-    bool listFiles = outputAll || parser.isSet(optListFiles);
+    // TODO: Output error if no options are set.
+    bool outputHeader = parser.isSet(optHeader);
+    bool outputIndex = parser.isSet(optIndex);
+    bool outputArchiveMD5 = parser.isSet(optArchiveMD5) || parser.isSet(optArchiveMD5Verbose);
+    bool outputOtherMD5 = parser.isSet(optOtherMD5);
+    bool listFiles = parser.isSet(optListFiles);
     bool printIndividualFileInformation = parser.isSet(optFileInfo);
 
     if ( outputArchiveMD5 )
