@@ -10,9 +10,82 @@ namespace FileFormats
         const char DELIM_POP = '}';
         const char DELIM_PREPROCESSOR = '#';
 
-        const QString DELIM_LINECOMMENT("//");
-        const QString DELIM_BLOCKCOMMENT_BEGIN("/*");
-        const QString DELIM_BLOCKCOMMENT_END("*/");
+        const QByteArray DELIM_LINECOMMENT("//");
+        const QByteArray DELIM_BLOCKCOMMENT_BEGIN("/*");
+        const QByteArray DELIM_BLOCKCOMMENT_END("*/");
+
+        bool isSingleCharDelimeter(char ch)
+        {
+            switch (ch)
+            {
+                case DELIM_QUOTE:
+                case DELIM_PUSH:
+                case DELIM_POP:
+                case DELIM_PREPROCESSOR:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        bool isTwoCharacterDelimeter(const QByteArray& array, int position)
+        {
+            if ( position >= array.length() - 1 )
+                return false;
+
+            QByteArray testString = array.mid(position, 2);
+            return testString == DELIM_LINECOMMENT ||
+                    testString == DELIM_BLOCKCOMMENT_BEGIN ||
+                    testString == DELIM_BLOCKCOMMENT_END;
+        }
+
+        bool isValidForNonQuotedString(const QByteArray& array, int position)
+        {
+            // Non-quoted strings are allowed to contain ASCII text (ie. not
+            // control characters) that is NOT also a delimeter.
+
+            char ch = array.at(position);
+
+            // No control chars.
+            if ( ch < 32 || ch > 126 )
+                return false;
+
+            return !isSingleCharDelimeter(ch) && !isTwoCharacterDelimeter(array, position);
+        }
+    }
+
+    QString KeyValuesToken::tokenReadableName(TokenType type)
+    {
+        switch ( type )
+        {
+            case TokenInvalid:
+                return "Invalid";
+
+            case TokenStringQuoted:
+                return "Quoted String";
+
+            case TokenStringUnquoted:
+                return "Unquoted String";
+
+            case TokenPush:
+                return "Group Begin";
+
+            case TokenPop:
+                return "Group End";
+
+            case TokenLineComment:
+                return "Line Comment";
+
+            case TokenBlockComment:
+                return "Block Comment";
+
+            case TokenPreprocessor:
+                return "Preprocessor Instruction";
+
+            default:
+                return "Unknown";
+        }
     }
 
     KeyValuesToken::KeyValuesToken()
@@ -39,9 +112,19 @@ namespace FileFormats
         return m_iTokenType;
     }
 
+    QString KeyValuesToken::readableName() const
+    {
+        return tokenReadableName(type());
+    }
+
     bool KeyValuesToken::isValid() const
     {
         return m_iTokenType != TokenInvalid;
+    }
+
+    bool KeyValuesToken::isIncomplete() const
+    {
+        return isValid() && m_iLength < 1;
     }
 
     // Assumes the position is valid.
@@ -50,7 +133,7 @@ namespace FileFormats
         TokenType token = TokenInvalid;
 
         // Try just the first character.
-        if ( getTokenFromFirstChar(arr.at(position), token) )
+        if ( getTokenFromFirstChar(arr, position, token) )
             return token;
 
         if ( position == arr.length() - 1 )
@@ -69,9 +152,9 @@ namespace FileFormats
     }
 
     // Returns true if the first character was enough to determine the token.
-    bool KeyValuesToken::getTokenFromFirstChar(char ch, TokenType &token)
+    bool KeyValuesToken::getTokenFromFirstChar(const QByteArray &arr, int position, TokenType &token)
     {
-        switch (ch)
+        switch (arr.at(position))
         {
             case DELIM_QUOTE:
                 token = TokenStringQuoted;
@@ -93,7 +176,7 @@ namespace FileFormats
                 break;
         }
 
-        if ( isValidForNonQuotedString(ch) )
+        if ( isValidForNonQuotedString(arr, position) )
         {
             token = TokenStringUnquoted;
             return true;
@@ -121,53 +204,26 @@ namespace FileFormats
         return false;
     }
 
-    bool KeyValuesToken::isWhitespace(char ch)
-    {
-        switch (ch)
-        {
-            case ' ':
-            case '\t':
-            case '\r':
-            case '\n':
-                return true;
-
-            default:
-                return false;
-        }
-    }
-
-    bool KeyValuesToken::isAlphaNumeric(char ch)
-    {
-        return (ch >= 'A' && ch <= 'Z') ||
-               (ch >= 'a' && ch <= 'z') ||
-               (ch >= '0' && ch <= '9') ||
-               ch == '_';
-    }
-
-    // Keep an eye on this - perhaps it'll need to be refined in the future.
-    bool KeyValuesToken::isValidForNonQuotedString(char ch)
-    {
-        return ch == '!' || ch == '|' || ch == '~' ||
-                (ch >= '$' && ch <= 'z');
-
-    }
-
     // Position is the beginning position of the first delimiter.
     // Offset is how long the first delimiter is, in chars.
     // The length returned is all of the characters in the token,
     // including the beginning and ending delimiters.
-    // A final delimeter MUST be found - if it is not, a length
-    // of 0 is returned.
-    int KeyValuesToken::lengthOfToken(const QByteArray &arr, int position, int offset, const QByteArray &endDelim)
+    int KeyValuesToken::lengthOfToken(const QByteArray &arr, int position, int offset, const QByteArray &endDelim,
+                                      bool eofIsDelimeter)
     {
         if ( position >= arr.length() )
             return 0;
 
         int index = arr.indexOf(endDelim, position+offset);
         if ( index < 0 )
-            return 0;
+        {
+            if ( eofIsDelimeter )
+                return arr.length() - position;
+            else
+                return 0;
+        }
 
-        return index - position + 1;
+        return index - position + endDelim.length();
     }
 
     int KeyValuesToken::lengthOfToken(const QByteArray &arr, int position, TokenType type)
@@ -177,20 +233,23 @@ namespace FileFormats
             case TokenInvalid:
             case TokenPush:
             case TokenPop:
-            case TokenPreprocessor:
                 return 1;
+
+            // Length is entire line including trailing newline (or EOF).
+            case TokenPreprocessor:
+                return lengthOfToken(arr, position, 1, "\n", true);
 
             // Length is entire quoted string.
             case TokenStringQuoted:
                 return lengthOfToken(arr, position, 1, "\"");
 
-            // Length is entire comment including trailing newline.
+            // Length is entire comment including trailing newline (or EOF).
             case TokenLineComment:
-                return lengthOfToken(arr, position, 2, "\n");
+                return lengthOfToken(arr, position, 2, "\n", true);
 
             // Length is entire comment including end tag.
             case TokenBlockComment:
-                return lengthOfToken(arr, position, 2, DELIM_BLOCKCOMMENT_END.toLatin1());
+                return lengthOfToken(arr, position, 2, DELIM_BLOCKCOMMENT_END);
 
             case TokenStringUnquoted:
             default:
@@ -203,7 +262,7 @@ namespace FileFormats
             int next = position+1;
             while ( next < arr.length() )
             {
-                if ( !isValidForNonQuotedString(arr.at(next)) )
+                if ( !isValidForNonQuotedString(arr, next) )
                     break;
 
                 next++;

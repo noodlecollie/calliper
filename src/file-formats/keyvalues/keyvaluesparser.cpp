@@ -19,6 +19,21 @@ namespace FileFormats
         {
             return arr.left(index).count('\n') + 1; // No newlines before means we're on line 1.
         }
+
+        bool isWhitespace(char ch)
+        {
+            switch (ch)
+            {
+                case ' ':
+                case '\t':
+                case '\r':
+                case '\n':
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
     }
 
     class KeyValuesParser::InvalidSyntaxException : public CalliperUtil::CalliperException
@@ -47,7 +62,7 @@ namespace FileFormats
     {
         for ( int i = from; i < m_Input.length(); i++ )
         {
-            if ( !KeyValuesToken::isWhitespace(m_Input.at(i)) )
+            if ( !isWhitespace(m_Input.at(i)) )
                 return i;
         }
 
@@ -98,6 +113,12 @@ namespace FileFormats
                 throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
                                              "Invalid syntax encountered.");
             }
+            else if ( token.isIncomplete() )
+            {
+                throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
+                                             QString("Incomplete token of type '%1' encountered.")
+                                             .arg(token.readableName()));
+            }
             else if ( token == KeyValuesToken::TokenPush )
             {
                 // Insert ':' if we've already had a key.
@@ -116,6 +137,13 @@ namespace FileFormats
             }
             else if ( token == KeyValuesToken::TokenPop )
             {
+                if ( depthTokens.top() % 2 != 0 )
+                {
+                    // Pop before finishing an entry.
+                    throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, from),
+                                                 "'}' encountered before the value for the previous key.");
+                }
+
                 if ( depthTokens.count() > 0 )
                 {
                     depthTokens.pop();
@@ -159,9 +187,17 @@ namespace FileFormats
             }
 
             // Actually write the token to the output.
-            token.writeJson(m_Input, intJson, depthTokens.top() % 2 == 0
-                            ? -1
-                            : (depthTokens.top()-1)/2);
+            int numericalPrefix = 0;
+            if ( depthTokens.top() % 2 == 0 )
+            {
+                numericalPrefix = -1;
+            }
+            else
+            {
+                numericalPrefix = (depthTokens.top()-1) / 2;
+            }
+
+            token.writeJson(m_Input, intJson, numericalPrefix);
 
             // Advance the index past the token.
             from += token.length();
@@ -169,6 +205,18 @@ namespace FileFormats
             // If we're past the end now, return.
             if ( from >= length )
                 break;
+        }
+
+        if ( depthTokens.size() > 1 )
+        {
+            throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, m_Input.length()),
+                                         "More '}' were encountered than '{' by the end of the file.");
+        }
+
+        if ( depthTokens.top() % 2 != 0 )
+        {
+            throw InvalidSyntaxException(numberOfNewlinesBeforeIndex(m_Input, m_Input.length()),
+                                         "End of file encountered before the value for the previous key.");
         }
 
         // End the root object.

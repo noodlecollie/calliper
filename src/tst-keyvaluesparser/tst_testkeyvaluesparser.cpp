@@ -4,6 +4,8 @@
 
 namespace
 {
+    const char* comment = "/* Comment*/";
+
     const char* vmt1 =
     "\"VertexLitGeneric\"\n"
     "{\n"
@@ -43,7 +45,8 @@ TestKeyValuesParser::TestKeyValuesParser()
 
 void TestKeyValuesParser::testSampleVmt1()
 {
-    FileFormats::KeyValuesParser parser(QByteArray(vmt1));
+    QByteArray data(comment);
+    FileFormats::KeyValuesParser parser(data);
     QString error;
     QJsonDocument doc = parser.toJsonDocument(&error);
 

@@ -21,23 +21,25 @@ namespace FileFormats
             TokenPreprocessor,      // # I'm a preprocessor
         };
 
+        static QString tokenReadableName(TokenType type);
+
         KeyValuesToken();
         KeyValuesToken(const QByteArray &kv, int position);
 
         TokenType type() const;
+        QString readableName() const;
         bool is(TokenType token) const;
         bool isValid() const;
         bool isString() const;
         bool shouldWriteJson() const;
 
+        // Is an incomplete token: it's not invalid but the length is 0.
+        bool isIncomplete() const;
+
         int length() const;
         int offset() const;
 
         void writeJson(const QByteArray &input, QByteArray &json, int prefix = -1);
-
-        static bool isWhitespace(char ch);
-        static bool isAlphaNumeric(char ch);
-        static bool isValidForNonQuotedString(char ch);
 
         inline bool operator == (const TokenType &type) const
         {
@@ -50,10 +52,11 @@ namespace FileFormats
         }
 
     private:
+        void validateToken();
         static TokenType getToken(const QByteArray &arr, int position);
-        static bool getTokenFromFirstChar(char ch, TokenType &token);
+        static bool getTokenFromFirstChar(const QByteArray& arr, int position, TokenType &token);
         static bool getTokenFromFirstTwoChars(const char* str, TokenType &token);
-        static int lengthOfToken(const QByteArray &arr, int position, int offset, const QByteArray &endDelim);
+        static int lengthOfToken(const QByteArray &arr, int position, int offset, const QByteArray &endDelim, bool eofIsDelimeter = false);
         static int lengthOfToken(const QByteArray &arr, int position, TokenType type);
         QByteArray getString(const QByteArray &input);
 

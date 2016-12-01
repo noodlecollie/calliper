@@ -30,7 +30,7 @@ namespace FileFormats
     public:
         class InvalidSyntaxException;
 
-        KeyValuesParser(const QByteArray &input);
+        explicit KeyValuesParser(const QByteArray &input);
         QJsonDocument toJsonDocument(QString* errorString = nullptr);
 
     private:
