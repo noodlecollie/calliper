@@ -4,9 +4,9 @@
 namespace Renderer
 {
     GeometryBuilder::GeometryBuilder(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
-                                     quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix)
+                                     quint16 shaderId, quint32 materialId, const QMatrix4x4 &modelToWorldMatrix)
         : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
-          m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix)
+          m_iShaderId(shaderId), m_iMaterialId(materialId), m_matModelToWorld(modelToWorldMatrix)
     {
     }
 
@@ -20,11 +20,11 @@ namespace Renderer
         return m_Sections.count() > 0 ? m_Sections.last() : nullptr;
     }
 
-    GeometrySection* GeometryBuilder::createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix)
+    GeometrySection* GeometryBuilder::createNewSection(quint16 shaderId, quint32 materialId, const QMatrix4x4 &matrix)
     {
         if ( m_Sections.isEmpty() || currentSection()->attributeCount(GeometrySection::PositionAttribute) > 0 )
         {
-            m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, shaderId, textureId, matrix));
+            m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, shaderId, materialId, matrix));
         }
         
         return currentSection();
@@ -32,7 +32,7 @@ namespace Renderer
 
     GeometrySection* GeometryBuilder::createNewSection()
     {
-        return createNewSection(m_iShaderId, m_iTextureId, m_matModelToWorld);
+        return createNewSection(m_iShaderId, m_iMaterialId, m_matModelToWorld);
     }
 
     int GeometryBuilder::sectionCount() const
@@ -84,14 +84,14 @@ namespace Renderer
         m_iShaderId = id;
     }
 
-    quint32 GeometryBuilder::textureId() const
+    quint32 GeometryBuilder::materialId() const
     {
-        return m_iTextureId;
+        return m_iMaterialId;
     }
 
-    void GeometryBuilder::setTextureId(quint32 id)
+    void GeometryBuilder::setMaterialId(quint32 id)
     {
-        m_iTextureId = id;
+        m_iMaterialId = id;
     }
 
     bool GeometryBuilder::isEmpty() const

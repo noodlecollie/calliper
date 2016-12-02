@@ -40,6 +40,7 @@ namespace Model
         SceneObject* rootObject() const;
         ShaderStore* shaderStore() const;
         TextureStore* textureStore() const;
+        MaterialStore* materialStore() const;
 
     signals:
         void objectCreated(SceneObject*);

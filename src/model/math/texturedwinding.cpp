@@ -2,19 +2,19 @@
 
 namespace Model
 {
-    TexturedWinding::TexturedWinding(const Plane3D &plane, quint32 textureId) :
-        Winding3D(plane), m_iTextureId(textureId)
+    TexturedWinding::TexturedWinding(const Plane3D &plane, quint32 materialId) :
+        Winding3D(plane), m_iMaterialId(materialId)
     {
 
     }
 
-    quint32 TexturedWinding::textureId() const
+    quint32 TexturedWinding::materialId() const
     {
-        return m_iTextureId;
+        return m_iMaterialId;
     }
 
-    void TexturedWinding::setTextureId(quint32 id)
+    void TexturedWinding::setMaterialId(quint32 id)
     {
-        m_iTextureId = id;
+        m_iMaterialId = id;
     }
 }

@@ -93,4 +93,9 @@ namespace Model
     {
         return m_pTextureStore;
     }
+
+    MaterialStore* Scene::materialStore() const
+    {
+        return m_pMaterialStore;
+    }
 }

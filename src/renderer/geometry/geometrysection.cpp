@@ -80,10 +80,10 @@ namespace
 namespace Renderer
 {
     GeometrySection::GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
-                                     quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix)
+                                     quint16 shaderId, quint32 materialId, const QMatrix4x4 modelToWorldMatrix)
         : m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
           m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
-          m_iShaderId(shaderId), m_iTextureId(textureId), m_matModelToWorld(modelToWorldMatrix),
+          m_iShaderId(shaderId), m_iMaterialId(materialId), m_matModelToWorld(modelToWorldMatrix),
           m_VertexFormat((*shaderFunctor)(shaderId)->vertexFormat())
     {
         init();
@@ -278,14 +278,14 @@ namespace Renderer
         m_iShaderId = id;
     }
 
-    quint32 GeometrySection::textureId() const
+    quint32 GeometrySection::materialId() const
     {
-        return m_iTextureId;
+        return m_iMaterialId;
     }
 
-    void GeometrySection::setTextureId(quint32 id)
+    void GeometrySection::setMaterialId(quint32 id)
     {
-        m_iTextureId = id;
+        m_iMaterialId = id;
     }
 
     GLenum GeometrySection::drawMode() const

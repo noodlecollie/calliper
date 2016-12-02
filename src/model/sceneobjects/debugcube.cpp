@@ -32,7 +32,7 @@ namespace Model
 
     void DebugCube::bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
     {
-        builder.setTextureId(1);
+        builder.setMaterialId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));
 
         if ( m_bDrawFrame )

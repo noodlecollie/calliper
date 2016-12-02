@@ -305,7 +305,7 @@ void MainWindow::processBrushes()
         for ( int i = 0; i < brush->brushFaceCount(); i++ )
         {
             GenericBrushFace* face = brush->brushFaceAt(i);
-            face->texturePlane()->setTextureId(m_iPlaceholderMaterial);
+            face->texturePlane()->setMaterialId(m_iPlaceholderMaterial);
         }
     }
 }

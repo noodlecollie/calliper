@@ -134,7 +134,7 @@ namespace Renderer
                             passKey,
                             RenderModelBatchGroupKey(
                                 section->shaderId(),
-                                section->textureId(),
+                                section->materialId(),
                                 section->drawMode(),
                                 section->drawWidth()
                             ),

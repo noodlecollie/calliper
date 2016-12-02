@@ -33,7 +33,7 @@ namespace Renderer
         };
 
         GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
-                        quint16 shaderId, quint32 textureId, const QMatrix4x4 modelToWorldMatrix);
+                        quint16 shaderId, quint32 materialId, const QMatrix4x4 modelToWorldMatrix);
 
         // It's assumed that the number of components for each attribute of
         // successive vertices will be the same (eg. 3 floats each time for position).
@@ -78,8 +78,8 @@ namespace Renderer
         quint16 shaderId() const;
         void setShaderId(quint16 id);
 
-        quint32 textureId() const;
-        void setTextureId(quint32 id);
+        quint32 materialId() const;
+        void setMaterialId(quint32 id);
 
         GLenum drawMode() const;
         void setDrawMode(GLenum mode);
@@ -106,7 +106,7 @@ namespace Renderer
         IShaderRetrievalFunctor* m_pShaderFunctor;
         ITextureRetrievalFunctor* m_pTextureFunctor;
         quint16 m_iShaderId;
-        quint32 m_iTextureId;
+        quint32 m_iMaterialId;
         QMatrix4x4 m_matModelToWorld;
         const VertexFormat m_VertexFormat;
     };

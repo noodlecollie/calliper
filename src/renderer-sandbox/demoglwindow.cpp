@@ -160,7 +160,7 @@ void DemoGLWindow::initializeGL()
         face->appendIndex(0);
         face->appendIndex(2);
         face->appendIndex(1);
-        face->texturePlane()->setTextureId(1);
+        face->texturePlane()->setMaterialId(1);
     }
 
     {
@@ -168,7 +168,7 @@ void DemoGLWindow::initializeGL()
         face->appendIndex(0);
         face->appendIndex(3);
         face->appendIndex(2);
-        face->texturePlane()->setTextureId(1);
+        face->texturePlane()->setMaterialId(1);
     }
 
     {
@@ -176,7 +176,7 @@ void DemoGLWindow::initializeGL()
         face->appendIndex(0);
         face->appendIndex(1);
         face->appendIndex(3);
-        face->texturePlane()->setTextureId(1);
+        face->texturePlane()->setMaterialId(1);
     }
 
     {
@@ -184,7 +184,7 @@ void DemoGLWindow::initializeGL()
         face->appendIndex(1);
         face->appendIndex(2);
         face->appendIndex(3);
-        face->texturePlane()->setTextureId(1);
+        face->texturePlane()->setMaterialId(1);
     }
 
     m_FrameTime = QTime::currentTime();

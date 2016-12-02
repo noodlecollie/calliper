@@ -10,20 +10,20 @@ namespace Model
 
     void TexturePlane::initDefaults()
     {
-        m_iTextureId = 0;
+        m_iMaterialId = 0;
         m_vecScale = QVector2D(1,1);
         m_vecTranslation = QVector2D(0,0);
         m_flRotation = 0;
     }
 
-    quint32 TexturePlane::textureId() const
+    quint32 TexturePlane::materialId() const
     {
-        return m_iTextureId;
+        return m_iMaterialId;
     }
 
-    void TexturePlane::setTextureId(quint32 id)
+    void TexturePlane::setMaterialId(quint32 id)
     {
-        m_iTextureId = id;
+        m_iMaterialId = id;
     }
 
     QVector2D TexturePlane::translation() const

@@ -16,9 +16,9 @@ namespace Model
     public:
         explicit TexturePlane(QObject* parent = 0);
 
-        // Texture to be used on the face.
-        quint32 textureId() const;
-        void setTextureId(quint32 id);
+        // Material to be used on the face.
+        quint32 materialId() const;
+        void setMaterialId(quint32 id);
 
         // The U and V axes specify the U and V axes of the texture in 3D space.
         // The length of each axis specifies how many texture units there are per world unit.
@@ -74,7 +74,7 @@ namespace Model
     private:
         void initDefaults();
 
-        quint32     m_iTextureId;
+        quint32     m_iMaterialId;
         QVector2D   m_vecScale;
         QVector2D   m_vecTranslation;
         float       m_flRotation;

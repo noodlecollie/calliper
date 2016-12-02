@@ -9,13 +9,13 @@ namespace Model
     class MODELSHARED_EXPORT TexturedWinding : public Winding3D
     {
     public:
-        TexturedWinding(const Plane3D &plane, quint32 textureId);
+        TexturedWinding(const Plane3D &plane, quint32 materialId);
 
-        quint32 textureId() const;
-        void setTextureId(quint32 id);
+        quint32 materialId() const;
+        void setMaterialId(quint32 id);
 
     private:
-        quint32     m_iTextureId;
+        quint32     m_iMaterialId;
     };
 }
 

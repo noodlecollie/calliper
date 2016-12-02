@@ -85,7 +85,7 @@ namespace Model
 
         GeometrySection* section = builder.createNewSection(
                     builder.shaderId(),
-                    texturePlane()->textureId(),
+                    texturePlane()->materialId(),
                     builder.modelToWorldMatrix());
 
         QVector<QVector3D> vertices = referencedBrushVertexList();
@@ -104,7 +104,11 @@ namespace Model
         }
 
         TextureStore* texStore = parentBrush()->parentScene()->textureStore();
-        OpenGLTexturePointer tex = (*texStore)(m_pTexturePlane->textureId());
+        MaterialStore* matStore = parentBrush()->parentScene()->materialStore();
+
+        RenderMaterialPointer mat = (*matStore)(m_pTexturePlane->materialId());
+        OpenGLTexturePointer tex = (*texStore)(mat->texture(ShaderDefs::MainTexture));
+
         for ( int i = 0; i < vertices.count(); i++ )
         {
             section->addTextureCoordinate(m_pTexturePlane->textureCoordinate(vertices.at(i), tex->size(), nrm));

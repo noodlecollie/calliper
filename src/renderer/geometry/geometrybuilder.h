@@ -13,13 +13,13 @@ namespace Renderer
     {
     public:
         GeometryBuilder(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
-                        quint16 shaderId, quint32 textureId, const QMatrix4x4 &modelToWorldMatrix);
+                        quint16 shaderId, quint32 materialId, const QMatrix4x4 &modelToWorldMatrix);
         ~GeometryBuilder();
 
         int sectionCount() const;
         GeometrySection* section(int index);
         const GeometrySection* section(int index) const;
-        GeometrySection* createNewSection(quint16 shaderId, quint32 textureId, const QMatrix4x4 &matrix);
+        GeometrySection* createNewSection(quint16 shaderId, quint32 materialId, const QMatrix4x4 &matrix);
         GeometrySection* createNewSection();
         GeometrySection* currentSection();
         const QList<GeometrySection*>& sections() const;
@@ -30,8 +30,8 @@ namespace Renderer
         quint16 shaderId() const;
         void setShaderId(quint16 id);
 
-        quint32 textureId() const;
-        void setTextureId(quint32 id);
+        quint32 materialId() const;
+        void setMaterialId(quint32 id);
 
         IShaderRetrievalFunctor* shaderFunctor() const;
         ITextureRetrievalFunctor* textureFunctor() const;
@@ -52,7 +52,7 @@ namespace Renderer
         ITextureRetrievalFunctor* m_pTextureFunctor;
 
         quint16 m_iShaderId;
-        quint32 m_iTextureId;
+        quint32 m_iMaterialId;
         QMatrix4x4  m_matModelToWorld;
     };
 }

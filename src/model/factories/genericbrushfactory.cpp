@@ -29,7 +29,7 @@ namespace Model
                     continue;
 
                 GenericBrushFace* face = b->createAndObtainBrushFace();
-                face->texturePlane()->setTextureId(windingFace->textureId());
+                face->texturePlane()->setMaterialId(windingFace->materialId());
                 face->appendIndices(windingFace->vertexIndices().toVector());
             }
 
