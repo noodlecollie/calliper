@@ -1,0 +1,25 @@
+"VertexlitGeneric"
+{
+	"$baseTexture" "models/items/bullion"
+	"$bumpmap" "models/items/bullion_normal"	
+//	"$envmap" "effects/saxxy/saxxy_gold"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[1 1 .8]"
+	
+//	"$normalmapalphaenvmapmask" "1"
+//	"$basemapalphaphongmask"	"1"
+//      "$basemapalphaenvmask"	"1"
+
+	"$phong" "1"
+	"$phongexponent" "3"
+	"$phongboost" "40"
+	"$phongalbedotint"
+	
+//	"$lightwarptexture" "models/player/pyro/pyro_lightwarp"
+	
+	"$phongfresnelranges"	"[.2 1 4]"
+
+	"$rimlight" "1"
+	"$rimlightexponent" "4"
+	"$rimlightboost" "2"
+}

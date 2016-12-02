@@ -55,6 +55,9 @@ int main(int argc, char *argv[])
     QCommandLineOption optFileInfo(QStringList() << "info", "List information about a given file.", "infofile");
     parser.addOption(optFileInfo);
 
+    QCommandLineOption optOutputFile(QStringList() << "output-path", "If info file specified, output this file to the given path", "outpath");
+    parser.addOption(optOutputFile);
+
     parser.addPositionalArgument("file", "VPK file to read");
 
     parser.process(a);
@@ -135,7 +138,14 @@ int main(int argc, char *argv[])
         VPKInfo::printOtherMD5Data(vpkFile.otherMD5s(), treeData, archiveMD5Data);
 
     if ( printIndividualFileInformation )
+    {
         VPKInfo::printInfoAboutFile(vpkFile.index(), parser.value(optFileInfo));
+        QString outPath = parser.value(optOutputFile);
+        if ( !outPath.isNull() )
+        {
+            VPKInfo::outputFile(vpkFile, parser.value(optFileInfo), outPath);
+        }
+    }
 
     return 0;
 }

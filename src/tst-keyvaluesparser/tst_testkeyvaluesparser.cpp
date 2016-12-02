@@ -12,6 +12,7 @@ public:
 
 private Q_SLOTS:
     void testSampleVmt1();
+    void testSampleVmt2();
 
 private:
     bool loadResource(const QString &filename, QByteArray& data)
@@ -47,6 +48,23 @@ void TestKeyValuesParser::testSampleVmt1()
     }
 
     QVERIFY2(!doc.isNull(), "JSON document should not be null.");
+}
+
+void TestKeyValuesParser::testSampleVmt2()
+{
+    QByteArray data;
+    QVERIFY2(loadResource(":/resource/materials.models.items.bullion.vmt", data),
+             "Could not load test resource.");
+
+    FileFormats::KeyValuesParser parser(data);
+    QString error;
+    QJsonDocument doc = parser.toJsonDocument(&error);
+    if ( !error.isNull() )
+    {
+        qDebug() << "Import error:" << error;
+    }
+
+    QVERIFY2(doc.isNull(), "Import should fail due to incomplete key.");
 }
 
 QTEST_APPLESS_MAIN(TestKeyValuesParser)

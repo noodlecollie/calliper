@@ -296,4 +296,38 @@ namespace VPKInfo
         s.flush();
         qInfo() << string.toLatin1().constData();
     }
+
+    void outputFile(FileFormats::VPKFile &file, const QString &filePath, const QString &outputPath)
+    {
+        using namespace FileFormats;
+
+        VPKIndexTreeRecordPointer record = file.index().recordAt(filePath);
+        if ( record.isNull() )
+        {
+            qWarning() << "Could not find file" << filePath << "in VPK.";
+            return;
+        }
+
+        if ( !file.openArchive(record->item()->archiveIndex()) )
+        {
+            qWarning() << "Could not open VPK archive" << record->item()->archiveIndex()
+                       << "to load file" << filePath;
+            return;
+        }
+
+        QByteArray data = file.readFromCurrentArchive(record->item());
+        file.closeArchive();
+
+        QFile outFile(outputPath);
+        if ( !outFile.open(QIODevice::WriteOnly) )
+        {
+            qWarning() << "Unable to open file" << outputPath << "for writing.";
+            return;
+        }
+
+        outFile.write(data);
+        outFile.close();
+
+        qInfo() << "File" << filePath << "extracted from VPK successfully as" << outputPath;
+    }
 }

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resource/materials.models.props_coalmine.replacements.vmt</file>
+        <file>resource/materials.models.items.bullion.vmt</file>
     </qresource>
 </RCC>

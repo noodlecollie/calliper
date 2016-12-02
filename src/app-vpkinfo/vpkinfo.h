@@ -2,6 +2,7 @@
 #define VPKINFO_H
 
 #include <QDataStream>
+#include "vpk/vpkfile.h"
 #include "vpk/vpkheader.h"
 #include "vpk/vpkindex.h"
 #include "vpk/vpkarchivemd5collection.h"
@@ -18,6 +19,7 @@ namespace VPKInfo
     void printOtherMD5Data(const FileFormats::VPKOtherMD5Item& md5s,
                            const QByteArray& treeData, const QByteArray& archiveMD5Data);
     void printInfoAboutFile(const FileFormats::VPKIndex& index, const QString& filename);
+    void outputFile(FileFormats::VPKFile& file, const QString& filePath, const QString& outputPath);
 }
 
 #endif // VPKINFO_H

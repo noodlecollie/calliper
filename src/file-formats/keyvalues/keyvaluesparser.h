@@ -25,6 +25,11 @@
 
 namespace FileFormats
 {
+    // This class in a sentence: Valve are inconsistent.
+    // The KV parser should be refactored at some point soon
+    // to also include the following cases:
+    // - Better error handling when a key is provided with no value on the same line.
+    // - Better error handling when some idiot tries to use double backslash as a comment.
     class FILEFORMATSSHARED_EXPORT KeyValuesParser
     {
     public:

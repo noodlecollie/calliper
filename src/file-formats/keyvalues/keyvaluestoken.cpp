@@ -312,7 +312,7 @@ namespace FileFormats
             json.append(QString("%0_").arg(prefix));
         }
 
-        json.append(getString(input));
+        json.append(getString(input).replace("\\", "\\\\"));
 
         if ( isString() )
         {
