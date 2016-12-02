@@ -22,6 +22,8 @@ namespace Renderer
         QList<quint32> textures() const;
         void clearTextures();
 
+        bool hasBaseTexture() const;
+
         const QMap<ShaderDefs::TextureUnit, quint32>& textureUnitMap() const;
 
     private:

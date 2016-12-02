@@ -92,7 +92,7 @@ namespace ModelLoaders
             using namespace Model;
             using namespace CalliperUtil;
 
-            TextureStore* textureStore = parent->parentScene()->textureStore();
+            MaterialStore* materialStore = parent->parentScene()->materialStore();
 
             QJsonObject world = doc.object().value("world").toObject();
             Json::JsonArrayWrapper solids = world.value("solid");
@@ -107,7 +107,7 @@ namespace ModelLoaders
                 for ( int j = 0; j < sides.count(); j++ )
                 {
                     QJsonObject side = sides.at(j).toObject();
-                    QString texturePath = CalliperUtil::General::normaliseResourcePathSeparators(side.value("material").toString());
+                    QString materialPath = CalliperUtil::General::normaliseResourcePathSeparators(side.value("material").toString().toLower());
                     QString plane = side.value("plane").toString();
 
                     QVector3D v0, v1, v2;
@@ -129,7 +129,7 @@ namespace ModelLoaders
                         break;
                     }
 
-                    polygons.append(new TexturedWinding(Plane3D(v0, v2, v1), textureStore->getTextureId(texturePath)));
+                    polygons.append(new TexturedWinding(Plane3D(v0, v2, v1), materialStore->getMaterialId(materialPath)));
                     Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
                 }
 

@@ -52,4 +52,9 @@ namespace Renderer
     {
         return m_TextureUnitToIdMap.keys();
     }
+
+    bool RenderMaterial::hasBaseTexture() const
+    {
+        return m_TextureUnitToIdMap.contains(ShaderDefs::MainTexture);
+    }
 }

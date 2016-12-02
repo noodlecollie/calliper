@@ -33,8 +33,7 @@ namespace
 namespace Renderer
 {
     RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor, IMaterialRetrievalFunctor* materialFunctor)
-        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor), m_pMaterialFunctor(materialFunctor),
-          m_iDrawDefaultTextureId(0)
+        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor), m_pMaterialFunctor(materialFunctor)
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor should not be null!");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor should not be null!");
@@ -89,9 +88,8 @@ namespace Renderer
         changeMaterialIfDifferent(material, newMaterial);
     }
 
-    void RenderModelPass::drawAllBatchGroups(quint32 defaultTextureId)
+    void RenderModelPass::drawAllBatchGroups()
     {
-        m_iDrawDefaultTextureId = defaultTextureId;
         OpenGLShaderProgram* currentShaderProgram = nullptr;
         RenderMaterialPointer currentMaterial;
 
@@ -114,7 +112,7 @@ namespace Renderer
         if ( newMaterial.isNull() )
         {
             QMap<ShaderDefs::TextureUnit, quint32> defaultMap;
-            defaultMap.insert(ShaderDefs::MainTexture, m_iDrawDefaultTextureId);
+            defaultMap.insert(ShaderDefs::MainTexture, 0);
             setTextureUnitMap(defaultMap);
         }
         else
@@ -147,6 +145,7 @@ namespace Renderer
             if ( tex.isNull() )
                 continue;
 
+            qDebug().nospace() << "Binding texture " << tex->textureStoreId() << " (" << it.value() << ") to point " << it.key();
             tex->bind(it.key());
         }
     }

@@ -20,7 +20,9 @@ namespace ModelLoaders
 
     private:
         void findReferencedVtfs();
-        QByteArray getVmtData(const FileFormats::VPKFilePointer& vpk, const FileFormats::VPKIndexTreeRecordPointer& record);
+        void loadReferencedVtfs();
+        QByteArray getData(const FileFormats::VPKFilePointer& vpk, const FileFormats::VPKIndexTreeRecordPointer& record);
+        void populateMaterial(Renderer::RenderMaterialPointer& material, const QJsonDocument& vmt);
 
         Model::MaterialStore* m_pMaterialStore;
         Model::TextureStore* m_pTextureStore;

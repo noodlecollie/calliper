@@ -274,18 +274,15 @@ namespace FileFormats
         catch (CalliperUtil::CalliperException& exception)
         {
             if ( errorString )
-                *errorString = QString("Error preprocessing KeyValues file: %1")
+                *errorString = QString("Preprocessing error: %1")
                     .arg(exception.errorHint());
 
             return QJsonDocument();
         }
         catch (...)
         {
-            QString err("ERROR: Unknown exception thrown when parsing keyvalues file!");
-            qCritical() << err;
-
             if ( errorString )
-                *errorString = "Unknown exception thrown when parsing keyvalues file!";
+                *errorString = "Unknown exception thrown when parsing!";
 
             return QJsonDocument();
         }
@@ -296,7 +293,7 @@ namespace FileFormats
         if ( error.error != QJsonParseError::NoError )
         {
             if ( errorString )
-                *errorString = QString("Error converting KeyValues to JSON: %1")
+                *errorString = QString("JSON conversion error: %1")
                     .arg(error.errorString());
 
             return QJsonDocument();

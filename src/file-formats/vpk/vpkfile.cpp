@@ -219,7 +219,7 @@ namespace FileFormats
                     QDataStream dataStream(&data, QIODevice::ReadOnly);
                     dataStream.setByteOrder(QDataStream::LittleEndian);
 
-                    if ( !createRecord(dataStream, currentPath, currentFilename,
+                    if ( !createRecord(dataStream, CalliperUtil::General::normaliseResourcePathSeparators(currentPath), currentFilename,
                                        currentExtension, errorHint) )
                         return false;
                 }

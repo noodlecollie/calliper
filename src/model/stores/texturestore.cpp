@@ -1,4 +1,5 @@
 #include "texturestore.h"
+#include <QtDebug>
 
 namespace Model
 {
@@ -60,6 +61,7 @@ namespace Model
 
         OpenGLTexturePointer texture = OpenGLTexturePointer::create(acquireNextTextureId(), QOpenGLTexture::Target2D);
         processCreatedTexture(texture, path);
+        qDebug() << "Created texture" << texture->textureStoreId() << "at path" << path;
         return texture;
     }
 
