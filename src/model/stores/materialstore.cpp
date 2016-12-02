@@ -3,9 +3,10 @@
 namespace Model
 {
     MaterialStore::MaterialStore()
-        : m_iNextMaterialId(1)
+        : m_iNextMaterialId(1),
+          m_pDefaultMaterial(Renderer::RenderMaterialPointer::create(0, QString()))
     {
-
+        m_pDefaultMaterial->addTexture(Renderer::ShaderDefs::MainTexture, 0);
     }
 
     MaterialStore::~MaterialStore()
@@ -21,7 +22,7 @@ namespace Model
 
     Renderer::RenderMaterialPointer MaterialStore::getMaterial(quint32 materialId) const
     {
-        return m_MaterialTable.value(materialId, Renderer::RenderMaterialPointer());
+        return m_MaterialTable.value(materialId, m_pDefaultMaterial);
     }
 
     Renderer::RenderMaterialPointer MaterialStore::operator ()(quint32 materialId) const
@@ -59,5 +60,10 @@ namespace Model
     Renderer::RenderMaterialPointer MaterialStore::getMaterial(const QString &path) const
     {
         return getMaterial(getMaterialId(path));
+    }
+
+    Renderer::RenderMaterialPointer MaterialStore::defaultMaterial() const
+    {
+        return m_pDefaultMaterial;
     }
 }

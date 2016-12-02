@@ -28,7 +28,6 @@ MainWindow::MainWindow(const QString& filename) :
     m_pTextureStore(nullptr),
     m_pMaterialStore(nullptr),
     m_iPlaceholderMaterial(0),
-    m_iErrorTextureId(0),
     m_pScene(nullptr),
     m_pCamera(nullptr),
     m_pSceneRenderer(nullptr),
@@ -137,10 +136,7 @@ void MainWindow::initShaders()
 
 void MainWindow::initTextures()
 {
-    OpenGLTexturePointer defaultTexture = m_pTextureStore->createTextureFromFile(":model/textures/_ERROR_");
-    Q_ASSERT_X(!defaultTexture.isNull(), Q_FUNC_INFO, "Unable to create default texture!");
-    m_iErrorTextureId = defaultTexture->textureStoreId();
-
+    m_pTextureStore->setDefaultTextureFromFile(":model/textures/_ERROR_");
     m_pTextureStore->createTextureFromFile(":model/textures/dev/devwhite");
 }
 
@@ -179,7 +175,6 @@ void MainWindow::initScene()
 
 void MainWindow::initSceneRenderer()
 {
-    m_pSceneRenderer->setDefaultTextureId(m_iErrorTextureId);
     m_pSceneRenderer->setShaderPalette(m_DefaultShaderPalette);
 }
 

@@ -26,11 +26,15 @@ namespace Model
         void destroyTexture(quint32 textureId);
         void destroyTexture(const QString& path);
 
+        Renderer::OpenGLTexturePointer defaultTexture() const;
+        void setDefaultTextureFromFile(const QString& path);
+
     private:
         quint32 acquireNextTextureId();
         void processCreatedTexture(const Renderer::OpenGLTexturePointer& texture, const QString& path);
 
         quint32 m_iNextTextureId;
+        Renderer::OpenGLTexturePointer m_pDefaultTexture;
         QHash<quint32, Renderer::OpenGLTexturePointer> m_TextureTable;
         QHash<QString, quint32> m_TexturePathTable;
     };

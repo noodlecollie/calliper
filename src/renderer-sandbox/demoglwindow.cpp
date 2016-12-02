@@ -111,7 +111,6 @@ void DemoGLWindow::initializeGL()
     m_pCamera->hierarchy().setPosition(QVector3D(-40,0,0));
 
     m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, m_pMaterialStore, &passClassifier, renderer, m_pScene);
-    m_pSceneRenderer->setDefaultTextureId(1);
 
     ShaderPalette shaderPalette;
     shaderPalette.addItem(ShaderPalette::DefaultShader, defaultShader);

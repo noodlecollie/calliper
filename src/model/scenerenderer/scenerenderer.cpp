@@ -12,7 +12,7 @@ namespace Model
           m_pMaterialFunctor(materialFunctor),
           m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene),
-          m_iDefaultTexture(0), m_vecDirectionalLight(QVector3D(1,1,1).normalized())
+          m_vecDirectionalLight(QVector3D(1,1,1).normalized())
     {
         Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
         Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
@@ -50,7 +50,7 @@ namespace Model
         {
             GeometryBuilder builder(m_pShaderFunctor, m_pTextureFunctor,
                                     m_ShaderPalette.shader(ShaderPalette::DefaultShader),
-                                    m_iDefaultTexture,
+                                    0,
                                     m_matRecursiveUpdateMatrix);
             object->rendererUpdate(m_ShaderPalette, builder);
 
@@ -82,16 +82,6 @@ namespace Model
         params.setDirectionalLight(m_vecDirectionalLight);
 
         m_pRenderer->draw(params);
-    }
-
-    quint32 SceneRenderer::defaultTextureId() const
-    {
-        return m_iDefaultTexture;
-    }
-
-    void SceneRenderer::setDefaultTextureId(quint32 id)
-    {
-        m_iDefaultTexture = id;
     }
 
     ShaderPalette SceneRenderer::shaderPalette() const

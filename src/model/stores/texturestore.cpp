@@ -3,7 +3,8 @@
 namespace Model
 {
     TextureStore::TextureStore()
-        : m_iNextTextureId(1)
+        : m_iNextTextureId(1),
+          m_pDefaultTexture(Renderer::OpenGLTexturePointer::create(0, QOpenGLTexture::Target2D))
     {
 
     }
@@ -25,7 +26,7 @@ namespace Model
 
     Renderer::OpenGLTexturePointer TextureStore::getTexture(quint32 textureId) const
     {
-        return m_TextureTable.value(textureId, Renderer::OpenGLTexturePointer());
+        return m_TextureTable.value(textureId, m_pDefaultTexture);
     }
 
     Renderer::OpenGLTexturePointer TextureStore::operator ()(quint32 textureId) const
@@ -96,5 +97,20 @@ namespace Model
     void TextureStore::destroyTexture(const QString &path)
     {
         destroyTexture(getTextureId(path));
+    }
+
+    Renderer::OpenGLTexturePointer TextureStore::defaultTexture() const
+    {
+        return m_pDefaultTexture;
+    }
+
+    void TextureStore::setDefaultTextureFromFile(const QString &path)
+    {
+        QImage image(path);
+        if ( image.isNull() )
+            return;
+
+        m_pDefaultTexture->setData(image.mirrored());
+        m_pDefaultTexture->create();
     }
 }

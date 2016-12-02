@@ -20,11 +20,14 @@ namespace Model
         quint32 getMaterialId(const QString &path) const;
         Renderer::RenderMaterialPointer getMaterial(const QString &path) const;
 
+        Renderer::RenderMaterialPointer defaultMaterial() const;
+
     private:
         quint32 acquireNextMaterialId();
         Renderer::RenderMaterialPointer createMaterialInternal(const QString &path, quint32 id);
 
         quint32 m_iNextMaterialId;
+        Renderer::RenderMaterialPointer m_pDefaultMaterial;
         QHash<quint32, Renderer::RenderMaterialPointer> m_MaterialTable;
         QHash<QString, quint32> m_MaterialPathTable;
     };

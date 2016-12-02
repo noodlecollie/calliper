@@ -58,7 +58,6 @@ private:
     Model::TextureStore* m_pTextureStore;
     Model::MaterialStore* m_pMaterialStore;
     quint32 m_iPlaceholderMaterial;
-    quint32 m_iErrorTextureId;
 
     Model::BasicScene* m_pScene;
     Model::SceneCamera* m_pCamera;

@@ -21,9 +21,6 @@ namespace Model
                       IRenderPassClassifier* renderPassClassifier,
                       Renderer::IRenderer* renderer, Scene* scene);
 
-        quint32 defaultTextureId() const;
-        void setDefaultTextureId(quint32 id);
-
         ShaderPalette shaderPalette() const;
         void setShaderPalette(const ShaderPalette& palette);
 
@@ -43,7 +40,6 @@ namespace Model
         IRenderPassClassifier* m_pRenderPassClassifier;
         Renderer::IRenderer* m_pRenderer;
         Scene* m_pScene;
-        quint32 m_iDefaultTexture;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
         ShaderPalette m_ShaderPalette;

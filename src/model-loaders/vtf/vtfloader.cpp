@@ -211,7 +211,7 @@ namespace ModelLoaders
                         continue;
                     }
 
-                    texture->setData(image);
+                    texture->setData(image.mirrored());
                     referencedVtfs.remove(fullPath);
                 }
 
