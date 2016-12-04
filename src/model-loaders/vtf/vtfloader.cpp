@@ -11,6 +11,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "keyvalues/keyvaluesparser.h"
+#include "VTFLib/src/VTFFile.h"
+#include <QOpenGLPixelTransferOptions>
+#include "VTFLib/src/VTFLib.h"
 
 namespace ModelLoaders
 {
@@ -30,6 +33,73 @@ namespace ModelLoaders
                 matPath = matPath.mid(removalIndex + static_cast<int>(strlen("materials/")));
             }
             return matPath;
+        }
+
+        bool setTextureFormat(Renderer::OpenGLTexturePointer& texture, VTFImageFormat format)
+        {
+            switch (format)
+            {
+                case IMAGE_FORMAT_DXT1:
+                texture->setFormat(QOpenGLTexture::RGBA_DXT1);
+                break;
+
+                case IMAGE_FORMAT_DXT3:
+                texture->setFormat(QOpenGLTexture::RGBA_DXT3);
+                break;
+
+                case IMAGE_FORMAT_DXT5:
+                texture->setFormat(QOpenGLTexture::RGBA_DXT5);
+                break;
+
+                case IMAGE_FORMAT_RGBA8888:
+                texture->setFormat(QOpenGLTexture::RGBA8_UNorm);
+                break;
+
+            default:
+                return false;
+            }
+
+            return true;
+        }
+
+        bool loadVtf(const QByteArray& vtfData, Renderer::OpenGLTexturePointer& texture)
+        {
+            VTFLib::CVTFFile vtfFile;
+            if ( !vtfFile.Load(static_cast<const vlVoid*>(vtfData.constData()), vtfData.length(), false) )
+            {
+                return false;
+            }
+
+            if ( !setTextureFormat(texture, vtfFile.GetFormat()) )
+            {
+                qWarning() << "Currently unsupported format" << vtfFile.GetFormat()
+                           << "for texture" << texture->path();
+                return false;
+            }
+
+            if ( !vtfFile.GetData(0,0,0,0) )
+            {
+                qWarning() << "VTF for texture" << texture->path()
+                           << "has no data.";
+                return false;
+            }
+
+            texture->setSize(vtfFile.GetWidth(), vtfFile.GetHeight());
+            texture->create();
+
+            if ( vtfFile.GetFormat() == IMAGE_FORMAT_RGBA8888 )
+            {
+                texture->setData(QOpenGLTexture::RGBA, QOpenGLTexture::UInt32, vtfFile.GetData(0, 0, 0, 0));
+            }
+            else
+            {
+                int size = static_cast<int>(VTFLib::CVTFFile::ComputeImageSize(vtfFile.GetWidth(), vtfFile.GetHeight(),
+                                                              vtfFile.GetDepth(), vtfFile.GetMipmapCount(),
+                                                              vtfFile.GetFormat()));
+                texture->setCompressedData(size, vtfFile.GetData(0,0,0,0));
+            }
+
+            return true;
         }
     }
 
@@ -125,18 +195,7 @@ namespace ModelLoaders
                 {
                     qDebug() << "VTF data is empty";
                     m_ReferencedVtfs.remove(fullPath);
-                    continue;
-                }
-
-                QBuffer vtfDataBuffer(&vtfData);
-                QImageReader imageReader(&vtfDataBuffer, "vtf");
-                QImage image = imageReader.read();
-
-                if ( image.isNull() )
-                {
-                    qDebug() << "Failed to read" << fullPath << "into a QImage";
                     m_pTextureStore->destroyTexture(textureId);
-                    m_ReferencedVtfs.remove(fullPath);
                     continue;
                 }
 
@@ -144,14 +203,20 @@ namespace ModelLoaders
                 if ( texture->textureStoreId() != textureId )
                 {
                     Q_ASSERT_X(false, Q_FUNC_INFO, "Texture ID mismatch, should never happen!");
+                    m_pTextureStore->destroyTexture(textureId);
                     m_ReferencedVtfs.remove(fullPath);
                     continue;
                 }
 
-                texture->setData(image.mirrored());
-                texture->create();
-                int removed = m_ReferencedVtfs.remove(fullPath);
-                qDebug() << "Removing referenced VTF" << fullPath << "returned" << removed;
+                if ( !loadVtf(vtfData, texture) )
+                {
+                    qDebug().nospace() << "Failed to read " << fullPath << ": " << VTFLib::LastError.Get();
+                    m_pTextureStore->destroyTexture(textureId);
+                    m_ReferencedVtfs.remove(fullPath);
+                    continue;
+                }
+
+                m_ReferencedVtfs.remove(fullPath);
             }
 
             vpk->close();

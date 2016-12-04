@@ -62,10 +62,3 @@ else:unix: LIBS += -L$$OUT_PWD/../dep-vtflib/ -ldep-vtflib
 
 INCLUDEPATH += $$PWD/../dep-vtflib
 DEPENDPATH += $$PWD/../dep-vtflib
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../dep-qvtf/release/ -ldep-qvtf
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../dep-qvtf/debug/ -ldep-qvtf
-else:unix: LIBS += -L$$OUT_PWD/../dep-qvtf/ -ldep-qvtf
-
-INCLUDEPATH += $$PWD/../dep-qvtf
-DEPENDPATH += $$PWD/../dep-qvtf
