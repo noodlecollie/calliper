@@ -1,4 +1,8 @@
 To do:
+- Modify renderer so that it doesn't force you to use one global instance.
+- Integrate a more generic version of the VMF viewer window into a common library.
+- Use this in a unit test in order to work out how to load VTFs properly.
+- Update KeyValues parser to force all keys to lowercase - leave values same case as normal.
 
 Proposed improvements:
 Create a new module for input handling - make this separate from the model
