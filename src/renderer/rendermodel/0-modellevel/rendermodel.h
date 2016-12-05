@@ -13,7 +13,7 @@
 
 namespace Renderer
 {
-    class RenderModel : public IRenderer
+    class RENDERERSHARED_EXPORT RenderModel : public IRenderer
     {
     public:
         RenderModel();

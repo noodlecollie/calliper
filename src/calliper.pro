@@ -11,7 +11,8 @@ SUBDIRS += \
     file-formats \
     model-loaders \
     dep-vtflib \
-    tst-keyvaluesparser
+    tst-keyvaluesparser \
+    high-level-convenience
 
 renderer-sandbox.depends = renderer calliperutil model
 model.depends = renderer calliperutil

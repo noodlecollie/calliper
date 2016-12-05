@@ -1,0 +1,17 @@
+#ifndef HIGHLEVELCONVENIENCE_GLOBAL_H
+#define HIGHLEVELCONVENIENCE_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(HIGHLEVELCONVENIENCE_LIBRARY)
+#  define HIGHLEVELCONVENIENCESHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define HIGHLEVELCONVENIENCESHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+namespace HighLevelConvenience
+{
+    const char* STR_NAMESPACE = "HighLevelConvenience";
+}
+
+#endif // HIGHLEVELCONVENIENCE_GLOBAL_H
