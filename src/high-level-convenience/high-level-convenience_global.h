@@ -11,7 +11,7 @@
 
 namespace HighLevelConvenience
 {
-    const char* STR_NAMESPACE = "HighLevelConvenience";
+    static const char* STR_NAMESPACE = "HighLevelConvenience";
 }
 
 #endif // HIGHLEVELCONVENIENCE_GLOBAL_H

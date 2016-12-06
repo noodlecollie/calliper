@@ -62,3 +62,10 @@ else:unix: LIBS += -L$$OUT_PWD/../dep-vtflib/ -ldep-vtflib
 
 INCLUDEPATH += $$PWD/../dep-vtflib
 DEPENDPATH += $$PWD/../dep-vtflib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../high-level-convenience/release/ -lhigh-level-convenience
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../high-level-convenience/debug/ -lhigh-level-convenience
+else:unix: LIBS += -L$$OUT_PWD/../high-level-convenience/ -lhigh-level-convenience
+
+INCLUDEPATH += $$PWD/../high-level-convenience
+DEPENDPATH += $$PWD/../high-level-convenience

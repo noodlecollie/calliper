@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+QT += opengl
+
 TARGET = high-level-convenience
 TEMPLATE = lib
 

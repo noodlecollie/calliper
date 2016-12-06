@@ -15,9 +15,6 @@
 #include "vpk/vpkfilecollection.h"
 #include "rendermodel/0-modellevel/rendermodel.h"
 
-class QPushButton;
-class QGridLayout;
-
 namespace HighLevelConvenience
 {
     class HIGHLEVELCONVENIENCESHARED_EXPORT MapViewWindow : public QOpenGLWindow
@@ -55,6 +52,10 @@ namespace HighLevelConvenience
 
         Model::SceneCamera* sceneCamera();
         const Model::SceneCamera* sceneCamera() const;
+
+        const FileFormats::VPKFileCollection& vpkFileCollection() const;
+
+        void loadMap();
 
     protected:
         virtual void initializeGL() override;

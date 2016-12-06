@@ -39,7 +39,6 @@ namespace HighLevelConvenience
         m_pKeyMap(nullptr),
         m_pMouseEventMap(nullptr)
     {
-        resize(640, 480);
     }
 
     MapViewWindow::~MapViewWindow()
@@ -330,5 +329,44 @@ namespace HighLevelConvenience
     const Model::SceneCamera* MapViewWindow::sceneCamera() const
     {
         return m_pCamera;
+    }
+
+    const FileFormats::VPKFileCollection& MapViewWindow::vpkFileCollection() const
+    {
+        return m_VpkFiles;
+    }
+
+    void MapViewWindow::loadMap()
+    {
+        using namespace FileFormats;
+        using namespace ModelLoaders;
+
+        if ( m_strMapPath.isNull() || m_strMapPath.isEmpty() )
+        {
+            QMessageBox::critical(nullptr, "Error", "No VMF file provided.");
+            return;
+        }
+
+        QFile file(m_strMapPath);
+        if ( !file.open(QIODevice::ReadOnly) )
+        {
+            QMessageBox::critical(nullptr, "Error", QString("Could not open VMF file ") + m_strMapPath);
+            return;
+        }
+
+        QByteArray fileData = file.readAll();
+        file.close();
+
+        QJsonDocument vmfDoc;
+
+        {
+            KeyValuesParser kvParser(fileData);
+            QString err;
+            vmfDoc = kvParser.toJsonDocument(&err);
+            if ( vmfDoc.isNull() )
+                return;
+        }
+
+        VMFLoader::createBrushes(vmfDoc, m_pScene->rootObject());
     }
 }

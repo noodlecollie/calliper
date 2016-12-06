@@ -43,8 +43,11 @@ int main(int argc, char *argv[])
         filename = opts.at(0);
     }
 
-    MainWindow w(filename);
+    MainWindow w;
+    w.setFilePath(filename);
     w.setVpkPath(parser.value(opVpkPath));
+    w.loadMap();
+    w.processBrushes();
     w.show();
 
     return a.exec();
