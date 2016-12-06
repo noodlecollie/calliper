@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="rockground003">rockground003.vtf</file>
+    </qresource>
+</RCC>

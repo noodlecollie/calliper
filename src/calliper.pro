@@ -12,7 +12,8 @@ SUBDIRS += \
     model-loaders \
     dep-vtflib \
     tst-keyvaluesparser \
-    high-level-convenience
+    high-level-convenience \
+    tst-vtfimport
 
 renderer-sandbox.depends = renderer calliperutil model
 model.depends = renderer calliperutil
@@ -24,3 +25,4 @@ model-loaders.depends = model renderer calliperutil file-formats dep-vtflib
 dep-qvtf.depends = dep-vtflib
 tst-keyvaluesparser.depends = file-formats calliperutil
 high-level-convenience.depends = renderer calliperutil model file-formats model-loaders dep-vtflib
+tst-vtfimport.depends = calliperutil renderer model file-formats model-loaders dep-vtflib high-level-convenience
