@@ -145,7 +145,6 @@ namespace Renderer
             if ( tex.isNull() )
                 continue;
 
-            qDebug().nospace() << "Binding texture " << tex->textureStoreId() << " (" << it.value() << ") to point " << it.key();
             tex->bind(it.key());
         }
     }

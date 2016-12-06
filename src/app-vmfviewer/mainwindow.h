@@ -8,7 +8,7 @@ class MainWindow : public HighLevelConvenience::MapViewWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow();
+    MainWindow();
     ~MainWindow();
 
     void processBrushes();

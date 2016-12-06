@@ -34,7 +34,7 @@ namespace HighLevelConvenience
         m_pCamera(nullptr),
         m_pRenderPassClassifier(classifier),
         m_pSceneRenderer(nullptr),
-        m_DefaultShaderPalette(),
+        m_ShaderPalette(),
         m_pCameraController(nullptr),
         m_pKeyMap(nullptr),
         m_pMouseEventMap(nullptr)
@@ -117,6 +117,8 @@ namespace HighLevelConvenience
 
     void MapViewWindow::paintGL()
     {
+        m_pSceneRenderer->setShaderPalette(m_ShaderPalette);
+
         GL_CURRENT_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         m_pSceneRenderer->render(m_pCamera);
@@ -162,7 +164,7 @@ namespace HighLevelConvenience
 
     void MapViewWindow::initSceneRenderer()
     {
-        m_pSceneRenderer->setShaderPalette(m_DefaultShaderPalette);
+
     }
 
     void MapViewWindow::initCameraController()
@@ -257,18 +259,14 @@ namespace HighLevelConvenience
         m_strMapPath = path;
     }
 
-    Model::ShaderPalette MapViewWindow::defaultShaderPalette() const
+    Model::ShaderPalette& MapViewWindow::shaderPalette()
     {
-        return m_DefaultShaderPalette;
+        return m_ShaderPalette;
     }
 
-    void MapViewWindow::setDefaultShaderPalette(const Model::ShaderPalette& palette)
+    const Model::ShaderPalette& MapViewWindow::shaderPalette() const
     {
-        if ( m_DefaultShaderPalette == palette )
-            return;
-
-        m_DefaultShaderPalette = palette;
-        m_pSceneRenderer->setShaderPalette(palette);
+        return m_ShaderPalette;
     }
 
     Model::ShaderStore* MapViewWindow::shaderStore()

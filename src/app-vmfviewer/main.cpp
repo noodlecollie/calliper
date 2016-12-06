@@ -44,11 +44,11 @@ int main(int argc, char *argv[])
     }
 
     MainWindow w;
-    w.setFilePath(filename);
+    w.setMapPath(filename);
     w.setVpkPath(parser.value(opVpkPath));
+    w.show();
     w.loadMap();
     w.processBrushes();
-    w.show();
 
     return a.exec();
 }

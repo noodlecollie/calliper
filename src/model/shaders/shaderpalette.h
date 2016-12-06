@@ -20,16 +20,6 @@ namespace Model
         void addItem(PaletteItem item, quint16 shader);
         quint16 shader(PaletteItem item) const;
 
-        inline bool operator ==(const ShaderPalette& other) const
-        {
-            return m_ItemTable == other.m_ItemTable;
-        }
-
-        inline bool operator !=(const ShaderPalette& other) const
-        {
-            return !(*this == other);
-        }
-
     private:
         QHash<PaletteItem, quint16> m_ItemTable;
     };

@@ -20,11 +20,10 @@ namespace HighLevelConvenience
     class HIGHLEVELCONVENIENCESHARED_EXPORT MapViewWindow : public QOpenGLWindow
     {
         Q_OBJECT
-
     public:
         // Takes ownership of the classifier object.
         explicit MapViewWindow(Model::IRenderPassClassifier* classifier);
-        ~MapViewWindow();
+        virtual ~MapViewWindow();
 
         QString vpkPath() const;
         void setVpkPath(const QString& path);
@@ -32,8 +31,8 @@ namespace HighLevelConvenience
         QString mapPath() const;
         void setMapPath(const QString& path);
 
-        Model::ShaderPalette defaultShaderPalette() const;
-        void setDefaultShaderPalette(const Model::ShaderPalette& palette);
+        Model::ShaderPalette& shaderPalette();
+        const Model::ShaderPalette& shaderPalette() const;
 
         Model::ShaderStore* shaderStore();
         const Model::ShaderStore* shaderStore() const;
@@ -91,7 +90,7 @@ namespace HighLevelConvenience
         Model::SceneCamera* m_pCamera;
         Model::IRenderPassClassifier* m_pRenderPassClassifier;
         Model::SceneRenderer* m_pSceneRenderer;
-        Model::ShaderPalette m_DefaultShaderPalette;
+        Model::ShaderPalette m_ShaderPalette;
 
         Model::CameraController* m_pCameraController;
         Model::KeyMap* m_pKeyMap;

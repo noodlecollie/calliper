@@ -23,13 +23,7 @@ public:
 
 };
 
-Model::IRenderPassClassifier* getClassifier()
-{
-    static SimpleRenderClassifier classifier;
-    return &classifier;
-}
-
-MainWindow::MainWindow() : HighLevelConvenience::MapViewWindow(getClassifier()),
+MainWindow::MainWindow() : HighLevelConvenience::MapViewWindow(new SimpleRenderClassifier()),
     m_iPlaceholderMaterial(0)
 {
     resize(640, 480);
@@ -41,10 +35,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::initShaders()
 {
-    Model::ShaderPalette palette = defaultShaderPalette();
+    Model::ShaderPalette& palette = shaderPalette();
     palette.addItem(Model::ShaderPalette::DefaultShader, shaderStore()->addShaderProgram<Model::SimpleLitShader>());
     palette.addItem(Model::ShaderPalette::UnlitPerVertexColor, shaderStore()->addShaderProgram<Model::UnlitPerVertexColorShader>());
-    setDefaultShaderPalette(palette);
 }
 
 void MainWindow::initTextures()
