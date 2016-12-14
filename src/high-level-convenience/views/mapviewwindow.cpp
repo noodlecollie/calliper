@@ -367,4 +367,10 @@ namespace HighLevelConvenience
 
         VMFLoader::createBrushes(vmfDoc, m_pScene->rootObject());
     }
+
+    void MapViewWindow::loadVpks()
+    {
+        m_VpkFiles.clear();
+        m_VpkFiles.addFilesFromDirectory(m_strVpkPath);
+    }
 }

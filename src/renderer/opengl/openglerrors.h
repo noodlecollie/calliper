@@ -74,7 +74,7 @@ namespace Renderer
 }
 
 #ifdef QT_DEBUG
-#define GLTRY(_func) OpenGLErrors::glTry([&]{_func;}, #_func, __FILE__, __LINE__, Q_FUNC_INFO)
+#define GLTRY(_func) ::Renderer::OpenGLErrors::glTry([&]{_func;}, #_func, __FILE__, __LINE__, Q_FUNC_INFO)
 #else
 #define GLTRY(_func) _func
 #endif

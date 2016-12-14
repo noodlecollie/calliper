@@ -10,7 +10,7 @@ namespace CalliperUtil
     {
         QString normaliseResourcePathSeparators(const QString &originalPath)
         {
-            return QDir::fromNativeSeparators(originalPath);
+            return QString(originalPath).replace('\\', '/');
         }
     }
 }

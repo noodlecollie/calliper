@@ -51,9 +51,9 @@ namespace ModelLoaders
                 texture->setFormat(QOpenGLTexture::RGBA_DXT5);
                 break;
 
-                case IMAGE_FORMAT_RGBA8888:
-                texture->setFormat(QOpenGLTexture::RGBA8_UNorm);
-                break;
+//                case IMAGE_FORMAT_RGBA8888:
+//                texture->setFormat(QOpenGLTexture::QOpenGLTexture::RGBA32U);
+//                break;
 
             default:
                 return false;
@@ -72,7 +72,7 @@ namespace ModelLoaders
 
             if ( !setTextureFormat(texture, vtfFile.GetFormat()) )
             {
-                qWarning() << "Currently unsupported format" << vtfFile.GetFormat()
+                qWarning() << "Currently unsupported format" << VTFLib::CVTFFile::ImageFormatName(vtfFile.GetFormat())
                            << "for texture" << texture->path();
                 return false;
             }
@@ -85,7 +85,7 @@ namespace ModelLoaders
             }
 
             texture->setSize(vtfFile.GetWidth(), vtfFile.GetHeight());
-            texture->create();
+            texture->allocateStorage(QOpenGLTexture::RGBA, QOpenGLTexture::UInt32);
 
             if ( vtfFile.GetFormat() == IMAGE_FORMAT_RGBA8888 )
             {
@@ -94,10 +94,12 @@ namespace ModelLoaders
             else
             {
                 int size = static_cast<int>(VTFLib::CVTFFile::ComputeImageSize(vtfFile.GetWidth(), vtfFile.GetHeight(),
-                                                              vtfFile.GetDepth(), vtfFile.GetMipmapCount(),
+                                                              1,1,
                                                               vtfFile.GetFormat()));
                 texture->setCompressedData(size, vtfFile.GetData(0,0,0,0));
             }
+
+            texture->create();
 
             return true;
         }
@@ -127,7 +129,7 @@ namespace ModelLoaders
         // Clean up any remaining VTFs - the files could have referenced some that don't actually exist.
         foreach ( quint32 textureId, m_ReferencedVtfs.values() )
         {
-            qDebug() << "Cleaning up unused texture" << textureId;
+            qDebug() << "Cleaning up unused texture" << textureId << m_pTextureStore->getTexture(textureId)->path();
             m_pTextureStore->destroyTexture(textureId);
         }
 

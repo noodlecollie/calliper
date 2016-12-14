@@ -754,7 +754,9 @@ namespace VTFLib
 
 		static vlVoid FlipImage(vlByte *lpImageDataRGBA8888, vlUInt uiWidth, vlUInt uiHeight);		//!< Flips an image vertically along its X-axis.
 		static vlVoid MirrorImage(vlByte *lpImageDataRGBA8888, vlUInt uiWidth, vlUInt uiHeight);	//!< Flips an image horizontally along its Y-axis.
-	};
+
+        static const vlChar* ImageFormatName(VTFImageFormat format);
+    };
 }
 #endif // c++
 

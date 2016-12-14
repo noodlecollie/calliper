@@ -92,5 +92,6 @@ void MainWindow::processBrushes()
 void MainWindow::importTextures()
 {
     ModelLoaders::VTFLoader loader(materialStore(), textureStore());
+    loadVpks();
     loader.loadMaterials(vpkFileCollection());
 }

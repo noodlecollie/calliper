@@ -55,6 +55,7 @@ namespace HighLevelConvenience
         const FileFormats::VPKFileCollection& vpkFileCollection() const;
 
         void loadMap();
+        void loadVpks();
 
     protected:
         virtual void initializeGL() override;

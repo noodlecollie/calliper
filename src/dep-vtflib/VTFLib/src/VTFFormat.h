@@ -120,7 +120,6 @@ typedef enum tagVTFImageFormat
 	IMAGE_FORMAT_NONE = -1
 } VTFImageFormat;
 
-
 //! VTF image header flags.
 typedef enum tagVTFImageFlag
 {
