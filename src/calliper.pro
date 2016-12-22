@@ -1,7 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-	app-calliper \
     renderer \
     renderer-sandbox \
     model \
@@ -12,7 +11,8 @@ SUBDIRS += \
     model-loaders \
     dep-vtflib \
     tst-keyvaluesparser \
-    high-level-convenience
+    high-level-convenience \
+    app-calliper
 
 renderer-sandbox.depends = calliperutil renderer model file-formats model-loaders dep-vtflib high-level-convenience
 model.depends = renderer calliperutil
