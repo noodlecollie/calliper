@@ -8,6 +8,7 @@ class QTreeWidgetItem;
 
 class ProjectFileDockWidget : public QDockWidget
 {
+    Q_OBJECT
 public:
     ProjectFileDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 

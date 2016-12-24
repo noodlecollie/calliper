@@ -49,7 +49,9 @@ SOURCES += \
     shaders/errorshader.cpp \
     shaders/simplelitshader.cpp \
     stores/materialstore.cpp \
-    stores/materialresourcemanager.cpp
+    stores/materialresourcemanager.cpp \
+    projects/calliperproject.cpp \
+    projects/calliperprojectmetadata.cpp
 
 HEADERS += \
     model_global.h \
@@ -92,7 +94,9 @@ HEADERS += \
     shaders/errorshader.h \
     shaders/simplelitshader.h \
     stores/materialstore.h \
-    stores/materialresourcemanager.h
+    stores/materialresourcemanager.h \
+    projects/calliperproject.h \
+    projects/calliperprojectmetadata.h
 
 unix {
     target.path = /usr/lib

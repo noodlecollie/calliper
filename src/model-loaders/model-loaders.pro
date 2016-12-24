@@ -13,12 +13,14 @@ DEFINES += MODELLOADERS_LIBRARY
 
 SOURCES += \
     vmf/vmfloader.cpp \
-    vtf/vtfloader.cpp
+    vtf/vtfloader.cpp \
+    projects/calliperprojectloader.cpp
 
 HEADERS +=\
     model-loaders_global.h \
     vmf/vmfloader.h \
-    vtf/vtfloader.h
+    vtf/vtfloader.h \
+    projects/calliperprojectloader.h
 
 unix {
     target.path = /usr/lib

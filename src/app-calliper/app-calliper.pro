@@ -13,10 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    projectfiledockwidget.cpp
+        widgets/mainwindow.cpp \
+    widgets/projectfiledockwidget.cpp
 
-HEADERS  += mainwindow.h \
-    projectfiledockwidget.h
+HEADERS  += widgets/mainwindow.h \
+    widgets/projectfiledockwidget.h
 
 FORMS    += mainwindow.ui
