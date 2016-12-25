@@ -1,0 +1,30 @@
+#ifndef VISIBLEACTIONDOCKWIDGET_H
+#define VISIBLEACTIONDOCKWIDGET_H
+
+#include <QDockWidget>
+#include <QPointer>
+#include <QAction>
+
+class VisibleActionDockWidget : public QDockWidget
+{
+    Q_OBJECT
+public:
+    VisibleActionDockWidget(const QString &title, QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+    VisibleActionDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+
+    QAction* visibilityAction() const;
+    void setVisibilityAction(QAction* action);
+    void clearVisibilityAction();
+
+private slots:
+    void actionCheckedStateChanged(bool checked);
+    void handleVisibilityChanged(bool visible);
+
+private:
+    void init();
+    void manageConnections(QAction* oldAction, QAction* newAction);
+
+    QPointer<QAction> m_pAction;
+};
+
+#endif // VISIBLEACTIONDOCKWIDGET_H

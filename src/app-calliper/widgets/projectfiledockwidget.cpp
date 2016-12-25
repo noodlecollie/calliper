@@ -37,7 +37,7 @@ namespace
 }
 
 ProjectFileDockWidget::ProjectFileDockWidget(QWidget *parent, Qt::WindowFlags flags)
-    : QDockWidget(tr("Project Files"), parent, flags)
+    : VisibleActionDockWidget(tr("Project Files"), parent, flags)
 {
     m_pTreeWidget = new QTreeWidget();
     m_pTreeWidget->setHeaderLabel(tr("Files"));
@@ -73,7 +73,7 @@ void ProjectFileDockWidget::clearFiles()
 void ProjectFileDockWidget::createEntry(const QStringList &filePathSections)
 {
     QFileIconProvider icons;
-    QTreeWidgetItem* item = m_pTreeWidget->invisibleRootItem();
+    QTreeWidgetItem* item = getRootItem();
 
     for ( int i = 0; i < filePathSections.count(); i++ )
     {
@@ -103,7 +103,7 @@ void ProjectFileDockWidget::createEntry(const QStringList &filePathSections)
 
 void ProjectFileDockWidget::removeEntry(const QStringList &filePathSections)
 {
-    removeEntryRecursive(m_pTreeWidget->invisibleRootItem(), filePathSections, 0);
+    removeEntryRecursive(getRootItem(), filePathSections, 0);
 }
 
 bool ProjectFileDockWidget::removeEntryRecursive(QTreeWidgetItem *parent, const QStringList &filePathSections, int index)
@@ -147,4 +147,27 @@ void ProjectFileDockWidget::itemDoubleClicked(QTreeWidgetItem *item, int column)
 
     if ( !filePath.isNull() )
         emit fileDoubleClicked(filePath);
+}
+
+QTreeWidgetItem* ProjectFileDockWidget::getRootItem() const
+{
+    QTreeWidgetItem* root = m_pTreeWidget->invisibleRootItem();
+    if ( root->childCount() < 1 )
+        return root;
+
+    return root->child(0);
+}
+
+void ProjectFileDockWidget::setRoot(const QString &projectFileName)
+{
+    QTreeWidgetItem* root = getRootItem();
+    if ( root == m_pTreeWidget->invisibleRootItem() )
+    {
+        QTreeWidgetItem* item = new QTreeWidgetItem();
+        root->addChild(item);
+        root = item;
+    }
+
+    root->setText(0, projectFileName);
+    root->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::File));
 }
