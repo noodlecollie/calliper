@@ -12,11 +12,17 @@ TEMPLATE = lib
 DEFINES += HIGHLEVELCONVENIENCE_LIBRARY
 
 SOURCES += \
-    views/mapviewwindow.cpp
+    views/mapviewwindow.cpp \
+    arrangeable-tabs/resizeablegridcontainer.cpp \
+    arrangeable-tabs/resizeablegridelement.cpp \
+    arrangeable-tabs/resizeablegridelementbutton.cpp
 
 HEADERS +=\
         high-level-convenience_global.h \
-    views/mapviewwindow.h
+    views/mapviewwindow.h \
+    arrangeable-tabs/resizeablegridcontainer.h \
+    arrangeable-tabs/resizeablegridelement.h \
+    arrangeable-tabs/resizeablegridelementbutton.h
 
 unix {
     target.path = /usr/lib
@@ -64,3 +70,5 @@ else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
 
 INCLUDEPATH += $$PWD/../renderer
 DEPENDPATH += $$PWD/../renderer
+
+FORMS +=
