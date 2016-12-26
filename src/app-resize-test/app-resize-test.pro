@@ -1,31 +1,23 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-12-05T18:52:01
+# Project created by QtCreator 2016-12-26T14:08:04
 #
 #-------------------------------------------------
 
-QT += opengl
+QT       += core gui
 
-TARGET = high-level-convenience
-TEMPLATE = lib
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-DEFINES += HIGHLEVELCONVENIENCE_LIBRARY
+TARGET = app-resize-test
+TEMPLATE = app
 
-SOURCES += \
-    views/mapviewwindow.cpp \
-    arrangeable-tabs/resizeablegridlayout.cpp \
-    arrangeable-tabs/resizeablegridelementbutton.cpp
 
-HEADERS +=\
-        high-level-convenience_global.h \
-    views/mapviewwindow.h \
-    arrangeable-tabs/resizeablegridlayout.h \
-    arrangeable-tabs/resizeablegridelementbutton.h
+SOURCES += main.cpp\
+        mainwindow.cpp
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+HEADERS  += mainwindow.h
+
+FORMS    += mainwindow.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil
@@ -34,12 +26,19 @@ else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 INCLUDEPATH += $$PWD/../calliperutil
 DEPENDPATH += $$PWD/../calliperutil
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../dep-vtflib/release/ -ldep-vtflib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../dep-vtflib/debug/ -ldep-vtflib
-else:unix: LIBS += -L$$OUT_PWD/../dep-vtflib/ -ldep-vtflib
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../high-level-convenience/release/ -lhigh-level-convenience
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../high-level-convenience/debug/ -lhigh-level-convenience
+else:unix: LIBS += -L$$OUT_PWD/../high-level-convenience/ -lhigh-level-convenience
 
-INCLUDEPATH += $$PWD/../dep-vtflib
-DEPENDPATH += $$PWD/../dep-vtflib
+INCLUDEPATH += $$PWD/../high-level-convenience
+DEPENDPATH += $$PWD/../high-level-convenience
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../renderer/release/ -lrenderer
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../renderer/debug/ -lrenderer
+else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
+
+INCLUDEPATH += $$PWD/../renderer
+DEPENDPATH += $$PWD/../renderer
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../model-loaders/release/ -lmodel-loaders
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../model-loaders/debug/ -lmodel-loaders
@@ -47,6 +46,13 @@ else:unix: LIBS += -L$$OUT_PWD/../model-loaders/ -lmodel-loaders
 
 INCLUDEPATH += $$PWD/../model-loaders
 DEPENDPATH += $$PWD/../model-loaders
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../dep-vtflib/release/ -ldep-vtflib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../dep-vtflib/debug/ -ldep-vtflib
+else:unix: LIBS += -L$$OUT_PWD/../dep-vtflib/ -ldep-vtflib
+
+INCLUDEPATH += $$PWD/../dep-vtflib
+DEPENDPATH += $$PWD/../dep-vtflib
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../file-formats/release/ -lfile-formats
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../file-formats/debug/ -lfile-formats
@@ -61,12 +67,3 @@ else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
 
 INCLUDEPATH += $$PWD/../model
 DEPENDPATH += $$PWD/../model
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../renderer/release/ -lrenderer
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../renderer/debug/ -lrenderer
-else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
-
-INCLUDEPATH += $$PWD/../renderer
-DEPENDPATH += $$PWD/../renderer
-
-FORMS +=
