@@ -24,18 +24,31 @@ namespace HighLevelConvenience
 
         ResizeModeFlags resizeFlags() const;
 
+        int rowIndex() const;
+        void setRowIndex(int index);
+
+        int columnIndex() const;
+        void setColumnIndex(int index);
+
     signals:
         void mouseMoved(int deltaX, int deltaY);
 
     protected:
         virtual void mouseMoveEvent(QMouseEvent *e) override;
+        virtual QSize sizeHint() const override;
+        virtual void enterEvent(QEvent *event) override;
+        virtual void leaveEvent(QEvent *event) override;
 
     private slots:
         void buttonReleased();
 
     private:
+        void calculateSizePolicy();
+
         ResizeModeFlags m_iResizeFlags;
         QScopedPointer<QPoint> m_pLastMousePos;
+        int m_iRowIndex;
+        int m_iColumnIndex;
     };
 
 

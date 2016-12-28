@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "arrangeable-tabs/resizeablegridlayoutmanager.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,9 +17,11 @@ public:
     ~MainWindow();
 
 private slots:
+    void addNewItem();
 
 private:
     Ui::MainWindow *ui;
+    HighLevelConvenience::ResizeableGridLayoutManager* m_pGridManager;
 };
 
 #endif // MAINWINDOW_H

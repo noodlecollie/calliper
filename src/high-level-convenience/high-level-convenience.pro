@@ -13,14 +13,14 @@ DEFINES += HIGHLEVELCONVENIENCE_LIBRARY
 
 SOURCES += \
     views/mapviewwindow.cpp \
-    arrangeable-tabs/resizeablegridlayout.cpp \
-    arrangeable-tabs/resizeablegridelementbutton.cpp
+    arrangeable-tabs/resizeablegridelementbutton.cpp \
+    arrangeable-tabs/resizeablegridlayoutmanager.cpp
 
 HEADERS +=\
         high-level-convenience_global.h \
     views/mapviewwindow.h \
-    arrangeable-tabs/resizeablegridlayout.h \
-    arrangeable-tabs/resizeablegridelementbutton.h
+    arrangeable-tabs/resizeablegridelementbutton.h \
+    arrangeable-tabs/resizeablegridlayoutmanager.h
 
 unix {
     target.path = /usr/lib
