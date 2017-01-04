@@ -326,8 +326,6 @@ namespace HighLevelConvenience
         if ( !button )
             return;
 
-        qDebug() << "Delta X:" << deltaX << "Delta Y:" << deltaY;
-
         if ( button->resizeFlags().testFlag(ResizeableGridElementButton::HorizontalResizeFlag) )
         {
             resizeHorizontal(deltaX);
