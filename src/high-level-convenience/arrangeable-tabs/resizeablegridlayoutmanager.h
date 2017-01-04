@@ -51,6 +51,8 @@ namespace HighLevelConvenience
         void addResizeButton(int row, int column, int rowSpan = 1, int colSpan = 1);
         void resizeHorizontal(int delta);
         void resizeVertical(int delta);
+        void setRowColMinSize();
+        void setStretchFactors(int row0, int row2, int col0, int col2);
 
         // Returns true if split is vertical, false if it's horizontal.
         // Lower is the item whose co-ordinate in the item axis is lower

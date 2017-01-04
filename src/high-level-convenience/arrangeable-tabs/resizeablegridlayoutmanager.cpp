@@ -110,6 +110,7 @@ namespace HighLevelConvenience
 
         qDeleteAll(m_ResizeButtons);
         m_ResizeButtons.clear();
+        setRowColMinSize();
     }
 
     void ResizeableGridLayoutManager::setSingleItemLayout()
@@ -118,6 +119,7 @@ namespace HighLevelConvenience
 
         QWidget* widget = m_OccupiedCells.begin().value();
         m_pGridLayout->addWidget(widget, 0, 0);
+        setStretchFactors(1,0,1,0);
     }
 
     void ResizeableGridLayoutManager::setDualItemLayout()
@@ -135,12 +137,14 @@ namespace HighLevelConvenience
             m_pGridLayout->addWidget(m_OccupiedCells.value(lowerCell), 0, 0, 3, 1);
             m_pGridLayout->addWidget(m_OccupiedCells.value(upperCell), 0, 2, 3, 1);
             addResizeButton(0,1,3,1);
+            setStretchFactors(1,0,1,1);
         }
         else
         {
             m_pGridLayout->addWidget(m_OccupiedCells.value(lowerCell), 0, 0, 1, 3);
             m_pGridLayout->addWidget(m_OccupiedCells.value(upperCell), 2, 0, 1, 3);
             addResizeButton(1,0,1,3);
+            setStretchFactors(1,1,1,0);
         }
     }
 
@@ -191,6 +195,9 @@ namespace HighLevelConvenience
 
             addResizeButton(0, 1);
             addResizeButton(2, 1);
+
+            m_pGridLayout->setRowStretch(0,1);
+            m_pGridLayout->setRowStretch(2,1);
         }
         else
         {
@@ -213,6 +220,9 @@ namespace HighLevelConvenience
 
             addResizeButton(1, 0);
             addResizeButton(1, 2);
+
+            m_pGridLayout->setColumnStretch(0,1);
+            m_pGridLayout->setColumnStretch(2,1);
         }
 
         QPoint shortenedCellIndex = indexForCell(shortenedCell);
@@ -365,5 +375,21 @@ namespace HighLevelConvenience
 
         m_pGridLayout->setRowStretch(0, top);
         m_pGridLayout->setRowStretch(2, bottom);
+    }
+
+    void ResizeableGridLayoutManager::setRowColMinSize()
+    {
+        m_pGridLayout->setRowMinimumHeight(0, 1);
+        m_pGridLayout->setRowMinimumHeight(2, 1);
+        m_pGridLayout->setColumnMinimumWidth(0, 1);
+        m_pGridLayout->setColumnMinimumWidth(2, 1);
+    }
+
+    void ResizeableGridLayoutManager::setStretchFactors(int row0, int row2, int col0, int col2)
+    {
+        m_pGridLayout->setRowStretch(0, row0);
+        m_pGridLayout->setRowStretch(2, row2);
+        m_pGridLayout->setColumnStretch(0, col0);
+        m_pGridLayout->setColumnStretch(2, col2);
     }
 }
