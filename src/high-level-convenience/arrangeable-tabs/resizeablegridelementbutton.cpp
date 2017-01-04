@@ -1,6 +1,7 @@
 #include "resizeablegridelementbutton.h"
 #include <QMouseEvent>
 #include <QGuiApplication>
+#include <QtDebug>
 
 namespace HighLevelConvenience
 {
@@ -14,17 +15,18 @@ namespace HighLevelConvenience
         setFlat(true);
         setAutoFillBackground(true);
         calculateSizePolicy();
+        connect(this, SIGNAL(released()), this, SLOT(buttonReleased()));
     }
 
     void ResizeableGridElementButton::mouseMoveEvent(QMouseEvent *e)
     {
         if ( !m_pLastMousePos )
         {
-            m_pLastMousePos.reset(new QPoint(mapToGlobal(e->pos())));
+            m_pLastMousePos.reset(new QPoint(e->globalPos()));
             return;
         }
 
-        QPoint newPos = mapToGlobal(e->pos());
+        QPoint newPos = e->globalPos();
         int deltaX = 0, deltaY = 0;
 
         if ( m_iResizeFlags.testFlag(HorizontalResizeFlag) )
@@ -114,5 +116,15 @@ namespace HighLevelConvenience
         QPushButton::enterEvent(event);
 
         QGuiApplication::restoreOverrideCursor();
+
+        // If we drag off the button and let go of the mouse,
+        // we get a leave event instead of a mouse released signal.
+        if ( m_pLastMousePos )
+            buttonReleased();
+    }
+
+    ResizeableGridElementButton::ResizeModeFlags ResizeableGridElementButton::resizeFlags() const
+    {
+        return m_iResizeFlags;
     }
 }

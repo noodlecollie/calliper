@@ -2,6 +2,7 @@
 #define RESIZEABLEGRIDLAYOUTMANAGER_H
 
 #include "high-level-convenience_global.h"
+#include <QObject>
 #include <QPoint>
 #include <QHash>
 
@@ -14,8 +15,9 @@ namespace HighLevelConvenience
 
     // Manages a 3x3 grid, where possible content cells are the corner cells.
     // Other cells are dividers used to resize the grid.
-    class ResizeableGridLayoutManager
+    class ResizeableGridLayoutManager : public QObject
     {
+        Q_OBJECT
     public:
         // Higher 16 bits are X, lower 16 bits are Y.
 #define ENCODE_CONTENTS_CELL(x,y) ((x) << 16) | (y)
@@ -36,6 +38,9 @@ namespace HighLevelConvenience
         QWidget* widgetAt(ContentCell cell) const;
         QWidget* takeWidget(ContentCell cell);
 
+    private slots:
+        void resizeButtonDragged(int deltaX, int deltaY);
+
     private:
         void updateLayout();
         void clearLayout();
@@ -44,6 +49,8 @@ namespace HighLevelConvenience
         void setTripleItemLayout();
         void setQuadItemLayout();
         void addResizeButton(int row, int column, int rowSpan = 1, int colSpan = 1);
+        void resizeHorizontal(int delta);
+        void resizeVertical(int delta);
 
         // Returns true if split is vertical, false if it's horizontal.
         // Lower is the item whose co-ordinate in the item axis is lower

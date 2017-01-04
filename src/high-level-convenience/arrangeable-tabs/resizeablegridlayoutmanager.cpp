@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include "resizeablegridelementbutton.h"
+#include <QtDebug>
 
 namespace
 {
@@ -9,6 +10,11 @@ namespace
     {
         return QPoint(static_cast<int>((cell & 0xffff0000) >> 16),
                       static_cast<int>(cell & 0x0000ffff));
+    }
+
+    inline int clampAbove(int in, int threshold)
+    {
+        return in < threshold ? threshold : in;
     }
 }
 
@@ -309,7 +315,57 @@ namespace HighLevelConvenience
         btn->setRowIndex(row);
         btn->setColumnIndex(column);
         m_pGridLayout->addWidget(btn, row, column, rowSpan, colSpan);
+        connect(btn, SIGNAL(mouseMoved(int,int)), this, SLOT(resizeButtonDragged(int,int)));
 
         m_ResizeButtons.append(btn);
+    }
+
+    void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
+    {
+        ResizeableGridElementButton* button = qobject_cast<ResizeableGridElementButton*>(sender());
+        if ( !button )
+            return;
+
+        qDebug() << "Delta X:" << deltaX << "Delta Y:" << deltaY;
+
+        if ( button->resizeFlags().testFlag(ResizeableGridElementButton::HorizontalResizeFlag) )
+        {
+            resizeHorizontal(deltaX);
+        }
+
+        if ( button->resizeFlags().testFlag(ResizeableGridElementButton::VerticalResizeFlag) )
+        {
+            resizeVertical(deltaY);
+        }
+    }
+
+    void ResizeableGridLayoutManager::resizeHorizontal(int delta)
+    {
+        QRect leftRect = m_pGridLayout->cellRect(0,0);
+        QRect rightRect = m_pGridLayout->cellRect(0,2);
+
+        if ( !leftRect.isValid() || !rightRect.isValid() )
+            return;
+
+        int left = clampAbove(leftRect.width() + delta, 1);
+        int right = clampAbove(rightRect.width() - delta, 1);
+
+        m_pGridLayout->setColumnStretch(0, left);
+        m_pGridLayout->setColumnStretch(2, right);
+    }
+
+    void ResizeableGridLayoutManager::resizeVertical(int delta)
+    {
+        QRect topRect = m_pGridLayout->cellRect(0,0);
+        QRect bottomRect = m_pGridLayout->cellRect(2,0);
+
+        if ( !topRect.isValid() || !bottomRect.isValid() )
+            return;
+
+        int top = clampAbove(topRect.height() + delta, 1);
+        int bottom = clampAbove(bottomRect.height() - delta, 1);
+
+        m_pGridLayout->setRowStretch(0, top);
+        m_pGridLayout->setRowStretch(2, bottom);
     }
 }
