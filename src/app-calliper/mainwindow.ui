@@ -57,6 +57,7 @@
       <string>Docks</string>
      </property>
      <addaction name="actionFile_Tree"/>
+     <addaction name="actionProject_Metadata"/>
     </widget>
     <addaction name="menuDocks"/>
    </widget>
@@ -64,9 +65,11 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew_Project"/>
     <addaction name="actionOpen_Project"/>
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
+    <addaction name="actionClose_Project"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -113,6 +116,30 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionNew_Project">
+   <property name="text">
+    <string>New Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionClose_Project">
+   <property name="text">
+    <string>Close Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Q</string>
+   </property>
+  </action>
+  <action name="actionProject_Metadata">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Project Metadata</string>
    </property>
   </action>
  </widget>
@@ -167,10 +194,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionNew_Project</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>menuNewProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>210</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClose_Project</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>menuCloseProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>210</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>menuOpenProject()</slot>
   <slot>menuSaveCurrentProjectAs()</slot>
   <slot>menuSaveCurrentProject()</slot>
+  <slot>menuNewProject()</slot>
+  <slot>menuCloseProject()</slot>
  </slots>
 </ui>

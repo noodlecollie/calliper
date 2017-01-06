@@ -2,22 +2,24 @@
 #define CALLIPERPROJECT_H
 
 #include "model_global.h"
+#include "core/datachangenotifier.h"
 #include "calliperprojectmetadata.h"
 
 namespace Model
 {
-    class CalliperProject
+    class CalliperProject : public DataChangeNotifier
     {
+        Q_OBJECT
     public:
-        CalliperProject();
+        explicit CalliperProject(QObject* parent = 0);
 
         void clear();
 
-        CalliperProjectMetadata& metadata();
-        const CalliperProjectMetadata& metadata() const;
+        CalliperProjectMetadata* metadata();
+        const CalliperProjectMetadata* metadata() const;
 
     private:
-        CalliperProjectMetadata m_Metadata;
+        CalliperProjectMetadata* m_pMetadata;
     };
 }
 

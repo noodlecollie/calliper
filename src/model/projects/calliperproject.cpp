@@ -2,23 +2,25 @@
 
 namespace Model
 {
-    CalliperProject::CalliperProject()
+    CalliperProject::CalliperProject(QObject* parent)
+        : DataChangeNotifier(parent),
+          m_pMetadata(new CalliperProjectMetadata(this))
     {
-
+        connectDataChangedSignals(m_pMetadata);
     }
 
     void CalliperProject::clear()
     {
-        m_Metadata.clear();
+        m_pMetadata->clear();
     }
 
-    CalliperProjectMetadata& CalliperProject::metadata()
+    CalliperProjectMetadata* CalliperProject::metadata()
     {
-        return m_Metadata;
+        return m_pMetadata;
     }
 
-    const CalliperProjectMetadata& CalliperProject::metadata() const
+    const CalliperProjectMetadata* CalliperProject::metadata() const
     {
-        return m_Metadata;
+        return m_pMetadata;
     }
 }

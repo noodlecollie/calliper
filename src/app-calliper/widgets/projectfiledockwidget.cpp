@@ -36,138 +36,141 @@ namespace
     }
 }
 
-ProjectFileDockWidget::ProjectFileDockWidget(QWidget *parent, Qt::WindowFlags flags)
-    : VisibleActionDockWidget(tr("Project Files"), parent, flags)
+namespace AppCalliper
 {
-    m_pTreeWidget = new QTreeWidget();
-    m_pTreeWidget->setHeaderLabel(tr("Files"));
-    m_pTreeWidget->setAnimated(true);
-
-    setWidget(m_pTreeWidget);
-}
-
-void ProjectFileDockWidget::addFile(const QString &localPath)
-{
-    QStringList filePathSections = QDir::fromNativeSeparators(localPath).split("/");
-    if ( filePathSections.isEmpty() )
-        return;
-
-    createEntry(filePathSections);
-}
-
-void ProjectFileDockWidget::removeFile(const QString &localPath)
-{
-    QStringList filePathSections = QDir::fromNativeSeparators(localPath).split("/");
-    if ( filePathSections.isEmpty() )
-        return;
-
-    removeEntry(filePathSections);
-}
-
-void ProjectFileDockWidget::clearFiles()
-{
-    m_pTreeWidget->clear();
-    emit filesCleared();
-}
-
-void ProjectFileDockWidget::createEntry(const QStringList &filePathSections)
-{
-    QFileIconProvider icons;
-    QTreeWidgetItem* item = getRootItem();
-
-    for ( int i = 0; i < filePathSections.count(); i++ )
+    ProjectFileDockWidget::ProjectFileDockWidget(QWidget *parent, Qt::WindowFlags flags)
+        : VisibleActionDockWidget(tr("Project Files"), parent, flags)
     {
-        QTreeWidgetItem* child = findChildItem(item, filePathSections.at(i));
-        if ( !child )
+        m_pTreeWidget = new QTreeWidget();
+        m_pTreeWidget->setHeaderLabel(tr("Files"));
+        m_pTreeWidget->setAnimated(true);
+
+        setWidget(m_pTreeWidget);
+    }
+
+    void ProjectFileDockWidget::addFile(const QString &localPath)
+    {
+        QStringList filePathSections = QDir::fromNativeSeparators(localPath).split("/");
+        if ( filePathSections.isEmpty() )
+            return;
+
+        createEntry(filePathSections);
+    }
+
+    void ProjectFileDockWidget::removeFile(const QString &localPath)
+    {
+        QStringList filePathSections = QDir::fromNativeSeparators(localPath).split("/");
+        if ( filePathSections.isEmpty() )
+            return;
+
+        removeEntry(filePathSections);
+    }
+
+    void ProjectFileDockWidget::clearFiles()
+    {
+        m_pTreeWidget->clear();
+        emit filesCleared();
+    }
+
+    void ProjectFileDockWidget::createEntry(const QStringList &filePathSections)
+    {
+        QFileIconProvider icons;
+        QTreeWidgetItem* item = getRootItem();
+
+        for ( int i = 0; i < filePathSections.count(); i++ )
         {
-            child = new QTreeWidgetItem(QStringList() << filePathSections.at(i));
-
-            QFileIconProvider::IconType iconType = QFileIconProvider::Folder;
-
-            if ( i == filePathSections.count() - 1 )
+            QTreeWidgetItem* child = findChildItem(item, filePathSections.at(i));
+            if ( !child )
             {
-                iconType = QFileIconProvider::File;
+                child = new QTreeWidgetItem(QStringList() << filePathSections.at(i));
+
+                QFileIconProvider::IconType iconType = QFileIconProvider::Folder;
+
+                if ( i == filePathSections.count() - 1 )
+                {
+                    iconType = QFileIconProvider::File;
+                }
+
+                child->setData(0, Qt::DecorationRole, icons.icon(iconType));
+                item->addChild(child);
             }
 
-            child->setData(0, Qt::DecorationRole, icons.icon(iconType));
-            item->addChild(child);
+            item = child;
         }
 
-        item = child;
+        QString path = filePathSections.join('/');
+        item->setData(0, FilePathRole, path);
+        emit fileAdded(path);
     }
 
-    QString path = filePathSections.join('/');
-    item->setData(0, FilePathRole, path);
-    emit fileAdded(path);
-}
-
-void ProjectFileDockWidget::removeEntry(const QStringList &filePathSections)
-{
-    removeEntryRecursive(getRootItem(), filePathSections, 0);
-}
-
-bool ProjectFileDockWidget::removeEntryRecursive(QTreeWidgetItem *parent, const QStringList &filePathSections, int index)
-{
-    if ( index < 0 || index >= filePathSections.count() )
-        return false;
-
-    int childIndex = findChildIndex(parent, filePathSections.at(index));
-    if ( childIndex < 0 )
-        return false;
-
-    QTreeWidgetItem* child = parent->child(childIndex);
-    bool canRemoveIntermediateItems = removeEntryRecursive(child, filePathSections, index + 1);
-
-    bool childIsTarget = index == filePathSections.count() - 1 &&
-                         child->data(0, FilePathRole).canConvert(QVariant::String);
-    if ( childIsTarget )
+    void ProjectFileDockWidget::removeEntry(const QStringList &filePathSections)
     {
-        // We found the target file we were removing!
-        canRemoveIntermediateItems = true;
+        removeEntryRecursive(getRootItem(), filePathSections, 0);
     }
 
-    if ( childIsTarget || (canRemoveIntermediateItems && child->childCount() < 1) )
+    bool ProjectFileDockWidget::removeEntryRecursive(QTreeWidgetItem *parent, const QStringList &filePathSections, int index)
     {
-        QString path = child->data(0, FilePathRole).toString();
+        if ( index < 0 || index >= filePathSections.count() )
+            return false;
 
-        parent->removeChild(child);
+        int childIndex = findChildIndex(parent, filePathSections.at(index));
+        if ( childIndex < 0 )
+            return false;
 
+        QTreeWidgetItem* child = parent->child(childIndex);
+        bool canRemoveIntermediateItems = removeEntryRecursive(child, filePathSections, index + 1);
+
+        bool childIsTarget = index == filePathSections.count() - 1 &&
+                             child->data(0, FilePathRole).canConvert(QVariant::String);
         if ( childIsTarget )
-            emit fileRemoved(path);
+        {
+            // We found the target file we were removing!
+            canRemoveIntermediateItems = true;
+        }
+
+        if ( childIsTarget || (canRemoveIntermediateItems && child->childCount() < 1) )
+        {
+            QString path = child->data(0, FilePathRole).toString();
+
+            parent->removeChild(child);
+
+            if ( childIsTarget )
+                emit fileRemoved(path);
+        }
+
+        return canRemoveIntermediateItems;
     }
 
-    return canRemoveIntermediateItems;
-}
-
-void ProjectFileDockWidget::itemDoubleClicked(QTreeWidgetItem *item, int column)
-{
-    Q_UNUSED(column);
-
-    QString filePath = item->data(0, FilePathRole).toString();
-
-    if ( !filePath.isNull() )
-        emit fileDoubleClicked(filePath);
-}
-
-QTreeWidgetItem* ProjectFileDockWidget::getRootItem() const
-{
-    QTreeWidgetItem* root = m_pTreeWidget->invisibleRootItem();
-    if ( root->childCount() < 1 )
-        return root;
-
-    return root->child(0);
-}
-
-void ProjectFileDockWidget::setRoot(const QString &projectFileName)
-{
-    QTreeWidgetItem* root = getRootItem();
-    if ( root == m_pTreeWidget->invisibleRootItem() )
+    void ProjectFileDockWidget::itemDoubleClicked(QTreeWidgetItem *item, int column)
     {
-        QTreeWidgetItem* item = new QTreeWidgetItem();
-        root->addChild(item);
-        root = item;
+        Q_UNUSED(column);
+
+        QString filePath = item->data(0, FilePathRole).toString();
+
+        if ( !filePath.isNull() )
+            emit fileDoubleClicked(filePath);
     }
 
-    root->setText(0, projectFileName);
-    root->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::File));
+    QTreeWidgetItem* ProjectFileDockWidget::getRootItem() const
+    {
+        QTreeWidgetItem* root = m_pTreeWidget->invisibleRootItem();
+        if ( root->childCount() < 1 )
+            return root;
+
+        return root->child(0);
+    }
+
+    void ProjectFileDockWidget::setRoot(const QString &projectFileName)
+    {
+        QTreeWidgetItem* root = getRootItem();
+        if ( root == m_pTreeWidget->invisibleRootItem() )
+        {
+            QTreeWidgetItem* item = new QTreeWidgetItem();
+            root->addChild(item);
+            root = item;
+        }
+
+        root->setText(0, projectFileName);
+        root->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::File));
+    }
 }

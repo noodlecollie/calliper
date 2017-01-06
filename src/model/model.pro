@@ -51,7 +51,8 @@ SOURCES += \
     stores/materialstore.cpp \
     stores/materialresourcemanager.cpp \
     projects/calliperproject.cpp \
-    projects/calliperprojectmetadata.cpp
+    projects/calliperprojectmetadata.cpp \
+    core/datachangenotifier.cpp
 
 HEADERS += \
     model_global.h \
@@ -96,7 +97,8 @@ HEADERS += \
     stores/materialstore.h \
     stores/materialresourcemanager.h \
     projects/calliperproject.h \
-    projects/calliperprojectmetadata.h
+    projects/calliperprojectmetadata.h \
+    core/datachangenotifier.h
 
 unix {
     target.path = /usr/lib

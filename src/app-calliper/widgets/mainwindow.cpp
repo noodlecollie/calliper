@@ -8,128 +8,245 @@
 #include "projects/calliperprojectloader.h"
 #include "json/jsonloaderutils.h"
 #include <QMessageBox>
+#include "projectmetadatadockwidget.h"
+#include <QtDebug>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+namespace AppCalliper
 {
-    ui->setupUi(this);
-    updateWindowTitle();
-
-    initDockWidgets();
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
-void MainWindow::initDockWidgets()
-{
-    m_pProjectFileDockWidget = new ProjectFileDockWidget();
-    m_pProjectFileDockWidget->setVisibilityAction(ui->actionFile_Tree);
-    addDockWidget(Qt::LeftDockWidgetArea, m_pProjectFileDockWidget);
-    m_pProjectFileDockWidget->show();
-}
-
-QString MainWindow::getFileDialogueDefaultPath() const
-{
-    if ( !m_strProjectFileName.isNull() )
+    MainWindow::MainWindow(QWidget *parent) :
+        QMainWindow(parent),
+        ui(new Ui::MainWindow),
+        m_bUnsavedProjectChanges(false)
     {
-        return QFileInfo(m_strProjectFileName).canonicalPath();
+        ui->setupUi(this);
+
+        initDockWidgets();
+        setProject(nullptr);
     }
 
-    QStringList locations = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
-    if ( !locations.isEmpty() )
-        return locations.at(0);
-    else
-        return QString();
-}
-
-void MainWindow::menuOpenProject()
-{
-    QString defaultPath = getFileDialogueDefaultPath();
-
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Project"), defaultPath, tr("Calliper project (*.cpj)"));
-    if ( filename.isNull() || filename.isEmpty() )
-        return;
-
-    QJsonDocument doc;
-    if ( !ModelLoaders::JsonLoaderUtils::loadJsonFile(filename, doc) )
+    MainWindow::~MainWindow()
     {
-        QMessageBox::critical(this, tr("Error"), QString("Unable to load project file %1").arg(filename));
-        return;
+        delete ui;
     }
 
-    m_strProjectFileName = filename;
-
-    m_Project.clear();
-    ModelLoaders::CalliperProjectLoader(&m_Project).fromJsonDocument(doc);
-    updateWindowTitle();
-    repopulateProjectFileTree();
-}
-
-void MainWindow::saveCurrentProject(const QString& filename)
-{
-    if ( filename.isNull() || filename.isEmpty() )
-        return;
-
-    QFile outFile(filename);
-    if ( !outFile.open(QIODevice::WriteOnly) )
+    void MainWindow::menuOpenProject()
     {
-        QMessageBox::critical(this, tr("Error"), QString("Unable to open project file %1 for writing").arg(filename));
-        return;
+        QString defaultPath = getFileDialogueDefaultPath();
+
+        QString filename = QFileDialog::getOpenFileName(this, tr("Open Project"), defaultPath, tr("Calliper project (*.cpj)"));
+        if ( filename.isNull() || filename.isEmpty() )
+            return;
+
+        QJsonDocument doc;
+        if ( !ModelLoaders::JsonLoaderUtils::loadJsonFile(filename, doc) )
+        {
+            QMessageBox::critical(this, tr("Error"), QString("Unable to load project file %1").arg(filename));
+            return;
+        }
+
+        setProject(new ApplicationProject());
+
+        m_pProject->setFileName(filename);
+        ModelLoaders::CalliperProjectLoader(m_pProject->project()).fromJsonDocument(doc);
+
+        m_bUnsavedProjectChanges = false;
+        updateWindowTitle();
+        repopulateProjectFileTree();
     }
 
-    outFile.write(ModelLoaders::CalliperProjectLoader(&m_Project).toJsonDocument().toJson());
-    outFile.close();
-    m_strProjectFileName = filename;
-    updateWindowTitle();
-    repopulateProjectFileTree();
-}
+    void MainWindow::menuCloseProject()
+    {
+        if ( !ensureProjectIsSaved() )
+            return;
 
-void MainWindow::menuSaveCurrentProject()
-{
-    if ( m_strProjectFileName.isNull() )
+        setProject(nullptr);
+        repopulateProjectFileTree();
+    }
+
+    void MainWindow::menuNewProject()
+    {
+        if ( !ensureProjectIsSaved() )
+            return;
+
+        setProject(new ApplicationProject());
         menuSaveCurrentProjectAs();
-    else
-        saveCurrentProject(m_strProjectFileName);
-}
+    }
 
-void MainWindow::menuSaveCurrentProjectAs()
-{
-    QString defaultPath = getFileDialogueDefaultPath();
-
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Project"), defaultPath, tr("Calliper project (*.cpj)"));
-    if ( filename.isNull() )
-        return;
-
-    saveCurrentProject(filename);
-}
-
-void MainWindow::updateWindowTitle()
-{
-    if ( hasValidProject() )
+    void MainWindow::menuSaveCurrentProject()
     {
-        QString name = m_Project.metadata().projectName();
-        if ( name.isNull() || name.isEmpty() )
-            setWindowTitle(tr("[Unnamed Project]"));
+        if ( !m_pProject )
+            return;
+
+        if ( m_pProject->fileName().isNull() )
+            menuSaveCurrentProjectAs();
         else
-            setWindowTitle(name);
+            saveCurrentProject(m_pProject->fileName());
     }
-    else
+
+    void MainWindow::menuSaveCurrentProjectAs()
     {
-        setWindowTitle(tr("[No Project]"));
+        if ( !m_pProject )
+            return;
+
+        QString defaultPath = getFileDialogueDefaultPath();
+
+        QString filename = QFileDialog::getSaveFileName(this, tr("Save Project"), defaultPath, tr("Calliper project (*.cpj)"));
+        if ( filename.isNull() || filename.isEmpty() )
+            return;
+
+        saveCurrentProject(filename);
     }
-}
 
-void MainWindow::repopulateProjectFileTree()
-{
-    m_pProjectFileDockWidget->clearFiles();
-    m_pProjectFileDockWidget->setRoot(QFileInfo(m_strProjectFileName).fileName());
-}
+    bool MainWindow::ensureProjectIsSaved()
+    {
+        if ( m_bUnsavedProjectChanges )
+        {
+            QMessageBox::StandardButton ret =
+                    QMessageBox::question(this,
+                                          tr("Unsaved Changes"),
+                                          tr("Project has unsaved changes. Save now?"),
+                                          QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+                                          QMessageBox::Yes);
 
-bool MainWindow::hasValidProject() const
-{
-    return !m_strProjectFileName.isNull();
+            if ( ret == QMessageBox::Cancel )
+            {
+                return false;
+            }
+            else if ( ret == QMessageBox::Yes )
+            {
+                menuSaveCurrentProject();
+
+                // Make sure it succeeded!
+                if ( m_bUnsavedProjectChanges )
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    void MainWindow::saveCurrentProject(const QString& filename)
+    {
+        if ( filename.isNull() || filename.isEmpty() || !m_pProject )
+            return;
+
+        QFile outFile(filename);
+        if ( !outFile.open(QIODevice::WriteOnly) )
+        {
+            QMessageBox::critical(this, tr("Error"), QString("Unable to open project file %1 for writing").arg(filename));
+            return;
+        }
+
+        outFile.write(ModelLoaders::CalliperProjectLoader(m_pProject->project()).toJsonDocument().toJson());
+        outFile.close();
+
+        m_bUnsavedProjectChanges = false;
+        m_pProject->setFileName(filename);
+        m_pProject->notifyDataReset();
+        updateWindowTitle();
+        repopulateProjectFileTree();
+    }
+
+    void MainWindow::updateWindowTitle()
+    {
+        if ( m_pProject )
+        {
+            QString name = m_pProject->project()->metadata()->projectName();
+            QString title;
+
+            if ( name.isNull() || name.isEmpty() )
+                title = tr("[Unnamed Project]");
+            else
+                title = name;
+
+            if ( m_bUnsavedProjectChanges )
+                title += "*";
+
+            setWindowTitle(title);
+        }
+        else
+        {
+            setWindowTitle(tr("[No Project]"));
+        }
+    }
+
+    void MainWindow::repopulateProjectFileTree()
+    {
+        m_pProjectFileDockWidget->clearFiles();
+
+        if ( !m_pProject )
+            return;
+
+        QString filename = m_pProject->fileName();
+        if ( filename.isNull() )
+        {
+            filename = "UNSAVED";
+        }
+
+        m_pProjectFileDockWidget->setRoot(QFileInfo(filename).fileName());
+    }
+
+    void MainWindow::setProject(ApplicationProject *newProject)
+    {
+        m_pProjectMetadataDockWidget->setProjectMetadata(nullptr);
+
+        m_pProject.reset(newProject);
+        m_bUnsavedProjectChanges = false;
+        updateWindowTitle();
+        setFileMenuItemEnabledStates();
+
+        if ( m_pProject )
+        {
+            connect(m_pProject.data(), SIGNAL(dataChanged()), this, SLOT(notifyProjectDataChanged()));
+
+            m_pProjectMetadataDockWidget->setProjectMetadata(m_pProject->project()->metadata());
+        }
+    }
+
+    void MainWindow::notifyProjectDataChanged()
+    {
+        m_bUnsavedProjectChanges = true;
+        updateWindowTitle();
+    }
+
+    void MainWindow::initDockWidgets()
+    {
+        m_pProjectFileDockWidget = new ProjectFileDockWidget();
+        initDockWidget(m_pProjectFileDockWidget, ui->actionFile_Tree, Qt::LeftDockWidgetArea);
+
+        m_pProjectMetadataDockWidget = new ProjectMetadataDockWidget();
+        initDockWidget(m_pProjectMetadataDockWidget, ui->actionProject_Metadata, Qt::LeftDockWidgetArea);
+    }
+
+    void MainWindow::initDockWidget(VisibleActionDockWidget *widget, QAction *action, Qt::DockWidgetArea area)
+    {
+        widget->setVisibilityAction(action);
+        addDockWidget(area, widget);
+        widget->setVisible(action->isChecked());
+    }
+
+    QString MainWindow::getFileDialogueDefaultPath() const
+    {
+        if ( m_pProject && !m_pProject->fileName().isNull() )
+        {
+            return QFileInfo(m_pProject->fileName()).canonicalPath();
+        }
+
+        QStringList locations = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+        if ( !locations.isEmpty() )
+            return locations.at(0);
+        else
+            return QString();
+    }
+
+    void MainWindow::setFileMenuItemEnabledStates()
+    {
+        bool haveProject = !m_pProject.isNull();
+
+        ui->actionClose_Project->setEnabled(haveProject);
+        ui->actionNew_Project->setEnabled(true);
+        ui->actionOpen_Project->setEnabled(true);
+        ui->actionSave_Project->setEnabled(haveProject);
+        ui->actionSave_Project_As->setEnabled(haveProject);
+    }
 }

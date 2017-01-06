@@ -1,43 +1,57 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "app-calliper_global.h"
 #include <QMainWindow>
-#include "projects/calliperproject.h"
-#include "projects/calliperproject.h"
+#include "model/applicationproject.h"
 
 class QTreeWidget;
-class ProjectFileDockWidget;
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+namespace AppCalliper
 {
-    Q_OBJECT
+    class VisibleActionDockWidget;
+    class ProjectFileDockWidget;
+    class ProjectMetadataDockWidget;
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    class MainWindow : public QMainWindow
+    {
+        Q_OBJECT
 
-private slots:
-    void menuOpenProject();
-    void menuSaveCurrentProject();
-    void menuSaveCurrentProjectAs();
+    public:
+        explicit MainWindow(QWidget *parent = 0);
+        ~MainWindow();
 
-private:
-    void initDockWidgets();
-    void saveCurrentProject(const QString& filename);
-    QString getFileDialogueDefaultPath() const;
-    void updateWindowTitle();
-    void repopulateProjectFileTree();
-    bool hasValidProject() const;
+    private slots:
+        void menuOpenProject();
+        void menuSaveCurrentProject();
+        void menuSaveCurrentProjectAs();
+        void menuCloseProject();
+        void menuNewProject();
+        void notifyProjectDataChanged();
 
-    Ui::MainWindow *ui;
+    private:
+        void initDockWidgets();
+        void initDockWidget(VisibleActionDockWidget* widget, QAction* action, Qt::DockWidgetArea area);
+        void saveCurrentProject(const QString& filename);
+        QString getFileDialogueDefaultPath() const;
+        void updateWindowTitle();
+        void repopulateProjectFileTree();
+        void setProject(ApplicationProject* newProject);
+        bool ensureProjectIsSaved();
+        void setFileMenuItemEnabledStates();
 
-    ProjectFileDockWidget* m_pProjectFileDockWidget;
-    QString m_strProjectFileName;
-    Model::CalliperProject m_Project;
-};
+        Ui::MainWindow *ui;
+
+        ProjectFileDockWidget* m_pProjectFileDockWidget;
+        ProjectMetadataDockWidget* m_pProjectMetadataDockWidget;
+
+        QScopedPointer<ApplicationProject> m_pProject;
+        bool m_bUnsavedProjectChanges;
+    };
+}
 
 #endif // MAINWINDOW_H

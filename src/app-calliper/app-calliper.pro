@@ -15,11 +15,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         widgets/mainwindow.cpp \
     widgets/projectfiledockwidget.cpp \
-    widgets/visibleactiondockwidget.cpp
+    widgets/visibleactiondockwidget.cpp \
+    model/applicationproject.cpp \
+    widgets/projectmetadatadockwidget.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/projectfiledockwidget.h \
-    widgets/visibleactiondockwidget.h
+    widgets/visibleactiondockwidget.h \
+    model/applicationproject.h \
+    app-calliper_global.h \
+    widgets/projectmetadatadockwidget.h
 
 FORMS    += mainwindow.ui
 

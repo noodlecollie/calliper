@@ -1,0 +1,6 @@
+- Create, load, save projects.
+- Add and remove files from project tree.
+- Open and view VMF files in project.
+- Rearrange views in splitters.
+- Float views.
+- Edit project metadata.

@@ -2,14 +2,17 @@
 #define CALLIPERPROJECTMETADATA_H
 
 #include "model_global.h"
+#include "core/datachangenotifier.h"
 #include <QString>
 
 namespace Model
 {
-    class CalliperProjectMetadata
+    class CalliperProjectMetadata : public DataChangeNotifier
     {
+        Q_OBJECT
+        Q_PROPERTY(QString projectName READ projectName WRITE setProjectName)
     public:
-        CalliperProjectMetadata();
+        explicit CalliperProjectMetadata(QObject* parent);
 
         void clear();
 

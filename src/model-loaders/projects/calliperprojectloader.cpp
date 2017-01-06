@@ -47,21 +47,21 @@ namespace ModelLoaders
 
     void CalliperProjectLoader::populateMetadata(const QJsonObject& json)
     {
-        Model::CalliperProjectMetadata& metadata = m_pProject->metadata();
+        Model::CalliperProjectMetadata* metadata = m_pProject->metadata();
 
         QJsonValue vProjectName = json.value("projectName");
         if ( vProjectName.isString() )
         {
-            metadata.setProjectName(vProjectName.toString());
+            metadata->setProjectName(vProjectName.toString());
         }
     }
 
     QJsonObject CalliperProjectLoader::exportMetadata() const
     {
-        const Model::CalliperProjectMetadata& metadata = m_pProject->metadata();
+        const Model::CalliperProjectMetadata* metadata = m_pProject->metadata();
         QJsonObject obj;
 
-        obj["projectName"] = metadata.projectName();
+        obj["projectName"] = metadata->projectName();
 
         return obj;
     }
