@@ -1,6 +1,7 @@
-- Create, load, save projects.
+- Create, load, save projects. (Done)
 - Add and remove files from project tree.
 - Open and view VMF files in project.
 - Rearrange views in splitters.
 - Float views.
-- Edit project metadata.
+- Edit project metadata. (Done)
+- Fix all TODOs.

@@ -1,6 +1,7 @@
 #include "calliperprojectmetadata.h"
 #include <QSignalBlocker>
 #include <QMetaObject>
+#include <QtDebug>
 
 namespace Model
 {
@@ -16,6 +17,7 @@ namespace Model
         Q_UNUSED(blocker);
 
         setProjectName(QString());
+        setVersion(0);
 
         notifyDataChanged();
     }
@@ -32,5 +34,19 @@ namespace Model
 
         m_strProjectName = name;
         notifyDataChanged(metaObject()->indexOfProperty("projectName"));
+    }
+
+    int CalliperProjectMetadata::version() const
+    {
+        return m_iVersion;
+    }
+
+    void CalliperProjectMetadata::setVersion(int version)
+    {
+        if ( version == m_iVersion )
+            return;
+
+        m_iVersion = version;
+        notifyDataChanged(metaObject()->indexOfProperty("version"));
     }
 }

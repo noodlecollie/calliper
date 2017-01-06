@@ -3,9 +3,11 @@
 #include <QLineEdit>
 #include <QMetaProperty>
 #include <QtDebug>
+#include <QLabel>
 
 namespace
 {
+    // TODO: Set these to lambdas in a hash table, indexed by class name.
     QVariant getContents(QWidget* widget)
     {
         QLineEdit* lineEdit = qobject_cast<QLineEdit*>(widget);
@@ -24,6 +26,12 @@ namespace
         {
             lineEdit->setText(contents.toString());
             return;
+        }
+
+        QLabel* label = qobject_cast<QLabel*>(widget);
+        if ( label )
+        {
+            label->setText(contents.toString());
         }
     }
 }
@@ -74,7 +82,8 @@ namespace AppCalliper
         m_pContentsWidget->setLayout(formLayout);
         setWidget(m_pContentsWidget);
 
-        addLineEditRow(tr("Project Name"), new QLineEdit(), SIGNAL(editingFinished()), "projectName");
+        addLineEditRow(tr("Version:"), new QLabel(), nullptr, "version");
+        addLineEditRow(tr("Project Name:"), new QLineEdit(), SIGNAL(editingFinished()), "projectName");
     }
 
     void ProjectMetadataDockWidget::addLineEditRow(const QString &labelText, QWidget *widget,
@@ -87,7 +96,9 @@ namespace AppCalliper
         formLayout->addRow(labelText, widget);
         m_WidgetToPropertyName.insert(widget, propertyName);
         m_PropertyNameToWidget.insert(propertyName, widget);
-        connect(widget, widgetSignal, this, SLOT(uiDelegateEdited()));
+
+        if ( widgetSignal )
+            connect(widget, widgetSignal, this, SLOT(uiDelegateEdited()));
     }
 
     void ProjectMetadataDockWidget::uiDelegateEdited()
@@ -108,8 +119,14 @@ namespace AppCalliper
 
     void ProjectMetadataDockWidget::propertyUpdated(int propertyIndex)
     {
-        if ( !m_pProjectMetadata || propertyIndex < 0 || propertyIndex >= m_pProjectMetadata->metaObject()->propertyCount() )
+        if ( !m_pProjectMetadata || propertyIndex >= m_pProjectMetadata->metaObject()->propertyCount() )
         {
+            return;
+        }
+
+        if ( propertyIndex < 0 )
+        {
+            updateAllUiDelegates();
             return;
         }
 
@@ -137,5 +154,26 @@ namespace AppCalliper
         {
             setContents(widget, QVariant());
         }
+    }
+
+    void ProjectMetadataDockWidget::updateAllUiDelegates()
+    {
+        if ( !m_pProjectMetadata )
+            return;
+
+      const QMetaObject *metaobject = m_pProjectMetadata->metaObject();
+      int count = metaobject->propertyCount();
+
+      for ( int i = 0; i < count; ++i )
+      {
+          QMetaProperty metaproperty = metaobject->property(i);
+          const char *name = metaproperty.name();
+
+          QWidget* widget = m_PropertyNameToWidget.value(name, nullptr);
+          if ( !widget )
+              continue;
+
+          setContents(widget, m_pProjectMetadata->property(name));
+      }
     }
 }

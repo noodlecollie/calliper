@@ -1,5 +1,6 @@
 #include "calliperprojectloader.h"
 #include <QJsonObject>
+#include <QtDebug>
 
 namespace ModelLoaders
 {
@@ -54,6 +55,20 @@ namespace ModelLoaders
         {
             metadata->setProjectName(vProjectName.toString());
         }
+
+        // TODO: Throw parse error if no version is present, or cannot be parsed.
+        QJsonValue vVersion = json.value("version");
+        if ( vVersion.isString() )
+        {
+            QString versionString = vVersion.toString();
+
+            bool ok = false;
+            int version = versionString.toInt(&ok);
+            if ( ok )
+            {
+                metadata->setVersion(version);
+            }
+        }
     }
 
     QJsonObject CalliperProjectLoader::exportMetadata() const
@@ -62,6 +77,7 @@ namespace ModelLoaders
         QJsonObject obj;
 
         obj["projectName"] = metadata->projectName();
+        obj["version"] = QString("%0").arg(metadata->version());
 
         return obj;
     }

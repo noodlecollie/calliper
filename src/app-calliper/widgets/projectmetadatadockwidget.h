@@ -27,6 +27,7 @@ namespace AppCalliper
         void updateUiEnabledState();
         void transitionSignals(Model::CalliperProjectMetadata* oldObj, Model::CalliperProjectMetadata* newObj);
         void clearUiDelegates();
+        void updateAllUiDelegates();
 
         QPointer<Model::CalliperProjectMetadata> m_pProjectMetadata;
         QWidget* m_pContentsWidget;
