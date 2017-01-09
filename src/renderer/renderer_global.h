@@ -11,7 +11,7 @@
 
 namespace Renderer
 {
-    static const char* STR_NAMESPACE = "Renderer";
+    extern const char* STR_NAMESPACE;
 }
 
 /*

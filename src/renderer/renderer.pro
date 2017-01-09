@@ -37,7 +37,8 @@ SOURCES += \
     rendermodel/rendererdrawparams.cpp \
     opengl/openglvertexarrayobject.cpp \
     shaders/globalshaderuniforms.cpp \
-    materials/rendermaterial.cpp
+    materials/rendermaterial.cpp \
+    renderer_global.cpp
 
 HEADERS +=\
         renderer_global.h \

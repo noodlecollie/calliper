@@ -3,7 +3,7 @@
 
 namespace AppCalliper
 {
-    static const char* STR_NAMESPACE = "AppCalliper";
+    extern const char* STR_NAMESPACE;
 }
 
 #endif // APPCALLIPER_GLOBAL_H

@@ -11,7 +11,7 @@
 
 namespace FileFormats
 {
-    static const char* STR_NAMESPACE = "FileFormats";
+    extern const char* STR_NAMESPACE;
 }
 
 #endif // FILEFORMATS_GLOBAL_H

@@ -11,7 +11,7 @@
 
 namespace Model
 {
-    static const char* STR_NAMESPACE = "Model";
+    extern const char* STR_NAMESPACE;
 }
 
 #endif // MODEL_GLOBAL_H

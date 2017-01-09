@@ -40,7 +40,8 @@ SOURCES += \
     VTFLib/src/windows/WindowsError.cpp \
     VTFLib/src/windows/WindowsFileReader.cpp \
     VTFLib/src/windows/WindowsFileWriter.cpp \
-    VTFLib/src/windows/WindowsVTFLib.cpp
+    VTFLib/src/windows/WindowsVTFLib.cpp \
+    VTFLib/src/dep-vtflib_global.cpp
 
 HEADERS +=\
         dep-vtflib_global.h \

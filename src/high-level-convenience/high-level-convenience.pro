@@ -14,7 +14,8 @@ DEFINES += HIGHLEVELCONVENIENCE_LIBRARY
 SOURCES += \
     views/mapviewwindow.cpp \
     arrangeable-tabs/resizeablegridelementbutton.cpp \
-    arrangeable-tabs/resizeablegridlayoutmanager.cpp
+    arrangeable-tabs/resizeablegridlayoutmanager.cpp \
+    high-level-convenience_global.cpp
 
 HEADERS +=\
         high-level-convenience_global.h \

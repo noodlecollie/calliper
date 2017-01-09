@@ -15,7 +15,8 @@ SOURCES += \
     vmf/vmfloader.cpp \
     vtf/vtfloader.cpp \
     projects/calliperprojectloader.cpp \
-    json/jsonloaderutils.cpp
+    json/jsonloaderutils.cpp \
+    model-loaders_global.cpp
 
 HEADERS +=\
     model-loaders_global.h \

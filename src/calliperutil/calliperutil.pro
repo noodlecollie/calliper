@@ -17,7 +17,8 @@ SOURCES += \
     general/hashfunctions.cpp \
     general/fixedindexpool.cpp \
     exceptions/calliperexception.cpp \
-    json/jsonarraywrapper.cpp
+    json/jsonarraywrapper.cpp \
+    calliperutil_global.cpp
 
 HEADERS +=\
         calliperutil_global.h \

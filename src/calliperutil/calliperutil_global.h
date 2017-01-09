@@ -11,7 +11,7 @@
 
 namespace CalliperUtil
 {
-    static const char* STR_NAMESPACE = "CalliperUtil";
+    extern const char* STR_NAMESPACE;
 }
 
 #endif // CALLIPERUTIL_GLOBAL_H

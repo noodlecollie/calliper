@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     widgets/projectfiledockwidget.cpp \
     widgets/visibleactiondockwidget.cpp \
     model/applicationproject.cpp \
-    widgets/projectmetadatadockwidget.cpp
+    widgets/projectmetadatadockwidget.cpp \
+    app-calliper_global.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/projectfiledockwidget.h \

@@ -11,7 +11,7 @@
 
 namespace ModelLoaders
 {
-    static const char* STR_NAMESPACE = "MapImporters";
+    extern const char* STR_NAMESPACE;
 }
 
 #endif // MODELLOADERS_GLOBAL_H

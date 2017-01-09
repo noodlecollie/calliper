@@ -18,6 +18,7 @@ class SimpleRenderClassifier : public Model::IRenderPassClassifier
 public:
     virtual int classify(quint32 objectId) const override
     {
+        Q_UNUSED(objectId);
         return 0;
     }
 

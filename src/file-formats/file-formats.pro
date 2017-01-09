@@ -23,7 +23,8 @@ SOURCES += \
     common/streamdatacontainer.cpp \
     vpk/vpkothermd5item.cpp \
     vpk/vpkarchivemd5collection.cpp \
-    vpk/vpkfilecollection.cpp
+    vpk/vpkfilecollection.cpp \
+    file-formats_global.cpp
 
 HEADERS +=\
         file-formats_global.h \

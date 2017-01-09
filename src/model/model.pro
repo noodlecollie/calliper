@@ -52,7 +52,8 @@ SOURCES += \
     stores/materialresourcemanager.cpp \
     projects/calliperproject.cpp \
     projects/calliperprojectmetadata.cpp \
-    core/datachangenotifier.cpp
+    core/datachangenotifier.cpp \
+    model_global.cpp
 
 HEADERS += \
     model_global.h \

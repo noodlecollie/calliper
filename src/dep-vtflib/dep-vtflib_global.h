@@ -11,7 +11,7 @@
 
 namespace Dep_VTFLib
 {
-    static const char* STR_NAMESPACE = "Dep_VTFLib";
+    extern const char* STR_NAMESPACE;
 }
 
 #endif // DEPVTFLIB_GLOBAL_H
