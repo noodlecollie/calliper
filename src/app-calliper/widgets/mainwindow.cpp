@@ -21,6 +21,7 @@ namespace AppCalliper
         ui->setupUi(this);
 
         initDockWidgets();
+        connect(ui->actionQuit, SIGNAL(triggered(bool)), qApp, SLOT(quit()));
         setProject(nullptr);
     }
 
@@ -70,6 +71,9 @@ namespace AppCalliper
 
         setProject(new ApplicationProject());
         menuSaveCurrentProjectAs();
+
+        if ( m_pProject->fileName().isNull() )
+            setProject(nullptr);
     }
 
     void MainWindow::menuSaveCurrentProject()

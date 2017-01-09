@@ -45,7 +45,7 @@
      <x>0</x>
      <y>0</y>
      <width>641</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuView">
@@ -70,6 +70,8 @@
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
     <addaction name="actionClose_Project"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -140,6 +142,11 @@
    </property>
    <property name="text">
     <string>Project Metadata</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
    </property>
   </action>
  </widget>
