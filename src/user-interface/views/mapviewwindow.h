@@ -1,7 +1,7 @@
 #ifndef MAPVIEWWINDOW_H
 #define MAPVIEWWINDOW_H
 
-#include "high-level-convenience_global.h"
+#include "user-interface_global.h"
 #include <QOpenGLWindow>
 #include "stores/shaderstore.h"
 #include "stores/texturestore.h"
@@ -15,9 +15,9 @@
 #include "vpk/vpkfilecollection.h"
 #include "rendermodel/0-modellevel/rendermodel.h"
 
-namespace HighLevelConvenience
+namespace UserInterface
 {
-    class HIGHLEVELCONVENIENCESHARED_EXPORT MapViewWindow : public QOpenGLWindow
+    class USERINTERFACESHARED_EXPORT MapViewWindow : public QOpenGLWindow
     {
         Q_OBJECT
     public:

@@ -24,7 +24,7 @@ public:
 
 };
 
-MainWindow::MainWindow() : HighLevelConvenience::MapViewWindow(new SimpleRenderClassifier()),
+MainWindow::MainWindow() : UserInterface::MapViewWindow(new SimpleRenderClassifier()),
     m_iPlaceholderMaterial(0)
 {
     resize(640, 480);

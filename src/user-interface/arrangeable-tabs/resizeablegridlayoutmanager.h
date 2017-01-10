@@ -1,7 +1,7 @@
 #ifndef RESIZEABLEGRIDLAYOUTMANAGER_H
 #define RESIZEABLEGRIDLAYOUTMANAGER_H
 
-#include "high-level-convenience_global.h"
+#include "user-interface_global.h"
 #include <QObject>
 #include <QPoint>
 #include <QHash>
@@ -9,13 +9,13 @@
 class QGridLayout;
 class QWidget;
 
-namespace HighLevelConvenience
+namespace UserInterface
 {
     class ResizeableGridElementButton;
 
     // Manages a 3x3 grid, where possible content cells are the corner cells.
     // Other cells are dividers used to resize the grid.
-    class ResizeableGridLayoutManager : public QObject
+    class USERINTERFACESHARED_EXPORT ResizeableGridLayoutManager : public QObject
     {
         Q_OBJECT
     public:

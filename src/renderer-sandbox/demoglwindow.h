@@ -3,7 +3,7 @@
 
 #include "views/mapviewwindow.h"
 
-class DemoGLWindow : public HighLevelConvenience::MapViewWindow
+class DemoGLWindow : public UserInterface::MapViewWindow
 {
     Q_OBJECT
 public:

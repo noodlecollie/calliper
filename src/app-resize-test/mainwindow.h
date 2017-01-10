@@ -21,7 +21,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    HighLevelConvenience::ResizeableGridLayoutManager* m_pGridManager;
+    UserInterface::ResizeableGridLayoutManager* m_pGridManager;
 };
 
 #endif // MAINWINDOW_H

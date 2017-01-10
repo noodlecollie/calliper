@@ -7,7 +7,7 @@
 
 namespace ModelLoaders
 {
-    class CalliperProjectLoader
+    class MODELLOADERSSHARED_EXPORT CalliperProjectLoader
     {
     public:
         explicit CalliperProjectLoader(Model::CalliperProject* project);

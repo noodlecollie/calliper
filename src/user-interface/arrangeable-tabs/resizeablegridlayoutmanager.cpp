@@ -6,7 +6,7 @@
 
 namespace
 {
-    inline QPoint indexForCell(HighLevelConvenience::ResizeableGridLayoutManager::ContentCell cell)
+    inline QPoint indexForCell(UserInterface::ResizeableGridLayoutManager::ContentCell cell)
     {
         return QPoint(static_cast<int>((cell & 0xffff0000) >> 16),
                       static_cast<int>(cell & 0x0000ffff));
@@ -18,7 +18,7 @@ namespace
     }
 }
 
-namespace HighLevelConvenience
+namespace UserInterface
 {
     ResizeableGridLayoutManager::ResizeableGridLayoutManager(QGridLayout* gridLayout)
         : m_pGridLayout(gridLayout),

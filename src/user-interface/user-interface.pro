@@ -6,22 +6,22 @@
 
 QT += opengl
 
-TARGET = high-level-convenience
+TARGET = user-interface
 TEMPLATE = lib
 
-DEFINES += HIGHLEVELCONVENIENCE_LIBRARY
+DEFINES += USERINTERFACE_LIBRARY
 
 SOURCES += \
     views/mapviewwindow.cpp \
     arrangeable-tabs/resizeablegridelementbutton.cpp \
     arrangeable-tabs/resizeablegridlayoutmanager.cpp \
-    high-level-convenience_global.cpp
+    user-interface_global.cpp
 
 HEADERS +=\
-        high-level-convenience_global.h \
     views/mapviewwindow.h \
     arrangeable-tabs/resizeablegridelementbutton.h \
-    arrangeable-tabs/resizeablegridlayoutmanager.h
+    arrangeable-tabs/resizeablegridlayoutmanager.h \
+    user-interface_global.h
 
 unix {
     target.path = /usr/lib

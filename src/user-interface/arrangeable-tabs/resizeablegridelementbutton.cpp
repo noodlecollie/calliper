@@ -3,7 +3,7 @@
 #include <QGuiApplication>
 #include <QtDebug>
 
-namespace HighLevelConvenience
+namespace UserInterface
 {
     ResizeableGridElementButton::ResizeableGridElementButton(const ResizeModeFlags &flags, QWidget *parent)
         : QPushButton(parent),

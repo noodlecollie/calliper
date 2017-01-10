@@ -7,7 +7,7 @@
 
 namespace Model
 {
-    class CalliperProjectMetadata : public DataChangeNotifier
+    class MODELSHARED_EXPORT CalliperProjectMetadata : public DataChangeNotifier
     {
         Q_OBJECT
 

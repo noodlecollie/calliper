@@ -15,7 +15,7 @@ public:
     }
 };
 
-DemoGLWindow::DemoGLWindow() : HighLevelConvenience::MapViewWindow(new SimpleClassifier())
+DemoGLWindow::DemoGLWindow() : UserInterface::MapViewWindow(new SimpleClassifier())
 {
 
 }
@@ -93,7 +93,7 @@ void DemoGLWindow::initLocalOpenGlSettings()
 
 void DemoGLWindow::initializeGL()
 {
-    HighLevelConvenience::MapViewWindow::initializeGL();
+    UserInterface::MapViewWindow::initializeGL();
 
     Model::GenericBrush* b =Model::GenericBrushFactory::createBrushFromMinMaxVectors(scene()->rootObject(),
                                                                               QVector3D(0,0,0),

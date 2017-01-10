@@ -6,7 +6,7 @@
 
 namespace Model
 {
-    class DataChangeNotifier : public QObject
+    class MODELSHARED_EXPORT DataChangeNotifier : public QObject
     {
         Q_OBJECT
     public:

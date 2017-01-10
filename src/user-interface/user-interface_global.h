@@ -3,13 +3,13 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(HIGHLEVELCONVENIENCE_LIBRARY)
-#  define HIGHLEVELCONVENIENCESHARED_EXPORT Q_DECL_EXPORT
+#if defined(USERINTERFACE_LIBRARY)
+#  define USERINTERFACESHARED_EXPORT Q_DECL_EXPORT
 #else
-#  define HIGHLEVELCONVENIENCESHARED_EXPORT Q_DECL_IMPORT
+#  define USERINTERFACESHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-namespace HighLevelConvenience
+namespace UserInterface
 {
     extern const char* STR_NAMESPACE;
 }

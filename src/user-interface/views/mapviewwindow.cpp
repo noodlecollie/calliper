@@ -20,7 +20,7 @@
 using namespace Model;
 using namespace Renderer;
 
-namespace HighLevelConvenience
+namespace UserInterface
 {
     MapViewWindow::MapViewWindow(IRenderPassClassifier *classifier) :
         QOpenGLWindow(),

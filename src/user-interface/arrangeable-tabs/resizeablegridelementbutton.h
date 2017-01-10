@@ -1,12 +1,12 @@
 #ifndef RESIZEABLEGRIDELEMENTBUTTON_H
 #define RESIZEABLEGRIDELEMENTBUTTON_H
 
-#include "high-level-convenience_global.h"
+#include "user-interface_global.h"
 #include <QPushButton>
 #include <QScopedPointer>
 #include <QPoint>
 
-namespace HighLevelConvenience
+namespace UserInterface
 {
     class ResizeableGridElementButton : public QPushButton
     {

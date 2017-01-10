@@ -11,18 +11,21 @@ SUBDIRS += \
     model-loaders \
     dep-vtflib \
     tst-keyvaluesparser \
-    high-level-convenience \
+    user-interface \
     app-calliper \
     app-resize-test \
     app-vpkbrowser
 
-renderer-sandbox.depends = calliperutil renderer model file-formats model-loaders dep-vtflib high-level-convenience
+renderer-sandbox.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
 model.depends = renderer calliperutil
 renderer.depends = calliperutil
-app-vmfviewer.depends = calliperutil renderer model file-formats model-loaders dep-vtflib high-level-convenience
+app-vmfviewer.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
 app-vpkinfo.depends = file-formats calliperutil
 file-formats.depends = calliperutil
 model-loaders.depends = model renderer calliperutil file-formats dep-vtflib
 dep-qvtf.depends = dep-vtflib
 tst-keyvaluesparser.depends = file-formats calliperutil
-high-level-convenience.depends = renderer calliperutil model file-formats model-loaders dep-vtflib
+user-interface.depends = renderer calliperutil model file-formats model-loaders dep-vtflib
+app-calliper.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
+app-resize-test.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
+app-vpkbrowser.depends = calliperutil file-formats user-interface
