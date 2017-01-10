@@ -13,7 +13,7 @@ namespace FileFormats
         : StreamDataContainer(),
           m_pData(new VPKOtherMD5Item::Data())
     {
-        memset(m_pData, 0, sizeof(VPKOtherMD5Item::Data));
+        clear();
     }
 
     VPKOtherMD5Item::~VPKOtherMD5Item()
@@ -35,6 +35,11 @@ namespace FileFormats
             return false;
 
         return true;
+    }
+
+    void VPKOtherMD5Item::clear()
+    {
+        memset(m_pData, 0, sizeof(VPKOtherMD5Item::Data));
     }
 
     QString VPKOtherMD5Item::containerName() const

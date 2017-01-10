@@ -36,6 +36,13 @@ namespace FileFormats
 
     }
 
+    VPKFile::VPKFile()
+        : m_File(),
+          m_iCurrentArchive(-1)
+    {
+
+    }
+
     VPKFile::~VPKFile()
     {
         close();
@@ -287,6 +294,11 @@ namespace FileFormats
         return m_SiblingArchives;
     }
 
+    int VPKFile::siblingArchiveCount() const
+    {
+        return m_SiblingArchives.count();
+    }
+
     bool VPKFile::openArchive(int index)
     {
         if ( index < 0 || index >= m_SiblingArchives.count() )
@@ -398,5 +410,27 @@ namespace FileFormats
     QString VPKFile::fileName() const
     {
         return m_File.fileName();
+    }
+
+    void VPKFile::setFileName(const QString &filename)
+    {
+        if ( filename == m_File.fileName() )
+            return;
+
+        clear();
+        m_File.setFileName(filename);
+    }
+
+    void VPKFile::clear()
+    {
+        closeArchive();
+        close();
+
+        m_File.setFileName(QString());
+        m_SiblingArchives.clear();
+        m_Header.clear();
+        m_Index.clear();
+        m_ArchiveMD5Collection.clear();
+        m_OtherMD5s.clear();
     }
 }

@@ -13,6 +13,7 @@ namespace FileFormats
         ~VPKOtherMD5Item();
 
         virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
+        void clear();
 
         QByteArray treeChecksum() const;
         QByteArray archiveMD5SectionChecksum() const;

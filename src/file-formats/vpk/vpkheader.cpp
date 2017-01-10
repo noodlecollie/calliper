@@ -24,7 +24,7 @@ namespace FileFormats
         : StreamDataContainer(),
           m_pData(new VPKHeader::Data())
     {
-        memset(m_pData, 0, sizeof(VPKHeader::Data));
+        clear();
     }
 
     VPKHeader::~VPKHeader()
@@ -74,6 +74,11 @@ namespace FileFormats
         }
 
         return true;
+    }
+
+    void VPKHeader::clear()
+    {
+        memset(m_pData, 0, sizeof(VPKHeader::Data));
     }
 
     quint32 VPKHeader::signature() const

@@ -15,15 +15,19 @@ namespace FileFormats
     class FILEFORMATSSHARED_EXPORT VPKFile
     {
     public:
+        VPKFile();
         VPKFile(const QString& filename);
         ~VPKFile();
 
         QStringList siblingArchives() const;
+        int siblingArchiveCount() const;
 
         bool open();
         void close();
         bool isOpen() const;
         QString fileName() const;
+        void setFileName(const QString& filename);
+        void clear();
 
         bool readIndex(QString* errorHint = nullptr);
         bool readArchiveMD5(QString* errorHint = nullptr);

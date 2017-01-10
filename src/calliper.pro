@@ -13,7 +13,8 @@ SUBDIRS += \
     tst-keyvaluesparser \
     high-level-convenience \
     app-calliper \
-    app-resize-test
+    app-resize-test \
+    app-vpkbrowser
 
 renderer-sandbox.depends = calliperutil renderer model file-formats model-loaders dep-vtflib high-level-convenience
 model.depends = renderer calliperutil
