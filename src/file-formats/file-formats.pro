@@ -24,7 +24,8 @@ SOURCES += \
     vpk/vpkothermd5item.cpp \
     vpk/vpkarchivemd5collection.cpp \
     vpk/vpkfilecollection.cpp \
-    file-formats_global.cpp
+    file-formats_global.cpp \
+    vpk/vpkindextreeiterator.cpp
 
 HEADERS +=\
         file-formats_global.h \
@@ -40,7 +41,8 @@ HEADERS +=\
     vpk/vpkothermd5item.h \
     vpk/vpkarchivemd5collection.h \
     collection/simpleitemcollection.h \
-    vpk/vpkfilecollection.h
+    vpk/vpkfilecollection.h \
+    vpk/vpkindextreeiterator.h
 
 unix {
     target.path = /usr/lib

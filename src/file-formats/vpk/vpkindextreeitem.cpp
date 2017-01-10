@@ -25,7 +25,7 @@ namespace FileFormats
         : StreamDataContainer(),
           m_pData(new VPKIndexTreeItem::Data())
     {
-        memset(m_pData, 0, sizeof(VPKIndexTreeItem::Data));
+        clear();
     }
 
     VPKIndexTreeItem::~VPKIndexTreeItem()
@@ -78,6 +78,11 @@ namespace FileFormats
         }
 
         return true;
+    }
+
+    void VPKIndexTreeItem::clear()
+    {
+        memset(m_pData, 0, sizeof(VPKIndexTreeItem::Data));
     }
 
     quint32 VPKIndexTreeItem::crc() const

@@ -18,7 +18,8 @@ SOURCES += \
     general/fixedindexpool.cpp \
     exceptions/calliperexception.cpp \
     json/jsonarraywrapper.cpp \
-    calliperutil_global.cpp
+    calliperutil_global.cpp \
+    string/stringutil.cpp
 
 HEADERS +=\
         calliperutil_global.h \
@@ -27,7 +28,8 @@ HEADERS +=\
     general/hashfunctions.h \
     general/fixedindexpool.h \
     exceptions/calliperexception.h \
-    json/jsonarraywrapper.h
+    json/jsonarraywrapper.h \
+    string/stringutil.h
 
 unix {
     target.path = /usr/lib

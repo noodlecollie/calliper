@@ -14,6 +14,7 @@ namespace FileFormats
         ~VPKIndexTreeItem();
 
         virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
+        void clear();
 
         quint32 crc() const;
         quint16 preloadBytes() const;
@@ -23,7 +24,8 @@ namespace FileFormats
 
         QByteArray preloadData() const;
 
-        // Size of entries excluding any preload data.
+        // Size of entries excluding any preload data,
+        // but including the terminator.
         static quint32 staticSize();
 
         // Size of all data, including preload bytes.

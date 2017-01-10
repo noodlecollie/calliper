@@ -4,17 +4,27 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QByteArrayData>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    init();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::init()
+{
+    ui->treeWidget->setHeaderLabels(QStringList() << tr("File") << tr("Type") << tr("Size"));
+
+    updateWindowTitle();
 }
 
 void MainWindow::menuOpenVpkDir()
@@ -61,6 +71,11 @@ bool MainWindow::loadVpkDir(const QString &filename)
     return true;
 }
 
+void MainWindow::updateFileTree()
+{
+
+}
+
 void MainWindow::showErrorMessage(const QString &message, const QString &information, const QString &detail)
 {
     QMessageBox messageBox(this);
@@ -86,4 +101,17 @@ QString MainWindow::getFileDialogueDefaultDirectory() const
     {
         return QFileInfo(m_strLastFileOpened).canonicalPath();
     }
+}
+
+void MainWindow::updateWindowTitle()
+{
+    QString title(tr("VPK Browser"));
+    QString fileName = m_VPKFile.fileName();
+
+    if ( !fileName.isNull() )
+    {
+        title += QString(" - '%1'").arg(fileName);
+    }
+
+    setWindowTitle(title);
 }
