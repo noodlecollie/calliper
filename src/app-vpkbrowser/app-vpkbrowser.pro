@@ -43,10 +43,3 @@ else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 
 INCLUDEPATH += $$PWD/../calliperutil
 DEPENDPATH += $$PWD/../calliperutil
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../user-interface/release/ -luser-interface
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../user-interface/debug/ -luser-interface
-else:unix: LIBS += -L$$OUT_PWD/../user-interface/ -luser-interface
-
-INCLUDEPATH += $$PWD/../user-interface
-DEPENDPATH += $$PWD/../user-interface

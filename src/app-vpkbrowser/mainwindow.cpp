@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QByteArrayData>
+#include "vpk/vpkindextreeiterator.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -65,9 +66,20 @@ bool MainWindow::loadVpkDir(const QString &filename)
                          .arg(filename),
                          QString(),
                          errorHint);
+
+        m_VPKFile.close();
         return false;
     }
 
+    // TODO: Remove me
+    QByteArray tree = m_VPKFile.treeData();
+    FileFormats::VPKIndexTreeIterator it(&tree);
+    while ( it.isValid() )
+    {
+        it.advance();
+    }
+
+    m_VPKFile.close();
     return true;
 }
 

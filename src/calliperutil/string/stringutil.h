@@ -12,7 +12,7 @@ namespace CalliperUtil
         // Assumes the input is a QByteArray and that the input data contains
         // a null-terminated string at the current position. If a null cannot
         // be found, a null byte array is returned.
-        QByteArray getNullTerminatedString(const QDataStream& dataStream);
+        QByteArray getNullTerminatedString(QDataStream& dataStream);
     }
 }
 
