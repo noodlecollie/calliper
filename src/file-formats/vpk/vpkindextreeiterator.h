@@ -30,6 +30,7 @@ namespace FileFormats
             return QString();
         }
 
+
     private:
         bool readNextFilePathString(QByteArray& out);
         bool readNextFileData(VPKIndexTreeItem& out);

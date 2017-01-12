@@ -46,7 +46,13 @@ namespace FileFormats
     void VPKIndexTreeIterator::tryReadAtCurrentPosition()
     {
         if ( !readNextFilePathOntoStack() )
+        {
             invalidate();
+            return;
+        }
+
+        readNextFileData(m_TreeItem);
+        qDebug() << "Next file path:" << filePathFromStack();
     }
 
     VPKIndexTreeIterator& VPKIndexTreeIterator::reset()
@@ -79,52 +85,97 @@ namespace FileFormats
 
     bool VPKIndexTreeIterator::readNextFilePathOntoStack()
     {
-        bool shouldSwap = m_FilePathStack.size() == 3;
+        static int calls = 0;
+        if ( calls > 5 )
+            return false;
 
-        do
+        while (true)
         {
-            QByteArray nextChunk;
-            if ( !readNextFilePathString(nextChunk) )
+            QByteArray next;
+            if ( !readNextFilePathString(next) )
             {
                 return false;
             }
 
-            Q_ASSERT_X(nextChunk.length() > 0, Q_FUNC_INFO, "Expected non-zero byte array length!");
+            Q_ASSERT_X(next.length() > 0, Q_FUNC_INFO, "Expected a valid byte array!");
 
-            if ( nextChunk.length() > 1 )
+            switch ( m_FilePathStack.size() )
             {
-                if ( shouldSwap )
-                    m_FilePathStack.top() = nextChunk;
-                else
-                    m_FilePathStack.push(nextChunk);
-
-                shouldSwap = false;
-
-                if ( m_FilePathStack.size() == 3 )
+                case 0:
                 {
-                    if ( !readNextFileData(m_TreeItem) )
+                    // Get next string.
+                    // If string is valid, push and loop.
+                    // Else return false.
+
+                    if ( next.length() == 1 )
                     {
+                        qDebug() << "No more data, invalidating";
                         return false;
                     }
+
+                    qDebug() << "Pushing" << next << "onto level 0";
+                    m_FilePathStack.push(next);
+                    break;
                 }
-            }
-            else
-            {
-                if ( m_FilePathStack.size() < 1 )
+
+                case 1:
                 {
-                    return false;
+                    // Get next string.
+                    // If string is valid, push and loop.
+                    // Else pop and loop.
+
+                    if ( next.length() == 1 )
+                    {
+                        qDebug() << "Popping" << m_FilePathStack.top() << "from level 1";
+                        m_FilePathStack.pop();
+                        break;
+                    }
+                    else
+                    {
+                        qDebug() << "Pushing" << next << "onto level 1";
+                        m_FilePathStack.push(next);
+                        break;
+                    }
                 }
-                else
+
+                case 2:
                 {
+                    // Get next string.
+                    // If string is valid, push and return true.
+                    // Else pop and loop.
+
+                    if ( next.length() == 1 )
+                    {
+                        qDebug() << "Popping" << m_FilePathStack.top() << "from level 2";
+                        m_FilePathStack.pop();
+                        break;
+                    }
+                    else
+                    {
+                        qDebug() << "Pushing" << next << "onto level 2";
+                        m_FilePathStack.push(next);
+                        calls++;
+                        return true;
+                    }
+                }
+
+                case 3:
+                {
+                    // Pop and loop again.
+                    // We'll only be here if we're continuing
+                    // on from a previous search.
+                    qDebug() << "Popping" << m_FilePathStack.top() << "from level 3";
                     m_FilePathStack.pop();
-                    shouldSwap = true;
+                    break;
+                }
+
+                default:
+                {
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "Unexpected stack depth!");
+                    return false;
                 }
             }
         }
-        while ( m_FilePathStack.size() < 3 );
-
-        qDebug() << "VPK Index Tree Iterator: Got next file path:" << filePathFromStack();
-        return true;
     }
 
     QString VPKIndexTreeIterator::filePathFromStack() const
