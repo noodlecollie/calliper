@@ -12,6 +12,11 @@ namespace CalliperUtil
         {
             return QString(originalPath).replace('\\', '/');
         }
+
+        QByteArray normaliseResourcePathSeparators(const QByteArray &originalPath)
+        {
+            return QByteArray(originalPath).replace('\\', '/');
+        }
     }
 }
 

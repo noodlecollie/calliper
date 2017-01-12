@@ -26,7 +26,7 @@ namespace ModelLoaders
 
         QString materialPath(const FileFormats::VPKIndexTreeRecordPointer& record)
         {
-            QString matPath = (record->path() + "/" + record->filename()).toLower();
+            QString matPath = (record->path() + "/" + record->fileName()).toLower();
             int removalIndex = matPath.indexOf("materials/");
             if ( removalIndex >= 0 )
             {

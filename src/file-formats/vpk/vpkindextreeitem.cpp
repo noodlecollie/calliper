@@ -28,6 +28,21 @@ namespace FileFormats
         clear();
     }
 
+    VPKIndexTreeItem::VPKIndexTreeItem(const VPKIndexTreeItem &other)
+        : StreamDataContainer(),
+          m_pData(new VPKIndexTreeItem::Data())
+    {
+        *this = other;
+    }
+
+    VPKIndexTreeItem& VPKIndexTreeItem::operator =(const VPKIndexTreeItem& other)
+    {
+        memcpy(m_pData, other.m_pData, sizeof(VPKIndexTreeItem::Data));
+        m_PreloadData = other.m_PreloadData;
+
+        return *this;
+    }
+
     VPKIndexTreeItem::~VPKIndexTreeItem()
     {
         delete m_pData;
@@ -65,6 +80,10 @@ namespace FileFormats
         {
             m_PreloadData.resize(d.preloadBytes);
             stream.readRawData(m_PreloadData.data(), d.preloadBytes);
+        }
+        else
+        {
+            m_PreloadData.clear();
         }
 
         if ( !endRead(stream, errorHint) )

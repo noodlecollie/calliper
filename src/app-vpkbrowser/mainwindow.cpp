@@ -71,14 +71,6 @@ bool MainWindow::loadVpkDir(const QString &filename)
         return false;
     }
 
-    // TODO: Remove me
-    QByteArray tree = m_VPKFile.treeData();
-    FileFormats::VPKIndexTreeIterator it(&tree);
-    while ( it.isValid() )
-    {
-        it.advance();
-    }
-
     m_VPKFile.close();
     return true;
 }

@@ -9,6 +9,7 @@
 #include <QList>
 #include "vpkarchivemd5collection.h"
 #include "vpkothermd5item.h"
+#include "vpkindextreeiterator.h"
 
 namespace FileFormats
 {
@@ -53,8 +54,7 @@ namespace FileFormats
         typedef QSharedPointer<VPKOtherMD5Item> VPKOtherMD5ItemPointer;
 
         bool createIndex(QDataStream& stream, QString* errorHint);
-        bool createRecord(QDataStream& stream, const QString& path, const QString& filename,
-                          const QString& extension, QString* errorHint);
+        void createRecord(const VPKIndexTreeIterator& it);
         QStringList findSiblingArchives() const;
         bool validateHeader(QString* errorHint) const;
         bool readMD5s(QDataStream& stream, QString* errorHint);

@@ -1,6 +1,7 @@
 #include "vpkindextreeiterator.h"
 #include "string/stringutil.h"
 #include <QtDebug>
+#include "general/generalutil.h"
 
 namespace
 {
@@ -38,12 +39,53 @@ namespace FileFormats
         return m_pTreeData && m_pDataStream->status() == QDataStream::Ok;
     }
 
-    QString VPKIndexTreeIterator::filePath() const
+    QString VPKIndexTreeIterator::fullPath() const
     {
         if ( !isValid() )
             return QString();
 
         return filePathFromStack();
+    }
+
+    QString VPKIndexTreeIterator::path() const
+    {
+        if ( !isValid() )
+            return QString();
+
+        return m_FilePathList.at(FILE_PATH);
+    }
+
+    QString VPKIndexTreeIterator::fileName() const
+    {
+        if ( !isValid() )
+            return QString();
+
+        return m_FilePathList.at(FILE_NAME);
+    }
+
+    QString VPKIndexTreeIterator::extension() const
+    {
+        if ( !isValid() )
+            return QString();
+
+        return m_FilePathList.at(FILE_EXTENSION);
+    }
+
+    const VPKIndexTreeItem& VPKIndexTreeIterator::treeItem() const
+    {
+        return m_TreeItem;
+    }
+
+    QString VPKIndexTreeIterator::errorHint() const
+    {
+        if ( hasPathOnStack() )
+        {
+            return QString("When processing file %1: %2")
+                    .arg(filePathFromStack())
+                    .arg(m_strErrorHint);
+        }
+
+        return m_strErrorHint;
     }
 
     VPKIndexTreeIterator& VPKIndexTreeIterator::advance()
@@ -64,10 +106,12 @@ namespace FileFormats
             return;
         }
 
-        // This is just for advancing the stream the correct amount.
-        // Because the item hasn't been cleared, there's no guarantee
-        // the data will be correct.
-        readNextFileData(m_TreeItem);
+        // Make sure the file data is accurate too.
+        if ( !readNextFileData() )
+        {
+            invalidate();
+            return;
+        }
     }
 
     VPKIndexTreeIterator& VPKIndexTreeIterator::reset()
@@ -75,6 +119,8 @@ namespace FileFormats
         if ( m_pTreeData )
         {
             m_pDataStream.reset(new QDataStream(*m_pTreeData));
+            m_TreeItem.clear();
+            m_strErrorHint = QString();
             resetFilePathList();
             tryReadAtCurrentPosition();
         }
@@ -85,6 +131,7 @@ namespace FileFormats
     void VPKIndexTreeIterator::invalidate()
     {
         m_pDataStream->setStatus(QDataStream::ReadPastEnd);
+        m_TreeItem.clear();
     }
 
     bool VPKIndexTreeIterator::readNextFilePathString(QByteArray &out)
@@ -93,9 +140,9 @@ namespace FileFormats
         return !out.isNull();
     }
 
-    bool VPKIndexTreeIterator::readNextFileData(VPKIndexTreeItem &out)
+    bool VPKIndexTreeIterator::readNextFileData()
     {
-        return out.populate(*m_pDataStream);
+        return m_TreeItem.populate(*m_pDataStream, &m_strErrorHint);
     }
 
     bool VPKIndexTreeIterator::readNextFilePathOntoStack()
@@ -114,41 +161,42 @@ namespace FileFormats
             {
                 case FILE_EXTENSION:
                 {
-                    if ( next.length() < 2 )
+                    if ( next.isEmpty() )
                     {
+                        m_FilePathList.replace(FILE_EXTENSION, QByteArray());
                         return false;
                     }
                     else
                     {
-                        m_FilePathList.replace(0, next);
+                        m_FilePathList.replace(FILE_EXTENSION, next);
                         incrementTargetDepth();
                     }
                 } break;
 
                 case FILE_PATH:
                 {
-                    if ( next.length() < 2 )
+                    if ( next.isEmpty() )
                     {
-                        m_FilePathList.replace(1, QByteArray());
+                        m_FilePathList.replace(FILE_PATH, QByteArray());
                         decrementTargetDepth();
                     }
                     else
                     {
-                        m_FilePathList.replace(1, next.trimmed());
+                        m_FilePathList.replace(FILE_PATH, CalliperUtil::General::normaliseResourcePathSeparators(next.trimmed()));
                         incrementTargetDepth();
                     }
                 } break;
 
                 case FILE_NAME:
                 {
-                    if ( next.length() < 2 )
+                    if ( next.isEmpty() )
                     {
-                        m_FilePathList.replace(2, QByteArray());
+                        m_FilePathList.replace(FILE_NAME, QByteArray());
                         decrementTargetDepth();
                     }
                     else
                     {
-                        m_FilePathList.replace(2, next);
+                        m_FilePathList.replace(FILE_NAME, next);
                         return true;
                     }
                 } break;
@@ -169,6 +217,17 @@ namespace FileFormats
                 .arg(path.isEmpty() ? "" : "/")
                 .arg(name.constData())
                 .arg(ext.constData());
+    }
+
+    bool VPKIndexTreeIterator::hasPathOnStack() const
+    {
+        foreach ( const QByteArray& arr, m_FilePathList )
+        {
+            if ( !arr.isNull() )
+                return true;
+        }
+
+        return false;
     }
 
     void VPKIndexTreeIterator::resetFilePathList()

@@ -33,6 +33,7 @@ namespace CalliperUtil
         // so that the rest of the code can assume the separators are normalised.
         // Assumes no escape characters in path.
         CALLIPERUTILSHARED_EXPORT QString normaliseResourcePathSeparators(const QString& originalPath);
+        CALLIPERUTILSHARED_EXPORT QByteArray normaliseResourcePathSeparators(const QByteArray& originalPath);
     }
 }
 

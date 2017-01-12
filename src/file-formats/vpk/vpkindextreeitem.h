@@ -7,11 +7,15 @@
 
 namespace FileFormats
 {
+    // TODO: Refactor this so that it doesn't use memcpy
     class FILEFORMATSSHARED_EXPORT VPKIndexTreeItem : public StreamDataContainer
     {
     public:
         VPKIndexTreeItem();
         ~VPKIndexTreeItem();
+
+        VPKIndexTreeItem(const VPKIndexTreeItem& other);
+        VPKIndexTreeItem& operator =(const VPKIndexTreeItem& other);
 
         virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
         void clear();

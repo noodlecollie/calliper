@@ -285,7 +285,7 @@ namespace VPKInfo
     left << qSetFieldWidth(15) << (_key) << qSetFieldWidth(0) << (_value)
 
         s << PRINT_PAIR("Path:", record->path()) << endl;
-        s << PRINT_PAIR("Name:", record->filename()) << endl;
+        s << PRINT_PAIR("Name:", record->fileName()) << endl;
         s << PRINT_PAIR("Extension:", record->extension()) << endl;
         s << PRINT_PAIR("Archive index:", item->archiveIndex()) << endl;
         s << PRINT_PAIR("Offset:", item->entryOffset()) << endl;

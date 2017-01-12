@@ -6,6 +6,7 @@
 
 namespace FileFormats
 {
+    // TODO: Refactor this so that it doesn't use memcpy
     class FILEFORMATSSHARED_EXPORT VPKArchiveMD5Item : public StreamDataContainer
     {
     public:

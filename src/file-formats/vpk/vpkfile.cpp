@@ -7,6 +7,7 @@
 #include <QByteArray>
 #include "vpkarchivemd5item.h"
 #include "general/generalutil.h"
+#include "vpkindextreeiterator.h"
 
 namespace FileFormats
 {
@@ -168,10 +169,8 @@ namespace FileFormats
             return false;
         }
 
-        QScopedArrayPointer<char> buffer(new char[m_Header.treeSize()]);
-
-        char* base = &buffer[0];
-        int bytesRead = stream.readRawData(base, m_Header.treeSize());
+        QByteArray buffer(m_Header.treeSize(), 0);
+        int bytesRead = stream.readRawData(buffer.data(), m_Header.treeSize());
         if ( static_cast<quint32>(bytesRead) != m_Header.treeSize() )
         {
             setErrorString(errorHint,
@@ -182,71 +181,28 @@ namespace FileFormats
             return false;
         }
 
-        char* currentString = base;
-
-        QString currentExtension;
-        QString currentPath;
-        QString currentFilename;
-
-        while ( currentString < base + m_Header.treeSize() )
+        VPKIndexTreeIterator it(&buffer);
+        for ( ; it.isValid(); it.advance() )
         {
-            currentExtension = getString(currentString);
-            if ( currentExtension.isEmpty() )
-                break;
+            createRecord(it);
+        }
 
-            while ( currentString < base + m_Header.treeSize() )
-            {
-                currentPath = getString(currentString);
-                if ( currentPath.isEmpty() )
-                    break;
-
-                currentPath = CalliperUtil::General::normaliseResourcePathSeparators(currentPath);
-
-                while ( currentString < base + m_Header.treeSize() )
-                {
-                    currentFilename = getString(currentString);
-                    if ( currentFilename.isEmpty() )
-                        break;
-
-                    if ( currentString + VPKIndexTreeItem::staticSize() > base + m_Header.treeSize() )
-                    {
-                        setErrorString(errorHint,
-                                       QString("Expected index entry of %1 bytes but was only able to read %2 bytes.")
-                                       .arg(VPKIndexTreeItem::staticSize())
-                                       .arg(reinterpret_cast<quint64>(base) + m_Header.treeSize()
-                                            - reinterpret_cast<quint64>(currentString)));
-
-                        return false;
-                    }
-
-                    QByteArray data;
-                    data.append(currentString, VPKIndexTreeItem::staticSize());
-                    currentString += VPKIndexTreeItem::staticSize();
-
-                    QDataStream dataStream(&data, QIODevice::ReadOnly);
-                    dataStream.setByteOrder(QDataStream::LittleEndian);
-
-                    if ( !createRecord(dataStream, CalliperUtil::General::normaliseResourcePathSeparators(currentPath), currentFilename,
-                                       currentExtension, errorHint) )
-                        return false;
-                }
-            }
+        QString itErrorHint = it.errorHint();
+        if ( !itErrorHint.isNull() )
+        {
+            setErrorString(errorHint, itErrorHint);
+            return false;
         }
 
         return true;
     }
 
-    bool VPKFile::createRecord(QDataStream &stream, const QString &path, const QString &filename,
-                               const QString &extension, QString *errorHint)
+    void VPKFile::createRecord(const VPKIndexTreeIterator &it)
     {
         VPKIndexTreeRecordPointer record =
-                VPKIndexTreeRecordPointer::create(path, filename, extension);
-
-        if ( !record->item()->populate(stream, errorHint) )
-            return false;
+                VPKIndexTreeRecordPointer::create(it);
 
         m_Index.addRecord(record);
-        return true;
     }
 
     const VPKHeader& VPKFile::header() const

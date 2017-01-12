@@ -26,9 +26,15 @@ namespace FileFormats
         explicit VPKIndexTreeIterator(QByteArray* treeData);
 
         bool isValid() const;
-        QString filePath() const;
         VPKIndexTreeIterator& advance();
         VPKIndexTreeIterator& reset();
+        QString errorHint() const;
+
+        QString fullPath() const;
+        QString path() const;
+        QString fileName() const;
+        QString extension() const;
+        const VPKIndexTreeItem& treeItem() const;
 
         inline VPKIndexTreeIterator& operator ++()
         {
@@ -43,10 +49,11 @@ namespace FileFormats
 
     private:
         bool readNextFilePathString(QByteArray& out);
-        bool readNextFileData(VPKIndexTreeItem& out);
+        bool readNextFileData();
         bool readNextFilePathOntoStack();
         void invalidate();
         QString filePathFromStack() const;
+        bool hasPathOnStack() const;
         void tryReadAtCurrentPosition();
         void resetFilePathList();
         void incrementTargetDepth();
@@ -56,6 +63,7 @@ namespace FileFormats
         QByteArray* m_pTreeData;
         QScopedPointer<QDataStream> m_pDataStream;
         VPKIndexTreeItem m_TreeItem;
+        QString m_strErrorHint;
 
         int m_iCurrentPathDepth;
         int m_iTargetPathDepth;
