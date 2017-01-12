@@ -2,16 +2,29 @@
 #include "string/stringutil.h"
 #include <QtDebug>
 
+namespace
+{
+    enum
+    {
+        FILE_EXTENSION = 0,
+        FILE_PATH,
+        FILE_NAME,
+
+        TOTAL_SEGMENTS
+    };
+}
+
 namespace FileFormats
 {
     VPKIndexTreeIterator::VPKIndexTreeIterator(QByteArray *treeData)
         : m_pTreeData(treeData),
-          m_pDataStream(nullptr)
+          m_pDataStream(nullptr),
+          m_iCurrentPathDepth(0),
+          m_iTargetPathDepth(0)
     {
         if ( treeData )
         {
-            m_pDataStream.reset(new QDataStream(*m_pTreeData));
-            tryReadAtCurrentPosition();
+            reset();
         }
         else
         {
@@ -51,8 +64,10 @@ namespace FileFormats
             return;
         }
 
+        // This is just for advancing the stream the correct amount.
+        // Because the item hasn't been cleared, there's no guarantee
+        // the data will be correct.
         readNextFileData(m_TreeItem);
-        qDebug() << "Next file path:" << filePathFromStack();
     }
 
     VPKIndexTreeIterator& VPKIndexTreeIterator::reset()
@@ -60,6 +75,7 @@ namespace FileFormats
         if ( m_pTreeData )
         {
             m_pDataStream.reset(new QDataStream(*m_pTreeData));
+            resetFilePathList();
             tryReadAtCurrentPosition();
         }
 
@@ -74,21 +90,16 @@ namespace FileFormats
     bool VPKIndexTreeIterator::readNextFilePathString(QByteArray &out)
     {
         out = CalliperUtil::StringUtil::getNullTerminatedString(*m_pDataStream);
-        return out.length() > 0;
+        return !out.isNull();
     }
 
     bool VPKIndexTreeIterator::readNextFileData(VPKIndexTreeItem &out)
     {
-        out.clear();
         return out.populate(*m_pDataStream);
     }
 
     bool VPKIndexTreeIterator::readNextFilePathOntoStack()
     {
-        static int calls = 0;
-        if ( calls > 5 )
-            return false;
-
         while (true)
         {
             QByteArray next;
@@ -97,96 +108,101 @@ namespace FileFormats
                 return false;
             }
 
-            Q_ASSERT_X(next.length() > 0, Q_FUNC_INFO, "Expected a valid byte array!");
+            Q_ASSERT_X(!next.isNull(), Q_FUNC_INFO, "Expected a valid byte array!");
 
-            switch ( m_FilePathStack.size() )
+            switch ( m_iCurrentPathDepth )
             {
-                case 0:
+                case FILE_EXTENSION:
                 {
-                    // Get next string.
-                    // If string is valid, push and loop.
-                    // Else return false.
-
-                    if ( next.length() == 1 )
+                    if ( next.length() < 2 )
                     {
-                        qDebug() << "No more data, invalidating";
                         return false;
                     }
-
-                    qDebug() << "Pushing" << next << "onto level 0";
-                    m_FilePathStack.push(next);
-                    break;
-                }
-
-                case 1:
-                {
-                    // Get next string.
-                    // If string is valid, push and loop.
-                    // Else pop and loop.
-
-                    if ( next.length() == 1 )
+                    else
                     {
-                        qDebug() << "Popping" << m_FilePathStack.top() << "from level 1";
-                        m_FilePathStack.pop();
-                        break;
+                        m_FilePathList.replace(0, next);
+                        incrementTargetDepth();
+                    }
+                } break;
+
+                case FILE_PATH:
+                {
+                    if ( next.length() < 2 )
+                    {
+                        m_FilePathList.replace(1, QByteArray());
+                        decrementTargetDepth();
                     }
                     else
                     {
-                        qDebug() << "Pushing" << next << "onto level 1";
-                        m_FilePathStack.push(next);
-                        break;
+                        m_FilePathList.replace(1, next.trimmed());
+                        incrementTargetDepth();
                     }
-                }
+                } break;
 
-                case 2:
+                case FILE_NAME:
                 {
-                    // Get next string.
-                    // If string is valid, push and return true.
-                    // Else pop and loop.
-
-                    if ( next.length() == 1 )
+                    if ( next.length() < 2 )
                     {
-                        qDebug() << "Popping" << m_FilePathStack.top() << "from level 2";
-                        m_FilePathStack.pop();
-                        break;
+                        m_FilePathList.replace(2, QByteArray());
+                        decrementTargetDepth();
                     }
                     else
                     {
-                        qDebug() << "Pushing" << next << "onto level 2";
-                        m_FilePathStack.push(next);
-                        calls++;
+                        m_FilePathList.replace(2, next);
                         return true;
                     }
-                }
-
-                case 3:
-                {
-                    // Pop and loop again.
-                    // We'll only be here if we're continuing
-                    // on from a previous search.
-                    qDebug() << "Popping" << m_FilePathStack.top() << "from level 3";
-                    m_FilePathStack.pop();
-                    break;
-                }
-
-                default:
-                {
-                    Q_ASSERT_X(false, Q_FUNC_INFO, "Unexpected stack depth!");
-                    return false;
-                }
+                } break;
             }
+
+            advanceDepth();
         }
     }
 
     QString VPKIndexTreeIterator::filePathFromStack() const
     {
-        if ( m_FilePathStack.size() != 3 )
-            return QString();
+        const QByteArray& path = m_FilePathList.at(FILE_PATH);
+        const QByteArray& name = m_FilePathList.at(FILE_NAME);
+        const QByteArray& ext = m_FilePathList.at(FILE_EXTENSION);
 
-        QList<QByteArray> list = m_FilePathStack.toList();
-        return QString("%1/%2.%3")
-                .arg(list.at(1).constData())
-                .arg(list.at(2).constData())
-                .arg(list.at(0).constData());
+        return QString("%1%2%3.%4")
+                .arg(path.constData())
+                .arg(path.isEmpty() ? "" : "/")
+                .arg(name.constData())
+                .arg(ext.constData());
+    }
+
+    void VPKIndexTreeIterator::resetFilePathList()
+    {
+        m_FilePathList.clear();
+        for ( int i = 0; i < TOTAL_SEGMENTS; ++i )
+        {
+            m_FilePathList.append(QByteArray());
+        }
+
+        m_iCurrentPathDepth = 0;
+        m_iTargetPathDepth = 0;
+    }
+
+    void VPKIndexTreeIterator::incrementTargetDepth()
+    {
+        ++m_iTargetPathDepth;
+
+        Q_ASSERT_X(m_iTargetPathDepth >= FILE_EXTENSION && m_iTargetPathDepth < TOTAL_SEGMENTS,
+                   Q_FUNC_INFO,
+                   "Target depth out of range!");
+    }
+
+    void VPKIndexTreeIterator::decrementTargetDepth()
+    {
+        --m_iTargetPathDepth;
+
+        Q_ASSERT_X(m_iTargetPathDepth >= FILE_EXTENSION && m_iTargetPathDepth < TOTAL_SEGMENTS,
+                   Q_FUNC_INFO,
+                   "Target depth out of range!");
+    }
+
+    void VPKIndexTreeIterator::advanceDepth()
+    {
+        m_iCurrentPathDepth = m_iTargetPathDepth;
     }
 }

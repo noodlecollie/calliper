@@ -24,8 +24,8 @@ namespace CalliperUtil
             if ( indexOfNull < 0 )
                 return QByteArray();
 
-            int length = indexOfNull - start + 1;
-            dataStream.skipRawData(length);
+            int length = indexOfNull - start;
+            dataStream.skipRawData(length+1);
             return arr.mid(start, length);
         }
     }
