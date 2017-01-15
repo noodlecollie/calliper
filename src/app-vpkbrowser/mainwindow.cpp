@@ -77,6 +77,8 @@ bool MainWindow::loadVpkDir(const QString &filename)
 
 void MainWindow::updateFileTree()
 {
+    ui->treeWidget->clear();
+
 
 }
 

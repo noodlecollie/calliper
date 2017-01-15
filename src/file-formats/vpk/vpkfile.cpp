@@ -51,7 +51,10 @@ namespace FileFormats
 
     bool VPKFile::open()
     {
-        return m_File.open(QIODevice::ReadOnly);
+        if ( !m_File.open(QIODevice::ReadOnly) )
+            return false;
+
+        return readHeader();
     }
 
     void VPKFile::close()
@@ -67,6 +70,21 @@ namespace FileFormats
         return m_File.isOpen();
     }
 
+    bool VPKFile::readHeader(QString *errorHint)
+    {
+        if ( !isOpen() )
+        {
+            setErrorString(errorHint, "File is not open.");
+            return false;
+        }
+
+        QDataStream stream(&m_File);
+        stream.setByteOrder(QDataStream::LittleEndian);
+
+        return m_Header.populate(stream, errorHint) && validateHeader(errorHint);
+
+    }
+
     bool VPKFile::readIndex(QString *errorHint)
     {
         if ( !isOpen() )
@@ -75,13 +93,16 @@ namespace FileFormats
             return false;
         }
 
+        if ( !isHeaderValid() )
+        {
+            setErrorString(errorHint, "VPK header is not valid.");
+            return false;
+        }
+
         {
             QDataStream stream(&m_File);
             stream.setByteOrder(QDataStream::LittleEndian);
-
-            if ( !m_Header.populate(stream, errorHint) ||
-                 !validateHeader(errorHint))
-                return false;
+            m_File.seek(m_Header.size());
 
             m_SiblingArchives = findSiblingArchives();
 
@@ -286,6 +307,11 @@ namespace FileFormats
         m_iCurrentArchive = -1;
     }
 
+    bool VPKFile::isHeaderValid() const
+    {
+        return m_Header.signatureValid();
+    }
+
     QByteArray VPKFile::readFromCurrentArchive(const VPKIndexTreeItem* item)
     {
         if ( !isArchiveOpen() || item->archiveIndex() != m_iCurrentArchive )
@@ -304,6 +330,11 @@ namespace FileFormats
 
     bool VPKFile::validateHeader(QString *errorHint) const
     {
+        if ( !m_Header.signatureValid() )
+        {
+            setErrorString(errorHint, "Invalid VPK header signature.");
+        }
+
         if ( m_Header.archiveMD5SectionSize() % VPKArchiveMD5Item::staticSize() != 0 )
         {
             setErrorString(errorHint,

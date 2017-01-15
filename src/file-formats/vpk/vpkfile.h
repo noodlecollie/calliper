@@ -29,6 +29,7 @@ namespace FileFormats
         QString fileName() const;
         void setFileName(const QString& filename);
         void clear();
+        bool isHeaderValid() const;
 
         bool readIndex(QString* errorHint = nullptr);
         bool readArchiveMD5(QString* errorHint = nullptr);
@@ -58,6 +59,7 @@ namespace FileFormats
         QStringList findSiblingArchives() const;
         bool validateHeader(QString* errorHint) const;
         bool readMD5s(QDataStream& stream, QString* errorHint);
+        bool readHeader(QString* errorHint = nullptr);
 
         QFile m_File;
         VPKHeader m_Header;
