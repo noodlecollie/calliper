@@ -23,40 +23,43 @@ MainWindow::~MainWindow()
 
 void MainWindow::addNewItem()
 {
+    static int itemNo = 1;
+
     QAction* action = qobject_cast<QAction*>(sender());
     if ( !action )
         return;
 
+    QString label = QString("Item %1").arg(itemNo++);
+    QWidget* n = new QGroupBox(label);
+    n->setObjectName(label);
+
     if ( action == ui->actionUpper_Left )
     {
-        QWidget* w = m_pGridManager->takeWidget(UserInterface::ResizeableGridLayoutManager::UpperLeft);
+        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::UpperLeft, n);
         if ( w )
             delete w;
-
-        m_pGridManager->addWidget(new QGroupBox("Item"), UserInterface::ResizeableGridLayoutManager::UpperLeft);
     }
     else if ( action == ui->actionUpper_Right )
     {
-        QWidget* w = m_pGridManager->takeWidget(UserInterface::ResizeableGridLayoutManager::UpperRight);
+        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::UpperRight, n);
         if ( w )
             delete w;
-
-        m_pGridManager->addWidget(new QGroupBox("Item"), UserInterface::ResizeableGridLayoutManager::UpperRight);
     }
     else if ( action == ui->actionLower_Left )
     {
-        QWidget* w = m_pGridManager->takeWidget(UserInterface::ResizeableGridLayoutManager::LowerLeft);
+        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::LowerLeft, n);
         if ( w )
             delete w;
-
-        m_pGridManager->addWidget(new QGroupBox("Item"), UserInterface::ResizeableGridLayoutManager::LowerLeft);
     }
     else if ( action == ui->actionLower_Right )
     {
-        QWidget* w = m_pGridManager->takeWidget(UserInterface::ResizeableGridLayoutManager::LowerRight);
+        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::LowerRight, n);
         if ( w )
             delete w;
-
-        m_pGridManager->addWidget(new QGroupBox("Item"), UserInterface::ResizeableGridLayoutManager::LowerRight);
+    }
+    else
+    {
+        --itemNo;
+        delete n;
     }
 }

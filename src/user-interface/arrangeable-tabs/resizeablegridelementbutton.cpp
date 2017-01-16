@@ -11,7 +11,6 @@ namespace UserInterface
           m_iRowIndex(-1),
           m_iColumnIndex(-1)
     {
-        setText("•");
         setFlat(true);
         setAutoFillBackground(true);
         calculateSizePolicy();
