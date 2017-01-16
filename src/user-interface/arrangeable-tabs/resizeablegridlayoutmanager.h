@@ -19,51 +19,62 @@ namespace UserInterface
     {
         Q_OBJECT
     public:
-        // Higher 16 bits are X, lower 16 bits are Y.
-#define ENCODE_CONTENTS_CELL(x,y) ((x) << 16) | (y)
-        enum ContentCell
+        enum ContentCellFlag
         {
-            NoCell = ~0,
-            UpperLeft   = ENCODE_CONTENTS_CELL(0,0),
-            UpperRight  = ENCODE_CONTENTS_CELL(2,0),
-            LowerLeft   = ENCODE_CONTENTS_CELL(0,2),
-            LowerRight  = ENCODE_CONTENTS_CELL(2,2),
+            NoCell = 0,
+            UpperLeft = (1<<0),
+            UpperRight = (1<<1),
+            LowerLeft = (1<<2),
+            LowerRight = (1<<3),
         };
-#undef ENCODE_CONTENTS_CELL
+        Q_DECLARE_FLAGS(ContentCellFlags, ContentCellFlag)
 
         explicit ResizeableGridLayoutManager(QGridLayout* gridLayout);
         ~ResizeableGridLayoutManager();
 
-        void addWidget(QWidget* widget, ContentCell cell);
-        QWidget* widgetAt(ContentCell cell) const;
-        QWidget* takeWidget(ContentCell cell);
-
-    private slots:
-        void resizeButtonDragged(int deltaX, int deltaY);
+        // Returns the widget that was already in this position,
+        // if there was one and it couldn't be split.
+        // Otherwise returns null.
+        QWidget* insertWidget(ContentCellFlag cell, QWidget* widget,
+                              Qt::Orientation splitPreference = Qt::Horizontal);
 
     private:
-        void updateLayout();
-        void clearLayout();
-        void setSingleItemLayout();
-        void setDualItemLayout();
-        void setTripleItemLayout();
-        void setQuadItemLayout();
-        void addResizeButton(int row, int column, int rowSpan = 1, int colSpan = 1);
-        void resizeHorizontal(int delta);
-        void resizeVertical(int delta);
-        void setRowColMinSize();
-        void setStretchFactors(int row0, int row2, int col0, int col2);
+        enum SplitIndexChoice
+        {
+            LowerIndex = 0,
+            UpperIndex,
+        };
 
-        // Returns true if split is vertical, false if it's horizontal.
-        // Lower is the item whose co-ordinate in the item axis is lower
-        // (ie. lower Y co-ord for a horizontal split, lower X co-ord for a vertical split).
-        // Upper is the other item.
-        bool calculateDualItemSplit(ContentCell cell1, ContentCell cell2, ContentCell& lower, ContentCell& upper);
+        static bool isSingleFlag(int cell);
+        static QPoint cellToIndex(ContentCellFlag cell);
+        static QPoint flagToIndex(const ContentCellFlags& flags);
+        static int cellCount(const ContentCellFlags& flags);
+        static SplitIndexChoice indexChoice(Qt::Orientation splitPreference, ContentCellFlag cell);
+        static QList<ContentCellFlag> flagList(const ContentCellFlags& flags);
+        static ContentCellFlag singleFlag(const ContentCellFlags& flags);
+
+        void initialiseGridLayout();
+        void resetCellToWidgetMap();
+        bool isSingleCellWidget(QWidget* widget) const;
+        QWidget* getWidget(ContentCellFlag flag) const;
+        ContentCellFlags getFlags(QWidget* widget) const;
+        void swapWidgetFlags(QWidget* existing, QWidget* widget);
+        void setFlags(QWidget* widget, int flags);
+
+        void removeResizeButtons();
+        void addResizeButton(int row, int column, int rowSpan, int colSpan);
+        void addVerticalResizeButton();
+        void addHorizontalResizeButton();
+        void removeResizeButton(int row, int col);
+
+        void splitWidget(QWidget* existing, QWidget* widget, ContentCellFlag cell, Qt::Orientation splitPreference);
+        void transition1to2widgets(QWidget* existing, QWidget* widget,
+                                   Qt::Orientation split, SplitIndexChoice newWidgetIndex);
+        void transitionSplitRectWidget(QWidget* existing, QWidget* widget, ContentCellFlag cell);
 
         QGridLayout* const m_pGridLayout;
-        QHash<ContentCell, QWidget*> m_OccupiedCells;
-        ContentCell m_iLastCell;
-        QList<ResizeableGridElementButton*> m_ResizeButtons;
+        QHash<ContentCellFlag, QWidget*> m_CellToWidget;
+        QHash<QWidget*, ContentCellFlags> m_WidgetToCell;
     };
 }
 
