@@ -177,8 +177,6 @@ namespace UserInterface
         //removeWidget(existing); TODO: Remove
         m_pGridLayout->removeWidget(existing);
 
-        setHandleLayout(ResizeHandleLayout::Tri);
-
         ContentCellFlags existingFlags = getFlags(existing);
 
         Q_ASSERT_X(existingFlags.testFlag(cell),
@@ -210,6 +208,8 @@ namespace UserInterface
         setHalfSplitStretch(majorSplit);
         m_HandleLayout.orientation = majorSplit;
         m_HandleLayout.tJunction = tJunctionIndex(existingFlag, cell);
+
+        setHandleLayout(m_WidgetToCell.count() == 4 ? ResizeHandleLayout::Quad : ResizeHandleLayout::Tri);
     }
 
     bool ResizeableGridLayoutManager::isSingleCellWidget(QWidget *widget) const

@@ -11,9 +11,8 @@ namespace UserInterface
           m_iRowIndex(-1),
           m_iColumnIndex(-1)
     {
-        setFlat(true);
-        setAutoFillBackground(true);
         calculateSizePolicy();
+        setCustomPalette();
         connect(this, SIGNAL(released()), this, SLOT(buttonReleased()));
     }
 
@@ -125,5 +124,11 @@ namespace UserInterface
     ResizeableGridElementButton::ResizeModeFlags ResizeableGridElementButton::resizeFlags() const
     {
         return m_iResizeFlags;
+    }
+
+    void ResizeableGridElementButton::setCustomPalette()
+    {
+        setFlat(true);
+        setAutoFillBackground(true);
     }
 }

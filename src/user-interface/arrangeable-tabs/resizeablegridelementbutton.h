@@ -44,6 +44,7 @@ namespace UserInterface
 
     private:
         void calculateSizePolicy();
+        void setCustomPalette();
 
         ResizeModeFlags m_iResizeFlags;
         QScopedPointer<QPoint> m_pLastMousePos;
