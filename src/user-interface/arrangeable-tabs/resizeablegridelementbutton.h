@@ -2,13 +2,13 @@
 #define RESIZEABLEGRIDELEMENTBUTTON_H
 
 #include "user-interface_global.h"
-#include <QPushButton>
+#include <QFrame>
 #include <QScopedPointer>
 #include <QPoint>
 
 namespace UserInterface
 {
-    class ResizeableGridElementButton : public QPushButton
+    class ResizeableGridElementButton : public QFrame
     {
         Q_OBJECT
     public:
@@ -35,16 +35,14 @@ namespace UserInterface
 
     protected:
         virtual void mouseMoveEvent(QMouseEvent *e) override;
+        virtual void mouseReleaseEvent(QMouseEvent *e) override;
         virtual QSize sizeHint() const override;
         virtual void enterEvent(QEvent *event) override;
         virtual void leaveEvent(QEvent *event) override;
 
-    private slots:
-        void buttonReleased();
-
     private:
         void calculateSizePolicy();
-        void setCustomPalette();
+        void initStyle();
 
         ResizeModeFlags m_iResizeFlags;
         QScopedPointer<QPoint> m_pLastMousePos;

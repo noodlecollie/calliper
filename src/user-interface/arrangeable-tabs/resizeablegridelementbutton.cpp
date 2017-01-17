@@ -6,14 +6,13 @@
 namespace UserInterface
 {
     ResizeableGridElementButton::ResizeableGridElementButton(const ResizeModeFlags &flags, QWidget *parent)
-        : QPushButton(parent),
+        : QFrame(parent),
           m_iResizeFlags(flags),
           m_iRowIndex(-1),
           m_iColumnIndex(-1)
     {
         calculateSizePolicy();
-        setCustomPalette();
-        connect(this, SIGNAL(released()), this, SLOT(buttonReleased()));
+        initStyle();
     }
 
     void ResizeableGridElementButton::mouseMoveEvent(QMouseEvent *e)
@@ -41,7 +40,7 @@ namespace UserInterface
         *(m_pLastMousePos.data()) = newPos;
     }
 
-    void ResizeableGridElementButton::buttonReleased()
+    void ResizeableGridElementButton::mouseReleaseEvent(QMouseEvent *)
     {
         m_pLastMousePos.reset();
     }
@@ -91,7 +90,7 @@ namespace UserInterface
 
     void ResizeableGridElementButton::enterEvent(QEvent *event)
     {
-        QPushButton::enterEvent(event);
+        QFrame::enterEvent(event);
 
         if ( m_iResizeFlags == NoResizeFlag )
             return;
@@ -111,14 +110,14 @@ namespace UserInterface
 
     void ResizeableGridElementButton::leaveEvent(QEvent *event)
     {
-        QPushButton::enterEvent(event);
+        QFrame::leaveEvent(event);
 
         QGuiApplication::restoreOverrideCursor();
 
         // If we drag off the button and let go of the mouse,
         // we get a leave event instead of a mouse released signal.
         if ( m_pLastMousePos )
-            buttonReleased();
+            m_pLastMousePos.reset();
     }
 
     ResizeableGridElementButton::ResizeModeFlags ResizeableGridElementButton::resizeFlags() const
@@ -126,9 +125,8 @@ namespace UserInterface
         return m_iResizeFlags;
     }
 
-    void ResizeableGridElementButton::setCustomPalette()
+    void ResizeableGridElementButton::initStyle()
     {
-        setFlat(true);
         setAutoFillBackground(true);
     }
 }
