@@ -63,3 +63,8 @@ void MainWindow::addNewItem()
         delete n;
     }
 }
+
+void MainWindow::equalise()
+{
+    m_pGridManager->equaliseCellSizes();
+}

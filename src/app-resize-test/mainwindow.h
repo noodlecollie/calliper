@@ -18,6 +18,7 @@ public:
 
 private slots:
     void addNewItem();
+    void equalise();
 
 private:
     Ui::MainWindow *ui;

@@ -11,6 +11,11 @@ namespace
     {
         return index.x() >= 0 && index.y() >= 0;
     }
+
+    inline int clampAbove(int in, int threshold)
+    {
+        return in < threshold ? threshold : in;
+    }
 }
 
 namespace UserInterface
@@ -29,7 +34,19 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
     {
-        qDebug() << "Resize drag:" << deltaX << deltaY;
+        ResizeableGridElementButton* button = qobject_cast<ResizeableGridElementButton*>(sender());
+        if ( !button )
+            return;
+
+        if ( button->resizeFlags().testFlag(ResizeableGridElementButton::HorizontalResizeFlag) )
+        {
+            resizeHorizontal(deltaX);
+        }
+
+        if ( button->resizeFlags().testFlag(ResizeableGridElementButton::VerticalResizeFlag) )
+        {
+            resizeVertical(deltaY);
+        }
     }
 
     QWidget* ResizeableGridLayoutManager::insertWidget(ContentCellFlag cell, QWidget *widget)
@@ -73,7 +90,6 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::setSingleWidget(QWidget *widget)
     {
-        //m_pGridLayout->addWidget(widget, 0, 0, 3, 3); TODO: Remove
         insertWidgetIntoLayout(widget, 0, 0, 3, 3);
 
         m_CellToWidget[UpperLeft] = widget;
@@ -85,6 +101,7 @@ namespace UserInterface
         m_WidgetToCell.insert(widget, ContentCellFlags() | UpperLeft | UpperRight | LowerLeft | LowerRight);
 
         setHandleLayout(ResizeHandleLayout::None);
+        setStretchFactors(1,0,1,0);
     }
 
     void ResizeableGridLayoutManager::splitWidget(QWidget *existing, QWidget *widget, ContentCellFlag cell,
@@ -121,7 +138,6 @@ namespace UserInterface
                                                             Qt::Orientation split,
                                                             SplitIndexChoice newWidgetIndex)
     {
-        //m_pGridLayout->removeWidget(existing); // TODO: Remove
         removeWidgetFromLayout(existing);
 
         setHandleLayout(ResizeHandleLayout::Bar);
@@ -138,8 +154,6 @@ namespace UserInterface
         if ( split == Qt::Horizontal )
         {
             // TODO: Refactor into a function
-            //m_pGridLayout->addWidget(lower, 0, 0, 1, 3); TODO: Remove
-            //m_pGridLayout->addWidget(upper, 2, 0, 1, 3); TODO: Remove
             insertWidgetIntoLayout(lower, 0, 0, 1, 3);
             insertWidgetIntoLayout(upper, 2, 0, 1, 3);
 
@@ -156,12 +170,12 @@ namespace UserInterface
 
             m_pGridLayout->setColumnStretch(0, 1);
             m_pGridLayout->setColumnStretch(2, 0);
+
+            setStretchFactors(1,1,1,0);
         }
         else
         {
             // TODO: Refactor into a function
-            //m_pGridLayout->addWidget(lower, 0, 0, 3, 1); TODO: Remove
-            //m_pGridLayout->addWidget(upper, 0, 2, 3, 1); TODO: Remove
             insertWidgetIntoLayout(lower, 0, 0, 3, 1);
             insertWidgetIntoLayout(upper, 0, 2, 3, 1);
 
@@ -178,6 +192,8 @@ namespace UserInterface
 
             m_pGridLayout->setColumnStretch(0, 1);
             m_pGridLayout->setColumnStretch(2, 1);
+
+            setStretchFactors(1,0,1,1);
         }
     }
 
@@ -196,11 +212,9 @@ namespace UserInterface
                    Q_FUNC_INFO,
                    "Expected existing widget to occupy two cells!");
 
-        //m_pGridLayout->removeWidget(existing); TODO: Remove
         removeWidgetFromLayout(existing);
 
         QPoint existingIndex = flagToIndex(existingFlags);
-        //m_pGridLayout->addWidget(existing, existingIndex.y(), existingIndex.x()); TODO: Remove
         insertWidgetIntoLayout(existing, existingIndex.y(), existingIndex.x());
 
         ContentCellFlag existingFlag = singleFlag(existingFlags);
@@ -208,18 +222,18 @@ namespace UserInterface
         m_WidgetToCell[existing] = existingFlag;
 
         QPoint newIndex = cellToIndex(cell);
-        //m_pGridLayout->addWidget(widget, newIndex.y(), newIndex.x()); TODO: Remove
         insertWidgetIntoLayout(widget, newIndex.y(), newIndex.x());
 
         m_CellToWidget[cell] = widget;
         m_WidgetToCell[widget] = cell;
 
         Qt::Orientation majorSplit = newIndex.y() == existingIndex.y() ? Qt::Horizontal : Qt::Vertical;
-        setHalfSplitStretch(majorSplit);
 
         setHandleLayout(m_WidgetToCell.count() == 4 ? ResizeHandleLayout::Quad : ResizeHandleLayout::Tri);
         m_HandleLayout.orientation = majorSplit;
         m_HandleLayout.tJunction = tJunctionIndex(existingFlag, cell);
+
+        setTSplitStretch(majorSplit);
     }
 
     bool ResizeableGridLayoutManager::isSingleCellWidget(QWidget *widget) const
@@ -245,6 +259,7 @@ namespace UserInterface
         m_pGridLayout->setRowStretch(1, 0);
         m_pGridLayout->setContentsMargins(0,0,0,0);
         m_pGridLayout->setSpacing(0);
+        setRowColMinSize();
     }
 
     QWidget* ResizeableGridLayoutManager::getWidget(ContentCellFlag flag) const
@@ -340,14 +355,32 @@ namespace UserInterface
         }
     }
 
-    void ResizeableGridLayoutManager::addVerticalResizeButton()
+    void ResizeableGridLayoutManager::addVerticalResizeButton(bool central)
     {
-        addResizeButton(0, 1, 3, 1);
+        if ( !central )
+        {
+            addResizeButton(0, 1, 3, 1);
+        }
+        else
+        {
+            addResizeButton(0, 1, 1, 1);
+            addResizeButton(1, 1, 1, 1);
+            addResizeButton(2, 1, 1, 1);
+        }
     }
 
-    void ResizeableGridLayoutManager::addHorizontalResizeButton()
+    void ResizeableGridLayoutManager::addHorizontalResizeButton(bool central)
     {
-        addResizeButton(1, 0, 1, 3);
+        if ( !central )
+        {
+            addResizeButton(1, 0, 1, 3);
+        }
+        else
+        {
+            addResizeButton(1, 0, 1, 1);
+            addResizeButton(1, 1, 1, 1);
+            addResizeButton(1, 2, 1, 1);
+        }
     }
 
     void ResizeableGridLayoutManager::addResizeButton(int row, int column, int rowSpan, int colSpan)
@@ -407,16 +440,18 @@ namespace UserInterface
     void ResizeableGridLayoutManager::rebuildHalfResizeButtons()
     {
         if ( m_HandleLayout.orientation == Qt::Horizontal )
-            addHorizontalResizeButton();
+            addHorizontalResizeButton(false);
         else
-            addVerticalResizeButton();
+            addVerticalResizeButton(false);
     }
 
     void ResizeableGridLayoutManager::rebuildTResizeButtons()
     {
-        rebuildHalfResizeButtons();
-        qDebug() << "Adding T-junction at row" << m_HandleLayout.tJunction.y()
-                 << "col" << m_HandleLayout.tJunction.x();
+        if ( m_HandleLayout.orientation == Qt::Horizontal )
+            addHorizontalResizeButton(true);
+        else
+            addVerticalResizeButton(true);
+
         addResizeButton(m_HandleLayout.tJunction.y(), m_HandleLayout.tJunction.x(), 1, 1);
     }
 
@@ -499,6 +534,20 @@ namespace UserInterface
         {
             m_pGridLayout->setColumnStretch(0, 1);
             m_pGridLayout->setColumnStretch(2, 1);
+            m_pGridLayout->setRowStretch(0, 1);
+            m_pGridLayout->setRowStretch(2, 1);
+        }
+    }
+
+    void ResizeableGridLayoutManager::setTSplitStretch(Qt::Orientation majorSplitDir)
+    {
+        if ( majorSplitDir == Qt::Horizontal )
+        {
+            m_pGridLayout->setColumnStretch(0, 1);
+            m_pGridLayout->setColumnStretch(2, 1);
+        }
+        else
+        {
             m_pGridLayout->setRowStretch(0, 1);
             m_pGridLayout->setRowStretch(2, 1);
         }
@@ -621,5 +670,129 @@ namespace UserInterface
             return nullptr;
 
         return container->replaceItem(newWidget);
+    }
+
+    void ResizeableGridLayoutManager::setRowColMinSize()
+    {
+        m_pGridLayout->setRowMinimumHeight(0, 1);
+        m_pGridLayout->setRowMinimumHeight(2, 1);
+        m_pGridLayout->setColumnMinimumWidth(0, 1);
+        m_pGridLayout->setColumnMinimumWidth(2, 1);
+    }
+
+    void ResizeableGridLayoutManager::setStretchFactors(int row0, int row2, int col0, int col2)
+    {
+        m_pGridLayout->setRowStretch(0, row0);
+        m_pGridLayout->setRowStretch(2, row2);
+        m_pGridLayout->setColumnStretch(0, col0);
+        m_pGridLayout->setColumnStretch(2, col2);
+    }
+
+    void ResizeableGridLayoutManager::resizeHorizontal(int delta)
+    {
+        QRect leftRect = m_pGridLayout->cellRect(0,0);
+        QRect rightRect = m_pGridLayout->cellRect(0,2);
+
+        if ( !leftRect.isValid() || !rightRect.isValid() )
+            return;
+
+        int left = clampAbove(leftRect.width() + delta, 1);
+        int right = clampAbove(rightRect.width() - delta, 1);
+
+        m_pGridLayout->setColumnStretch(0, left);
+        m_pGridLayout->setColumnStretch(2, right);
+    }
+
+    void ResizeableGridLayoutManager::resizeVertical(int delta)
+    {
+        QRect topRect = m_pGridLayout->cellRect(0,0);
+        QRect bottomRect = m_pGridLayout->cellRect(2,0);
+
+        if ( !topRect.isValid() || !bottomRect.isValid() )
+            return;
+
+        int top = clampAbove(topRect.height() + delta, 1);
+        int bottom = clampAbove(bottomRect.height() - delta, 1);
+
+        m_pGridLayout->setRowStretch(0, top);
+        m_pGridLayout->setRowStretch(2, bottom);
+    }
+
+    void ResizeableGridLayoutManager::equaliseCellSizes()
+    {
+        switch ( m_WidgetToCell.count() )
+        {
+            case 2:
+            {
+                Qt::Orientation orientation = Qt::Horizontal;
+                if ( !getCellSpanDirection(m_WidgetToCell.constBegin().key(), orientation) )
+                {
+                    Q_ASSERT(false);
+                    return;
+                }
+
+                setHalfSplitStretch(orientation);
+                break;
+            }
+
+            case 3:
+            {
+                for ( QHash<QWidget*, ContentCellFlags>::const_iterator it = m_WidgetToCell.constBegin(); it != m_WidgetToCell.constEnd(); ++it )
+                {
+                    if ( cellCount(it.value()) == 2 )
+                    {
+                        Qt::Orientation orientation = Qt::Horizontal;
+                        if ( !getCellSpanDirection(it.key(), orientation) )
+                        {
+                            Q_ASSERT(false);
+                            return;
+                        }
+
+                        setHalfSplitStretch(orientation);
+                        return;
+                    }
+                }
+
+                Q_ASSERT(false);
+                break;
+            }
+
+            case 4:
+            {
+                setStretchFactors(1,1,1,1);
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
+        }
+    }
+
+    bool ResizeableGridLayoutManager::getCellSpanDirection(QWidget *widget, Qt::Orientation &orientation) const
+    {
+        ContentCellFlags flags = getFlags(widget);
+        QList<ContentCellFlag> list = flagList(flags);
+
+        if ( list.count() != 2 )
+            return false;
+
+        QPoint index1 = flagToIndex(list.at(0));
+        QPoint index2 = flagToIndex(list.at(1));
+
+        if ( index1.x() == index2.x() )
+        {
+            orientation = Qt::Vertical;
+            return true;
+        }
+
+        if ( index1.y() == index2.y() )
+        {
+            orientation = Qt::Horizontal;
+            return true;
+        }
+
+        return false;
     }
 }

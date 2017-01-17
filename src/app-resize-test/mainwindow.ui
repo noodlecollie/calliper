@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -35,6 +35,7 @@
    <addaction name="actionUpper_Right"/>
    <addaction name="actionLower_Left"/>
    <addaction name="actionLower_Right"/>
+   <addaction name="actionEqualise"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionUpper_Left">
@@ -55,6 +56,11 @@
   <action name="actionLower_Right">
    <property name="text">
     <string>Lower Right</string>
+   </property>
+  </action>
+  <action name="actionEqualise">
+   <property name="text">
+    <string>Equalise</string>
    </property>
   </action>
  </widget>
@@ -125,8 +131,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionEqualise</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>equalise()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>addNewItem()</slot>
+  <slot>equalise()</slot>
  </slots>
 </ui>

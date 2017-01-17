@@ -39,6 +39,9 @@ namespace UserInterface
         QWidget* insertWidget(ContentCellFlag cell, QWidget* widget,
                               Qt::Orientation splitPreference);
         QWidget* insertWidget(ContentCellFlag cell, QWidget* widget);
+
+        void equaliseCellSizes();
+
     private slots:
         void resizeButtonDragged(int deltaX, int deltaY);
 
@@ -84,8 +87,14 @@ namespace UserInterface
         ContentCellFlags getFlags(QWidget* widget) const;
         void swapWidgetFlags(QWidget* existing, QWidget* widget);
         void setHalfSplitStretch(Qt::Orientation splitDir);
+        void setTSplitStretch(Qt::Orientation majorSplitDir);
         void removeWidget(QWidget* widget);
         Qt::Orientation autoSplitPreference(ContentCellFlag newCell);
+        void setRowColMinSize();
+        void setStretchFactors(int row0, int row2, int col0, int col2);
+        void resizeVertical(int delta);
+        void resizeHorizontal(int delta);
+        bool getCellSpanDirection(QWidget* widget, Qt::Orientation& orientation) const;
 
         void insertWidgetIntoLayout(QWidget* widget, int row, int col, int rowSpan = 1, int colSpan = 1);
         void removeWidgetFromLayout(QWidget* widget);
@@ -93,8 +102,8 @@ namespace UserInterface
 
         void removeResizeButtons();
         void addResizeButton(int row, int column, int rowSpan, int colSpan);
-        void addVerticalResizeButton();
-        void addHorizontalResizeButton();
+        void addVerticalResizeButton(bool central);
+        void addHorizontalResizeButton(bool central);
         void rebuildResizeButtons();
         void rebuildQuadResizeButtons();
         void rebuildTResizeButtons();
