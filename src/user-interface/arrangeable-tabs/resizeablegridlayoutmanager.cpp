@@ -206,10 +206,10 @@ namespace UserInterface
 
         Qt::Orientation majorSplit = newIndex.y() == existingIndex.y() ? Qt::Horizontal : Qt::Vertical;
         setHalfSplitStretch(majorSplit);
-        m_HandleLayout.orientation = majorSplit;
-        m_HandleLayout.tJunction = tJunctionIndex(existingFlag, cell);
 
         setHandleLayout(m_WidgetToCell.count() == 4 ? ResizeHandleLayout::Quad : ResizeHandleLayout::Tri);
+        m_HandleLayout.orientation = majorSplit;
+        m_HandleLayout.tJunction = tJunctionIndex(existingFlag, cell);
     }
 
     bool ResizeableGridLayoutManager::isSingleCellWidget(QWidget *widget) const
@@ -405,6 +405,8 @@ namespace UserInterface
     void ResizeableGridLayoutManager::rebuildTResizeButtons()
     {
         rebuildHalfResizeButtons();
+        qDebug() << "Adding T-junction at row" << m_HandleLayout.tJunction.y()
+                 << "col" << m_HandleLayout.tJunction.x();
         addResizeButton(m_HandleLayout.tJunction.y(), m_HandleLayout.tJunction.x(), 1, 1);
     }
 
