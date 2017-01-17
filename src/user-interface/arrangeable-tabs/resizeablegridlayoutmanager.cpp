@@ -3,6 +3,7 @@
 #include <QGridLayout>
 #include "resizeablegridelementbutton.h"
 #include <QtDebug>
+#include "resizeablegridlayoutcontainer.h"
 
 namespace
 {
@@ -26,9 +27,9 @@ namespace UserInterface
         // Buttons are parented to the layout's parent widget, so will be deleted automatically.
     }
 
-    void ResizeableGridLayoutManager::resizeButtonDragged(int, int)
+    void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
     {
-
+        qDebug() << "Resize drag:" << deltaX << deltaY;
     }
 
     QWidget* ResizeableGridLayoutManager::insertWidget(ContentCellFlag cell, QWidget *widget)
@@ -46,9 +47,12 @@ namespace UserInterface
 
         if ( existing )
         {
-            if ( isSingleFlag(getFlags(existing)) )
+            ContentCellFlags existingFlags = getFlags(existing);
+            if ( isSingleFlag(existingFlags) )
             {
-                m_pGridLayout->replaceWidget(existing, widget, Qt::FindDirectChildrenOnly);
+                ContentCellFlag flag = static_cast<ContentCellFlag>(static_cast<int>(existingFlags));
+                QPoint index = flagToIndex(flag);
+                replaceWidgetInLayout(widget, index.y(), index.x());
                 swapWidgetFlags(existing, widget);
             }
             else
@@ -69,7 +73,8 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::setSingleWidget(QWidget *widget)
     {
-        m_pGridLayout->addWidget(widget, 0, 0, 3, 3);
+        //m_pGridLayout->addWidget(widget, 0, 0, 3, 3); TODO: Remove
+        insertWidgetIntoLayout(widget, 0, 0, 3, 3);
 
         m_CellToWidget[UpperLeft] = widget;
         m_CellToWidget[UpperRight] = widget;
@@ -116,8 +121,8 @@ namespace UserInterface
                                                             Qt::Orientation split,
                                                             SplitIndexChoice newWidgetIndex)
     {
-        //removeWidget(existing); TODO: Remove
-        m_pGridLayout->removeWidget(existing);
+        //m_pGridLayout->removeWidget(existing); // TODO: Remove
+        removeWidgetFromLayout(existing);
 
         setHandleLayout(ResizeHandleLayout::Bar);
         m_HandleLayout.orientation = split;
@@ -133,8 +138,10 @@ namespace UserInterface
         if ( split == Qt::Horizontal )
         {
             // TODO: Refactor into a function
-            m_pGridLayout->addWidget(lower, 0, 0, 1, 3);
-            m_pGridLayout->addWidget(upper, 2, 0, 1, 3);
+            //m_pGridLayout->addWidget(lower, 0, 0, 1, 3); TODO: Remove
+            //m_pGridLayout->addWidget(upper, 2, 0, 1, 3); TODO: Remove
+            insertWidgetIntoLayout(lower, 0, 0, 1, 3);
+            insertWidgetIntoLayout(upper, 2, 0, 1, 3);
 
             m_CellToWidget[UpperLeft] = lower;
             m_CellToWidget[UpperRight] = lower;
@@ -153,8 +160,10 @@ namespace UserInterface
         else
         {
             // TODO: Refactor into a function
-            m_pGridLayout->addWidget(lower, 0, 0, 3, 1);
-            m_pGridLayout->addWidget(upper, 0, 2, 3, 1);
+            //m_pGridLayout->addWidget(lower, 0, 0, 3, 1); TODO: Remove
+            //m_pGridLayout->addWidget(upper, 0, 2, 3, 1); TODO: Remove
+            insertWidgetIntoLayout(lower, 0, 0, 3, 1);
+            insertWidgetIntoLayout(upper, 0, 2, 3, 1);
 
             m_CellToWidget[UpperLeft] = lower;
             m_CellToWidget[LowerLeft] = lower;
@@ -174,8 +183,6 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::transitionSplitRectWidget(QWidget *existing, QWidget *widget, ContentCellFlag cell)
     {
-        //removeWidget(existing); TODO: Remove
-        m_pGridLayout->removeWidget(existing);
 
         ContentCellFlags existingFlags = getFlags(existing);
 
@@ -189,17 +196,20 @@ namespace UserInterface
                    Q_FUNC_INFO,
                    "Expected existing widget to occupy two cells!");
 
-        m_pGridLayout->removeWidget(existing);
+        //m_pGridLayout->removeWidget(existing); TODO: Remove
+        removeWidgetFromLayout(existing);
 
         QPoint existingIndex = flagToIndex(existingFlags);
-        m_pGridLayout->addWidget(existing, existingIndex.y(), existingIndex.x());
+        //m_pGridLayout->addWidget(existing, existingIndex.y(), existingIndex.x()); TODO: Remove
+        insertWidgetIntoLayout(existing, existingIndex.y(), existingIndex.x());
 
         ContentCellFlag existingFlag = singleFlag(existingFlags);
         m_CellToWidget[existingFlag] = existing;
         m_WidgetToCell[existing] = existingFlag;
 
         QPoint newIndex = cellToIndex(cell);
-        m_pGridLayout->addWidget(widget, newIndex.y(), newIndex.x());
+        //m_pGridLayout->addWidget(widget, newIndex.y(), newIndex.x()); TODO: Remove
+        insertWidgetIntoLayout(widget, newIndex.y(), newIndex.x());
 
         m_CellToWidget[cell] = widget;
         m_WidgetToCell[widget] = cell;
@@ -551,5 +561,65 @@ namespace UserInterface
         {
             return QPoint(0, 1);
         }
+    }
+
+    void ResizeableGridLayoutManager::insertWidgetIntoLayout(QWidget *widget, int row, int col, int rowSpan, int colSpan)
+    {
+        ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
+        container->setItem(widget);
+        m_pGridLayout->addWidget(container, row, col, rowSpan, colSpan);
+    }
+
+    void ResizeableGridLayoutManager::removeWidgetFromLayout(QWidget *widget)
+    {
+        if ( !widget )
+            return;
+
+        for ( int row = 0; row <= 2; row += 2 )
+        {
+            for ( int col = 0; col <= 2; col += 2 )
+            {
+                QLayoutItem* item = m_pGridLayout->itemAtPosition(row, col);
+                if ( !item )
+                    continue;
+
+                QWidget* containerWidget = item->widget();
+                if ( !containerWidget )
+                    continue;
+
+                ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(containerWidget);
+                if ( !container )
+                    continue;
+
+                if ( container->item() == widget )
+                {
+                    m_pGridLayout->removeWidget(container);
+                    container->replaceItem(nullptr);
+                    widget->setParent(nullptr);
+                    delete container;
+                    return;
+                }
+            }
+        }
+    }
+
+    QWidget* ResizeableGridLayoutManager::replaceWidgetInLayout(QWidget* newWidget, int row, int col)
+    {
+        if ( !newWidget )
+            return nullptr;
+
+        QLayoutItem* item = m_pGridLayout->itemAtPosition(row, col);
+        if ( !item )
+            return nullptr;
+
+        QWidget* containerWidget = item->widget();
+        if ( !containerWidget )
+            return nullptr;
+
+        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(containerWidget);
+        if ( !container )
+            return nullptr;
+
+        return container->replaceItem(newWidget);
     }
 }

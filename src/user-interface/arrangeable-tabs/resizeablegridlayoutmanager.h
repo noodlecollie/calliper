@@ -15,6 +15,7 @@ namespace UserInterface
 
     // Manages a 3x3 grid, where possible content cells are the corner cells.
     // Other cells are dividers used to resize the grid.
+    // -xx
     class USERINTERFACESHARED_EXPORT ResizeableGridLayoutManager : public QObject
     {
         Q_OBJECT
@@ -86,6 +87,10 @@ namespace UserInterface
         void removeWidget(QWidget* widget);
         Qt::Orientation autoSplitPreference(ContentCellFlag newCell);
 
+        void insertWidgetIntoLayout(QWidget* widget, int row, int col, int rowSpan = 1, int colSpan = 1);
+        void removeWidgetFromLayout(QWidget* widget);
+        QWidget* replaceWidgetInLayout(QWidget* newWidget, int row, int col);
+
         void removeResizeButtons();
         void addResizeButton(int row, int column, int rowSpan, int colSpan);
         void addVerticalResizeButton();
@@ -109,6 +114,8 @@ namespace UserInterface
         ContentCellFlag m_iLastAddedCell;
         ResizeHandleLayout m_HandleLayout;
     };
+
+    Q_DECLARE_OPERATORS_FOR_FLAGS(ResizeableGridLayoutManager::ContentCellFlags)
 }
 
 #endif // RESIZEABLEGRIDLAYOUTMANAGER_H

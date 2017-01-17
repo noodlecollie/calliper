@@ -3,6 +3,11 @@
 #include <QGuiApplication>
 #include <QtDebug>
 
+namespace
+{
+    const QSize SIZE(5,5);
+}
+
 namespace UserInterface
 {
     ResizeableGridElementButton::ResizeableGridElementButton(const ResizeModeFlags &flags, QWidget *parent)
@@ -85,7 +90,7 @@ namespace UserInterface
 
     QSize ResizeableGridElementButton::sizeHint() const
     {
-        return QSize(12,12);
+        return SIZE;
     }
 
     void ResizeableGridElementButton::enterEvent(QEvent *event)

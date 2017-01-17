@@ -1,0 +1,33 @@
+#ifndef RESIZEABLEGRIDLAYOUTCONTAINER_H
+#define RESIZEABLEGRIDLAYOUTCONTAINER_H
+
+#include "user-interface_global.h"
+#include <QFrame>
+
+class QVBoxLayout;
+
+namespace UserInterface
+{
+    class ResizeableGridLayoutContainer : public QFrame
+    {
+        Q_OBJECT
+    public:
+        explicit ResizeableGridLayoutContainer(QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+        QWidget* item() const;
+
+        // Returns the old item, which will need deleting.
+        QWidget* replaceItem(QWidget* newItem);
+
+        // Deletes the old item.
+        void setItem(QWidget* newItem);
+
+    private:
+        QVBoxLayout* vBoxLayout() const;
+        void initFrame();
+
+        QWidget* m_pItem;
+    };
+}
+
+#endif // RESIZEABLEGRIDLAYOUTCONTAINER_H
