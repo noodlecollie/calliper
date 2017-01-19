@@ -16,14 +16,18 @@ SOURCES += \
     arrangeable-tabs/resizeablegridelementbutton.cpp \
     arrangeable-tabs/resizeablegridlayoutmanager.cpp \
     user-interface_global.cpp \
-    arrangeable-tabs/resizeablegridlayoutcontainer.cpp
+    arrangeable-tabs/resizeablegridlayoutcontainer.cpp \
+    arrangeable-tabs/quadgridlayoutmodel.cpp \
+    arrangeable-tabs/quadgridlayoutinfo.cpp
 
 HEADERS +=\
     views/mapviewwindow.h \
     arrangeable-tabs/resizeablegridelementbutton.h \
     arrangeable-tabs/resizeablegridlayoutmanager.h \
     user-interface_global.h \
-    arrangeable-tabs/resizeablegridlayoutcontainer.h
+    arrangeable-tabs/resizeablegridlayoutcontainer.h \
+    arrangeable-tabs/quadgridlayoutmodel.h \
+    arrangeable-tabs/quadgridlayoutinfo.h
 
 unix {
     target.path = /usr/lib
