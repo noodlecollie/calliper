@@ -95,15 +95,6 @@ namespace UserInterface
 
     void QuadGridLayoutModel::mergeSingleCellNeighbour(QWidget *widget, Qt::Orientation preferredMerge)
     {
-        // Remove the specified widget and merge in
-        // the other neighbour that has a cell count
-        // of 1.
-        // How do we pick one if they both do?
-        // Specify a preferred split (H or V)
-        // and merge in the neighbour in the
-        // specified direction - from side if H,
-        // from above/below if V.
-
         GridCells cellFlags = widgetCells(widget);
         GridCell cell = cellFromFlags(cellFlags);
         Q_ASSERT(cell != NoCell);
@@ -120,6 +111,24 @@ namespace UserInterface
     {
         QList<GridCell> neighbours = neighboursOfExtendedWidget(widget);
         Q_ASSERT(neighbours.count() == 2);
+
+        foreach ( GridCell thisNeighbour, neighbours )
+        {
+            QPoint thisNeighbourPoint = cellToPoint(thisNeighbour);
+
+            QPoint targetPoint((thisNeighbourPoint.x() + 1) % 2, thisNeighbourPoint.y());
+            if ( neighbours.contains(pointToCell(targetPoint)) )
+            {
+                targetPoint = QPoint(thisNeighbourPoint.x(), (thisNeighbourPoint.y() + 1) % 2);
+            }
+
+            GridCell targetCell = pointToCell(targetPoint);
+            Q_ASSERT(targetCell != NoCell);
+
+            QWidget* thisNeighbourWidget = widgetAt(thisNeighbour);
+            m_IndexToWidget[cellToArrayIndex(targetCell)] = thisNeighbourWidget;
+            m_WidgetToIndex[thisNeighbourWidget] = targetCell;
+        }
     }
 
     QList<QuadGridLayoutModel::GridCell> QuadGridLayoutModel::neighboursOfExtendedWidget(QWidget *widget) const
@@ -128,8 +137,31 @@ namespace UserInterface
 
         if ( cells.testFlag(NorthWest) )
         {
+            if ( cells.testFlag(NorthEast) )
+            {
+                return QList<GridCell>() << SouthEast << SouthWest;
+            }
 
+            if ( cells.testFlag(SouthWest) )
+            {
+                return QList<GridCell>() << NorthEast << SouthEast;
+            }
         }
+        else if ( cells.testFlag(SouthEast) )
+        {
+            if ( cells.testFlag(NorthEast) )
+            {
+                return QList<GridCell>() << NorthWest << SouthWest;
+            }
+
+            if  ( cells.testFlag(SouthWest) )
+            {
+                return QList<GridCell>() << NorthEast << NorthWest;
+            }
+        }
+
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Expected widget to occupy two neighbouring cells!");
+        return QList<GridCell>();
     }
 
     QWidget* QuadGridLayoutModel::widgetAt(GridCell cell) const
@@ -183,7 +215,7 @@ namespace UserInterface
         if ( !widget )
             return 0;
 
-        return cellCount(widgetCells);
+        return cellCount(widgetCells(widget));
     }
 
     QuadGridLayoutModel::GridCells QuadGridLayoutModel::widgetCells(QWidget *widget) const
@@ -218,7 +250,7 @@ namespace UserInterface
 
     int QuadGridLayoutModel::pointToArrayIndex(const QPoint &p)
     {
-        return (2 * point.y()) + point.x();
+        return (2 * p.y()) + p.x();
     }
 
     bool QuadGridLayoutModel::isArrayIndexValid(int index)
@@ -328,17 +360,15 @@ namespace UserInterface
         if ( neighbourHCellCount != neighbourVCellCount )
         {
             if ( neighbourHCellCount == 1 )
-                return pointToCell(neighbourPointH);
+                return pointToCell(neighbour(orig, true));
 
-            if ( neighbourPointV == 1 )
-                return pointToCell(neighbourPointV);
+            if ( neighbourVCellCount == 1 )
+                return pointToCell(neighbour(orig, false));
         }
         else
         {
             if ( neighbourHCellCount == 1 )
-                return pointToCell(preferredDirection == Qt::Horizontal
-                                   ? neighbourPointH
-                                   : neighbourPointV);
+                return pointToCell(neighbour(orig, preferredDirection == Qt::Horizontal));
         }
 
         return NoCell;
@@ -347,8 +377,8 @@ namespace UserInterface
 
     int QuadGridLayoutModel::neighbourCellCount(const QPoint& point, bool horizontal) const
     {
-        QPoint neighbourPoint = neighbour(orig, horizontal);
-        QWidget* neighbourWidget = widgetAt(pointToArrayIndex(neighbourPoint));
+        QPoint neighbourPoint = neighbour(point, horizontal);
+        QWidget* neighbourWidget = widgetAt(pointToCell(neighbourPoint));
         return cellCount(widgetCells(neighbourWidget));
     }
 

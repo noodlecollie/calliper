@@ -39,7 +39,7 @@ namespace UserInterface
 
     private:
         static int cellToArrayIndex(GridCell cell);
-        static int arrayIndexToCell(int index);
+        static GridCell arrayIndexToCell(int index);
         static int cellCount(const GridCells cells);
         static int pointToArrayIndex(const QPoint& p);
         static bool isArrayIndexValid(int index);
