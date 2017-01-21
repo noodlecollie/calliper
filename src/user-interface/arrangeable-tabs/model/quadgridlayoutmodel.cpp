@@ -15,8 +15,22 @@ namespace UserInterface
         m_WidgetToCells.clear();
     }
 
+    bool QuadGridLayoutModel::canAddWidget(QuadGridLayoutDefs::GridCell cell) const
+    {
+        QWidget* existingWidget = widgetAt(cell);
+        return !existingWidget || widgetCellCount(existingWidget) > 1;
+    }
+
+    bool QuadGridLayoutModel::canRemoveWidget(QuadGridLayoutDefs::GridCell cell) const
+    {
+        return widgetAt(cell) != nullptr;
+    }
+
     bool QuadGridLayoutModel::addWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit)
     {
+        if ( !canAddWidget(cell) )
+            return false;
+
         QWidget* existingWidget = widgetAt(cell);
         if ( !existingWidget )
         {
@@ -66,6 +80,9 @@ namespace UserInterface
 
     bool QuadGridLayoutModel::removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredMerge)
     {
+        if ( !canRemoveWidget(cell) )
+            return false;
+
         QWidget* existingWidget = widgetAt(cell);
         if ( !existingWidget )
         {
@@ -146,6 +163,11 @@ namespace UserInterface
     int QuadGridLayoutModel::widgetCount() const
     {
         return m_WidgetToCells.count();
+    }
+
+    QList<QWidget*> QuadGridLayoutModel::widgets() const
+    {
+        return m_WidgetToCells.keys();
     }
 
     QuadGridLayoutDefs::GridCell QuadGridLayoutModel::neighbourCell(QuadGridLayoutDefs::GridCell cell, Qt::Orientation direction)
