@@ -14,6 +14,114 @@ namespace UserInterface
         m_WidgetToCells.clear();
     }
 
+    bool QuadGridLayoutModel::addWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit)
+    {
+        QWidget* existingWidget = widgetAt(cell);
+        if ( !existingWidget )
+        {
+            Q_ASSERT(m_WidgetToCells.count() == 0);
+            setSingleWidget(widget);
+            return true;
+        }
+
+        switch ( widgetCellCount(existingWidget) )
+        {
+            case 1:
+            {
+                Q_ASSERT(m_WidgetToCells.count() == 4);
+
+                // Don't perform operations that would completely overwrite existing widgets.
+                return false;
+            }
+
+            case 2:
+            {
+                Q_ASSERT(m_WidgetToCells.count() == 2 || m_WidgetToCells.count() == 3);
+
+                // Split the rectangular widget in half.
+                splitRectangleWidget(existingWidget, widget, orderingForRectangleSplit(cell, widgetSpan(existingWidget)));
+                break;
+            }
+
+            case 4:
+            {
+                Q_ASSERT(m_WidgetToCells.count() == 1);
+
+                // We're just splitting a single widget.
+                splitSingleWidget(widget, preferredSplit, orderingForSplit(cell, preferredSplit));
+                break;
+            }
+
+            default:
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unexpected number of occupied cells for existing widget!");
+                return false;
+            }
+        }
+
+        emit layoutUpdated();
+        return true;
+    }
+
+    bool QuadGridLayoutModel::removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredMerge)
+    {
+        QWidget* existingWidget = widgetAt(cell);
+        if ( !existingWidget )
+        {
+            Q_ASSERT(m_WidgetToCells.count() == 0);
+            return false;
+        }
+
+        switch ( widgetCellCount(existingWidget) )
+        {
+            case 1:
+            {
+                Q_ASSERT(m_WidgetToCells.count() == 4 || m_WidgetToCells.count() == 3);
+
+                mergeSingleNeighbour(existingWidget, preferredMerge);
+                break;
+            }
+
+            case 2:
+            {
+                if ( m_WidgetToCells.count() == 3 )
+                {
+                    mergeDoubleNeighbours(existingWidget);
+                    break;
+                }
+                else if ( m_WidgetToCells.count() == 2 )
+                {
+                    QuadGridLayoutDefs::WidgetSpan span = widgetSpan(existingWidget);
+                    Qt::Orientation neighbourDir = neighbourOrientation(span);
+                    setSingleWidget(widgetAt(QuadGridLayoutPoint(cell).neighbour(neighbourDir)));
+                    break;
+                }
+                else
+                {
+                    Q_ASSERT(false);
+                    return false;
+                }
+            }
+
+            case 4:
+            {
+                Q_ASSERT(m_WidgetToCells.count() == 1);
+
+                clear();
+                break;
+            }
+
+            default:
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unexpected number of occupied cells for existing widget!");
+                return false;
+            }
+        }
+
+        emit layoutUpdated();
+        return true;
+    }
+
     QWidget* QuadGridLayoutModel::widgetAt(QuadGridLayoutDefs::GridCell cell) const
     {
         return widgetAt(QuadGridLayoutPoint(cell));
@@ -39,6 +147,32 @@ namespace UserInterface
         return QuadGridLayoutPoint(cell).neighbour(direction).toCell();
     }
 
+    QuadGridLayoutDefs::WidgetOrdering QuadGridLayoutModel::orderingForSplit(QuadGridLayoutDefs::GridCell targetCell, Qt::Orientation splitDirection)
+    {
+        QuadGridLayoutPoint targetPoint(targetCell);
+        int axisPos = splitDirection == Qt::Horizontal ? targetPoint.y() : targetPoint.x();
+
+        return axisPos == 1 ? QuadGridLayoutDefs::NewWidgetInUpperIndex : QuadGridLayoutDefs::NewWidgetInLowerIndex;
+    }
+
+    QuadGridLayoutDefs::WidgetOrdering QuadGridLayoutModel::orderingForRectangleSplit(QuadGridLayoutDefs::GridCell targetCell,
+                                                                                      QuadGridLayoutDefs::WidgetSpan span)
+    {
+        Q_ASSERT(span != QuadGridLayoutDefs::NoSpan);
+
+        QuadGridLayoutPoint targetPoint(targetCell);
+        int axisPos = span == QuadGridLayoutDefs::VerticalSpan ? targetPoint.y() : targetPoint.x();
+
+        return axisPos == 1 ? QuadGridLayoutDefs::NewWidgetInUpperIndex : QuadGridLayoutDefs::NewWidgetInLowerIndex;
+    }
+
+    Qt::Orientation QuadGridLayoutModel::neighbourOrientation(QuadGridLayoutDefs::WidgetSpan span)
+    {
+        Q_ASSERT(span != QuadGridLayoutDefs::NoSpan);
+
+        return span == QuadGridLayoutDefs::HorizontalSpan ? Qt::Vertical : Qt::Horizontal;
+    }
+
     QuadGridLayoutDefs::WidgetSpan QuadGridLayoutModel::widgetSpan(QWidget *widget) const
     {
         GridCellList cells = widgetCells(widget);
@@ -59,5 +193,145 @@ namespace UserInterface
 
         // Cells that are adjacent on Y will have a value equal to 0 after % 2.
         return QuadGridLayoutDefs::VerticalSpan;
+    }
+
+    void QuadGridLayoutModel::updateWidget(QWidget *widget, const GridCellList &cells)
+    {
+        foreach ( QuadGridLayoutDefs::GridCell cell, cells )
+        {
+            // Remove this cell from the widget that currently references it.
+            int cellArrayIndex = QuadGridLayoutPoint(cell).toArrayIndex();
+            QWidget* w = m_CellToWidget[cellArrayIndex];
+
+            GridCellList& wList = m_WidgetToCells[w];
+            wList.removeOne(cell);
+
+            if ( wList.isEmpty() )
+            {
+                m_WidgetToCells.remove(w);
+            }
+
+            // Replace the widget at this cell with our new widget.
+            m_CellToWidget[cellArrayIndex] = widget;
+        }
+
+        // Add the widget to the map.
+        m_WidgetToCells.insert(widget, cells);
+    }
+
+    void QuadGridLayoutModel::setSingleWidget(QWidget *widget)
+    {
+        updateWidget(widget, GridCellList()
+                     << QuadGridLayoutDefs::NorthWest
+                     << QuadGridLayoutDefs::NorthEast
+                     << QuadGridLayoutDefs::SouthWest
+                     << QuadGridLayoutDefs::SouthEast);
+    }
+
+    void QuadGridLayoutModel::splitSingleWidget(QWidget *newWidget, Qt::Orientation splitDirection, QuadGridLayoutDefs::WidgetOrdering ordering)
+    {
+        GridCellList newWidgetCells;
+
+        if ( ordering == QuadGridLayoutDefs::NewWidgetInUpperIndex )
+        {
+            newWidgetCells.append(QuadGridLayoutDefs::SouthEast);
+
+            if ( splitDirection == Qt::Horizontal )
+            {
+                newWidgetCells.append(SouthWest);
+            }
+            else
+            {
+                newWidgetCells.append(NorthEast);
+            }
+        }
+        else
+        {
+            newWidgetCells.append(QuadGridLayoutDefs::NorthWest);
+
+            if ( splitDirection == Qt::Horizontal )
+            {
+                newWidgetCells.append(NorthEast);
+            }
+            else
+            {
+                newWidgetCells.append(SouthWest);
+            }
+        }
+
+        updateWidget(newWidget, newWidgetCells);
+    }
+
+    void QuadGridLayoutModel::splitRectangleWidget(QWidget *rectangleWidget, QWidget *newWidget, QuadGridLayoutDefs::WidgetOrdering ordering)
+    {
+        Q_ASSERT(widgetSpan(rectangleWidget) != QuadGridLayoutDefs::NoSpan);
+
+        GridCellList cellList = widgetCells(rectangleWidget);
+        Q_ASSERT(cellList.count() == 2);
+
+        int lowerIndex = cellList.at(0) < cellList.at(1) ? 0 : 1;
+        int upperIndex = lowerIndex == 0 ? 1 : 0;
+
+        if ( ordering == QuadGridLayoutDefs::NewWidgetInLowerIndex )
+        {
+            cellList.removeAt(upperIndex);
+        }
+        else
+        {
+            cellList.removeAt(lowerIndex);
+        }
+
+        updateWidget(newWidget, cellList);
+    }
+
+    void QuadGridLayoutModel::mergeSingleNeighbour(QWidget *removalWidget, Qt::Orientation mergeDirection)
+    {
+        GridCellList removalCellList = widgetCells(removalWidget);
+        Q_ASSERT(removalCellList.count() == 1);
+
+        QuadGridLayoutDefs::GridCell removalCell = removalCellList.at(0);
+        QuadGridLayoutDefs::GridCell targetCell = neighbourCell(removalCell, mergeDirection);
+        QWidget* targetWidget = widgetAt(targetCell);
+
+        if ( widgetCellCount(targetWidget) != 1 )
+        {
+            if ( mergeDirection == Qt::Horizontal )
+            {
+                mergeDirection = Qt::Vertical;
+            }
+            else
+            {
+                mergeDirection = Qt::Horizontal;
+            }
+
+            targetCell = QuadGridLayoutPoint(removalCell).neighbour(mergeDirection).toCell();
+            targetWidget = widgetAt(targetCell);
+
+            Q_ASSERT(widgetCellCount(targetWidget) == 1);
+        }
+
+        updateWidget(targetWidget, widgetCells(targetWidget) << removalCell);
+    }
+
+    void QuadGridLayoutModel::mergeDoubleNeighbours(QWidget *removalWidget)
+    {
+        QuadGridLayoutDefs::WidgetSpan span = widgetSpan(removalWidget);
+        Q_ASSERT(span != QuadGridLayoutDefs::NoSpan);
+
+        Qt::Orientation mergeDirection =
+                span == QuadGridLayoutDefs::HorizontalSpan
+                    ? Qt::Vertical
+                    : Qt::Horizontal;
+
+        GridCellList cellList = widgetCells(removalWidget);
+        Q_ASSERT(cellList.count() == 2);
+
+        QuadGridLayoutDefs::GridCell neighbourCell0 = neighbourCell(cellList.at(0), mergeDirection);
+        QuadGridLayoutDefs::GridCell neighbourCell1 = neighbourCell(cellList.at(1), mergeDirection);
+
+        Q_ASSERT(widgetAt(neighbourCell0) != widgetAt(neighbourCell1));
+
+        updateWidget(widgetAt(neighbourCell0), GridCellList() << neighbourCell0 << cellList.at(0));
+        updateWidget(widgetAt(neighbourCell1), GridCellList() << neighbourCell1 << cellList.at(1));
     }
 }

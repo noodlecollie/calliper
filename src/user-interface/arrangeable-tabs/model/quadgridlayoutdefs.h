@@ -46,6 +46,13 @@ namespace UserInterface
         };
         Q_ENUM(WidgetSpan)
 
+        enum WidgetOrdering
+        {
+            NewWidgetInLowerIndex = 0,
+            NewWidgetInUpperIndex,
+        };
+        Q_ENUM(WidgetOrdering)
+
     private:
         QuadGridLayoutDefs() = delete;
     };
