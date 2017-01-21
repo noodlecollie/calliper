@@ -1,31 +1,30 @@
 #include "quadgridlayoutanalyser.h"
+#include "quadgridlayoutmodel.h"
 
 namespace UserInterface
 {
-    QuadGridLayoutAnalyser::QuadGridLayoutAnalyser(const QWidget* gridCells, QObject* parent)
-        : QObject(parent), m_pGridCells(gridCells)
+    QuadGridLayoutAnalyser::QuadGridLayoutAnalyser(QuadGridLayoutModel *parentModel)
+        : QObject(parentModel), m_pModel(parentModel)
     {
+        Q_ASSERT(m_pModel);
+
         clear();
+        connect(model(), SIGNAL(layoutUpdated()), this, SLOT(analyseLayout()));
+    }
+
+    QuadGridLayoutModel* QuadGridLayoutAnalyser::model() const
+    {
+        return m_pModel;
     }
 
     void QuadGridLayoutAnalyser::analyseLayout()
     {
         clear();
-
-        for ( int i = 0; i < 4; ++i )
-        {
-            if ( m_pGridCells[i] == nullptr )
-                continue;
-
-            m_Widgets.insert(m_pGridCells[i]);
-        }
-
         calculateMajorMinorSplit();
     }
 
     void QuadGridLayoutAnalyser::clear()
     {
-        m_Widgets.clear();
         m_iMajorSplit = QuadGridLayoutDefs::MajorNone;
         m_iMinorSplit = QuadGridLayoutDefs::MinorNone;
     }
@@ -40,14 +39,9 @@ namespace UserInterface
         return m_iMinorSplit;
     }
 
-    const QSet<QWidget*>& QuadGridLayoutAnalyser::widgets() const
-    {
-        return m_Widgets;
-    }
-
     void QuadGridLayoutAnalyser::calculateMajorMinorSplit()
     {
-        switch ( m_Widgets.count() )
+        switch ( m_pModel->widgetCount() )
         {
             case 0:
             case 1:
@@ -91,13 +85,13 @@ namespace UserInterface
     QuadGridLayoutDefs::MajorSplit QuadGridLayoutAnalyser::calculateMajorSplitFrom(QuadGridLayoutDefs::GridCell cell) const
     {
         QuadGridLayoutPoint point(cell);
-        QWidget* w = m_pGridCells[point.toArrayIndex()];
-        QWidget* wNeighbour = m_pGridCells[point.neighbour(Qt::Horizontal).toArrayIndex()];
+        QWidget* w = m_pModel->widgetAt(point);
+        QWidget* wNeighbour = m_pModel->widgetAt(point.neighbour(Qt::Horizontal));
 
         if ( w == wNeighbour )
             return QuadGridLayoutDefs::MajorHorizontal;
 
-        wNeighbour = m_pGridCells[point.neighbour(Qt::Vertical).toArrayIndex()];
+        wNeighbour = m_pModel->widgetAt(point.neighbour(Qt::Vertical));
 
         if ( w == wNeighbour )
             return QuadGridLayoutDefs::MajorVertical;
@@ -127,8 +121,8 @@ namespace UserInterface
                     : Qt::Vertical;
 
         QuadGridLayoutPoint point(QuadGridLayoutDefs::NorthWest);
-        QWidget* w = m_pGridCells[point.toArrayIndex()];
-        QWidget* wNeighbour = m_pGridCells[point.neighbour(stackingDirection).toArrayIndex()];
+        QWidget* w = m_pModel->widgetAt(point);
+        QWidget* wNeighbour = m_pModel->widgetAt(point.neighbour(stackingDirection));
 
         if ( w != wNeighbour )
         {
@@ -136,8 +130,8 @@ namespace UserInterface
         }
 
         point = QuadGridLayoutPoint(QuadGridLayoutDefs::SouthEast);
-        w = m_pGridCells[point.toArrayIndex()];
-        wNeighbour = m_pGridCells[point.neighbour(stackingDirection).toArrayIndex()];
+        w = m_pModel->widgetAt(point);
+        wNeighbour = m_pModel->widgetAt(point.neighbour(stackingDirection));
 
         if ( w != wNeighbour )
         {

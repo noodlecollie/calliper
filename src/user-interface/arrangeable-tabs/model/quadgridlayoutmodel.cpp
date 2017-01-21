@@ -3,7 +3,8 @@
 
 namespace UserInterface
 {
-    QuadGridLayoutModel::QuadGridLayoutModel(QObject *parent) : QObject(parent)
+    QuadGridLayoutModel::QuadGridLayoutModel(QObject *parent)
+        : QObject(parent)
     {
         clear();
     }
@@ -142,6 +143,11 @@ namespace UserInterface
         return widgetCells(widget).count();
     }
 
+    int QuadGridLayoutModel::widgetCount() const
+    {
+        return m_WidgetToCells.count();
+    }
+
     QuadGridLayoutDefs::GridCell QuadGridLayoutModel::neighbourCell(QuadGridLayoutDefs::GridCell cell, Qt::Orientation direction)
     {
         return QuadGridLayoutPoint(cell).neighbour(direction).toCell();
@@ -184,7 +190,7 @@ namespace UserInterface
         QuadGridLayoutDefs::GridCell cell2 = cells.at(1);
 
         // Opposite corners - should never happen.
-        if ( cell1 + cell2 = 3 )
+        if ( cell1 + cell2 == 3 )
             return QuadGridLayoutDefs::NoSpan;
 
         // Cells that are adjacent on X will have different values % 2.
@@ -238,11 +244,11 @@ namespace UserInterface
 
             if ( splitDirection == Qt::Horizontal )
             {
-                newWidgetCells.append(SouthWest);
+                newWidgetCells.append(QuadGridLayoutDefs::SouthWest);
             }
             else
             {
-                newWidgetCells.append(NorthEast);
+                newWidgetCells.append(QuadGridLayoutDefs::NorthEast);
             }
         }
         else
@@ -251,11 +257,11 @@ namespace UserInterface
 
             if ( splitDirection == Qt::Horizontal )
             {
-                newWidgetCells.append(NorthEast);
+                newWidgetCells.append(QuadGridLayoutDefs::NorthEast);
             }
             else
             {
-                newWidgetCells.append(SouthWest);
+                newWidgetCells.append(QuadGridLayoutDefs::SouthWest);
             }
         }
 

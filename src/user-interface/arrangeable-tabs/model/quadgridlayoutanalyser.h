@@ -9,17 +9,18 @@
 
 namespace UserInterface
 {
-    class QuadGridLayoutAnalyser : public QObject
+    class QuadGridLayoutModel;
+
+    class USERINTERFACESHARED_EXPORT QuadGridLayoutAnalyser : public QObject
     {
         Q_OBJECT
     public:
-        // Expects an array of 4 QWidget* pointers.
-        explicit QuadGridLayoutAnalyser(const QWidget* gridCells, QObject *parent = 0);
+        explicit QuadGridLayoutAnalyser(QuadGridLayoutModel* parentModel);
+
+        QuadGridLayoutModel* model() const;
 
         QuadGridLayoutDefs::MajorSplit majorSplit() const;
         QuadGridLayoutDefs::MinorSplit minorSplit() const;
-
-        const QSet<QWidget*>& widgets() const;
 
     signals:
 
@@ -33,9 +34,7 @@ namespace UserInterface
         QuadGridLayoutDefs::MajorSplit calculate3WidgetMajorSplit() const;
         QuadGridLayoutDefs::MinorSplit calculateMinorSplit() const;
 
-        const QWidget* m_pGridCells;
-
-        QSet<QWidget*> m_Widgets;
+        QuadGridLayoutModel* m_pModel;
         QuadGridLayoutDefs::MajorSplit m_iMajorSplit;
         QuadGridLayoutDefs::MinorSplit m_iMinorSplit;
     };

@@ -7,7 +7,7 @@
 
 namespace UserInterface
 {
-    class QuadGridLayoutPoint
+    class USERINTERFACESHARED_EXPORT QuadGridLayoutPoint
     {
     public:
         QuadGridLayoutPoint(int x, int y);

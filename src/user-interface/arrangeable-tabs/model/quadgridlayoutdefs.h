@@ -6,7 +6,7 @@
 
 namespace UserInterface
 {
-    class QuadGridLayoutDefs
+    class USERINTERFACESHARED_EXPORT QuadGridLayoutDefs
     {
         Q_GADGET
     public:

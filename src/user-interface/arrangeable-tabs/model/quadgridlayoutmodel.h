@@ -11,26 +11,17 @@ class QWidget;
 
 namespace UserInterface
 {
-    class QuadGridLayoutModel : public QObject
+    class USERINTERFACESHARED_EXPORT QuadGridLayoutModel : public QObject
     {
         Q_OBJECT
     public:
-        explicit QuadGridLayoutModel(QObject *parent = nullptr);
+        typedef QList<QuadGridLayoutDefs::GridCell> GridCellList;
 
-        QWidget* widgetAt(QuadGridLayoutDefs::GridCell cell) const;
+        explicit QuadGridLayoutModel(QObject *parent = nullptr);
 
         void clear();
         bool addWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit = Qt::Horizontal);
         bool removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredMerge = Qt::Horizontal);
-
-    signals:
-        void layoutUpdated();
-
-    public slots:
-
-    private:
-        typedef QList<QuadGridLayoutDefs::GridCell> GridCellList;
-        typedef QHash<QWidget*, GridCellList> WidgetCellMap;
 
         QWidget* widgetAt(QuadGridLayoutDefs::GridCell cell) const;
         QWidget* widgetAt(const QuadGridLayoutPoint& point) const;
@@ -38,6 +29,16 @@ namespace UserInterface
         GridCellList widgetCells(QWidget* widget) const;
         int widgetCellCount(QWidget* widget) const;
         QuadGridLayoutDefs::WidgetSpan widgetSpan(QWidget* widget) const;
+
+        int widgetCount() const;
+
+    signals:
+        void layoutUpdated();
+
+    public slots:
+
+    private:
+        typedef QHash<QWidget*, GridCellList> WidgetCellMap;
 
         static QuadGridLayoutDefs::GridCell neighbourCell(QuadGridLayoutDefs::GridCell cell, Qt::Orientation direction);
         static QuadGridLayoutDefs::WidgetOrdering orderingForSplit(QuadGridLayoutDefs::GridCell targetCell, Qt::Orientation splitDirection);
