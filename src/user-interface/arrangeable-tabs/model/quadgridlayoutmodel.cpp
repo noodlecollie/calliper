@@ -26,6 +26,11 @@ namespace UserInterface
         return widgetAt(cell) != nullptr;
     }
 
+    bool QuadGridLayoutModel::canReplaceWidget(QuadGridLayoutDefs::GridCell cell) const
+    {
+        return widgetAt(cell) != nullptr;
+    }
+
     bool QuadGridLayoutModel::addWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit)
     {
         if ( !canAddWidget(cell) )
@@ -135,6 +140,18 @@ namespace UserInterface
                 return false;
             }
         }
+
+        emit layoutUpdated();
+        return true;
+    }
+
+    bool QuadGridLayoutModel::replaceWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell)
+    {
+        if ( !canReplaceWidget(cell) )
+            return false;
+
+        QWidget* currentWidget = widgetAt(cell);
+        updateWidget(widget, widgetCells(currentWidget));
 
         emit layoutUpdated();
         return true;
@@ -361,5 +378,23 @@ namespace UserInterface
 
         updateWidget(widgetAt(neighbourCell0), GridCellList() << neighbourCell0 << cellList.at(0));
         updateWidget(widgetAt(neighbourCell1), GridCellList() << neighbourCell1 << cellList.at(1));
+    }
+
+    QuadGridLayoutDefs::GridCell QuadGridLayoutModel::lowestGridCell(const GridCellList &list)
+    {
+        Q_ASSERT(!list.isEmpty());
+        if ( list.isEmpty() )
+            return QuadGridLayoutDefs::NorthWest;
+
+        QuadGridLayoutDefs::GridCell lowestCell = QuadGridLayoutDefs::SouthEast;
+        foreach ( QuadGridLayoutDefs::GridCell cell, list )
+        {
+            if ( cell < lowestCell )
+            {
+                lowestCell = cell;
+            }
+        }
+
+        return lowestCell;
     }
 }

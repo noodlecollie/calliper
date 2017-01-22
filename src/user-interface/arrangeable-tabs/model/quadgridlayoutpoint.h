@@ -4,6 +4,7 @@
 #include "user-interface_global.h"
 #include "quadgridlayoutdefs.h"
 #include <QtGlobal>
+#include <QtDebug>
 
 namespace UserInterface
 {
@@ -28,6 +29,8 @@ namespace UserInterface
         int m_iX;
         int m_iY;
     };
+
+    USERINTERFACESHARED_EXPORT QDebug operator <<(QDebug dbg, const QuadGridLayoutPoint& point);
 }
 
 #endif // QUADGRIDLAYOUTPOINT_H

@@ -5,6 +5,9 @@
 #include <QObject>
 #include <QPoint>
 #include <QHash>
+#include "model/quadgridlayoutdefs.h"
+#include "model/quadgridlayoutmodel.h"
+#include "model/quadgridlayoutanalyser.h"
 
 class QGridLayout;
 class QWidget;
@@ -15,30 +18,22 @@ namespace UserInterface
 
     // Manages a 3x3 grid, where possible content cells are the corner cells.
     // Other cells are dividers used to resize the grid.
-    // -xx
     class USERINTERFACESHARED_EXPORT ResizeableGridLayoutManager : public QObject
     {
         Q_OBJECT
     public:
-        enum ContentCellFlag
-        {
-            NoCell = 0,
-            UpperLeft = (1<<0),
-            UpperRight = (1<<1),
-            LowerLeft = (1<<2),
-            LowerRight = (1<<3),
-        };
-        Q_DECLARE_FLAGS(ContentCellFlags, ContentCellFlag)
-
         explicit ResizeableGridLayoutManager(QGridLayout* gridLayout);
         ~ResizeableGridLayoutManager();
 
         // Returns the widget that was already in this position,
         // if there was one and it couldn't be split.
         // Otherwise returns null.
-        QWidget* insertWidget(ContentCellFlag cell, QWidget* widget,
+        QWidget* insertWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell,
                               Qt::Orientation splitPreference);
-        QWidget* insertWidget(ContentCellFlag cell, QWidget* widget);
+
+        // Returns the widget that was in this position, if there was one.
+        // Otherwise returns null.
+        QWidget* removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference);
 
         void equaliseCellSizes();
 
@@ -46,85 +41,29 @@ namespace UserInterface
         void resizeButtonDragged(int deltaX, int deltaY);
 
     private:
-        enum SplitIndexChoice
-        {
-            LowerIndex = 0,
-            UpperIndex,
-        };
+        void updateGridLayout();
+        void clearGridLayout();
 
-        class ResizeHandleLayout
-        {
-        public:
-            enum LayoutType
-            {
-                None,
-                Bar,
-                Tri,
-                Quad,
-            };
+        void setSingleWidgetLayout();
+        void genericAddWidgets();
 
-            LayoutType type;
-
-            Qt::Orientation orientation;
-            QPoint tJunction;
-
-            ResizeHandleLayout() : type(None), orientation(Qt::Horizontal), tJunction() {}
-        };
-
-        static bool isSingleFlag(int cell);
-        static QPoint cellToIndex(ContentCellFlag cell);
-        static QPoint flagToIndex(const ContentCellFlags& flags);
-        static int cellCount(const ContentCellFlags& flags);
-        static SplitIndexChoice indexChoice(Qt::Orientation splitPreference, ContentCellFlag cell);
-        static QList<ContentCellFlag> flagList(const ContentCellFlags& flags);
-        static ContentCellFlag singleFlag(const ContentCellFlags& flags);
-        static QPoint tJunctionIndex(ContentCellFlag singleCell1, ContentCellFlag singleCell2);
-
-        void initialiseGridLayout();
-        void resetCellToWidgetMap();
-        bool isSingleCellWidget(QWidget* widget) const;
-        QWidget* getWidget(ContentCellFlag flag) const;
-        ContentCellFlags getFlags(QWidget* widget) const;
-        void swapWidgetFlags(QWidget* existing, QWidget* widget);
-        void setHalfSplitStretch(Qt::Orientation splitDir);
-        void setTSplitStretch(Qt::Orientation majorSplitDir);
-        void removeWidget(QWidget* widget);
-        Qt::Orientation autoSplitPreference(ContentCellFlag newCell);
-        void setRowColMinSize();
-        void setStretchFactors(int row0, int row2, int col0, int col2);
-        void resizeVertical(int delta);
-        void resizeHorizontal(int delta);
-        bool getCellSpanDirection(QWidget* widget, Qt::Orientation& orientation) const;
-
-        void insertWidgetIntoLayout(QWidget* widget, int row, int col, int rowSpan = 1, int colSpan = 1);
-        void removeWidgetFromLayout(QWidget* widget);
-        QWidget* replaceWidgetInLayout(QWidget* newWidget, int row, int col);
-
-        void removeResizeButtons();
+        void addResizeButtons();
+        void addMajorSplitOnly();
+        void addMajorMinorSplit();
         void addResizeButton(int row, int column, int rowSpan, int colSpan);
-        void addVerticalResizeButton(bool central);
-        void addHorizontalResizeButton(bool central);
-        void rebuildResizeButtons();
-        void rebuildQuadResizeButtons();
-        void rebuildTResizeButtons();
-        void rebuildHalfResizeButtons();
-        void setHandleLayout(ResizeHandleLayout::LayoutType type);
 
-        void splitWidget(QWidget* existing, QWidget* widget, ContentCellFlag cell, Qt::Orientation splitPreference);
-        void transition1to2widgets(QWidget* existing, QWidget* widget,
-                                   Qt::Orientation split, SplitIndexChoice newWidgetIndex);
-        void transitionSplitRectWidget(QWidget* existing, QWidget* widget, ContentCellFlag cell);
-        void setSingleWidget(QWidget* widget);
+        void addFullSpanWidgetToLayout(QWidget* widget);
+        void addWidgetToLayout(QWidget* widget, const QuadGridLayoutPoint& point, QuadGridLayoutDefs::WidgetSpan span);
+        void addWidgetToLayout(QWidget* widget, int row, int col, int rowSpan, int colSpan);
+        void removeWidgetFromLayout(const QuadGridLayoutModel::GridCellList& list);
+        void addWidgetToLayout(QWidget* widget);
 
         QGridLayout* const m_pGridLayout;
-        QHash<ContentCellFlag, QWidget*> m_CellToWidget;
-        QHash<QWidget*, ContentCellFlags> m_WidgetToCell;
         QList<ResizeableGridElementButton*> m_ResizeButtons;
-        ContentCellFlag m_iLastAddedCell;
-        ResizeHandleLayout m_HandleLayout;
-    };
 
-    Q_DECLARE_OPERATORS_FOR_FLAGS(ResizeableGridLayoutManager::ContentCellFlags)
+        QuadGridLayoutModel* m_pModel;
+        QuadGridLayoutAnalyser* m_pAnalyser;
+    };
 }
 
 #endif // RESIZEABLEGRIDLAYOUTMANAGER_H

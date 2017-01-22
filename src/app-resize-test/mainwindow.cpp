@@ -35,25 +35,25 @@ void MainWindow::addNewItem()
 
     if ( action == ui->actionUpper_Left )
     {
-        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::UpperLeft, n);
+        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
         if ( w )
             delete w;
     }
     else if ( action == ui->actionUpper_Right )
     {
-        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::UpperRight, n);
+        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
         if ( w )
             delete w;
     }
     else if ( action == ui->actionLower_Left )
     {
-        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::LowerLeft, n);
+        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
         if ( w )
             delete w;
     }
     else if ( action == ui->actionLower_Right )
     {
-        QWidget* w = m_pGridManager->insertWidget(UserInterface::ResizeableGridLayoutManager::LowerRight, n);
+        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
         if ( w )
             delete w;
     }

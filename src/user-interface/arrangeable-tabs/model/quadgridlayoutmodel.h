@@ -22,19 +22,22 @@ namespace UserInterface
         void clear();
         bool addWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit = Qt::Horizontal);
         bool removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredMerge = Qt::Horizontal);
+        bool replaceWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell);
 
         bool canAddWidget(QuadGridLayoutDefs::GridCell cell) const;
         bool canRemoveWidget(QuadGridLayoutDefs::GridCell cell) const;
+        bool canReplaceWidget(QuadGridLayoutDefs::GridCell cell) const;
 
         QWidget* widgetAt(QuadGridLayoutDefs::GridCell cell) const;
         QWidget* widgetAt(const QuadGridLayoutPoint& point) const;
         QList<QWidget*> widgets() const;
+        int widgetCount() const;
 
         GridCellList widgetCells(QWidget* widget) const;
         int widgetCellCount(QWidget* widget) const;
         QuadGridLayoutDefs::WidgetSpan widgetSpan(QWidget* widget) const;
 
-        int widgetCount() const;
+        static QuadGridLayoutDefs::GridCell lowestGridCell(const GridCellList& list);
 
     signals:
         void layoutUpdated();

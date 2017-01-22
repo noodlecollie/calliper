@@ -2,6 +2,12 @@
 
 namespace UserInterface
 {
+    QDebug operator <<(QDebug dbg, const QuadGridLayoutPoint& point)
+    {
+        dbg.nospace() << "QuadGridLayoutPoint(" << point.x() << "," << point.y() << ")";
+        return dbg.space();
+    }
+
     QuadGridLayoutPoint::QuadGridLayoutPoint(int x, int y)
         : m_iX(0), m_iY(0)
     {
