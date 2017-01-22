@@ -32,6 +32,7 @@ void MainWindow::addNewItem()
     QString label = QString("Item %1").arg(itemNo++);
     QWidget* n = new QGroupBox(label);
     n->setObjectName(label);
+    n->setWindowTitle(QString("This GroupBox is named '%1'").arg(label));
 
     if ( action == ui->actionUpper_Left )
     {

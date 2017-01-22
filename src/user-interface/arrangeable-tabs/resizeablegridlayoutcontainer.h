@@ -8,6 +8,8 @@ class QVBoxLayout;
 
 namespace UserInterface
 {
+    class ResizeableGridLayoutContainerHandle;
+
     class ResizeableGridLayoutContainer : public QFrame
     {
         Q_OBJECT
@@ -27,6 +29,7 @@ namespace UserInterface
         void initFrame();
 
         QWidget* m_pItem;
+        ResizeableGridLayoutContainerHandle* m_pTopHandle;
     };
 }
 

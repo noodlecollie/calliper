@@ -1,5 +1,6 @@
 #include "resizeablegridlayoutcontainer.h"
 #include <QVBoxLayout>
+#include "resizeablegridlayoutcontainerhandle.h"
 
 namespace
 {
@@ -14,9 +15,13 @@ namespace UserInterface
     {
         QVBoxLayout* l = new QVBoxLayout();
         l->setContentsMargins(MARGIN, MARGIN, MARGIN, MARGIN);
+        l->setSpacing(1);
         setLayout(l);
 
         initFrame();
+
+        m_pTopHandle = new ResizeableGridLayoutContainerHandle();
+        l->addWidget(m_pTopHandle);
     }
 
     QWidget* ResizeableGridLayoutContainer::item() const
