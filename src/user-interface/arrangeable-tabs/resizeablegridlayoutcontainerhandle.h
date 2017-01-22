@@ -2,17 +2,37 @@
 #define RESIZEABLEGRIDLAYOUTCONTAINERHANDLE_H
 
 #include "user-interface_global.h"
-#include <QFrame>
+#include <QToolBar>
+#include <QAction>
+#include <QStyle>
 
 namespace UserInterface
 {
-    class ResizeableGridLayoutContainerHandle : public QFrame
+    class ResizeableGridLayoutContainerHandle : public QToolBar
     {
         Q_OBJECT
     public:
-        ResizeableGridLayoutContainerHandle(QWidget* parent = 0, Qt::WindowFlags f = 0);
+        ResizeableGridLayoutContainerHandle(QWidget* parent = nullptr);
 
         virtual QSize sizeHint() const override;
+
+    signals:
+        void handleDoubleClicked();
+        void closeClicked();
+        void maximizeClicked();
+        void floatClicked();
+
+    protected:
+        virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
+
+    private:
+        void init();
+        void createActions();
+        void createAction(QAction*& member, const char* signal, QStyle::StandardPixmap pixmap);
+
+        QAction* m_pCloseAction;
+        QAction* m_pMaximizeAction;
+        QAction* m_pFloatAction;
     };
 }
 

@@ -23,6 +23,7 @@ namespace UserInterface
         bool addWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit = Qt::Horizontal);
         bool removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredMerge = Qt::Horizontal);
         bool replaceWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell);
+        bool containsWidget(QWidget* widget) const;
 
         bool canAddWidget(QuadGridLayoutDefs::GridCell cell) const;
         bool canRemoveWidget(QuadGridLayoutDefs::GridCell cell) const;

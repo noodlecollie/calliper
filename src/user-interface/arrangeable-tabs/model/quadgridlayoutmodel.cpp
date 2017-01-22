@@ -397,4 +397,9 @@ namespace UserInterface
 
         return lowestCell;
     }
+
+    bool QuadGridLayoutModel::containsWidget(QWidget* widget) const
+    {
+        return m_WidgetToCells.contains(widget);
+    }
 }

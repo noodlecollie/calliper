@@ -24,6 +24,15 @@ namespace UserInterface
         // Deletes the old item.
         void setItem(QWidget* newItem);
 
+        bool handleVisible() const;
+        void setHandleVisible(bool visible);
+
+    signals:
+        void handleDoubleClicked();
+        void closeClicked();
+        void maximizeClicked();
+        void floatClicked();
+
     private:
         QVBoxLayout* vBoxLayout() const;
         void initFrame();

@@ -53,6 +53,11 @@ namespace UserInterface
                                    direction == Qt::Vertical   ? (m_iY + 1) % 2 : m_iY);
     }
 
+    QuadGridLayoutPoint QuadGridLayoutPoint::diagonalNeighbour() const
+    {
+        return neighbour(Qt::Horizontal).neighbour(Qt::Vertical);
+    }
+
     QuadGridLayoutDefs::GridCell QuadGridLayoutPoint::toCell() const
     {
         if ( m_iY == 0 )

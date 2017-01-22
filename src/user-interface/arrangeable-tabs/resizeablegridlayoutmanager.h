@@ -36,11 +36,20 @@ namespace UserInterface
         // Returns the widget that was in this position, if there was one.
         // Otherwise returns null.
         QWidget* removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference);
+        bool removeWidget(QWidget* widget, Qt::Orientation mergePreference);
 
         void equaliseCellSizes();
+        void maximizeWidget(QuadGridLayoutDefs::GridCell cell);
+        void maximizeWidget(QWidget* widget);
+
+        void floatWidget(QuadGridLayoutDefs::GridCell cell);
+        void floatWidget(QWidget* widget);
 
     private slots:
         void resizeButtonDragged(int deltaX, int deltaY);
+        void containerCloseClicked();
+        void containerMaximizeClicked();
+        void containerFloatClicked();
 
     private:
         void updateGridLayout();

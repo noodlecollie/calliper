@@ -21,6 +21,12 @@ namespace UserInterface
         initFrame();
 
         m_pTopHandle = new ResizeableGridLayoutContainerHandle();
+
+        connect(m_pTopHandle, SIGNAL(handleDoubleClicked()), this, SIGNAL(handleDoubleClicked()));
+        connect(m_pTopHandle, SIGNAL(closeClicked()), this, SIGNAL(closeClicked()));
+        connect(m_pTopHandle, SIGNAL(maximizeClicked()), this, SIGNAL(maximizeClicked()));
+        connect(m_pTopHandle, SIGNAL(floatClicked()), this, SIGNAL(floatClicked()));
+
         l->addWidget(m_pTopHandle);
     }
 
@@ -68,5 +74,15 @@ namespace UserInterface
     {
         setFrameStyle(QFrame::Panel | QFrame::Sunken);
         setLineWidth(MARGIN);
+    }
+
+    bool ResizeableGridLayoutContainer::handleVisible() const
+    {
+        return m_pTopHandle->isVisible();
+    }
+
+    void ResizeableGridLayoutContainer::setHandleVisible(bool visible)
+    {
+        return m_pTopHandle->setVisible(visible);
     }
 }

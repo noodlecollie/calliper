@@ -24,6 +24,7 @@ namespace UserInterface
         int toArrayIndex() const;
 
         QuadGridLayoutPoint neighbour(Qt::Orientation direction) const;
+        QuadGridLayoutPoint diagonalNeighbour() const;
 
     private:
         int m_iX;

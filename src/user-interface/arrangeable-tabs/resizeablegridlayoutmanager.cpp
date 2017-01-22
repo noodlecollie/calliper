@@ -78,6 +78,19 @@ namespace UserInterface
         return previousWidget;
     }
 
+    bool ResizeableGridLayoutManager::removeWidget(QWidget *widget, Qt::Orientation mergePreference)
+    {
+        if ( !widget )
+            return false;
+
+        QuadGridLayoutModel::GridCellList list = m_pModel->widgetCells(widget);
+        if ( list.isEmpty() )
+            return false;
+
+        QWidget* removed = removeWidget(QuadGridLayoutModel::lowestGridCell(list), mergePreference);
+        return removed == widget;
+    }
+
     void ResizeableGridLayoutManager::equaliseCellSizes()
     {
         switch ( m_pModel->widgetCount() )
@@ -108,6 +121,61 @@ namespace UserInterface
                 break;
             }
         }
+    }
+
+    void ResizeableGridLayoutManager::maximizeWidget(QWidget *widget)
+    {
+        if ( !widget )
+            return;
+
+        QuadGridLayoutModel::GridCellList list = m_pModel->widgetCells(widget);
+        if ( list.isEmpty() )
+            return;
+
+        maximizeWidget(QuadGridLayoutModel::lowestGridCell(list));
+    }
+
+    void ResizeableGridLayoutManager::maximizeWidget(QuadGridLayoutDefs::GridCell cell)
+    {
+        QuadGridLayoutPoint point(cell);
+        QuadGridLayoutPoint opposite = point.diagonalNeighbour();
+        m_pGridLayout->setRowStretch(point.y() * 2, 1);
+        m_pGridLayout->setRowStretch(opposite.y() * 2, 0);
+        m_pGridLayout->setColumnStretch(point.x() * 2, 1);
+        m_pGridLayout->setColumnStretch(opposite.x() * 2, 0);
+    }
+
+    void ResizeableGridLayoutManager::floatWidget(QWidget *widget)
+    {
+        if ( !widget )
+            return;
+
+        QuadGridLayoutModel::GridCellList list = m_pModel->widgetCells(widget);
+        if ( list.isEmpty() )
+            return;
+
+        floatWidget(QuadGridLayoutModel::lowestGridCell(list));
+    }
+
+    void ResizeableGridLayoutManager::floatWidget(QuadGridLayoutDefs::GridCell cell)
+    {
+        QWidget* widget = m_pModel->widgetAt(cell);
+        if ( !widget )
+            return;
+
+        QRect oldGeom = widget->geometry();
+        QPoint oldPos(widget->mapToGlobal(QPoint(oldGeom.x(), oldGeom.y())));
+
+        QWidget* removed = removeWidget(cell, Qt::Horizontal);
+        Q_UNUSED(removed);
+        Q_ASSERT(widget == removed);
+
+        ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
+        container->setItem(widget);
+        container->setHandleVisible(false);
+        container->resize(oldGeom.width(), oldGeom.height());
+        container->move(oldPos);
+        container->show();
     }
 
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
@@ -360,6 +428,12 @@ namespace UserInterface
     {
         ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
         container->setItem(widget);
+
+        connect(container, SIGNAL(handleDoubleClicked()), this, SLOT(containerFloatClicked()));
+        connect(container, SIGNAL(closeClicked()), this, SLOT(containerCloseClicked()));
+        connect(container, SIGNAL(maximizeClicked()), this, SLOT(containerMaximizeClicked()));
+        connect(container, SIGNAL(floatClicked()), this, SLOT(containerFloatClicked()));
+
         m_pGridLayout->addWidget(container, row, col, rowSpan, colSpan);
     }
 
@@ -495,5 +569,42 @@ namespace UserInterface
 
         m_pGridLayout->setRowStretch(0, top);
         m_pGridLayout->setRowStretch(2, bottom);
+    }
+
+    void ResizeableGridLayoutManager::containerCloseClicked()
+    {
+        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
+        Q_ASSERT(container);
+
+        QWidget* widget = container->item();
+        if ( !widget )
+            return;
+
+        removeWidget(widget, Qt::Horizontal);
+        delete widget;
+    }
+
+    void ResizeableGridLayoutManager::containerMaximizeClicked()
+    {
+        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
+        Q_ASSERT(container);
+
+        QWidget* widget = container->item();
+        if ( !widget )
+            return;
+
+        maximizeWidget(widget);
+    }
+
+    void ResizeableGridLayoutManager::containerFloatClicked()
+    {
+        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
+        Q_ASSERT(container);
+
+        QWidget* widget = container->item();
+        if ( !widget )
+            return;
+
+        floatWidget(widget);
     }
 }
