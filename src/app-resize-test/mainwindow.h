@@ -18,6 +18,7 @@ public:
 
 private slots:
     void addNewItem();
+    void removeItem();
     void equalise();
 
 private:

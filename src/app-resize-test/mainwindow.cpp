@@ -64,6 +64,38 @@ void MainWindow::addNewItem()
     }
 }
 
+void MainWindow::removeItem()
+{
+    QAction* action = qobject_cast<QAction*>(sender());
+    if ( !action )
+        return;
+
+    if ( action == ui->actionRemove_UL )
+    {
+        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
+        if ( w )
+            delete w;
+    }
+    else if ( action == ui->actionRemove_UR )
+    {
+        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
+        if ( w )
+            delete w;
+    }
+    else if ( action == ui->actionRemove_LL )
+    {
+        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
+        if ( w )
+            delete w;
+    }
+    else if ( action == ui->actionRemove_LR )
+    {
+        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
+        if ( w )
+            delete w;
+    }
+}
+
 void MainWindow::equalise()
 {
     m_pGridManager->equaliseCellSizes();

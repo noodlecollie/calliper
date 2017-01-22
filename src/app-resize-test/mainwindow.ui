@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>524</width>
+    <height>387</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>524</width>
      <height>21</height>
     </rect>
    </property>
@@ -32,35 +32,59 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionUpper_Left"/>
+   <addaction name="actionRemove_UL"/>
    <addaction name="actionUpper_Right"/>
+   <addaction name="actionRemove_UR"/>
    <addaction name="actionLower_Left"/>
+   <addaction name="actionRemove_LL"/>
    <addaction name="actionLower_Right"/>
+   <addaction name="actionRemove_LR"/>
    <addaction name="actionEqualise"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionUpper_Left">
    <property name="text">
-    <string>Upper Left</string>
+    <string>Add UL</string>
    </property>
   </action>
   <action name="actionUpper_Right">
    <property name="text">
-    <string>Upper Right</string>
+    <string>Add UR</string>
    </property>
   </action>
   <action name="actionLower_Left">
    <property name="text">
-    <string>Lower Left</string>
+    <string>Add LL</string>
    </property>
   </action>
   <action name="actionLower_Right">
    <property name="text">
-    <string>Lower Right</string>
+    <string>Add LR</string>
    </property>
   </action>
   <action name="actionEqualise">
    <property name="text">
     <string>Equalise</string>
+   </property>
+  </action>
+  <action name="actionRemove_UL">
+   <property name="text">
+    <string>Remove UL</string>
+   </property>
+  </action>
+  <action name="actionRemove_UR">
+   <property name="text">
+    <string>Remove UR</string>
+   </property>
+  </action>
+  <action name="actionRemove_LL">
+   <property name="text">
+    <string>Remove LL</string>
+   </property>
+  </action>
+  <action name="actionRemove_LR">
+   <property name="text">
+    <string>Remove LR</string>
    </property>
   </action>
  </widget>
@@ -147,9 +171,74 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionRemove_LL</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>removeItem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>261</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRemove_LR</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>removeItem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>261</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRemove_UL</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>removeItem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>261</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRemove_UR</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>removeItem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>261</x>
+     <y>193</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>addNewItem()</slot>
   <slot>equalise()</slot>
+  <slot>removeItem()</slot>
  </slots>
 </ui>
