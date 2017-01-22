@@ -4,8 +4,23 @@
 #include "resizeablegridlayoutcontainer.h"
 #include "resizeablegridelementbutton.h"
 
+namespace
+{
+    inline int clampAbove(int in, int threshold)
+    {
+        return in < threshold ? threshold : in;
+    }
+}
+
 namespace UserInterface
 {
+#ifdef QT_DEBUG
+    void ResizeableGridLayoutManager::addToPreviousWidgets(QWidget *widget)
+    {
+        m_PreviousWidgets.append(QPointer<QWidget>(widget));
+    }
+#endif
+
     ResizeableGridLayoutManager::ResizeableGridLayoutManager(QGridLayout* gridLayout)
         : m_pGridLayout(gridLayout),
           m_ResizeButtons(),
@@ -14,6 +29,15 @@ namespace UserInterface
     {
         m_pGridLayout->setContentsMargins(0,0,0,0);
         m_pGridLayout->setSpacing(0);
+
+        m_pGridLayout->setRowStretch(1, 0);
+        m_pGridLayout->setColumnStretch(1, 0);
+
+        m_pGridLayout->setRowMinimumHeight(0, 1);
+        m_pGridLayout->setRowMinimumHeight(2, 1);
+
+        m_pGridLayout->setColumnMinimumWidth(0, 1);
+        m_pGridLayout->setColumnMinimumWidth(2, 1);
     }
 
     ResizeableGridLayoutManager::~ResizeableGridLayoutManager()
@@ -23,11 +47,20 @@ namespace UserInterface
 
     QWidget* ResizeableGridLayoutManager::insertWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
     {
+        if ( !widget )
+            return nullptr;
+
+        clearGridLayout();
+
         QWidget* previousWidget = m_pModel->widgetAt(cell);
 
         if ( !m_pModel->canAddWidget(cell) )
         {
             m_pModel->replaceWidget(widget, cell);
+
+#ifdef QT_DEBUG
+            addToPreviousWidgets(previousWidget);
+#endif
         }
         else
         {
@@ -36,17 +69,25 @@ namespace UserInterface
         }
 
         updateGridLayout();
+        updateStretchFactors();
         return previousWidget;
     }
 
     QWidget* ResizeableGridLayoutManager::removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference)
     {
-        QWidget* previousWidget = m_pModel->widgetAt(cell);
-
-        if ( m_pModel->canRemoveWidget(cell) )
+        if ( !m_pModel->canRemoveWidget(cell) )
         {
-            m_pModel->removeWidget(cell, mergePreference);
+            return nullptr;
         }
+
+        clearGridLayout();
+
+        QWidget* previousWidget = m_pModel->widgetAt(cell);
+        m_pModel->removeWidget(cell, mergePreference);
+
+#ifdef QT_DEBUG
+        addToPreviousWidgets(previousWidget);
+#endif
 
         updateGridLayout();
         return previousWidget;
@@ -59,13 +100,23 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
     {
+        ResizeableGridElementButton* button = qobject_cast<ResizeableGridElementButton*>(sender());
+        if ( !button )
+            return;
 
+        if ( button->resizeFlags().testFlag(ResizeableGridElementButton::HorizontalResizeFlag) )
+        {
+            resizeHorizontal(deltaX);
+        }
+
+        if ( button->resizeFlags().testFlag(ResizeableGridElementButton::VerticalResizeFlag) )
+        {
+            resizeVertical(deltaY);
+        }
     }
 
     void ResizeableGridLayoutManager::updateGridLayout()
     {
-        clearGridLayout();
-
         switch ( m_pModel->widgetCount() )
         {
             case 1:
@@ -214,19 +265,44 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::clearGridLayout()
     {
-        QList<QWidget*> widgets = m_pModel->widgets();
-        foreach ( QWidget* widget, widgets )
+        QLayoutItem *child;
+        while ( (child = m_pGridLayout->takeAt(0)) != nullptr )
         {
-            removeWidgetFromLayout(m_pModel->widgetCells(widget));
+            if ( cleanUpContainer(qobject_cast<ResizeableGridLayoutContainer*>(child->widget())) )
+            {
+                delete child;
+                continue;
+            }
+
+            if ( cleanUpButton(qobject_cast<ResizeableGridElementButton*>(child->widget())) )
+            {
+                delete child;
+                continue;
+            }
+
+            delete child;
         }
 
-        foreach ( ResizeableGridElementButton* button, m_ResizeButtons )
-        {
-            m_pGridLayout->removeWidget(button);
-        }
-
-        qDeleteAll(m_ResizeButtons);
         m_ResizeButtons.clear();
+    }
+
+    bool ResizeableGridLayoutManager::cleanUpContainer(ResizeableGridLayoutContainer *container)
+    {
+        if ( !container )
+            return false;
+
+        container->replaceItem(nullptr);
+        delete container;
+        return true;
+    }
+
+    bool ResizeableGridLayoutManager::cleanUpButton(ResizeableGridElementButton *button)
+    {
+        if ( !button )
+            return false;
+
+        delete button;
+        return true;
     }
 
     void ResizeableGridLayoutManager::setSingleWidgetLayout()
@@ -241,7 +317,6 @@ namespace UserInterface
         {
             addWidgetToLayout(widget);
         }
-        qDebug() << "Done";
     }
 
     void ResizeableGridLayoutManager::addWidgetToLayout(QWidget *widget)
@@ -266,8 +341,6 @@ namespace UserInterface
         int rowSpan = span == QuadGridLayoutDefs::VerticalSpan ? 3 : 1;
         int colSpan = span == QuadGridLayoutDefs::HorizontalSpan ? 3 : 1;
 
-        qDebug() << "Received widget" << widget << "at point" << point << "and with span" << span;
-        qDebug() << "Adding widget" << widget << "to layout with row" << row << "column" << col << "row span" << rowSpan << "column span" << colSpan;
         addWidgetToLayout(widget, row, col, rowSpan, colSpan);
     }
 
@@ -278,34 +351,137 @@ namespace UserInterface
         m_pGridLayout->addWidget(container, row, col, rowSpan, colSpan);
     }
 
-    void ResizeableGridLayoutManager::removeWidgetFromLayout(const QuadGridLayoutModel::GridCellList &list)
+    void ResizeableGridLayoutManager::addResizeButton(int row, int column, int rowSpan, int colSpan)
     {
-        QuadGridLayoutPoint point(QuadGridLayoutModel::lowestGridCell(list));
-        QLayoutItem* item = m_pGridLayout->itemAtPosition(point.y(), point.x());
-        m_pGridLayout->removeItem(item);
-        delete item;
+        ResizeableGridElementButton::ResizeModeFlags flags = ResizeableGridElementButton::NoResizeFlag;
+
+        if ( column == 1 )
+        {
+            flags |= ResizeableGridElementButton::HorizontalResizeFlag;
+        }
+
+        if ( row == 1 )
+        {
+            flags |= ResizeableGridElementButton::VerticalResizeFlag;
+        }
+
+        ResizeableGridElementButton* btn = new ResizeableGridElementButton(flags);
+        btn->setRowIndex(row);
+        btn->setColumnIndex(column);
+        m_pGridLayout->addWidget(btn, row, column, rowSpan, colSpan);
+        connect(btn, SIGNAL(mouseMoved(int,int)), this, SLOT(resizeButtonDragged(int,int)));
+
+        m_ResizeButtons.append(btn);
     }
 
-    void ResizeableGridLayoutManager::addResizeButton(int row, int column, int rowSpan, int colSpan)
+    void ResizeableGridLayoutManager::updateStretchFactors()
+    {
+        switch ( m_pModel->widgetCount() )
         {
-            ResizeableGridElementButton::ResizeModeFlags flags = ResizeableGridElementButton::NoResizeFlag;
-
-            if ( column == 1 )
+            case 1:
             {
-                flags |= ResizeableGridElementButton::HorizontalResizeFlag;
+                setSingleWidgetStretchFactors();
+                break;
             }
 
-            if ( row == 1 )
+            case 2:
             {
-                flags |= ResizeableGridElementButton::VerticalResizeFlag;
+                setDualWidgetStretchFactors();
+                break;
             }
 
-            ResizeableGridElementButton* btn = new ResizeableGridElementButton(flags);
-            btn->setRowIndex(row);
-            btn->setColumnIndex(column);
-            m_pGridLayout->addWidget(btn, row, column, rowSpan, colSpan);
-            connect(btn, SIGNAL(mouseMoved(int,int)), this, SLOT(resizeButtonDragged(int,int)));
+            case 3:
+            {
+                setTripleWidgetStretchFactors();
+                break;
+            }
 
-            m_ResizeButtons.append(btn);
+            default:
+            {
+                break;
+            }
         }
+    }
+
+    void ResizeableGridLayoutManager::setSingleWidgetStretchFactors()
+    {
+        setStretchFactors(1, 0, 1, 0);
+    }
+
+    void ResizeableGridLayoutManager::setDualWidgetStretchFactors()
+    {
+        if ( m_pAnalyser->majorSplit() == QuadGridLayoutDefs::MajorVertical )
+        {
+            setStretchFactors(1, 0, 1, 1);
+        }
+        else
+        {
+            setStretchFactors(1, 1, 1, 0);
+        }
+    }
+
+    void ResizeableGridLayoutManager::setTripleWidgetStretchFactors()
+    {
+        switch ( m_pAnalyser->minorSplit() )
+        {
+            case QuadGridLayoutDefs::MinorNorth:
+            case QuadGridLayoutDefs::MinorSouth:
+            {
+                m_pGridLayout->setColumnStretch(0, 1);
+                m_pGridLayout->setColumnStretch(2, 1);
+                break;
+            }
+
+            case QuadGridLayoutDefs::MinorWest:
+            case QuadGridLayoutDefs::MinorEast:
+            {
+                m_pGridLayout->setRowStretch(0, 1);
+                m_pGridLayout->setRowStretch(2, 1);
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
+        }
+    }
+
+    void ResizeableGridLayoutManager::setStretchFactors(int row0, int row2, int col0, int col2)
+    {
+        m_pGridLayout->setRowStretch(0, row0);
+        m_pGridLayout->setRowStretch(2, row2);
+        m_pGridLayout->setColumnStretch(0, col0);
+        m_pGridLayout->setColumnStretch(2, col2);
+    }
+
+    void ResizeableGridLayoutManager::resizeHorizontal(int delta)
+    {
+        QRect leftRect = m_pGridLayout->cellRect(0,0);
+        QRect rightRect = m_pGridLayout->cellRect(0,2);
+
+        if ( !leftRect.isValid() || !rightRect.isValid() )
+            return;
+
+        int left = clampAbove(leftRect.width() + delta, 1);
+        int right = clampAbove(rightRect.width() - delta, 1);
+
+        m_pGridLayout->setColumnStretch(0, left);
+        m_pGridLayout->setColumnStretch(2, right);
+    }
+
+    void ResizeableGridLayoutManager::resizeVertical(int delta)
+    {
+        QRect topRect = m_pGridLayout->cellRect(0,0);
+        QRect bottomRect = m_pGridLayout->cellRect(2,0);
+
+        if ( !topRect.isValid() || !bottomRect.isValid() )
+            return;
+
+        int top = clampAbove(topRect.height() + delta, 1);
+        int bottom = clampAbove(bottomRect.height() - delta, 1);
+
+        m_pGridLayout->setRowStretch(0, top);
+        m_pGridLayout->setRowStretch(2, bottom);
+    }
 }
