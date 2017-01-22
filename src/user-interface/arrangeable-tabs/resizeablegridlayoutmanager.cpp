@@ -14,13 +14,6 @@ namespace
 
 namespace UserInterface
 {
-#ifdef QT_DEBUG
-    void ResizeableGridLayoutManager::addToPreviousWidgets(QWidget *widget)
-    {
-        m_PreviousWidgets.append(QPointer<QWidget>(widget));
-    }
-#endif
-
     ResizeableGridLayoutManager::ResizeableGridLayoutManager(QGridLayout* gridLayout)
         : m_pGridLayout(gridLayout),
           m_ResizeButtons(),
@@ -57,10 +50,6 @@ namespace UserInterface
         if ( !m_pModel->canAddWidget(cell) )
         {
             m_pModel->replaceWidget(widget, cell);
-
-#ifdef QT_DEBUG
-            addToPreviousWidgets(previousWidget);
-#endif
         }
         else
         {
@@ -85,17 +74,40 @@ namespace UserInterface
         QWidget* previousWidget = m_pModel->widgetAt(cell);
         m_pModel->removeWidget(cell, mergePreference);
 
-#ifdef QT_DEBUG
-        addToPreviousWidgets(previousWidget);
-#endif
-
         updateGridLayout();
         return previousWidget;
     }
 
     void ResizeableGridLayoutManager::equaliseCellSizes()
     {
+        switch ( m_pModel->widgetCount() )
+        {
+            case 2:
+            {
+                if ( m_pAnalyser->majorSplit() == QuadGridLayoutDefs::MajorHorizontal )
+                {
+                    setStretchFactors(1, 1, 0, 0);
+                }
+                else
+                {
+                    setStretchFactors(0, 0, 1, 1);
+                }
 
+                break;
+            }
+
+            case 3:
+            case 4:
+            {
+                setStretchFactors(1, 1, 1, 1);
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
+        }
     }
 
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)

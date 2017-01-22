@@ -75,11 +75,6 @@ namespace UserInterface
 
         QuadGridLayoutModel* m_pModel;
         QuadGridLayoutAnalyser* m_pAnalyser;
-
-#ifdef QT_DEBUG
-        QList<QPointer<QWidget> > m_PreviousWidgets;
-        void addToPreviousWidgets(QWidget* widget);
-#endif
     };
 }
 
