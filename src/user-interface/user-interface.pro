@@ -21,7 +21,8 @@ SOURCES += \
     arrangeable-tabs/model/quadgridlayoutpoint.cpp \
     arrangeable-tabs/model/quadgridlayoutmodel.cpp \
     arrangeable-tabs/model/quadgridlayoutanalyser.cpp \
-    arrangeable-tabs/resizeablegridlayoutcontainerhandle.cpp
+    arrangeable-tabs/resizeablegridlayoutcontainerhandle.cpp \
+    arrangeable-tabs/resizablegridwrapper.cpp
 
 HEADERS +=\
     views/mapviewwindow.h \
@@ -33,7 +34,8 @@ HEADERS +=\
     arrangeable-tabs/model/quadgridlayoutpoint.h \
     arrangeable-tabs/model/quadgridlayoutmodel.h \
     arrangeable-tabs/model/quadgridlayoutanalyser.h \
-    arrangeable-tabs/resizeablegridlayoutcontainerhandle.h
+    arrangeable-tabs/resizeablegridlayoutcontainerhandle.h \
+    arrangeable-tabs/resizablegridwrapper.h
 
 unix {
     target.path = /usr/lib

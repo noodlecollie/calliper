@@ -42,6 +42,8 @@ namespace UserInterface
         void maximizeWidget(QuadGridLayoutDefs::GridCell cell);
         void maximizeWidget(QWidget* widget);
 
+        bool containsWidget(QWidget* widget) const;
+
     signals:
         void widgetFloatClicked(QWidget* widget);
 

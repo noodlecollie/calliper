@@ -38,6 +38,11 @@ namespace UserInterface
         // Buttons are parented to the layout's parent widget, so will be deleted automatically.
     }
 
+    bool ResizeableGridLayoutManager::containsWidget(QWidget *widget) const
+    {
+        return m_pModel->containsWidget(widget);
+    }
+
     QWidget* ResizeableGridLayoutManager::insertWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
     {
         if ( !widget )
