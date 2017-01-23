@@ -31,7 +31,10 @@ namespace UserInterface
         void handleDoubleClicked();
         void closeClicked();
         void maximizeClicked();
-        void floatClicked();
+        void floatClicked(QWidget* widget);
+
+    private slots:
+        void handleFloatClicked();
 
     private:
         QVBoxLayout* vBoxLayout() const;

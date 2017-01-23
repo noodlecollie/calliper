@@ -145,39 +145,6 @@ namespace UserInterface
         m_pGridLayout->setColumnStretch(opposite.x() * 2, 0);
     }
 
-    void ResizeableGridLayoutManager::floatWidget(QWidget *widget)
-    {
-        if ( !widget )
-            return;
-
-        QuadGridLayoutModel::GridCellList list = m_pModel->widgetCells(widget);
-        if ( list.isEmpty() )
-            return;
-
-        floatWidget(QuadGridLayoutModel::lowestGridCell(list));
-    }
-
-    void ResizeableGridLayoutManager::floatWidget(QuadGridLayoutDefs::GridCell cell)
-    {
-        QWidget* widget = m_pModel->widgetAt(cell);
-        if ( !widget )
-            return;
-
-        QRect oldGeom = widget->geometry();
-        QPoint oldPos(widget->mapToGlobal(QPoint(oldGeom.x(), oldGeom.y())));
-
-        QWidget* removed = removeWidget(cell, Qt::Horizontal);
-        Q_UNUSED(removed);
-        Q_ASSERT(widget == removed);
-
-        ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
-        container->setItem(widget);
-        container->setHandleVisible(false);
-        container->resize(oldGeom.width(), oldGeom.height());
-        container->move(oldPos);
-        container->show();
-    }
-
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
     {
         ResizeableGridElementButton* button = qobject_cast<ResizeableGridElementButton*>(sender());
@@ -432,7 +399,7 @@ namespace UserInterface
         connect(container, SIGNAL(handleDoubleClicked()), this, SLOT(containerFloatClicked()));
         connect(container, SIGNAL(closeClicked()), this, SLOT(containerCloseClicked()));
         connect(container, SIGNAL(maximizeClicked()), this, SLOT(containerMaximizeClicked()));
-        connect(container, SIGNAL(floatClicked()), this, SLOT(containerFloatClicked()));
+        connect(container, SIGNAL(floatClicked(QWidget*)), this, SIGNAL(widgetFloatClicked(QWidget*)));
 
         m_pGridLayout->addWidget(container, row, col, rowSpan, colSpan);
     }
@@ -594,17 +561,5 @@ namespace UserInterface
             return;
 
         maximizeWidget(widget);
-    }
-
-    void ResizeableGridLayoutManager::containerFloatClicked()
-    {
-        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
-        Q_ASSERT(container);
-
-        QWidget* widget = container->item();
-        if ( !widget )
-            return;
-
-        floatWidget(widget);
     }
 }

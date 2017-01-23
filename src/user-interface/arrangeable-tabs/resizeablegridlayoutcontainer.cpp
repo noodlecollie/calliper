@@ -25,7 +25,7 @@ namespace UserInterface
         connect(m_pTopHandle, SIGNAL(handleDoubleClicked()), this, SIGNAL(handleDoubleClicked()));
         connect(m_pTopHandle, SIGNAL(closeClicked()), this, SIGNAL(closeClicked()));
         connect(m_pTopHandle, SIGNAL(maximizeClicked()), this, SIGNAL(maximizeClicked()));
-        connect(m_pTopHandle, SIGNAL(floatClicked()), this, SIGNAL(floatClicked()));
+        connect(m_pTopHandle, SIGNAL(floatClicked()), this, SIGNAL(handleFloatClicked()));
 
         l->addWidget(m_pTopHandle);
     }
@@ -84,5 +84,10 @@ namespace UserInterface
     void ResizeableGridLayoutContainer::setHandleVisible(bool visible)
     {
         return m_pTopHandle->setVisible(visible);
+    }
+
+    void ResizeableGridLayoutContainer::handleFloatClicked()
+    {
+        emit floatClicked(item());
     }
 }

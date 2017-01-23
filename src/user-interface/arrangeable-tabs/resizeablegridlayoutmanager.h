@@ -42,14 +42,13 @@ namespace UserInterface
         void maximizeWidget(QuadGridLayoutDefs::GridCell cell);
         void maximizeWidget(QWidget* widget);
 
-        void floatWidget(QuadGridLayoutDefs::GridCell cell);
-        void floatWidget(QWidget* widget);
+    signals:
+        void widgetFloatClicked(QWidget* widget);
 
     private slots:
         void resizeButtonDragged(int deltaX, int deltaY);
         void containerCloseClicked();
         void containerMaximizeClicked();
-        void containerFloatClicked();
 
     private:
         void updateGridLayout();
