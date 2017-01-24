@@ -22,10 +22,10 @@ namespace UserInterface
 
         m_pTopHandle = new ResizeableGridLayoutContainerHandle();
 
-        connect(m_pTopHandle, SIGNAL(handleDoubleClicked()), this, SIGNAL(handleDoubleClicked()));
+        connect(m_pTopHandle, SIGNAL(handleDoubleClicked()), this, SLOT(handleFloatClicked()));
         connect(m_pTopHandle, SIGNAL(closeClicked()), this, SIGNAL(closeClicked()));
         connect(m_pTopHandle, SIGNAL(maximizeClicked()), this, SIGNAL(maximizeClicked()));
-        connect(m_pTopHandle, SIGNAL(floatClicked()), this, SIGNAL(handleFloatClicked()));
+        connect(m_pTopHandle, SIGNAL(floatClicked()), this, SLOT(handleFloatClicked()));
 
         l->addWidget(m_pTopHandle);
     }

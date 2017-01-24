@@ -28,7 +28,6 @@ namespace UserInterface
         void setHandleVisible(bool visible);
 
     signals:
-        void handleDoubleClicked();
         void closeClicked();
         void maximizeClicked();
         void floatClicked(QWidget* widget);
