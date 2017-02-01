@@ -11,8 +11,21 @@ def checkVersion():
 def childDirs(parentDir):
 	return [x.strip('/') for x in glob('*/')]
 
-def moduleGlobalHeaderName(module):
-	return module + "_global.h"
+def openFile(filename, mode):
+	try:
+		f = open(filename, mode)
+
+	except OSError:
+	    return None
+
+	except IOError:
+	   	return None
+
+	except:
+	    print("Unexpected error opening " + filename + " in mode '" + mode + "':", sys.exc_info()[0])
+	    raise
+
+	return f
 
 class MainClass:
 	rootDir = ""
@@ -21,8 +34,21 @@ class MainClass:
 	def __init__(self):
 		self.rootDir = os.path.abspath(".")
 
+	def moduleGlobalHeaderName(self):
+		return self.currentModule + "_global.h"
+
 	def processModule(self):
 		print("Processing directory " + self.currentModule + "...")
+
+		globalHeaderPath = self.rootDir + "/" + self.currentModule + "/" + self.moduleGlobalHeaderName()
+
+		headerFile = openFile(globalHeaderPath, 'r')
+		if headerFile is None:
+			print("Could not open global header, skipping.")
+			return
+
+		print("Opened header successfully")
+		headerFile.close()
 
 	def process(self):
 		for subdir in childDirs('.'):
