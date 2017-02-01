@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-import sys, os
+import sys, os, re
 from glob import glob
 
 def checkVersion():
@@ -27,9 +27,15 @@ def openFile(filename, mode):
 
 	return f
 
+def moduleExportDef(moduleName):
+	return re.sub('[^A-Za-z0-9]', '', moduleName.upper()) + "SHARED_EXPORT"
+
 class MainClass:
 	rootDir = ""
 	currentModule = ""
+
+	globalHeaderPath = ""
+	moduleExportDef = ""
 
 	def __init__(self):
 		self.rootDir = os.path.abspath(".")
@@ -37,23 +43,32 @@ class MainClass:
 	def moduleGlobalHeaderName(self):
 		return self.currentModule + "_global.h"
 
-	def processModule(self):
+	def moduleDirPath(self):
+		return self.rootDir + "/" + self.currentModule
+
+	def setModuleVars(self):
+		self.globalHeaderPath = self.rootDir + "/" + self.currentModule + "/" + self.moduleGlobalHeaderName()
+		self.moduleExportDef = moduleExportDef(self.currentModule)
+
+	def fileContainsContainsModuleExport(self, contents):
+		return self.moduleExportDef in contents
+
+	def processModule(self, module):
+		self.currentModule = module
+		self.setModuleVars()
+
 		print("Processing directory " + self.currentModule + "...")
 
-		globalHeaderPath = self.rootDir + "/" + self.currentModule + "/" + self.moduleGlobalHeaderName()
-
-		headerFile = openFile(globalHeaderPath, 'r')
-		if headerFile is None:
-			print("Could not open global header, skipping.")
+		if not os.path.isfile(self.globalHeaderPath):
+			print("Could not find global header for module, skipping.")
 			return
 
-		print("Opened header successfully")
-		headerFile.close()
+		for root, dirs, files in os.walk(self.moduleDirPath()):
+			print (files)	# TODO: Process each file
 
 	def process(self):
 		for subdir in childDirs('.'):
-			self.currentModule = subdir
-			self.processModule()
+			self.processModule(subdir)
 
 def main():
 	checkVersion()
