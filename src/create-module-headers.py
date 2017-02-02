@@ -53,6 +53,50 @@ class MainClass:
 	def fileContainsContainsModuleExport(self, contents):
 		return self.moduleExportDef in contents
 
+	def getRelativeFilePath(self, absolutePath):
+		commonPrefix = os.path.commonprefix([absolutePath, self.rootDir])
+		return os.path.relpath(absolutePath, commonPrefix)
+
+	def createInclude(self, fileName, absolutePath):
+		relativePath = self.getRelativeFilePath(absolutePath)
+		relativeDir = os.path.dirname(relativePath)
+
+		pathFromIncludeDir = "../../" + relativeDir + "/" + fileName
+		includeFileContents = '#include "' + pathFromIncludeDir + '"'
+		targetFilePath = self.rootDir + "/include/" + self.currentModule + "/" + fileName
+		
+		if not os.path.exists(self.rootDir + "/include/" + self.currentModule):
+			os.makedirs(self.rootDir + "/include/" + self.currentModule)
+
+		print("Creating include for '" + targetFilePath + "'")
+		# TODO: Create file and write contents
+		# Perhaps allow option not to write file if it already exists,
+		# and let the user control this from the command line.
+
+	def walkDirs(self):
+		for root, dirs, files in os.walk(self.moduleDirPath()):
+			# Root is the path to the current directory.
+			# Dirs are the next subdirectories
+			# Files are the files present in the current directory.
+			
+			for file in files:
+				if not file.lower().endswith(('.h')):
+					continue
+
+				absoluteFilePath = root + "/" + file
+
+				f = openFile(absoluteFilePath, 'r')
+				if f is None:
+					continue
+
+				contents = f.read()
+				f.close()
+
+				if not self.fileContainsContainsModuleExport(contents):
+					continue
+
+				self.createInclude(file, absoluteFilePath)
+
 	def processModule(self, module):
 		self.currentModule = module
 		self.setModuleVars()
@@ -63,12 +107,15 @@ class MainClass:
 			print("Could not find global header for module, skipping.")
 			return
 
-		for root, dirs, files in os.walk(self.moduleDirPath()):
-			print (files)	# TODO: Process each file
+		self.walkDirs()
 
 	def process(self):
+		if not os.path.exists("./include"):
+			os.makedirs("./include")
+
 		for subdir in childDirs('.'):
-			self.processModule(subdir)
+			if subdir != "include":
+				self.processModule(subdir)
 
 def main():
 	checkVersion()
