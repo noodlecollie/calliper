@@ -37,6 +37,9 @@ class MainClass:
 	globalHeaderPath = ""
 	moduleExportDef = ""
 
+	targetFilePath = ""
+	targetFileContents = ""
+
 	def __init__(self):
 		self.rootDir = os.path.abspath(".")
 
@@ -57,21 +60,29 @@ class MainClass:
 		commonPrefix = os.path.commonprefix([absolutePath, self.rootDir])
 		return os.path.relpath(absolutePath, commonPrefix)
 
+	def writeIncludeFile(self):
+		fileToWrite = openFile(self.targetFilePath, 'w')
+
+		if fileToWrite is None:
+			print("Unable to open " + self.targetFilePath + " for writing.")
+			return
+
+		fileToWrite.write(self.targetFileContents)
+		fileToWrite.close()
+
 	def createInclude(self, fileName, absolutePath):
 		relativePath = self.getRelativeFilePath(absolutePath)
 		relativeDir = os.path.dirname(relativePath)
 
 		pathFromIncludeDir = "../../" + relativeDir + "/" + fileName
-		includeFileContents = '#include "' + pathFromIncludeDir + '"'
-		targetFilePath = self.rootDir + "/include/" + self.currentModule + "/" + fileName
+		self.targetFileContents = '#include "' + pathFromIncludeDir + '"'
+		self.targetFilePath = self.rootDir + "/include/" + self.currentModule + "/" + fileName
 		
 		if not os.path.exists(self.rootDir + "/include/" + self.currentModule):
 			os.makedirs(self.rootDir + "/include/" + self.currentModule)
 
-		print("Creating include for '" + targetFilePath + "'")
-		# TODO: Create file and write contents
-		# Perhaps allow option not to write file if it already exists,
-		# and let the user control this from the command line.
+		print("Creating include for '" + self.targetFilePath + "'")
+		self.writeIncludeFile()
 
 	def walkDirs(self):
 		for root, dirs, files in os.walk(self.moduleDirPath()):
