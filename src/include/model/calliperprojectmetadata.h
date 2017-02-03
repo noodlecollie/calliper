@@ -1,0 +1,1 @@
+#include "../../model/projects/calliperprojectmetadata.h"

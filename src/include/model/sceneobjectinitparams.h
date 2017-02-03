@@ -1,0 +1,1 @@
+#include "../../model/scene/sceneobjectinitparams.h"

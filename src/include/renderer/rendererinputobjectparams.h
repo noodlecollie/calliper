@@ -1,0 +1,1 @@
+#include "../../renderer/rendermodel/rendererinputobjectparams.h"
