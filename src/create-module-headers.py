@@ -27,17 +27,16 @@ def openFile(filename, mode):
 
 	return f
 
-def moduleExportDef(moduleName):
-	return re.sub('[^A-Za-z0-9]', '', moduleName.upper()) + "SHARED_EXPORT"
-
 class MainClass:
+	moduleExportDefOverride = {}
+	
 	rootDir = ""
 	currentModule = ""
 	verbose = False
 	overwriteExisting = False
 
 	globalHeaderPath = ""
-	moduleExportDef = ""
+	moduleExportDefString = ""
 
 	targetFilePath = ""
 	targetFileContents = ""
@@ -46,6 +45,7 @@ class MainClass:
 		self.vlog("Running script using Python:\n" + sys.version + "\n")
 	
 		self.rootDir = os.path.abspath(".")
+		self.initModuleDefOverrides()
 		
 		try:
 			opts, args = getopt.getopt(argv, "vx")
@@ -78,10 +78,31 @@ class MainClass:
 	def setModuleVars(self):
 		self.globalHeaderPath = os.path.normpath(self.rootDir + "/" + self.currentModule +
 		"/" + self.moduleGlobalHeaderName())
-		self.moduleExportDef = moduleExportDef(self.currentModule)
-
-	def fileContainsContainsModuleExport(self, contents):
-		return self.moduleExportDef in contents
+		self.moduleExportDefString = self.moduleExportDef()
+		
+		self.vlog("Module export def: " + self.moduleExportDefString)
+	
+	def initModuleDefOverrides(self):
+		# For dependencies that don't follow the Qt convention,
+		# Put their #defines here.
+		
+		self.moduleExportDefOverride["dep-vtflib"] = "VTFLIB_API"
+	
+	def moduleExportDef(self):
+		return re.sub('[^A-Za-z0-9]', '', self.currentModule.upper()) + "SHARED_EXPORT"
+	
+	def moduleExportDefOverridden(self):
+		return self.currentModule in self.moduleExportDefOverride
+	
+	def shouldCreateInclude(self, contents):
+		if self.moduleExportDefOverridden() and \
+		self.moduleExportDefOverride[self.currentModule] in contents:
+			return True
+			
+		if self.moduleExportDefString in contents:
+			return True
+		
+		return False
 
 	def getRelativeFilePath(self, absolutePath):
 		commonPrefix = os.path.commonprefix([absolutePath, self.rootDir])
@@ -115,10 +136,10 @@ class MainClass:
 			os.makedirs(modulePath)
 			
 		if not self.overwriteExisting and os.path.isfile(self.targetFilePath):
-			print("Include file '" + self.targetFilePath + "' already exists, skipping.")
+			self.vlog("Include file '" + self.targetFilePath + "' already exists, skipping.")
 			return
 
-		print("Creating include for '" + self.targetFilePath + "'")
+		self.vlog("Creating include for '" + self.targetFilePath + "'")
 		self.writeIncludeFile()
 
 	def walkDirs(self):
@@ -140,7 +161,7 @@ class MainClass:
 				contents = f.read()
 				f.close()
 
-				if not self.fileContainsContainsModuleExport(contents):
+				if not self.shouldCreateInclude(contents):
 					continue
 
 				self.createInclude(file, absoluteFilePath)
@@ -154,7 +175,7 @@ class MainClass:
 		self.vlog("Attempting to find global header '" + self.globalHeaderPath + "'...")
 		
 		if not os.path.isfile(self.globalHeaderPath):
-			print("Could not find global header for module, skipping.")
+			self.vlog("Could not find global header for module, skipping.")
 			return
 
 		self.walkDirs()
