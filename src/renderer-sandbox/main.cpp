@@ -1,29 +1,18 @@
 #include <QApplication>
-#include "demoglwindow.h"
-
-using namespace Renderer;
+#include "user-interface/arrangeable-tabs/container/resizablegridlayoutcontainerbutton.h"
+#include "tempclass.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QSurfaceFormat format;
-    format.setMajorVersion(4);
-    format.setMinorVersion(1);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-    format.setSamples(2);
-    format.setDepthBufferSize(24);
-    format.setRedBufferSize(8);
-    format.setGreenBufferSize(8);
-    format.setBlueBufferSize(8);
-    format.setAlphaBufferSize(0);
-    format.setStencilBufferSize(8);
-    QSurfaceFormat::setDefaultFormat(format);
+    TempClass c;
+    UserInterface::ResizableGridLayoutContainerButton btn;
+    c.connect(&btn, SIGNAL(selectInvoked()), &c, SLOT(handleSelect()));
+    c.connect(&btn, SIGNAL(maximiseInvoked()), &c, SLOT(handleMaximise()));
+    c.connect(&btn, SIGNAL(closeInvoked()), &c, SLOT(handleClose()));
 
-    DemoGLWindow window;
-    window.show();
+    btn.show();
 
     return a.exec();
 }

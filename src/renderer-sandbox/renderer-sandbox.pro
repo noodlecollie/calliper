@@ -13,10 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    demoglwindow.cpp
+    tempclass.cpp
 
 HEADERS  += \
-    demoglwindow.h
+    tempclass.h
 
 FORMS    +=
 

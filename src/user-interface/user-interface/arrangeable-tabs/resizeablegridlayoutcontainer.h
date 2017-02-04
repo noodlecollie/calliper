@@ -10,6 +10,7 @@ namespace UserInterface
 {
     class ResizeableGridLayoutContainerHandle;
 
+    // TODO: Replace me with updated, stacked container
     class ResizeableGridLayoutContainer : public QFrame
     {
         Q_OBJECT

@@ -8,6 +8,7 @@
 
 namespace UserInterface
 {
+    // TODO: Replace me with updated, stacked container.
     class ResizeableGridLayoutContainerHandle : public QToolBar
     {
         Q_OBJECT
