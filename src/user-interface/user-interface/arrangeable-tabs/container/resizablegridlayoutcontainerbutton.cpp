@@ -7,21 +7,35 @@
 namespace UserInterface
 {
     ResizableGridLayoutContainerButton::ResizableGridLayoutContainerButton(QWidget *parent)
-        : QFrame(parent)
+        : QFrame(parent),
+          m_pSelectAction(nullptr),
+          m_pMaximiseAction(nullptr),
+          m_pCloseAction(nullptr),
+          m_iItemID(-1)
     {
         initActions();
+    }
+
+    int ResizableGridLayoutContainerButton::itemId() const
+    {
+        return m_iItemID;
+    }
+
+    void ResizableGridLayoutContainerButton::setItemId(int id)
+    {
+        m_iItemID = id;
     }
 
     void ResizableGridLayoutContainerButton::initActions()
     {
         m_pSelectAction = new QAction(tr("&Select"));
-        connect(m_pSelectAction, SIGNAL(triggered(bool)), this, SIGNAL(selectInvoked()));
+        connect(m_pSelectAction, &QAction::triggered, [this]{ emit selectInvoked(m_iItemID); });
 
         m_pMaximiseAction = new QAction(tr("&Maximise"));
-        connect(m_pMaximiseAction, SIGNAL(triggered(bool)), this, SIGNAL(maximiseInvoked()));
+        connect(m_pMaximiseAction, &QAction::triggered, [this]{ emit maximiseInvoked(m_iItemID); });
 
         m_pCloseAction = new QAction(tr("&Close"));
-        connect(m_pCloseAction, SIGNAL(triggered(bool)), this, SIGNAL(closeInvoked()));
+        connect(m_pCloseAction, &QAction::triggered, [this]{ emit closeInvoked(m_iItemID); });
     }
 
     void ResizableGridLayoutContainerButton::contextMenuEvent(QContextMenuEvent *event)

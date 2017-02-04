@@ -12,9 +12,9 @@ public:
 signals:
 
 public slots:
-    void handleSelect();
-    void handleMaximise();
-    void handleClose();
+    void handleSelect(int itemId);
+    void handleMaximise(int itemId);
+    void handleClose(int itemId);
 };
 
 #endif // TEMPCLASS_H

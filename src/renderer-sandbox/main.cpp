@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
 
     TempClass c;
     UserInterface::ResizableGridLayoutContainerButton btn;
-    c.connect(&btn, SIGNAL(selectInvoked()), &c, SLOT(handleSelect()));
-    c.connect(&btn, SIGNAL(maximiseInvoked()), &c, SLOT(handleMaximise()));
-    c.connect(&btn, SIGNAL(closeInvoked()), &c, SLOT(handleClose()));
+    c.connect(&btn, SIGNAL(selectInvoked(int)), &c, SLOT(handleSelect(int)));
+    c.connect(&btn, SIGNAL(maximiseInvoked(int)), &c, SLOT(handleMaximise(int)));
+    c.connect(&btn, SIGNAL(closeInvoked(int)), &c, SLOT(handleClose(int)));
 
     btn.show();
 

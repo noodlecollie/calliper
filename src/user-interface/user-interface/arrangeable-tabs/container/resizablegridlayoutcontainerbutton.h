@@ -17,10 +17,13 @@ namespace UserInterface
     public:
         explicit ResizableGridLayoutContainerButton(QWidget *parent = 0);
 
+        int itemId() const;
+        void setItemId(int id);
+
     signals:
-        void selectInvoked();
-        void maximiseInvoked();
-        void closeInvoked();
+        void selectInvoked(int itemId);
+        void maximiseInvoked(int itemId);
+        void closeInvoked(int itemId);
 
     public slots:
 
@@ -35,6 +38,8 @@ namespace UserInterface
         QAction* m_pSelectAction;
         QAction* m_pMaximiseAction;
         QAction* m_pCloseAction;
+
+        int m_iItemID;
     };
 }
 

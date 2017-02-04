@@ -6,17 +6,17 @@ TempClass::TempClass(QObject *parent) : QObject(parent)
 
 }
 
-void TempClass::handleSelect()
+void TempClass::handleSelect(int itemId)
 {
-    qDebug() << "Select received";
+    qDebug() << "Select received with item ID" << itemId;
 }
 
-void TempClass::handleMaximise()
+void TempClass::handleMaximise(int itemId)
 {
-    qDebug() << "Maximise received";
+    qDebug() << "Maximise received with item ID" << itemId;
 }
 
-void TempClass::handleClose()
+void TempClass::handleClose(int itemId)
 {
-    qDebug() << "Close received";
+    qDebug() << "Close received with item ID" << itemId;
 }
