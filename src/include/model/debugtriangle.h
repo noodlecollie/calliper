@@ -1,1 +1,0 @@
-#include "../../model/sceneobjects/debugtriangle.h"

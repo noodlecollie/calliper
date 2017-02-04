@@ -1,1 +1,0 @@
-#include "../../renderer/renderer_global.h"

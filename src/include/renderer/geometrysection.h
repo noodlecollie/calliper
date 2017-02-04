@@ -1,1 +1,0 @@
-#include "../../renderer/geometry/geometrysection.h"
