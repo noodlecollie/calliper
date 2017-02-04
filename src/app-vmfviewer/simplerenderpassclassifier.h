@@ -1,7 +1,7 @@
 #ifndef SIMPLERENDERPASSCLASSIFIER_H
 #define SIMPLERENDERPASSCLASSIFIER_H
 
-#include "scenerenderer/irenderpassclassifier.h"
+#include "model/scenerenderer/irenderpassclassifier.h"
 
 class SimpleRenderPassClassifier : public Model::IRenderPassClassifier
 {

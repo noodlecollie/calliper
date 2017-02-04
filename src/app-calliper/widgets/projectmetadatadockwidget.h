@@ -3,7 +3,7 @@
 
 #include "app-calliper_global.h"
 #include "visibleactiondockwidget.h"
-#include "projects/calliperprojectmetadata.h"
+#include "model/projects/calliperprojectmetadata.h"
 #include <QPointer>
 
 namespace AppCalliper

@@ -5,8 +5,8 @@
 #include <QStandardPaths>
 #include <QFileDialog>
 #include <QFileInfo>
-#include "projects/calliperprojectloader.h"
-#include "json/jsonloaderutils.h"
+#include "model-loaders/projects/calliperprojectloader.h"
+#include "model-loaders/json/jsonloaderutils.h"
 #include <QMessageBox>
 #include "projectmetadatadockwidget.h"
 #include <QtDebug>

@@ -2,11 +2,11 @@
 #define VPKINFO_H
 
 #include <QDataStream>
-#include "vpk/vpkfile.h"
-#include "vpk/vpkheader.h"
-#include "vpk/vpkindex.h"
-#include "vpk/vpkarchivemd5collection.h"
-#include "vpk/vpkothermd5item.h"
+#include "file-formats/vpk/vpkfile.h"
+#include "file-formats/vpk/vpkheader.h"
+#include "file-formats/vpk/vpkindex.h"
+#include "file-formats/vpk/vpkarchivemd5collection.h"
+#include "file-formats/vpk/vpkothermd5item.h"
 #include <QStringList>
 
 namespace VPKInfo

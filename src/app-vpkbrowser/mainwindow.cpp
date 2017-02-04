@@ -5,7 +5,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QByteArrayData>
-#include "vpk/vpkindextreeiterator.h"
+#include "file-formats/vpk/vpkindextreeiterator.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

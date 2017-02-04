@@ -12,37 +12,37 @@ TEMPLATE = lib
 DEFINES += FILEFORMATS_LIBRARY
 
 SOURCES += \
-    keyvalues/keyvaluestoken.cpp \
-    keyvalues/keyvaluesparser.cpp \
-    vpk/vpkheader.cpp \
-    vpk/vpkindextreeitem.cpp \
-    vpk/vpkindex.cpp \
-    vpk/vpkindextreerecord.cpp \
-    vpk/vpkfile.cpp \
-    vpk/vpkarchivemd5item.cpp \
-    common/streamdatacontainer.cpp \
-    vpk/vpkothermd5item.cpp \
-    vpk/vpkarchivemd5collection.cpp \
-    vpk/vpkfilecollection.cpp \
     file-formats_global.cpp \
-    vpk/vpkindextreeiterator.cpp
+    file-formats/common/streamdatacontainer.cpp \
+    file-formats/keyvalues/keyvaluesparser.cpp \
+    file-formats/keyvalues/keyvaluestoken.cpp \
+    file-formats/vpk/vpkarchivemd5collection.cpp \
+    file-formats/vpk/vpkarchivemd5item.cpp \
+    file-formats/vpk/vpkfile.cpp \
+    file-formats/vpk/vpkfilecollection.cpp \
+    file-formats/vpk/vpkheader.cpp \
+    file-formats/vpk/vpkindex.cpp \
+    file-formats/vpk/vpkindextreeitem.cpp \
+    file-formats/vpk/vpkindextreeiterator.cpp \
+    file-formats/vpk/vpkindextreerecord.cpp \
+    file-formats/vpk/vpkothermd5item.cpp
 
 HEADERS +=\
         file-formats_global.h \
-    keyvalues/keyvaluestoken.h \
-    keyvalues/keyvaluesparser.h \
-    vpk/vpkheader.h \
-    vpk/vpkindextreeitem.h \
-    vpk/vpkindex.h \
-    vpk/vpkindextreerecord.h \
-    vpk/vpkfile.h \
-    vpk/vpkarchivemd5item.h \
-    common/streamdatacontainer.h \
-    vpk/vpkothermd5item.h \
-    vpk/vpkarchivemd5collection.h \
-    collection/simpleitemcollection.h \
-    vpk/vpkfilecollection.h \
-    vpk/vpkindextreeiterator.h
+    file-formats/collection/simpleitemcollection.h \
+    file-formats/common/streamdatacontainer.h \
+    file-formats/keyvalues/keyvaluesparser.h \
+    file-formats/keyvalues/keyvaluestoken.h \
+    file-formats/vpk/vpkarchivemd5collection.h \
+    file-formats/vpk/vpkarchivemd5item.h \
+    file-formats/vpk/vpkfile.h \
+    file-formats/vpk/vpkfilecollection.h \
+    file-formats/vpk/vpkheader.h \
+    file-formats/vpk/vpkindex.h \
+    file-formats/vpk/vpkindextreeitem.h \
+    file-formats/vpk/vpkindextreeiterator.h \
+    file-formats/vpk/vpkindextreerecord.h \
+    file-formats/vpk/vpkothermd5item.h
 
 unix {
     target.path = /usr/lib

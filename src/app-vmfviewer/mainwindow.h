@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "views/mapviewwindow.h"
+#include "user-interface/views/mapviewwindow.h"
 
 class MainWindow : public UserInterface::MapViewWindow
 {

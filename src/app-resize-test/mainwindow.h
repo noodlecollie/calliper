@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "arrangeable-tabs/resizeablegridlayoutmanager.h"
+#include "user-interface/arrangeable-tabs/resizeablegridlayoutmanager.h"
 
 namespace Ui {
 class MainWindow;

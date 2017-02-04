@@ -1,9 +1,9 @@
 #include "demoglwindow.h"
-#include "shaders/simplelitshader.h"
-#include "shaders/unlitpervertexcolorshader.h"
-#include "opengl/openglhelpers.h"
-#include "opengl/openglerrors.h"
-#include "factories/genericbrushfactory.h"
+#include "model/shaders/simplelitshader.h"
+#include "model/shaders/unlitpervertexcolorshader.h"
+#include "renderer/opengl/openglhelpers.h"
+#include "renderer/opengl/openglerrors.h"
+#include "model/factories/genericbrushfactory.h"
 #include "VTFLib/src/VTFFile.h"
 
 class SimpleClassifier : public Model::IRenderPassClassifier

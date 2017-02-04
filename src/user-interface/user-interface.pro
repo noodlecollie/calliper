@@ -12,30 +12,30 @@ TEMPLATE = lib
 DEFINES += USERINTERFACE_LIBRARY
 
 SOURCES += \
-    views/mapviewwindow.cpp \
-    arrangeable-tabs/resizeablegridelementbutton.cpp \
-    arrangeable-tabs/resizeablegridlayoutmanager.cpp \
     user-interface_global.cpp \
-    arrangeable-tabs/resizeablegridlayoutcontainer.cpp \
-    arrangeable-tabs/model/quadgridlayoutdefs.cpp \
-    arrangeable-tabs/model/quadgridlayoutpoint.cpp \
-    arrangeable-tabs/model/quadgridlayoutmodel.cpp \
-    arrangeable-tabs/model/quadgridlayoutanalyser.cpp \
-    arrangeable-tabs/resizeablegridlayoutcontainerhandle.cpp \
-    arrangeable-tabs/resizablegridwrapper.cpp
+    user-interface/arrangeable-tabs/model/quadgridlayoutanalyser.cpp \
+    user-interface/arrangeable-tabs/model/quadgridlayoutdefs.cpp \
+    user-interface/arrangeable-tabs/model/quadgridlayoutmodel.cpp \
+    user-interface/arrangeable-tabs/model/quadgridlayoutpoint.cpp \
+    user-interface/arrangeable-tabs/resizablegridwrapper.cpp \
+    user-interface/arrangeable-tabs/resizeablegridelementbutton.cpp \
+    user-interface/arrangeable-tabs/resizeablegridlayoutcontainer.cpp \
+    user-interface/arrangeable-tabs/resizeablegridlayoutcontainerhandle.cpp \
+    user-interface/arrangeable-tabs/resizeablegridlayoutmanager.cpp \
+    user-interface/views/mapviewwindow.cpp
 
 HEADERS +=\
-    views/mapviewwindow.h \
-    arrangeable-tabs/resizeablegridelementbutton.h \
-    arrangeable-tabs/resizeablegridlayoutmanager.h \
     user-interface_global.h \
-    arrangeable-tabs/resizeablegridlayoutcontainer.h \
-    arrangeable-tabs/model/quadgridlayoutdefs.h \
-    arrangeable-tabs/model/quadgridlayoutpoint.h \
-    arrangeable-tabs/model/quadgridlayoutmodel.h \
-    arrangeable-tabs/model/quadgridlayoutanalyser.h \
-    arrangeable-tabs/resizeablegridlayoutcontainerhandle.h \
-    arrangeable-tabs/resizablegridwrapper.h
+    user-interface/arrangeable-tabs/model/quadgridlayoutanalyser.h \
+    user-interface/arrangeable-tabs/model/quadgridlayoutdefs.h \
+    user-interface/arrangeable-tabs/model/quadgridlayoutmodel.h \
+    user-interface/arrangeable-tabs/model/quadgridlayoutpoint.h \
+    user-interface/arrangeable-tabs/resizablegridwrapper.h \
+    user-interface/arrangeable-tabs/resizeablegridelementbutton.h \
+    user-interface/arrangeable-tabs/resizeablegridlayoutcontainer.h \
+    user-interface/arrangeable-tabs/resizeablegridlayoutcontainerhandle.h \
+    user-interface/arrangeable-tabs/resizeablegridlayoutmanager.h \
+    user-interface/views/mapviewwindow.h
 
 unix {
     target.path = /usr/lib

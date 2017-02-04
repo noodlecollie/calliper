@@ -3,7 +3,7 @@
 #include <QtDebug>
 #include <QFile>
 #include "vpkinfo.h"
-#include "vpk/vpkfile.h"
+#include "file-formats/vpk/vpkfile.h"
 #include <iostream>
 
 namespace

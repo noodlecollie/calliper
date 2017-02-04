@@ -2,8 +2,8 @@
 #define APPLICATIONPROJECT_H
 
 #include "app-calliper_global.h"
-#include "projects/calliperproject.h"
-#include "core/datachangenotifier.h"
+#include "model/projects/calliperproject.h"
+#include "model/core/datachangenotifier.h"
 
 namespace AppCalliper
 {

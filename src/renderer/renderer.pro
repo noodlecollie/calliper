@@ -12,68 +12,68 @@ TEMPLATE = lib
 DEFINES += RENDERER_LIBRARY
 
 SOURCES += \
-    opengl/openglerrors.cpp \
-    opengl/opengluniformbuffer.cpp \
-    shaders/shaderdefs.cpp \
-    opengl/openglshaderprogram.cpp \
-    rendermodel/1-passlevel/rendermodelpass.cpp \
-    opengl/opengltexture.cpp \
-    geometry/vertex3d.cpp \
-    geometry/geometrybuilder.cpp \
-    shaders/vertexformat.cpp \
-    geometry/geometrysection.cpp \
-    rendermodel/0-modellevel/rendermodel.cpp \
-    rendermodel/4-batchitemlevel/matrixbatchitemkey.cpp \
-    rendermodel/3-batchlevel/matrixbatchkey.cpp \
-    rendermodel/1-passlevel/rendermodelpasskey.cpp \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.cpp \
-    rendermodel/4-batchitemlevel/matrixbatchitem.cpp \
-    rendermodel/3-batchlevel/matrixbatch.cpp \
-    rendermodel/3-batchlevel/openglbatch.cpp \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.cpp \
-    global.cpp \
-    rendermodel/rendererinputobjectparams.cpp \
-    rendermodel/0-modellevel/rendermodelkey.cpp \
-    rendermodel/rendererdrawparams.cpp \
-    opengl/openglvertexarrayobject.cpp \
-    shaders/globalshaderuniforms.cpp \
-    materials/rendermaterial.cpp \
-    renderer_global.cpp
+    renderer_global.cpp \
+    renderer/geometry/geometrybuilder.cpp \
+    renderer/geometry/geometrysection.cpp \
+    renderer/geometry/vertex3d.cpp \
+    renderer/materials/rendermaterial.cpp \
+    renderer/opengl/openglerrors.cpp \
+    renderer/opengl/openglshaderprogram.cpp \
+    renderer/opengl/opengltexture.cpp \
+    renderer/opengl/opengluniformbuffer.cpp \
+    renderer/opengl/openglvertexarrayobject.cpp \
+    renderer/rendermodel/0-modellevel/rendermodel.cpp \
+    renderer/rendermodel/0-modellevel/rendermodelkey.cpp \
+    renderer/rendermodel/1-passlevel/rendermodelpass.cpp \
+    renderer/rendermodel/1-passlevel/rendermodelpasskey.cpp \
+    renderer/rendermodel/2-batchgrouplevel/rendermodelbatchgroup.cpp \
+    renderer/rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.cpp \
+    renderer/rendermodel/3-batchlevel/matrixbatch.cpp \
+    renderer/rendermodel/3-batchlevel/matrixbatchkey.cpp \
+    renderer/rendermodel/3-batchlevel/openglbatch.cpp \
+    renderer/rendermodel/4-batchitemlevel/matrixbatchitem.cpp \
+    renderer/rendermodel/4-batchitemlevel/matrixbatchitemkey.cpp \
+    renderer/rendermodel/rendererdrawparams.cpp \
+    renderer/rendermodel/rendererinputobjectparams.cpp \
+    renderer/shaders/globalshaderuniforms.cpp \
+    renderer/shaders/shaderdefs.cpp \
+    renderer/shaders/vertexformat.cpp \
+    renderer/global.cpp
 
 HEADERS +=\
         renderer_global.h \
-    opengl/openglerrors.h \
-    shaders/shaderdefs.h \
-    opengl/openglhelpers.h \
-    shaders/ishaderspec.h \
-    opengl/opengluniformbuffer.h \
-    opengl/openglshaderprogram.h \
-    rendermodel/1-passlevel/rendermodelpass.h \
-    opengl/opengltexture.h \
-    functors/ishaderretrievalfunctor.h \
-    functors/itextureretrievalfunctor.h \
-    geometry/vertex3d.h \
-    geometry/geometrybuilder.h \
-    shaders/vertexformat.h \
-    geometry/geometrysection.h \
-    rendermodel/0-modellevel/rendermodel.h \
-    irenderer.h \
-    rendermodel/4-batchitemlevel/matrixbatchitemkey.h \
-    rendermodel/3-batchlevel/matrixbatchkey.h \
-    rendermodel/1-passlevel/rendermodelpasskey.h \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h \
-    rendermodel/4-batchitemlevel/matrixbatchitem.h \
-    rendermodel/3-batchlevel/matrixbatch.h \
-    rendermodel/3-batchlevel/openglbatch.h \
-    rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h \
-    rendermodel/rendererinputobjectparams.h \
-    rendermodel/0-modellevel/rendermodelkey.h \
-    rendermodel/rendererdrawparams.h \
-    rendermodel/rendererobjectflags.h \
-    opengl/openglvertexarrayobject.h \
-    shaders/globalshaderuniforms.h \
-    materials/rendermaterial.h \
-    functors/imaterialretrievalfunctor.h
+    renderer/functors/imaterialretrievalfunctor.h \
+    renderer/functors/ishaderretrievalfunctor.h \
+    renderer/functors/itextureretrievalfunctor.h \
+    renderer/geometry/geometrybuilder.h \
+    renderer/geometry/geometrysection.h \
+    renderer/geometry/vertex3d.h \
+    renderer/materials/rendermaterial.h \
+    renderer/opengl/openglerrors.h \
+    renderer/opengl/openglhelpers.h \
+    renderer/opengl/openglshaderprogram.h \
+    renderer/opengl/opengltexture.h \
+    renderer/opengl/opengluniformbuffer.h \
+    renderer/opengl/openglvertexarrayobject.h \
+    renderer/rendermodel/0-modellevel/rendermodel.h \
+    renderer/rendermodel/0-modellevel/rendermodelkey.h \
+    renderer/rendermodel/1-passlevel/rendermodelpass.h \
+    renderer/rendermodel/1-passlevel/rendermodelpasskey.h \
+    renderer/rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h \
+    renderer/rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h \
+    renderer/rendermodel/3-batchlevel/matrixbatch.h \
+    renderer/rendermodel/3-batchlevel/matrixbatchkey.h \
+    renderer/rendermodel/3-batchlevel/openglbatch.h \
+    renderer/rendermodel/4-batchitemlevel/matrixbatchitem.h \
+    renderer/rendermodel/4-batchitemlevel/matrixbatchitemkey.h \
+    renderer/rendermodel/rendererdrawparams.h \
+    renderer/rendermodel/rendererinputobjectparams.h \
+    renderer/rendermodel/rendererobjectflags.h \
+    renderer/shaders/globalshaderuniforms.h \
+    renderer/shaders/ishaderspec.h \
+    renderer/shaders/shaderdefs.h \
+    renderer/shaders/vertexformat.h \
+    renderer/irenderer.h
 
 unix {
     target.path = /usr/lib
@@ -81,7 +81,7 @@ unix {
 }
 
 RESOURCES += \
-    resource/resource.qrc
+    renderer/resource/resource.qrc
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil

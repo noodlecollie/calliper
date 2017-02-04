@@ -1,17 +1,17 @@
 #include "mainwindow.h"
-#include "shaders/unlitshader.h"
-#include "shaders/unlitpervertexcolorshader.h"
-#include "opengl/openglerrors.h"
-#include "opengl/openglhelpers.h"
+#include "model/shaders/unlitshader.h"
+#include "model/shaders/unlitpervertexcolorshader.h"
+#include "renderer/opengl/openglerrors.h"
+#include "renderer/opengl/openglhelpers.h"
 #include <QtDebug>
-#include "shaders/errorshader.h"
-#include "genericbrush/genericbrush.h"
-#include "shaders/simplelitshader.h"
+#include "model/shaders/errorshader.h"
+#include "model/genericbrush/genericbrush.h"
+#include "model/shaders/simplelitshader.h"
 #include <QMessageBox>
 #include <QtGlobal>
 #include <QMap>
-#include "vpk/vpkindextreerecord.h"
-#include "vtf/vtfloader.h"
+#include "file-formats/vpk/vpkindextreerecord.h"
+#include "model-loaders/vtf/vtfloader.h"
 
 class SimpleRenderClassifier : public Model::IRenderPassClassifier
 {

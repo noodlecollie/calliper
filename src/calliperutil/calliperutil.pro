@@ -12,24 +12,24 @@ TEMPLATE = lib
 DEFINES += UTIL_LIBRARY
 
 SOURCES += \
-    general/generalutil.cpp \
-    math/math.cpp \
-    general/hashfunctions.cpp \
-    general/fixedindexpool.cpp \
-    exceptions/calliperexception.cpp \
-    json/jsonarraywrapper.cpp \
-    calliperutil_global.cpp \
-    string/stringutil.cpp
+    calliperutil/exceptions/calliperexception.cpp \
+    calliperutil/general/fixedindexpool.cpp \
+    calliperutil/general/generalutil.cpp \
+    calliperutil/general/hashfunctions.cpp \
+    calliperutil/json/jsonarraywrapper.cpp \
+    calliperutil/math/math.cpp \
+    calliperutil/string/stringutil.cpp \
+    calliperutil_global.cpp
 
 HEADERS +=\
         calliperutil_global.h \
-    general/generalutil.h \
-    math/math.h \
-    general/hashfunctions.h \
-    general/fixedindexpool.h \
-    exceptions/calliperexception.h \
-    json/jsonarraywrapper.h \
-    string/stringutil.h
+    calliperutil/exceptions/calliperexception.h \
+    calliperutil/general/fixedindexpool.h \
+    calliperutil/general/generalutil.h \
+    calliperutil/general/hashfunctions.h \
+    calliperutil/json/jsonarraywrapper.h \
+    calliperutil/math/math.h \
+    calliperutil/string/stringutil.h
 
 unix {
     target.path = /usr/lib

@@ -1,6 +1,6 @@
 #include <QString>
 #include <QtTest>
-#include "keyvalues/keyvaluesparser.h"
+#include "file-formats/keyvalues/keyvaluesparser.h"
 #include <QFile>
 
 class TestKeyValuesParser : public QObject

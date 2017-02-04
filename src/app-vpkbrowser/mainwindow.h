@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "vpk/vpkfile.h"
+#include "file-formats/vpk/vpkfile.h"
 
 namespace Ui {
 class MainWindow;

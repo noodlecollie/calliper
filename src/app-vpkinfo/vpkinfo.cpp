@@ -1,8 +1,8 @@
 #include "vpkinfo.h"
-#include "vpk/vpkheader.h"
+#include "file-formats/vpk/vpkheader.h"
 #include <QtDebug>
 #include <QTextStream>
-#include "vpk/vpkfile.h"
+#include "file-formats/vpk/vpkfile.h"
 #include <QCryptographicHash>
 
 namespace VPKInfo

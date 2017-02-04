@@ -12,18 +12,18 @@ TEMPLATE = lib
 DEFINES += MODELLOADERS_LIBRARY
 
 SOURCES += \
-    vmf/vmfloader.cpp \
-    vtf/vtfloader.cpp \
-    projects/calliperprojectloader.cpp \
-    json/jsonloaderutils.cpp \
+    model-loaders/json/jsonloaderutils.cpp \
+    model-loaders/projects/calliperprojectloader.cpp \
+    model-loaders/vmf/vmfloader.cpp \
+    model-loaders/vtf/vtfloader.cpp
     model-loaders_global.cpp
 
 HEADERS +=\
     model-loaders_global.h \
-    vmf/vmfloader.h \
-    vtf/vtfloader.h \
-    projects/calliperprojectloader.h \
-    json/jsonloaderutils.h
+    model-loaders/json/jsonloaderutils.h \
+    model-loaders/projects/calliperprojectloader.h \
+    model-loaders/vmf/vmfloader.h \
+    model-loaders/vtf/vtfloader.h
 
 unix {
     target.path = /usr/lib
