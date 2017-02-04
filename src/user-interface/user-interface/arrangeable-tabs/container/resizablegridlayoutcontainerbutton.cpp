@@ -1,6 +1,8 @@
 #include <QAction>
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QLabel>
+#include <QHBoxLayout>
 
 #include "resizablegridlayoutcontainerbutton.h"
 
@@ -11,8 +13,10 @@ namespace UserInterface
           m_pSelectAction(nullptr),
           m_pMaximiseAction(nullptr),
           m_pCloseAction(nullptr),
-          m_iItemID(-1)
+          m_iItemID(-1),
+          m_pLabel(nullptr)
     {
+        initLayout();
         initActions();
     }
 
@@ -26,6 +30,16 @@ namespace UserInterface
         m_iItemID = id;
     }
 
+    QString ResizableGridLayoutContainerButton::label() const
+    {
+        return m_pLabel->text();
+    }
+
+    void ResizableGridLayoutContainerButton::setLabel(const QString &text)
+    {
+        m_pLabel->setText(text);
+    }
+
     void ResizableGridLayoutContainerButton::initActions()
     {
         m_pSelectAction = new QAction(tr("&Select"));
@@ -36,6 +50,21 @@ namespace UserInterface
 
         m_pCloseAction = new QAction(tr("&Close"));
         connect(m_pCloseAction, &QAction::triggered, [this]{ emit closeInvoked(m_iItemID); });
+    }
+
+    void ResizableGridLayoutContainerButton::initLayout()
+    {
+        QHBoxLayout* l = new QHBoxLayout();
+        l->setContentsMargins(0,0,0,0);
+        l->setSpacing(0);
+        setLayout(l);
+
+        m_pLabel = new QLabel();
+        m_pLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        l->addWidget(m_pLabel);
+
+        setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        setFrameStyle(QFrame::Panel | QFrame::Raised);
     }
 
     void ResizableGridLayoutContainerButton::contextMenuEvent(QContextMenuEvent *event)

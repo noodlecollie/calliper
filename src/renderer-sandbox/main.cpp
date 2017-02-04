@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
 
     TempClass c;
     UserInterface::ResizableGridLayoutContainerButton btn;
+    btn.setLabel("Testing");
     c.connect(&btn, SIGNAL(selectInvoked(int)), &c, SLOT(handleSelect(int)));
     c.connect(&btn, SIGNAL(maximiseInvoked(int)), &c, SLOT(handleMaximise(int)));
     c.connect(&btn, SIGNAL(closeInvoked(int)), &c, SLOT(handleClose(int)));

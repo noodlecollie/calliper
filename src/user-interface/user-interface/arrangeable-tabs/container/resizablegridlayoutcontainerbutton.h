@@ -6,6 +6,7 @@
 class QAction;
 class QContextMenuEvent;
 class QMouseEvent;
+class QLabel;
 
 #include "user-interface_global.h"
 
@@ -20,6 +21,9 @@ namespace UserInterface
         int itemId() const;
         void setItemId(int id);
 
+        QString label() const;
+        void setLabel(const QString& text);
+
     signals:
         void selectInvoked(int itemId);
         void maximiseInvoked(int itemId);
@@ -33,13 +37,16 @@ namespace UserInterface
         void mouseDoubleClickEvent(QMouseEvent *event) override;
 
     private:
+        void initLayout();
         void initActions();
 
         QAction* m_pSelectAction;
         QAction* m_pMaximiseAction;
         QAction* m_pCloseAction;
 
+
         int m_iItemID;
+        QLabel* m_pLabel;
     };
 }
 
