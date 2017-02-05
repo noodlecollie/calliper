@@ -24,10 +24,14 @@ namespace UserInterface
         QString label() const;
         void setLabel(const QString& text);
 
+        int dragActivationThreshold() const;
+        void setDragActivationThreshold(int threshold);
+
     signals:
         void selectInvoked(int itemId);
         void maximiseInvoked(int itemId);
         void closeInvoked(int itemId);
+        void floatInvoked(int itemId, bool dragged);
 
     public slots:
 
@@ -35,6 +39,8 @@ namespace UserInterface
         void contextMenuEvent(QContextMenuEvent *event) override;
         void mousePressEvent(QMouseEvent *event) override;
         void mouseDoubleClickEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *event) override;
+        void mouseReleaseEvent(QMouseEvent *event) override;
 
     private:
         void initLayout();
@@ -42,11 +48,14 @@ namespace UserInterface
 
         QAction* m_pSelectAction;
         QAction* m_pMaximiseAction;
+        QAction* m_pFloatAction;
         QAction* m_pCloseAction;
-
 
         int m_iItemID;
         QLabel* m_pLabel;
+        int m_iDragActivationThreshold;
+        bool m_bInDrag;
+        QPoint m_LastMousePress;
     };
 }
 

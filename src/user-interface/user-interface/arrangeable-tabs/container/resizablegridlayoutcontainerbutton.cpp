@@ -3,6 +3,7 @@
 #include <QMenu>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QtDebug>
 
 #include "resizablegridlayoutcontainerbutton.h"
 
@@ -12,9 +13,13 @@ namespace UserInterface
         : QFrame(parent),
           m_pSelectAction(nullptr),
           m_pMaximiseAction(nullptr),
+          m_pFloatAction(nullptr),
           m_pCloseAction(nullptr),
           m_iItemID(-1),
-          m_pLabel(nullptr)
+          m_pLabel(nullptr),
+          m_iDragActivationThreshold(0),
+          m_bInDrag(false),
+          m_LastMousePress()
     {
         initLayout();
         initActions();
@@ -40,6 +45,16 @@ namespace UserInterface
         m_pLabel->setText(text);
     }
 
+    int ResizableGridLayoutContainerButton::dragActivationThreshold() const
+    {
+        return m_iDragActivationThreshold;
+    }
+
+    void ResizableGridLayoutContainerButton::setDragActivationThreshold(int threshold)
+    {
+        m_iDragActivationThreshold = threshold;
+    }
+
     void ResizableGridLayoutContainerButton::initActions()
     {
         m_pSelectAction = new QAction(tr("&Select"));
@@ -47,6 +62,9 @@ namespace UserInterface
 
         m_pMaximiseAction = new QAction(tr("&Maximise"));
         connect(m_pMaximiseAction, &QAction::triggered, [this]{ emit maximiseInvoked(m_iItemID); });
+
+        m_pFloatAction = new QAction(tr("&Float"));
+        connect(m_pFloatAction, &QAction::triggered, [this]{ emit floatInvoked(m_iItemID, m_bInDrag); });
 
         m_pCloseAction = new QAction(tr("&Close"));
         connect(m_pCloseAction, &QAction::triggered, [this]{ emit closeInvoked(m_iItemID); });
@@ -73,6 +91,7 @@ namespace UserInterface
 
         menu.addAction(m_pSelectAction);
         menu.addAction(m_pMaximiseAction);
+        menu.addAction(m_pFloatAction);
         menu.addAction(m_pCloseAction);
 
         menu.exec(event->globalPos());
@@ -84,6 +103,8 @@ namespace UserInterface
         {
             case Qt::LeftButton:
             {
+                m_bInDrag = true;
+                m_LastMousePress = event->globalPos();
                 m_pSelectAction->trigger();
                 return;
             }
@@ -105,5 +126,31 @@ namespace UserInterface
     {
         Q_UNUSED(event);
         m_pMaximiseAction->trigger();
+    }
+
+    void ResizableGridLayoutContainerButton::mouseMoveEvent(QMouseEvent *event)
+    {
+        if ( !m_bInDrag )
+        {
+            QFrame::mouseMoveEvent(event);
+            return;
+        }
+
+        if ( (event->globalPos() - m_LastMousePress).manhattanLength() >= m_iDragActivationThreshold )
+        {
+            m_pFloatAction->trigger();
+            m_bInDrag = false;
+        }
+    }
+
+    void ResizableGridLayoutContainerButton::mouseReleaseEvent(QMouseEvent *event)
+    {
+        QFrame::mouseReleaseEvent(event);
+
+        if ( event->button() == Qt::LeftButton )
+        {
+            m_bInDrag = false;
+            m_LastMousePress = QPoint();
+        }
     }
 }

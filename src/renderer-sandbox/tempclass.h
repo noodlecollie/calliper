@@ -15,6 +15,7 @@ public slots:
     void handleSelect(int itemId);
     void handleMaximise(int itemId);
     void handleClose(int itemId);
+    void handleFloat(int itemId, bool wasDragged);
 };
 
 #endif // TEMPCLASS_H

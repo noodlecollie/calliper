@@ -20,3 +20,9 @@ void TempClass::handleClose(int itemId)
 {
     qDebug() << "Close received with item ID" << itemId;
 }
+
+void TempClass::handleFloat(int itemId, bool wasDragged)
+{
+    qDebug() << "Float received with item ID" << itemId << "where button"
+             << (wasDragged ? "was" : "was not") << "dragged";
+}
