@@ -4,19 +4,22 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QtDebug>
+#include <QFontMetrics>
+#include <QApplication>
 
-#include "resizablegridlayoutcontainerbutton.h"
+#include "resizeablegridlayoutcontainerbutton.h"
 
 namespace UserInterface
 {
-    ResizableGridLayoutContainerButton::ResizableGridLayoutContainerButton(QWidget *parent)
-        : QFrame(parent),
+    ResizeableGridLayoutContainerButton::ResizeableGridLayoutContainerButton(QWidget *parent, Qt::WindowFlags f)
+        : QFrame(parent, f),
           m_pSelectAction(nullptr),
           m_pMaximiseAction(nullptr),
           m_pFloatAction(nullptr),
           m_pCloseAction(nullptr),
           m_iItemID(-1),
           m_pLabel(nullptr),
+          m_strLabelText(),
           m_iDragActivationThreshold(0),
           m_bInDrag(false),
           m_LastMousePress()
@@ -25,37 +28,46 @@ namespace UserInterface
         initActions();
     }
 
-    int ResizableGridLayoutContainerButton::itemId() const
+    int ResizeableGridLayoutContainerButton::itemId() const
     {
         return m_iItemID;
     }
 
-    void ResizableGridLayoutContainerButton::setItemId(int id)
+    void ResizeableGridLayoutContainerButton::setItemId(int id)
     {
         m_iItemID = id;
     }
 
-    QString ResizableGridLayoutContainerButton::label() const
+    QString ResizeableGridLayoutContainerButton::text() const
     {
-        return m_pLabel->text();
+        return m_strLabelText;
     }
 
-    void ResizableGridLayoutContainerButton::setLabel(const QString &text)
+    void ResizeableGridLayoutContainerButton::setText(const QString &labelText)
     {
-        m_pLabel->setText(text);
+        if ( m_strLabelText == labelText )
+            return;
+
+        m_strLabelText = labelText;
+        updateTextElide();
     }
 
-    int ResizableGridLayoutContainerButton::dragActivationThreshold() const
+    int ResizeableGridLayoutContainerButton::dragActivationThreshold() const
     {
         return m_iDragActivationThreshold;
     }
 
-    void ResizableGridLayoutContainerButton::setDragActivationThreshold(int threshold)
+    void ResizeableGridLayoutContainerButton::setDragActivationThreshold(int threshold)
     {
         m_iDragActivationThreshold = threshold;
     }
 
-    void ResizableGridLayoutContainerButton::initActions()
+    void ResizeableGridLayoutContainerButton::currentItemIndexChanged(int index)
+    {
+        // TODO: Highlight! How?
+    }
+
+    void ResizeableGridLayoutContainerButton::initActions()
     {
         m_pSelectAction = new QAction(tr("&Select"));
         connect(m_pSelectAction, &QAction::triggered, [this]{ emit selectInvoked(m_iItemID); });
@@ -70,7 +82,7 @@ namespace UserInterface
         connect(m_pCloseAction, &QAction::triggered, [this]{ emit closeInvoked(m_iItemID); });
     }
 
-    void ResizableGridLayoutContainerButton::initLayout()
+    void ResizeableGridLayoutContainerButton::initLayout()
     {
         QHBoxLayout* l = new QHBoxLayout();
         l->setContentsMargins(0,0,0,0);
@@ -79,25 +91,33 @@ namespace UserInterface
 
         m_pLabel = new QLabel();
         m_pLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        m_pLabel->setMinimumWidth(1);
         l->addWidget(m_pLabel);
 
-        setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
         setFrameStyle(QFrame::Panel | QFrame::Raised);
     }
 
-    void ResizableGridLayoutContainerButton::contextMenuEvent(QContextMenuEvent *event)
+    void ResizeableGridLayoutContainerButton::updateTextElide()
+    {
+        QFontMetrics fm(m_pLabel->font());
+        m_pLabel->setText(fm.elidedText(m_strLabelText, Qt::ElideMiddle, m_pLabel->width()));
+    }
+
+    void ResizeableGridLayoutContainerButton::contextMenuEvent(QContextMenuEvent *event)
     {
         QMenu menu(this);
 
         menu.addAction(m_pSelectAction);
         menu.addAction(m_pMaximiseAction);
         menu.addAction(m_pFloatAction);
+        menu.addSeparator();
         menu.addAction(m_pCloseAction);
 
         menu.exec(event->globalPos());
     }
 
-    void ResizableGridLayoutContainerButton::mousePressEvent(QMouseEvent *event)
+    void ResizeableGridLayoutContainerButton::mousePressEvent(QMouseEvent *event)
     {
         switch ( event->button() )
         {
@@ -122,13 +142,13 @@ namespace UserInterface
         QFrame::mousePressEvent(event);
     }
 
-    void ResizableGridLayoutContainerButton::mouseDoubleClickEvent(QMouseEvent *event)
+    void ResizeableGridLayoutContainerButton::mouseDoubleClickEvent(QMouseEvent *event)
     {
         Q_UNUSED(event);
         m_pMaximiseAction->trigger();
     }
 
-    void ResizableGridLayoutContainerButton::mouseMoveEvent(QMouseEvent *event)
+    void ResizeableGridLayoutContainerButton::mouseMoveEvent(QMouseEvent *event)
     {
         if ( !m_bInDrag )
         {
@@ -143,7 +163,7 @@ namespace UserInterface
         }
     }
 
-    void ResizableGridLayoutContainerButton::mouseReleaseEvent(QMouseEvent *event)
+    void ResizeableGridLayoutContainerButton::mouseReleaseEvent(QMouseEvent *event)
     {
         QFrame::mouseReleaseEvent(event);
 
@@ -152,5 +172,11 @@ namespace UserInterface
             m_bInDrag = false;
             m_LastMousePress = QPoint();
         }
+    }
+
+    void ResizeableGridLayoutContainerButton::resizeEvent(QResizeEvent *event)
+    {
+        QFrame::resizeEvent(event);
+        updateTextElide();
     }
 }

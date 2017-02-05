@@ -1,7 +1,7 @@
 #include "resizeablegridlayoutmanager.h"
 #include <QGridLayout>
 #include <QWidget>
-#include "resizeablegridlayoutcontainer.h"
+#include "container/resizeablegridlayoutcontainer.h"
 #include "resizeablegridelementbutton.h"
 
 namespace
@@ -343,7 +343,8 @@ namespace UserInterface
         if ( !container )
             return false;
 
-        container->replaceItem(nullptr);
+        QWidget* w = container->removeWidget(0);
+        delete w;
         delete container;
         return true;
     }
@@ -399,11 +400,11 @@ namespace UserInterface
     void ResizeableGridLayoutManager::addWidgetToLayout(QWidget *widget, int row, int col, int rowSpan, int colSpan)
     {
         ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
-        container->setItem(widget);
+        container->addWidget(widget);
 
-        connect(container, SIGNAL(closeClicked()), this, SLOT(containerCloseClicked()));
-        connect(container, SIGNAL(maximizeClicked()), this, SLOT(containerMaximizeClicked()));
-        connect(container, SIGNAL(floatClicked(QWidget*)), this, SIGNAL(widgetFloatClicked(QWidget*)));
+//        connect(container, SIGNAL(closeClicked()), this, SLOT(containerCloseClicked()));
+//        connect(container, SIGNAL(maximizeClicked()), this, SLOT(containerMaximizeClicked()));
+//        connect(container, SIGNAL(floatClicked(QWidget*)), this, SIGNAL(widgetFloatClicked(QWidget*)));
 
         m_pGridLayout->addWidget(container, row, col, rowSpan, colSpan);
     }
@@ -547,7 +548,7 @@ namespace UserInterface
         ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
         Q_ASSERT(container);
 
-        QWidget* widget = container->item();
+        QWidget* widget = container->widgetAt(0);
         if ( !widget )
             return;
 
@@ -560,7 +561,7 @@ namespace UserInterface
         ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
         Q_ASSERT(container);
 
-        QWidget* widget = container->item();
+        QWidget* widget = container->widgetAt(0);
         if ( !widget )
             return;
 

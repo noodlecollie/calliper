@@ -1,5 +1,5 @@
-#ifndef RESIZABLEGRIDLAYOUTCONTAINERBUTTON_H
-#define RESIZABLEGRIDLAYOUTCONTAINERBUTTON_H
+#ifndef RESIZEABLEGRIDLAYOUTCONTAINERBUTTON_H
+#define RESIZEABLEGRIDLAYOUTCONTAINERBUTTON_H
 
 #include <QFrame>
 
@@ -12,17 +12,17 @@ class QLabel;
 
 namespace UserInterface
 {
-    class USERINTERFACESHARED_EXPORT ResizableGridLayoutContainerButton : public QFrame
+    class USERINTERFACESHARED_EXPORT ResizeableGridLayoutContainerButton : public QFrame
     {
         Q_OBJECT
     public:
-        explicit ResizableGridLayoutContainerButton(QWidget *parent = 0);
+        explicit ResizeableGridLayoutContainerButton(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
         int itemId() const;
         void setItemId(int id);
 
-        QString label() const;
-        void setLabel(const QString& text);
+        QString text() const;
+        void setText(const QString& labelText);
 
         int dragActivationThreshold() const;
         void setDragActivationThreshold(int threshold);
@@ -34,6 +34,7 @@ namespace UserInterface
         void floatInvoked(int itemId, bool dragged);
 
     public slots:
+        void currentItemIndexChanged(int index);
 
     protected:
         void contextMenuEvent(QContextMenuEvent *event) override;
@@ -41,10 +42,12 @@ namespace UserInterface
         void mouseDoubleClickEvent(QMouseEvent *event) override;
         void mouseMoveEvent(QMouseEvent *event) override;
         void mouseReleaseEvent(QMouseEvent *event) override;
+        void resizeEvent(QResizeEvent *event) override;
 
     private:
         void initLayout();
         void initActions();
+        void updateTextElide();
 
         QAction* m_pSelectAction;
         QAction* m_pMaximiseAction;
@@ -53,10 +56,11 @@ namespace UserInterface
 
         int m_iItemID;
         QLabel* m_pLabel;
+        QString m_strLabelText;
         int m_iDragActivationThreshold;
         bool m_bInDrag;
         QPoint m_LastMousePress;
     };
 }
 
-#endif // RESIZABLEGRIDLAYOUTCONTAINERBUTTON_H
+#endif // RESIZEABLEGRIDLAYOUTCONTAINERBUTTON_H

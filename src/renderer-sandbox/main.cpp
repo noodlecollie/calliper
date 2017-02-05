@@ -1,21 +1,25 @@
 #include <QApplication>
-#include "user-interface/arrangeable-tabs/container/resizablegridlayoutcontainerbutton.h"
-#include "tempclass.h"
+#include "user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.h"
+#include <QGroupBox>
+#include <QTabBar>
+#include <QPushButton>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    TempClass c;
-    UserInterface::ResizableGridLayoutContainerButton btn;
-    btn.setLabel("Testing");
-    btn.setDragActivationThreshold(50);
-    c.connect(&btn, SIGNAL(selectInvoked(int)), &c, SLOT(handleSelect(int)));
-    c.connect(&btn, SIGNAL(maximiseInvoked(int)), &c, SLOT(handleMaximise(int)));
-    c.connect(&btn, SIGNAL(closeInvoked(int)), &c, SLOT(handleClose(int)));
-    c.connect(&btn, SIGNAL(floatInvoked(int,bool)), &c, SLOT(handleFloat(int,bool)));
+    UserInterface::ResizeableGridLayoutContainer container;
+    QGroupBox* box = new QGroupBox();
+    box->setTitle("Group Box");
+    box->setWindowTitle("A Group Box");
+    container.addWidget(box);
 
-    btn.show();
+    QGroupBox* box2 = new QGroupBox();
+    box2->setTitle("Group Box 2");
+    box2->setWindowTitle("A second group box");
+    container.addWidget(box2);
+
+    container.show();
 
     return a.exec();
 }
