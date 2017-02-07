@@ -27,30 +27,19 @@ namespace UserInterface
         explicit ResizeableGridLayoutManager(QGridLayout* gridLayout);
         ~ResizeableGridLayoutManager();
 
-        // Returns the widget that was already in this position,
-        // if there was one and it couldn't be split.
-        // Otherwise returns null.
-        QWidget* insertWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell,
-                              Qt::Orientation splitPreference);
+        // Inserts a widget and splits existing containers if possible.
+        // If it's not possible to split, inserts the widget into the container.
+        void embedWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference);
 
-        // Returns the widget that was in this position, if there was one.
-        // Otherwise returns null.
-        QWidget* removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference);
-        bool removeWidget(QWidget* widget, Qt::Orientation mergePreference);
+        // Inserts a widget directly into the container located in the specified cell.
+        void insertWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell);
 
         void equaliseCellSizes();
-        void maximizeWidget(QuadGridLayoutDefs::GridCell cell);
-        void maximizeWidget(QWidget* widget);
-
-        bool containsWidget(QWidget* widget) const;
 
     signals:
-        void widgetFloatClicked(QWidget* widget);
 
     private slots:
         void resizeButtonDragged(int deltaX, int deltaY);
-        void containerCloseClicked();
-        void containerMaximizeClicked();
 
     private:
         void updateGridLayout();
@@ -68,8 +57,6 @@ namespace UserInterface
         void addWidgetToLayout(QWidget* widget, const QuadGridLayoutPoint& point, QuadGridLayoutDefs::WidgetSpan span);
         void addWidgetToLayout(QWidget* widget, int row, int col, int rowSpan, int colSpan);
         void addWidgetToLayout(QWidget* widget);
-        bool cleanUpContainer(ResizeableGridLayoutContainer* container);
-        bool cleanUpButton(ResizeableGridElementButton* button);
 
         void updateStretchFactors();
         void setSingleWidgetStretchFactors();
@@ -79,6 +66,9 @@ namespace UserInterface
 
         void resizeHorizontal(int delta);
         void resizeVertical(int delta);
+
+        ResizeableGridLayoutContainer* createContainerForEmbed(QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference);
+        ResizeableGridLayoutContainer* createContainerForInsert(QuadGridLayoutDefs::GridCell cell);
 
         QGridLayout* const m_pGridLayout;
         QList<ResizeableGridElementButton*> m_ResizeButtons;

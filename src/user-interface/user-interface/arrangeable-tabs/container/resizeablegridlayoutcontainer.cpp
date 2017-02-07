@@ -34,6 +34,7 @@ namespace UserInterface
         int index = m_pStackedWidget->count();
         m_pButtonLayout->addWidget(createButton(widget, index));
         m_pStackedWidget->addWidget(widget);
+        emit currentChanged(m_pStackedWidget->currentIndex());
     }
 
     QWidget* ResizeableGridLayoutContainer::replaceWidget(int index, QWidget *widget)
@@ -91,7 +92,7 @@ namespace UserInterface
         ResizeableGridLayoutContainerButton* button = new ResizeableGridLayoutContainerButton(this);
         button->setItemId(index);
         button->setText(widget->windowTitle());
-        connect(m_pStackedWidget, SIGNAL(currentChanged(int)), button, SLOT(currentItemIndexChanged()));
+        connect(this, SIGNAL(currentChanged(int)), button, SLOT(currentItemIndexChanged()));
         connect(button, SIGNAL(selectInvoked(int)), this, SLOT(buttonPressed(int)));
         return button;
     }
@@ -120,6 +121,7 @@ namespace UserInterface
         m_pGeneralLayout->addLayout(m_pButtonLayout, 0);
 
         m_pStackedWidget = new QStackedWidget();
+        connect(m_pStackedWidget, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
         m_pGeneralLayout->addWidget(m_pStackedWidget, 1);
     }
 }

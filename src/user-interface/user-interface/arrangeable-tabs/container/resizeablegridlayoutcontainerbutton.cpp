@@ -75,8 +75,6 @@ namespace UserInterface
 
     void ResizeableGridLayoutContainerButton::currentItemIndexChanged()
     {
-        Q_UNUSED(index);
-
         if ( shouldHighlight() && !m_bHighlighted )
         {
             setHighlighted(true);
@@ -85,6 +83,8 @@ namespace UserInterface
         {
             setHighlighted(false);
         }
+
+        m_pSelectAction->setEnabled(m_pContainer->widgetCount() > 1);
     }
 
     void ResizeableGridLayoutContainerButton::setHighlighted(bool highlighted)

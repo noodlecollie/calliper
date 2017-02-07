@@ -15,6 +15,7 @@ namespace UserInterface
 
     void ResizableGridWrapper::widgetFloated(QWidget *widget)
     {
+        /*
         if ( !widget || !m_pLayoutManager->containsWidget(widget) )
             return;
 
@@ -27,5 +28,6 @@ namespace UserInterface
         newWrapper->move(pos);
         newWrapper->resize(size);
         newWrapper->show();
+        */
     }
 }

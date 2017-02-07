@@ -35,65 +35,71 @@ namespace UserInterface
 
     ResizeableGridLayoutManager::~ResizeableGridLayoutManager()
     {
-        // Buttons are parented to the layout's parent widget, so will be deleted automatically.
+
     }
 
-    bool ResizeableGridLayoutManager::containsWidget(QWidget *widget) const
-    {
-        return m_pModel->containsWidget(widget);
-    }
-
-    QWidget* ResizeableGridLayoutManager::insertWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
+    void ResizeableGridLayoutManager::embedWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
     {
         if ( !widget )
-            return nullptr;
+            return;
 
         clearGridLayout();
 
-        QWidget* previousWidget = m_pModel->widgetAt(cell);
-
-        if ( !m_pModel->canAddWidget(cell) )
-        {
-            m_pModel->replaceWidget(widget, cell);
-        }
-        else
-        {
-            m_pModel->addWidget(widget, cell, splitPreference);
-            previousWidget = nullptr;
-        }
+        ResizeableGridLayoutContainer* container = createContainerForEmbed(cell, splitPreference);
+        container->addWidget(widget);
 
         updateGridLayout();
         updateStretchFactors();
-        return previousWidget;
     }
 
-    QWidget* ResizeableGridLayoutManager::removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference)
+    void ResizeableGridLayoutManager::insertWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell)
     {
-        if ( !m_pModel->canRemoveWidget(cell) )
-        {
-            return nullptr;
-        }
+        if ( !widget )
+            return;
 
         clearGridLayout();
 
-        QWidget* previousWidget = m_pModel->widgetAt(cell);
-        m_pModel->removeWidget(cell, mergePreference);
+        ResizeableGridLayoutContainer* container = createContainerForInsert(cell);
+        container->addWidget(widget);
 
         updateGridLayout();
-        return previousWidget;
+        updateStretchFactors();
     }
 
-    bool ResizeableGridLayoutManager::removeWidget(QWidget *widget, Qt::Orientation mergePreference)
+    ResizeableGridLayoutContainer* ResizeableGridLayoutManager::createContainerForEmbed(QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
     {
-        if ( !widget )
-            return false;
+        ResizeableGridLayoutContainer* container = nullptr;
 
-        QuadGridLayoutModel::GridCellList list = m_pModel->widgetCells(widget);
-        if ( list.isEmpty() )
-            return false;
+        if ( m_pModel->canAddWidget(cell) )
+        {
+            container = new ResizeableGridLayoutContainer();
+            m_pModel->addWidget(container, cell, splitPreference);
+        }
+        else
+        {
+            container = qobject_cast<ResizeableGridLayoutContainer*>(m_pModel->widgetAt(cell));
+            Q_ASSERT(container);
+        }
 
-        QWidget* removed = removeWidget(QuadGridLayoutModel::lowestGridCell(list), mergePreference);
-        return removed == widget;
+        return container;
+    }
+
+    ResizeableGridLayoutContainer* ResizeableGridLayoutManager::createContainerForInsert(QuadGridLayoutDefs::GridCell cell)
+    {
+        ResizeableGridLayoutContainer* container = nullptr;
+
+        if ( !m_pModel->widgetAt(cell) )
+        {
+            container = new ResizeableGridLayoutContainer();
+            m_pModel->addWidget(container, cell);
+        }
+        else
+        {
+            container = qobject_cast<ResizeableGridLayoutContainer*>(m_pModel->widgetAt(cell));
+            Q_ASSERT(container);
+        }
+
+        return container;
     }
 
     void ResizeableGridLayoutManager::equaliseCellSizes()
@@ -126,28 +132,6 @@ namespace UserInterface
                 break;
             }
         }
-    }
-
-    void ResizeableGridLayoutManager::maximizeWidget(QWidget *widget)
-    {
-        if ( !widget )
-            return;
-
-        QuadGridLayoutModel::GridCellList list = m_pModel->widgetCells(widget);
-        if ( list.isEmpty() )
-            return;
-
-        maximizeWidget(QuadGridLayoutModel::lowestGridCell(list));
-    }
-
-    void ResizeableGridLayoutManager::maximizeWidget(QuadGridLayoutDefs::GridCell cell)
-    {
-        QuadGridLayoutPoint point(cell);
-        QuadGridLayoutPoint opposite = point.diagonalNeighbour();
-        m_pGridLayout->setRowStretch(point.y() * 2, 1);
-        m_pGridLayout->setRowStretch(opposite.y() * 2, 0);
-        m_pGridLayout->setColumnStretch(point.x() * 2, 1);
-        m_pGridLayout->setColumnStretch(opposite.x() * 2, 0);
     }
 
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
@@ -320,41 +304,18 @@ namespace UserInterface
         QLayoutItem *child;
         while ( (child = m_pGridLayout->takeAt(0)) != nullptr )
         {
-            if ( cleanUpContainer(qobject_cast<ResizeableGridLayoutContainer*>(child->widget())) )
+            // Only delete buttons - the other widgets are still held
+            // in the model and may be re-inserted later.
+            ResizeableGridElementButton* button = qobject_cast<ResizeableGridElementButton*>(child->widget());
+            if ( button )
             {
-                delete child;
-                continue;
-            }
-
-            if ( cleanUpButton(qobject_cast<ResizeableGridElementButton*>(child->widget())) )
-            {
-                delete child;
-                continue;
+                delete button;
             }
 
             delete child;
         }
 
         m_ResizeButtons.clear();
-    }
-
-    bool ResizeableGridLayoutManager::cleanUpContainer(ResizeableGridLayoutContainer *container)
-    {
-        if ( !container )
-            return false;
-
-        container->removeWidget(0);
-        delete container;
-        return true;
-    }
-
-    bool ResizeableGridLayoutManager::cleanUpButton(ResizeableGridElementButton *button)
-    {
-        if ( !button )
-            return false;
-
-        delete button;
-        return true;
     }
 
     void ResizeableGridLayoutManager::setSingleWidgetLayout()
@@ -398,10 +359,7 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::addWidgetToLayout(QWidget *widget, int row, int col, int rowSpan, int colSpan)
     {
-        ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
-        container->addWidget(widget);
-
-        m_pGridLayout->addWidget(container, row, col, rowSpan, colSpan);
+        m_pGridLayout->addWidget(widget, row, col, rowSpan, colSpan);
     }
 
     void ResizeableGridLayoutManager::addResizeButton(int row, int column, int rowSpan, int colSpan)
@@ -536,30 +494,5 @@ namespace UserInterface
 
         m_pGridLayout->setRowStretch(0, top);
         m_pGridLayout->setRowStretch(2, bottom);
-    }
-
-    void ResizeableGridLayoutManager::containerCloseClicked()
-    {
-        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
-        Q_ASSERT(container);
-
-        QWidget* widget = container->widgetAt(0);
-        if ( !widget )
-            return;
-
-        removeWidget(widget, Qt::Horizontal);
-        delete widget;
-    }
-
-    void ResizeableGridLayoutManager::containerMaximizeClicked()
-    {
-        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
-        Q_ASSERT(container);
-
-        QWidget* widget = container->widgetAt(0);
-        if ( !widget )
-            return;
-
-        maximizeWidget(widget);
     }
 }

@@ -36,27 +36,19 @@ void MainWindow::addNewItem()
 
     if ( action == ui->actionUpper_Left )
     {
-        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
-        if ( w )
-            delete w;
+        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
     }
     else if ( action == ui->actionUpper_Right )
     {
-        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
-        if ( w )
-            delete w;
+        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
     }
     else if ( action == ui->actionLower_Left )
     {
-        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
-        if ( w )
-            delete w;
+        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
     }
     else if ( action == ui->actionLower_Right )
     {
-        QWidget* w = m_pGridManager->insertWidget(n, UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
-        if ( w )
-            delete w;
+        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
     }
     else
     {
@@ -70,31 +62,6 @@ void MainWindow::removeItem()
     QAction* action = qobject_cast<QAction*>(sender());
     if ( !action )
         return;
-
-    if ( action == ui->actionRemove_UL )
-    {
-        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
-        if ( w )
-            delete w;
-    }
-    else if ( action == ui->actionRemove_UR )
-    {
-        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
-        if ( w )
-            delete w;
-    }
-    else if ( action == ui->actionRemove_LL )
-    {
-        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
-        if ( w )
-            delete w;
-    }
-    else if ( action == ui->actionRemove_LR )
-    {
-        QWidget* w = m_pGridManager->removeWidget(UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
-        if ( w )
-            delete w;
-    }
 }
 
 void MainWindow::equalise()

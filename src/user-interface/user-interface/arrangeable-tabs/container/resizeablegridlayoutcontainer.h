@@ -13,7 +13,7 @@ namespace UserInterface
 {
     class ResizeableGridLayoutContainerButton;
 
-    class ResizeableGridLayoutContainer : public QFrame
+    class USERINTERFACESHARED_EXPORT ResizeableGridLayoutContainer : public QFrame
     {
         Q_OBJECT
     public:
@@ -28,6 +28,7 @@ namespace UserInterface
         int currentWidgetIndex() const;
 
     signals:
+        void currentChanged(int index);
 
     public slots:
 

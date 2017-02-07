@@ -19,7 +19,6 @@ SOURCES += \
     user-interface/arrangeable-tabs/model/quadgridlayoutpoint.cpp \
     user-interface/arrangeable-tabs/resizablegridwrapper.cpp \
     user-interface/arrangeable-tabs/resizeablegridelementbutton.cpp \
-    user-interface/arrangeable-tabs/resizeablegridlayoutcontainerhandle.cpp \
     user-interface/arrangeable-tabs/resizeablegridlayoutmanager.cpp \
     user-interface/views/mapviewwindow.cpp \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.cpp \
@@ -33,7 +32,6 @@ HEADERS +=\
     user-interface/arrangeable-tabs/model/quadgridlayoutpoint.h \
     user-interface/arrangeable-tabs/resizablegridwrapper.h \
     user-interface/arrangeable-tabs/resizeablegridelementbutton.h \
-    user-interface/arrangeable-tabs/resizeablegridlayoutcontainerhandle.h \
     user-interface/arrangeable-tabs/resizeablegridlayoutmanager.h \
     user-interface/views/mapviewwindow.h \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.h \
