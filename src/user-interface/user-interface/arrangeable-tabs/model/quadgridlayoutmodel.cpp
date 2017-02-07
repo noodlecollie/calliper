@@ -248,12 +248,15 @@ namespace UserInterface
             int cellArrayIndex = QuadGridLayoutPoint(cell).toArrayIndex();
             QWidget* w = m_CellToWidget[cellArrayIndex];
 
-            GridCellList& wList = m_WidgetToCells[w];
-            wList.removeOne(cell);
-
-            if ( wList.isEmpty() )
+            if ( w )
             {
-                m_WidgetToCells.remove(w);
+                GridCellList& wList = m_WidgetToCells[w];
+                wList.removeOne(cell);
+
+                if ( wList.isEmpty() )
+                {
+                    m_WidgetToCells.remove(w);
+                }
             }
 
             // Replace the widget at this cell with our new widget.

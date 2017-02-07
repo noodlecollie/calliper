@@ -343,8 +343,7 @@ namespace UserInterface
         if ( !container )
             return false;
 
-        QWidget* w = container->removeWidget(0);
-        delete w;
+        container->removeWidget(0);
         delete container;
         return true;
     }
