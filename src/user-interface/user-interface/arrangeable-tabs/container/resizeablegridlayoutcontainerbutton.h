@@ -12,11 +12,13 @@ class QLabel;
 
 namespace UserInterface
 {
+    class ResizeableGridLayoutContainer;
+
     class USERINTERFACESHARED_EXPORT ResizeableGridLayoutContainerButton : public QFrame
     {
         Q_OBJECT
     public:
-        explicit ResizeableGridLayoutContainerButton(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+        explicit ResizeableGridLayoutContainerButton(ResizeableGridLayoutContainer* container, QWidget *parent = nullptr);
 
         int itemId() const;
         void setItemId(int id);
@@ -34,7 +36,7 @@ namespace UserInterface
         void floatInvoked(int itemId, bool dragged);
 
     public slots:
-        void currentItemIndexChanged(int index);
+        void currentItemIndexChanged();
 
     protected:
         void contextMenuEvent(QContextMenuEvent *event) override;
@@ -48,8 +50,10 @@ namespace UserInterface
         void initLayout();
         void initActions();
         void updateTextElide();
-        bool shouldHighlight(int index) const;
+        bool shouldHighlight() const;
         void setHighlighted(bool highlighted);
+
+        ResizeableGridLayoutContainer* m_pContainer;
 
         QAction* m_pSelectAction;
         QAction* m_pMaximiseAction;

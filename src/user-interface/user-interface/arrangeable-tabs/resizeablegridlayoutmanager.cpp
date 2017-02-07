@@ -401,10 +401,6 @@ namespace UserInterface
         ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
         container->addWidget(widget);
 
-//        connect(container, SIGNAL(closeClicked()), this, SLOT(containerCloseClicked()));
-//        connect(container, SIGNAL(maximizeClicked()), this, SLOT(containerMaximizeClicked()));
-//        connect(container, SIGNAL(floatClicked(QWidget*)), this, SIGNAL(widgetFloatClicked(QWidget*)));
-
         m_pGridLayout->addWidget(container, row, col, rowSpan, colSpan);
     }
 

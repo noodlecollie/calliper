@@ -16,6 +16,16 @@ namespace UserInterface
         initLayout();
     }
 
+    int ResizeableGridLayoutContainer::widgetCount() const
+    {
+        return m_pStackedWidget->count();
+    }
+
+    int ResizeableGridLayoutContainer::currentWidgetIndex() const
+    {
+        return m_pStackedWidget->currentIndex();
+    }
+
     void ResizeableGridLayoutContainer::addWidget(QWidget *widget)
     {
         if ( !widget )
@@ -78,10 +88,10 @@ namespace UserInterface
 
     ResizeableGridLayoutContainerButton* ResizeableGridLayoutContainer::createButton(QWidget *widget, int index)
     {
-        ResizeableGridLayoutContainerButton* button = new ResizeableGridLayoutContainerButton();
+        ResizeableGridLayoutContainerButton* button = new ResizeableGridLayoutContainerButton(this);
         button->setItemId(index);
         button->setText(widget->windowTitle());
-        connect(m_pStackedWidget, SIGNAL(currentChanged(int)), button, SLOT(currentItemIndexChanged(int)));
+        connect(m_pStackedWidget, SIGNAL(currentChanged(int)), button, SLOT(currentItemIndexChanged()));
         connect(button, SIGNAL(selectInvoked(int)), this, SLOT(buttonPressed(int)));
         return button;
     }

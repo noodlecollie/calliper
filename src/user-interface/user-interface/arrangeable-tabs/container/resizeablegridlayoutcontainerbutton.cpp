@@ -8,11 +8,13 @@
 #include <QApplication>
 
 #include "resizeablegridlayoutcontainerbutton.h"
+#include "resizeablegridlayoutcontainer.h"
 
 namespace UserInterface
 {
-    ResizeableGridLayoutContainerButton::ResizeableGridLayoutContainerButton(QWidget *parent, Qt::WindowFlags f)
-        : QFrame(parent, f),
+    ResizeableGridLayoutContainerButton::ResizeableGridLayoutContainerButton(ResizeableGridLayoutContainer *container, QWidget *parent)
+        : QFrame(parent),
+          m_pContainer(container),
           m_pSelectAction(nullptr),
           m_pMaximiseAction(nullptr),
           m_pFloatAction(nullptr),
@@ -25,6 +27,7 @@ namespace UserInterface
           m_LastMousePress(),
           m_bHighlighted(false)
     {
+        Q_ASSERT(m_pContainer);
         initLayout();
         initActions();
     }
@@ -63,18 +66,22 @@ namespace UserInterface
         m_iDragActivationThreshold = threshold;
     }
 
-    bool ResizeableGridLayoutContainerButton::shouldHighlight(int index) const
+    bool ResizeableGridLayoutContainerButton::shouldHighlight() const
     {
-        return index >= 0 && index == m_iItemID;
+        return m_pContainer->widgetCount() > 1
+                && m_pContainer->currentWidgetIndex() >= 0
+                && m_pContainer->currentWidgetIndex() == m_iItemID;
     }
 
-    void ResizeableGridLayoutContainerButton::currentItemIndexChanged(int index)
+    void ResizeableGridLayoutContainerButton::currentItemIndexChanged()
     {
-        if ( shouldHighlight(index) && !m_bHighlighted )
+        Q_UNUSED(index);
+
+        if ( shouldHighlight() && !m_bHighlighted )
         {
             setHighlighted(true);
         }
-        else if ( !shouldHighlight(index) && m_bHighlighted )
+        else if ( !shouldHighlight() && m_bHighlighted )
         {
             setHighlighted(false);
         }

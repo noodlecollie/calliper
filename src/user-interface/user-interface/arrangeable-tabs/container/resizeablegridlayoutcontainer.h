@@ -24,6 +24,8 @@ namespace UserInterface
         QWidget* removeWidget(int index);
 
         QWidget* widgetAt(int index) const;
+        int widgetCount() const;
+        int currentWidgetIndex() const;
 
     signals:
 
