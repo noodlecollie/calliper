@@ -77,7 +77,7 @@ namespace UserInterface
         }
         else
         {
-            container = qobject_cast<ResizeableGridLayoutContainer*>(m_pModel->widgetAt(cell));
+            container = containerAt(cell);
             Q_ASSERT(container);
         }
 
@@ -95,11 +95,37 @@ namespace UserInterface
         }
         else
         {
-            container = qobject_cast<ResizeableGridLayoutContainer*>(m_pModel->widgetAt(cell));
+            container = containerAt(cell);
             Q_ASSERT(container);
         }
 
         return container;
+    }
+
+    QWidget* ResizeableGridLayoutManager::takeActiveWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference)
+    {
+        ResizeableGridLayoutContainer* container = containerAt(cell);
+        if ( !container )
+            return nullptr;
+
+        QWidget* widget = container->removeCurrentWidget();
+
+        if ( container->widgetCount() < 1 )
+        {
+            clearGridLayout();
+
+            m_pModel->removeWidget(cell, mergePreference);
+            delete container;
+
+            updateGridLayout();
+        }
+
+        return widget;
+    }
+
+    ResizeableGridLayoutContainer* ResizeableGridLayoutManager::containerAt(QuadGridLayoutDefs::GridCell cell) const
+    {
+        return qobject_cast<ResizeableGridLayoutContainer*>(m_pModel->widgetAt(cell));
     }
 
     void ResizeableGridLayoutManager::equaliseCellSizes()

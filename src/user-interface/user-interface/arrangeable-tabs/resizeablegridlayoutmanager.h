@@ -34,6 +34,8 @@ namespace UserInterface
         // Inserts a widget directly into the container located in the specified cell.
         void insertWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell);
 
+        QWidget* takeActiveWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference);
+
         void equaliseCellSizes();
 
     signals:
@@ -67,6 +69,7 @@ namespace UserInterface
         void resizeHorizontal(int delta);
         void resizeVertical(int delta);
 
+        ResizeableGridLayoutContainer* containerAt(QuadGridLayoutDefs::GridCell cell) const;
         ResizeableGridLayoutContainer* createContainerForEmbed(QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference);
         ResizeableGridLayoutContainer* createContainerForInsert(QuadGridLayoutDefs::GridCell cell);
 

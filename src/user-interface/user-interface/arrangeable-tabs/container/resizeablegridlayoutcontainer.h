@@ -22,6 +22,7 @@ namespace UserInterface
         void addWidget(QWidget* widget);
         QWidget* replaceWidget(int index, QWidget* widget);
         QWidget* removeWidget(int index);
+        QWidget* removeCurrentWidget();
 
         QWidget* widgetAt(int index) const;
         int widgetCount() const;

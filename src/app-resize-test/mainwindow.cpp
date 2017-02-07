@@ -62,6 +62,23 @@ void MainWindow::removeItem()
     QAction* action = qobject_cast<QAction*>(sender());
     if ( !action )
         return;
+
+    if ( action == ui->actionRemove_UL )
+    {
+        m_pGridManager->takeActiveWidget(UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
+    }
+    else if ( action == ui->actionRemove_UR )
+    {
+        m_pGridManager->takeActiveWidget(UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
+    }
+    else if ( action == ui->actionRemove_LL )
+    {
+        m_pGridManager->takeActiveWidget(UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
+    }
+    else if ( action == ui->actionRemove_LR )
+    {
+        m_pGridManager->takeActiveWidget(UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
+    }
 }
 
 void MainWindow::equalise()

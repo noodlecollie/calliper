@@ -74,6 +74,11 @@ namespace UserInterface
         return oldWidget;
     }
 
+    QWidget* ResizeableGridLayoutContainer::removeCurrentWidget()
+    {
+        return removeWidget(currentWidgetIndex());
+    }
+
     QWidget* ResizeableGridLayoutContainer::widgetAt(int index) const
     {
         if ( index < 0 || index >= m_pStackedWidget->count() )
