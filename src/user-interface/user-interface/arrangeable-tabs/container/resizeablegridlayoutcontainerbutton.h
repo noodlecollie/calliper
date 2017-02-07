@@ -48,6 +48,8 @@ namespace UserInterface
         void initLayout();
         void initActions();
         void updateTextElide();
+        bool shouldHighlight(int index) const;
+        void setHighlighted(bool highlighted);
 
         QAction* m_pSelectAction;
         QAction* m_pMaximiseAction;
@@ -60,6 +62,7 @@ namespace UserInterface
         int m_iDragActivationThreshold;
         bool m_bInDrag;
         QPoint m_LastMousePress;
+        bool m_bHighlighted;
     };
 }
 

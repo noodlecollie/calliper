@@ -29,6 +29,9 @@ namespace UserInterface
 
     public slots:
 
+    private slots:
+        void buttonPressed(int index);
+
     private:
         ResizeableGridLayoutContainerButton* createButton(QWidget* widget, int index);
         void initLayout();

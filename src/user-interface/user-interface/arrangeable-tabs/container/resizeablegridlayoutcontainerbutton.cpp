@@ -22,7 +22,8 @@ namespace UserInterface
           m_strLabelText(),
           m_iDragActivationThreshold(0),
           m_bInDrag(false),
-          m_LastMousePress()
+          m_LastMousePress(),
+          m_bHighlighted(false)
     {
         initLayout();
         initActions();
@@ -62,9 +63,40 @@ namespace UserInterface
         m_iDragActivationThreshold = threshold;
     }
 
+    bool ResizeableGridLayoutContainerButton::shouldHighlight(int index) const
+    {
+        return index >= 0 && index == m_iItemID;
+    }
+
     void ResizeableGridLayoutContainerButton::currentItemIndexChanged(int index)
     {
-        // TODO: Highlight! How?
+        if ( shouldHighlight(index) && !m_bHighlighted )
+        {
+            setHighlighted(true);
+        }
+        else if ( !shouldHighlight(index) && m_bHighlighted )
+        {
+            setHighlighted(false);
+        }
+    }
+
+    void ResizeableGridLayoutContainerButton::setHighlighted(bool highlighted)
+    {
+        QPalette p = QApplication::palette();
+
+        if ( highlighted )
+        {
+            p.setBrush(QPalette::Window, p.highlight());
+            p.setBrush(QPalette::WindowText, p.highlightedText());
+        }
+        else
+        {
+            p.setBrush(QPalette::Window, p.window());
+            p.setBrush(QPalette::WindowText, p.windowText());
+        }
+
+        setPalette(p);
+        m_bHighlighted = highlighted;
     }
 
     void ResizeableGridLayoutContainerButton::initActions()
@@ -96,6 +128,7 @@ namespace UserInterface
 
         setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
         setFrameStyle(QFrame::Panel | QFrame::Raised);
+        setAutoFillBackground(true);
     }
 
     void ResizeableGridLayoutContainerButton::updateTextElide()

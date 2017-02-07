@@ -82,7 +82,16 @@ namespace UserInterface
         button->setItemId(index);
         button->setText(widget->windowTitle());
         connect(m_pStackedWidget, SIGNAL(currentChanged(int)), button, SLOT(currentItemIndexChanged(int)));
+        connect(button, SIGNAL(selectInvoked(int)), this, SLOT(buttonPressed(int)));
         return button;
+    }
+
+    void ResizeableGridLayoutContainer::buttonPressed(int index)
+    {
+        if ( index < 0 || index >= m_pStackedWidget->count() )
+            return;
+
+        m_pStackedWidget->setCurrentIndex(index);
     }
 
     void ResizeableGridLayoutContainer::initLayout()
