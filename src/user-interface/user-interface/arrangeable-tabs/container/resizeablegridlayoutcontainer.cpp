@@ -26,6 +26,11 @@ namespace UserInterface
         return m_pStackedWidget->currentIndex();
     }
 
+    void ResizeableGridLayoutContainer::setCurrentWidgetIndex(int index)
+    {
+        m_pStackedWidget->setCurrentIndex(index);
+    }
+
     void ResizeableGridLayoutContainer::addWidget(QWidget *widget)
     {
         if ( !widget )
@@ -97,8 +102,11 @@ namespace UserInterface
         ResizeableGridLayoutContainerButton* button = new ResizeableGridLayoutContainerButton(this);
         button->setItemId(index);
         button->setText(widget->windowTitle());
+
         connect(this, SIGNAL(currentChanged(int)), button, SLOT(currentItemIndexChanged()));
         connect(button, SIGNAL(selectInvoked(int)), this, SLOT(buttonPressed(int)));
+        connect(button, SIGNAL(maximiseInvoked(int)), this, SIGNAL(maximizeInvoked(int)));
+
         return button;
     }
 

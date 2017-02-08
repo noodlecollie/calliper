@@ -27,9 +27,11 @@ namespace UserInterface
         QWidget* widgetAt(int index) const;
         int widgetCount() const;
         int currentWidgetIndex() const;
+        void setCurrentWidgetIndex(int index);
 
     signals:
         void currentChanged(int index);
+        void maximizeInvoked(int index);
 
     public slots:
 

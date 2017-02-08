@@ -42,6 +42,7 @@ namespace UserInterface
 
     private slots:
         void resizeButtonDragged(int deltaX, int deltaY);
+        void maximizeInvoked(int itemId);
 
     private:
         void updateGridLayout();
@@ -68,10 +69,12 @@ namespace UserInterface
 
         void resizeHorizontal(int delta);
         void resizeVertical(int delta);
+        void maximize(QuadGridLayoutDefs::GridCell cell);
 
         ResizeableGridLayoutContainer* containerAt(QuadGridLayoutDefs::GridCell cell) const;
         ResizeableGridLayoutContainer* createContainerForEmbed(QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference);
         ResizeableGridLayoutContainer* createContainerForInsert(QuadGridLayoutDefs::GridCell cell);
+        ResizeableGridLayoutContainer* createContainer();
 
         QGridLayout* const m_pGridLayout;
         QList<ResizeableGridElementButton*> m_ResizeButtons;

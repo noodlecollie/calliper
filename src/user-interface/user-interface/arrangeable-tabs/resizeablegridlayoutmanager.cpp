@@ -72,7 +72,7 @@ namespace UserInterface
 
         if ( m_pModel->canAddWidget(cell) )
         {
-            container = new ResizeableGridLayoutContainer();
+            container = createContainer();
             m_pModel->addWidget(container, cell, splitPreference);
         }
         else
@@ -90,7 +90,7 @@ namespace UserInterface
 
         if ( !m_pModel->widgetAt(cell) )
         {
-            container = new ResizeableGridLayoutContainer();
+            container = createContainer();
             m_pModel->addWidget(container, cell);
         }
         else
@@ -99,6 +99,13 @@ namespace UserInterface
             Q_ASSERT(container);
         }
 
+        return container;
+    }
+
+    ResizeableGridLayoutContainer* ResizeableGridLayoutManager::createContainer()
+    {
+        ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
+        connect(container, SIGNAL(maximizeInvoked(int)), this, SLOT(maximizeInvoked(int)));
         return container;
     }
 
@@ -520,5 +527,29 @@ namespace UserInterface
 
         m_pGridLayout->setRowStretch(0, top);
         m_pGridLayout->setRowStretch(2, bottom);
+    }
+
+    void ResizeableGridLayoutManager::maximizeInvoked(int itemId)
+    {
+        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
+        if ( !container )
+            return;
+
+        QuadGridLayoutModel::GridCellList cells = m_pModel->widgetCells(container);
+        if ( cells.isEmpty() )
+            return;
+
+        container->setCurrentWidgetIndex(itemId);
+        maximize(QuadGridLayoutModel::lowestGridCell(cells));
+    }
+
+    void ResizeableGridLayoutManager::maximize(QuadGridLayoutDefs::GridCell cell)
+    {
+        QuadGridLayoutPoint point(cell);
+        QuadGridLayoutPoint opposite = point.diagonalNeighbour();
+        m_pGridLayout->setRowStretch(point.y() * 2, 1);
+        m_pGridLayout->setRowStretch(opposite.y() * 2, 0);
+        m_pGridLayout->setColumnStretch(point.x() * 2, 1);
+        m_pGridLayout->setColumnStretch(opposite.x() * 2, 0);
     }
 }
