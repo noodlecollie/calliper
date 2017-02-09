@@ -133,7 +133,7 @@ namespace UserInterface
 
         connect(menu, SIGNAL(selectInvoked()), this, SLOT(menuSelectInvoked()));
         connect(menu, SIGNAL(maximiseInvoked()), this, SLOT(menuMaximiseInvoked()));
-        connect(menu, SIGNAL(floatInvoked()), this, SLOT(menuMaximiseInvoked()));
+        connect(menu, SIGNAL(floatInvoked()), this, SLOT(menuFloatInvoked()));
         connect(menu, SIGNAL(closeInvoked()), this, SLOT(menuCloseInvoked()));
 
         menu->popup(event->globalPos());

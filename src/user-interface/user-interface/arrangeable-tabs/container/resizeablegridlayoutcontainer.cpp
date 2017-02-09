@@ -107,6 +107,7 @@ namespace UserInterface
 
         connect(button, SIGNAL(selectInvoked(int)), this, SLOT(buttonPressed(int)));
         connect(button, SIGNAL(maximiseInvoked(int)), this, SIGNAL(maximizeInvoked(int)));
+        connect(button, SIGNAL(floatInvoked(int,bool)), this, SIGNAL(floatInvoked(int,bool)));
         connect(button, SIGNAL(closeInvoked(int)), this, SIGNAL(closeInvoked(int)));
 
         return button;

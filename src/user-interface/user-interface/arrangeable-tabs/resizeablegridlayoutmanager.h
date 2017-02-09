@@ -39,11 +39,13 @@ namespace UserInterface
         void equaliseCellSizes();
 
     signals:
+        void widgetFloated(QWidget* widget, bool dragged);
 
     private slots:
         void resizeButtonDragged(int deltaX, int deltaY);
         void maximizeInvoked(int itemId);
         void closeInvoked(int itemId);
+        void floatInvoked(int itemId, bool dragged);
 
     private:
         void updateGridLayout();

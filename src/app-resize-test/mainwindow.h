@@ -20,8 +20,11 @@ private slots:
     void addNewItem();
     void removeItem();
     void equalise();
+    void widgetFloated(QWidget* widget, bool dragged);
 
 private:
+    void setWidgetInGrid(QWidget* widget);
+
     Ui::MainWindow *ui;
     UserInterface::ResizeableGridLayoutManager* m_pGridManager;
 };

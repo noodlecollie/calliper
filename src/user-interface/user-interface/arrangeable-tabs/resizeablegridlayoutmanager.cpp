@@ -3,6 +3,7 @@
 #include <QWidget>
 #include "container/resizeablegridlayoutcontainer.h"
 #include "resizeablegridelementbutton.h"
+#include "calliperutil/debug/debug.h"
 
 namespace
 {
@@ -105,8 +106,11 @@ namespace UserInterface
     ResizeableGridLayoutContainer* ResizeableGridLayoutManager::createContainer()
     {
         ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
+
         connect(container, SIGNAL(maximizeInvoked(int)), this, SLOT(maximizeInvoked(int)));
         connect(container, SIGNAL(closeInvoked(int)), this, SLOT(closeInvoked(int)));
+        connect(container, SIGNAL(floatInvoked(int,bool)), this, SLOT(floatInvoked(int,bool)));
+
         return container;
     }
 
@@ -577,12 +581,22 @@ namespace UserInterface
         {
             clearGridLayout();
 
-            m_pModel->removeWidget(cell, mergePreference);
-            delete container;
+            CUTL_ASSERT_SUCCESS(m_pModel->removeWidget(cell, mergePreference));
 
+            delete container;
             updateGridLayout();
         }
 
         return widget;
+    }
+
+    void ResizeableGridLayoutManager::floatInvoked(int itemId, bool dragged)
+    {
+        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
+        if ( !container )
+            return;
+
+        QWidget* widget = removeWidget(container, itemId, Qt::Horizontal);
+        emit widgetFloated(widget, dragged);
     }
 }

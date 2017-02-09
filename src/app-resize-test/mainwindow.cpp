@@ -12,7 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QGridLayout* gridLayout = new QGridLayout();
     ui->centralWidget->setLayout(gridLayout);
+
     m_pGridManager = new UserInterface::ResizeableGridLayoutManager(gridLayout);
+    connect(m_pGridManager, SIGNAL(widgetFloated(QWidget*,bool)), this, SLOT(widgetFloated(QWidget*,bool)));
 }
 
 MainWindow::~MainWindow()
@@ -84,4 +86,18 @@ void MainWindow::removeItem()
 void MainWindow::equalise()
 {
     m_pGridManager->equaliseCellSizes();
+}
+
+void MainWindow::widgetFloated(QWidget *widget, bool dragged)
+{
+    Q_UNUSED(dragged);
+
+    MainWindow* other = new MainWindow();
+    other->setWidgetInGrid(widget);
+    other->show();
+}
+
+void MainWindow::setWidgetInGrid(QWidget *widget)
+{
+    m_pGridManager->embedWidget(widget, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
 }
