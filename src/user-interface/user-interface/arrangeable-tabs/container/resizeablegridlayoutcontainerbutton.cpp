@@ -9,16 +9,13 @@
 
 #include "resizeablegridlayoutcontainerbutton.h"
 #include "resizeablegridlayoutcontainer.h"
+#include "resizeablegridlayoutcontainermenu.h"
 
 namespace UserInterface
 {
     ResizeableGridLayoutContainerButton::ResizeableGridLayoutContainerButton(ResizeableGridLayoutContainer *container, QWidget *parent)
         : QFrame(parent),
           m_pContainer(container),
-          m_pSelectAction(nullptr),
-          m_pMaximiseAction(nullptr),
-          m_pFloatAction(nullptr),
-          m_pCloseAction(nullptr),
           m_iItemID(-1),
           m_pLabel(nullptr),
           m_strLabelText(),
@@ -29,7 +26,10 @@ namespace UserInterface
     {
         Q_ASSERT(m_pContainer);
         initLayout();
-        initActions();
+    }
+
+    ResizeableGridLayoutContainerButton::~ResizeableGridLayoutContainerButton()
+    {
     }
 
     int ResizeableGridLayoutContainerButton::itemId() const
@@ -83,8 +83,6 @@ namespace UserInterface
         {
             setHighlighted(false);
         }
-
-        m_pSelectAction->setEnabled(m_pContainer->widgetCount() > 1);
     }
 
     void ResizeableGridLayoutContainerButton::setHighlighted(bool highlighted)
@@ -104,21 +102,6 @@ namespace UserInterface
 
         setPalette(p);
         m_bHighlighted = highlighted;
-    }
-
-    void ResizeableGridLayoutContainerButton::initActions()
-    {
-        m_pSelectAction = new QAction(tr("&Select"));
-        connect(m_pSelectAction, &QAction::triggered, [this]{ emit selectInvoked(m_iItemID); });
-
-        m_pMaximiseAction = new QAction(tr("&Maximise"));
-        connect(m_pMaximiseAction, &QAction::triggered, [this]{ emit maximiseInvoked(m_iItemID); });
-
-        m_pFloatAction = new QAction(tr("&Float"));
-        connect(m_pFloatAction, &QAction::triggered, [this]{ emit floatInvoked(m_iItemID, m_bInDrag); });
-
-        m_pCloseAction = new QAction(tr("&Close"));
-        connect(m_pCloseAction, &QAction::triggered, [this]{ emit closeInvoked(m_iItemID); });
     }
 
     void ResizeableGridLayoutContainerButton::initLayout()
@@ -146,15 +129,14 @@ namespace UserInterface
 
     void ResizeableGridLayoutContainerButton::contextMenuEvent(QContextMenuEvent *event)
     {
-        QMenu menu(this);
+        ResizeableGridLayoutContainerMenu* menu = new ResizeableGridLayoutContainerMenu(this);
 
-        menu.addAction(m_pSelectAction);
-        menu.addAction(m_pMaximiseAction);
-        menu.addAction(m_pFloatAction);
-        menu.addSeparator();
-        menu.addAction(m_pCloseAction);
+        connect(menu, SIGNAL(selectInvoked()), this, SLOT(menuSelectInvoked()));
+        connect(menu, SIGNAL(maximiseInvoked()), this, SLOT(menuMaximiseInvoked()));
+        connect(menu, SIGNAL(floatInvoked()), this, SLOT(menuMaximiseInvoked()));
+        connect(menu, SIGNAL(closeInvoked()), this, SLOT(menuCloseInvoked()));
 
-        menu.exec(event->globalPos());
+        menu->popup(event->globalPos());
     }
 
     void ResizeableGridLayoutContainerButton::mousePressEvent(QMouseEvent *event)
@@ -165,13 +147,13 @@ namespace UserInterface
             {
                 m_bInDrag = true;
                 m_LastMousePress = event->globalPos();
-                m_pSelectAction->trigger();
+                emit selectInvoked(m_iItemID);
                 return;
             }
 
             case Qt::MiddleButton:
             {
-                m_pCloseAction->trigger();
+                emit closeInvoked(m_iItemID);
                 return;
             }
 
@@ -185,7 +167,7 @@ namespace UserInterface
     void ResizeableGridLayoutContainerButton::mouseDoubleClickEvent(QMouseEvent *event)
     {
         Q_UNUSED(event);
-        m_pMaximiseAction->trigger();
+        emit maximiseInvoked(m_iItemID);
     }
 
     void ResizeableGridLayoutContainerButton::mouseMoveEvent(QMouseEvent *event)
@@ -198,7 +180,7 @@ namespace UserInterface
 
         if ( (event->globalPos() - m_LastMousePress).manhattanLength() >= m_iDragActivationThreshold )
         {
-            m_pFloatAction->trigger();
+            emit floatInvoked(m_iItemID, true);
             m_bInDrag = false;
         }
     }
@@ -218,5 +200,25 @@ namespace UserInterface
     {
         QFrame::resizeEvent(event);
         updateTextElide();
+    }
+
+    void ResizeableGridLayoutContainerButton::menuCloseInvoked()
+    {
+        emit closeInvoked(m_iItemID);
+    }
+
+    void ResizeableGridLayoutContainerButton::menuFloatInvoked()
+    {
+        emit floatInvoked(m_iItemID, false);
+    }
+
+    void ResizeableGridLayoutContainerButton::menuMaximiseInvoked()
+    {
+        emit maximiseInvoked(m_iItemID);
+    }
+
+    void ResizeableGridLayoutContainerButton::menuSelectInvoked()
+    {
+        emit selectInvoked(m_iItemID);
     }
 }

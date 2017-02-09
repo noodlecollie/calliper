@@ -104,8 +104,10 @@ namespace UserInterface
         button->setText(widget->windowTitle());
 
         connect(this, SIGNAL(currentChanged(int)), button, SLOT(currentItemIndexChanged()));
+
         connect(button, SIGNAL(selectInvoked(int)), this, SLOT(buttonPressed(int)));
         connect(button, SIGNAL(maximiseInvoked(int)), this, SIGNAL(maximizeInvoked(int)));
+        connect(button, SIGNAL(closeInvoked(int)), this, SIGNAL(closeInvoked(int)));
 
         return button;
     }

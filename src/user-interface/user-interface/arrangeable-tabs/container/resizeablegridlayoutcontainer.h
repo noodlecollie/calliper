@@ -32,6 +32,7 @@ namespace UserInterface
     signals:
         void currentChanged(int index);
         void maximizeInvoked(int index);
+        void closeInvoked(int index);
 
     public slots:
 

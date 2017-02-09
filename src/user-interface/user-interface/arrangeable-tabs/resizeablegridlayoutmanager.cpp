@@ -106,6 +106,7 @@ namespace UserInterface
     {
         ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
         connect(container, SIGNAL(maximizeInvoked(int)), this, SLOT(maximizeInvoked(int)));
+        connect(container, SIGNAL(closeInvoked(int)), this, SLOT(closeInvoked(int)));
         return container;
     }
 
@@ -115,19 +116,7 @@ namespace UserInterface
         if ( !container )
             return nullptr;
 
-        QWidget* widget = container->removeCurrentWidget();
-
-        if ( container->widgetCount() < 1 )
-        {
-            clearGridLayout();
-
-            m_pModel->removeWidget(cell, mergePreference);
-            delete container;
-
-            updateGridLayout();
-        }
-
-        return widget;
+        return removeWidget(container, container->currentWidgetIndex(), mergePreference);
     }
 
     ResizeableGridLayoutContainer* ResizeableGridLayoutManager::containerAt(QuadGridLayoutDefs::GridCell cell) const
@@ -551,5 +540,41 @@ namespace UserInterface
         m_pGridLayout->setRowStretch(opposite.y() * 2, 0);
         m_pGridLayout->setColumnStretch(point.x() * 2, 1);
         m_pGridLayout->setColumnStretch(opposite.x() * 2, 0);
+    }
+
+    void ResizeableGridLayoutManager::closeInvoked(int itemId)
+    {
+        ResizeableGridLayoutContainer* container = qobject_cast<ResizeableGridLayoutContainer*>(sender());
+        if ( !container )
+            return;
+
+        QWidget* widget = removeWidget(container, itemId, Qt::Horizontal);
+        delete widget;
+    }
+
+    QWidget* ResizeableGridLayoutManager::removeWidget(ResizeableGridLayoutContainer *container, int index, Qt::Orientation mergePreference)
+    {
+        QuadGridLayoutModel::GridCellList list = m_pModel->widgetCells(container);
+        if ( list.isEmpty() )
+        {
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Expected container to be part of model!");
+            return nullptr;
+        }
+
+        QuadGridLayoutDefs::GridCell cell = QuadGridLayoutModel::lowestGridCell(list);
+
+        QWidget* widget = container->removeWidget(index);
+
+        if ( container->widgetCount() < 1 )
+        {
+            clearGridLayout();
+
+            m_pModel->removeWidget(cell, mergePreference);
+            delete container;
+
+            updateGridLayout();
+        }
+
+        return widget;
     }
 }

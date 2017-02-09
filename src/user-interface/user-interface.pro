@@ -22,7 +22,8 @@ SOURCES += \
     user-interface/arrangeable-tabs/resizeablegridlayoutmanager.cpp \
     user-interface/views/mapviewwindow.cpp \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.cpp \
-    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.cpp
+    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.cpp \
+    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.cpp
 
 HEADERS +=\
     user-interface_global.h \
@@ -35,7 +36,8 @@ HEADERS +=\
     user-interface/arrangeable-tabs/resizeablegridlayoutmanager.h \
     user-interface/views/mapviewwindow.h \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.h \
-    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.h
+    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.h \
+    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.h
 
 unix {
     target.path = /usr/lib
