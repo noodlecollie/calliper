@@ -171,6 +171,9 @@ namespace UserInterface
         {
             resizeVertical(deltaY);
         }
+
+        qDebug() << "Col 0:" << m_pGridLayout->columnStretch(0) << "Col 2:" << m_pGridLayout->columnStretch(2)
+                 << "Row 0:" << m_pGridLayout->rowStretch(0) << "Row 2:" << m_pGridLayout->rowStretch(2);
     }
 
     void ResizeableGridLayoutManager::updateGridLayout()
@@ -534,12 +537,17 @@ namespace UserInterface
 
     void ResizeableGridLayoutManager::maximize(QuadGridLayoutDefs::GridCell cell)
     {
+        // This is a pretty awful way to do maximisation, but setting the non-maximised
+        // rows/columns to 0 doesn't always squash them down. Instead, we need to set
+        // them to 1 and set the maximised areas to something much larger.
+        static const int LARGE_STRETCH = 65535;
+
         QuadGridLayoutPoint point(cell);
         QuadGridLayoutPoint opposite = point.diagonalNeighbour();
-        m_pGridLayout->setRowStretch(point.y() * 2, 1);
-        m_pGridLayout->setRowStretch(opposite.y() * 2, 0);
-        m_pGridLayout->setColumnStretch(point.x() * 2, 1);
-        m_pGridLayout->setColumnStretch(opposite.x() * 2, 0);
+        m_pGridLayout->setRowStretch(point.y() * 2, LARGE_STRETCH);
+        m_pGridLayout->setRowStretch(opposite.y() * 2, 1);
+        m_pGridLayout->setColumnStretch(point.x() * 2, LARGE_STRETCH);
+        m_pGridLayout->setColumnStretch(opposite.x() * 2, 1);
     }
 
     void ResizeableGridLayoutManager::closeInvoked(int itemId)
