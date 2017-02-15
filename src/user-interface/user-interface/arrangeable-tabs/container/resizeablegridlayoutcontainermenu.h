@@ -20,7 +20,6 @@ namespace UserInterface
     signals:
         void selectInvoked();
         void maximiseInvoked();
-        void floatInvoked();
         void closeInvoked();
 
     private slots:
@@ -31,7 +30,6 @@ namespace UserInterface
 
         QAction* m_pSelectAction;
         QAction* m_pMaximiseAction;
-        QAction* m_pFloatAction;
         QAction* m_pCloseAction;
     };
 }

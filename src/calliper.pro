@@ -13,7 +13,6 @@ SUBDIRS += \
     tst-keyvaluesparser \
     user-interface \
     app-calliper \
-    app-resize-test \
     app-vpkbrowser
 
 renderer-sandbox.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
@@ -27,5 +26,4 @@ dep-qvtf.depends = dep-vtflib
 tst-keyvaluesparser.depends = file-formats calliperutil
 user-interface.depends = renderer calliperutil model file-formats model-loaders dep-vtflib
 app-calliper.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
-app-resize-test.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
 app-vpkbrowser.depends = calliperutil file-formats user-interface

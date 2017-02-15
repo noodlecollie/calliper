@@ -13,15 +13,11 @@ namespace UserInterface
         m_pMaximiseAction = new QAction(tr("&Maximise"));
         connect(m_pMaximiseAction, SIGNAL(triggered(bool)), this, SLOT(actionTriggered()));
 
-        m_pFloatAction = new QAction(tr("&Float"));
-        connect(m_pFloatAction, SIGNAL(triggered(bool)), this, SLOT(actionTriggered()));
-
         m_pCloseAction = new QAction(tr("&Close"));
         connect(m_pCloseAction, SIGNAL(triggered(bool)), this, SLOT(actionTriggered()));
 
         addAction(m_pSelectAction);
         addAction(m_pMaximiseAction);
-        addAction(m_pFloatAction);
         addSeparator();
         addAction(m_pCloseAction);
     }
@@ -43,10 +39,6 @@ namespace UserInterface
         else if ( action == m_pMaximiseAction )
         {
             emit maximiseInvoked();
-        }
-        else if ( action == m_pFloatAction )
-        {
-            emit floatInvoked();
         }
         else if ( action == m_pCloseAction )
         {

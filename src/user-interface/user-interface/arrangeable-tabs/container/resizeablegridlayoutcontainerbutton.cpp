@@ -19,9 +19,6 @@ namespace UserInterface
           m_iItemID(-1),
           m_pLabel(nullptr),
           m_strLabelText(),
-          m_iDragActivationThreshold(0),
-          m_bInDrag(false),
-          m_LastMousePress(),
           m_bHighlighted(false)
     {
         Q_ASSERT(m_pContainer);
@@ -54,16 +51,6 @@ namespace UserInterface
 
         m_strLabelText = labelText;
         updateTextElide();
-    }
-
-    int ResizeableGridLayoutContainerButton::dragActivationThreshold() const
-    {
-        return m_iDragActivationThreshold;
-    }
-
-    void ResizeableGridLayoutContainerButton::setDragActivationThreshold(int threshold)
-    {
-        m_iDragActivationThreshold = threshold;
     }
 
     bool ResizeableGridLayoutContainerButton::shouldHighlight() const
@@ -145,8 +132,6 @@ namespace UserInterface
         {
             case Qt::LeftButton:
             {
-                m_bInDrag = true;
-                m_LastMousePress = event->globalPos();
                 emit selectInvoked(m_iItemID);
                 return;
             }
@@ -170,32 +155,6 @@ namespace UserInterface
         emit maximiseInvoked(m_iItemID);
     }
 
-    void ResizeableGridLayoutContainerButton::mouseMoveEvent(QMouseEvent *event)
-    {
-        if ( !m_bInDrag )
-        {
-            QFrame::mouseMoveEvent(event);
-            return;
-        }
-
-        if ( (event->globalPos() - m_LastMousePress).manhattanLength() >= m_iDragActivationThreshold )
-        {
-            emit floatInvoked(m_iItemID, true);
-            m_bInDrag = false;
-        }
-    }
-
-    void ResizeableGridLayoutContainerButton::mouseReleaseEvent(QMouseEvent *event)
-    {
-        QFrame::mouseReleaseEvent(event);
-
-        if ( event->button() == Qt::LeftButton )
-        {
-            m_bInDrag = false;
-            m_LastMousePress = QPoint();
-        }
-    }
-
     void ResizeableGridLayoutContainerButton::resizeEvent(QResizeEvent *event)
     {
         QFrame::resizeEvent(event);
@@ -205,11 +164,6 @@ namespace UserInterface
     void ResizeableGridLayoutContainerButton::menuCloseInvoked()
     {
         emit closeInvoked(m_iItemID);
-    }
-
-    void ResizeableGridLayoutContainerButton::menuFloatInvoked()
-    {
-        emit floatInvoked(m_iItemID, false);
     }
 
     void ResizeableGridLayoutContainerButton::menuMaximiseInvoked()
