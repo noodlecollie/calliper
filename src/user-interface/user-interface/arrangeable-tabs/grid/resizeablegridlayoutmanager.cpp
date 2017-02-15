@@ -1,7 +1,7 @@
 #include "resizeablegridlayoutmanager.h"
 #include <QGridLayout>
 #include <QWidget>
-#include "container/resizeablegridlayoutcontainer.h"
+#include "user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.h"
 #include "resizeablegridelementbutton.h"
 #include "calliperutil/debug/debug.h"
 
@@ -39,7 +39,7 @@ namespace UserInterface
 
     }
 
-    void ResizeableGridLayoutManager::embedWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
+    void ResizeableGridLayoutManager::addWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
     {
         if ( !widget )
             return;
@@ -596,7 +596,13 @@ namespace UserInterface
         if ( !container )
             return;
 
-        QWidget* widget = removeWidget(container, itemId, Qt::Horizontal);
-        emit widgetFloated(widget, dragged);
+        QWidget* widget = container->widgetAt(itemId);
+        Q_ASSERT(widget);
+        QPoint globalPos = widget->mapToGlobal(QPoint(0,0));
+
+        QWidget* removalWidget = removeWidget(container, itemId, Qt::Horizontal);
+        Q_ASSERT(widget == removalWidget);
+
+        emit widgetFloated(widget, globalPos, dragged);
     }
 }

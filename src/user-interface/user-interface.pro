@@ -17,13 +17,13 @@ SOURCES += \
     user-interface/arrangeable-tabs/model/quadgridlayoutdefs.cpp \
     user-interface/arrangeable-tabs/model/quadgridlayoutmodel.cpp \
     user-interface/arrangeable-tabs/model/quadgridlayoutpoint.cpp \
-    user-interface/arrangeable-tabs/resizablegridwrapper.cpp \
-    user-interface/arrangeable-tabs/resizeablegridelementbutton.cpp \
-    user-interface/arrangeable-tabs/resizeablegridlayoutmanager.cpp \
+    user-interface/arrangeable-tabs/grid/resizeablegridelementbutton.cpp \
+    user-interface/arrangeable-tabs/grid/resizeablegridlayoutmanager.cpp \
     user-interface/views/mapviewwindow.cpp \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.cpp \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.cpp \
-    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.cpp
+    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.cpp \
+    user-interface/arrangeable-tabs/container/resizablegridlayoutpanel.cpp
 
 HEADERS +=\
     user-interface_global.h \
@@ -31,13 +31,13 @@ HEADERS +=\
     user-interface/arrangeable-tabs/model/quadgridlayoutdefs.h \
     user-interface/arrangeable-tabs/model/quadgridlayoutmodel.h \
     user-interface/arrangeable-tabs/model/quadgridlayoutpoint.h \
-    user-interface/arrangeable-tabs/resizablegridwrapper.h \
-    user-interface/arrangeable-tabs/resizeablegridelementbutton.h \
-    user-interface/arrangeable-tabs/resizeablegridlayoutmanager.h \
+    user-interface/arrangeable-tabs/grid/resizeablegridelementbutton.h \
+    user-interface/arrangeable-tabs/grid/resizeablegridlayoutmanager.h \
     user-interface/views/mapviewwindow.h \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainer.h \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.h \
-    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.h
+    user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.h \
+    user-interface/arrangeable-tabs/container/resizablegridlayoutpanel.h
 
 unix {
     target.path = /usr/lib

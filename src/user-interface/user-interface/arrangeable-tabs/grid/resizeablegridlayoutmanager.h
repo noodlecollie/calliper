@@ -6,9 +6,9 @@
 #include <QPoint>
 #include <QPointer>
 #include <QHash>
-#include "model/quadgridlayoutdefs.h"
-#include "model/quadgridlayoutmodel.h"
-#include "model/quadgridlayoutanalyser.h"
+#include "user-interface/arrangeable-tabs/model/quadgridlayoutdefs.h"
+#include "user-interface/arrangeable-tabs/model/quadgridlayoutmodel.h"
+#include "user-interface/arrangeable-tabs/model/quadgridlayoutanalyser.h"
 
 class QGridLayout;
 class QWidget;
@@ -29,7 +29,7 @@ namespace UserInterface
 
         // Inserts a widget and splits existing containers if possible.
         // If it's not possible to split, inserts the widget into the container.
-        void embedWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference);
+        void addWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference);
 
         // Inserts a widget directly into the container located in the specified cell.
         void insertWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell);
@@ -39,7 +39,7 @@ namespace UserInterface
         void equaliseCellSizes();
 
     signals:
-        void widgetFloated(QWidget* widget, bool dragged);
+        void widgetFloated(QWidget* widget, const QPoint& globalPos, bool dragged);
 
     private slots:
         void resizeButtonDragged(int deltaX, int deltaY);

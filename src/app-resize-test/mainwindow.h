@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "user-interface/arrangeable-tabs/resizeablegridlayoutmanager.h"
+#include "user-interface/arrangeable-tabs/grid/resizeablegridlayoutmanager.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,7 +20,7 @@ private slots:
     void addNewItem();
     void removeItem();
     void equalise();
-    void widgetFloated(QWidget* widget, bool dragged);
+    void widgetFloated(QWidget* widget, const QPoint& globalPos, bool dragged);
 
 private:
     void setWidgetInGrid(QWidget* widget);

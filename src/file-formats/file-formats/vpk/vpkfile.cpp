@@ -20,14 +20,6 @@ namespace FileFormats
             if ( errorString )
                 *errorString = msg;
         }
-
-        // We assume we'll always be null-terminated.
-        inline QString getString(char*& buffer)
-        {
-            QString str(buffer);
-            buffer += str.length() + 1;
-            return str;
-        }
     }
 
     VPKFile::VPKFile(const QString &filename)

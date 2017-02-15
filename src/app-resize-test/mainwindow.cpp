@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->setLayout(gridLayout);
 
     m_pGridManager = new UserInterface::ResizeableGridLayoutManager(gridLayout);
-    connect(m_pGridManager, SIGNAL(widgetFloated(QWidget*,bool)), this, SLOT(widgetFloated(QWidget*,bool)));
+    connect(m_pGridManager, &UserInterface::ResizeableGridLayoutManager::widgetFloated, this, &MainWindow::widgetFloated);
 }
 
 MainWindow::~MainWindow()
@@ -38,19 +38,19 @@ void MainWindow::addNewItem()
 
     if ( action == ui->actionUpper_Left )
     {
-        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
+        m_pGridManager->addWidget(n, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
     }
     else if ( action == ui->actionUpper_Right )
     {
-        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
+        m_pGridManager->addWidget(n, UserInterface::QuadGridLayoutDefs::NorthEast, Qt::Horizontal);
     }
     else if ( action == ui->actionLower_Left )
     {
-        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
+        m_pGridManager->addWidget(n, UserInterface::QuadGridLayoutDefs::SouthWest, Qt::Horizontal);
     }
     else if ( action == ui->actionLower_Right )
     {
-        m_pGridManager->embedWidget(n, UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
+        m_pGridManager->addWidget(n, UserInterface::QuadGridLayoutDefs::SouthEast, Qt::Horizontal);
     }
     else
     {
@@ -88,10 +88,8 @@ void MainWindow::equalise()
     m_pGridManager->equaliseCellSizes();
 }
 
-void MainWindow::widgetFloated(QWidget *widget, bool dragged)
+void MainWindow::widgetFloated(QWidget *widget, const QPoint &globalPos, bool dragged)
 {
-    Q_UNUSED(dragged);
-
     MainWindow* other = new MainWindow();
     other->setWidgetInGrid(widget);
     other->show();
@@ -99,5 +97,5 @@ void MainWindow::widgetFloated(QWidget *widget, bool dragged)
 
 void MainWindow::setWidgetInGrid(QWidget *widget)
 {
-    m_pGridManager->embedWidget(widget, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
+    m_pGridManager->addWidget(widget, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
 }
