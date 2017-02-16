@@ -14,10 +14,17 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption opVpkPath("vpkpath", "Path where VPK content is stored.", "path");
+    QCommandLineOption opVpkPath("vpkpath", "Folder where VPK content is stored. There is no need to specify the actual VPK files.", "path");
     parser.addOption(opVpkPath);
 
     parser.addPositionalArgument("file", "VMF file to read.");
+
+    parser.setApplicationDescription(
+                "Simple viewer for VMF files. Provide a path to the folder where "
+                "VPKs are located with --vpkpath; the first non-named argument is "
+                "interpreted as the VMF to load.");
+
+    parser.addHelpOption();
 
     parser.process(a);
 

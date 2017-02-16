@@ -31,11 +31,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QMdiArea" name="mdiArea">
-      <property name="viewMode">
-       <enum>QMdiArea::TabbedView</enum>
-      </property>
-     </widget>
+     <widget class="GridContainer" name="gridWidget" native="true"/>
     </item>
    </layout>
   </widget>
@@ -45,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>641</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuView">
@@ -151,6 +147,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>GridContainer</class>
+   <extends>QWidget</extends>
+   <header>widgets/gridcontainer.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
