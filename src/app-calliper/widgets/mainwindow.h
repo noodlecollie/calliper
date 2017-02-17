@@ -32,6 +32,7 @@ namespace AppCalliper
         void menuCloseProject();
         void menuNewProject();
         void notifyProjectDataChanged();
+        void fileDoubleClicked(const QString& path);
 
     private:
         void initDockWidgets();

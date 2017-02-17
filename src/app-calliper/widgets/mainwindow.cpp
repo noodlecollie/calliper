@@ -253,4 +253,9 @@ namespace AppCalliper
         ui->actionSave_Project->setEnabled(haveProject);
         ui->actionSave_Project_As->setEnabled(haveProject);
     }
+
+    void MainWindow::fileDoubleClicked(const QString& path)
+    {
+
+    }
 }

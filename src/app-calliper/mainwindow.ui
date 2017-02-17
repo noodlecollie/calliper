@@ -31,7 +31,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="GridContainer" name="gridWidget" native="true"/>
+     <widget class="UserInterface::QuadGridWidget" name="gridWidget" native="true"/>
     </item>
    </layout>
   </widget>
@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>641</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuView">
@@ -149,9 +149,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>GridContainer</class>
+   <class>UserInterface::QuadGridWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/gridcontainer.h</header>
+   <header>user-interface/arrangeable-tabs/widget/quadgridwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -18,16 +18,14 @@ SOURCES += main.cpp\
     widgets/visibleactiondockwidget.cpp \
     model/applicationproject.cpp \
     widgets/projectmetadatadockwidget.cpp \
-    app-calliper_global.cpp \
-    widgets/gridcontainer.cpp
+    app-calliper_global.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/projectfiledockwidget.h \
     widgets/visibleactiondockwidget.h \
     model/applicationproject.h \
     app-calliper_global.h \
-    widgets/projectmetadatadockwidget.h \
-    widgets/gridcontainer.h
+    widgets/projectmetadatadockwidget.h
 
 FORMS    += mainwindow.ui
 
