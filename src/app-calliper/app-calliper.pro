@@ -18,14 +18,18 @@ SOURCES += main.cpp\
     widgets/visibleactiondockwidget.cpp \
     model/applicationproject.cpp \
     widgets/projectmetadatadockwidget.cpp \
-    app-calliper_global.cpp
+    app-calliper_global.cpp \
+    model/vmfdatamodel.cpp \
+    application/applicationtasks.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/projectfiledockwidget.h \
     widgets/visibleactiondockwidget.h \
     model/applicationproject.h \
     app-calliper_global.h \
-    widgets/projectmetadatadockwidget.h
+    widgets/projectmetadatadockwidget.h \
+    model/vmfdatamodel.h \
+    application/applicationtasks.h
 
 FORMS    += mainwindow.ui
 

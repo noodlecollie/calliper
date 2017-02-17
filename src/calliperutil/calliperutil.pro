@@ -13,7 +13,6 @@ DEFINES += UTIL_LIBRARY
 
 SOURCES += \
     calliperutil/exceptions/calliperexception.cpp \
-    calliperutil/general/fixedindexpool.cpp \
     calliperutil/general/generalutil.cpp \
     calliperutil/general/hashfunctions.cpp \
     calliperutil/json/jsonarraywrapper.cpp \
@@ -24,13 +23,13 @@ SOURCES += \
 HEADERS +=\
         calliperutil_global.h \
     calliperutil/exceptions/calliperexception.h \
-    calliperutil/general/fixedindexpool.h \
     calliperutil/general/generalutil.h \
     calliperutil/general/hashfunctions.h \
     calliperutil/json/jsonarraywrapper.h \
     calliperutil/math/math.h \
     calliperutil/string/stringutil.h \
-    calliperutil/debug/debug.h
+    calliperutil/debug/debug.h \
+    calliperutil/global/globalinstance.h
 
 unix {
     target.path = /usr/lib

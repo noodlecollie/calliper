@@ -53,7 +53,8 @@ SOURCES += \
     model/stores/materialresourcemanager.cpp \
     model/stores/materialstore.cpp \
     model/stores/shaderstore.cpp \
-    model/stores/texturestore.cpp
+    model/stores/texturestore.cpp \
+    model/stores/resourceenvironment.cpp
 
 HEADERS += \
     model_global.h \
@@ -99,7 +100,8 @@ HEADERS += \
     model/stores/materialresourcemanager.h \
     model/stores/materialstore.h \
     model/stores/shaderstore.h \
-    model/stores/texturestore.h
+    model/stores/texturestore.h \
+    model/stores/resourceenvironment.h
 
 unix {
     target.path = /usr/lib
