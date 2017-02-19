@@ -1,17 +1,15 @@
 #include "applicationtasks.h"
 #include "calliperutil/global/globalinstance.h"
-#include "model/stores/resourceenvironment.h"
+#include "model/global/resourceenvironment.h"
 #include "model/shaders/simplelitshader.h"
 
 namespace
 {
-    typedef CalliperUtil::GlobalInstance<Model::ResourceEnvironment> ResourceEnvironmentInstance;
-
-    ResourceEnvironmentInstance* g_pResourceEnv;
+    Model::ResourceEnvironmentInstance* g_pResourceEnv;
 
     void loadFailsafeShaders()
     {
-        CalliperUtil::GlobalInstance<Model::ResourceEnvironment>& resourceEnv = *g_pResourceEnv;
+        Model::ResourceEnvironmentInstance& resourceEnv = *g_pResourceEnv;
         Model::ShaderStore* shaderStore = resourceEnv->shaderStore();
 
         quint16 failsafeShader = shaderStore->addShaderProgram<Model::SimpleLitShader>();
@@ -23,10 +21,8 @@ namespace
 
     void loadFailsafeTextures()
     {
-        CalliperUtil::GlobalInstance<Model::ResourceEnvironment>& resourceEnv = *g_pResourceEnv;
-        Model::MaterialResourceManager* resourceManager = resourceEnv->materialResourceManager();
-
-        resourceManager->textureStore()->setDefaultTextureFromFile(":model/textures/_ERROR_");
+        Model::ResourceEnvironmentInstance& resourceEnv = *g_pResourceEnv;
+        resourceEnv->textureStore()->setDefaultTextureFromFile(":model/textures/_ERROR_");
     }
 }
 
@@ -36,7 +32,7 @@ namespace AppCalliper
     {
         void initSubSystems()
         {
-            g_pResourceEnv = new ResourceEnvironmentInstance();
+            g_pResourceEnv = new Model::ResourceEnvironmentInstance();
 
             loadFailsafeShaders();
             loadFailsafeTextures();

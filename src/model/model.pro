@@ -50,11 +50,10 @@ SOURCES += \
     model/shaders/simplelitshader.cpp \
     model/shaders/unlitpervertexcolorshader.cpp \
     model/shaders/unlitshader.cpp \
-    model/stores/materialresourcemanager.cpp \
     model/stores/materialstore.cpp \
     model/stores/shaderstore.cpp \
     model/stores/texturestore.cpp \
-    model/stores/resourceenvironment.cpp
+    model/global/resourceenvironment.cpp
 
 HEADERS += \
     model_global.h \
@@ -97,11 +96,10 @@ HEADERS += \
     model/shaders/simplelitshader.h \
     model/shaders/unlitpervertexcolorshader.h \
     model/shaders/unlitshader.h \
-    model/stores/materialresourcemanager.h \
     model/stores/materialstore.h \
     model/stores/shaderstore.h \
     model/stores/texturestore.h \
-    model/stores/resourceenvironment.h
+    model/global/resourceenvironment.h
 
 unix {
     target.path = /usr/lib
