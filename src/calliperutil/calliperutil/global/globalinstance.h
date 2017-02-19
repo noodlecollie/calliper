@@ -9,17 +9,9 @@ namespace CalliperUtil
     class GlobalInstance
     {
     public:
-        GlobalInstance()
-        {
-            if ( m_nRefCount == 0 )
-            {
-                m_pInstance = new T();
-                m_pFirstInstantiation = this;
-            }
-
-            ++m_nRefCount;
-        }
-
+        // Called exactly once to initialise the global instance.
+        // The code that calls this constructor should keep the
+        // GlobalInstance object around for as long as it is required.
         explicit GlobalInstance(T* newInstance)
         {
             Q_ASSERT_X(!isValid(), Q_FUNC_INFO, "An instance of this class already exists!");
@@ -29,6 +21,14 @@ namespace CalliperUtil
                 m_pInstance = newInstance;
                 m_pFirstInstantiation = this;
             }
+
+            ++m_nRefCount;
+        }
+
+        // Called by anything else that wants to access the instance.
+        GlobalInstance()
+        {
+           Q_ASSERT_X(isValid(), Q_FUNC_INFO, "An instance of this class has not been created yet!");
 
             ++m_nRefCount;
         }

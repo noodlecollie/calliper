@@ -15,7 +15,7 @@ namespace Model
     {
         Q_OBJECT
     public:
-        explicit Scene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent = 0);
+        explicit Scene(QObject* parent = 0);
 
         template<typename T, typename... Args>
         T* createSceneObject(Args... args)
@@ -38,9 +38,6 @@ namespace Model
         void destroySceneObject(SceneObject* object);
 
         SceneObject* rootObject() const;
-        ShaderStore* shaderStore() const;
-        TextureStore* textureStore() const;
-        MaterialStore* materialStore() const;
 
     signals:
         void objectCreated(SceneObject*);
@@ -53,10 +50,6 @@ namespace Model
         void addObjectToTable(SceneObject* object);
         void removeObjectFromTable(SceneObject* object);
         void deleteObjectsRecursive(SceneObject* object);
-
-        ShaderStore* m_pShaderStore;
-        TextureStore* m_pTextureStore;
-        MaterialStore* m_pMaterialStore;
 
         quint32 m_iObjectIdCounter;
         SceneObject* m_pRootObject;

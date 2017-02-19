@@ -3,9 +3,7 @@
 
 #include "user-interface_global.h"
 #include <QOpenGLWindow>
-#include "model/stores/shaderstore.h"
-#include "model/stores/texturestore.h"
-#include "model/stores/materialstore.h"
+#include "model/global/resourceenvironment.h"
 #include "model/scene/mapscene.h"
 #include "model/camera/scenecamera.h"
 #include "model/scenerenderer/scenerenderer.h"
@@ -31,17 +29,11 @@ namespace UserInterface
         QString mapPath() const;
         void setMapPath(const QString& path);
 
+        Model::ResourceEnvironment* resourceEnvironment();
+        const Model::ResourceEnvironment* resourceEnvironment() const;
+
         Model::ShaderPalette& shaderPalette();
         const Model::ShaderPalette& shaderPalette() const;
-
-        Model::ShaderStore* shaderStore();
-        const Model::ShaderStore* shaderStore() const;
-
-        Model::TextureStore* textureStore();
-        const Model::TextureStore* textureStore() const;
-
-        Model::MaterialStore* materialStore();
-        const Model::MaterialStore* materialStore() const;
 
         Model::IRenderPassClassifier* renderPassClassifier();
         const Model::IRenderPassClassifier* renderPassClassifier() const;
@@ -82,10 +74,7 @@ namespace UserInterface
         QString m_strVpkPath;
 
         Renderer::RenderModel* m_pRenderer;
-
-        Model::ShaderStore* m_pShaderStore;
-        Model::TextureStore* m_pTextureStore;
-        Model::MaterialStore* m_pMaterialStore;
+        Model::ResourceEnvironmentInstance* m_pResourceEnvironment;
 
         Model::MapScene* m_pScene;
         Model::SceneCamera* m_pCamera;

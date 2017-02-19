@@ -12,6 +12,7 @@
 #include "model/scene/scene.h"
 #include "model/stores/texturestore.h"
 #include "calliperutil/general/generalutil.h"
+#include "model/global/resourceenvironment.h"
 
 namespace ModelLoaders
 {
@@ -92,7 +93,7 @@ namespace ModelLoaders
             using namespace Model;
             using namespace CalliperUtil;
 
-            MaterialStore* materialStore = parent->parentScene()->materialStore();
+            MaterialStore* materialStore = ResourceEnvironmentInstance()->materialStore();
 
             QJsonObject world = doc.object().value("world").toObject();
             Json::JsonArrayWrapper solids = world.value("solid");

@@ -27,9 +27,7 @@ namespace UserInterface
         m_strMapPath(),
         m_strVpkPath(),
         m_pRenderer(nullptr),
-        m_pShaderStore(nullptr),
-        m_pTextureStore(nullptr),
-        m_pMaterialStore(nullptr),
+        m_pResourceEnvironment(nullptr),
         m_pScene(nullptr),
         m_pCamera(nullptr),
         m_pRenderPassClassifier(classifier),
@@ -69,14 +67,8 @@ namespace UserInterface
         delete m_pRenderer;
         m_pRenderer = nullptr;
 
-        delete m_pShaderStore;
-        m_pShaderStore = nullptr;
-
-        delete m_pTextureStore;
-        m_pTextureStore = nullptr;
-
-        delete m_pMaterialStore;
-        m_pMaterialStore = nullptr;
+        delete m_pResourceEnvironment;
+        m_pResourceEnvironment = nullptr;
 
         delete m_pRenderPassClassifier;
         m_pRenderPassClassifier = nullptr;
@@ -86,22 +78,19 @@ namespace UserInterface
     {
         initLocalOpenGlSettings();
 
-        m_pShaderStore = new ShaderStore();
-        initShaders();
-
-        m_pTextureStore = new TextureStore();
-        initTextures();
-
-        m_pMaterialStore = new MaterialStore();
-        initMaterials();
+        m_pResourceEnvironment = new ResourceEnvironmentInstance(new ResourceEnvironment());
+        ResourceEnvironment& resourceEnv = *(*m_pResourceEnvironment);
 
         m_pRenderer = new Renderer::RenderModel();
         initRenderer();
 
-        m_pScene = new MapScene(m_pShaderStore, m_pTextureStore, m_pMaterialStore, this);
+        m_pScene = new MapScene(this);
         initScene();
 
-        m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, m_pMaterialStore, m_pRenderPassClassifier,
+        m_pSceneRenderer = new SceneRenderer(resourceEnv.shaderStore(),
+                                             resourceEnv.textureStore(),
+                                             resourceEnv.materialStore(),
+                                             m_pRenderPassClassifier,
                                              m_pRenderer, m_pScene);
         initSceneRenderer();
 
@@ -152,9 +141,9 @@ namespace UserInterface
 
     void MapViewWindow::initRenderer()
     {
-        m_pRenderer->setShaderFunctor(m_pShaderStore);
-        m_pRenderer->setTextureFunctor(m_pTextureStore);
-        m_pRenderer->setMaterialFunctor(m_pMaterialStore);
+        m_pRenderer->setShaderFunctor(resourceEnvironment()->shaderStore());
+        m_pRenderer->setTextureFunctor(resourceEnvironment()->textureStore());
+        m_pRenderer->setMaterialFunctor(resourceEnvironment()->materialStore());
     }
 
     void MapViewWindow::initScene()
@@ -259,6 +248,22 @@ namespace UserInterface
         m_strMapPath = path;
     }
 
+    Model::ResourceEnvironment* MapViewWindow::resourceEnvironment()
+    {
+        if ( !m_pResourceEnvironment )
+            return nullptr;
+
+        return ResourceEnvironmentInstance::instance();
+    }
+
+    const Model::ResourceEnvironment* MapViewWindow::resourceEnvironment() const
+    {
+        if ( !m_pResourceEnvironment )
+            return nullptr;
+
+        return ResourceEnvironmentInstance::instance();
+    }
+
     Model::ShaderPalette& MapViewWindow::shaderPalette()
     {
         return m_ShaderPalette;
@@ -267,36 +272,6 @@ namespace UserInterface
     const Model::ShaderPalette& MapViewWindow::shaderPalette() const
     {
         return m_ShaderPalette;
-    }
-
-    Model::ShaderStore* MapViewWindow::shaderStore()
-    {
-        return m_pShaderStore;
-    }
-
-    const Model::ShaderStore* MapViewWindow::shaderStore() const
-    {
-        return m_pShaderStore;
-    }
-
-    Model::TextureStore* MapViewWindow::textureStore()
-    {
-        return m_pTextureStore;
-    }
-
-    const Model::TextureStore* MapViewWindow::textureStore() const
-    {
-        return m_pTextureStore;
-    }
-
-    Model::MaterialStore* MapViewWindow::materialStore()
-    {
-        return m_pMaterialStore;
-    }
-
-    const Model::MaterialStore* MapViewWindow::materialStore() const
-    {
-        return m_pMaterialStore;
     }
 
     Model::IRenderPassClassifier* MapViewWindow::renderPassClassifier()

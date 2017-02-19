@@ -37,23 +37,28 @@ MainWindow::~MainWindow()
 void MainWindow::initShaders()
 {
     Model::ShaderPalette& palette = shaderPalette();
-    palette.addItem(Model::ShaderPalette::DefaultShader, shaderStore()->addShaderProgram<Model::SimpleLitShader>());
-    palette.addItem(Model::ShaderPalette::UnlitPerVertexColor, shaderStore()->addShaderProgram<Model::UnlitPerVertexColorShader>());
+    Model::ShaderStore* shaderStore = resourceEnvironment()->shaderStore();
+    palette.addItem(Model::ShaderPalette::DefaultShader, shaderStore->addShaderProgram<Model::SimpleLitShader>());
+    palette.addItem(Model::ShaderPalette::UnlitPerVertexColor, shaderStore->addShaderProgram<Model::UnlitPerVertexColorShader>());
 }
 
 void MainWindow::initTextures()
 {
-    textureStore()->setDefaultTextureFromFile(":model/textures/_ERROR_");
-    textureStore()->createTextureFromFile(":model/textures/dev/devwhite");
+    Model::TextureStore* textureStore = resourceEnvironment()->textureStore();
+    textureStore->setDefaultTextureFromFile(":model/textures/_ERROR_");
+    textureStore->createTextureFromFile(":model/textures/dev/devwhite");
 }
 
 void MainWindow::initMaterials()
 {
+    Model::MaterialStore* materialStore = resourceEnvironment()->materialStore();
+    Model::TextureStore* textureStore = resourceEnvironment()->textureStore();
+
     // For now the string must be identical.
-    Renderer::RenderMaterialPointer material = materialStore()->createMaterial(":model/textures/dev/devwhite");
+    Renderer::RenderMaterialPointer material = materialStore->createMaterial(":model/textures/dev/devwhite");
     m_iPlaceholderMaterial = material->materialStoreId();
 
-    material->addTexture(Renderer::ShaderDefs::MainTexture, textureStore()->getTextureId(":model/textures/dev/devwhite"));
+    material->addTexture(Renderer::ShaderDefs::MainTexture, textureStore->getTextureId(":model/textures/dev/devwhite"));
 }
 
 void MainWindow::initLocalOpenGlSettings()
@@ -92,7 +97,7 @@ void MainWindow::processBrushes()
 
 void MainWindow::importTextures()
 {
-    ModelLoaders::VTFLoader loader(materialStore(), textureStore());
+    ModelLoaders::VTFLoader loader(resourceEnvironment()->materialStore(), resourceEnvironment()->textureStore());
     loadVpks();
     loader.loadMaterials(vpkFileCollection());
 }

@@ -2,16 +2,11 @@
 
 namespace Model
 {
-    Scene::Scene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent)
+    Scene::Scene(QObject* parent)
         : QObject(parent),
-          m_pShaderStore(shaderStore),
-          m_pTextureStore(textureStore),
-          m_pMaterialStore(materialStore),
           m_iObjectIdCounter(0),
           m_pRootObject(new SceneObject(SceneObjectInitParams(this, acquireNextObjectId()), nullptr))
     {
-        Q_ASSERT_X(m_pShaderStore, Q_FUNC_INFO, "Shader store cannot be null!");
-        Q_ASSERT_X(m_pTextureStore, Q_FUNC_INFO, "Texture store cannot be null!");
         addObjectToTable(m_pRootObject);
     }
 
@@ -82,20 +77,5 @@ namespace Model
     {
         Q_ASSERT_X(object->objectId() > 0, Q_FUNC_INFO, "Object cannot have an ID of zero!");
         m_ObjectTable.remove(object->objectId());
-    }
-
-    ShaderStore* Scene::shaderStore() const
-    {
-        return m_pShaderStore;
-    }
-
-    TextureStore* Scene::textureStore() const
-    {
-        return m_pTextureStore;
-    }
-
-    MaterialStore* Scene::materialStore() const
-    {
-        return m_pMaterialStore;
     }
 }

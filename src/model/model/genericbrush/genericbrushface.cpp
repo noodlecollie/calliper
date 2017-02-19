@@ -1,6 +1,7 @@
 #include "genericbrushface.h"
 #include "genericbrush.h"
 #include "model/scene/scene.h"
+#include "model/global/resourceenvironment.h"
 
 namespace Model
 {
@@ -103,8 +104,8 @@ namespace Model
             section->addNormal(nrm);
         }
 
-        TextureStore* texStore = parentBrush()->parentScene()->textureStore();
-        MaterialStore* matStore = parentBrush()->parentScene()->materialStore();
+        TextureStore* texStore = ResourceEnvironmentInstance()->textureStore();
+        MaterialStore* matStore = ResourceEnvironmentInstance()->materialStore();
 
         RenderMaterialPointer mat = (*matStore)(m_pTexturePlane->materialId());
         OpenGLTexturePointer tex = (*texStore)(mat->texture(ShaderDefs::MainTexture));
