@@ -6,7 +6,7 @@
 #include "model/stores/shaderstore.h"
 #include "model/stores/texturestore.h"
 #include "model/stores/materialstore.h"
-#include "model/scene/basicscene.h"
+#include "model/scene/mapscene.h"
 #include "model/camera/scenecamera.h"
 #include "model/scenerenderer/scenerenderer.h"
 #include "model/camera/cameracontroller.h"
@@ -87,7 +87,7 @@ namespace UserInterface
         Model::TextureStore* m_pTextureStore;
         Model::MaterialStore* m_pMaterialStore;
 
-        Model::BasicScene* m_pScene;
+        Model::MapScene* m_pScene;
         Model::SceneCamera* m_pCamera;
         Model::IRenderPassClassifier* m_pRenderPassClassifier;
         Model::SceneRenderer* m_pSceneRenderer;

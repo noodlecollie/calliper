@@ -36,7 +36,6 @@ SOURCES += \
     model/math/windingvertex.cpp \
     model/projects/calliperproject.cpp \
     model/projects/calliperprojectmetadata.cpp \
-    model/scene/basicscene.cpp \
     model/scene/hierarchystate.cpp \
     model/scene/scene.cpp \
     model/scene/sceneobject.cpp \
@@ -53,7 +52,8 @@ SOURCES += \
     model/stores/materialstore.cpp \
     model/stores/shaderstore.cpp \
     model/stores/texturestore.cpp \
-    model/global/resourceenvironment.cpp
+    model/global/resourceenvironment.cpp \
+    model/scene/mapscene.cpp
 
 HEADERS += \
     model_global.h \
@@ -81,7 +81,6 @@ HEADERS += \
     model/math/windingvertex.h \
     model/projects/calliperproject.h \
     model/projects/calliperprojectmetadata.h \
-    model/scene/basicscene.h \
     model/scene/hierarchystate.h \
     model/scene/scene.h \
     model/scene/sceneobject.h \
@@ -99,7 +98,8 @@ HEADERS += \
     model/stores/materialstore.h \
     model/stores/shaderstore.h \
     model/stores/texturestore.h \
-    model/global/resourceenvironment.h
+    model/global/resourceenvironment.h \
+    model/scene/mapscene.h
 
 unix {
     target.path = /usr/lib

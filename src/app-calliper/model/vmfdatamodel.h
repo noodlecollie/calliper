@@ -3,7 +3,7 @@
 
 #include "app-calliper_global.h"
 #include <QObject>
-#include "model/scene/basicscene.h"
+#include "model/scene/mapscene.h"
 
 namespace AppCalliper
 {
@@ -14,7 +14,7 @@ namespace AppCalliper
         VmfDataModel();
 
     private:
-        Model::BasicScene* m_pScene;
+        Model::MapScene* m_pScene;
     };
 }
 

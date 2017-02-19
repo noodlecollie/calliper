@@ -1,5 +1,5 @@
-#ifndef BASICSCENE_H
-#define BASICSCENE_H
+#ifndef MAPSCENE_H
+#define MAPSCENE_H
 
 #include "model_global.h"
 #include "scene.h"
@@ -9,11 +9,11 @@ namespace Model
     class SceneCamera;
     class OriginMarker;
 
-    class MODELSHARED_EXPORT BasicScene : public Scene
+    class MODELSHARED_EXPORT MapScene : public Scene
     {
         Q_OBJECT
     public:
-        explicit BasicScene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore,
+        explicit MapScene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore,
                             QObject* parent = nullptr);
 
         SceneCamera* defaultCamera() const;
@@ -24,4 +24,4 @@ namespace Model
     };
 }
 
-#endif // BASICSCENE_H
+#endif // MAPSCENE_H

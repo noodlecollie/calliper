@@ -1,10 +1,10 @@
-#include "basicscene.h"
+#include "mapscene.h"
 #include "model/camera/scenecamera.h"
 #include "model/sceneobjects/originmarker.h"
 
 namespace Model
 {
-    BasicScene::BasicScene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent)
+    MapScene::MapScene(ShaderStore* shaderStore, TextureStore* textureStore, MaterialStore* materialStore, QObject* parent)
         : Scene(shaderStore, textureStore, materialStore, parent)
     {
         m_pDefaultCamera = createSceneObject<SceneCamera>(rootObject());
@@ -15,7 +15,7 @@ namespace Model
         m_pOriginMarker->setObjectName("_originMarker");
     }
 
-    SceneCamera* BasicScene::defaultCamera() const
+    SceneCamera* MapScene::defaultCamera() const
     {
         return m_pDefaultCamera;
     }

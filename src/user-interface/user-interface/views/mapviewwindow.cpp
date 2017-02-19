@@ -98,7 +98,7 @@ namespace UserInterface
         m_pRenderer = new Renderer::RenderModel();
         initRenderer();
 
-        m_pScene = new BasicScene(m_pShaderStore, m_pTextureStore, m_pMaterialStore, this);
+        m_pScene = new MapScene(m_pShaderStore, m_pTextureStore, m_pMaterialStore, this);
         initScene();
 
         m_pSceneRenderer = new SceneRenderer(m_pShaderStore, m_pTextureStore, m_pMaterialStore, m_pRenderPassClassifier,
