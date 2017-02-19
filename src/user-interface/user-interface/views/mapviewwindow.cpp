@@ -79,7 +79,6 @@ namespace UserInterface
         initLocalOpenGlSettings();
 
         m_pResourceEnvironment = new ResourceEnvironmentInstance(new ResourceEnvironment());
-        ResourceEnvironment& resourceEnv = *(*m_pResourceEnvironment);
 
         m_pRenderer = new Renderer::RenderModel();
         initRenderer();
@@ -87,11 +86,9 @@ namespace UserInterface
         m_pScene = new MapScene(this);
         initScene();
 
-        m_pSceneRenderer = new SceneRenderer(resourceEnv.shaderStore(),
-                                             resourceEnv.textureStore(),
-                                             resourceEnv.materialStore(),
-                                             m_pRenderPassClassifier,
-                                             m_pRenderer, m_pScene);
+        m_pSceneRenderer = new SceneRenderer(m_pRenderPassClassifier,
+                                             m_pRenderer,
+                                             m_pScene);
         initSceneRenderer();
 
         m_pCameraController = new CameraController(this);

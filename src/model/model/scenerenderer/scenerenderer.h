@@ -12,14 +12,14 @@
 
 namespace Model
 {
+    class ResourceEnvironment;
+
     class MODELSHARED_EXPORT SceneRenderer
     {
     public:
-        SceneRenderer(Renderer::IShaderRetrievalFunctor* shaderFunctor,
-                      Renderer::ITextureRetrievalFunctor* textureFunctor,
-                      Renderer::IMaterialRetrievalFunctor* materialFunctor,
-                      IRenderPassClassifier* renderPassClassifier,
-                      Renderer::IRenderer* renderer, Scene* scene);
+        SceneRenderer(IRenderPassClassifier* renderPassClassifier,
+                      Renderer::IRenderer* renderer,
+                      Scene* scene);
 
         ShaderPalette shaderPalette() const;
         void setShaderPalette(const ShaderPalette& palette);
@@ -34,9 +34,6 @@ namespace Model
         void updateObjectRecursive(SceneObject* object);
         void drawAllObjects(const QMatrix4x4& worldToCamera, const QMatrix4x4& projection);
 
-        Renderer::IShaderRetrievalFunctor* m_pShaderFunctor;
-        Renderer::ITextureRetrievalFunctor* m_pTextureFunctor;
-        Renderer::IMaterialRetrievalFunctor* m_pMaterialFunctor;
         IRenderPassClassifier* m_pRenderPassClassifier;
         Renderer::IRenderer* m_pRenderer;
         Scene* m_pScene;

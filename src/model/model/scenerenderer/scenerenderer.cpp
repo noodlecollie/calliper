@@ -1,22 +1,15 @@
 #include "scenerenderer.h"
+#include "model/global/resourceenvironment.h"
 
 namespace Model
 {
-    SceneRenderer::SceneRenderer(Renderer::IShaderRetrievalFunctor* shaderFunctor,
-                                 Renderer::ITextureRetrievalFunctor* textureFunctor,
-                                 Renderer::IMaterialRetrievalFunctor* materialFunctor,
-                                 IRenderPassClassifier* renderPassClassifier,
-                                 Renderer::IRenderer* renderer, Scene* scene)
-        : m_pShaderFunctor(shaderFunctor),
-          m_pTextureFunctor(textureFunctor),
-          m_pMaterialFunctor(materialFunctor),
-          m_pRenderPassClassifier(renderPassClassifier),
+    SceneRenderer::SceneRenderer(IRenderPassClassifier* renderPassClassifier,
+                                 Renderer::IRenderer* renderer,
+                                 Scene* scene)
+        : m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene),
           m_vecDirectionalLight(QVector3D(1,1,1).normalized())
     {
-        Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor cannot be null");
-        Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor cannot be null");
-        Q_ASSERT_X(m_pMaterialFunctor, Q_FUNC_INFO, "Material functor cannot be null");
         Q_ASSERT_X(m_pRenderPassClassifier, Q_FUNC_INFO, "Render pass classifier cannot be null");
         Q_ASSERT_X(m_pRenderer, Q_FUNC_INFO, "Renderer cannot be null");
         Q_ASSERT_X(m_pScene, Q_FUNC_INFO, "Scene cannot be null");
@@ -42,13 +35,15 @@ namespace Model
     void SceneRenderer::updateObjectRecursive(SceneObject *object)
     {
         using namespace Renderer;
+        ResourceEnvironmentInstance resourceEnv;
 
         QMatrix4x4 oldMatrix = m_matRecursiveUpdateMatrix;
         m_matRecursiveUpdateMatrix = object->hierarchy().parentToLocal() * m_matRecursiveUpdateMatrix;
 
         if ( object->needsRendererUpdate() )
         {
-            GeometryBuilder builder(m_pShaderFunctor, m_pTextureFunctor,
+            GeometryBuilder builder(resourceEnv->shaderStore(),
+                                    resourceEnv->textureStore(),
                                     m_ShaderPalette.shader(ShaderPalette::DefaultShader),
                                     0,
                                     m_matRecursiveUpdateMatrix);
