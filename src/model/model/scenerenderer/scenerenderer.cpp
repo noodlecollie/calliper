@@ -4,7 +4,7 @@
 namespace Model
 {
     SceneRenderer::SceneRenderer(IRenderPassClassifier* renderPassClassifier,
-                                 Renderer::IRenderer* renderer,
+                                 Renderer::RenderModel* renderer,
                                  Scene* scene)
         : m_pRenderPassClassifier(renderPassClassifier),
           m_pRenderer(renderer), m_pScene(scene),

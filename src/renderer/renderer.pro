@@ -37,8 +37,7 @@ SOURCES += \
     renderer/rendermodel/rendererinputobjectparams.cpp \
     renderer/shaders/globalshaderuniforms.cpp \
     renderer/shaders/shaderdefs.cpp \
-    renderer/shaders/vertexformat.cpp \
-    renderer/global.cpp
+    renderer/shaders/vertexformat.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -72,8 +71,7 @@ HEADERS +=\
     renderer/shaders/globalshaderuniforms.h \
     renderer/shaders/ishaderspec.h \
     renderer/shaders/shaderdefs.h \
-    renderer/shaders/vertexformat.h \
-    renderer/irenderer.h
+    renderer/shaders/vertexformat.h
 
 unix {
     target.path = /usr/lib

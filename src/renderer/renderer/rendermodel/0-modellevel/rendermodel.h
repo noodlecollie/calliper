@@ -2,7 +2,6 @@
 #define RENDERMODEL_H
 
 #include "renderer_global.h"
-#include "renderer/irenderer.h"
 #include <QMap>
 #include "renderer/rendermodel/1-passlevel/rendermodelpass.h"
 #include "renderer/rendermodel/1-passlevel/rendermodelpasskey.h"
@@ -10,30 +9,32 @@
 #include <QList>
 #include "renderer/shaders/globalshaderuniforms.h"
 #include "renderer/opengl/openglvertexarrayobject.h"
+#include "renderer/rendermodel/rendererinputobjectparams.h"
+#include "renderer/rendermodel/rendererdrawparams.h"
 
 namespace Renderer
 {
-    class RENDERERSHARED_EXPORT RenderModel : public IRenderer
+    class RENDERERSHARED_EXPORT RenderModel
     {
     public:
         RenderModel();
         ~RenderModel();
 
-        virtual IShaderRetrievalFunctor* shaderFunctor() const override;
-        virtual void setShaderFunctor(IShaderRetrievalFunctor *functor) override;
-        virtual ITextureRetrievalFunctor* textureFunctor() const override;
-        virtual void setTextureFunctor(ITextureRetrievalFunctor *functor) override;
-        virtual IMaterialRetrievalFunctor* materialFunctor() const override;
-        virtual void setMaterialFunctor(IMaterialRetrievalFunctor* functor) override;
+        IShaderRetrievalFunctor* shaderFunctor() const;
+        void setShaderFunctor(IShaderRetrievalFunctor *functor);
+        ITextureRetrievalFunctor* textureFunctor() const;
+        void setTextureFunctor(ITextureRetrievalFunctor *functor);
+        IMaterialRetrievalFunctor* materialFunctor() const;
+        void setMaterialFunctor(IMaterialRetrievalFunctor* functor);
 
-        virtual void updateObject(const RendererInputObjectParams &object) override;
-        virtual void removeObject(quint32 objectId) override;
+        void updateObject(const RendererInputObjectParams &object);
+        void removeObject(quint32 objectId);
 
-        virtual void draw(const RendererDrawParams &params) override;
+        void draw(const RendererDrawParams &params);
 
-        virtual void setObjectFlags(quint32 objectId, quint32 flags) override;
-        virtual void clearObjectFlags(quint32 objectId, quint32 flags) override;
-        virtual quint32 getObjectFlags(quint32 objectId) const override;
+        void setObjectFlags(quint32 objectId, quint32 flags);
+        void clearObjectFlags(quint32 objectId, quint32 flags);
+        quint32 getObjectFlags(quint32 objectId) const;
 
         void printDebugInfo() const;
 

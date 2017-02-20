@@ -7,7 +7,7 @@
 #define CUTL_ASSERT_SUCCESS(_expr) \
     { bool CUTL_success = (_expr); Q_ASSERT(CUTL_success); }
 #else
-    { (_expr); }
+#define CUTL_ASSERT_SUCCESS(_expr) _expr;
 #endif
 
 namespace CalliperUtil

@@ -3,11 +3,11 @@
 
 #include "model_global.h"
 #include "model/scene/scene.h"
-#include "renderer/irenderer.h"
 #include "model/camera/scenecamera.h"
 #include "renderer/functors/ishaderretrievalfunctor.h"
 #include "renderer/functors/itextureretrievalfunctor.h"
 #include "renderer/functors/imaterialretrievalfunctor.h"
+#include "renderer/rendermodel/0-modellevel/rendermodel.h"
 #include "irenderpassclassifier.h"
 
 namespace Model
@@ -18,7 +18,7 @@ namespace Model
     {
     public:
         SceneRenderer(IRenderPassClassifier* renderPassClassifier,
-                      Renderer::IRenderer* renderer,
+                      Renderer::RenderModel* renderer,
                       Scene* scene);
 
         ShaderPalette shaderPalette() const;
@@ -35,7 +35,7 @@ namespace Model
         void drawAllObjects(const QMatrix4x4& worldToCamera, const QMatrix4x4& projection);
 
         IRenderPassClassifier* m_pRenderPassClassifier;
-        Renderer::IRenderer* m_pRenderer;
+        Renderer::RenderModel* m_pRenderer;
         Scene* m_pScene;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;

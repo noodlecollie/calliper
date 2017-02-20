@@ -3,7 +3,6 @@
 #include "model/shaders/unlitpervertexcolorshader.h"
 #include "renderer/opengl/openglerrors.h"
 #include "renderer/opengl/openglhelpers.h"
-#include "renderer/irenderer.h"
 #include <QMouseEvent>
 #include <QFile>
 #include "file-formats/keyvalues/keyvaluesparser.h"
