@@ -2,6 +2,32 @@
 
 namespace Model
 {
+    ResourceEnvironment* ResourceEnvironment::m_pGlobalInstance = nullptr;
+
+    void ResourceEnvironment::globalInitialise()
+    {
+        Q_ASSERT_X(!m_pGlobalInstance, Q_FUNC_INFO, "Global instance already initialised!");
+        if ( m_pGlobalInstance )
+        {
+            return;
+        }
+
+        m_pGlobalInstance = new ResourceEnvironment();
+    }
+
+    void ResourceEnvironment::globalShutdown()
+    {
+        Q_ASSERT_X(m_pGlobalInstance, Q_FUNC_INFO, "Global instance not initialised!");
+
+        delete m_pGlobalInstance;
+        m_pGlobalInstance = nullptr;
+    }
+
+    ResourceEnvironment* ResourceEnvironment::globalInstance()
+    {
+        return m_pGlobalInstance;
+    }
+
     ResourceEnvironment::ResourceEnvironment()
         : m_pShaderStore(nullptr),
           m_pTextureStore(nullptr),

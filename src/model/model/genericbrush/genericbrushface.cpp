@@ -104,8 +104,8 @@ namespace Model
             section->addNormal(nrm);
         }
 
-        TextureStore* texStore = ResourceEnvironmentInstance()->textureStore();
-        MaterialStore* matStore = ResourceEnvironmentInstance()->materialStore();
+        TextureStore* texStore = ResourceEnvironment::globalInstance()->textureStore();
+        MaterialStore* matStore = ResourceEnvironment::globalInstance()->materialStore();
 
         RenderMaterialPointer mat = (*matStore)(m_pTexturePlane->materialId());
         OpenGLTexturePointer tex = (*texStore)(mat->texture(ShaderDefs::MainTexture));

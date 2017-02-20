@@ -2,7 +2,6 @@
 #define RESOURCEENVIRONMENT_H
 
 #include "model_global.h"
-#include "calliperutil/global/globalinstance.h"
 #include "model/stores/shaderstore.h"
 #include "model/stores/texturestore.h"
 #include "model/stores/materialstore.h"
@@ -28,7 +27,13 @@ namespace Model
         ShaderPalette failsafeShaderPalette() const;
         void setFailsafeShaderPalette(const ShaderPalette& palette);
 
+        static void globalInitialise();
+        static void globalShutdown();
+        static ResourceEnvironment* globalInstance();
+
     private:
+        static ResourceEnvironment* m_pGlobalInstance;
+
         // These are allocated on the heap so we get to control
         // their construction/destruction order.
         ShaderStore* m_pShaderStore;
@@ -37,8 +42,6 @@ namespace Model
 
         ShaderPalette m_FailsafePalette;
     };
-
-    typedef CalliperUtil::GlobalInstance<ResourceEnvironment> ResourceEnvironmentInstance;
 }
 
 #endif // RESOURCEENVIRONMENT_H

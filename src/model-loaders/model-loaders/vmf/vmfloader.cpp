@@ -93,7 +93,7 @@ namespace ModelLoaders
             using namespace Model;
             using namespace CalliperUtil;
 
-            MaterialStore* materialStore = ResourceEnvironmentInstance()->materialStore();
+            MaterialStore* materialStore = ResourceEnvironment::globalInstance()->materialStore();
 
             QJsonObject world = doc.object().value("world").toObject();
             Json::JsonArrayWrapper solids = world.value("solid");

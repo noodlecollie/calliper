@@ -1,15 +1,12 @@
 #include "applicationtasks.h"
-#include "calliperutil/global/globalinstance.h"
 #include "model/global/resourceenvironment.h"
 #include "model/shaders/simplelitshader.h"
 
 namespace
 {
-    Model::ResourceEnvironmentInstance* g_pResourceEnv;
-
     void loadFailsafeShaders()
     {
-        Model::ResourceEnvironmentInstance& resourceEnv = *g_pResourceEnv;
+        Model::ResourceEnvironment* resourceEnv = Model::ResourceEnvironment::globalInstance();
         Model::ShaderStore* shaderStore = resourceEnv->shaderStore();
 
         quint16 failsafeShader = shaderStore->addShaderProgram<Model::SimpleLitShader>();
@@ -21,7 +18,7 @@ namespace
 
     void loadFailsafeTextures()
     {
-        Model::ResourceEnvironmentInstance& resourceEnv = *g_pResourceEnv;
+        Model::ResourceEnvironment* resourceEnv = Model::ResourceEnvironment::globalInstance();
         resourceEnv->textureStore()->setDefaultTextureFromFile(":model/textures/_ERROR_");
     }
 }
@@ -32,7 +29,7 @@ namespace AppCalliper
     {
         void initSubSystems()
         {
-            g_pResourceEnv = new Model::ResourceEnvironmentInstance();
+            Model::ResourceEnvironment::globalInitialise();
 
             loadFailsafeShaders();
             loadFailsafeTextures();
@@ -40,8 +37,7 @@ namespace AppCalliper
 
         void shutDownSubSystems()
         {
-            delete g_pResourceEnv;
-            g_pResourceEnv = nullptr;
+            Model::ResourceEnvironment::globalShutdown();
         }
     }
 }

@@ -29,9 +29,6 @@ namespace UserInterface
         QString mapPath() const;
         void setMapPath(const QString& path);
 
-        Model::ResourceEnvironment* resourceEnvironment();
-        const Model::ResourceEnvironment* resourceEnvironment() const;
-
         Model::ShaderPalette& shaderPalette();
         const Model::ShaderPalette& shaderPalette() const;
 
@@ -74,7 +71,6 @@ namespace UserInterface
         QString m_strVpkPath;
 
         Renderer::RenderModel* m_pRenderer;
-        Model::ResourceEnvironmentInstance* m_pResourceEnvironment;
 
         Model::MapScene* m_pScene;
         Model::SceneCamera* m_pCamera;

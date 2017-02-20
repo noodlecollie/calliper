@@ -37,22 +37,22 @@ MainWindow::~MainWindow()
 void MainWindow::initShaders()
 {
     Model::ShaderPalette& palette = shaderPalette();
-    Model::ShaderStore* shaderStore = resourceEnvironment()->shaderStore();
+    Model::ShaderStore* shaderStore = Model::ResourceEnvironment::globalInstance()->shaderStore();
     palette.addItem(Model::ShaderPalette::DefaultShader, shaderStore->addShaderProgram<Model::SimpleLitShader>());
     palette.addItem(Model::ShaderPalette::UnlitPerVertexColor, shaderStore->addShaderProgram<Model::UnlitPerVertexColorShader>());
 }
 
 void MainWindow::initTextures()
 {
-    Model::TextureStore* textureStore = resourceEnvironment()->textureStore();
+    Model::TextureStore* textureStore = Model::ResourceEnvironment::globalInstance()->textureStore();
     textureStore->setDefaultTextureFromFile(":model/textures/_ERROR_");
     textureStore->createTextureFromFile(":model/textures/dev/devwhite");
 }
 
 void MainWindow::initMaterials()
 {
-    Model::MaterialStore* materialStore = resourceEnvironment()->materialStore();
-    Model::TextureStore* textureStore = resourceEnvironment()->textureStore();
+    Model::MaterialStore* materialStore = Model::ResourceEnvironment::globalInstance()->materialStore();
+    Model::TextureStore* textureStore = Model::ResourceEnvironment::globalInstance()->textureStore();
 
     // For now the string must be identical.
     Renderer::RenderMaterialPointer material = materialStore->createMaterial(":model/textures/dev/devwhite");
@@ -97,7 +97,8 @@ void MainWindow::processBrushes()
 
 void MainWindow::importTextures()
 {
-    ModelLoaders::VTFLoader loader(resourceEnvironment()->materialStore(), resourceEnvironment()->textureStore());
+    ModelLoaders::VTFLoader loader(Model::ResourceEnvironment::globalInstance()->materialStore(),
+                                   Model::ResourceEnvironment::globalInstance()->textureStore());
     loadVpks();
     loader.loadMaterials(vpkFileCollection());
 }

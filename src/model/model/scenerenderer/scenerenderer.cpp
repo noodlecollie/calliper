@@ -35,7 +35,7 @@ namespace Model
     void SceneRenderer::updateObjectRecursive(SceneObject *object)
     {
         using namespace Renderer;
-        ResourceEnvironmentInstance resourceEnv;
+        ResourceEnvironment* resourceEnv = ResourceEnvironment::globalInstance();
 
         QMatrix4x4 oldMatrix = m_matRecursiveUpdateMatrix;
         m_matRecursiveUpdateMatrix = object->hierarchy().parentToLocal() * m_matRecursiveUpdateMatrix;

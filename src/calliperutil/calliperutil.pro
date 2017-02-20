@@ -28,8 +28,7 @@ HEADERS +=\
     calliperutil/json/jsonarraywrapper.h \
     calliperutil/math/math.h \
     calliperutil/string/stringutil.h \
-    calliperutil/debug/debug.h \
-    calliperutil/global/globalinstance.h
+    calliperutil/debug/debug.h
 
 unix {
     target.path = /usr/lib

@@ -26,7 +26,6 @@ namespace UserInterface
         m_strMapPath(),
         m_strVpkPath(),
         m_pRenderer(nullptr),
-        m_pResourceEnvironment(nullptr),
         m_pScene(nullptr),
         m_pCamera(nullptr),
         m_pRenderPassClassifier(classifier),
@@ -66,8 +65,7 @@ namespace UserInterface
         delete m_pRenderer;
         m_pRenderer = nullptr;
 
-        delete m_pResourceEnvironment;
-        m_pResourceEnvironment = nullptr;
+        ResourceEnvironment::globalShutdown();
 
         delete m_pRenderPassClassifier;
         m_pRenderPassClassifier = nullptr;
@@ -77,7 +75,7 @@ namespace UserInterface
     {
         initLocalOpenGlSettings();
 
-        m_pResourceEnvironment = new ResourceEnvironmentInstance(new ResourceEnvironment());
+        ResourceEnvironment::globalInitialise();
 
         m_pRenderer = new Renderer::RenderModel();
         initRenderer();
@@ -137,9 +135,9 @@ namespace UserInterface
 
     void MapViewWindow::initRenderer()
     {
-        m_pRenderer->setShaderFunctor(resourceEnvironment()->shaderStore());
-        m_pRenderer->setTextureFunctor(resourceEnvironment()->textureStore());
-        m_pRenderer->setMaterialFunctor(resourceEnvironment()->materialStore());
+        m_pRenderer->setShaderFunctor(ResourceEnvironment::globalInstance()->shaderStore());
+        m_pRenderer->setTextureFunctor(ResourceEnvironment::globalInstance()->textureStore());
+        m_pRenderer->setMaterialFunctor(ResourceEnvironment::globalInstance()->materialStore());
     }
 
     void MapViewWindow::initScene()
@@ -242,22 +240,6 @@ namespace UserInterface
             return;
 
         m_strMapPath = path;
-    }
-
-    Model::ResourceEnvironment* MapViewWindow::resourceEnvironment()
-    {
-        if ( !m_pResourceEnvironment )
-            return nullptr;
-
-        return ResourceEnvironmentInstance::instance();
-    }
-
-    const Model::ResourceEnvironment* MapViewWindow::resourceEnvironment() const
-    {
-        if ( !m_pResourceEnvironment )
-            return nullptr;
-
-        return ResourceEnvironmentInstance::instance();
     }
 
     Model::ShaderPalette& MapViewWindow::shaderPalette()
