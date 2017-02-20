@@ -1,0 +1,10 @@
+The rebuild of the renderer works well. However, we need to pay consideration to the following:
+
+- Picking objects - how best to manage this? One possibility might be to encode the object ID in
+  each vertex (or maybe fragment?). Non-renderer methods for this of course include ray casting,
+  but it would be nice to have a quick and cheap render-based way. I think this should be possible
+  without too much modification of existing code, as you should be able to specify a shader for
+  the object and a uniform for the colour. We would, however, need to be able to read from the
+  buffer that was drawn to, as well as enable scissoring, disable blending, etc.
+- Animating objects - a new model matrix would need to be passed in for each section of vertices
+  that needs to be animated. Need more research to work out an efficient way to do this.
