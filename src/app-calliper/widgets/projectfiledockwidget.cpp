@@ -34,6 +34,11 @@ namespace
 
         return -1;
     }
+
+    QString fileNameWithExtension(const QString& path)
+    {
+        return QFileInfo(path).fileName();
+    }
 }
 
 namespace AppCalliper
@@ -162,7 +167,7 @@ namespace AppCalliper
         return root->child(0);
     }
 
-    void ProjectFileDockWidget::setRoot(const QString &projectFileName)
+    void ProjectFileDockWidget::setRoot(const QString &projectFilePath)
     {
         QTreeWidgetItem* root = getRootItem();
         if ( root == m_pTreeWidget->invisibleRootItem() )
@@ -172,7 +177,10 @@ namespace AppCalliper
             root = item;
         }
 
-        root->setText(0, projectFileName);
+        QFileInfo fileInfo(projectFilePath);
+
+        root->setText(0, fileNameWithExtension(fileInfo.fileName()));
+        root->setData(0, FilePathRole, fileInfo.canonicalFilePath());
         root->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::File));
     }
 }

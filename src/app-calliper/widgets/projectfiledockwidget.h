@@ -15,7 +15,7 @@ namespace AppCalliper
     public:
         ProjectFileDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 
-        void setRoot(const QString& projectFileName);
+        void setRoot(const QString& projectFilePath);
 
         void addFile(const QString& localPath);
         void removeFile(const QString& localPath);

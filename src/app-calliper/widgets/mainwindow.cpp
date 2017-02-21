@@ -191,7 +191,7 @@ namespace AppCalliper
             filename = "UNSAVED";
         }
 
-        m_pProjectFileDockWidget->setRoot(QFileInfo(filename).fileName());
+        m_pProjectFileDockWidget->setRoot(filename);
     }
 
     void MainWindow::setProject(ApplicationProject *newProject)
@@ -271,7 +271,7 @@ namespace AppCalliper
         qDebug() << path << "was double clicked.";
 
         QFileInfo fileInfo(path);
-        if ( fileInfo.suffix() != "vmf" )
+        if ( fileInfo.suffix() != "cpj" )
         {
             return;
         }

@@ -9,6 +9,7 @@ namespace UserInterface
         QGridLayout* gridLayout = new QGridLayout();
         gridLayout->setContentsMargins(0,0,0,0);
         gridLayout->setSpacing(0);
+
         setLayout(gridLayout);
 
         m_pGridManager = new UserInterface::ResizeableGridLayoutManager(gridLayout);
