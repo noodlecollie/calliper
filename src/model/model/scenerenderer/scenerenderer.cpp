@@ -7,7 +7,8 @@ namespace Model
                                  Renderer::RenderModel* renderer,
                                  Scene* scene)
         : m_pRenderPassClassifier(renderPassClassifier),
-          m_pRenderer(renderer), m_pScene(scene),
+          m_pRenderer(renderer),
+          m_pScene(scene),
           m_vecDirectionalLight(QVector3D(1,1,1).normalized())
     {
         Q_ASSERT_X(m_pRenderPassClassifier, Q_FUNC_INFO, "Render pass classifier cannot be null");

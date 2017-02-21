@@ -19,4 +19,22 @@ namespace UserInterface
         delete m_pGridManager;
         m_pGridManager = nullptr;
     }
+
+    void QuadGridWidget::clear()
+    {
+        m_pGridManager->clear();
+    }
+
+    void QuadGridWidget::setSingleWidget(QWidget *widget)
+    {
+        if ( !widget )
+        {
+            return;
+        }
+
+        clear();
+
+        // None of these params apart from the widget actually matter.
+        m_pGridManager->addWidget(widget, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
+    }
 }

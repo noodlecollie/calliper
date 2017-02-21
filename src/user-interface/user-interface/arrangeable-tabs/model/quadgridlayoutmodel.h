@@ -19,7 +19,12 @@ namespace UserInterface
 
         explicit QuadGridLayoutModel(QObject *parent = nullptr);
 
+        // Does not delete widgets.
         void clear();
+
+        // Does delete widgets.
+        void deleteAllWidgets();
+
         bool addWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit = Qt::Horizontal);
         bool removeWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredMerge = Qt::Horizontal);
         bool replaceWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell);

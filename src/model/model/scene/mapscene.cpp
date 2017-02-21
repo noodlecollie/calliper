@@ -19,4 +19,9 @@ namespace Model
     {
         return m_pDefaultCamera;
     }
+
+    QList<SceneCamera*> MapScene::cameras() const
+    {
+        return rootObject()->findChildren<SceneCamera*>();
+    }
 }

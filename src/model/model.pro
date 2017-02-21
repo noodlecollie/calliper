@@ -53,7 +53,8 @@ SOURCES += \
     model/stores/shaderstore.cpp \
     model/stores/texturestore.cpp \
     model/global/resourceenvironment.cpp \
-    model/scene/mapscene.cpp
+    model/scene/mapscene.cpp \
+    model/scenerenderer/simplerenderpassclassifier.cpp
 
 HEADERS += \
     model_global.h \
@@ -99,7 +100,8 @@ HEADERS += \
     model/stores/shaderstore.h \
     model/stores/texturestore.h \
     model/global/resourceenvironment.h \
-    model/scene/mapscene.h
+    model/scene/mapscene.h \
+    model/scenerenderer/simplerenderpassclassifier.h
 
 unix {
     target.path = /usr/lib

@@ -44,7 +44,7 @@ namespace UserInterface
         if ( !widget )
             return;
 
-        clearGridLayout();
+        removeAllWidgetsFromGridLayout();
 
         ResizeableGridLayoutContainer* container = createContainerForEmbed(cell, splitPreference);
         container->addWidget(widget);
@@ -58,7 +58,7 @@ namespace UserInterface
         if ( !widget )
             return;
 
-        clearGridLayout();
+        removeAllWidgetsFromGridLayout();
 
         ResizeableGridLayoutContainer* container = createContainerForInsert(cell);
         container->addWidget(widget);
@@ -158,6 +158,12 @@ namespace UserInterface
                 break;
             }
         }
+    }
+
+    void ResizeableGridLayoutManager::clear()
+    {
+        removeAllWidgetsFromGridLayout();
+        m_pModel->deleteAllWidgets();
     }
 
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)
@@ -328,7 +334,7 @@ namespace UserInterface
         }
     }
 
-    void ResizeableGridLayoutManager::clearGridLayout()
+    void ResizeableGridLayoutManager::removeAllWidgetsFromGridLayout()
     {
         QLayoutItem *child;
         while ( (child = m_pGridLayout->takeAt(0)) != nullptr )
@@ -579,7 +585,7 @@ namespace UserInterface
 
         if ( container->widgetCount() < 1 )
         {
-            clearGridLayout();
+            removeAllWidgetsFromGridLayout();
 
             CUTL_ASSERT_SUCCESS(m_pModel->removeWidget(cell, mergePreference));
 

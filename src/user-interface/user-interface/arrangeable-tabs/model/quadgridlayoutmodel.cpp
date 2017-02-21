@@ -15,6 +15,16 @@ namespace UserInterface
         m_WidgetToCells.clear();
     }
 
+    void QuadGridLayoutModel::deleteAllWidgets()
+    {
+        for ( int i = 0; i < 4; ++i )
+        {
+            delete m_CellToWidget[i];
+        }
+
+        clear();
+    }
+
     bool QuadGridLayoutModel::canAddWidget(QuadGridLayoutDefs::GridCell cell) const
     {
         QWidget* existingWidget = widgetAt(cell);

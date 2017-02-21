@@ -37,6 +37,7 @@ namespace UserInterface
         QWidget* takeActiveWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference);
 
         void equaliseCellSizes();
+        void clear();
 
     signals:
         void widgetFloated(QWidget* widget, const QPoint& globalPos, bool dragged);
@@ -49,7 +50,7 @@ namespace UserInterface
 
     private:
         void updateGridLayout();
-        void clearGridLayout();
+        void removeAllWidgetsFromGridLayout();
 
         void setSingleWidgetLayout();
         void genericAddWidgets();

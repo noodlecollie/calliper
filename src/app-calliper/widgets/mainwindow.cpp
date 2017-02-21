@@ -10,6 +10,10 @@
 #include <QMessageBox>
 #include "projectmetadatadockwidget.h"
 #include <QtDebug>
+#include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
+
+// Swap me out for something useful
+#include <QGroupBox>
 
 namespace AppCalliper
 {
@@ -254,8 +258,25 @@ namespace AppCalliper
         ui->actionSave_Project_As->setEnabled(haveProject);
     }
 
+    UserInterface::QuadGridWidget* MainWindow::centralGridWidget() const
+    {
+        return qobject_cast<UserInterface::QuadGridWidget*>(centralWidget());
+    }
+
     void MainWindow::fileDoubleClicked(const QString& path)
     {
+        // TODO: This is all placeholder code. Rewrite this to be flexible.
 
+        QFileInfo fileInfo(path);
+        if ( fileInfo.suffix() != "vmf" )
+        {
+            return;
+        }
+
+        QGroupBox* temp = new QGroupBox();
+        temp->setTitle(path);
+
+        UserInterface::QuadGridWidget* gridWidget = centralGridWidget();
+        gridWidget->setSingleWidget(temp);
     }
 }

@@ -11,6 +11,11 @@ namespace Ui {
 class MainWindow;
 }
 
+namespace UserInterface
+{
+    class QuadGridWidget;
+}
+
 namespace AppCalliper
 {
     class VisibleActionDockWidget;
@@ -44,6 +49,7 @@ namespace AppCalliper
         void setProject(ApplicationProject* newProject);
         bool ensureProjectIsSaved();
         void setFileMenuItemEnabledStates();
+        UserInterface::QuadGridWidget* centralGridWidget() const;
 
         Ui::MainWindow *ui;
 

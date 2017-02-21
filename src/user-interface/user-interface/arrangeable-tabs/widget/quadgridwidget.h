@@ -14,6 +14,9 @@ namespace UserInterface
         explicit QuadGridWidget(QWidget *parent = 0);
         ~QuadGridWidget();
 
+        void clear();
+        void setSingleWidget(QWidget* widget);
+
     signals:
 
     public slots:
