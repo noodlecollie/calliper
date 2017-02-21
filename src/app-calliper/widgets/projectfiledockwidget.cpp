@@ -46,6 +46,8 @@ namespace AppCalliper
         m_pTreeWidget->setAnimated(true);
 
         setWidget(m_pTreeWidget);
+
+        connect(m_pTreeWidget, &QTreeWidget::itemDoubleClicked, this, &ProjectFileDockWidget::itemDoubleClicked);
     }
 
     void ProjectFileDockWidget::addFile(const QString &localPath)

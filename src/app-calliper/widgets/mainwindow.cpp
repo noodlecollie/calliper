@@ -222,6 +222,8 @@ namespace AppCalliper
         m_pProjectFileDockWidget = new ProjectFileDockWidget();
         initDockWidget(m_pProjectFileDockWidget, ui->actionFile_Tree, Qt::LeftDockWidgetArea);
 
+        connect(m_pProjectFileDockWidget, &ProjectFileDockWidget::fileDoubleClicked, this, &MainWindow::fileDoubleClicked);
+
         m_pProjectMetadataDockWidget = new ProjectMetadataDockWidget();
         initDockWidget(m_pProjectMetadataDockWidget, ui->actionProject_Metadata, Qt::LeftDockWidgetArea);
     }
@@ -266,6 +268,7 @@ namespace AppCalliper
     void MainWindow::fileDoubleClicked(const QString& path)
     {
         // TODO: This is all placeholder code. Rewrite this to be flexible.
+        qDebug() << path << "was double clicked.";
 
         QFileInfo fileInfo(path);
         if ( fileInfo.suffix() != "vmf" )

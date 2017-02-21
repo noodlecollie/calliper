@@ -1,6 +1,8 @@
 #include "applicationtasks.h"
 #include "model/global/resourceenvironment.h"
 #include "model/shaders/simplelitshader.h"
+#include "renderer/global/openglbackgroundcontext.h"
+#include "calliperutil/debug/debug.h"
 
 namespace
 {
@@ -29,15 +31,28 @@ namespace AppCalliper
     {
         void initSubSystems()
         {
+            Renderer::OpenGLBackgroundContext::globalInitialise();
+            CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->create());
+
             Model::ResourceEnvironment::globalInitialise();
+
+            CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->makeCurrent());
 
             loadFailsafeShaders();
             loadFailsafeTextures();
+
+            Renderer::OpenGLBackgroundContext::globalInstance()->doneCurrent();
         }
 
         void shutDownSubSystems()
         {
+            CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->makeCurrent());
+
             Model::ResourceEnvironment::globalShutdown();
+
+            Renderer::OpenGLBackgroundContext::globalInstance()->doneCurrent();
+
+            Renderer::OpenGLBackgroundContext::globalShutdown();
         }
     }
 }
