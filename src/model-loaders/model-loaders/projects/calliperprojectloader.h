@@ -20,8 +20,10 @@ namespace ModelLoaders
 
     private:
         void populateMetadata(const QJsonObject& json);
+        void populateProjectFiles(const QJsonArray& json);
 
         QJsonObject exportMetadata() const;
+        QJsonArray exportProjectFiles() const;
 
         Model::CalliperProject* m_pProject;
     };

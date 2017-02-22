@@ -188,7 +188,7 @@ namespace AppCalliper
         QString filename = m_pProject->fileName();
         if ( filename.isNull() )
         {
-            filename = "UNSAVED";
+            filename = tr("UNSAVED");
         }
 
         m_pProjectFileDockWidget->setProject(filename);

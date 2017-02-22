@@ -12,6 +12,7 @@ namespace Model
     void CalliperProject::clear()
     {
         m_pMetadata->clear();
+        m_ProjectFiles.clear();
     }
 
     CalliperProjectMetadata* CalliperProject::metadata()
@@ -22,5 +23,25 @@ namespace Model
     const CalliperProjectMetadata* CalliperProject::metadata() const
     {
         return m_pMetadata;
+    }
+
+    void CalliperProject::addProjectFile(const QString &localFilePath)
+    {
+        m_ProjectFiles.insert(localFilePath);
+    }
+
+    void CalliperProject::removeProjectFile(const QString &localFilePath)
+    {
+        m_ProjectFiles.remove(localFilePath);
+    }
+
+    int CalliperProject::projectFileCount() const
+    {
+        return m_ProjectFiles.count();
+    }
+
+    const QSet<QString>& CalliperProject::projectFiles() const
+    {
+        return m_ProjectFiles;
     }
 }

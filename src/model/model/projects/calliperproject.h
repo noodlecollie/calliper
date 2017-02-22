@@ -4,6 +4,7 @@
 #include "model_global.h"
 #include "model/core/datachangenotifier.h"
 #include "calliperprojectmetadata.h"
+#include <QSet>
 
 namespace Model
 {
@@ -18,8 +19,14 @@ namespace Model
         CalliperProjectMetadata* metadata();
         const CalliperProjectMetadata* metadata() const;
 
+        void addProjectFile(const QString& localFilePath);
+        void removeProjectFile(const QString& localFilePath);
+        int projectFileCount() const;
+        const QSet<QString>& projectFiles() const;
+
     private:
         CalliperProjectMetadata* m_pMetadata;
+        QSet<QString> m_ProjectFiles;
     };
 }
 

@@ -1,5 +1,6 @@
 #include "calliperprojectloader.h"
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QtDebug>
 
 namespace ModelLoaders
@@ -26,6 +27,7 @@ namespace ModelLoaders
 
         QJsonObject root;
         root["metadata"]  = exportMetadata();
+        root["projectFiles"] = exportProjectFiles();
 
         QJsonDocument doc;
         doc.setObject(root);
@@ -44,6 +46,7 @@ namespace ModelLoaders
         m_pProject->clear();
 
         populateMetadata(root["metadata"].toObject());
+        populateProjectFiles(root["projectFiles"].toArray());
     }
 
     void CalliperProjectLoader::populateMetadata(const QJsonObject& json)
@@ -71,6 +74,20 @@ namespace ModelLoaders
         }
     }
 
+    void CalliperProjectLoader::populateProjectFiles(const QJsonArray &json)
+    {
+        for ( QJsonArray::const_iterator it = json.constBegin(); it != json.constEnd(); ++it )
+        {
+            QJsonValue val = *it;
+            if ( !val.isString() )
+            {
+                continue;
+            }
+
+            m_pProject->addProjectFile(val.toString());
+        }
+    }
+
     QJsonObject CalliperProjectLoader::exportMetadata() const
     {
         const Model::CalliperProjectMetadata* metadata = m_pProject->metadata();
@@ -80,5 +97,18 @@ namespace ModelLoaders
         obj["version"] = QString("%0").arg(metadata->version());
 
         return obj;
+    }
+
+    QJsonArray CalliperProjectLoader::exportProjectFiles() const
+    {
+        const QSet<QString>& projectFiles = m_pProject->projectFiles();
+        QJsonArray array;
+
+        for ( QSet<QString>::const_iterator it = projectFiles.constBegin(); it != projectFiles.constEnd(); ++it )
+        {
+            array.append(QJsonValue(*it));
+        }
+
+        return array;
     }
 }
