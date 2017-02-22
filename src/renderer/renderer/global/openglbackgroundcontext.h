@@ -29,8 +29,8 @@ namespace Renderer
     private:
         static OpenGLBackgroundContext* m_pGlobalInstance;
 
-        QOpenGLContext* m_pContext;
         QOffscreenSurface* m_pSurface;
+        QOpenGLContext* m_pContext;
         bool m_bCreatedSuccessfully;
     };
 }

@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "projectfiledockwidget.h"
+#include "widgets/projectfiles/projectfiledockwidget.h"
 #include <QSignalBlocker>
 #include <QStandardPaths>
 #include <QFileDialog>

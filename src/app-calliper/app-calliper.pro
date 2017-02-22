@@ -14,22 +14,24 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         widgets/mainwindow.cpp \
-    widgets/projectfiledockwidget.cpp \
+    widgets/projectfiles/projectfiledockwidget.cpp \
     widgets/visibleactiondockwidget.cpp \
     model/applicationproject.cpp \
     widgets/projectmetadatadockwidget.cpp \
     app-calliper_global.cpp \
     model/vmfdatamodel.cpp \
-    application/applicationtasks.cpp
+    application/applicationtasks.cpp \
+    widgets/projectfiles/projectfiletreewidget.cpp
 
 HEADERS  += widgets/mainwindow.h \
-    widgets/projectfiledockwidget.h \
+    widgets/projectfiles/projectfiledockwidget.h \
     widgets/visibleactiondockwidget.h \
     model/applicationproject.h \
     app-calliper_global.h \
     widgets/projectmetadatadockwidget.h \
     model/vmfdatamodel.h \
-    application/applicationtasks.h
+    application/applicationtasks.h \
+    widgets/projectfiles/projectfiletreewidget.h
 
 FORMS    += mainwindow.ui
 
