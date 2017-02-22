@@ -1,5 +1,7 @@
 #include "projectfiletreewidget.h"
 #include <QFileIconProvider>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 namespace
 {
@@ -14,12 +16,11 @@ namespace
 namespace AppCalliper
 {
     ProjectFileTreeWidget::ProjectFileTreeWidget(QWidget *parent)
-        : QTreeWidget(parent)
+        : QTreeWidget(parent),
+          m_pProjectItem(nullptr),
+          m_bHasProject(false)
     {
-        m_pProjectItem = new QTreeWidgetItem();
-        m_pProjectItem->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::File));
-
-        invisibleRootItem()->addChild(m_pProjectItem);
+        createBlankProjectItem();
     }
 
     QTreeWidgetItem* ProjectFileTreeWidget::rootProjectItem() const
@@ -27,12 +28,20 @@ namespace AppCalliper
         return m_pProjectItem;
     }
 
-    void ProjectFileTreeWidget::setRoot(const QString &projectFilePath)
+    void ProjectFileTreeWidget::setProject(const QString &projectFilePath)
     {
         QFileInfo fileInfo(projectFilePath);
 
         m_pProjectItem->setText(0, fileInfo.fileName());
         m_pProjectItem->setData(0, FilePathRole, fileInfo.canonicalFilePath());
+        m_pProjectItem->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::File));
+
+        m_bHasProject = true;
+    }
+
+    bool ProjectFileTreeWidget::hasProject() const
+    {
+        return m_bHasProject;
     }
 
     void ProjectFileTreeWidget::addFile(FileType type, const QString &localPath)
@@ -88,12 +97,7 @@ namespace AppCalliper
 
     void ProjectFileTreeWidget::clearFiles()
     {
-        while ( m_pProjectItem->childCount() > 0 )
-        {
-            QTreeWidgetItem* child = m_pProjectItem->child(0);
-            m_pProjectItem->removeChild(child);
-            delete child;
-        }
+        createBlankProjectItem();
 
         m_ItemsByPath.clear();
         m_ItemsByType.clear();
@@ -110,5 +114,30 @@ namespace AppCalliper
 
         m_pProjectItem->addChild(item);
         return item;
+    }
+
+    void ProjectFileTreeWidget::contextMenuEvent(QContextMenuEvent *event)
+    {
+        QMenu menu;
+
+        createMenuAction(menu, tr("&Add new file..."), SIGNAL(addNewFileRequested()));
+
+        menu.exec(event->globalPos());
+    }
+
+    // TODO: Allow passing lambdas. Can't see how Qt does this ATM as I'm not on the internet.
+    void ProjectFileTreeWidget::createMenuAction(QMenu &menu, const QString &text, const char *sigOrSlot)
+    {
+        QAction* action = menu.addAction(text, this, sigOrSlot);
+        action->setEnabled(hasProject());
+    }
+
+    void ProjectFileTreeWidget::createBlankProjectItem()
+    {
+        delete m_pProjectItem;
+        m_pProjectItem = new QTreeWidgetItem();
+        invisibleRootItem()->addChild(m_pProjectItem);
+
+        m_bHasProject = false;
     }
 }

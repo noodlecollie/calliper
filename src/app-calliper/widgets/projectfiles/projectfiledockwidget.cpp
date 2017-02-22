@@ -38,8 +38,8 @@ namespace AppCalliper
         m_pTreeWidget->clearFiles();
     }
 
-    void ProjectFileDockWidget::setRoot(const QString &projectFilePath)
+    void ProjectFileDockWidget::setProject(const QString &projectFilePath)
     {
-        m_pTreeWidget->setRoot(projectFilePath);
+        m_pTreeWidget->setProject(projectFilePath);
     }
 }

@@ -14,7 +14,7 @@ namespace AppCalliper
         ProjectFileDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 
         void clearFiles();
-        void setRoot(const QString& projectFilePath);
+        void setProject(const QString& projectFilePath);
 
     signals:
         void fileAdded(const QString& localFilePath);

@@ -29,7 +29,8 @@ namespace AppCalliper
         explicit ProjectFileTreeWidget(QWidget *parent = 0);
 
         QTreeWidgetItem* rootProjectItem() const;
-        void setRoot(const QString& projectFilePath);
+        void setProject(const QString& projectFilePath);
+        bool hasProject() const;
 
         void addFile(FileType type, const QString& localPath);
         void removeFile(const QString& localPath);
@@ -40,10 +41,19 @@ namespace AppCalliper
         void fileRemoved(const QString& localFilePath);
         void filesCleared();
 
+        void addNewFileRequested();
+
+    protected:
+        void contextMenuEvent(QContextMenuEvent *event);
+
     private:
         QTreeWidgetItem* createFileTypeItem(FileType type);
+        void createBlankProjectItem();
+        void createMenuAction(QMenu& menu, const QString& text, const char* sigOrSlot);
 
         QTreeWidgetItem* m_pProjectItem;
+        bool m_bHasProject;
+
         QHash<QString, QTreeWidgetItem*> m_ItemsByPath;
         QHash<FileType, QTreeWidgetItem*> m_ItemsByType;
     };

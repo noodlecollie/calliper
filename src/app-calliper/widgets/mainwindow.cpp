@@ -191,7 +191,7 @@ namespace AppCalliper
             filename = "UNSAVED";
         }
 
-        m_pProjectFileDockWidget->setRoot(filename);
+        m_pProjectFileDockWidget->setProject(filename);
     }
 
     void MainWindow::setProject(ApplicationProject *newProject)
