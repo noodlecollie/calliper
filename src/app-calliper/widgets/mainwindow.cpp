@@ -205,7 +205,7 @@ namespace AppCalliper
 
         if ( m_pProject )
         {
-            connect(m_pProject.data(), SIGNAL(dataChanged()), this, SLOT(notifyProjectDataChanged()));
+            connect(m_pProject.data(), &ApplicationProject::dataChanged, this, &MainWindow::notifyProjectDataChanged);
 
             m_pProjectMetadataDockWidget->setProjectMetadata(m_pProject->project()->metadata());
         }
