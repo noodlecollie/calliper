@@ -13,11 +13,18 @@ namespace AppCalliper
     {
         Q_OBJECT
     public:
+        enum FileType
+        {
+            UnknownFile = 0,
+
+            MapFile,
+        };
+
         ProjectFileDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 
         void setRoot(const QString& projectFilePath);
 
-        void addFile(const QString& localPath);
+        void addFile(FileType type, const QString& localPath);
         void removeFile(const QString& localPath);
         void clearFiles();
 
@@ -35,8 +42,11 @@ namespace AppCalliper
         void removeEntry(const QStringList& filePathSections);
         bool removeEntryRecursive(QTreeWidgetItem* parent, const QStringList& filePathSections, int index);
         QTreeWidgetItem* getRootItem() const;
+        QTreeWidgetItem* createFileTypeItem(FileType type);
 
         QTreeWidget* m_pTreeWidget;
+        QHash<QString, QTreeWidgetItem*> m_ItemsByPath;
+        QHash<FileType, QTreeWidgetItem*> m_ItemsByType;
     };
 }
 
