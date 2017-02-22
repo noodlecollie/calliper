@@ -13,12 +13,6 @@ namespace Model
         return m_bDataChanged;
     }
 
-    void DataChangeNotifier::notifyDataChanged()
-    {
-        m_bDataChanged = true;
-        emit dataChanged();
-    }
-
     void DataChangeNotifier::notifyDataChanged(int propertyIndex)
     {
         m_bDataChanged = true;
@@ -36,7 +30,7 @@ namespace Model
 
     void DataChangeNotifier::connectDataChangedSignals(DataChangeNotifier *source)
     {
-        connect(source, SIGNAL(dataChanged(int)), this, SLOT(notifyDataChanged()));
+        connect(source, &DataChangeNotifier::dataChanged, this, &DataChangeNotifier::notifyDataChanged);
         connect(this, &DataChangeNotifier::dataReset, source, &DataChangeNotifier::notifyDataReset);
     }
 }

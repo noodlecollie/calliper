@@ -15,17 +15,16 @@ namespace Model
         bool dataHasChanged() const;
 
     signals:
-        void dataChanged(int propertyIndex = -1);
+        void dataChanged(int propertyIndex);
         void dataReset();
 
     public slots:
-        void notifyDataChanged();
         void notifyDataReset();
+        void notifyDataChanged(int propertyIndex = -1);
 
     protected:
         // Connects CHANGED source->this, RESET this->source.
         void connectDataChangedSignals(DataChangeNotifier* source);
-        void notifyDataChanged(int propertyIndex);
 
     private:
         bool m_bDataChanged;
