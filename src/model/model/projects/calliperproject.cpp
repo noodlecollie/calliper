@@ -1,5 +1,10 @@
 #include "calliperproject.h"
 
+namespace
+{
+    const int PROJECT_VERSION = 1;
+}
+
 namespace Model
 {
     CalliperProject::CalliperProject(QObject* parent)
@@ -7,6 +12,7 @@ namespace Model
           m_pMetadata(new CalliperProjectMetadata(this))
     {
         connectDataChangedSignals(m_pMetadata);
+        m_pMetadata->setVersion(PROJECT_VERSION);
     }
 
     void CalliperProject::clear()

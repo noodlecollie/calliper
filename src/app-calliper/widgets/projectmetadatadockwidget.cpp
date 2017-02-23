@@ -8,6 +8,8 @@
 namespace
 {
     // TODO: Set these to lambdas in a hash table, indexed by class name.
+    // TODO: Better, actually rewrite all of this, cycling through casts
+    // when receiving data is an awful idea.
     QVariant getContents(QWidget* widget)
     {
         QLineEdit* lineEdit = qobject_cast<QLineEdit*>(widget);

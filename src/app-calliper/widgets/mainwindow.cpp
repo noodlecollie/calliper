@@ -267,19 +267,6 @@ namespace AppCalliper
 
     void MainWindow::fileDoubleClicked(const QString& path)
     {
-        // TODO: This is all placeholder code. Rewrite this to be flexible.
-        qDebug() << path << "was double clicked.";
-
-        QFileInfo fileInfo(path);
-        if ( fileInfo.suffix() != "cpj" )
-        {
-            return;
-        }
-
-        QGroupBox* temp = new QGroupBox();
-        temp->setTitle(path);
-
-        UserInterface::QuadGridWidget* gridWidget = centralGridWidget();
-        gridWidget->setSingleWidget(temp);
+        // TODO
     }
 }

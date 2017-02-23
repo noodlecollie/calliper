@@ -1,0 +1,20 @@
+When a file is double-clicked, we want to end up opening a widget in the main area that displays the file. For example, if a VMF is double-clicked, we want to load it and show a viewport in the main area.
+
+To do this, we can first define mappings between file types and model/view types, eg. VMF maps to some VMF data model and a viewport widget for viewing. We can then check whether the current file is already loaded, and if it isn't we can create a new data model for it and load in the data. Once loaded, we can create a new view widget and insert it into the main area.
+
+This should involve a process something like the following:
+
+if ( file is not loaded )
+{
+	BaseFileModelPointer = Factory::createFileModelFor(fileType)
+	BaseFileModelPointer->load(file)	// Could take some time depending on what kind of file it is.
+}
+else
+{
+	BaseFileModelPointer = modelWeAlreadyLoadedFor(file)
+}
+
+BaseFileViewPointer = Factory::createFileViewFor(fileType)
+BaseFileViewPointer->setModel(BaseFileModelPointer)
+
+MainArea->addView(BaseFileViewPointer)

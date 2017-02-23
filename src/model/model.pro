@@ -54,7 +54,10 @@ SOURCES += \
     model/stores/texturestore.cpp \
     model/global/resourceenvironment.cpp \
     model/scene/mapscene.cpp \
-    model/scenerenderer/simplerenderpassclassifier.cpp
+    model/scenerenderer/simplerenderpassclassifier.cpp \
+    model/filedatamodels/base/basefiledatamodel.cpp \
+    model/filedatamodels/map/mapfiledatamodel.cpp \
+    model/filedatamodels/filedatamodelfactory.cpp
 
 HEADERS += \
     model_global.h \
@@ -101,7 +104,10 @@ HEADERS += \
     model/stores/texturestore.h \
     model/global/resourceenvironment.h \
     model/scene/mapscene.h \
-    model/scenerenderer/simplerenderpassclassifier.h
+    model/scenerenderer/simplerenderpassclassifier.h \
+    model/filedatamodels/base/basefiledatamodel.h \
+    model/filedatamodels/map/mapfiledatamodel.h \
+    model/filedatamodels/filedatamodelfactory.h
 
 unix {
     target.path = /usr/lib

@@ -19,7 +19,6 @@ SOURCES += main.cpp\
     model/applicationproject.cpp \
     widgets/projectmetadatadockwidget.cpp \
     app-calliper_global.cpp \
-    model/vmfdatamodel.cpp \
     application/applicationtasks.cpp \
     widgets/projectfiles/projectfiletreewidget.cpp
 
@@ -29,7 +28,6 @@ HEADERS  += widgets/mainwindow.h \
     model/applicationproject.h \
     app-calliper_global.h \
     widgets/projectmetadatadockwidget.h \
-    model/vmfdatamodel.h \
     application/applicationtasks.h \
     widgets/projectfiles/projectfiletreewidget.h
 
