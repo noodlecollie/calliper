@@ -9,6 +9,7 @@
 #include "calliperutil/general/generalutil.h"
 #include "model/global/resourceenvironment.h"
 #include <QTextStream>
+#include "file-formats/keyvalues/keyvaluesparser.h"
 
 namespace
 {
@@ -85,6 +86,14 @@ namespace
         v1 = vectorFromVmfCoord_x(fragments.at(3) + " " + fragments.at(4) + " " + fragments.at(5));
         v2 = vectorFromVmfCoord_x(fragments.at(6) + " " + fragments.at(7) + " " + fragments.at(8));
     }
+
+    inline void setErrorString(QString* string, const QString& error)
+    {
+        if ( string )
+        {
+            *string = error;
+        }
+    }
 }
 
 namespace ModelLoaders
@@ -115,7 +124,29 @@ namespace ModelLoaders
     {
         clearInternalState();
 
-        // TODO
+        QFile file(filePath);
+        if ( !file.open(QIODevice::ReadOnly) )
+        {
+            setErrorString(errorString, "Unable to open file for reading.");
+            return Failure;
+        }
+
+        QByteArray fileData = file.readAll();
+        file.close();
+
+        QJsonDocument document = createDocument(fileData, errorString);
+        if ( document.isNull() )
+        {
+            return Failure;
+        }
+
+        createBrushes(document);
+
+        if ( m_iSuccess != Success && errorString )
+        {
+            *errorString = m_Errors.join('\n');
+        }
+
         return m_iSuccess;
     }
 
@@ -123,14 +154,21 @@ namespace ModelLoaders
     {
         clearInternalState();
 
-        // TODO
-        return m_iSuccess;
+        // TODO: We can't write VMFs yet.
+        Q_UNUSED(filePath);
+        Q_UNUSED(errorString);
+        return Failure;
     }
 
     void VmfDataLoader::clearInternalState()
     {
         m_Errors.clear();
         m_iSuccess = Success;
+    }
+
+    QJsonDocument VmfDataLoader::createDocument(const QByteArray &vmfData, QString *errorString)
+    {
+        return FileFormats::KeyValuesParser(vmfData).toJsonDocument(errorString);
     }
 
     void VmfDataLoader::createBrushes(const QJsonDocument &doc)

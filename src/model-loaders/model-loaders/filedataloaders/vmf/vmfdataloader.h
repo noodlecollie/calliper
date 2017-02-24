@@ -34,9 +34,10 @@ namespace ModelLoaders
         Model::TexturedWinding* createSide(const QJsonObject& side, int brushId);
         void addError(int brushId, const QString& error);
         void clearInternalState();
+        QJsonDocument createDocument(const QByteArray& vmfData, QString* errorString);
 
         SuccessCode m_iSuccess;
-        QVector<QString> m_Errors;
+        QStringList m_Errors;
     };
 }
 
