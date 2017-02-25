@@ -209,32 +209,42 @@ namespace FileFormats
         depthTokens.pop();
     }
 
-    void KeyValuesParser::convertNonUniqueKeysToArrays(QJsonObject &obj)
+    void KeyValuesParser::convertIntermediaJsonToArrays(QJsonObject &obj)
     {
+        // The parser automatically prefixes each key in a QJsonObject with a
+        // number, followed by an underscore. This is in case a KeyValues file
+        // contains more than one subkey with the same name (which KV files are
+        // allowed to do, but JSON files are not). This function turns this
+        // "intermediate" format into better-formed JSON, where any multiply-
+        // defined subkeys in the original KV file are represented by an array
+        // of values in the JSON object.
+
         typedef QHash<QString, QJsonArray> JsonTable;
         JsonTable itemTable;
 
         for ( QJsonObject::iterator it = obj.begin(); it != obj.end(); ++it )
         {
-            QString key = it.key();
-            int index = key.indexOf("_");
-            if ( index >= 0 )
-                key = key.mid(index+1);
+            QString key = keyWithoutUniqueIdentifier(it.key());
+
             if ( key.isEmpty() )
+            {
                 continue;
+            }
 
             if ( !itemTable.contains(key) )
             {
                 QJsonArray array;
                 array.append(it.value());
                 itemTable.insert(key, array);
-                continue;
             }
-
-            itemTable[key].append(it.value());
+            else
+            {
+                itemTable[key].append(it.value());
+            }
         }
 
         obj = QJsonObject();
+
         for ( JsonTable::iterator it = itemTable.begin(); it != itemTable.end(); ++it )
         {
             if ( it->count() > 1 )
@@ -248,19 +258,44 @@ namespace FileFormats
         }
     }
 
-    void KeyValuesParser::convertNonUniqueKeysToArraysRecursive(QJsonObject &obj)
+    void KeyValuesParser::convertArraysToIntermediateJson(QJsonObject &obj)
+    {
+        QJsonObject oldObj = obj;
+        obj = QJsonObject();
+
+        int counter = 0;
+        for ( QJsonObject::const_iterator it = oldObj.constBegin(); it != oldObj.constEnd(); ++it )
+        {
+            QString key = QString("%0_%1").arg(counter++).arg(it.key());
+            obj.insert(key, it.value());
+        }
+    }
+
+    QString KeyValuesParser::keyWithoutUniqueIdentifier(const QString& key)
+    {
+        int index = key.indexOf("_");
+
+        if ( index >= 0 )
+        {
+            return key.mid(index+1);
+        }
+
+        return key;
+    }
+
+    void KeyValuesParser::convertIntermediateJsonArraysRecursive(QJsonObject &obj)
     {
         for ( QJsonObject::iterator it = obj.begin(); it != obj.end(); ++it )
         {
             if ( (*it).isObject() )
             {
                 QJsonObject child = (*it).toObject();
-                convertNonUniqueKeysToArraysRecursive(child);
+                convertIntermediaJsonToArrays(child);
                 *it = child;
             }
         }
 
-        convertNonUniqueKeysToArrays(obj);
+        convertIntermediaJsonToArrays(obj);
     }
 
     QJsonDocument KeyValuesParser::toJsonDocument(QString* errorString)
@@ -302,7 +337,7 @@ namespace FileFormats
         Q_ASSERT_X(doc.isObject(), Q_FUNC_INFO, "Expected JSON document to have a root object.");
 
         QJsonObject obj = doc.object();
-        convertNonUniqueKeysToArraysRecursive(obj);
+        convertIntermediateJsonArraysRecursive(obj);
         doc.setObject(obj);
         return doc;
     }
