@@ -268,5 +268,6 @@ namespace AppCalliper
     void MainWindow::fileDoubleClicked(const QString& path)
     {
         // TODO
+        Q_UNUSED(path);
     }
 }

@@ -9,6 +9,8 @@ namespace Model
     class MODELSHARED_EXPORT BaseFileDataModel
     {
     public:
+        virtual ~BaseFileDataModel();
+
         enum FileType
         {
             UnknownFile = 0,

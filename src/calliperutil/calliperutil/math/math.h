@@ -47,8 +47,8 @@ namespace CalliperUtil
         {
             CALLIPERUTILSHARED_EXPORT int max();
             CALLIPERUTILSHARED_EXPORT int min();
-            CALLIPERUTILSHARED_EXPORT int extent();
-            CALLIPERUTILSHARED_EXPORT double diagonal();
+            CALLIPERUTILSHARED_EXPORT int extent();         // Distance from min (-) to max (+)
+            CALLIPERUTILSHARED_EXPORT double diagonal();    // Distance from opposite corners of a square whose sides are of length extent()
         }
 
         namespace StaticMatrix
@@ -114,31 +114,14 @@ namespace CalliperUtil
 
         CALLIPERUTILSHARED_EXPORT float distanceFromPointToPlane(const QVector3D &point, const QVector3D &planeNormal, const QVector3D pointOnPlane);
 
-        template<typename T>
-        void updateWithInitCheck(const T &value, T &toUpdate, bool &hasBeenUpdated,
-                                 std::function<bool (const T& val, const T& current)> updateFunc)
+        inline static QVector3D transformVectorPosition(const QVector3D& vec, const QMatrix4x4& mat)
         {
-            if ( !hasBeenUpdated || updateFunc(value, toUpdate) )
-            {
-                toUpdate = value;
-                hasBeenUpdated = true;
-            }
+            return (QVector4D(vec, 1) * mat).toVector3D();
         }
 
-        template<typename T>
-        void updateIfLessThan(const T &value, T &toUpdate, bool &hasBeenUpdated)
+        inline static QVector3D transformVectorDirection(const QVector3D vec, const QMatrix4x4& mat)
         {
-            return updateWithInitCheck<T>(value, toUpdate, hasBeenUpdated,
-                                       [] (const T &val, const T &current)
-                                          {return val < current;});
-        }
-
-        template<typename T>
-        void updateIfGreaterThan(const T &value, T &toUpdate, bool &hasBeenUpdated)
-        {
-            return updateWithInitCheck<T>(value, toUpdate, hasBeenUpdated,
-                                       [] (const T &val, const T &current)
-                                          {return val > current;});
+            return (QVector4D(vec, 0) * mat).toVector3D();
         }
     }
 

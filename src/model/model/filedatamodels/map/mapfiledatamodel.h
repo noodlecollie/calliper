@@ -12,6 +12,7 @@ namespace Model
     {
     public:
         MapFileDataModel();
+        virtual ~MapFileDataModel();
 
         virtual FileType type() const override;
 

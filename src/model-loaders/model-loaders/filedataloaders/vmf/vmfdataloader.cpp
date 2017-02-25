@@ -157,6 +157,7 @@ namespace ModelLoaders
         // TODO: We can't write VMFs yet.
         Q_UNUSED(filePath);
         Q_UNUSED(errorString);
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Can't save VMFs yet.");
         return Failure;
     }
 

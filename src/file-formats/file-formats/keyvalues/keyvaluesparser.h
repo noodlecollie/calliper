@@ -42,9 +42,9 @@ namespace FileFormats
         int nextNonWhitespaceCharacter(int from) const;
         void keyValuesToIntermediateJson_x(QByteArray &intJson);
 
-        static void convertIntermediaJsonToArrays(QJsonObject& obj);
-        static void convertIntermediateJsonArraysRecursive(QJsonObject& obj);
-        static void convertArraysToIntermediateJson(QJsonObject& obj);
+        static void convertIntermediateJsonToArrays(QJsonObject& obj);
+        static void convertIntermediateJsonToArraysRecursive(QJsonObject& obj);
+        static void convertIntermediateJsonToArraysRecursive(QJsonArray& arr);
 
         static QString keyWithoutUniqueIdentifier(const QString& key);
 

@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
     w.setMapPath(filename);
     w.setVpkPath(parser.value(opVpkPath));
     w.show();
-//    w.importTextures();
-//    w.loadMap();
+    w.importTextures();
+    w.loadMap();
 
     return a.exec();
 }

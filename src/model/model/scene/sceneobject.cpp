@@ -2,6 +2,8 @@
 #include <QCoreApplication>
 #include "model/events/modeleventtypes.h"
 #include <QtDebug>
+#include "calliperutil/math/math.h"
+#include "model/math/modelmath.h"
 
 namespace Model
 {
@@ -221,5 +223,49 @@ namespace Model
 
         m_colColor = col;
         flagNeedsRendererUpdate();
+    }
+
+    bool SceneObject::mustExist() const
+    {
+        return m_bMustExist;
+    }
+
+    void SceneObject::setMustExist(bool mustExist)
+    {
+        m_bMustExist = mustExist;
+    }
+
+    void SceneObject::setParentObject(SceneObject *newParent)
+    {
+        if ( newParent == this )
+        {
+            return;
+        }
+
+        Q_ASSERT_X(newParent->parentScene() == parentScene(), Q_FUNC_INFO, "Cannot set parent to an object in a different scene!");
+        if ( newParent->parentScene() != parentScene() )
+        {
+            return;
+        }
+
+        SceneObject* oldParent = parentObject();
+        Q_ASSERT(oldParent);
+
+        QMatrix4x4 oldParentToNewParent = newParent->rootToLocalMatrix() * oldParent->localToRootMatrix();
+
+        QVector3D newPosition = CalliperUtil::Math::transformVectorPosition(hierarchy().position(), oldParentToNewParent);
+
+        QVector3D fwd, right, up;
+        ModelMath::angleToVectors(hierarchy().rotation(), fwd, right, up);
+        fwd = CalliperUtil::Math::transformVectorDirection(fwd, oldParentToNewParent);
+        up = CalliperUtil::Math::transformVectorDirection(up, oldParentToNewParent);
+        EulerAngle newAngles = ModelMath::vectorsToAngle(fwd, up);
+
+        QVector3D newScale = CalliperUtil::Math::transformVectorDirection(hierarchy().scale(), oldParentToNewParent);
+
+        setParent(newParent);
+        hierarchy().setPosition(newPosition);
+        hierarchy().setRotation(newAngles);
+        hierarchy().setScale(newScale);
     }
 }

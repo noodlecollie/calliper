@@ -36,6 +36,7 @@ namespace Model
         }
 
         void destroySceneObject(SceneObject* object);
+        void clear();
 
         SceneObject* rootObject() const;
 

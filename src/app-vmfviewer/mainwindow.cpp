@@ -77,7 +77,7 @@ void MainWindow::processBrushes()
 {
     using namespace Model;
 
-    QList<GenericBrush*> brushes = scene()->rootObject()->findChildren<GenericBrush*>();
+    QList<GenericBrush*> brushes = mapDataModel()->scene()->rootObject()->findChildren<GenericBrush*>();
 
     foreach ( GenericBrush* brush, brushes )
     {

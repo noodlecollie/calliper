@@ -9,6 +9,11 @@ namespace Model
 
     }
 
+    MapFileDataModel::~MapFileDataModel()
+    {
+
+    }
+
     BaseFileDataModel::FileType MapFileDataModel::type() const
     {
         return MapFile;

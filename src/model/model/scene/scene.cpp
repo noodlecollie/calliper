@@ -8,6 +8,7 @@ namespace Model
           m_pRootObject(new SceneObject(SceneObjectInitParams(this, acquireNextObjectId()), nullptr))
     {
         addObjectToTable(m_pRootObject);
+        m_pRootObject->setMustExist(true);
     }
 
     void Scene::processSceneObjectCreated(SceneObject *object)
@@ -36,6 +37,7 @@ namespace Model
     {
         Q_ASSERT_X(object->parentScene() == this, Q_FUNC_INFO, "Scene object must belong to this scene!");
         Q_ASSERT_X(object != m_pRootObject, Q_FUNC_INFO, "Cannot delete the root object!");
+
         if ( object->parentScene() != this || object == m_pRootObject )
             return;
 
@@ -50,9 +52,24 @@ namespace Model
             deleteObjectsRecursive(object);
         }
 
+        if ( object->mustExist() )
+        {
+            object->setParentObject(m_pRootObject);
+            return;
+        }
+
         emit objectDestroyed(object);
         removeObjectFromTable(object);
         delete object;
+    }
+
+    void Scene::clear()
+    {
+        QList<SceneObject*> children = m_pRootObject->childSceneObjects();
+        foreach ( SceneObject* object, children )
+        {
+            destroySceneObject(object);
+        }
     }
 
     SceneObject* Scene::rootObject() const

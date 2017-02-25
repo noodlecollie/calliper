@@ -23,6 +23,11 @@ namespace Model
         bool isRoot() const;
         Scene* parentScene() const;
 
+        // Sets the object as the parent of this object,
+        // and adjusts this object's transformations so
+        // that its translation/rotation/scale are maintained.
+        void setParentObject(SceneObject* newParent);
+
         quint32 objectId() const;
 
         HierarchyState& hierarchy();
@@ -40,6 +45,9 @@ namespace Model
 
         QColor color() const;
         void setColor(const QColor &col);
+
+        bool mustExist() const;
+        void setMustExist(bool mustExist);
 
     public slots:
         void flagNeedsRendererUpdate();
@@ -88,9 +96,11 @@ namespace Model
 
         Scene* const m_pParentScene;
         const quint32 m_iObjectId;
+
         HierarchyState* m_pHierarchy;
         mutable bool m_bNeedsRendererUpdate;
         QColor m_colColor;
+        bool m_bMustExist;
     };
 }
 

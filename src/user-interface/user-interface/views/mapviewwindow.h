@@ -12,6 +12,7 @@
 #include "model/controller-adapters/mouseeventmap.h"
 #include "file-formats/vpk/vpkfilecollection.h"
 #include "renderer/rendermodel/0-modellevel/rendermodel.h"
+#include "model/filedatamodels/map/mapfiledatamodel.h"
 
 namespace UserInterface
 {
@@ -29,17 +30,14 @@ namespace UserInterface
         QString mapPath() const;
         void setMapPath(const QString& path);
 
+        Model::MapFileDataModel* mapDataModel();
+        const Model::MapFileDataModel* mapDataModel() const;
+
         Model::ShaderPalette& shaderPalette();
         const Model::ShaderPalette& shaderPalette() const;
 
         Model::IRenderPassClassifier* renderPassClassifier();
         const Model::IRenderPassClassifier* renderPassClassifier() const;
-
-        Model::Scene* scene();
-        const Model::Scene* scene() const;
-
-        Model::SceneCamera* sceneCamera();
-        const Model::SceneCamera* sceneCamera() const;
 
         const FileFormats::VPKFileCollection& vpkFileCollection() const;
 
@@ -69,11 +67,11 @@ namespace UserInterface
 
         QString m_strMapPath;
         QString m_strVpkPath;
+        bool m_bInitialised;
+
+        Model::MapFileDataModel* m_pVmfData;
 
         Renderer::RenderModel* m_pRenderer;
-
-        Model::MapScene* m_pScene;
-        Model::SceneCamera* m_pCamera;
         Model::IRenderPassClassifier* m_pRenderPassClassifier;
         Model::SceneRenderer* m_pSceneRenderer;
         Model::ShaderPalette m_ShaderPalette;

@@ -6,4 +6,9 @@ namespace Model
     {
 
     }
+
+    BaseFileDataModel::~BaseFileDataModel()
+    {
+
+    }
 }

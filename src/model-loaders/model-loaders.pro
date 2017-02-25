@@ -14,7 +14,6 @@ DEFINES += MODELLOADERS_LIBRARY
 SOURCES += \
     model-loaders/json/jsonloaderutils.cpp \
     model-loaders/projects/calliperprojectloader.cpp \
-    model-loaders/vmf/vmfloader.cpp \
     model-loaders/vtf/vtfloader.cpp \
     model-loaders/filedataloaders/base/basefileloader.cpp \
     model-loaders/filedataloaders/vmf/vmfdataloader.cpp
@@ -24,7 +23,6 @@ HEADERS +=\
     model-loaders_global.h \
     model-loaders/json/jsonloaderutils.h \
     model-loaders/projects/calliperprojectloader.h \
-    model-loaders/vmf/vmfloader.h \
     model-loaders/vtf/vtfloader.h \
     model-loaders/filedataloaders/base/basefileloader.h \
     model-loaders/filedataloaders/vmf/vmfdataloader.h
