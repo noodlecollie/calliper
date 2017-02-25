@@ -16,7 +16,8 @@ SOURCES += \
     model-loaders/projects/calliperprojectloader.cpp \
     model-loaders/vtf/vtfloader.cpp \
     model-loaders/filedataloaders/base/basefileloader.cpp \
-    model-loaders/filedataloaders/vmf/vmfdataloader.cpp
+    model-loaders/filedataloaders/vmf/vmfdataloader.cpp \
+    model-loaders/filedataloaders/fileextensiondatamodelmap.cpp
     model-loaders_global.cpp
 
 HEADERS +=\
@@ -25,7 +26,8 @@ HEADERS +=\
     model-loaders/projects/calliperprojectloader.h \
     model-loaders/vtf/vtfloader.h \
     model-loaders/filedataloaders/base/basefileloader.h \
-    model-loaders/filedataloaders/vmf/vmfdataloader.h
+    model-loaders/filedataloaders/vmf/vmfdataloader.h \
+    model-loaders/filedataloaders/fileextensiondatamodelmap.h
 
 unix {
     target.path = /usr/lib

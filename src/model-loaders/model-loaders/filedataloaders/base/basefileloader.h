@@ -15,7 +15,7 @@ namespace ModelLoaders
     public:
         enum FileType
         {
-            UnknownType = 0,
+            UnknownFile = 0,
             VmfFile
         };
 
