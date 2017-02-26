@@ -20,7 +20,7 @@ namespace ModelLoaders
     public:
         VmfDataLoader();
 
-        virtual FileType type() const override;
+        virtual LoaderType type() const override;
 
         Model::MapFileDataModel* vmfDataModel() const;
         virtual bool setDataModel(Model::BaseFileDataModel *model) override;

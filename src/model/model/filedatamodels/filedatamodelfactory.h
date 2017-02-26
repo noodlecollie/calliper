@@ -9,7 +9,7 @@ namespace Model
     class FileDataModelFactory
     {
     public:
-        static BaseFileDataModel* createModel(BaseFileDataModel::FileType type);
+        static BaseFileDataModel* createModel(BaseFileDataModel::ModelType type);
 
     private:
         FileDataModelFactory() = delete;

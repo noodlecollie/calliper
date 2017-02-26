@@ -105,9 +105,9 @@ namespace ModelLoaders
 
     }
 
-    BaseFileLoader::FileType VmfDataLoader::type() const
+    BaseFileLoader::LoaderType VmfDataLoader::type() const
     {
-        return VmfFile;
+        return VmfLoader;
     }
 
     Model::MapFileDataModel* VmfDataLoader::vmfDataModel() const
@@ -117,7 +117,7 @@ namespace ModelLoaders
 
     bool VmfDataLoader::setDataModel(Model::BaseFileDataModel *model)
     {
-        if ( !model || model->type() != Model::BaseFileDataModel::MapFile )
+        if ( !model || model->type() != Model::BaseFileDataModel::MapModel )
         {
             return false;
         }

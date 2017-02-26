@@ -2,6 +2,7 @@
 #define BASEFILELOADER_H
 
 #include "model-loaders_global.h"
+#include <QObject>
 
 namespace Model
 {
@@ -12,11 +13,13 @@ namespace ModelLoaders
 {
     class MODELLOADERSSHARED_EXPORT BaseFileLoader
     {
+        Q_GADGET
     public:
-        enum FileType
+        // TODO: Rename these enums to distinguish between the loader and the model.
+        enum LoaderType
         {
-            UnknownFile = 0,
-            VmfFile
+            UnknownLoader = 0,
+            VmfLoader
         };
 
         enum SuccessCode
@@ -28,7 +31,7 @@ namespace ModelLoaders
 
         virtual ~BaseFileLoader();
 
-        virtual FileType type() const = 0;
+        virtual LoaderType type() const = 0;
         bool isValid() const;
 
         Model::BaseFileDataModel* dataModel() const;

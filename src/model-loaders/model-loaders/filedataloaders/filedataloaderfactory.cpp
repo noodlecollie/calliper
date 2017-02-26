@@ -3,13 +3,13 @@
 
 namespace ModelLoaders
 {
-    BaseFileLoader* FileDataLoaderFactory::createLoader(BaseFileLoader::FileType type, Model::BaseFileDataModel *dataModel)
+    BaseFileLoader* FileDataLoaderFactory::createLoader(BaseFileLoader::LoaderType loaderType, Model::BaseFileDataModel *dataModel)
     {
         BaseFileLoader* loader = nullptr;
 
-        switch ( type )
+        switch ( loaderType )
         {
-            case BaseFileLoader::VmfFile:
+            case BaseFileLoader::VmfLoader:
             {
                 loader = new VmfDataLoader();
             }

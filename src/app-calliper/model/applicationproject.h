@@ -4,8 +4,7 @@
 #include "app-calliper_global.h"
 #include "model/projects/calliperproject.h"
 #include "model/core/datachangenotifier.h"
-#include <QHash>
-#include "model/filedatamodels/base/basefiledatamodel.h"
+#include "model-loaders/filedataloaders/filedatamodelstore.h"
 
 namespace AppCalliper
 {
@@ -21,12 +20,15 @@ namespace AppCalliper
         Model::CalliperProject* project();
         const Model::CalliperProject* project() const;
 
+        ModelLoaders::FileDataModelStore& fileStore();
+        const ModelLoaders::FileDataModelStore& fileStore() const;
+
     private:
+        typedef QSharedPointer<Model::BaseFileDataModel> DataModelPointer;
+
         QString m_strFileName;
         Model::CalliperProject* m_pProject;
-
-        // Maps a local file path to a model for that file.
-        QHash<QString, Model::BaseFileDataModel*> m_FileModels;
+        ModelLoaders::FileDataModelStore m_FileStore;
     };
 }
 

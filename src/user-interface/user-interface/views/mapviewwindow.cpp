@@ -296,7 +296,8 @@ namespace UserInterface
             return;
         }
 
-        VmfDataLoader loader(m_pVmfData);
+        VmfDataLoader loader;
+        loader.setDataModel(m_pVmfData);
         QString errorString;
 
         if ( loader.load(m_strMapPath, &errorString) != BaseFileLoader::Success )

@@ -3,8 +3,8 @@
 namespace ModelLoaders
 {
     bool FileExtensionDataModelMap::m_bInitialised = false;
-    QHash<QString, BaseFileLoader::FileType> FileExtensionDataModelMap::m_ExtensionToFileType;
-    QHash<BaseFileLoader::FileType, Model::BaseFileDataModel::FileType> FileExtensionDataModelMap::m_FileTypeToDataModelType;
+    QHash<QString, BaseFileLoader::LoaderType> FileExtensionDataModelMap::m_ExtensionToFileType;
+    QHash<BaseFileLoader::LoaderType, Model::BaseFileDataModel::ModelType> FileExtensionDataModelMap::m_FileTypeToDataModelType;
 
     FileExtensionDataModelMap::FileExtensionDataModelMap()
     {
@@ -13,46 +13,46 @@ namespace ModelLoaders
             return;
         }
 
-        addExtension("vmf", BaseFileLoader::VmfFile, Model::BaseFileDataModel::MapFile);
+        addExtension("vmf", BaseFileLoader::VmfLoader, Model::BaseFileDataModel::MapModel);
     }
 
-    BaseFileLoader::FileType FileExtensionDataModelMap::fileType(const QString &extension) const
+    BaseFileLoader::LoaderType FileExtensionDataModelMap::loaderType(const QString &extension) const
     {
-        return m_ExtensionToFileType.value(extension.toLower(), BaseFileLoader::UnknownFile);
+        return m_ExtensionToFileType.value(extension.toLower(), BaseFileLoader::UnknownLoader);
     }
 
-    Model::BaseFileDataModel::FileType FileExtensionDataModelMap::dataModelType(BaseFileLoader::FileType fileType) const
+    Model::BaseFileDataModel::ModelType FileExtensionDataModelMap::modelType(BaseFileLoader::LoaderType loaderType) const
     {
-        return m_FileTypeToDataModelType.value(fileType, Model::BaseFileDataModel::UnknownFile);
+        return m_FileTypeToDataModelType.value(loaderType, Model::BaseFileDataModel::UnknownModel);
     }
 
-    Model::BaseFileDataModel::FileType FileExtensionDataModelMap::dataModelType(const QString &extension) const
+    Model::BaseFileDataModel::ModelType FileExtensionDataModelMap::modelType(const QString &extension) const
     {
-        return dataModelType(fileType(extension));
+        return modelType(loaderType(extension));
     }
 
     void FileExtensionDataModelMap::addExtension(const QString &extension,
-                                                 BaseFileLoader::FileType fileType,
-                                                 Model::BaseFileDataModel::FileType dataModelType)
+                                                 BaseFileLoader::LoaderType loaderType,
+                                                 Model::BaseFileDataModel::ModelType modelType)
     {
-        Q_ASSERT_X(fileType != BaseFileLoader::UnknownFile && dataModelType != Model::BaseFileDataModel::UnknownFile,
+        Q_ASSERT_X(loaderType != BaseFileLoader::UnknownLoader && modelType != Model::BaseFileDataModel::UnknownModel,
                    Q_FUNC_INFO,
                    "Cannot add entry for unknown file type!");
 
-        if ( fileType == BaseFileLoader::UnknownFile || dataModelType == Model::BaseFileDataModel::UnknownFile )
+        if ( loaderType == BaseFileLoader::UnknownLoader || modelType == Model::BaseFileDataModel::UnknownModel )
         {
             return;
         }
 
         Q_ASSERT_X(!m_ExtensionToFileType.contains(extension.toLower()),
                    Q_FUNC_INFO,
-                   "File extension already has a registered file type!");
+                   "File extension already has a registered loader type!");
 
-        Q_ASSERT_X(!m_FileTypeToDataModelType.contains(fileType),
+        Q_ASSERT_X(!m_FileTypeToDataModelType.contains(loaderType),
                    Q_FUNC_INFO,
-                   "File type already has a registered data model type!");
+                   "Loader type already has a registered model type!");
 
-        m_ExtensionToFileType[extension.toLower()] = fileType;
-        m_FileTypeToDataModelType[fileType] = dataModelType;
+        m_ExtensionToFileType[extension.toLower()] = loaderType;
+        m_FileTypeToDataModelType[loaderType] = modelType;
     }
 }

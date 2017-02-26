@@ -3,22 +3,24 @@
 
 #include "model_global.h"
 #include <QString>
+#include <QObject>
 
 namespace Model
 {
     class MODELSHARED_EXPORT BaseFileDataModel
     {
+        Q_GADGET
     public:
         virtual ~BaseFileDataModel();
 
-        enum FileType
+        enum ModelType
         {
-            UnknownFile = 0,
-            MapFile
+            UnknownModel = 0,
+            MapModel
         };
 
         // Returns what type this model actually is.
-        virtual FileType type() const = 0;
+        virtual ModelType type() const = 0;
 
     protected:
         BaseFileDataModel();

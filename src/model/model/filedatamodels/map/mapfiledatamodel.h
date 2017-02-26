@@ -14,7 +14,7 @@ namespace Model
         MapFileDataModel();
         virtual ~MapFileDataModel();
 
-        virtual FileType type() const override;
+        virtual ModelType type() const override;
 
         MapScene* scene();
         const MapScene* scene() const;

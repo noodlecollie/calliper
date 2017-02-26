@@ -13,15 +13,15 @@ namespace ModelLoaders
     public:
         FileExtensionDataModelMap();
 
-        BaseFileLoader::FileType fileType(const QString& extension) const;
-        Model::BaseFileDataModel::FileType dataModelType(BaseFileLoader::FileType fileType) const;
-        Model::BaseFileDataModel::FileType dataModelType(const QString& extension) const;
+        BaseFileLoader::LoaderType loaderType(const QString& extension) const;
+        Model::BaseFileDataModel::ModelType modelType(BaseFileLoader::LoaderType fileType) const;
+        Model::BaseFileDataModel::ModelType modelType(const QString& extension) const;
 
     private:
-        void addExtension(const QString& extension, BaseFileLoader::FileType fileType, Model::BaseFileDataModel::FileType dataModelType);
+        void addExtension(const QString& extension, BaseFileLoader::LoaderType loaderType, Model::BaseFileDataModel::ModelType modelType);
 
-        static QHash<QString, BaseFileLoader::FileType> m_ExtensionToFileType;
-        static QHash<BaseFileLoader::FileType, Model::BaseFileDataModel::FileType> m_FileTypeToDataModelType;
+        static QHash<QString, BaseFileLoader::LoaderType> m_ExtensionToFileType;
+        static QHash<BaseFileLoader::LoaderType, Model::BaseFileDataModel::ModelType> m_FileTypeToDataModelType;
         static bool m_bInitialised;
     };
 }

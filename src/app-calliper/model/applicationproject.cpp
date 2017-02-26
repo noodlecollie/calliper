@@ -1,4 +1,9 @@
 #include "applicationproject.h"
+#include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"
+#include "model/filedatamodels/filedatamodelfactory.h"
+#include "model-loaders/filedataloaders/filedataloaderfactory.h"
+#include <QFileInfo>
+#include <QScopedPointer>
 
 namespace AppCalliper
 {
@@ -27,5 +32,15 @@ namespace AppCalliper
     const Model::CalliperProject* ApplicationProject::project() const
     {
         return m_pProject;
+    }
+
+    ModelLoaders::FileDataModelStore& ApplicationProject::fileStore()
+    {
+        return m_FileStore;
+    }
+
+    const ModelLoaders::FileDataModelStore& ApplicationProject::fileStore() const
+    {
+        return m_FileStore;
     }
 }

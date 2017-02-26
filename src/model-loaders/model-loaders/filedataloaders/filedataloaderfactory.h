@@ -9,7 +9,7 @@ namespace ModelLoaders
     class FileDataLoaderFactory
     {
     public:
-        static BaseFileLoader* createLoader(BaseFileLoader::FileType type, Model::BaseFileDataModel* dataModel);
+        static BaseFileLoader* createLoader(BaseFileLoader::LoaderType loaderType, Model::BaseFileDataModel* dataModel);
 
     private:
         FileDataLoaderFactory() = delete;

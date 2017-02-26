@@ -3,11 +3,11 @@
 
 namespace Model
 {
-    BaseFileDataModel* FileDataModelFactory::createModel(BaseFileDataModel::FileType type)
+    BaseFileDataModel* FileDataModelFactory::createModel(BaseFileDataModel::ModelType type)
     {
         switch ( type )
         {
-            case BaseFileDataModel::MapFile:
+            case BaseFileDataModel::MapModel:
             {
                 return new MapFileDataModel();
             }

@@ -14,9 +14,9 @@ namespace Model
 
     }
 
-    BaseFileDataModel::FileType MapFileDataModel::type() const
+    BaseFileDataModel::ModelType MapFileDataModel::type() const
     {
-        return MapFile;
+        return MapModel;
     }
 
     MapScene* MapFileDataModel::scene()
