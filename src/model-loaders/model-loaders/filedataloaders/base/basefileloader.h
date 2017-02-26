@@ -26,16 +26,19 @@ namespace ModelLoaders
             Success,
         };
 
-        virtual FileType type() const = 0;
+        virtual ~BaseFileLoader();
 
-        Model::BaseFileDataModel* dataModel();
-        const Model::BaseFileDataModel* dataModel() const;
+        virtual FileType type() const = 0;
+        bool isValid() const;
+
+        Model::BaseFileDataModel* dataModel() const;
+        virtual bool setDataModel(Model::BaseFileDataModel* model) = 0;
 
         virtual SuccessCode load(const QString& filePath, QString* errorString = nullptr) = 0;
         virtual SuccessCode save(const QString& filePath, QString* errorString = nullptr) = 0;
 
     protected:
-        BaseFileLoader(Model::BaseFileDataModel* dataModel);
+        BaseFileLoader();
 
         Model::BaseFileDataModel* m_pDataModel;
     };

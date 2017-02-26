@@ -17,7 +17,8 @@ SOURCES += \
     model-loaders/vtf/vtfloader.cpp \
     model-loaders/filedataloaders/base/basefileloader.cpp \
     model-loaders/filedataloaders/vmf/vmfdataloader.cpp \
-    model-loaders/filedataloaders/fileextensiondatamodelmap.cpp
+    model-loaders/filedataloaders/fileextensiondatamodelmap.cpp \
+    model-loaders/filedataloaders/filedataloaderfactory.cpp
     model-loaders_global.cpp
 
 HEADERS +=\
@@ -27,7 +28,8 @@ HEADERS +=\
     model-loaders/vtf/vtfloader.h \
     model-loaders/filedataloaders/base/basefileloader.h \
     model-loaders/filedataloaders/vmf/vmfdataloader.h \
-    model-loaders/filedataloaders/fileextensiondatamodelmap.h
+    model-loaders/filedataloaders/fileextensiondatamodelmap.h \
+    model-loaders/filedataloaders/filedataloaderfactory.h
 
 unix {
     target.path = /usr/lib

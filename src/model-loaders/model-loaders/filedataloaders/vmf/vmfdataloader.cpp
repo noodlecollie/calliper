@@ -98,8 +98,8 @@ namespace
 
 namespace ModelLoaders
 {
-    VmfDataLoader::VmfDataLoader(Model::MapFileDataModel *dataModel)
-        : BaseFileLoader(dataModel),
+    VmfDataLoader::VmfDataLoader()
+        : BaseFileLoader(),
           m_iSuccess(Success)
     {
 
@@ -110,14 +110,20 @@ namespace ModelLoaders
         return VmfFile;
     }
 
-    Model::MapFileDataModel* VmfDataLoader::vmfDataModel()
+    Model::MapFileDataModel* VmfDataLoader::vmfDataModel() const
     {
         return static_cast<Model::MapFileDataModel*>(m_pDataModel);
     }
 
-    const Model::MapFileDataModel* VmfDataLoader::vmfDataModel() const
+    bool VmfDataLoader::setDataModel(Model::BaseFileDataModel *model)
     {
-        return static_cast<const Model::MapFileDataModel*>(m_pDataModel);
+        if ( !model || model->type() != Model::BaseFileDataModel::MapFile )
+        {
+            return false;
+        }
+
+        m_pDataModel = model;
+        return true;
     }
 
     BaseFileLoader::SuccessCode VmfDataLoader::load(const QString &filePath, QString *errorString)

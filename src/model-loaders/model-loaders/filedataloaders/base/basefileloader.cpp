@@ -3,19 +3,22 @@
 
 namespace ModelLoaders
 {
-    BaseFileLoader::BaseFileLoader(Model::BaseFileDataModel *dataModel)
-        : m_pDataModel(dataModel)
+    BaseFileLoader::BaseFileLoader()
+        : m_pDataModel(nullptr)
     {
-        Q_ASSERT_X(m_pDataModel, Q_FUNC_INFO, "Expected a valid data model");
     }
 
-    Model::BaseFileDataModel* BaseFileLoader::dataModel()
+    BaseFileLoader::~BaseFileLoader()
+    {
+    }
+
+    Model::BaseFileDataModel* BaseFileLoader::dataModel() const
     {
         return m_pDataModel;
     }
 
-    const Model::BaseFileDataModel* BaseFileLoader::dataModel() const
+    bool BaseFileLoader::isValid() const
     {
-        return m_pDataModel;
+        return m_pDataModel != nullptr;
     }
 }

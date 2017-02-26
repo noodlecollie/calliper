@@ -18,12 +18,12 @@ namespace ModelLoaders
     class MODELLOADERSSHARED_EXPORT VmfDataLoader : public BaseFileLoader
     {
     public:
-        VmfDataLoader(Model::MapFileDataModel* dataModel);
+        VmfDataLoader();
 
         virtual FileType type() const override;
 
-        Model::MapFileDataModel* vmfDataModel();
-        const Model::MapFileDataModel* vmfDataModel() const;
+        Model::MapFileDataModel* vmfDataModel() const;
+        virtual bool setDataModel(Model::BaseFileDataModel *model) override;
 
         virtual SuccessCode load(const QString &filePath, QString *errorString) override;
         virtual SuccessCode save(const QString &filePath, QString *errorString) override;
