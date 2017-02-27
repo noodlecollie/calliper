@@ -21,6 +21,8 @@ namespace AppCalliper
         connect(m_pTreeWidget, &ProjectFileTreeWidget::fileAdded, this, &ProjectFileDockWidget::fileAdded);
         connect(m_pTreeWidget, &ProjectFileTreeWidget::fileRemoved, this, &ProjectFileDockWidget::fileRemoved);
         connect(m_pTreeWidget, &ProjectFileTreeWidget::filesCleared, this, &ProjectFileDockWidget::filesCleared);
+
+        connect(m_pTreeWidget, &ProjectFileTreeWidget::addNewFileRequested, this, &ProjectFileDockWidget::addNewFileRequested);
     }
 
     void ProjectFileDockWidget::itemDoubleClicked(QTreeWidgetItem *item, int column)

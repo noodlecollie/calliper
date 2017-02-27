@@ -14,8 +14,8 @@ namespace AppCalliper
     public:
         explicit ApplicationProject(QObject* parent = 0);
 
-        QString fileName() const;
-        void setFileName(const QString& filename);
+        QString fullPath() const;
+        void setFullPath(const QString& path);
 
         Model::CalliperProject* project();
         const Model::CalliperProject* project() const;
@@ -26,7 +26,7 @@ namespace AppCalliper
     private:
         typedef QSharedPointer<Model::BaseFileDataModel> DataModelPointer;
 
-        QString m_strFileName;
+        QString m_strFullPath;
         Model::CalliperProject* m_pProject;
         ModelLoaders::FileDataModelStore m_FileStore;
     };

@@ -38,20 +38,20 @@ namespace AppCalliper
     {
         QString defaultPath = getFileDialogueDefaultPath();
 
-        QString filename = QFileDialog::getOpenFileName(this, tr("Open Project"), defaultPath, tr("Calliper project (*.cpj)"));
-        if ( filename.isNull() || filename.isEmpty() )
+        QString filePath = QFileDialog::getOpenFileName(this, tr("Open Project"), defaultPath, tr("Calliper project (*.cpj)"));
+        if ( filePath.isNull() || filePath.isEmpty() )
             return;
 
         QJsonDocument doc;
-        if ( !ModelLoaders::JsonLoaderUtils::loadJsonFile(filename, doc) )
+        if ( !ModelLoaders::JsonLoaderUtils::loadJsonFile(filePath, doc) )
         {
-            QMessageBox::critical(this, tr("Error"), QString("Unable to load project file %1").arg(filename));
+            QMessageBox::critical(this, tr("Error"), QString("Unable to load project file %1").arg(filePath));
             return;
         }
 
         setProject(new ApplicationProject());
 
-        m_pProject->setFileName(filename);
+        m_pProject->setFullPath(filePath);
         ModelLoaders::CalliperProjectLoader(m_pProject->project()).fromJsonDocument(doc);
 
         m_bUnsavedProjectChanges = false;
@@ -76,7 +76,7 @@ namespace AppCalliper
         setProject(new ApplicationProject());
         menuSaveCurrentProjectAs();
 
-        if ( m_pProject->fileName().isNull() )
+        if ( m_pProject->fullPath().isNull() )
             setProject(nullptr);
     }
 
@@ -85,10 +85,10 @@ namespace AppCalliper
         if ( !m_pProject )
             return;
 
-        if ( m_pProject->fileName().isNull() )
+        if ( m_pProject->fullPath().isNull() )
             menuSaveCurrentProjectAs();
         else
-            saveCurrentProject(m_pProject->fileName());
+            saveCurrentProject(m_pProject->fullPath());
     }
 
     void MainWindow::menuSaveCurrentProjectAs()
@@ -133,15 +133,15 @@ namespace AppCalliper
         return true;
     }
 
-    void MainWindow::saveCurrentProject(const QString& filename)
+    void MainWindow::saveCurrentProject(const QString& fullPath)
     {
-        if ( filename.isNull() || filename.isEmpty() || !m_pProject )
+        if ( fullPath.isNull() || fullPath.isEmpty() || !m_pProject )
             return;
 
-        QFile outFile(filename);
+        QFile outFile(fullPath);
         if ( !outFile.open(QIODevice::WriteOnly) )
         {
-            QMessageBox::critical(this, tr("Error"), QString("Unable to open project file %1 for writing").arg(filename));
+            QMessageBox::critical(this, tr("Error"), QString("Unable to open project file %1 for writing").arg(fullPath));
             return;
         }
 
@@ -149,7 +149,7 @@ namespace AppCalliper
         outFile.close();
 
         m_bUnsavedProjectChanges = false;
-        m_pProject->setFileName(filename);
+        m_pProject->setFullPath(fullPath);
         m_pProject->notifyDataReset();
         updateWindowTitle();
         repopulateProjectFileTree();
@@ -185,13 +185,13 @@ namespace AppCalliper
         if ( !m_pProject )
             return;
 
-        QString filename = m_pProject->fileName();
-        if ( filename.isNull() )
+        QString fullPath = m_pProject->fullPath();
+        if ( fullPath.isNull() )
         {
-            filename = tr("UNSAVED");
+            fullPath = tr("UNSAVED");
         }
 
-        m_pProjectFileDockWidget->setProject(filename);
+        m_pProjectFileDockWidget->setProject(fullPath);
     }
 
     void MainWindow::setProject(ApplicationProject *newProject)
@@ -223,6 +223,7 @@ namespace AppCalliper
         initDockWidget(m_pProjectFileDockWidget, ui->actionFile_Tree, Qt::LeftDockWidgetArea);
 
         connect(m_pProjectFileDockWidget, &ProjectFileDockWidget::fileDoubleClicked, this, &MainWindow::fileDoubleClicked);
+        connect(m_pProjectFileDockWidget, &ProjectFileDockWidget::addNewFileRequested, this, &MainWindow::addNewProjectFile);
 
         m_pProjectMetadataDockWidget = new ProjectMetadataDockWidget();
         initDockWidget(m_pProjectMetadataDockWidget, ui->actionProject_Metadata, Qt::LeftDockWidgetArea);
@@ -237,9 +238,9 @@ namespace AppCalliper
 
     QString MainWindow::getFileDialogueDefaultPath() const
     {
-        if ( m_pProject && !m_pProject->fileName().isNull() )
+        if ( m_pProject && !m_pProject->fullPath().isNull() )
         {
-            return QFileInfo(m_pProject->fileName()).canonicalPath();
+            return QFileInfo(m_pProject->fullPath()).canonicalPath();
         }
 
         QStringList locations = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
@@ -265,9 +266,85 @@ namespace AppCalliper
         return qobject_cast<UserInterface::QuadGridWidget*>(centralWidget());
     }
 
-    void MainWindow::fileDoubleClicked(const QString& path)
+    void MainWindow::fileDoubleClicked(const QString& localPath)
     {
-        // TODO
-        Q_UNUSED(path);
+        if ( m_pProject.isNull() )
+        {
+            return;
+        }
+
+        QString fullPath = getFullPath(localPath);
+
+        ModelLoaders::FileDataModelStore& files = m_pProject->fileStore();
+        if ( files.isFileLoaded(fullPath) )
+        {
+            return;
+        }
+
+        QString errorString;
+        ModelLoaders::BaseFileLoader::SuccessCode success = files.loadFile(fullPath, &errorString);
+
+        switch ( success )
+        {
+            case ModelLoaders::BaseFileLoader::Failure:
+            {
+                QMessageBox box(QMessageBox::Critical,
+                                tr("Error loading file"),
+                                tr("There was a critical error loading the file %1").arg(fullPath),
+                                QMessageBox::Ok);
+
+                box.setDetailedText(errorString);
+                box.exec();
+
+                return;
+            }
+
+            case ModelLoaders::BaseFileLoader::PartialSuccess:
+            {
+                QMessageBox box(QMessageBox::Warning,
+                                tr("Error loading file"),
+                                tr("File %1 was loaded, but some errors occurred.").arg(fullPath),
+                                QMessageBox::Ok);
+
+                box.setInformativeText(tr("See details."));
+                box.setDetailedText(errorString);
+                box.exec();
+
+                break;
+            }
+
+            default:
+                break;
+        }
+
+        qDebug() << "File" << fullPath << "loaded successfully.";
+    }
+
+    QString MainWindow::getFullPath(const QString &localFilePath) const
+    {
+        if ( m_pProject.isNull() || m_pProject->fullPath().isEmpty() )
+        {
+            return QString();
+        }
+
+        QDir dir(m_pProject->fullPath());
+        dir.cd(QFileInfo(localFilePath).path());    // In case there's a file name on the end of the path.
+        return dir.canonicalPath();
+    }
+
+    void MainWindow::addNewProjectFile()
+    {
+        QString defaultPath = getFileDialogueDefaultPath();
+
+        QString filePath = QFileDialog::getSaveFileName(
+                    this,
+                    tr("Add File"),
+                    defaultPath,
+                    tr("Valve Map File (*.vmf)"));
+
+        if ( filePath.isNull() || filePath.isEmpty() )
+        {
+            return;
+        }
     }
 }

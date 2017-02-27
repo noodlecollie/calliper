@@ -3,6 +3,7 @@
 namespace ModelLoaders
 {
     bool FileExtensionDataModelMap::m_bInitialised = false;
+    QHash<QString, QString> FileExtensionDataModelMap::m_ExtensionToDescription;
     QHash<QString, BaseFileLoader::LoaderType> FileExtensionDataModelMap::m_ExtensionToFileType;
     QHash<BaseFileLoader::LoaderType, Model::BaseFileDataModel::ModelType> FileExtensionDataModelMap::m_FileTypeToDataModelType;
 
@@ -13,7 +14,19 @@ namespace ModelLoaders
             return;
         }
 
-        addExtension("vmf", BaseFileLoader::VmfLoader, Model::BaseFileDataModel::MapModel);
+        addExtension("vmf", "Valve Map File", BaseFileLoader::VmfLoader, Model::BaseFileDataModel::MapModel);
+
+        m_bInitialised = true;
+    }
+
+    QStringList FileExtensionDataModelMap::supportedExtensions() const
+    {
+        return m_ExtensionToFileType.keys();
+    }
+
+    QString FileExtensionDataModelMap::description(const QString &extension) const
+    {
+        return m_ExtensionToDescription.value(extension.toLower(), QString());
     }
 
     BaseFileLoader::LoaderType FileExtensionDataModelMap::loaderType(const QString &extension) const
@@ -31,7 +44,8 @@ namespace ModelLoaders
         return modelType(loaderType(extension));
     }
 
-    void FileExtensionDataModelMap::addExtension(const QString &extension,
+    void FileExtensionDataModelMap::addExtension(const QString& extension,
+                                                 const QString& description,
                                                  BaseFileLoader::LoaderType loaderType,
                                                  Model::BaseFileDataModel::ModelType modelType)
     {
@@ -52,6 +66,7 @@ namespace ModelLoaders
                    Q_FUNC_INFO,
                    "Loader type already has a registered model type!");
 
+        m_ExtensionToDescription[extension.toLower()] = description;
         m_ExtensionToFileType[extension.toLower()] = loaderType;
         m_FileTypeToDataModelType[loaderType] = modelType;
     }

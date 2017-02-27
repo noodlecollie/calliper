@@ -14,14 +14,14 @@ namespace AppCalliper
         connectDataChangedSignals(m_pProject);
     }
 
-    QString ApplicationProject::fileName() const
+    QString ApplicationProject::fullPath() const
     {
-        return m_strFileName;
+        return m_strFullPath;
     }
 
-    void ApplicationProject::setFileName(const QString &filename)
+    void ApplicationProject::setFullPath(const QString &path)
     {
-        m_strFileName = filename;
+        m_strFullPath = path;
     }
 
     Model::CalliperProject* ApplicationProject::project()

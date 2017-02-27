@@ -22,6 +22,8 @@ namespace AppCalliper
         void fileDoubleClicked(const QString& localFilePath);
         void filesCleared();
 
+        void addNewFileRequested();
+
     private slots:
         void itemDoubleClicked(QTreeWidgetItem* item, int column);
 

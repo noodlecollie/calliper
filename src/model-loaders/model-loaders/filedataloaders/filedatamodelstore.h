@@ -13,17 +13,28 @@ namespace ModelLoaders
     class FileDataModelStore
     {
     public:
+        typedef QHash<QString, QSharedPointer<Model::BaseFileDataModel> >::const_iterator ConstIterator;
+
         FileDataModelStore();
 
-        ModelLoaders::BaseFileLoader::SuccessCode loadFile(const QString& localPath, QString* errorString = nullptr);
-        QSharedPointer<Model::BaseFileDataModel> dataModel(const QString& localPath) const;
+        ModelLoaders::BaseFileLoader::SuccessCode loadFile(const QString& path, QString* errorString = nullptr);
+        QSharedPointer<Model::BaseFileDataModel> dataModel(const QString& path) const;
+        bool isFileLoaded(const QString& path) const;
+
+        // If the shared pointer is held by other objects, the model itself will not be
+        // destroyed until the shared pointers are released. It will however be removed
+        // from this object.
+        void unloadFile(const QString& path);
+
+        QStringList loadedFiles() const;
+        ConstIterator constBegin() const;
+        ConstIterator constEnd() const;
 
     private:
         class FileDataModelInfo;
         typedef QSharedPointer<Model::BaseFileDataModel> DataModelPointer;
 
         FileDataModelInfo getDataModelInfo(const QString& path) const;
-        DataModelPointer createDataModel(const QString& path, QString* errorString);
 
         QHash<QString, DataModelPointer> m_FileModels;
     };

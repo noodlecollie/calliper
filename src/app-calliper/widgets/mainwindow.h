@@ -37,12 +37,14 @@ namespace AppCalliper
         void menuCloseProject();
         void menuNewProject();
         void notifyProjectDataChanged();
-        void fileDoubleClicked(const QString& path);
+
+        void fileDoubleClicked(const QString& localPath);
+        void addNewProjectFile();
 
     private:
         void initDockWidgets();
         void initDockWidget(VisibleActionDockWidget* widget, QAction* action, Qt::DockWidgetArea area);
-        void saveCurrentProject(const QString& filename);
+        void saveCurrentProject(const QString& fullPath);
         QString getFileDialogueDefaultPath() const;
         void updateWindowTitle();
         void repopulateProjectFileTree();
@@ -50,6 +52,7 @@ namespace AppCalliper
         bool ensureProjectIsSaved();
         void setFileMenuItemEnabledStates();
         UserInterface::QuadGridWidget* centralGridWidget() const;
+        QString getFullPath(const QString& localFilePath) const;
 
         Ui::MainWindow *ui;
 

@@ -65,21 +65,46 @@ namespace ModelLoaders
 
     }
 
-    QSharedPointer<Model::BaseFileDataModel> FileDataModelStore::dataModel(const QString &localPath) const
+    QSharedPointer<Model::BaseFileDataModel> FileDataModelStore::dataModel(const QString &path) const
     {
-        return m_FileModels.value(localPath, DataModelPointer());
+        return m_FileModels.value(path, DataModelPointer());
     }
 
-    ModelLoaders::BaseFileLoader::SuccessCode FileDataModelStore::loadFile(const QString &localPath, QString *errorString)
+    bool FileDataModelStore::isFileLoaded(const QString &path) const
     {
-        if ( m_FileModels.contains(localPath) )
+        return m_FileModels.contains(path);
+    }
+
+    void FileDataModelStore::unloadFile(const QString &path)
+    {
+        m_FileModels.remove(path);
+    }
+
+    QStringList FileDataModelStore::loadedFiles() const
+    {
+        return m_FileModels.keys();
+    }
+
+    FileDataModelStore::ConstIterator FileDataModelStore::constBegin() const
+    {
+        return m_FileModels.constBegin();
+    }
+
+    FileDataModelStore::ConstIterator FileDataModelStore::constEnd() const
+    {
+        return m_FileModels.constEnd();
+    }
+
+    ModelLoaders::BaseFileLoader::SuccessCode FileDataModelStore::loadFile(const QString &path, QString *errorString)
+    {
+        if ( m_FileModels.contains(path) )
         {
             return BaseFileLoader::Success;
         }
 
-        QString extension = QFileInfo(localPath).suffix();
+        QString extension = QFileInfo(path).suffix();
 
-        FileDataModelInfo info = getDataModelInfo(localPath);
+        FileDataModelInfo info = getDataModelInfo(path);
         if ( info.loaderType() == BaseFileLoader::UnknownLoader )
         {
             setErrorString(errorString, QString("Unknown file format '%1'.").arg(extension));
@@ -115,13 +140,13 @@ namespace ModelLoaders
             return BaseFileLoader::Failure;
         }
 
-        BaseFileLoader::SuccessCode success = loader->load(localPath, errorString);
+        BaseFileLoader::SuccessCode success = loader->load(path, errorString);
         if ( success == BaseFileLoader::Failure )
         {
             return BaseFileLoader::Failure;
         }
 
-        m_FileModels.insert(localPath, dataModel);
+        m_FileModels.insert(path, dataModel);
         return success;
     }
 
