@@ -166,7 +166,7 @@ namespace UserInterface
         m_pCameraController->setVerticalSpeed(100.0f);
         m_pCameraController->setEnabled(true);
 
-        connect(m_pCameraController, SIGNAL(tickFinished()), this, SLOT(update()));
+        connect(m_pCameraController, &CameraController::tickFinished, this, [this]{ update(); });
     }
 
     void MapViewWindow::initKeyMap()
@@ -194,8 +194,8 @@ namespace UserInterface
         m_pMouseEventMap->setHorizontalSensitivity(-1);
         connect(m_pMouseEventMap, &MouseEventMap::mouseMovedX, m_pCameraController, &CameraController::addYaw);
         connect(m_pMouseEventMap, &MouseEventMap::mouseMovedY, m_pCameraController, &CameraController::addPitch);
-        connect(m_pMouseEventMap, SIGNAL(mouseMovedX(float)), this, SLOT(update()));
-        connect(m_pMouseEventMap, SIGNAL(mouseMovedY(float)), this, SLOT(update()));
+        connect(m_pMouseEventMap, &MouseEventMap::mouseMovedX, this, [this]{ update(); });
+        connect(m_pMouseEventMap, &MouseEventMap::mouseMovedY, this, [this]{ update(); });
 
         installEventFilter(m_pMouseEventMap);
     }

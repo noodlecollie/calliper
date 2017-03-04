@@ -100,7 +100,9 @@ namespace AppCalliper
         m_PropertyNameToWidget.insert(propertyName, widget);
 
         if ( widgetSignal )
+        {
             connect(widget, widgetSignal, this, SLOT(uiDelegateEdited()));
+        }
     }
 
     void ProjectMetadataDockWidget::uiDelegateEdited()

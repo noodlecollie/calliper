@@ -8,13 +8,13 @@ namespace UserInterface
           m_pButton(button)
     {
         m_pSelectAction = new QAction(tr("&Select"));
-        connect(m_pSelectAction, SIGNAL(triggered(bool)), this, SLOT(actionTriggered()));
+        connect(m_pSelectAction, &QAction::triggered, this, &ResizeableGridLayoutContainerMenu::actionTriggered);
 
         m_pMaximiseAction = new QAction(tr("&Maximise"));
-        connect(m_pMaximiseAction, SIGNAL(triggered(bool)), this, SLOT(actionTriggered()));
+        connect(m_pMaximiseAction, &QAction::triggered, this, &ResizeableGridLayoutContainerMenu::actionTriggered);
 
         m_pCloseAction = new QAction(tr("&Close"));
-        connect(m_pCloseAction, SIGNAL(triggered(bool)), this, SLOT(actionTriggered()));
+        connect(m_pCloseAction, &QAction::triggered, this, &ResizeableGridLayoutContainerMenu::actionTriggered);
 
         addAction(m_pSelectAction);
         addAction(m_pMaximiseAction);

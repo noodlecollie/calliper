@@ -107,9 +107,9 @@ namespace UserInterface
     {
         ResizeableGridLayoutContainer* container = new ResizeableGridLayoutContainer();
 
-        connect(container, SIGNAL(maximizeInvoked(int)), this, SLOT(maximizeInvoked(int)));
-        connect(container, SIGNAL(closeInvoked(int)), this, SLOT(closeInvoked(int)));
-        connect(container, SIGNAL(floatInvoked(int,bool)), this, SLOT(floatInvoked(int,bool)));
+        connect(container, &ResizeableGridLayoutContainer::maximizeInvoked, this, &ResizeableGridLayoutManager::maximizeInvoked);
+        connect(container, &ResizeableGridLayoutContainer::closeInvoked, this, &ResizeableGridLayoutManager::closeInvoked);
+        connect(container, &ResizeableGridLayoutContainer::floatInvoked, this, &ResizeableGridLayoutManager::floatInvoked);
 
         return container;
     }

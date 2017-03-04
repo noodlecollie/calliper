@@ -9,7 +9,7 @@ namespace UserInterface
         Q_ASSERT(m_pModel);
 
         clear();
-        connect(model(), SIGNAL(layoutUpdated()), this, SLOT(analyseLayout()));
+        connect(model(), &QuadGridLayoutModel::layoutUpdated, this, &QuadGridLayoutAnalyser::analyseLayout);
     }
 
     QuadGridLayoutModel* QuadGridLayoutAnalyser::model() const

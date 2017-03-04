@@ -39,7 +39,7 @@ namespace AppCalliper
         void notifyProjectDataChanged();
 
         void fileDoubleClicked(const QString& localPath);
-        void addNewProjectFile();
+        void addNewProjectFiles();
 
     private:
         void initDockWidgets();

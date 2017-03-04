@@ -1,73 +1,139 @@
 #include "fileextensiondatamodelmap.h"
+#include <QCoreApplication>
+
+namespace
+{
+    inline QString translate(const QString& text)
+    {
+        return QCoreApplication::translate(
+                    ModelLoaders::FileExtensionDataModelMap::staticMetaObject.className(),
+                    qPrintable(text));
+    }
+}
 
 namespace ModelLoaders
 {
     bool FileExtensionDataModelMap::m_bInitialised = false;
-    QHash<QString, QString> FileExtensionDataModelMap::m_ExtensionToDescription;
-    QHash<QString, BaseFileLoader::LoaderType> FileExtensionDataModelMap::m_ExtensionToFileType;
-    QHash<BaseFileLoader::LoaderType, Model::BaseFileDataModel::ModelType> FileExtensionDataModelMap::m_FileTypeToDataModelType;
+    QHash<BaseFileLoader::LoaderType, FileExtensionDataModelMap::FileInfo> FileExtensionDataModelMap::m_FileInfo;
+    QHash<QString, BaseFileLoader::LoaderType> FileExtensionDataModelMap::m_ExtensionToLoaderType;
 
     FileExtensionDataModelMap::FileExtensionDataModelMap()
+    {
+        initialise();
+    }
+
+    QList<BaseFileLoader::LoaderType> FileExtensionDataModelMap::supportedLoaderTypes() const
+    {
+        return m_FileInfo.keys();
+    }
+
+    BaseFileLoader::LoaderType FileExtensionDataModelMap::loaderTypeForExtension(const QString &extension) const
+    {
+        return m_ExtensionToLoaderType.value(extension.toLower(), BaseFileLoader::UnknownLoader);
+    }
+
+    bool FileExtensionDataModelMap::isLoaderTypeSupported(BaseFileLoader::LoaderType loaderType) const
+    {
+        return m_FileInfo.contains(loaderType);
+    }
+
+    QString FileExtensionDataModelMap::description(BaseFileLoader::LoaderType loaderType) const
+    {
+        if ( !isLoaderTypeSupported(loaderType) )
+        {
+            return QString();
+        }
+
+        return translate(m_FileInfo[loaderType].m_strDescription);
+    }
+
+    QStringList FileExtensionDataModelMap::extensions(BaseFileLoader::LoaderType loaderType) const
+    {
+        if ( !isLoaderTypeSupported(loaderType) )
+        {
+            return QStringList();
+        }
+
+        return m_FileInfo[loaderType].m_Extensions;
+    }
+
+    Model::BaseFileDataModel::ModelType FileExtensionDataModelMap::modelType(BaseFileLoader::LoaderType loaderType) const
+    {
+        if ( !isLoaderTypeSupported(loaderType) )
+        {
+            return Model::BaseFileDataModel::UnknownModel;
+        }
+
+        return m_FileInfo[loaderType].m_iModelType;
+    }
+
+    QString FileExtensionDataModelMap::fileDialogTypeString(BaseFileLoader::LoaderType loaderType) const
+    {
+        if ( !isLoaderTypeSupported(loaderType) )
+        {
+            return QString();
+        }
+
+        const FileInfo& fileInfo = m_FileInfo[loaderType];
+
+        // Format: "JPEG File (*.jpg *.jpeg)"
+        return QString("%1 (*.%2)")
+                .arg(translate(fileInfo.m_strDescription))
+                .arg(fileInfo.m_Extensions.join(" *."));
+    }
+
+    QStringList FileExtensionDataModelMap::fileDialogTypeStrings() const
+    {
+        QStringList list;
+        QList<BaseFileLoader::LoaderType> loaderTypes = m_FileInfo.keys();
+
+        foreach ( BaseFileLoader::LoaderType type, loaderTypes )
+        {
+            list.append(fileDialogTypeString(type));
+        }
+
+        return list;
+    }
+
+    void FileExtensionDataModelMap::initialise()
     {
         if ( m_bInitialised )
         {
             return;
         }
 
-        addExtension("vmf", "Valve Map File", BaseFileLoader::VmfLoader, Model::BaseFileDataModel::MapModel);
+        addFile(BaseFileLoader::VmfLoader, "Valve Map File", QStringList() << "vmf", Model::BaseFileDataModel::MapModel);
 
         m_bInitialised = true;
     }
 
-    QStringList FileExtensionDataModelMap::supportedExtensions() const
+    void FileExtensionDataModelMap::addFile(BaseFileLoader::LoaderType loaderType,
+                                            const QString &description,
+                                            const QStringList &extensions,
+                                            Model::BaseFileDataModel::ModelType modelType)
     {
-        return m_ExtensionToFileType.keys();
-    }
-
-    QString FileExtensionDataModelMap::description(const QString &extension) const
-    {
-        return m_ExtensionToDescription.value(extension.toLower(), QString());
-    }
-
-    BaseFileLoader::LoaderType FileExtensionDataModelMap::loaderType(const QString &extension) const
-    {
-        return m_ExtensionToFileType.value(extension.toLower(), BaseFileLoader::UnknownLoader);
-    }
-
-    Model::BaseFileDataModel::ModelType FileExtensionDataModelMap::modelType(BaseFileLoader::LoaderType loaderType) const
-    {
-        return m_FileTypeToDataModelType.value(loaderType, Model::BaseFileDataModel::UnknownModel);
-    }
-
-    Model::BaseFileDataModel::ModelType FileExtensionDataModelMap::modelType(const QString &extension) const
-    {
-        return modelType(loaderType(extension));
-    }
-
-    void FileExtensionDataModelMap::addExtension(const QString& extension,
-                                                 const QString& description,
-                                                 BaseFileLoader::LoaderType loaderType,
-                                                 Model::BaseFileDataModel::ModelType modelType)
-    {
-        Q_ASSERT_X(loaderType != BaseFileLoader::UnknownLoader && modelType != Model::BaseFileDataModel::UnknownModel,
-                   Q_FUNC_INFO,
-                   "Cannot add entry for unknown file type!");
-
-        if ( loaderType == BaseFileLoader::UnknownLoader || modelType == Model::BaseFileDataModel::UnknownModel )
+        QStringList lowercaseExtensions;
+        foreach ( const QString& ext, extensions )
         {
-            return;
+            QString lowercase = ext.toLower();
+            Q_ASSERT_X(!m_ExtensionToLoaderType.contains(lowercase), Q_FUNC_INFO, "Loader type already registered with this extension!");
+            if ( m_ExtensionToLoaderType.contains(lowercase) )
+            {
+                return;
+            }
+
+            lowercaseExtensions.append(ext.toLower());
         }
 
-        Q_ASSERT_X(!m_ExtensionToFileType.contains(extension.toLower()),
-                   Q_FUNC_INFO,
-                   "File extension already has a registered loader type!");
+        Q_ASSERT_X(loaderType != BaseFileLoader::UnknownLoader, Q_FUNC_INFO, "Expected valid loader type!");
+        Q_ASSERT_X(!lowercaseExtensions.isEmpty(), Q_FUNC_INFO, "Expected at least one extension!");
+        Q_ASSERT_X(modelType != Model::BaseFileDataModel::UnknownModel, Q_FUNC_INFO, "Expected valid model type!");
 
-        Q_ASSERT_X(!m_FileTypeToDataModelType.contains(loaderType),
-                   Q_FUNC_INFO,
-                   "Loader type already has a registered model type!");
+        m_FileInfo.insert(loaderType, FileInfo(loaderType, description, lowercaseExtensions, modelType));
 
-        m_ExtensionToDescription[extension.toLower()] = description;
-        m_ExtensionToFileType[extension.toLower()] = loaderType;
-        m_FileTypeToDataModelType[loaderType] = modelType;
+        foreach ( const QString& ext, lowercaseExtensions )
+        {
+            m_ExtensionToLoaderType.insert(ext, loaderType);
+        }
     }
 }

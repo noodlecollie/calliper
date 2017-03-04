@@ -11,6 +11,7 @@
 #include "projectmetadatadockwidget.h"
 #include <QtDebug>
 #include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
+#include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"
 
 // Swap me out for something useful
 #include <QGroupBox>
@@ -25,7 +26,7 @@ namespace AppCalliper
         ui->setupUi(this);
 
         initDockWidgets();
-        connect(ui->actionQuit, SIGNAL(triggered(bool)), qApp, SLOT(quit()));
+        connect(ui->actionQuit, &QAction::triggered, qApp, &QApplication::quit);
         setProject(nullptr);
     }
 
@@ -223,7 +224,7 @@ namespace AppCalliper
         initDockWidget(m_pProjectFileDockWidget, ui->actionFile_Tree, Qt::LeftDockWidgetArea);
 
         connect(m_pProjectFileDockWidget, &ProjectFileDockWidget::fileDoubleClicked, this, &MainWindow::fileDoubleClicked);
-        connect(m_pProjectFileDockWidget, &ProjectFileDockWidget::addNewFileRequested, this, &MainWindow::addNewProjectFile);
+        connect(m_pProjectFileDockWidget, &ProjectFileDockWidget::addNewFileRequested, this, &MainWindow::addNewProjectFiles);
 
         m_pProjectMetadataDockWidget = new ProjectMetadataDockWidget();
         initDockWidget(m_pProjectMetadataDockWidget, ui->actionProject_Metadata, Qt::LeftDockWidgetArea);
@@ -332,19 +333,22 @@ namespace AppCalliper
         return dir.canonicalPath();
     }
 
-    void MainWindow::addNewProjectFile()
+    void MainWindow::addNewProjectFiles()
     {
         QString defaultPath = getFileDialogueDefaultPath();
+        ModelLoaders::FileExtensionDataModelMap extMap;
 
-        QString filePath = QFileDialog::getSaveFileName(
+        QStringList filePathList = QFileDialog::getOpenFileNames(
                     this,
                     tr("Add File"),
                     defaultPath,
-                    tr("Valve Map File (*.vmf)"));
+                    extMap.fileDialogTypeStrings().join(";;"));
 
-        if ( filePath.isNull() || filePath.isEmpty() )
+        if ( filePathList.isEmpty() )
         {
             return;
         }
+
+        qDebug() << "Files chosen:" << filePathList;
     }
 }

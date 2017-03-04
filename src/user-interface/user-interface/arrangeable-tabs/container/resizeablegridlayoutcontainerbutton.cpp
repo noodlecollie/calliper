@@ -118,10 +118,9 @@ namespace UserInterface
     {
         ResizeableGridLayoutContainerMenu* menu = new ResizeableGridLayoutContainerMenu(this);
 
-        connect(menu, SIGNAL(selectInvoked()), this, SLOT(menuSelectInvoked()));
-        connect(menu, SIGNAL(maximiseInvoked()), this, SLOT(menuMaximiseInvoked()));
-        connect(menu, SIGNAL(floatInvoked()), this, SLOT(menuFloatInvoked()));
-        connect(menu, SIGNAL(closeInvoked()), this, SLOT(menuCloseInvoked()));
+        connect(menu, &ResizeableGridLayoutContainerMenu::selectInvoked, this, &ResizeableGridLayoutContainerButton::menuSelectInvoked);
+        connect(menu, &ResizeableGridLayoutContainerMenu::maximiseInvoked, this, &ResizeableGridLayoutContainerButton::menuMaximiseInvoked);
+        connect(menu, &ResizeableGridLayoutContainerMenu::closeInvoked, this, &ResizeableGridLayoutContainerButton::menuCloseInvoked);
 
         menu->popup(event->globalPos());
     }

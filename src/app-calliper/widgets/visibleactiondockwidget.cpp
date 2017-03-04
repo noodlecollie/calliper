@@ -17,7 +17,7 @@ namespace AppCalliper
 
     void VisibleActionDockWidget::init()
     {
-        connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(handleVisibilityChanged(bool)));
+        connect(this, &VisibleActionDockWidget::visibilityChanged, this, &VisibleActionDockWidget::handleVisibilityChanged);
     }
 
     QAction* VisibleActionDockWidget::visibilityAction() const

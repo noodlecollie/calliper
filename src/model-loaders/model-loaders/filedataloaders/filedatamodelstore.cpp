@@ -154,6 +154,7 @@ namespace ModelLoaders
     {
         ModelLoaders::FileExtensionDataModelMap extMap;
         QString extension = QFileInfo(path).suffix();
-        return FileDataModelInfo(extMap.modelType(extension), extMap.loaderType(extension));
+        BaseFileLoader::LoaderType loaderType = extMap.loaderTypeForExtension(extension);
+        return FileDataModelInfo(extMap.modelType(loaderType), loaderType);
     }
 }
