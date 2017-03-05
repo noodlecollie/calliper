@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "widgets/projectfiles/projectfiledockwidget.h"
+#include "app-calliper/widgets/projectfiles/projectfiletreewidget.h"
+#include "app-calliper/widgets/dock/projectfiledockwidget.h"
 #include <QSignalBlocker>
 #include <QStandardPaths>
 #include <QFileDialog>
@@ -8,7 +9,7 @@
 #include "model-loaders/projects/calliperprojectloader.h"
 #include "model-loaders/json/jsonloaderutils.h"
 #include <QMessageBox>
-#include "widgets/projectmetadata/projectmetadatadockwidget.h"
+#include "app-calliper/widgets/dock/projectmetadatadockwidget.h"
 #include <QtDebug>
 #include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
 #include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"

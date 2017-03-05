@@ -12,24 +12,24 @@ TARGET = calliper
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        widgets/mainwindow/mainwindow.cpp \
-    widgets/dock/projectfiledockwidget.cpp \
-    widgets/dock/visibleactiondockwidget.cpp \
-    model/applicationproject.cpp \
-    widgets/dock/projectmetadatadockwidget.cpp \
+SOURCES += app-calliper/main.cpp\
+        app-calliper/widgets/mainwindow/mainwindow.cpp \
+    app-calliper/widgets/dock/projectfiledockwidget.cpp \
+    app-calliper/widgets/dock/visibleactiondockwidget.cpp \
+    app-calliper/model/applicationproject.cpp \
+    app-calliper/widgets/dock/projectmetadatadockwidget.cpp \
     app-calliper_global.cpp \
-    application/applicationtasks.cpp \
-    widgets/projectfiles/projectfiletreewidget.cpp
+    app-calliper/application/applicationtasks.cpp \
+    app-calliper/widgets/projectfiles/projectfiletreewidget.cpp
 
-HEADERS  += widgets/mainwindow/mainwindow.h \
-    widgets/dock/projectfiledockwidget.h \
-    widgets/dock/visibleactiondockwidget.h \
-    model/applicationproject.h \
+HEADERS  += app-calliper/widgets/mainwindow/mainwindow.h \
+    app-calliper/widgets/dock/projectfiledockwidget.h \
+    app-calliper/widgets/dock/visibleactiondockwidget.h \
+    app-calliper/model/applicationproject.h \
     app-calliper_global.h \
-    widgets/dock/projectmetadatadockwidget.h \
-    application/applicationtasks.h \
-    widgets/projectfiles/projectfiletreewidget.h
+    app-calliper/widgets/dock/projectmetadatadockwidget.h \
+    app-calliper/application/applicationtasks.h \
+    app-calliper/widgets/projectfiles/projectfiletreewidget.h
 
 FORMS    += mainwindow.ui
 

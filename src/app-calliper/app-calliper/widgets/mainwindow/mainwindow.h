@@ -3,7 +3,7 @@
 
 #include "app-calliper_global.h"
 #include <QMainWindow>
-#include "model/applicationproject.h"
+#include "app-calliper/model/applicationproject.h"
 
 class QTreeWidget;
 
