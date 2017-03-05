@@ -44,6 +44,7 @@ namespace AppCalliper
     private:
         void initDockWidgets();
         void initDockWidget(VisibleActionDockWidget* widget, QAction* action, Qt::DockWidgetArea area);
+        void setNewApplicationProject(const QString& filePath, const QJsonDocument& project);
         void saveCurrentProject(const QString& fullPath);
         QString getFileDialogueDefaultPath() const;
         void updateWindowTitle();

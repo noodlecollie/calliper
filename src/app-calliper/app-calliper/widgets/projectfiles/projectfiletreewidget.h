@@ -26,7 +26,7 @@ namespace AppCalliper
         void setProject(const QString& projectFilePath);
         bool hasProject() const;
 
-        void addFile(Model::BaseFileDataModel::ModelType type, const QString& localPath);
+        void addFile(Model::BaseFileDataModel::ModelType type, const QString& localPath, bool shouldExpandItem = false);
         void removeFile(const QString& localPath);
         void clearFiles();
 

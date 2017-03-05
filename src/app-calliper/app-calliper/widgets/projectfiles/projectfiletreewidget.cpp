@@ -52,7 +52,7 @@ namespace AppCalliper
         return m_bHasProject;
     }
 
-    void ProjectFileTreeWidget::addFile(Model::BaseFileDataModel::ModelType type, const QString &localPath)
+    void ProjectFileTreeWidget::addFile(Model::BaseFileDataModel::ModelType type, const QString &localPath, bool shouldExpandItem)
     {
         if ( m_ItemsByPath.contains(localPath) )
         {
@@ -75,7 +75,11 @@ namespace AppCalliper
 
         item->addChild(child);
         m_ItemsByPath.insert(localPath, child);
-        expandItem(child);
+
+        if ( shouldExpandItem )
+        {
+            expandItem(item);
+        }
 
         emit fileAdded(localPath);
     }

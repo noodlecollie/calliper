@@ -13,7 +13,7 @@ namespace AppCalliper
     public:
         ProjectFileDockWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
 
-        void addFile(Model::BaseFileDataModel::ModelType type, const QString& localPath);
+        void addFile(Model::BaseFileDataModel::ModelType type, const QString& localPath, bool expandItem = false);
         void removeFile(const QString& localPath);
         void clearFiles();
         void setProject(const QString& projectFilePath);

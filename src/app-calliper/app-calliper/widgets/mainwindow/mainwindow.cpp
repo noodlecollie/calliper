@@ -49,14 +49,7 @@ namespace AppCalliper
             return;
         }
 
-        setProject(new ApplicationProject());
-
-        m_pProject->setFullPath(filePath);
-        ModelLoaders::CalliperProjectLoader(m_pProject->project()).fromJsonDocument(doc);
-
-        m_bUnsavedProjectChanges = false;
-        updateWindowTitle();
-        repopulateProjectFileTree();
+        setNewApplicationProject(filePath, doc);
     }
 
     void MainWindow::menuCloseProject()
@@ -155,6 +148,18 @@ namespace AppCalliper
         repopulateProjectFileTree();
     }
 
+    void MainWindow::setNewApplicationProject(const QString &filePath, const QJsonDocument &project)
+    {
+        setProject(new ApplicationProject());
+
+        m_pProject->setFullPath(filePath);
+        ModelLoaders::CalliperProjectLoader(m_pProject->project()).fromJsonDocument(project);
+
+        m_bUnsavedProjectChanges = false;
+        updateWindowTitle();
+        repopulateProjectFileTree();
+    }
+
     void MainWindow::updateWindowTitle()
     {
         if ( m_pProject )
@@ -188,7 +193,7 @@ namespace AppCalliper
         QString fullPath = m_pProject->fullPath();
         if ( fullPath.isNull() )
         {
-            fullPath = tr("UNSAVED");
+            fullPath = tr("Unsaved Project");
         }
 
         m_pProjectFileDockWidget->setProject(fullPath);
@@ -385,7 +390,7 @@ namespace AppCalliper
         {
             QString extension = QFileInfo(path).suffix();
             m_pProject->project()->addProjectFile(path);
-            m_pProjectFileDockWidget->addFile(extMap.modelType(extension), path);
+            m_pProjectFileDockWidget->addFile(extMap.modelType(extension), path, true);
         }
     }
 

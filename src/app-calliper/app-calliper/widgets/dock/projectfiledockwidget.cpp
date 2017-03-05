@@ -44,9 +44,9 @@ namespace AppCalliper
         emit fileDoubleClicked(filePath);
     }
 
-    void ProjectFileDockWidget::addFile(Model::BaseFileDataModel::ModelType type, const QString &localPath)
+    void ProjectFileDockWidget::addFile(Model::BaseFileDataModel::ModelType type, const QString &localPath, bool expandItem)
     {
-        m_pTreeWidget->addFile(type, localPath);
+        m_pTreeWidget->addFile(type, localPath, expandItem);
     }
 
     void ProjectFileDockWidget::removeFile(const QString &localPath)
