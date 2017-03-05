@@ -28,7 +28,8 @@ namespace AppCalliper
 
         void addFile(Model::BaseFileDataModel::ModelType type, const QString& localPath, bool shouldExpandItem = false);
         void removeFile(const QString& localPath);
-        void clearFiles();
+        void clear();
+        void clearProjectFiles();
 
     signals:
         void fileAdded(const QString& localFilePath);
@@ -44,6 +45,7 @@ namespace AppCalliper
         QTreeWidgetItem* createFileTypeItem(Model::BaseFileDataModel::ModelType type);
         void createBlankProjectItem();
         void createMenuAction(QMenu& menu, const QString& text, const char* sigOrSlot);
+        void expandAncestorPath(QTreeWidgetItem* item);
 
         QTreeWidgetItem* m_pProjectItem;
         bool m_bHasProject;

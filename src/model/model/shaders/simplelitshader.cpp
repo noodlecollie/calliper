@@ -1,11 +1,9 @@
 #include "simplelitshader.h"
-
-#include "calliperutil/general/generalutil.h"
-
+#include "calliperutil/qobject/qobjectutil.h"
 namespace Model
 {
     SimpleLitShader::SimpleLitShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<SimpleLitShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::QObjectUtil::nonNamespacedClassName<SimpleLitShader>(), parent)
     {
 
     }

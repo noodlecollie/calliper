@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QtDebug>
 #include <QCoreApplication>
+#include "user-interface/icons/filedatamodeliconprovider.h"
 
 namespace
 {
@@ -42,7 +43,7 @@ namespace AppCalliper
 
         m_pProjectItem->setText(0, fileInfo.fileName());
         m_pProjectItem->setData(0, FilePathRole, fileInfo.canonicalFilePath());
-        m_pProjectItem->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::File));
+        m_pProjectItem->setData(0, Qt::DecorationRole, UserInterface::FileDataModelIconProvider().calliperProjectIcon());
 
         m_bHasProject = true;
     }
@@ -65,21 +66,20 @@ namespace AppCalliper
             item = createFileTypeItem(type);
         }
 
-        QFileIconProvider icons;
+        UserInterface::FileDataModelIconProvider iconProvider;
+        QIcon icon = iconProvider.hasIcon(type) ? iconProvider.icon(type) : QFileIconProvider().icon(QFileIconProvider::File);
 
         QTreeWidgetItem* child = new QTreeWidgetItem();
-        child->setData(0, Qt::DecorationRole, icons.icon(QFileIconProvider::File));
+        child->setData(0, Qt::DecorationRole, icon);
         child->setData(0, FilePathRole, localPath);
         child->setText(0, QFileInfo(localPath).fileName());
-        qDebug() << "Local path:" << localPath;
 
         item->addChild(child);
         m_ItemsByPath.insert(localPath, child);
 
-        // TODO: Fix
         if ( shouldExpandItem )
         {
-            expandItem(item);
+            expandAncestorPath(child);
         }
 
         emit fileAdded(localPath);
@@ -110,9 +110,18 @@ namespace AppCalliper
         emit fileRemoved(localPath);
     }
 
-    void ProjectFileTreeWidget::clearFiles()
+    void ProjectFileTreeWidget::clear()
     {
         createBlankProjectItem();
+        clearProjectFiles();
+    }
+
+    void ProjectFileTreeWidget::clearProjectFiles()
+    {
+        while ( m_pProjectItem->childCount() > 0 )
+        {
+            m_pProjectItem->removeChild(m_pProjectItem->child(0));
+        }
 
         m_ItemsByPath.clear();
         m_ItemsByType.clear();
@@ -124,6 +133,7 @@ namespace AppCalliper
         QTreeWidgetItem* item = new QTreeWidgetItem();
 
         item->setText(0, translatedTypeLabel(type));
+        item->setData(0, Qt::DecorationRole, QFileIconProvider().icon(QFileIconProvider::Folder));
         item->setData(0, FileTypeRole, type);
         m_ItemsByType.insert(type, item);
 
@@ -156,11 +166,30 @@ namespace AppCalliper
 
     void ProjectFileTreeWidget::createBlankProjectItem()
     {
-        delete m_pProjectItem;
+        QTreeWidgetItem* oldItem = m_pProjectItem;
+
         m_pProjectItem = new QTreeWidgetItem();
         m_pProjectItem->setFlags(m_pProjectItem->flags() & ~Qt::ItemIsSelectable);
         invisibleRootItem()->addChild(m_pProjectItem);
 
+        if ( oldItem )
+        {
+            for ( int i = 0; i < oldItem->childCount(); ++i )
+            {
+                m_pProjectItem->addChild(oldItem->child(i));
+            }
+
+            delete oldItem;
+        }
+
         m_bHasProject = false;
+    }
+
+    void ProjectFileTreeWidget::expandAncestorPath(QTreeWidgetItem *item)
+    {
+        for ( QTreeWidgetItem* parent = item->parent(); parent && parent != invisibleRootItem(); parent = parent->parent() )
+        {
+            expandItem(parent);
+        }
     }
 }

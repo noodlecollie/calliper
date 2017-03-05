@@ -10,7 +10,7 @@
 
 namespace ModelLoaders
 {
-    class FileDataModelStore
+    class MODELLOADERSSHARED_EXPORT FileDataModelStore
     {
     public:
         typedef QHash<QString, QSharedPointer<Model::BaseFileDataModel> >::const_iterator ConstIterator;

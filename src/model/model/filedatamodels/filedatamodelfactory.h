@@ -6,7 +6,7 @@
 
 namespace Model
 {
-    class FileDataModelFactory
+    class MODELSHARED_EXPORT FileDataModelFactory
     {
     public:
         static BaseFileDataModel* createModel(BaseFileDataModel::ModelType type);

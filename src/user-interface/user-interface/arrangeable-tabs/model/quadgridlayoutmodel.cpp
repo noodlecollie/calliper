@@ -17,9 +17,18 @@ namespace UserInterface
 
     void QuadGridLayoutModel::deleteAllWidgets()
     {
+        QSet<QWidget*> deletedWidgets;
+
         for ( int i = 0; i < 4; ++i )
         {
-            delete m_CellToWidget[i];
+            QWidget* w = m_CellToWidget[i];
+            if ( deletedWidgets.contains(w) )
+            {
+                continue;
+            }
+
+            deletedWidgets.insert(w);
+            delete w;
         }
 
         clear();

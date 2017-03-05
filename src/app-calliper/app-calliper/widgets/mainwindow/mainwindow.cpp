@@ -50,6 +50,7 @@ namespace AppCalliper
         }
 
         setNewApplicationProject(filePath, doc);
+        m_pProjectFileDockWidget->expandProjectItem();
     }
 
     void MainWindow::menuCloseProject()
@@ -76,12 +77,18 @@ namespace AppCalliper
     void MainWindow::menuSaveCurrentProject()
     {
         if ( !m_pProject )
+        {
             return;
+        }
 
         if ( m_pProject->fullPath().isNull() )
+        {
             menuSaveCurrentProjectAs();
+        }
         else
+        {
             saveCurrentProject(m_pProject->fullPath());
+        }
     }
 
     void MainWindow::menuSaveCurrentProjectAs()
@@ -96,6 +103,7 @@ namespace AppCalliper
             return;
 
         saveCurrentProject(filename);
+        repopulateProjectFileTree();
     }
 
     bool MainWindow::ensureProjectIsSaved()
@@ -145,7 +153,7 @@ namespace AppCalliper
         m_pProject->setFullPath(fullPath);
         m_pProject->notifyDataReset();
         updateWindowTitle();
-        repopulateProjectFileTree();
+        updateProjectFileTreeName();
     }
 
     void MainWindow::setNewApplicationProject(const QString &filePath, const QJsonDocument &project)
@@ -157,6 +165,7 @@ namespace AppCalliper
 
         m_bUnsavedProjectChanges = false;
         updateWindowTitle();
+        updateProjectFileTreeName();
         repopulateProjectFileTree();
     }
 
@@ -185,18 +194,12 @@ namespace AppCalliper
 
     void MainWindow::repopulateProjectFileTree()
     {
-        m_pProjectFileDockWidget->clearFiles();
+        m_pProjectFileDockWidget->clearProjectFiles();
 
         if ( !m_pProject )
-            return;
-
-        QString fullPath = m_pProject->fullPath();
-        if ( fullPath.isNull() )
         {
-            fullPath = tr("Unsaved Project");
+            return;
         }
-
-        m_pProjectFileDockWidget->setProject(fullPath);
 
         const QSet<QString>& files = m_pProject->project()->projectFiles();
         ModelLoaders::FileExtensionDataModelMap extMap;
@@ -206,6 +209,22 @@ namespace AppCalliper
             QString extension = QFileInfo(path).suffix();
             m_pProjectFileDockWidget->addFile(extMap.modelType(extension), path);
         }
+    }
+
+    void MainWindow::updateProjectFileTreeName()
+    {
+        if ( !m_pProject )
+        {
+            return;
+        }
+
+        QString fullPath = m_pProject->fullPath();
+        if ( fullPath.isNull() )
+        {
+            fullPath = tr("Unsaved Project");
+        }
+
+        m_pProjectFileDockWidget->setProject(fullPath);
     }
 
     void MainWindow::setProject(ApplicationProject *newProject)
@@ -392,6 +411,8 @@ namespace AppCalliper
             m_pProject->project()->addProjectFile(path);
             m_pProjectFileDockWidget->addFile(extMap.modelType(extension), path, true);
         }
+
+        notifyProjectDataChanged();
     }
 
     QStringList  MainWindow::absoluteFilePathsToLocalFilePaths(const QStringList &filePaths) const

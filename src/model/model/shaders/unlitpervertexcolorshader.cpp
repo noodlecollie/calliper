@@ -1,10 +1,10 @@
 #include "unlitpervertexcolorshader.h"
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/qobject/qobjectutil.h"
 
 namespace Model
 {
     UnlitPerVertexColorShader::UnlitPerVertexColorShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<UnlitPerVertexColorShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::QObjectUtil::nonNamespacedClassName<UnlitPerVertexColorShader>(), parent)
     {
 
     }

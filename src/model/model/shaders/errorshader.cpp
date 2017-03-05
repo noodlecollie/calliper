@@ -1,10 +1,10 @@
 #include "errorshader.h"
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/qobject/qobjectutil.h"
 
 namespace Model
 {
     ErrorShader::ErrorShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<ErrorShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::QObjectUtil::nonNamespacedClassName<ErrorShader>(), parent)
     {
 
     }

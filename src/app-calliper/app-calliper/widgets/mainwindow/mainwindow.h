@@ -49,6 +49,7 @@ namespace AppCalliper
         QString getFileDialogueDefaultPath() const;
         void updateWindowTitle();
         void repopulateProjectFileTree();
+        void updateProjectFileTreeName();
         void setProject(ApplicationProject* newProject);
         bool ensureProjectIsSaved();
         void setFileMenuItemEnabledStates();

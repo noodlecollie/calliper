@@ -18,6 +18,7 @@ namespace Model
             UnknownModel = 0,
             MapModel
         };
+        Q_ENUMS(ModelType)
 
         // Returns what type this model actually is.
         virtual ModelType type() const = 0;

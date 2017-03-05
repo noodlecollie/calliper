@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/user-interface/icons/datamodel">
+        <file alias="MapModel">icons/datamodel/mapfile.svg</file>
+    </qresource>
+    <qresource prefix="/user-interface/icons/project">
+        <file alias="calliperproject">icons/project/calliperproject.svg</file>
+    </qresource>
+</RCC>

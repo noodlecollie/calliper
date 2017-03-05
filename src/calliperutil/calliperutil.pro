@@ -18,7 +18,8 @@ SOURCES += \
     calliperutil/json/jsonarraywrapper.cpp \
     calliperutil/math/math.cpp \
     calliperutil/string/stringutil.cpp \
-    calliperutil_global.cpp
+    calliperutil_global.cpp \
+    calliperutil/qobject/qobjectutil.cpp
 
 HEADERS +=\
         calliperutil_global.h \
@@ -28,7 +29,8 @@ HEADERS +=\
     calliperutil/json/jsonarraywrapper.h \
     calliperutil/math/math.h \
     calliperutil/string/stringutil.h \
-    calliperutil/debug/debug.h
+    calliperutil/debug/debug.h \
+    calliperutil/qobject/qobjectutil.h
 
 unix {
     target.path = /usr/lib

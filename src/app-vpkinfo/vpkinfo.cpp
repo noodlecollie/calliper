@@ -27,7 +27,7 @@ namespace VPKInfo
           << "======================================\n";
 
 #define HEADER_FIELD(_key, _value) \
-        qSetFieldWidth(21) << QString("%1:").arg(_key).toLatin1().constData() <<\
+        qSetFieldWidth(21) << QString("%1:").arg(_key).toUtf8().constData() <<\
         qSetFieldWidth(17) << (_value) << qSetFieldWidth(0)
 
         s << HEADER_FIELD("File signature", toHex<quint32>(header.signature(), true)) << endl;
@@ -52,7 +52,7 @@ namespace VPKInfo
         }
 
         s.flush();
-        qInfo() << string.toLatin1().constData();
+        qInfo() << qPrintable(string);
     }
 
     void printIndexData(const FileFormats::VPKIndex &index)
@@ -68,7 +68,7 @@ namespace VPKInfo
         s << "Files: " << index.recordCount() << ", extensions: " << extensions.count() << endl << endl;
 
 #define FIELD(_key, _value) \
-        qSetFieldWidth(8) << QString("%1:").arg(_key).toLatin1().constData() <<\
+        qSetFieldWidth(8) << QString("%1:").arg(_key).toUtf8().constData() <<\
         qSetFieldWidth(12) << (_value) << qSetFieldWidth(0)
 
         foreach ( const QString& str, extensions )
@@ -79,7 +79,7 @@ namespace VPKInfo
 #undef FIELD
 
         s.flush();
-        qInfo() << string.toLatin1().constData();
+        qInfo() << qPrintable(string);
     }
 
     void listFiles(const FileFormats::VPKIndex &index)
@@ -197,7 +197,7 @@ namespace VPKInfo
             }
 
             if ( verbose )
-                qInfo() << line.toLatin1().constData();
+                qInfo() << qPrintable(line);
         }
 
         archive.close();
@@ -247,7 +247,7 @@ namespace VPKInfo
             str += " FAIL.";
         }
 
-        qInfo() << str.toLatin1().constData();
+        qInfo() << qPrintable(str);
 
         str = "Validating archive MD5 data checksum...";
 
@@ -260,7 +260,7 @@ namespace VPKInfo
             str += " FAIL.";
         }
 
-        qInfo() << str.toLatin1().constData() << "";
+        qInfo() << qPrintable(str) << "";
     }
 
     void printInfoAboutFile(const FileFormats::VPKIndex &index, const QString &filename)
@@ -294,7 +294,7 @@ namespace VPKInfo
 #undef PRINT_PAIR
 
         s.flush();
-        qInfo() << string.toLatin1().constData();
+        qInfo() << qPrintable(string);
     }
 
     void outputFile(FileFormats::VPKFile &file, const QString &filePath, const QString &outputPath)

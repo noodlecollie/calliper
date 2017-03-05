@@ -118,7 +118,7 @@ namespace AppCalliper
         if ( propertyName.isNull() )
             return;
 
-        m_pProjectMetadata->setProperty(propertyName.toLatin1().constData(), getContents(widget));
+        m_pProjectMetadata->setProperty(qPrintable(propertyName), getContents(widget));
     }
 
     void ProjectMetadataDockWidget::propertyUpdated(int propertyIndex)

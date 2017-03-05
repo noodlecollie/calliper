@@ -1,4 +1,4 @@
-#include "widgets/mainwindow.h"
+#include "app-calliper/widgets/mainwindow/mainwindow.h"
 #include <QApplication>
 #include "application/applicationtasks.h"
 #include <QSurfaceFormat>

@@ -54,13 +54,26 @@ namespace AppCalliper
         m_pTreeWidget->removeFile(localPath);
     }
 
-    void ProjectFileDockWidget::clearFiles()
+    void ProjectFileDockWidget::clear()
     {
-        m_pTreeWidget->clearFiles();
+
+    }
+
+    void ProjectFileDockWidget::clearProjectFiles()
+    {
+
     }
 
     void ProjectFileDockWidget::setProject(const QString &projectFilePath)
     {
         m_pTreeWidget->setProject(projectFilePath);
+    }
+
+    void ProjectFileDockWidget::expandProjectItem()
+    {
+        if ( m_pTreeWidget->rootProjectItem() )
+        {
+            m_pTreeWidget->expandItem(m_pTreeWidget->rootProjectItem());
+        }
     }
 }

@@ -7,8 +7,6 @@
 #include <QOpenGLContext>
 #include <QtDebug>
 
-#define ENABLE_OPENGL_FAILFIRST
-
 namespace Renderer
 {
     class RENDERERSHARED_EXPORT OpenGLErrors
@@ -50,7 +48,7 @@ namespace Renderer
                        .arg(line)
                        .arg(funcName)
                        .arg(errorList.join(", "))
-                       .toLatin1().constData()
+                       .toUtf8().constData()
                       );
 
                 // For some reason qFatal doesn't kill us on Windows...?

@@ -4,7 +4,7 @@
 #include "model/filedatamodels/filedatamodelfactory.h"
 #include "model-loaders/filedataloaders/filedataloaderfactory.h"
 #include <QPair>
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/qobject/qobjectutil.h"
 
 namespace
 {
@@ -18,12 +18,12 @@ namespace
 
     inline QString dataModelEnumString(Model::BaseFileDataModel::ModelType type)
     {
-        return CalliperUtil::General::enumKeyFromValue<Model::BaseFileDataModel>("ModelType", type);
+        return CalliperUtil::QObjectUtil::enumKeyFromValue<Model::BaseFileDataModel>("ModelType", type);
     }
 
     inline QString dataModelLoaderEnumString(ModelLoaders::BaseFileLoader::LoaderType type)
     {
-        return CalliperUtil::General::enumKeyFromValue<ModelLoaders::BaseFileLoader>("LoaderType", type);
+        return CalliperUtil::QObjectUtil::enumKeyFromValue<ModelLoaders::BaseFileLoader>("LoaderType", type);
     }
 }
 

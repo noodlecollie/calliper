@@ -1,6 +1,6 @@
 #include "winding3d.h"
 #include "calliperutil/math/math.h"
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/qobject/qobjectutil.h"
 
 using namespace CalliperUtil;
 
@@ -210,8 +210,8 @@ namespace Model
                 qWarning().nospace() << Q_FUNC_INFO << " - Edge " << v0 << " -> " << v1
                                      << " reported no intersection with " << plane
                                      << " but both vertices are not on same side of plane "
-                                     << "(" << General::enumKeyFromValue<Plane3D>("PointLocation", plV0)
-                                     << " vs " << General::enumKeyFromValue<Plane3D>("PointLocation", plV1) << ")";
+                                     << "(" << QObjectUtil::enumKeyFromValue<Plane3D>("PointLocation", plV0)
+                                     << " vs " << QObjectUtil::enumKeyFromValue<Plane3D>("PointLocation", plV1) << ")";
             }
         }
         // If there was an intersection, this could be that one point was on the plane and the other was
@@ -265,8 +265,8 @@ namespace Model
                 qWarning().nospace() << Q_FUNC_INFO << " - Edge " << v0 << " -> " << v1
                                      << " reported intersection with " << plane
                                      << " but both vertices are in same location relative to the plane "
-                                     << "(" << General::enumKeyFromValue<Plane3D>("PointLocation", plV0)
-                                     << " vs " << General::enumKeyFromValue<Plane3D>("PointLocation", plV1) << ")";
+                                     << "(" << QObjectUtil::enumKeyFromValue<Plane3D>("PointLocation", plV0)
+                                     << " vs " << QObjectUtil::enumKeyFromValue<Plane3D>("PointLocation", plV1) << ")";
             }
         }
         // If there were multiple intersections (ie. the plane and line were parallel),
@@ -284,8 +284,8 @@ namespace Model
                 qWarning().nospace() << Q_FUNC_INFO << " - Edge " << v0 << " -> " << v1
                                      << " lies in " << plane
                                      << " but one or more vertices were not on the plane "
-                                     << "(" << General::enumKeyFromValue<Plane3D>("PointLocation", plV0)
-                                     << " vs " << General::enumKeyFromValue<Plane3D>("PointLocation", plV1) << ")";
+                                     << "(" << QObjectUtil::enumKeyFromValue<Plane3D>("PointLocation", plV0)
+                                     << " vs " << QObjectUtil::enumKeyFromValue<Plane3D>("PointLocation", plV1) << ")";
             }
         }
 

@@ -8,7 +8,7 @@ class QWidget;
 
 namespace UserInterface
 {
-    class ModelViewFactory
+    class USERINTERFACESHARED_EXPORT ModelViewFactory
     {
     public:
         static QWidget* createView(Model::BaseFileDataModel::ModelType modelType);

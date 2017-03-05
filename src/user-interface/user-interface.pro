@@ -25,7 +25,8 @@ SOURCES += \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.cpp \
     user-interface/arrangeable-tabs/widget/quadgridwidget.cpp \
     user-interface/modelviews/modelviewfactory.cpp \
-    user-interface/views/mapviewport.cpp
+    user-interface/views/mapviewport.cpp \
+    user-interface/icons/filedatamodeliconprovider.cpp
 
 HEADERS +=\
     user-interface_global.h \
@@ -41,7 +42,8 @@ HEADERS +=\
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.h \
     user-interface/arrangeable-tabs/widget/quadgridwidget.h \
     user-interface/modelviews/modelviewfactory.h \
-    user-interface/views/mapviewport.h
+    user-interface/views/mapviewport.h \
+    user-interface/icons/filedatamodeliconprovider.h
 
 unix {
     target.path = /usr/lib
@@ -91,3 +93,6 @@ INCLUDEPATH += $$PWD/../renderer
 DEPENDPATH += $$PWD/../renderer
 
 FORMS +=
+
+RESOURCES += \
+    user-interface/resource/resource.qrc

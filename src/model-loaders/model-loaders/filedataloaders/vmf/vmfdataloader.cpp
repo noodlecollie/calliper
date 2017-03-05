@@ -10,6 +10,7 @@
 #include "model/global/resourceenvironment.h"
 #include <QTextStream>
 #include "file-formats/keyvalues/keyvaluesparser.h"
+#include <QFile>
 
 namespace
 {

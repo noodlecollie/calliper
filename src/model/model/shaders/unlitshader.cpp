@@ -1,10 +1,10 @@
 #include "unlitshader.h"
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/qobject/qobjectutil.h"
 
 namespace Model
 {
     UnlitShader::UnlitShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, CalliperUtil::General::nonNamespacedClassName<UnlitShader>(), parent)
+        : OpenGLShaderProgram(id, CalliperUtil::QObjectUtil::nonNamespacedClassName<UnlitShader>(), parent)
     {
 
     }

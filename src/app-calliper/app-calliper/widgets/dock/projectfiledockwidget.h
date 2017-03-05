@@ -15,8 +15,10 @@ namespace AppCalliper
 
         void addFile(Model::BaseFileDataModel::ModelType type, const QString& localPath, bool expandItem = false);
         void removeFile(const QString& localPath);
-        void clearFiles();
+        void clear();
+        void clearProjectFiles();
         void setProject(const QString& projectFilePath);
+        void expandProjectItem();
 
     signals:
         void fileAdded(const QString& localFilePath);
