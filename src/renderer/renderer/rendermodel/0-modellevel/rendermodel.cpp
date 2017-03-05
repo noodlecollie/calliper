@@ -24,7 +24,7 @@ namespace
 namespace Renderer
 {
     RenderModel::RenderModel()
-        : m_pShaderFunctor(nullptr), m_pTextureFunctor(nullptr), m_DrawParams(),
+        : m_pShaderFunctor(Q_NULLPTR), m_pTextureFunctor(Q_NULLPTR), m_DrawParams(),
           m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
     {
         m_VAO.create();

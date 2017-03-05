@@ -12,7 +12,7 @@ namespace FileFormats
     public:
         virtual ~StreamDataContainer() {}
 
-        virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) = 0;
+        virtual bool populate(QDataStream& stream, QString* errorHint = Q_NULLPTR) = 0;
 
         void beginRead(QDataStream& stream);
         bool endRead(QDataStream& stream, QString* errorHint);

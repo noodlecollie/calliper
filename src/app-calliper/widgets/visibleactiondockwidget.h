@@ -12,8 +12,8 @@ namespace AppCalliper
     {
         Q_OBJECT
     public:
-        VisibleActionDockWidget(const QString &title, QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
-        VisibleActionDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+        VisibleActionDockWidget(const QString &title, QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
+        VisibleActionDockWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
 
         QAction* visibilityAction() const;
         void setVisibilityAction(QAction* action);

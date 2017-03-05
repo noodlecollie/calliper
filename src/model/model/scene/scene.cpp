@@ -5,7 +5,7 @@ namespace Model
     Scene::Scene(QObject* parent)
         : QObject(parent),
           m_iObjectIdCounter(0),
-          m_pRootObject(new SceneObject(SceneObjectInitParams(this, acquireNextObjectId()), nullptr))
+          m_pRootObject(new SceneObject(SceneObjectInitParams(this, acquireNextObjectId()), Q_NULLPTR))
     {
         addObjectToTable(m_pRootObject);
         m_pRootObject->setMustExist(true);

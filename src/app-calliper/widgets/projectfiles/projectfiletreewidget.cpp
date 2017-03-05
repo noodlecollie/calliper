@@ -25,7 +25,7 @@ namespace AppCalliper
 {
     ProjectFileTreeWidget::ProjectFileTreeWidget(QWidget *parent)
         : QTreeWidget(parent),
-          m_pProjectItem(nullptr),
+          m_pProjectItem(Q_NULLPTR),
           m_bHasProject(false)
     {
         createBlankProjectItem();
@@ -59,8 +59,8 @@ namespace AppCalliper
             return;
         }
 
-        QTreeWidgetItem* item = m_ItemsByType.value(type, nullptr);
-        if ( item == nullptr )
+        QTreeWidgetItem* item = m_ItemsByType.value(type, Q_NULLPTR);
+        if ( item == Q_NULLPTR )
         {
             item = createFileTypeItem(type);
         }
@@ -82,7 +82,7 @@ namespace AppCalliper
 
     void ProjectFileTreeWidget::removeFile(const QString &localPath)
     {
-        QTreeWidgetItem* item = m_ItemsByPath.value(localPath, nullptr);
+        QTreeWidgetItem* item = m_ItemsByPath.value(localPath, Q_NULLPTR);
         if ( !item )
         {
             return;

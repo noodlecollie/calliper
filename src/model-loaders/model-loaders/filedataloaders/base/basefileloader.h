@@ -37,8 +37,8 @@ namespace ModelLoaders
         Model::BaseFileDataModel* dataModel() const;
         virtual bool setDataModel(Model::BaseFileDataModel* model) = 0;
 
-        virtual SuccessCode load(const QString& filePath, QString* errorString = nullptr) = 0;
-        virtual SuccessCode save(const QString& filePath, QString* errorString = nullptr) = 0;
+        virtual SuccessCode load(const QString& filePath, QString* errorString = Q_NULLPTR) = 0;
+        virtual SuccessCode save(const QString& filePath, QString* errorString = Q_NULLPTR) = 0;
 
     protected:
         BaseFileLoader();

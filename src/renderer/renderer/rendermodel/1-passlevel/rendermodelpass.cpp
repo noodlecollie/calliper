@@ -90,7 +90,7 @@ namespace Renderer
 
     void RenderModelPass::drawAllBatchGroups()
     {
-        OpenGLShaderProgram* currentShaderProgram = nullptr;
+        OpenGLShaderProgram* currentShaderProgram = Q_NULLPTR;
         RenderMaterialPointer currentMaterial;
 
         foreach ( const RenderModelBatchGroupPointer &batchGroup, m_BatchGroups.values() )
@@ -99,7 +99,7 @@ namespace Renderer
             batchGroup->drawAllBatches(currentShaderProgram);
         }
 
-        changeShaderIfDifferent(currentShaderProgram, nullptr);
+        changeShaderIfDifferent(currentShaderProgram, Q_NULLPTR);
         changeMaterialIfDifferent(currentMaterial, RenderMaterialPointer());
     }
 

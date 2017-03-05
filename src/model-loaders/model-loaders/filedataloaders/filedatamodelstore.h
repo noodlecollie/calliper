@@ -17,7 +17,7 @@ namespace ModelLoaders
 
         FileDataModelStore();
 
-        ModelLoaders::BaseFileLoader::SuccessCode loadFile(const QString& path, QString* errorString = nullptr);
+        ModelLoaders::BaseFileLoader::SuccessCode loadFile(const QString& path, QString* errorString = Q_NULLPTR);
         QSharedPointer<Model::BaseFileDataModel> dataModel(const QString& path) const;
         bool isFileLoaded(const QString& path) const;
 

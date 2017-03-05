@@ -237,13 +237,13 @@ namespace ModelLoaders
         {
             QString error = QString("Error parsing plane co-ordinates for side %1: '%2'").arg(side.value("id").toInt()).arg(exception.errorHint());
             addError(brushId, error);
-            return nullptr;
+            return Q_NULLPTR;
         }
         catch (...)
         {
             QString error = QString("Unexpected exception occurred when parsing plane co-ordinates for side %1.").arg(side.value("id").toInt());
             addError(brushId, error);
-            return nullptr;
+            return Q_NULLPTR;
         }
 
         MaterialStore* materialStore = ResourceEnvironment::globalInstance()->materialStore();

@@ -69,7 +69,7 @@ namespace UserInterface
 
     ResizeableGridLayoutContainer* ResizeableGridLayoutManager::createContainerForEmbed(QuadGridLayoutDefs::GridCell cell, Qt::Orientation splitPreference)
     {
-        ResizeableGridLayoutContainer* container = nullptr;
+        ResizeableGridLayoutContainer* container = Q_NULLPTR;
 
         if ( m_pModel->canAddWidget(cell) )
         {
@@ -87,7 +87,7 @@ namespace UserInterface
 
     ResizeableGridLayoutContainer* ResizeableGridLayoutManager::createContainerForInsert(QuadGridLayoutDefs::GridCell cell)
     {
-        ResizeableGridLayoutContainer* container = nullptr;
+        ResizeableGridLayoutContainer* container = Q_NULLPTR;
 
         if ( !m_pModel->widgetAt(cell) )
         {
@@ -118,7 +118,7 @@ namespace UserInterface
     {
         ResizeableGridLayoutContainer* container = containerAt(cell);
         if ( !container )
-            return nullptr;
+            return Q_NULLPTR;
 
         return removeWidget(container, container->currentWidgetIndex(), mergePreference);
     }
@@ -337,7 +337,7 @@ namespace UserInterface
     void ResizeableGridLayoutManager::removeAllWidgetsFromGridLayout()
     {
         QLayoutItem *child;
-        while ( (child = m_pGridLayout->takeAt(0)) != nullptr )
+        while ( (child = m_pGridLayout->takeAt(0)) != Q_NULLPTR )
         {
             // Only delete buttons - the other widgets are still held
             // in the model and may be re-inserted later.
@@ -576,7 +576,7 @@ namespace UserInterface
         if ( list.isEmpty() )
         {
             Q_ASSERT_X(false, Q_FUNC_INFO, "Expected container to be part of model!");
-            return nullptr;
+            return Q_NULLPTR;
         }
 
         QuadGridLayoutDefs::GridCell cell = QuadGridLayoutModel::lowestGridCell(list);

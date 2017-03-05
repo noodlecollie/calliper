@@ -13,7 +13,7 @@ namespace Model
     {
         Q_OBJECT
     public:
-        explicit MapScene(QObject* parent = nullptr);
+        explicit MapScene(QObject* parent = Q_NULLPTR);
 
         SceneCamera* defaultCamera() const;
         QList<SceneCamera*> cameras() const;

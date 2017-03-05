@@ -15,7 +15,7 @@ namespace UserInterface
     {
         Q_OBJECT
     public:
-        explicit ResizeableGridLayoutContainerMenu(ResizeableGridLayoutContainerButton* button, QWidget* parent = nullptr);
+        explicit ResizeableGridLayoutContainerMenu(ResizeableGridLayoutContainerButton* button, QWidget* parent = Q_NULLPTR);
 
     signals:
         void selectInvoked();

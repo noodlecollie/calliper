@@ -67,7 +67,7 @@ namespace Model
 
     bool SceneObject::isRoot() const
     {
-        return parentObject() == nullptr;
+        return parentObject() == Q_NULLPTR;
     }
 
     HierarchyState& SceneObject::hierarchy()

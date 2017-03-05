@@ -17,7 +17,7 @@ namespace UserInterface
     {
         Q_OBJECT
     public:
-        explicit ResizeableGridLayoutContainer(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+        explicit ResizeableGridLayoutContainer(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
         void addWidget(QWidget* widget);
         QWidget* replaceWidget(int index, QWidget* widget);

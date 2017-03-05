@@ -19,7 +19,7 @@ namespace FileFormats
 {
     VPKIndexTreeIterator::VPKIndexTreeIterator(QByteArray *treeData)
         : m_pTreeData(treeData),
-          m_pDataStream(nullptr),
+          m_pDataStream(Q_NULLPTR),
           m_iCurrentPathDepth(0),
           m_iTargetPathDepth(0)
     {

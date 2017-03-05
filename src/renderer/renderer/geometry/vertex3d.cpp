@@ -108,7 +108,7 @@ namespace Renderer
     }
 
     Vertex3DArrayRef::Vertex3DArrayRef()
-        : m_pPosition(nullptr), m_pNormal(nullptr), m_pColor(nullptr), m_pTextureCoordinate(nullptr)
+        : m_pPosition(Q_NULLPTR), m_pNormal(Q_NULLPTR), m_pColor(Q_NULLPTR), m_pTextureCoordinate(Q_NULLPTR)
     {
 
     }
@@ -121,7 +121,7 @@ namespace Renderer
 
     bool Vertex3DArrayRef::isNull() const
     {
-        return m_pPosition == nullptr;
+        return m_pPosition == Q_NULLPTR;
     }
 
     float* Vertex3DArrayRef::position()

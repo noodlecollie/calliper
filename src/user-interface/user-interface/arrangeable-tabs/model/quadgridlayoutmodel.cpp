@@ -33,12 +33,12 @@ namespace UserInterface
 
     bool QuadGridLayoutModel::canRemoveWidget(QuadGridLayoutDefs::GridCell cell) const
     {
-        return widgetAt(cell) != nullptr;
+        return widgetAt(cell) != Q_NULLPTR;
     }
 
     bool QuadGridLayoutModel::canReplaceWidget(QuadGridLayoutDefs::GridCell cell) const
     {
-        return widgetAt(cell) != nullptr;
+        return widgetAt(cell) != Q_NULLPTR;
     }
 
     bool QuadGridLayoutModel::addWidget(QWidget *widget, QuadGridLayoutDefs::GridCell cell, Qt::Orientation preferredSplit)

@@ -17,7 +17,7 @@ namespace Renderer
 
     GeometrySection* GeometryBuilder::currentSection()
     {
-        return m_Sections.count() > 0 ? m_Sections.last() : nullptr;
+        return m_Sections.count() > 0 ? m_Sections.last() : Q_NULLPTR;
     }
 
     GeometrySection* GeometryBuilder::createNewSection(quint16 shaderId, quint32 materialId, const QMatrix4x4 &matrix)

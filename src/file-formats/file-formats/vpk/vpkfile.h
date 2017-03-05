@@ -30,9 +30,9 @@ namespace FileFormats
         void setFileName(const QString& filename);
         void clear();
 
-        bool readIndex(QString* errorHint = nullptr);
-        bool readArchiveMD5(QString* errorHint = nullptr);
-        bool readOtherMD5(QString* errorHint = nullptr);
+        bool readIndex(QString* errorHint = Q_NULLPTR);
+        bool readArchiveMD5(QString* errorHint = Q_NULLPTR);
+        bool readOtherMD5(QString* errorHint = Q_NULLPTR);
 
         const VPKHeader& header() const;
         const VPKIndex& index() const;

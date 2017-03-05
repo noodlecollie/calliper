@@ -13,7 +13,7 @@ namespace FileFormats
         VPKOtherMD5Item();
         ~VPKOtherMD5Item();
 
-        virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
+        virtual bool populate(QDataStream& stream, QString* errorHint = Q_NULLPTR) override;
         void clear();
 
         QByteArray treeChecksum() const;

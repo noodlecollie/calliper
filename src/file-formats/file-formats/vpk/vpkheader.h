@@ -14,7 +14,7 @@ namespace FileFormats
         VPKHeader();
         ~VPKHeader();
 
-        virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
+        virtual bool populate(QDataStream& stream, QString* errorHint = Q_NULLPTR) override;
         void clear();
 
         quint32 signature() const;

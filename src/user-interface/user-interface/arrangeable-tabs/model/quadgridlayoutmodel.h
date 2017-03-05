@@ -17,7 +17,7 @@ namespace UserInterface
     public:
         typedef QList<QuadGridLayoutDefs::GridCell> GridCellList;
 
-        explicit QuadGridLayoutModel(QObject *parent = nullptr);
+        explicit QuadGridLayoutModel(QObject *parent = Q_NULLPTR);
 
         // Does not delete widgets.
         void clear();

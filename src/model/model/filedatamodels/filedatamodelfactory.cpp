@@ -15,7 +15,7 @@ namespace Model
             default:
             {
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Model type was unrecognised");
-                return nullptr;
+                return Q_NULLPTR;
             }
         }
     }

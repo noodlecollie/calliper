@@ -13,7 +13,7 @@ namespace FileFormats
         VPKArchiveMD5Item();
         ~VPKArchiveMD5Item();
 
-        virtual bool populate(QDataStream& stream, QString* errorHint = nullptr) override;
+        virtual bool populate(QDataStream& stream, QString* errorHint = Q_NULLPTR) override;
 
         quint32 archiveIndex() const;
         quint32 startingOffset() const;

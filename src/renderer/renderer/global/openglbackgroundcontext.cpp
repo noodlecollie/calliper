@@ -3,7 +3,7 @@
 
 namespace Renderer
 {
-    OpenGLBackgroundContext* OpenGLBackgroundContext::m_pGlobalInstance = nullptr;
+    OpenGLBackgroundContext* OpenGLBackgroundContext::m_pGlobalInstance = Q_NULLPTR;
 
     void OpenGLBackgroundContext::globalInitialise()
     {
@@ -21,7 +21,7 @@ namespace Renderer
         Q_ASSERT_X(m_pGlobalInstance, Q_FUNC_INFO, "Global instance not initialised!");
 
         delete m_pGlobalInstance;
-        m_pGlobalInstance = nullptr;
+        m_pGlobalInstance = Q_NULLPTR;
     }
 
     OpenGLBackgroundContext* OpenGLBackgroundContext::globalInstance()

@@ -37,7 +37,7 @@ namespace
 namespace Model
 {
     CameraController::CameraController(QObject* parent) : QObject(parent),
-        m_pCamera(nullptr), m_flForwardSpeed(100), m_flStrafeSpeed(100), m_flVerticalSpeed(100),
+        m_pCamera(Q_NULLPTR), m_flForwardSpeed(100), m_flStrafeSpeed(100), m_flVerticalSpeed(100),
         m_iForwardState(NoMovement), m_iStrafeState(NoMovement), m_iVerticalState(NoMovement)
     {
         m_Timer.setSingleShot(false);

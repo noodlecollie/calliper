@@ -20,7 +20,7 @@ namespace UserInterface
     {
         Q_OBJECT
     public:
-        ResizeableGridLayoutContainerButton(ResizeableGridLayoutContainer* container, QWidget *parent = nullptr);
+        ResizeableGridLayoutContainerButton(ResizeableGridLayoutContainer* container, QWidget *parent = Q_NULLPTR);
         ~ResizeableGridLayoutContainerButton();
 
         int itemId() const;

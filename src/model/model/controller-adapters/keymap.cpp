@@ -48,12 +48,12 @@ namespace Model
 
     KeySignalSender* KeyMap::keyMap(int key) const
     {
-        return m_KeyMap.value(key, nullptr);
+        return m_KeyMap.value(key, Q_NULLPTR);
     }
 
     KeySignalSender* KeyMap::addKeyMap(int key)
     {
-        KeySignalSender* sender = m_KeyMap.value(key, nullptr);
+        KeySignalSender* sender = m_KeyMap.value(key, Q_NULLPTR);
 
         if ( !sender )
         {
@@ -66,7 +66,7 @@ namespace Model
 
     void KeyMap::removeKeyMap(int key)
     {
-        KeySignalSender* sender = m_KeyMap.value(key, nullptr);
+        KeySignalSender* sender = m_KeyMap.value(key, Q_NULLPTR);
         if ( sender )
             delete sender;
 

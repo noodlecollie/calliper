@@ -12,7 +12,7 @@ namespace AppCalliper
     {
         Q_OBJECT
     public:
-        ProjectMetadataDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+        ProjectMetadataDockWidget(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
 
         Model::CalliperProjectMetadata* projectMetadata() const;
         void setProjectMetadata(Model::CalliperProjectMetadata* metadata);

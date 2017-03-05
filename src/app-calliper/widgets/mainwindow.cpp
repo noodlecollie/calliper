@@ -27,7 +27,7 @@ namespace AppCalliper
 
         initDockWidgets();
         connect(ui->actionQuit, &QAction::triggered, qApp, &QApplication::quit);
-        setProject(nullptr);
+        setProject(Q_NULLPTR);
     }
 
     MainWindow::~MainWindow()
@@ -65,7 +65,7 @@ namespace AppCalliper
         if ( !ensureProjectIsSaved() )
             return;
 
-        setProject(nullptr);
+        setProject(Q_NULLPTR);
         repopulateProjectFileTree();
     }
 
@@ -78,7 +78,7 @@ namespace AppCalliper
         menuSaveCurrentProjectAs();
 
         if ( m_pProject->fullPath().isNull() )
-            setProject(nullptr);
+            setProject(Q_NULLPTR);
     }
 
     void MainWindow::menuSaveCurrentProject()
@@ -206,7 +206,7 @@ namespace AppCalliper
 
     void MainWindow::setProject(ApplicationProject *newProject)
     {
-        m_pProjectMetadataDockWidget->setProjectMetadata(nullptr);
+        m_pProjectMetadataDockWidget->setProjectMetadata(Q_NULLPTR);
 
         m_pProject.reset(newProject);
         m_bUnsavedProjectChanges = false;

@@ -26,14 +26,14 @@ namespace UserInterface
         m_strMapPath(),
         m_strVpkPath(),
         m_bInitialised(false),
-        m_pVmfData(nullptr),
-        m_pRenderer(nullptr),
+        m_pVmfData(Q_NULLPTR),
+        m_pRenderer(Q_NULLPTR),
         m_pRenderPassClassifier(classifier),
-        m_pSceneRenderer(nullptr),
+        m_pSceneRenderer(Q_NULLPTR),
         m_ShaderPalette(),
-        m_pCameraController(nullptr),
-        m_pKeyMap(nullptr),
-        m_pMouseEventMap(nullptr)
+        m_pCameraController(Q_NULLPTR),
+        m_pKeyMap(Q_NULLPTR),
+        m_pMouseEventMap(Q_NULLPTR)
     {
     }
 
@@ -47,27 +47,27 @@ namespace UserInterface
     void MapViewWindow::destroy()
     {
         delete m_pMouseEventMap;
-        m_pMouseEventMap = nullptr;
+        m_pMouseEventMap = Q_NULLPTR;
 
         delete m_pKeyMap;
-        m_pKeyMap = nullptr;
+        m_pKeyMap = Q_NULLPTR;
 
         delete m_pCameraController;
-        m_pCameraController = nullptr;
+        m_pCameraController = Q_NULLPTR;
 
         delete m_pSceneRenderer;
-        m_pSceneRenderer = nullptr;
+        m_pSceneRenderer = Q_NULLPTR;
 
         delete m_pRenderer;
-        m_pRenderer = nullptr;
+        m_pRenderer = Q_NULLPTR;
 
         delete m_pVmfData;
-        m_pVmfData = nullptr;
+        m_pVmfData = Q_NULLPTR;
 
         ResourceEnvironment::globalShutdown();
 
         delete m_pRenderPassClassifier;
-        m_pRenderPassClassifier = nullptr;
+        m_pRenderPassClassifier = Q_NULLPTR;
     }
 
     void MapViewWindow::initializeGL()
@@ -292,7 +292,7 @@ namespace UserInterface
 
         if ( m_strMapPath.isNull() || m_strMapPath.isEmpty() )
         {
-            QMessageBox::critical(nullptr, "Error", "No VMF file provided.");
+            QMessageBox::critical(Q_NULLPTR, "Error", "No VMF file provided.");
             return;
         }
 

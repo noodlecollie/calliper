@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    ResourceEnvironment* ResourceEnvironment::m_pGlobalInstance = nullptr;
+    ResourceEnvironment* ResourceEnvironment::m_pGlobalInstance = Q_NULLPTR;
 
     void ResourceEnvironment::globalInitialise()
     {
@@ -20,7 +20,7 @@ namespace Model
         Q_ASSERT_X(m_pGlobalInstance, Q_FUNC_INFO, "Global instance not initialised!");
 
         delete m_pGlobalInstance;
-        m_pGlobalInstance = nullptr;
+        m_pGlobalInstance = Q_NULLPTR;
     }
 
     ResourceEnvironment* ResourceEnvironment::globalInstance()
@@ -29,9 +29,9 @@ namespace Model
     }
 
     ResourceEnvironment::ResourceEnvironment()
-        : m_pShaderStore(nullptr),
-          m_pTextureStore(nullptr),
-          m_pMaterialStore(nullptr)
+        : m_pShaderStore(Q_NULLPTR),
+          m_pTextureStore(Q_NULLPTR),
+          m_pMaterialStore(Q_NULLPTR)
     {
         m_pShaderStore = new ShaderStore();
         m_pTextureStore = new TextureStore();

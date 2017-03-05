@@ -42,7 +42,7 @@ namespace AppCalliper
 {
     ProjectMetadataDockWidget::ProjectMetadataDockWidget(QWidget *parent, Qt::WindowFlags flags)
         : VisibleActionDockWidget(tr("Project Metadata"), parent, flags),
-          m_pProjectMetadata(nullptr)
+          m_pProjectMetadata(Q_NULLPTR)
     {
         setupUi();
         updateUiEnabledState();
@@ -84,7 +84,7 @@ namespace AppCalliper
         m_pContentsWidget->setLayout(formLayout);
         setWidget(m_pContentsWidget);
 
-        addLineEditRow(tr("Version:"), new QLabel(), nullptr, "version");
+        addLineEditRow(tr("Version:"), new QLabel(), Q_NULLPTR, "version");
         addLineEditRow(tr("Project Name:"), new QLineEdit(), SIGNAL(editingFinished()), "projectName");
     }
 
@@ -135,7 +135,7 @@ namespace AppCalliper
         }
 
         QMetaProperty property = m_pProjectMetadata->metaObject()->property(propertyIndex);
-        QWidget* widget = m_PropertyNameToWidget.value(property.name(), nullptr);
+        QWidget* widget = m_PropertyNameToWidget.value(property.name(), Q_NULLPTR);
         if ( !widget )
             return;
 
@@ -149,7 +149,7 @@ namespace AppCalliper
             clearUiDelegates();
         }
 
-        m_pContentsWidget->setEnabled(m_pProjectMetadata != nullptr);
+        m_pContentsWidget->setEnabled(m_pProjectMetadata != Q_NULLPTR);
     }
 
     void ProjectMetadataDockWidget::clearUiDelegates()
@@ -173,7 +173,7 @@ namespace AppCalliper
           QMetaProperty metaproperty = metaobject->property(i);
           const char *name = metaproperty.name();
 
-          QWidget* widget = m_PropertyNameToWidget.value(name, nullptr);
+          QWidget* widget = m_PropertyNameToWidget.value(name, Q_NULLPTR);
           if ( !widget )
               continue;
 

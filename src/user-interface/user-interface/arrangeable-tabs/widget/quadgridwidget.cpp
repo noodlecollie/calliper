@@ -4,7 +4,7 @@
 namespace UserInterface
 {
     QuadGridWidget::QuadGridWidget(QWidget *parent) : QWidget(parent),
-        m_pGridManager(nullptr)
+        m_pGridManager(Q_NULLPTR)
     {
         QGridLayout* gridLayout = new QGridLayout();
         gridLayout->setContentsMargins(0,0,0,0);
@@ -18,7 +18,7 @@ namespace UserInterface
     QuadGridWidget::~QuadGridWidget()
     {
         delete m_pGridManager;
-        m_pGridManager = nullptr;
+        m_pGridManager = Q_NULLPTR;
     }
 
     void QuadGridWidget::clear()

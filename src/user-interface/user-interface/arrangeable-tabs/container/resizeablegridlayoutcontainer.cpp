@@ -9,9 +9,9 @@ namespace UserInterface
 {
     ResizeableGridLayoutContainer::ResizeableGridLayoutContainer(QWidget *parent, Qt::WindowFlags f)
         : QFrame(parent, f),
-          m_pGeneralLayout(nullptr),
-          m_pButtonLayout(nullptr),
-          m_pStackedWidget(nullptr)
+          m_pGeneralLayout(Q_NULLPTR),
+          m_pButtonLayout(Q_NULLPTR),
+          m_pStackedWidget(Q_NULLPTR)
     {
         initLayout();
     }
@@ -45,7 +45,7 @@ namespace UserInterface
     QWidget* ResizeableGridLayoutContainer::replaceWidget(int index, QWidget *widget)
     {
         if ( !widget || index < 0 || index >= m_pStackedWidget->count() )
-            return nullptr;
+            return Q_NULLPTR;
 
         m_pButtonLayout->insertWidget(index, createButton(widget, index));
         m_pStackedWidget->insertWidget(index, widget);
@@ -58,14 +58,14 @@ namespace UserInterface
         QWidget* oldWidget = m_pStackedWidget->widget(index+1);
         Q_ASSERT(oldWidget);
         m_pStackedWidget->removeWidget(oldWidget);
-        oldWidget->setParent(nullptr);
+        oldWidget->setParent(Q_NULLPTR);
         return oldWidget;
     }
 
     QWidget* ResizeableGridLayoutContainer::removeWidget(int index)
     {
         if ( index < 0 || index >= m_pStackedWidget->count() )
-            return nullptr;
+            return Q_NULLPTR;
 
         ResizeableGridLayoutContainerButton* oldButton = button(index);
         Q_ASSERT(oldButton);
@@ -75,7 +75,7 @@ namespace UserInterface
         QWidget* oldWidget = m_pStackedWidget->widget(index);
         Q_ASSERT(oldWidget);
         m_pStackedWidget->removeWidget(oldWidget);
-        oldWidget->setParent(nullptr);
+        oldWidget->setParent(Q_NULLPTR);
         return oldWidget;
     }
 
@@ -87,7 +87,7 @@ namespace UserInterface
     QWidget* ResizeableGridLayoutContainer::widgetAt(int index) const
     {
         if ( index < 0 || index >= m_pStackedWidget->count() )
-            return nullptr;
+            return Q_NULLPTR;
 
         return m_pStackedWidget->widget(index);
     }

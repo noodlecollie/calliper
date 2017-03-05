@@ -33,7 +33,7 @@ namespace AppCalliper
 
     void VisibleActionDockWidget::clearVisibilityAction()
     {
-        setVisibilityAction(nullptr);
+        setVisibilityAction(Q_NULLPTR);
     }
 
     void VisibleActionDockWidget::manageConnections(QAction *oldAction, QAction *newAction)

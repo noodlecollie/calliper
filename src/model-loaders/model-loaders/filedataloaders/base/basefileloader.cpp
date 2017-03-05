@@ -4,7 +4,7 @@
 namespace ModelLoaders
 {
     BaseFileLoader::BaseFileLoader()
-        : m_pDataModel(nullptr)
+        : m_pDataModel(Q_NULLPTR)
     {
     }
 
@@ -19,6 +19,6 @@ namespace ModelLoaders
 
     bool BaseFileLoader::isValid() const
     {
-        return m_pDataModel != nullptr;
+        return m_pDataModel != Q_NULLPTR;
     }
 }

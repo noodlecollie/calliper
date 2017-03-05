@@ -52,7 +52,7 @@ namespace Renderer
         void setObjectHidden(quint32 objectId, bool hidden);
 
         MatrixBatch::MatrixBatchItemPointer createOrFetchMatrixBatchItem(const RenderModelKey &key,
-                                                RenderModelPass::RenderModelBatchGroupPointer* batchGroup = nullptr);
+                                                RenderModelPass::RenderModelBatchGroupPointer* batchGroup = Q_NULLPTR);
         void cleanMatrixBatchItem(const RenderModelKey &key);
         bool getModelItems(const RenderModelKey &key,
                            RenderModelPassPointer &pass,

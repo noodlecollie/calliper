@@ -32,7 +32,7 @@ namespace FileFormats
 
         foreach ( const QString& ext, extensions )
         {
-            QSet<VPKFilePointer>* set = m_FilesContainingExtensions.value(ext, nullptr);
+            QSet<VPKFilePointer>* set = m_FilesContainingExtensions.value(ext, Q_NULLPTR);
 
             if ( !set )
             {

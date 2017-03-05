@@ -36,7 +36,7 @@ namespace FileFormats
         class InvalidSyntaxException;
 
         explicit KeyValuesParser(const QByteArray &input);
-        QJsonDocument toJsonDocument(QString* errorString = nullptr);
+        QJsonDocument toJsonDocument(QString* errorString = Q_NULLPTR);
 
     private:
         int nextNonWhitespaceCharacter(int from) const;

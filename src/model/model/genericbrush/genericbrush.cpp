@@ -108,7 +108,7 @@ namespace Model
         if ( index < 0 || index >= m_BrushFaces.count() )
         {
             Q_ASSERT_X(false, Q_FUNC_INFO, "Index out of bounds!");
-            return nullptr;
+            return Q_NULLPTR;
         }
 
         return m_BrushFaces.at(index);

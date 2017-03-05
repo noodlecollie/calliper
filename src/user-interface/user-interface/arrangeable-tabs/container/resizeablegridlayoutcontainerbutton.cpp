@@ -17,7 +17,7 @@ namespace UserInterface
         : QFrame(parent),
           m_pContainer(container),
           m_iItemID(-1),
-          m_pLabel(nullptr),
+          m_pLabel(Q_NULLPTR),
           m_strLabelText(),
           m_bHighlighted(false)
     {
