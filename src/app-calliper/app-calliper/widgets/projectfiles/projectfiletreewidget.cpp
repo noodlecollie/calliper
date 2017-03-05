@@ -76,6 +76,7 @@ namespace AppCalliper
         item->addChild(child);
         m_ItemsByPath.insert(localPath, child);
 
+        // TODO: Fix
         if ( shouldExpandItem )
         {
             expandItem(item);
