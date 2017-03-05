@@ -11,6 +11,10 @@ namespace UserInterface
         Q_OBJECT
     public:
         MapViewport(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+
+    signals:
+
+    public slots:
     };
 }
 

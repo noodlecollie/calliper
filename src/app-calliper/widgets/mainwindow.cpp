@@ -12,9 +12,7 @@
 #include <QtDebug>
 #include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
 #include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"
-
-// Swap me out for something useful
-#include <QGroupBox>
+#include "user-interface/modelviews/modelviewfactory.h"
 
 namespace AppCalliper
 {
@@ -326,6 +324,24 @@ namespace AppCalliper
             default:
                 break;
         }
+
+        QSharedPointer<Model::BaseFileDataModel> dataModel = files.dataModel(fullPath);
+        Q_ASSERT_X(!dataModel.isNull(), Q_FUNC_INFO, "Expected a valid data model!");
+        if ( dataModel.isNull() )
+        {
+            QMessageBox box(QMessageBox::Critical,
+                            tr("Error opening file"),
+                            tr("Data model expected to be valid!"),
+                            QMessageBox::Ok);
+
+            box.exec();
+            return;
+        }
+
+        QWidget* view = UserInterface::ModelViewFactory::createView(dataModel->type());
+        Q_ASSERT(view);
+        view->setWindowTitle(QFileInfo(fullPath).fileName());
+        ui->gridWidget->setSingleWidget(view);
     }
 
     QString MainWindow::getFullPath(const QString &localFilePath) const

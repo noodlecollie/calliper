@@ -24,6 +24,7 @@ SOURCES += \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.cpp \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.cpp \
     user-interface/arrangeable-tabs/widget/quadgridwidget.cpp \
+    user-interface/modelviews/modelviewfactory.cpp \
     user-interface/views/mapviewport.cpp
 
 HEADERS +=\
@@ -39,6 +40,7 @@ HEADERS +=\
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainermenu.h \
     user-interface/arrangeable-tabs/container/resizeablegridlayoutcontainerbutton.h \
     user-interface/arrangeable-tabs/widget/quadgridwidget.h \
+    user-interface/modelviews/modelviewfactory.h \
     user-interface/views/mapviewport.h
 
 unix {
