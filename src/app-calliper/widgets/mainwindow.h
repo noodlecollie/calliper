@@ -53,6 +53,7 @@ namespace AppCalliper
         void setFileMenuItemEnabledStates();
         UserInterface::QuadGridWidget* centralGridWidget() const;
         QString getFullPath(const QString& localFilePath) const;
+        QStringList absoluteFilePathsToLocalFilePaths(const QStringList& filePaths) const;
 
         Ui::MainWindow *ui;
 

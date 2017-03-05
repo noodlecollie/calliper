@@ -193,6 +193,15 @@ namespace AppCalliper
         }
 
         m_pProjectFileDockWidget->setProject(fullPath);
+
+        const QSet<QString>& files = m_pProject->project()->projectFiles();
+        ModelLoaders::FileExtensionDataModelMap extMap;
+
+        foreach ( const QString& path, files )
+        {
+            QString extension = QFileInfo(path).suffix();
+            m_pProjectFileDockWidget->addFile(extMap.modelType(extension), path);
+        }
     }
 
     void MainWindow::setProject(ApplicationProject *newProject)
@@ -317,8 +326,6 @@ namespace AppCalliper
             default:
                 break;
         }
-
-        qDebug() << "File" << fullPath << "loaded successfully.";
     }
 
     QString MainWindow::getFullPath(const QString &localFilePath) const
@@ -328,13 +335,19 @@ namespace AppCalliper
             return QString();
         }
 
-        QDir dir(m_pProject->fullPath());
-        dir.cd(QFileInfo(localFilePath).path());    // In case there's a file name on the end of the path.
-        return dir.canonicalPath();
+        QFileInfo file(localFilePath);
+        QDir dir(QFileInfo(m_pProject->fullPath()).canonicalPath());
+        dir.cd(file.path());    // In case there's a file name on the end of the path.
+        return dir.canonicalPath() + "/" + file.fileName();
     }
 
     void MainWindow::addNewProjectFiles()
     {
+        if ( m_pProject.isNull() )
+        {
+            return;
+        }
+
         QString defaultPath = getFileDialogueDefaultPath();
         ModelLoaders::FileExtensionDataModelMap extMap;
 
@@ -349,6 +362,26 @@ namespace AppCalliper
             return;
         }
 
-        qDebug() << "Files chosen:" << filePathList;
+        QStringList localPaths = absoluteFilePathsToLocalFilePaths(filePathList);
+
+        foreach ( const QString& path, localPaths )
+        {
+            QString extension = QFileInfo(path).suffix();
+            m_pProject->project()->addProjectFile(path);
+            m_pProjectFileDockWidget->addFile(extMap.modelType(extension), path);
+        }
+    }
+
+    QStringList  MainWindow::absoluteFilePathsToLocalFilePaths(const QStringList &filePaths) const
+    {
+        QDir dir(QFileInfo(m_pProject->fullPath()).canonicalPath());
+        QStringList localPaths;
+
+        foreach ( const QString& filePath, filePaths )
+        {
+            localPaths.append(dir.relativeFilePath(filePath));
+        }
+
+        return localPaths;
     }
 }

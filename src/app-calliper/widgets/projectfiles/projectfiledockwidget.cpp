@@ -29,10 +29,29 @@ namespace AppCalliper
     {
         Q_UNUSED(column);
 
+        if ( !item->flags().testFlag(Qt::ItemIsSelectable) )
+        {
+            return;
+        }
+
         QString filePath = item->data(0, ProjectFileTreeWidget::FilePathRole).toString();
 
-        if ( !filePath.isNull() )
-            emit fileDoubleClicked(filePath);
+        if ( filePath.isNull() )
+        {
+            return;
+        }
+
+        emit fileDoubleClicked(filePath);
+    }
+
+    void ProjectFileDockWidget::addFile(Model::BaseFileDataModel::ModelType type, const QString &localPath)
+    {
+        m_pTreeWidget->addFile(type, localPath);
+    }
+
+    void ProjectFileDockWidget::removeFile(const QString &localPath)
+    {
+        m_pTreeWidget->removeFile(localPath);
     }
 
     void ProjectFileDockWidget::clearFiles()

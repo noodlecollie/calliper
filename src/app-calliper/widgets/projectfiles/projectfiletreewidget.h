@@ -4,6 +4,7 @@
 #include "app-calliper_global.h"
 #include <QTreeWidget>
 #include <QHash>
+#include "model/filedatamodels/base/basefiledatamodel.h"
 
 class QTreeWidgetItem;
 
@@ -13,13 +14,6 @@ namespace AppCalliper
     {
         Q_OBJECT
     public:
-        enum FileType
-        {
-            UnknownFile = 0,
-
-            MapFile,
-        };
-
         enum ItemUserRole
         {
             FilePathRole = Qt::UserRole,
@@ -32,7 +26,7 @@ namespace AppCalliper
         void setProject(const QString& projectFilePath);
         bool hasProject() const;
 
-        void addFile(FileType type, const QString& localPath);
+        void addFile(Model::BaseFileDataModel::ModelType type, const QString& localPath);
         void removeFile(const QString& localPath);
         void clearFiles();
 
@@ -47,7 +41,7 @@ namespace AppCalliper
         void contextMenuEvent(QContextMenuEvent *event);
 
     private:
-        QTreeWidgetItem* createFileTypeItem(FileType type);
+        QTreeWidgetItem* createFileTypeItem(Model::BaseFileDataModel::ModelType type);
         void createBlankProjectItem();
         void createMenuAction(QMenu& menu, const QString& text, const char* sigOrSlot);
 
@@ -55,7 +49,7 @@ namespace AppCalliper
         bool m_bHasProject;
 
         QHash<QString, QTreeWidgetItem*> m_ItemsByPath;
-        QHash<FileType, QTreeWidgetItem*> m_ItemsByType;
+        QHash<Model::BaseFileDataModel::ModelType, QTreeWidgetItem*> m_ItemsByType;
     };
 }
 

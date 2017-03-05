@@ -2,15 +2,23 @@
 #include <QFileIconProvider>
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QtDebug>
+#include <QCoreApplication>
 
 namespace
 {
-    const char* fileTypeLabels[] =
+    QString translatedTypeLabel(Model::BaseFileDataModel::ModelType type)
     {
-        "Other",
+        static QHash<Model::BaseFileDataModel::ModelType, QString> names;
 
-        "Maps",
-    };
+        if ( names.isEmpty() )
+        {
+            names.insert(Model::BaseFileDataModel::MapModel, "Maps");
+        }
+
+        return QCoreApplication::translate(AppCalliper::ProjectFileTreeWidget::staticMetaObject.className(),
+                                           qPrintable(names.value(type, "Other")));
+    }
 }
 
 namespace AppCalliper
@@ -44,7 +52,7 @@ namespace AppCalliper
         return m_bHasProject;
     }
 
-    void ProjectFileTreeWidget::addFile(FileType type, const QString &localPath)
+    void ProjectFileTreeWidget::addFile(Model::BaseFileDataModel::ModelType type, const QString &localPath)
     {
         if ( m_ItemsByPath.contains(localPath) )
         {
@@ -63,9 +71,11 @@ namespace AppCalliper
         child->setData(0, Qt::DecorationRole, icons.icon(QFileIconProvider::File));
         child->setData(0, FilePathRole, localPath);
         child->setText(0, QFileInfo(localPath).fileName());
+        qDebug() << "Local path:" << localPath;
 
         item->addChild(child);
         m_ItemsByPath.insert(localPath, child);
+        expandItem(child);
 
         emit fileAdded(localPath);
     }
@@ -86,7 +96,7 @@ namespace AppCalliper
 
         if ( parent->childCount() < 1 )
         {
-            FileType type = static_cast<FileType>(parent->data(0, FileTypeRole).toInt());
+            Model::BaseFileDataModel::ModelType type = static_cast<Model::BaseFileDataModel::ModelType>(parent->data(0, FileTypeRole).toInt());
             parent->parent()->removeChild(parent);
             delete parent;
             m_ItemsByType.remove(type);
@@ -104,11 +114,11 @@ namespace AppCalliper
         emit filesCleared();
     }
 
-    QTreeWidgetItem* ProjectFileTreeWidget::createFileTypeItem(FileType type)
+    QTreeWidgetItem* ProjectFileTreeWidget::createFileTypeItem(Model::BaseFileDataModel::ModelType type)
     {
         QTreeWidgetItem* item = new QTreeWidgetItem();
 
-        item->setText(0, tr(fileTypeLabels[type]));
+        item->setText(0, translatedTypeLabel(type));
         item->setData(0, FileTypeRole, type);
         m_ItemsByType.insert(type, item);
 
@@ -136,6 +146,7 @@ namespace AppCalliper
     {
         delete m_pProjectItem;
         m_pProjectItem = new QTreeWidgetItem();
+        m_pProjectItem->setFlags(m_pProjectItem->flags() & ~Qt::ItemIsSelectable);
         invisibleRootItem()->addChild(m_pProjectItem);
 
         m_bHasProject = false;

@@ -67,6 +67,11 @@ namespace ModelLoaders
         return m_FileInfo[loaderType].m_iModelType;
     }
 
+    Model::BaseFileDataModel::ModelType FileExtensionDataModelMap::modelType(const QString &extension) const
+    {
+        return modelType(loaderTypeForExtension(extension));
+    }
+
     QString FileExtensionDataModelMap::fileDialogTypeString(BaseFileLoader::LoaderType loaderType) const
     {
         if ( !isLoaderTypeSupported(loaderType) )

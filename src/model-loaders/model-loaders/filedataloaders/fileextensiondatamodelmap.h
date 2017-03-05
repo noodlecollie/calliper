@@ -23,6 +23,7 @@ namespace ModelLoaders
         QString description(BaseFileLoader::LoaderType loaderType) const;
         QStringList extensions(BaseFileLoader::LoaderType loaderType) const;
         Model::BaseFileDataModel::ModelType modelType(BaseFileLoader::LoaderType loaderType) const;
+        Model::BaseFileDataModel::ModelType modelType(const QString& extension) const;
 
         // Description strings returned are translated.
         QString fileDialogTypeString(BaseFileLoader::LoaderType loaderType) const;

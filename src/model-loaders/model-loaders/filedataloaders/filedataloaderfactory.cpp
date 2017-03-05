@@ -12,6 +12,7 @@ namespace ModelLoaders
             case BaseFileLoader::VmfLoader:
             {
                 loader = new VmfDataLoader();
+                break;
             }
 
             default:
