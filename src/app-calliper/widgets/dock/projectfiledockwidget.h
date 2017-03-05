@@ -2,7 +2,7 @@
 #define PROJECTFILEDOCKWIDGET_H
 
 #include "app-calliper_global.h"
-#include "widgets/visibleactiondockwidget.h"
+#include "widgets/dock/visibleactiondockwidget.h"
 #include "projectfiletreewidget.h"
 
 namespace AppCalliper

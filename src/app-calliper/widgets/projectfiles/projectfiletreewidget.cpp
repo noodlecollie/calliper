@@ -128,6 +128,13 @@ namespace AppCalliper
 
     void ProjectFileTreeWidget::contextMenuEvent(QContextMenuEvent *event)
     {
+        QTreeWidgetItem* item = itemAt(event->pos());
+        if ( item )
+        {
+            // Handle custom menus for items here at some point.
+            return;
+        }
+
         QMenu menu;
 
         createMenuAction(menu, tr("&Add new file..."), SIGNAL(addNewFileRequested()));

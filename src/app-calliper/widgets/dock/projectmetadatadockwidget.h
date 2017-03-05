@@ -2,7 +2,7 @@
 #define PROJECTMETADATADOCKWIDGET_H
 
 #include "app-calliper_global.h"
-#include "visibleactiondockwidget.h"
+#include "widgets/dock/visibleactiondockwidget.h"
 #include "model/projects/calliperprojectmetadata.h"
 #include <QPointer>
 

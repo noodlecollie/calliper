@@ -8,7 +8,7 @@
 #include "model-loaders/projects/calliperprojectloader.h"
 #include "model-loaders/json/jsonloaderutils.h"
 #include <QMessageBox>
-#include "projectmetadatadockwidget.h"
+#include "widgets/projectmetadata/projectmetadatadockwidget.h"
 #include <QtDebug>
 #include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
 #include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"

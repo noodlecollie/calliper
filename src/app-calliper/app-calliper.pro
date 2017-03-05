@@ -13,21 +13,21 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widgets/mainwindow.cpp \
-    widgets/projectfiles/projectfiledockwidget.cpp \
-    widgets/visibleactiondockwidget.cpp \
+        widgets/mainwindow/mainwindow.cpp \
+    widgets/dock/projectfiledockwidget.cpp \
+    widgets/dock/visibleactiondockwidget.cpp \
     model/applicationproject.cpp \
-    widgets/projectmetadatadockwidget.cpp \
+    widgets/dock/projectmetadatadockwidget.cpp \
     app-calliper_global.cpp \
     application/applicationtasks.cpp \
     widgets/projectfiles/projectfiletreewidget.cpp
 
-HEADERS  += widgets/mainwindow.h \
-    widgets/projectfiles/projectfiledockwidget.h \
-    widgets/visibleactiondockwidget.h \
+HEADERS  += widgets/mainwindow/mainwindow.h \
+    widgets/dock/projectfiledockwidget.h \
+    widgets/dock/visibleactiondockwidget.h \
     model/applicationproject.h \
     app-calliper_global.h \
-    widgets/projectmetadatadockwidget.h \
+    widgets/dock/projectmetadatadockwidget.h \
     application/applicationtasks.h \
     widgets/projectfiles/projectfiletreewidget.h
 

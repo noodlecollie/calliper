@@ -40,12 +40,12 @@ namespace AppCalliper
     {
         if ( oldAction )
         {
-            disconnect(newAction, SIGNAL(triggered(bool)), this, SLOT(actionCheckedStateChanged(bool)));
+            disconnect(oldAction, &QAction::triggered, this, &VisibleActionDockWidget::actionCheckedStateChanged);
         }
 
         if ( newAction )
         {
-            connect(newAction, SIGNAL(triggered(bool)), this, SLOT(actionCheckedStateChanged(bool)));
+            connect(newAction, &QAction::triggered, this, &VisibleActionDockWidget::actionCheckedStateChanged);
         }
     }
 
