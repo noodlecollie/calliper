@@ -29,7 +29,7 @@ namespace AppCalliper
     {
         Q_UNUSED(column);
 
-        if ( !item->flags().testFlag(Qt::ItemIsSelectable) )
+        if ( item->data(0, ProjectFileTreeWidget::ItemFlagsRole) == ProjectFileTreeWidget::ProjectItemFlag )
         {
             return;
         }

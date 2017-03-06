@@ -18,7 +18,17 @@ namespace AppCalliper
         {
             FilePathRole = Qt::UserRole,
             FileTypeRole,
+            ItemFlagsRole,
         };
+
+        enum ItemFlag
+        {
+            NoItemFlag = 0,
+
+            ProjectItemFlag = 0x1,
+        };
+        Q_DECLARE_FLAGS(ItemFlags, ItemFlag)
+        Q_FLAG(ItemFlags)
 
         explicit ProjectFileTreeWidget(QWidget *parent = 0);
 
@@ -53,6 +63,8 @@ namespace AppCalliper
         QHash<QString, QTreeWidgetItem*> m_ItemsByPath;
         QHash<Model::BaseFileDataModel::ModelType, QTreeWidgetItem*> m_ItemsByType;
     };
+
+    Q_DECLARE_OPERATORS_FOR_FLAGS(ProjectFileTreeWidget::ItemFlags)
 }
 
 #endif // PROJECTFILETREEWIDGET_H

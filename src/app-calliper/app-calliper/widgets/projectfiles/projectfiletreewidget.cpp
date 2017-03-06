@@ -169,7 +169,7 @@ namespace AppCalliper
         QTreeWidgetItem* oldItem = m_pProjectItem;
 
         m_pProjectItem = new QTreeWidgetItem();
-        m_pProjectItem->setFlags(m_pProjectItem->flags() & ~Qt::ItemIsSelectable);
+        m_pProjectItem->setData(0, ItemFlagsRole, QVariant::fromValue<ItemFlags>(ProjectItemFlag));
         invisibleRootItem()->addChild(m_pProjectItem);
 
         if ( oldItem )
