@@ -95,4 +95,10 @@ namespace Model
         Q_ASSERT_X(object->objectId() > 0, Q_FUNC_INFO, "Object cannot have an ID of zero!");
         m_ObjectTable.remove(object->objectId());
     }
+
+    int Scene::classify(quint32 objectId) const
+    {
+        Q_UNUSED(objectId);
+        return 0;
+    }
 }

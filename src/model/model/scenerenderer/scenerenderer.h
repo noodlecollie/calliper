@@ -17,6 +17,7 @@ namespace Model
     class MODELSHARED_EXPORT SceneRenderer
     {
     public:
+        // TODO: Make so that things can be set outside of constructor, and handle when they're null.
         SceneRenderer(IRenderPassClassifier* renderPassClassifier,
                       Renderer::RenderModel* renderer,
                       Scene* scene);

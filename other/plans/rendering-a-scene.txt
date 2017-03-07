@@ -1,0 +1,54 @@
+Scene:
+- A textured brush
+- A UI element
+
+Render mode is lit textured.
+
+1. When the application is started, several things happen:
+	- The textured lit shader is added to the shader store.
+	- The per vertex colour unlit shader is added to the shader store.
+	- Both these shaders are added to a "lit textured" shader palette, which is added to the shader palette store.
+	- Appropriate game textures are loaded and added to the texture store.
+	- Appropriate game materials are loaded and are added to the material store.
+2. The brush is loaded in from a file. The faces reference materials that (we assume for this example) exist in the material store.
+3. The UI element is loaded from some model file and is placed in the scene. It has per-vertex colours specified.
+4. Before the frame is rendered, the render mode is set to "lit textured". This corresponds to the "lit textured" shader palette.
+   The scene renderer has its current shader palette set to the "lit textured" palette.
+5. Before the frame is rendered, the scene renderer iterates over all the objects and updates their geometry in the renderer if required.
+	* What are the pros and cons of this when compared to the object updating the renderer before the frame, whenever its geometry changes?
+6. When the frame is rendered, the scene renderer calls draw() on the renderer. The renderer iterates over each batch in its own
+   internally-managed order and draws each object. The brush is drawn in the first pass, then the Z buffer is cleared, and the UI element
+   is drawn in the second pass.
+	- This involves binding the appropriate shaders and textures when required.
+
+Components that are involved (- = currently happens, * = needs to happen)
+
+Shader:
+- Stored in model, known at compile time.
+- Specifies how to draw triangles, given certain information like positions, colours, normals, texture co-ords, uniforms, etc.
+
+Texture:
+- Stored in model, discovered at runtime.
+- In its simplest sense, specifies an image to be mapped onto primitives.
+
+Shader palette:
+- Stored in model, known at compile time. Essentially correspond to modes of rendering, eg. lit textured, unlit textured, wireframe, etc.
+	Correspond to enum entries, so pallets are known to the application.
+	A palette is chosen by the application (or the user) to render a frame in a certain style.
+- Maps known shader purposes (eg. lit surfaces, unlit per-vertex lines, etc) to shaders.
+
+Material:
+- Stored in model, discovered at runtime.
+- Maps texture units (eg. main texture, secondary blend texture, normal map, etc.) to IDs of actual texture images.
+* Specifies the shader purpose to be used for drawing primitives that use the material.
+
+Render pass classifier:
+- Belongs to scene (in fact, scene inherits from interface).
+- Maps an object ID to a render pass ID. Higher render passes are drawn after lower render passes. The depth
+	buffer is not maintained between passes, but view matrices are.
+
+To do:
+- Move shader palette to renderer
+- Add shader purpose reference to material
+- Change renderer (or submission to renderer) so that shader is replaced with shader purpose.
+- Allow shader palette to be set on renderer - this will map between purposes and shaders

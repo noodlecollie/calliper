@@ -6,6 +6,7 @@
 #include "model/stores/texturestore.h"
 #include "model/stores/materialstore.h"
 #include "model/shaders/shaderpalette.h"
+#include "model/stores/shaderpalettestore.h"
 
 namespace Model
 {
@@ -24,8 +25,8 @@ namespace Model
         MaterialStore* materialStore();
         const MaterialStore* materialStore() const;
 
-        ShaderPalette failsafeShaderPalette() const;
-        void setFailsafeShaderPalette(const ShaderPalette& palette);
+        ShaderPaletteStore* shaderPaletteStore();
+        const ShaderPaletteStore* shaderPaletteStore() const;
 
         static void globalInitialise();
         static void globalShutdown();
@@ -39,8 +40,7 @@ namespace Model
         ShaderStore* m_pShaderStore;
         TextureStore* m_pTextureStore;
         MaterialStore* m_pMaterialStore;
-
-        ShaderPalette m_FailsafePalette;
+        ShaderPaletteStore* m_pShaderPaletteStore;
     };
 }
 

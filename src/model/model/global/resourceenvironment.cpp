@@ -34,6 +34,7 @@ namespace Model
           m_pMaterialStore(Q_NULLPTR)
     {
         m_pShaderStore = new ShaderStore();
+        m_pShaderPaletteStore = new ShaderPaletteStore();
         m_pTextureStore = new TextureStore();
         m_pMaterialStore = new MaterialStore();
     }
@@ -42,6 +43,7 @@ namespace Model
     {
         delete m_pMaterialStore;
         delete m_pTextureStore;
+        delete m_pShaderPaletteStore;
         delete m_pShaderStore;
     }
 
@@ -75,13 +77,13 @@ namespace Model
         return m_pMaterialStore;
     }
 
-    ShaderPalette ResourceEnvironment::failsafeShaderPalette() const
+    ShaderPaletteStore* ResourceEnvironment::shaderPaletteStore()
     {
-        return m_FailsafePalette;
+        return m_pShaderPaletteStore;
     }
 
-    void ResourceEnvironment::setFailsafeShaderPalette(const ShaderPalette &palette)
+    const ShaderPaletteStore* ResourceEnvironment::shaderPaletteStore() const
     {
-        m_FailsafePalette = palette;
+        return m_pShaderPaletteStore;
     }
 }

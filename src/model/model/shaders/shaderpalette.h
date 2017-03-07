@@ -11,7 +11,7 @@ namespace Model
     public:
         enum PaletteItem
         {
-            DefaultShader = 0,
+            LitTextured = 0,
             UnlitPerVertexColor,
         };
 

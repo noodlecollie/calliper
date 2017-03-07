@@ -45,7 +45,7 @@ namespace Model
         {
             GeometryBuilder builder(resourceEnv->shaderStore(),
                                     resourceEnv->textureStore(),
-                                    m_ShaderPalette.shader(ShaderPalette::DefaultShader),
+                                    m_ShaderPalette.shader(ShaderPalette::LitTextured),   // TODO: Get this from material instead
                                     0,
                                     m_matRecursiveUpdateMatrix);
             object->rendererUpdate(m_ShaderPalette, builder);

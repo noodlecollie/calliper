@@ -8,10 +8,12 @@
 #include "model/stores/texturestore.h"
 #include "model/stores/shaderstore.h"
 #include "model/stores/materialstore.h"
+#include "model/scenerenderer/irenderpassclassifier.h"
 
 namespace Model
 {
-    class MODELSHARED_EXPORT Scene : public QObject
+    class MODELSHARED_EXPORT Scene : public QObject,
+                                     public IRenderPassClassifier
     {
         Q_OBJECT
     public:
@@ -39,6 +41,8 @@ namespace Model
         void clear();
 
         SceneObject* rootObject() const;
+
+        virtual int classify(quint32 objectId) const override;
 
     signals:
         void objectCreated(SceneObject*);

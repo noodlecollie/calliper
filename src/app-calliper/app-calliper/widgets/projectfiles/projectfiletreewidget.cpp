@@ -157,7 +157,7 @@ namespace AppCalliper
         menu.exec(event->globalPos());
     }
 
-    // TODO: Allow passing lambdas. Can't see how Qt does this ATM as I'm not on the internet.
+    // TODO: Allow passing function pointers.
     void ProjectFileTreeWidget::createMenuAction(QMenu &menu, const QString &text, const char *sigOrSlot)
     {
         QAction* action = menu.addAction(text, this, sigOrSlot);
