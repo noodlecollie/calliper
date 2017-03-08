@@ -44,10 +44,8 @@ SOURCES += \
     model/sceneobjects/debugtriangle.cpp \
     model/sceneobjects/originmarker.cpp \
     model/scenerenderer/scenerenderer.cpp \
-    model/shaders/errorshader.cpp \
     model/shaders/simplelitshader.cpp \
     model/shaders/unlitpervertexcolorshader.cpp \
-    model/shaders/unlitshader.cpp \
     model/stores/materialstore.cpp \
     model/stores/shaderstore.cpp \
     model/stores/texturestore.cpp \
@@ -94,10 +92,8 @@ HEADERS += \
     model/sceneobjects/originmarker.h \
     model/scenerenderer/irenderpassclassifier.h \
     model/scenerenderer/scenerenderer.h \
-    model/shaders/errorshader.h \
     model/shaders/simplelitshader.h \
     model/shaders/unlitpervertexcolorshader.h \
-    model/shaders/unlitshader.h \
     model/stores/materialstore.h \
     model/stores/shaderstore.h \
     model/stores/texturestore.h \
