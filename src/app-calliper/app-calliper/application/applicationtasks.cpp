@@ -10,15 +10,11 @@ namespace
     void loadFailsafeShaders()
     {
         Model::ResourceEnvironment* resourceEnv = Model::ResourceEnvironment::globalInstance();
-        Model::ShaderStore* shaderStore = resourceEnv->shaderStore();
         Model::ShaderPaletteStore* shaderPaletteStore = resourceEnv->shaderPaletteStore();
 
-        quint16 litShader = shaderStore->addShaderProgram<Model::SimpleLitShader>();
-        quint16 unlitShader = shaderStore->addShaderProgram<Model::UnlitPerVertexColorShader>();
-
-        Model::ShaderPalette palette;
-        palette.addItem(Model::ShaderPalette::DefaultShader, litShader);
-        palette.addItem(Model::ShaderPalette::UnlitPerVertexColor, unlitShader);
+        Renderer::ShaderPalette palette;
+        palette.addItem(Renderer::ShaderPalette::LitTextured, Model::KnownShaderDefs::SimpleLitShaderId);
+        palette.addItem(Renderer::ShaderPalette::UnlitPerVertexColor, Model::KnownShaderDefs::UnlitPerVertexColourShaderId);
 
         shaderPaletteStore->setDefaultShaderPalette(palette);
     }

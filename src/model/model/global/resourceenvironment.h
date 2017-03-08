@@ -5,7 +5,7 @@
 #include "model/stores/shaderstore.h"
 #include "model/stores/texturestore.h"
 #include "model/stores/materialstore.h"
-#include "model/shaders/shaderpalette.h"
+#include "renderer/shaders/shaderpalette.h"
 #include "model/stores/shaderpalettestore.h"
 
 namespace Model

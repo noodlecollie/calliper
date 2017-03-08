@@ -25,7 +25,7 @@ namespace Model
         updateScalableState(scalable());
     }
 
-    void OriginMarker::bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
+    void OriginMarker::bakeGeometry(const Renderer::ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
     {
         using namespace Renderer;
 

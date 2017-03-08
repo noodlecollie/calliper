@@ -1,18 +1,18 @@
 #include "shaderpalette.h"
 
-namespace Model
+namespace Renderer
 {
     ShaderPalette::ShaderPalette()
     {
 
     }
 
-    void ShaderPalette::addItem(PaletteItem item, quint16 shader)
+    void ShaderPalette::addItem(ShaderTechnique item, quint16 shader)
     {
         m_ItemTable.insert(item, shader);
     }
 
-    quint16 ShaderPalette::shader(PaletteItem item) const
+    quint16 ShaderPalette::shader(ShaderTechnique item) const
     {
         return m_ItemTable.value(item, 0);
     }

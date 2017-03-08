@@ -3,6 +3,7 @@
 
 #include "model_global.h"
 #include "renderer/opengl/openglshaderprogram.h"
+#include "knownshaderdefs.h"
 
 namespace Model
 {
@@ -10,8 +11,10 @@ namespace Model
     {
         Q_OBJECT
     public:
-        SimpleLitShader(quint16 id, QObject* parent = 0);
+        SimpleLitShader(QObject* parent = 0);
         virtual ~SimpleLitShader();
+
+        KnownShaderDefs::KnownShaderId knownShaderId() const;
 
         virtual void construct() override;
         virtual bool hasLocalUniformBlockBinding() const override;

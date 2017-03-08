@@ -12,6 +12,7 @@
 #include <QMap>
 #include "file-formats/vpk/vpkindextreerecord.h"
 #include "model-loaders/vtf/vtfloader.h"
+#include "model/shaders/knownshaderdefs.h"
 
 class SimpleRenderClassifier : public Model::IRenderPassClassifier
 {
@@ -36,10 +37,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::initShaders()
 {
-    Model::ShaderPalette& palette = shaderPalette();
-    Model::ShaderStore* shaderStore = Model::ResourceEnvironment::globalInstance()->shaderStore();
-    palette.addItem(Model::ShaderPalette::DefaultShader, shaderStore->addShaderProgram<Model::SimpleLitShader>());
-    palette.addItem(Model::ShaderPalette::UnlitPerVertexColor, shaderStore->addShaderProgram<Model::UnlitPerVertexColorShader>());
+    Renderer::ShaderPalette& palette = shaderPalette();
+    palette.addItem(Renderer::ShaderPalette::LitTextured, Model::KnownShaderDefs::SimpleLitShaderId);
+    palette.addItem(Renderer::ShaderPalette::UnlitPerVertexColor, Model::KnownShaderDefs::UnlitPerVertexColourShaderId);
 }
 
 void MainWindow::initTextures()

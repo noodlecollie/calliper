@@ -250,12 +250,12 @@ namespace UserInterface
         m_strMapPath = path;
     }
 
-    Model::ShaderPalette& MapViewWindow::shaderPalette()
+    Renderer::ShaderPalette& MapViewWindow::shaderPalette()
     {
         return m_ShaderPalette;
     }
 
-    const Model::ShaderPalette& MapViewWindow::shaderPalette() const
+    const Renderer::ShaderPalette& MapViewWindow::shaderPalette() const
     {
         return m_ShaderPalette;
     }

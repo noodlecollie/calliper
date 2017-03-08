@@ -33,8 +33,8 @@ namespace UserInterface
         Model::MapFileDataModel* mapDataModel();
         const Model::MapFileDataModel* mapDataModel() const;
 
-        Model::ShaderPalette& shaderPalette();
-        const Model::ShaderPalette& shaderPalette() const;
+        Renderer::ShaderPalette& shaderPalette();
+        const Renderer::ShaderPalette& shaderPalette() const;
 
         Model::IRenderPassClassifier* renderPassClassifier();
         const Model::IRenderPassClassifier* renderPassClassifier() const;
@@ -74,7 +74,7 @@ namespace UserInterface
         Renderer::RenderModel* m_pRenderer;
         Model::IRenderPassClassifier* m_pRenderPassClassifier;
         Model::SceneRenderer* m_pSceneRenderer;
-        Model::ShaderPalette m_ShaderPalette;
+        Renderer::ShaderPalette m_ShaderPalette;
 
         Model::CameraController* m_pCameraController;
         Model::KeyMap* m_pKeyMap;

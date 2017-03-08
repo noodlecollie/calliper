@@ -40,7 +40,7 @@ namespace Model
         GenericBrush(const GenericBrush* cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~GenericBrush();
 
-        virtual void bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(const Renderer::ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
 
     private slots:
         void brushFaceUpdated();

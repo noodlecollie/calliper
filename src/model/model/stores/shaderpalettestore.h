@@ -2,7 +2,7 @@
 #define SHADERPALETTESTORE_H
 
 #include "model_global.h"
-#include "model/shaders/shaderpalette.h"
+#include "renderer/shaders/shaderpalette.h"
 
 namespace Model
 {
@@ -16,15 +16,15 @@ namespace Model
 
         ShaderPaletteStore();
 
-        ShaderPalette shaderPalette(RenderMode renderMode) const;
-        void addShaderPalette(RenderMode renderMode, const ShaderPalette& palette);
+        Renderer::ShaderPalette shaderPalette(RenderMode renderMode) const;
+        void addShaderPalette(RenderMode renderMode, const Renderer::ShaderPalette& palette);
 
-        ShaderPalette defaultShaderPalette() const;
-        void setDefaultShaderPalette(const ShaderPalette& palette);
+        Renderer::ShaderPalette defaultShaderPalette() const;
+        void setDefaultShaderPalette(const Renderer::ShaderPalette& palette);
 
     private:
-        QHash<RenderMode, ShaderPalette> m_Palettes;
-        ShaderPalette m_DefaultPalette;
+        QHash<RenderMode, Renderer::ShaderPalette> m_Palettes;
+        Renderer::ShaderPalette m_DefaultPalette;
     };
 }
 

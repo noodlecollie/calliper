@@ -80,12 +80,12 @@ namespace Model
         m_pRenderer->draw(params);
     }
 
-    ShaderPalette SceneRenderer::shaderPalette() const
+    Renderer::ShaderPalette SceneRenderer::shaderPalette() const
     {
         return m_ShaderPalette;
     }
 
-    void SceneRenderer::setShaderPalette(const ShaderPalette &palette)
+    void SceneRenderer::setShaderPalette(const Renderer::ShaderPalette &palette)
     {
         m_ShaderPalette = palette;
     }

@@ -7,7 +7,7 @@
 #include "model/events/spatialconfigurationchange.h"
 #include "renderer/geometry/geometrybuilder.h"
 #include "sceneobjectinitparams.h"
-#include "model/shaders/shaderpalette.h"
+#include "renderer/shaders/shaderpalette.h"
 #include <QColor>
 
 namespace Model
@@ -35,7 +35,7 @@ namespace Model
         virtual bool scalable() const;
 
         bool needsRendererUpdate() const;
-        void rendererUpdate(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
+        void rendererUpdate(const Renderer::ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
 
         // Not cached, so could be expensive if called a lot.
         QMatrix4x4 rootToLocalMatrix() const;
@@ -67,7 +67,7 @@ namespace Model
         virtual ~SceneObject();
 
         virtual void customEvent(QEvent *event);
-        virtual void bakeGeometry(const ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(const Renderer::ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const;
 
         // Called by subclasses to convert hierarchy state to non-scalable.
         void updateScalableState(bool isScalable);

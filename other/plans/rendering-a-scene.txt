@@ -35,12 +35,12 @@ Shader palette:
 - Stored in model, known at compile time. Essentially correspond to modes of rendering, eg. lit textured, unlit textured, wireframe, etc.
 	Correspond to enum entries, so pallets are known to the application.
 	A palette is chosen by the application (or the user) to render a frame in a certain style.
-- Maps known shader purposes (eg. lit surfaces, unlit per-vertex lines, etc) to shaders.
+- Maps known shader techniques (eg. lit surfaces, unlit per-vertex lines, etc) to shaders.
 
 Material:
 - Stored in model, discovered at runtime.
 - Maps texture units (eg. main texture, secondary blend texture, normal map, etc.) to IDs of actual texture images.
-* Specifies the shader purpose to be used for drawing primitives that use the material.
+* Specifies the shader technique to be used for drawing primitives that use the material.
 
 Render pass classifier:
 - Belongs to scene (in fact, scene inherits from interface).
@@ -48,7 +48,10 @@ Render pass classifier:
 	buffer is not maintained between passes, but view matrices are.
 
 To do:
-- Move shader palette to renderer
-- Add shader purpose reference to material
-- Change renderer (or submission to renderer) so that shader is replaced with shader purpose.
-- Allow shader palette to be set on renderer - this will map between purposes and shaders
+- Move shader palette to renderer - done.
+- Hard-code populate the shader store - done.
+- Hard-code populate the shader palette store.
+- Hard-code shader palettes - subclass rather than add as a list.
+- Add shader technique reference to material
+- Change submission to renderer (GeometryBuilder) so that shader is replaced with shader technique.
+- Allow shader palette to be set on renderer, instead of shader. Batch things by shader palette.

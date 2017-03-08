@@ -2,8 +2,10 @@
 #include "calliperutil/qobject/qobjectutil.h"
 namespace Model
 {
-    SimpleLitShader::SimpleLitShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, CalliperUtil::QObjectUtil::nonNamespacedClassName<SimpleLitShader>(), parent)
+    SimpleLitShader::SimpleLitShader(QObject* parent)
+        : Renderer::OpenGLShaderProgram(KnownShaderDefs::SimpleLitShaderId,
+                                        CalliperUtil::QObjectUtil::nonNamespacedClassName<SimpleLitShader>(),
+                                        parent)
     {
 
     }
@@ -11,6 +13,11 @@ namespace Model
     SimpleLitShader::~SimpleLitShader()
     {
 
+    }
+
+    KnownShaderDefs::KnownShaderId SimpleLitShader::knownShaderId() const
+    {
+        return static_cast<KnownShaderDefs::KnownShaderId>(shaderStoreId());
     }
 
     void SimpleLitShader::construct()

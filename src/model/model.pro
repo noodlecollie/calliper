@@ -45,7 +45,6 @@ SOURCES += \
     model/sceneobjects/originmarker.cpp \
     model/scenerenderer/scenerenderer.cpp \
     model/shaders/errorshader.cpp \
-    model/shaders/shaderpalette.cpp \
     model/shaders/simplelitshader.cpp \
     model/shaders/unlitpervertexcolorshader.cpp \
     model/shaders/unlitshader.cpp \
@@ -96,7 +95,6 @@ HEADERS += \
     model/scenerenderer/irenderpassclassifier.h \
     model/scenerenderer/scenerenderer.h \
     model/shaders/errorshader.h \
-    model/shaders/shaderpalette.h \
     model/shaders/simplelitshader.h \
     model/shaders/unlitpervertexcolorshader.h \
     model/shaders/unlitshader.h \
@@ -109,7 +107,8 @@ HEADERS += \
     model/filedatamodels/base/basefiledatamodel.h \
     model/filedatamodels/map/mapfiledatamodel.h \
     model/filedatamodels/filedatamodelfactory.h \
-    model/stores/shaderpalettestore.h
+    model/stores/shaderpalettestore.h \
+    model/shaders/knownshaderdefs.h
 
 unix {
     target.path = /usr/lib

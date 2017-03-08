@@ -1,56 +1,43 @@
 #include "shaderstore.h"
+#include "model/shaders/simplelitshader.h"
+#include "model/shaders/unlitpervertexcolorshader.h"
 
 namespace Model
 {
     ShaderStore::ShaderStore()
-        : m_iNextShaderId(1)
     {
+        memset(m_Shaders, 0, KnownShaderDefs::TOTAL_SHADERS * sizeof(Renderer::OpenGLShaderProgram*));
 
+        addShaderProgram(new SimpleLitShader());
+        addShaderProgram(new UnlitPerVertexColorShader());
     }
 
     ShaderStore::~ShaderStore()
     {
-        using namespace Renderer;
-
-        foreach ( OpenGLShaderProgram* shaderProgram, m_ShaderTable.values() )
+        for ( int i = 0; i < KnownShaderDefs::TOTAL_SHADERS; ++i )
         {
-            delete shaderProgram;
+            delete m_Shaders[i];
         }
-
-        m_ShaderTable.clear();
     }
 
-    quint16 ShaderStore::acquireNextShaderId()
+    Renderer::OpenGLShaderProgram* ShaderStore::shaderProgram(KnownShaderDefs::KnownShaderId shaderId) const
     {
-        Q_ASSERT_X(m_iNextShaderId + 1 != 0, Q_FUNC_INFO, "Shader ID counter overflow!");
-        return m_iNextShaderId++;
-    }
-
-    Renderer::OpenGLShaderProgram* ShaderStore::getShaderProgram(quint16 shaderId) const
-    {
-        return m_ShaderTable.value(shaderId, Q_NULLPTR);
+        return m_Shaders[shaderId];
     }
 
     Renderer::OpenGLShaderProgram* ShaderStore::operator ()(quint16 shaderId) const
     {
-        return getShaderProgram(shaderId);
-    }
-
-    quint16 ShaderStore::getShaderId(const QString shaderName) const
-    {
-        using namespace Renderer;
-
-        foreach ( OpenGLShaderProgram* shaderProgram, m_ShaderTable.values() )
+        if ( shaderId == KnownShaderDefs::UnknownShaderId || shaderId >= KnownShaderDefs::TOTAL_SHADERS )
         {
-            if ( shaderProgram->objectName() == shaderName )
-                return shaderProgram->shaderStoreId();
+            return Q_NULLPTR;
         }
 
-        return 0;
+        return shaderProgram(static_cast<KnownShaderDefs::KnownShaderId>(shaderId));
     }
 
-    Renderer::OpenGLShaderProgram* ShaderStore::getShaderProgram(const QString &shaderName) const
+    void ShaderStore::addShaderProgram(Renderer::OpenGLShaderProgram *program)
     {
-        return getShaderProgram(getShaderId(shaderName));
+        program->construct();
+        m_Shaders[program->shaderStoreId()] = program;
     }
 }

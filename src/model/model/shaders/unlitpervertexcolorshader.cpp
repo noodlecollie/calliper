@@ -3,15 +3,20 @@
 
 namespace Model
 {
-    UnlitPerVertexColorShader::UnlitPerVertexColorShader(quint16 id, QObject* parent)
-        : OpenGLShaderProgram(id, CalliperUtil::QObjectUtil::nonNamespacedClassName<UnlitPerVertexColorShader>(), parent)
+    UnlitPerVertexColorShader::UnlitPerVertexColorShader(QObject* parent)
+        : Renderer::OpenGLShaderProgram(KnownShaderDefs::UnlitPerVertexColourShaderId,
+                                        CalliperUtil::QObjectUtil::nonNamespacedClassName<UnlitPerVertexColorShader>(),
+                                        parent)
     {
-
     }
 
     UnlitPerVertexColorShader::~UnlitPerVertexColorShader()
     {
+    }
 
+    KnownShaderDefs::KnownShaderId UnlitPerVertexColorShader::knownShaderId() const
+    {
+        return static_cast<KnownShaderDefs::KnownShaderId>(shaderStoreId());
     }
 
     void UnlitPerVertexColorShader::construct()
