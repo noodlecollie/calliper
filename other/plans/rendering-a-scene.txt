@@ -50,8 +50,9 @@ Render pass classifier:
 To do:
 - Move shader palette to renderer - done.
 - Hard-code populate the shader store - done.
-- Hard-code populate the shader palette store.
-- Hard-code shader palettes - subclass rather than add as a list.
+- Hard-code populate the shader palette store - done.
+- Hard-code shader palettes - subclass rather than add as a list - done.
+
 - Add shader technique reference to material
 - Change submission to renderer (GeometryBuilder) so that shader is replaced with shader technique.
 - Allow shader palette to be set on renderer, instead of shader. Batch things by shader palette.

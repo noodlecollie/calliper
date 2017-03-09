@@ -1,5 +1,4 @@
 #include "mapviewwindow.h"
-#include "model/shaders/unlitshader.h"
 #include "model/shaders/unlitpervertexcolorshader.h"
 #include "renderer/opengl/openglerrors.h"
 #include "renderer/opengl/openglhelpers.h"
@@ -7,7 +6,6 @@
 #include <QFile>
 #include "file-formats/keyvalues/keyvaluesparser.h"
 #include <QtDebug>
-#include "model/shaders/errorshader.h"
 #include "model/genericbrush/genericbrush.h"
 #include "model/shaders/simplelitshader.h"
 #include <QtGlobal>
@@ -30,7 +28,6 @@ namespace UserInterface
         m_pRenderer(Q_NULLPTR),
         m_pRenderPassClassifier(classifier),
         m_pSceneRenderer(Q_NULLPTR),
-        m_ShaderPalette(),
         m_pCameraController(Q_NULLPTR),
         m_pKeyMap(Q_NULLPTR),
         m_pMouseEventMap(Q_NULLPTR)
@@ -109,7 +106,7 @@ namespace UserInterface
             return;
         }
 
-        m_pSceneRenderer->setShaderPalette(m_ShaderPalette);
+        m_pSceneRenderer->setShaderPalette(/*TODO*/Q_NULLPTR);
 
         GL_CURRENT_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -248,16 +245,6 @@ namespace UserInterface
             return;
 
         m_strMapPath = path;
-    }
-
-    Renderer::ShaderPalette& MapViewWindow::shaderPalette()
-    {
-        return m_ShaderPalette;
-    }
-
-    const Renderer::ShaderPalette& MapViewWindow::shaderPalette() const
-    {
-        return m_ShaderPalette;
     }
 
     Model::IRenderPassClassifier* MapViewWindow::renderPassClassifier()

@@ -55,7 +55,8 @@ SOURCES += \
     model/filedatamodels/base/basefiledatamodel.cpp \
     model/filedatamodels/map/mapfiledatamodel.cpp \
     model/filedatamodels/filedatamodelfactory.cpp \
-    model/stores/shaderpalettestore.cpp
+    model/stores/shaderpalettestore.cpp \
+    model/shaderpalettes/simplelittexturedshaderpalette.cpp
 
 HEADERS += \
     model_global.h \
@@ -104,7 +105,8 @@ HEADERS += \
     model/filedatamodels/map/mapfiledatamodel.h \
     model/filedatamodels/filedatamodelfactory.h \
     model/stores/shaderpalettestore.h \
-    model/shaders/knownshaderdefs.h
+    model/shaders/knownshaderdefs.h \
+    model/shaderpalettes/simplelittexturedshaderpalette.h
 
 unix {
     target.path = /usr/lib

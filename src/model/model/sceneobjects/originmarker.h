@@ -18,7 +18,7 @@ namespace Model
         OriginMarker(const OriginMarker *cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~OriginMarker();
 
-        virtual void bakeGeometry(const Renderer::ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const override;
+        virtual void bakeGeometry(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const override;
         virtual bool customVertexColours() const override { return true; }
 
     private:

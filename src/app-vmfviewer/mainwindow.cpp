@@ -1,10 +1,8 @@
 #include "mainwindow.h"
-#include "model/shaders/unlitshader.h"
 #include "model/shaders/unlitpervertexcolorshader.h"
 #include "renderer/opengl/openglerrors.h"
 #include "renderer/opengl/openglhelpers.h"
 #include <QtDebug>
-#include "model/shaders/errorshader.h"
 #include "model/genericbrush/genericbrush.h"
 #include "model/shaders/simplelitshader.h"
 #include <QMessageBox>
@@ -37,9 +35,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::initShaders()
 {
-    Renderer::ShaderPalette& palette = shaderPalette();
-    palette.addItem(Renderer::ShaderPalette::LitTextured, Model::KnownShaderDefs::SimpleLitShaderId);
-    palette.addItem(Renderer::ShaderPalette::UnlitPerVertexColor, Model::KnownShaderDefs::UnlitPerVertexColourShaderId);
 }
 
 void MainWindow::initTextures()

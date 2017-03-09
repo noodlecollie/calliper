@@ -2,29 +2,35 @@
 #define SHADERPALETTESTORE_H
 
 #include "model_global.h"
-#include "renderer/shaders/shaderpalette.h"
+#include "renderer/shaders/baseshaderpalette.h"
 
 namespace Model
 {
     class MODELSHARED_EXPORT ShaderPaletteStore
     {
     public:
+        // Modes of rendering. Each mode uses a different shader palette,
+        // which will map known shader techniques to different shaders
+        // depending on the mode.
         enum RenderMode
         {
-            TodoImplementMe,
+            UnknownRenderMode = 0,
+
+            SimpleLitTexturedRenderMode,
+
+            TOTAL_RENDER_MODES
         };
 
         ShaderPaletteStore();
+        ~ShaderPaletteStore();
 
-        Renderer::ShaderPalette shaderPalette(RenderMode renderMode) const;
-        void addShaderPalette(RenderMode renderMode, const Renderer::ShaderPalette& palette);
-
-        Renderer::ShaderPalette defaultShaderPalette() const;
-        void setDefaultShaderPalette(const Renderer::ShaderPalette& palette);
+        Renderer::BaseShaderPalette* shaderPalette(RenderMode renderMode) const;
 
     private:
-        QHash<RenderMode, Renderer::ShaderPalette> m_Palettes;
-        Renderer::ShaderPalette m_DefaultPalette;
+        void createPalettes();
+        void addShaderPalette(RenderMode renderMode, Renderer::BaseShaderPalette* palette);
+
+        Renderer::BaseShaderPalette* m_Palettes[TOTAL_RENDER_MODES];
     };
 }
 

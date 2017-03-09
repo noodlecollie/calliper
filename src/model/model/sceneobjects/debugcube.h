@@ -22,7 +22,7 @@ namespace Model
         DebugCube(const DebugCube *cloneFrom, const SceneObjectInitParams &initParams);
         virtual ~DebugCube();
 
-        virtual void bakeGeometry(const Renderer::ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const override;
+        virtual void bakeGeometry(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const override;
 
     private:
         void commonInit();

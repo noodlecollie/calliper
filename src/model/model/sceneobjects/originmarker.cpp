@@ -25,12 +25,12 @@ namespace Model
         updateScalableState(scalable());
     }
 
-    void OriginMarker::bakeGeometry(const Renderer::ShaderPalette &shaderPalette, Renderer::GeometryBuilder &builder) const
+    void OriginMarker::bakeGeometry(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const
     {
         using namespace Renderer;
 
         GeometrySection* section = builder.createNewSection(
-                    shaderPalette.shader(ShaderPalette::UnlitPerVertexColor),
+                    shaderPalette->shader(BaseShaderPalette::UnlitPerVertexColor),
                     0,
                     builder.modelToWorldMatrix());
         section->setDrawMode(GL_LINES);

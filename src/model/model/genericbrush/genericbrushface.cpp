@@ -80,7 +80,7 @@ namespace Model
         return parentBrush()->brushVertexList(m_BrushVertexIndices);
     }
 
-    void GenericBrushFace::buildFaceGeometry(const Renderer::ShaderPalette&, Renderer::GeometryBuilder &builder) const
+    void GenericBrushFace::buildFaceGeometry(const Renderer::BaseShaderPalette*, Renderer::GeometryBuilder &builder) const
     {
         using namespace Renderer;
 

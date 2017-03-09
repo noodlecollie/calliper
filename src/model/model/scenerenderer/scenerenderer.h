@@ -23,8 +23,8 @@ namespace Model
                       Scene* scene);
         SceneRenderer() {/*REMOVE ME*/}
 
-        Renderer::ShaderPalette shaderPalette() const;
-        void setShaderPalette(const Renderer::ShaderPalette& palette);
+        Renderer::BaseShaderPalette* shaderPalette() const;
+        void setShaderPalette(Renderer::BaseShaderPalette* palette);
 
         QVector3D directionalLight() const;
         void setDirectionalLight(const QVector3D& dir);
@@ -41,7 +41,7 @@ namespace Model
         Scene* m_pScene;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
-        Renderer::ShaderPalette m_ShaderPalette;
+        Renderer::BaseShaderPalette* m_ShaderPalette;
         QVector3D m_vecDirectionalLight;
     };
 }

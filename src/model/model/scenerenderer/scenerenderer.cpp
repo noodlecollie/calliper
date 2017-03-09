@@ -45,7 +45,7 @@ namespace Model
         {
             GeometryBuilder builder(resourceEnv->shaderStore(),
                                     resourceEnv->textureStore(),
-                                    m_ShaderPalette.shader(ShaderPalette::LitTextured),   // TODO: Get this from material instead
+                                    m_ShaderPalette->shader(BaseShaderPalette::LitTextured),   // TODO: Get this from material instead
                                     0,
                                     m_matRecursiveUpdateMatrix);
             object->rendererUpdate(m_ShaderPalette, builder);
@@ -80,12 +80,12 @@ namespace Model
         m_pRenderer->draw(params);
     }
 
-    Renderer::ShaderPalette SceneRenderer::shaderPalette() const
+    Renderer::BaseShaderPalette* SceneRenderer::shaderPalette() const
     {
         return m_ShaderPalette;
     }
 
-    void SceneRenderer::setShaderPalette(const Renderer::ShaderPalette &palette)
+    void SceneRenderer::setShaderPalette(Renderer::BaseShaderPalette* palette)
     {
         m_ShaderPalette = palette;
     }

@@ -21,7 +21,7 @@ namespace Model
 
     }
 
-    void DebugTriangle::bakeGeometry(const Renderer::ShaderPalette&, Renderer::GeometryBuilder &builder) const
+    void DebugTriangle::bakeGeometry(const Renderer::BaseShaderPalette*, Renderer::GeometryBuilder &builder) const
     {
         using namespace Renderer;
 
