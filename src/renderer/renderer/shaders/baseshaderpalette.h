@@ -10,9 +10,12 @@ namespace Renderer
     {
     public:
         // Different ways in which we might want to draw geometry.
+        // Some other examples might be unlit textured, or
+        // refract (for water).
         enum ShaderTechnique
         {
-            LitTextured = 0,
+            UnlitTextured,
+            LitTextured,
             UnlitPerVertexColor,
         };
 
