@@ -30,7 +30,7 @@ namespace Model
         using namespace Renderer;
 
         GeometrySection* section = builder.createNewSection(
-                    shaderPalette->shader(BaseShaderPalette::UnlitPerVertexColor),
+                    shaderPalette->shader(ShaderDefs::UnlitPerVertexColor3D),
                     0,
                     builder.modelToWorldMatrix());
         section->setDrawMode(GL_LINES);

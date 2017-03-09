@@ -38,7 +38,7 @@ namespace Model
         if ( m_bDrawFrame )
         {
             quint16 oldShader = builder.shaderId();
-            builder.setShaderId(shaderPalette->shader(Renderer::BaseShaderPalette::UnlitPerVertexColor));
+            builder.setShaderId(shaderPalette->shader(Renderer::ShaderDefs::UnlitPerVertexColor3D));
             GeometryFactory::wireframeCube(builder, m_flRadius, QColor::fromRgb(0xffff0000));
             builder.setShaderId(oldShader);
         }

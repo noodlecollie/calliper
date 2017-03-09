@@ -8,16 +8,16 @@ namespace Model
 
     }
 
-    quint16 SimpleLitTexturedShaderPalette::shader(ShaderTechnique technique) const
+    quint16 SimpleLitTexturedShaderPalette::shader(Renderer::ShaderDefs::ShaderTechnique technique) const
     {
         switch ( technique )
         {
-            case BaseShaderPalette::LitTextured:
+            case Renderer::ShaderDefs::LitTextured3D:
             {
                 return KnownShaderDefs::SimpleLitShaderId;
             }
 
-            case BaseShaderPalette::UnlitPerVertexColor:
+            case Renderer::ShaderDefs::UnlitPerVertexColor3D:
             {
                 return KnownShaderDefs::UnlitPerVertexColourShaderId;
             }

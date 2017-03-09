@@ -11,7 +11,7 @@ namespace Model
     public:
         SimpleLitTexturedShaderPalette();
 
-        virtual quint16 shader(ShaderTechnique technique) const override;
+        virtual quint16 shader(Renderer::ShaderDefs::ShaderTechnique technique) const override;
     };
 }
 

@@ -16,8 +16,8 @@ namespace Renderer
         quint32 materialStoreId() const;
         QString path() const;
 
-        BaseShaderPalette::ShaderTechnique shaderTechnique() const;
-        void setShaderTechnique(BaseShaderPalette::ShaderTechnique technique);
+        ShaderDefs::ShaderTechnique shaderTechnique() const;
+        void setShaderTechnique(ShaderDefs::ShaderTechnique technique);
 
         void addTexture(ShaderDefs::TextureUnit textureUnit, quint32 textureStoreId);
         quint32 texture(ShaderDefs::TextureUnit textureUnit) const;
@@ -34,7 +34,7 @@ namespace Renderer
         quint32 m_iId;
         QString m_strPath;
         QMap<ShaderDefs::TextureUnit, quint32> m_TextureUnitToIdMap;
-        BaseShaderPalette::ShaderTechnique m_nTechnique;
+        ShaderDefs::ShaderTechnique m_nTechnique;
     };
 }
 

@@ -6,7 +6,7 @@ namespace Renderer
         : m_iId(id),
           m_strPath(path),
           m_TextureUnitToIdMap(),
-          m_nTechnique(BaseShaderPalette::UnlitTextured)
+          m_nTechnique(ShaderDefs::UnlitTextured3D)
     {
 
     }
@@ -21,12 +21,12 @@ namespace Renderer
         return m_iId;
     }
 
-    BaseShaderPalette::ShaderTechnique RenderMaterial::shaderTechnique() const
+    ShaderDefs::ShaderTechnique RenderMaterial::shaderTechnique() const
     {
         return m_nTechnique;
     }
 
-    void RenderMaterial::setShaderTechnique(BaseShaderPalette::ShaderTechnique technique)
+    void RenderMaterial::setShaderTechnique(ShaderDefs::ShaderTechnique technique)
     {
         m_nTechnique = technique;
     }
