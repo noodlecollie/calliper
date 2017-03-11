@@ -8,6 +8,7 @@ namespace Renderer
     class RENDERERSHARED_EXPORT VertexFormat
     {
     public:
+        VertexFormat();
         VertexFormat(int positions, int normals, int colors, int texCoords);
 
         // Each attribute can have a maximum of 4 components,

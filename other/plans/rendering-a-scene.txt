@@ -56,3 +56,4 @@ To do:
 
 - Change submission to renderer (GeometryBuilder) so that shader is replaced with shader technique.
 - Allow shader palette to be set on renderer, instead of shader. Batch things by shader palette.
+  - Can't do, need to batch by vertex format which is not necessarily the same for all shaders of a given technique.

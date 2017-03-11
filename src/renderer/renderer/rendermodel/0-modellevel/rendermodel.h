@@ -11,6 +11,7 @@
 #include "renderer/opengl/openglvertexarrayobject.h"
 #include "renderer/rendermodel/rendererinputobjectparams.h"
 #include "renderer/rendermodel/rendererdrawparams.h"
+#include "renderer/functors/renderfunctorgroup.h"
 
 namespace Renderer
 {
@@ -26,6 +27,7 @@ namespace Renderer
         void setTextureFunctor(ITextureRetrievalFunctor *functor);
         IMaterialRetrievalFunctor* materialFunctor() const;
         void setMaterialFunctor(IMaterialRetrievalFunctor* functor);
+        void setRenderFunctors(const RenderFunctorGroup& renderFunctors);
 
         void updateObject(const RendererInputObjectParams &object);
         void removeObject(quint32 objectId);
@@ -35,8 +37,6 @@ namespace Renderer
         void setObjectFlags(quint32 objectId, quint32 flags);
         void clearObjectFlags(quint32 objectId, quint32 flags);
         quint32 getObjectFlags(quint32 objectId) const;
-
-        void printDebugInfo() const;
 
     private:
         typedef QSharedPointer<RenderModelPass> RenderModelPassPointer;
@@ -60,9 +60,7 @@ namespace Renderer
                            RenderModelBatchGroup::MatrixBatchPointer &matrixBatch,
                            MatrixBatch::MatrixBatchItemPointer &batchItem) const;
 
-        IShaderRetrievalFunctor*    m_pShaderFunctor;
-        ITextureRetrievalFunctor*   m_pTextureFunctor;
-        IMaterialRetrievalFunctor*  m_pMaterialFunctor;
+        RenderFunctorGroup m_RenderFunctors;
         RendererDrawParams          m_DrawParams;
 
         GlobalShaderUniforms        m_GlobalShaderUniforms;

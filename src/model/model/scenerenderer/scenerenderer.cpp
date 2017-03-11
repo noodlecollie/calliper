@@ -43,12 +43,11 @@ namespace Model
 
         if ( object->needsRendererUpdate() )
         {
-            GeometryBuilder builder(resourceEnv->shaderStore(),
-                                    resourceEnv->textureStore(),
-                                    m_ShaderPalette->shader(ShaderDefs::LitTextured3D),   // TODO: Get this from material instead
+            GeometryBuilder builder(resourceEnv->renderFunctors(),
+                                    m_ShaderPalette,
                                     0,
                                     m_matRecursiveUpdateMatrix);
-            object->rendererUpdate(m_ShaderPalette, builder);
+            object->rendererUpdate(builder);
 
             m_pRenderer->updateObject(
                 RendererInputObjectParams(

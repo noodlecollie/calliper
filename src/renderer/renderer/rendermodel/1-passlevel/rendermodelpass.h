@@ -6,9 +6,7 @@
 #include <QSharedPointer>
 #include "renderer/rendermodel/2-batchgrouplevel/rendermodelbatchgroup.h"
 #include "renderer/rendermodel/2-batchgrouplevel/rendermodelbatchgroupkey.h"
-#include "renderer/functors/ishaderretrievalfunctor.h"
-#include "renderer/functors/itextureretrievalfunctor.h"
-#include "renderer/functors/imaterialretrievalfunctor.h"
+#include "renderer/functors/renderfunctorgroup.h"
 #include <QOpenGLBuffer>
 
 namespace Renderer
@@ -18,7 +16,7 @@ namespace Renderer
     public:
         typedef QSharedPointer<RenderModelBatchGroup> RenderModelBatchGroupPointer;
 
-        RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor, IMaterialRetrievalFunctor* materialFunctor);
+        RenderModelPass(const RenderFunctorGroup& renderFunctors);
         ~RenderModelPass();
 
         RenderModelBatchGroupPointer createBatchGroup(const RenderModelBatchGroupKey &key,
@@ -38,9 +36,7 @@ namespace Renderer
         void changeMaterialIfDifferent(Renderer::RenderMaterialPointer &origMaterial,
                                       const Renderer::RenderMaterialPointer &newMaterial);
 
-        IShaderRetrievalFunctor* const  m_pShaderFunctor;
-        ITextureRetrievalFunctor* const m_pTextureFunctor;
-        IMaterialRetrievalFunctor* const m_pMaterialFunctor;
+        const RenderFunctorGroup m_RenderFunctors;
 
         QMap<RenderModelBatchGroupKey, RenderModelBatchGroupPointer>  m_BatchGroups;
         QMap<ShaderDefs::TextureUnit, quint32> m_TextureUnitMap;

@@ -77,6 +77,11 @@ namespace Model
         return m_pMaterialStore;
     }
 
+    Renderer::RenderFunctorGroup ResourceEnvironment::renderFunctors() const
+    {
+        return Renderer::RenderFunctorGroup(m_pShaderStore, m_pTextureStore, m_pMaterialStore);
+    }
+
     ShaderPaletteStore* ResourceEnvironment::shaderPaletteStore()
     {
         return m_pShaderPaletteStore;

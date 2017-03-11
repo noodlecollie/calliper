@@ -13,8 +13,8 @@
 #include <QOpenGLFunctions>
 #include <QMatrix4x4>
 #include "renderer/shaders/vertexformat.h"
-#include "renderer/functors/ishaderretrievalfunctor.h"
-#include "renderer/functors/itextureretrievalfunctor.h"
+#include "renderer/functors/renderfunctorgroup.h"
+#include "renderer/shaders/baseshaderpalette.h"
 
 namespace Renderer
 {
@@ -32,8 +32,10 @@ namespace Renderer
             AttributeTypeCount
         };
 
-        GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
-                        quint16 shaderId, quint32 materialId, const QMatrix4x4 modelToWorldMatrix);
+        GeometrySection(const RenderFunctorGroup& renderFunctors,
+                        BaseShaderPalette* shaderPalette,
+                        quint32 materialId,
+                        const QMatrix4x4 modelToWorldMatrix);
 
         // It's assumed that the number of components for each attribute of
         // successive vertices will be the same (eg. 3 floats each time for position).
@@ -76,7 +78,6 @@ namespace Renderer
                         QVector<float> &textureCoordinates, QVector<quint32> &indices) const;
 
         quint16 shaderId() const;
-        void setShaderId(quint16 id);
 
         quint32 materialId() const;
         void setMaterialId(quint32 id);
@@ -92,10 +93,14 @@ namespace Renderer
 
         IShaderRetrievalFunctor* shaderFunctor() const;
         ITextureRetrievalFunctor* textureFunctor() const;
+        IMaterialRetrievalFunctor* materialFunctor() const;
+        BaseShaderPalette* shaderPalette() const;
+
         VertexFormat vertexFormat() const;
 
     private:
         void init();
+        OpenGLShaderProgram* getShader() const;
 
         QList<QVector<float> >  m_Attributes;
         QVector<quint32>        m_Indices;
@@ -103,12 +108,13 @@ namespace Renderer
         GLenum  m_iDrawMode;
         float   m_flDrawWidth;
 
-        IShaderRetrievalFunctor* m_pShaderFunctor;
-        ITextureRetrievalFunctor* m_pTextureFunctor;
-        quint16 m_iShaderId;
+        RenderFunctorGroup m_RenderFunctors;
+        BaseShaderPalette* m_pShaderPalette;
+
         quint32 m_iMaterialId;
         QMatrix4x4 m_matModelToWorld;
-        const VertexFormat m_VertexFormat;
+        OpenGLShaderProgram* m_pShader;
+        VertexFormat m_VertexFormat;
     };
 
     typedef QList<GeometrySection> GeometrySectionList;

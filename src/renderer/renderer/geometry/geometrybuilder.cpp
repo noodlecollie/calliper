@@ -3,10 +3,14 @@
 
 namespace Renderer
 {
-    GeometryBuilder::GeometryBuilder(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
-                                     quint16 shaderId, quint32 materialId, const QMatrix4x4 &modelToWorldMatrix)
-        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
-          m_iShaderId(shaderId), m_iMaterialId(materialId), m_matModelToWorld(modelToWorldMatrix)
+    GeometryBuilder::GeometryBuilder(const RenderFunctorGroup& renderFunctors,
+                                     BaseShaderPalette* shaderPalette,
+                                     quint32 materialId,
+                                     const QMatrix4x4 &modelToWorldMatrix)
+        : m_RenderFunctors(renderFunctors),
+          m_pShaderPalette(shaderPalette),
+          m_iMaterialId(materialId),
+          m_matModelToWorld(modelToWorldMatrix)
     {
     }
 
@@ -20,11 +24,11 @@ namespace Renderer
         return m_Sections.count() > 0 ? m_Sections.last() : Q_NULLPTR;
     }
 
-    GeometrySection* GeometryBuilder::createNewSection(quint16 shaderId, quint32 materialId, const QMatrix4x4 &matrix)
+    GeometrySection* GeometryBuilder::createNewSection(quint32 materialId, const QMatrix4x4 &matrix)
     {
         if ( m_Sections.isEmpty() || currentSection()->attributeCount(GeometrySection::PositionAttribute) > 0 )
         {
-            m_Sections.append(new GeometrySection(m_pShaderFunctor, m_pTextureFunctor, shaderId, materialId, matrix));
+            m_Sections.append(new GeometrySection(m_RenderFunctors, m_pShaderPalette, materialId, matrix));
         }
         
         return currentSection();
@@ -32,7 +36,7 @@ namespace Renderer
 
     GeometrySection* GeometryBuilder::createNewSection()
     {
-        return createNewSection(m_iShaderId, m_iMaterialId, m_matModelToWorld);
+        return createNewSection(m_iMaterialId, m_matModelToWorld);
     }
 
     int GeometryBuilder::sectionCount() const
@@ -74,16 +78,6 @@ namespace Renderer
         }
     }
 
-    quint16 GeometryBuilder::shaderId() const
-    {
-        return m_iShaderId;
-    }
-
-    void GeometryBuilder::setShaderId(quint16 id)
-    {
-        m_iShaderId = id;
-    }
-
     quint32 GeometryBuilder::materialId() const
     {
         return m_iMaterialId;
@@ -107,12 +101,22 @@ namespace Renderer
 
     IShaderRetrievalFunctor* GeometryBuilder::shaderFunctor() const
     {
-        return m_pShaderFunctor;
+        return m_RenderFunctors.shaderFunctor;
     }
 
     ITextureRetrievalFunctor* GeometryBuilder::textureFunctor() const
     {
-        return m_pTextureFunctor;
+        return m_RenderFunctors.textureFunctor;
+    }
+
+    IMaterialRetrievalFunctor* GeometryBuilder::materialFunctor() const
+    {
+        return m_RenderFunctors.materialFunctor;
+    }
+
+    BaseShaderPalette* GeometryBuilder::shaderPalette() const
+    {
+        return m_pShaderPalette;
     }
 
     GeometrySection* GeometryBuilder::section(int index)

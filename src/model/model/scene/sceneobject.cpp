@@ -114,10 +114,10 @@ namespace Model
         m_bNeedsRendererUpdate = true;
     }
 
-    void SceneObject::rendererUpdate(const Renderer::BaseShaderPalette *shaderPalette, Renderer::GeometryBuilder &builder) const
+    void SceneObject::rendererUpdate(Renderer::GeometryBuilder &builder) const
     {
         // Call virtual function so that subclasses build their own geometry.
-        bakeGeometry(shaderPalette, builder);
+        bakeGeometry(builder);
 
         if ( !customVertexColours() )
         {
@@ -127,9 +127,8 @@ namespace Model
         m_bNeedsRendererUpdate = false;
     }
 
-    void SceneObject::bakeGeometry(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const
+    void SceneObject::bakeGeometry(Renderer::GeometryBuilder &builder) const
     {
-        Q_UNUSED(shaderPalette);
         Q_UNUSED(builder);
     }
 

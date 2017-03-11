@@ -34,7 +34,7 @@ namespace Model
 
         QVector3D normal() const;
 
-        void buildFaceGeometry(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const;
+        void buildFaceGeometry(Renderer::GeometryBuilder &builder) const;
 
     signals:
         void dataChanged();

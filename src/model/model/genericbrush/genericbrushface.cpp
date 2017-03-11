@@ -80,12 +80,11 @@ namespace Model
         return parentBrush()->brushVertexList(m_BrushVertexIndices);
     }
 
-    void GenericBrushFace::buildFaceGeometry(const Renderer::BaseShaderPalette*, Renderer::GeometryBuilder &builder) const
+    void GenericBrushFace::buildFaceGeometry(Renderer::GeometryBuilder &builder) const
     {
         using namespace Renderer;
 
         GeometrySection* section = builder.createNewSection(
-                    builder.shaderId(),
                     texturePlane()->materialId(),
                     builder.modelToWorldMatrix());
 

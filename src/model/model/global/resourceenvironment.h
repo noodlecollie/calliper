@@ -7,6 +7,7 @@
 #include "model/stores/materialstore.h"
 #include "renderer/shaders/baseshaderpalette.h"
 #include "model/stores/shaderpalettestore.h"
+#include "renderer/functors/renderfunctorgroup.h"
 
 namespace Model
 {
@@ -27,6 +28,8 @@ namespace Model
 
         ShaderPaletteStore* shaderPaletteStore();
         const ShaderPaletteStore* shaderPaletteStore() const;
+
+        Renderer::RenderFunctorGroup renderFunctors() const;
 
         static void globalInitialise();
         static void globalShutdown();

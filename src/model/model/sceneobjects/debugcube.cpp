@@ -30,17 +30,15 @@ namespace Model
         m_bDrawFrame = false;
     }
 
-    void DebugCube::bakeGeometry(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const
+    void DebugCube::bakeGeometry(Renderer::GeometryBuilder &builder) const
     {
         builder.setMaterialId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));
 
         if ( m_bDrawFrame )
         {
-            quint16 oldShader = builder.shaderId();
-            builder.setShaderId(shaderPalette->shader(Renderer::ShaderDefs::UnlitPerVertexColor3D));
+            // TODO: Set material in wireframe cube.
             GeometryFactory::wireframeCube(builder, m_flRadius, QColor::fromRgb(0xffff0000));
-            builder.setShaderId(oldShader);
         }
     }
 

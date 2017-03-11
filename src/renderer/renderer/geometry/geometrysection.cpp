@@ -1,4 +1,5 @@
 #include "geometrysection.h"
+#include "renderer/materials/rendermaterial.h"
 
 namespace
 {
@@ -79,12 +80,18 @@ namespace
 
 namespace Renderer
 {
-    GeometrySection::GeometrySection(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor,
-                                     quint16 shaderId, quint32 materialId, const QMatrix4x4 modelToWorldMatrix)
-        : m_iDrawMode(GL_TRIANGLES), m_flDrawWidth(1),
-          m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor),
-          m_iShaderId(shaderId), m_iMaterialId(materialId), m_matModelToWorld(modelToWorldMatrix),
-          m_VertexFormat((*shaderFunctor)(shaderId)->vertexFormat())
+    GeometrySection::GeometrySection(const RenderFunctorGroup& renderFunctors,
+                                     BaseShaderPalette* shaderPalette,
+                                     quint32 materialId,
+                                     const QMatrix4x4 modelToWorldMatrix)
+        : m_iDrawMode(GL_TRIANGLES),
+          m_flDrawWidth(1),
+          m_RenderFunctors(renderFunctors),
+          m_pShaderPalette(shaderPalette),
+          m_iMaterialId(materialId),
+          m_matModelToWorld(modelToWorldMatrix),
+          m_pShader(getShader()),
+          m_VertexFormat(m_pShader->vertexFormat())
     {
         init();
     }
@@ -260,22 +267,22 @@ namespace Renderer
 
     IShaderRetrievalFunctor* GeometrySection::shaderFunctor() const
     {
-        return m_pShaderFunctor;
+        return m_RenderFunctors.shaderFunctor;
     }
 
     ITextureRetrievalFunctor* GeometrySection::textureFunctor() const
     {
-        return m_pTextureFunctor;
+        return m_RenderFunctors.textureFunctor;
+    }
+
+    IMaterialRetrievalFunctor* GeometrySection::materialFunctor() const
+    {
+        return m_RenderFunctors.materialFunctor;
     }
 
     quint16 GeometrySection::shaderId() const
     {
-        return m_iShaderId;
-    }
-
-    void GeometrySection::setShaderId(quint16 id)
-    {
-        m_iShaderId = id;
+        return getShader()->shaderStoreId();
     }
 
     quint32 GeometrySection::materialId() const
@@ -332,5 +339,13 @@ namespace Renderer
     VertexFormat GeometrySection::vertexFormat() const
     {
         return m_VertexFormat;
+    }
+
+    OpenGLShaderProgram* GeometrySection::getShader() const
+    {
+        RenderMaterialPointer material = (*materialFunctor())(m_iMaterialId);
+        ShaderDefs::ShaderTechnique shaderTechnique = material->shaderTechnique();
+        quint16 shaderId = m_pShaderPalette->shader(shaderTechnique);
+        return (*shaderFunctor())(shaderId);
     }
 }

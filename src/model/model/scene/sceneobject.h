@@ -35,7 +35,7 @@ namespace Model
         virtual bool scalable() const;
 
         bool needsRendererUpdate() const;
-        void rendererUpdate(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const;
+        void rendererUpdate(Renderer::GeometryBuilder &builder) const;
 
         // Not cached, so could be expensive if called a lot.
         QMatrix4x4 rootToLocalMatrix() const;
@@ -67,7 +67,7 @@ namespace Model
         virtual ~SceneObject();
 
         virtual void customEvent(QEvent *event);
-        virtual void bakeGeometry(const Renderer::BaseShaderPalette* shaderPalette, Renderer::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(Renderer::GeometryBuilder &builder) const;
 
         // Called by subclasses to convert hierarchy state to non-scalable.
         void updateScalableState(bool isScalable);

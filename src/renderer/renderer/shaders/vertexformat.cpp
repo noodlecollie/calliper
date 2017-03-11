@@ -14,6 +14,11 @@ namespace Renderer
         Q_ASSERT_X(texCoords >= 0 && texCoords <= 4, Q_FUNC_INFO, "Texture coordinates value must be between 0 and 4");
     }
 
+    VertexFormat::VertexFormat()
+        : VertexFormat(0,0,0,0)
+    {
+    }
+
     int VertexFormat::positionComponents() const
     {
         return m_iPositionComponents;

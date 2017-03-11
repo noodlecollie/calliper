@@ -75,7 +75,8 @@ HEADERS +=\
     renderer/shaders/shaderdefs.h \
     renderer/shaders/vertexformat.h \
     renderer/global/openglbackgroundcontext.h \
-    renderer/shaders/baseshaderpalette.h
+    renderer/shaders/baseshaderpalette.h \
+    renderer/functors/renderfunctorgroup.h
 
 unix {
     target.path = /usr/lib

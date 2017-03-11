@@ -32,12 +32,10 @@ namespace
 
 namespace Renderer
 {
-    RenderModelPass::RenderModelPass(IShaderRetrievalFunctor* shaderFunctor, ITextureRetrievalFunctor* textureFunctor, IMaterialRetrievalFunctor* materialFunctor)
-        : m_pShaderFunctor(shaderFunctor), m_pTextureFunctor(textureFunctor), m_pMaterialFunctor(materialFunctor)
+    RenderModelPass::RenderModelPass(const RenderFunctorGroup &renderFunctors)
+        : m_RenderFunctors(renderFunctors)
     {
-        Q_ASSERT_X(m_pShaderFunctor, Q_FUNC_INFO, "Shader functor should not be null!");
-        Q_ASSERT_X(m_pTextureFunctor, Q_FUNC_INFO, "Texture functor should not be null!");
-        Q_ASSERT_X(m_pMaterialFunctor, Q_FUNC_INFO, "Material functor should not be null!");
+        Q_ASSERT_X(m_RenderFunctors.isValid(), Q_FUNC_INFO, "Functors should be valid!");
     }
 
     RenderModelPass::~RenderModelPass()
@@ -47,7 +45,7 @@ namespace Renderer
 
     RenderModelPass::RenderModelBatchGroupPointer RenderModelPass::createBatchGroup(const RenderModelBatchGroupKey &key, QOpenGLBuffer::UsagePattern usagePattern)
     {
-        OpenGLShaderProgram* shaderProgram = (*m_pShaderFunctor)(key.shaderId());
+        OpenGLShaderProgram* shaderProgram = (*m_RenderFunctors.shaderFunctor)(key.shaderId());
 
         RenderModelBatchGroupPointer batchGroup = RenderModelBatchGroupPointer::create(key, usagePattern, shaderProgram);
         m_BatchGroups.insert(key, batchGroup);
@@ -81,10 +79,10 @@ namespace Renderer
 
     void RenderModelPass::setIfRequired(const RenderModelBatchGroupKey &key, OpenGLShaderProgram *&shaderProgram, RenderMaterialPointer &material)
     {
-        OpenGLShaderProgram* newShaderProgram = (*m_pShaderFunctor)(key.shaderId());
+        OpenGLShaderProgram* newShaderProgram = (*m_RenderFunctors.shaderFunctor)(key.shaderId());
         changeShaderIfDifferent(shaderProgram, newShaderProgram);
 
-        RenderMaterialPointer newMaterial = (*m_pMaterialFunctor)(key.materialId());
+        RenderMaterialPointer newMaterial = (*m_RenderFunctors.materialFunctor)(key.materialId());
         changeMaterialIfDifferent(material, newMaterial);
     }
 
@@ -129,7 +127,7 @@ namespace Renderer
 
         foreach ( quint32 texture, m_TextureUnitMap.values() )
         {
-            OpenGLTexturePointer tex = (*m_pTextureFunctor)(texture);
+            OpenGLTexturePointer tex = (*m_RenderFunctors.textureFunctor)(texture);
             if ( tex.isNull() )
                 continue;
 
@@ -141,7 +139,7 @@ namespace Renderer
 
         for ( TextureUnitMap::const_iterator it = m_TextureUnitMap.constBegin(); it != m_TextureUnitMap.constEnd(); ++it )
         {
-            OpenGLTexturePointer tex = (*m_pTextureFunctor)(it.value());
+            OpenGLTexturePointer tex = (*m_RenderFunctors.textureFunctor)(it.value());
             if ( tex.isNull() )
                 continue;
 

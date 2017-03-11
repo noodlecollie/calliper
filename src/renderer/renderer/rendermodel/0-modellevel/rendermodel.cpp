@@ -24,7 +24,8 @@ namespace
 namespace Renderer
 {
     RenderModel::RenderModel()
-        : m_pShaderFunctor(Q_NULLPTR), m_pTextureFunctor(Q_NULLPTR), m_DrawParams(),
+        : m_RenderFunctors(),
+          m_DrawParams(),
           m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
     {
         m_VAO.create();
@@ -41,7 +42,7 @@ namespace Renderer
 
     RenderModel::RenderModelPassPointer RenderModel::createRenderPass(const RenderModelPassKey &key)
     {
-        RenderModelPassPointer pass = RenderModelPassPointer::create(m_pShaderFunctor, m_pTextureFunctor, m_pMaterialFunctor);
+        RenderModelPassPointer pass = RenderModelPassPointer::create(m_RenderFunctors);
         m_RenderPasses.insert(key, pass);
         return pass;
     }
@@ -68,32 +69,37 @@ namespace Renderer
 
     IShaderRetrievalFunctor* RenderModel::shaderFunctor() const
     {
-        return m_pShaderFunctor;
+        return m_RenderFunctors.shaderFunctor;
     }
 
     void RenderModel::setShaderFunctor(IShaderRetrievalFunctor *functor)
     {
-        m_pShaderFunctor = functor;
+        m_RenderFunctors.shaderFunctor = functor;
     }
 
     ITextureRetrievalFunctor* RenderModel::textureFunctor() const
     {
-        return m_pTextureFunctor;
+        return m_RenderFunctors.textureFunctor;
     }
 
     void RenderModel::setTextureFunctor(ITextureRetrievalFunctor *functor)
     {
-        m_pTextureFunctor = functor;
+        m_RenderFunctors.textureFunctor = functor;
     }
 
     IMaterialRetrievalFunctor* RenderModel::materialFunctor() const
     {
-        return m_pMaterialFunctor;
+        return m_RenderFunctors.materialFunctor;
     }
 
     void RenderModel::setMaterialFunctor(IMaterialRetrievalFunctor *functor)
     {
-        m_pMaterialFunctor = functor;
+        m_RenderFunctors.materialFunctor = functor;
+    }
+
+    void RenderModel::setRenderFunctors(const RenderFunctorGroup &renderFunctors)
+    {
+        m_RenderFunctors = renderFunctors;
     }
 
     void RenderModel::updateObject(const RendererInputObjectParams &object)
@@ -243,11 +249,6 @@ namespace Renderer
         }
 
         return batchItem;
-    }
-
-    void RenderModel::printDebugInfo() const
-    {
-        qDebug() << "Passes:" << m_RenderPasses.count();
     }
 
     void RenderModel::cleanMatrixBatchItem(const RenderModelKey &key)
