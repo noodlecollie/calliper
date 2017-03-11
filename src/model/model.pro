@@ -57,7 +57,8 @@ SOURCES += \
     model/filedatamodels/filedatamodelfactory.cpp \
     model/stores/shaderpalettestore.cpp \
     model/shaderpalettes/simplelittexturedshaderpalette.cpp \
-    model/renderunit/renderunit.cpp
+    model/renderunit/renderunit.cpp \
+    model/presetmaterials/unlitpervertexcolourpresetmaterial.cpp
 
 HEADERS += \
     model_global.h \
@@ -108,7 +109,8 @@ HEADERS += \
     model/stores/shaderpalettestore.h \
     model/shaders/knownshaderdefs.h \
     model/shaderpalettes/simplelittexturedshaderpalette.h \
-    model/renderunit/renderunit.h
+    model/renderunit/renderunit.h \
+    model/presetmaterials/unlitpervertexcolourpresetmaterial.h
 
 unix {
     target.path = /usr/lib

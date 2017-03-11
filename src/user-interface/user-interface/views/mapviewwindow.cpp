@@ -93,12 +93,14 @@ namespace UserInterface
             return;
         }
 
-        // TODO: Set up scene renderer.
+        SceneRenderer sceneRenderer(m_pVmfData->scene(), m_pRenderer);
+        sceneRenderer.setShaderPalette(ResourceEnvironment::globalInstance()->shaderPaletteStore()
+                                       ->shaderPalette(ShaderPaletteStore::SimpleLitTexturedRenderMode));
 
         GL_CURRENT_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-        // TODO: Render with scene renderer.
+        sceneRenderer.render(m_pVmfData->scene()->defaultCamera());
     }
 
     void MapViewWindow::resizeGL(int w, int h)

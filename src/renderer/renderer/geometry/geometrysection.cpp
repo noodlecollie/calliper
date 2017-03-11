@@ -91,7 +91,7 @@ namespace Renderer
           m_iMaterialId(materialId),
           m_matModelToWorld(modelToWorldMatrix),
           m_pShader(getShader()),
-          m_VertexFormat(m_pShader->vertexFormat())
+          m_VertexFormat(m_pShader ? m_pShader->vertexFormat() : VertexFormat(0,0,0,0))
     {
         init();
     }

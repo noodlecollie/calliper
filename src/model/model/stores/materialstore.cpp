@@ -1,4 +1,10 @@
 #include "materialstore.h"
+#include "model/presetmaterials/unlitpervertexcolourpresetmaterial.h"
+
+namespace
+{
+    const QString PRESET_MATERIAL_PATH_PREFIX = "_presetMaterials";
+}
 
 namespace Model
 {
@@ -6,12 +12,27 @@ namespace Model
         : m_iNextMaterialId(1),
           m_pDefaultMaterial(Renderer::RenderMaterialPointer::create(0, QString()))
     {
+        m_pDefaultMaterial->setShaderTechnique(Renderer::ShaderDefs::LitTextured3D);
         m_pDefaultMaterial->addTexture(Renderer::ShaderDefs::MainTexture, 0);
+        addPresetMaterials();
     }
 
     MaterialStore::~MaterialStore()
     {
 
+    }
+
+    void MaterialStore::addPresetMaterials()
+    {
+        createPresetMaterial(UnlitPerVertexColor3D,
+                             new UnlitPerVertexColourPresetMaterial(acquireNextMaterialId(),
+                                                                    PRESET_MATERIAL_PATH_PREFIX + "/unlitpervertexcolor3d"));
+    }
+
+    void MaterialStore::createPresetMaterial(PresetMaterial preset, Renderer::RenderMaterial *material)
+    {
+        createMaterialInternal(material);
+        m_PresetMaterialTable.insert(preset, material->materialStoreId());
     }
 
     quint32 MaterialStore::acquireNextMaterialId()
@@ -44,12 +65,15 @@ namespace Model
 
     Renderer::RenderMaterialPointer MaterialStore::createMaterialInternal(const QString &path, quint32 id)
     {
-        using namespace Renderer;
+        return createMaterialInternal(new Renderer::RenderMaterial(id, path));
+    }
 
-        RenderMaterialPointer material = RenderMaterialPointer::create(id, path);
-        m_MaterialTable.insert(id, material);
-        m_MaterialPathTable.insert(path, id);
-        return material;
+    Renderer::RenderMaterialPointer MaterialStore::createMaterialInternal(Renderer::RenderMaterial *material)
+    {
+        Renderer::RenderMaterialPointer materialPointer(material);
+        m_MaterialTable.insert(materialPointer->materialStoreId(), materialPointer);
+        m_MaterialPathTable.insert(materialPointer->path(), materialPointer->materialStoreId());
+        return materialPointer;
     }
 
     quint32 MaterialStore::getMaterialId(const QString &path) const
@@ -65,5 +89,21 @@ namespace Model
     Renderer::RenderMaterialPointer MaterialStore::defaultMaterial() const
     {
         return m_pDefaultMaterial;
+    }
+
+    Renderer::RenderMaterialPointer MaterialStore::presetMaterial(PresetMaterial material) const
+    {
+        quint32 materialId = m_PresetMaterialTable.value(material, 0);
+        if ( materialId == 0 )
+        {
+            return defaultMaterial();
+        }
+
+        return getMaterial(materialId);
+    }
+
+    quint32 MaterialStore::presetMaterialId(PresetMaterial material) const
+    {
+        return m_PresetMaterialTable.value(material, 0);
     }
 }

@@ -1,5 +1,6 @@
 #include "originmarker.h"
 #include "model/scene/scene.h"
+#include "model/global/resourceenvironment.h"
 
 namespace Model
 {
@@ -30,7 +31,8 @@ namespace Model
         using namespace Renderer;
 
         GeometrySection* section = builder.createNewSection(
-                    0,  // TODO: Needs an actual material
+                    ResourceEnvironment::globalInstance()->materialStore()
+                        ->presetMaterialId(MaterialStore::UnlitPerVertexColor3D),
                     builder.modelToWorldMatrix());
         section->setDrawMode(GL_LINES);
 
