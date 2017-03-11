@@ -17,11 +17,8 @@ namespace Model
     class MODELSHARED_EXPORT SceneRenderer
     {
     public:
-        // TODO: Make so that things can be set outside of constructor, and handle when they're null.
-        SceneRenderer(IRenderPassClassifier* renderPassClassifier,
-                      Renderer::RenderModel* renderer,
-                      Scene* scene);
-        SceneRenderer() {/*REMOVE ME*/}
+        SceneRenderer(Scene* scene,
+                      Renderer::RenderModel* renderer);
 
         Renderer::BaseShaderPalette* shaderPalette() const;
         void setShaderPalette(Renderer::BaseShaderPalette* palette);
@@ -36,12 +33,11 @@ namespace Model
         void updateObjectRecursive(SceneObject* object);
         void drawAllObjects(const QMatrix4x4& worldToCamera, const QMatrix4x4& projection);
 
-        IRenderPassClassifier* m_pRenderPassClassifier;
-        Renderer::RenderModel* m_pRenderer;
         Scene* m_pScene;
+        Renderer::RenderModel* m_pRenderer;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
-        Renderer::BaseShaderPalette* m_ShaderPalette;
+        Renderer::BaseShaderPalette* m_pShaderPalette;
         QVector3D m_vecDirectionalLight;
     };
 }

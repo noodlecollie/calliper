@@ -21,7 +21,7 @@ namespace UserInterface
         Q_OBJECT
     public:
         // Takes ownership of the classifier object.
-        explicit MapViewWindow(Model::IRenderPassClassifier* classifier);
+        explicit MapViewWindow();
         virtual ~MapViewWindow();
 
         QString vpkPath() const;
@@ -57,7 +57,6 @@ namespace UserInterface
         void destroy();
         void initRenderer();
         void initScene();
-        void initSceneRenderer();
         void initCameraController();
         void initKeyMap();
         void initMouseEventMap();
@@ -69,8 +68,6 @@ namespace UserInterface
         Model::MapFileDataModel* m_pVmfData;
 
         Renderer::RenderModel* m_pRenderer;
-        Model::IRenderPassClassifier* m_pRenderPassClassifier;
-        Model::SceneRenderer* m_pSceneRenderer;
 
         Model::CameraController* m_pCameraController;
         Model::KeyMap* m_pKeyMap;

@@ -19,15 +19,13 @@ using namespace Renderer;
 
 namespace UserInterface
 {
-    MapViewWindow::MapViewWindow(IRenderPassClassifier *classifier) :
+    MapViewWindow::MapViewWindow() :
         QOpenGLWindow(),
         m_strMapPath(),
         m_strVpkPath(),
         m_bInitialised(false),
         m_pVmfData(Q_NULLPTR),
         m_pRenderer(Q_NULLPTR),
-        m_pRenderPassClassifier(classifier),
-        m_pSceneRenderer(Q_NULLPTR),
         m_pCameraController(Q_NULLPTR),
         m_pKeyMap(Q_NULLPTR),
         m_pMouseEventMap(Q_NULLPTR)
@@ -52,9 +50,6 @@ namespace UserInterface
         delete m_pCameraController;
         m_pCameraController = Q_NULLPTR;
 
-        delete m_pSceneRenderer;
-        m_pSceneRenderer = Q_NULLPTR;
-
         delete m_pRenderer;
         m_pRenderer = Q_NULLPTR;
 
@@ -62,9 +57,6 @@ namespace UserInterface
         m_pVmfData = Q_NULLPTR;
 
         ResourceEnvironment::globalShutdown();
-
-        delete m_pRenderPassClassifier;
-        m_pRenderPassClassifier = Q_NULLPTR;
     }
 
     void MapViewWindow::initializeGL()
@@ -81,11 +73,6 @@ namespace UserInterface
 
         m_pRenderer = new Renderer::RenderModel();
         initRenderer();
-
-        m_pSceneRenderer = new SceneRenderer(m_pRenderPassClassifier,
-                                             m_pRenderer,
-                                             m_pVmfData->scene());
-        initSceneRenderer();
 
         m_pCameraController = new CameraController(this);
         initCameraController();
@@ -106,11 +93,12 @@ namespace UserInterface
             return;
         }
 
-        m_pSceneRenderer->setShaderPalette(/*TODO*/Q_NULLPTR);
+        // TODO: Set up scene renderer.
 
         GL_CURRENT_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-        m_pSceneRenderer->render(m_pVmfData->scene()->defaultCamera());
+
+        // TODO: Render with scene renderer.
     }
 
     void MapViewWindow::resizeGL(int w, int h)
@@ -146,11 +134,6 @@ namespace UserInterface
     }
 
     void MapViewWindow::initScene()
-    {
-
-    }
-
-    void MapViewWindow::initSceneRenderer()
     {
 
     }
@@ -245,16 +228,6 @@ namespace UserInterface
             return;
 
         m_strMapPath = path;
-    }
-
-    Model::IRenderPassClassifier* MapViewWindow::renderPassClassifier()
-    {
-        return m_pRenderPassClassifier;
-    }
-
-    const Model::IRenderPassClassifier* MapViewWindow::renderPassClassifier() const
-    {
-        return m_pRenderPassClassifier;
     }
 
     const FileFormats::VPKFileCollection& MapViewWindow::vpkFileCollection() const

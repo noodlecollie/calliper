@@ -12,18 +12,7 @@
 #include "model-loaders/vtf/vtfloader.h"
 #include "model/shaders/knownshaderdefs.h"
 
-class SimpleRenderClassifier : public Model::IRenderPassClassifier
-{
-public:
-    virtual int classify(quint32 objectId) const override
-    {
-        Q_UNUSED(objectId);
-        return 0;
-    }
-
-};
-
-MainWindow::MainWindow() : UserInterface::MapViewWindow(new SimpleRenderClassifier()),
+MainWindow::MainWindow() : UserInterface::MapViewWindow(),
     m_iPlaceholderMaterial(0)
 {
     resize(640, 480);

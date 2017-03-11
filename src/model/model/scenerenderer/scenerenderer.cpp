@@ -3,23 +3,30 @@
 
 namespace Model
 {
-    SceneRenderer::SceneRenderer(IRenderPassClassifier* renderPassClassifier,
-                                 Renderer::RenderModel* renderer,
-                                 Scene* scene)
-        : m_pRenderPassClassifier(renderPassClassifier),
+    SceneRenderer::SceneRenderer(Scene* scene,
+                                 Renderer::RenderModel* renderer)
+        : m_pScene(scene),
           m_pRenderer(renderer),
-          m_pScene(scene),
+          m_matRecursiveUpdateMatrix(),
+          m_pShaderPalette(Q_NULLPTR),
           m_vecDirectionalLight(QVector3D(1,1,1).normalized())
     {
-        Q_ASSERT_X(m_pRenderPassClassifier, Q_FUNC_INFO, "Render pass classifier cannot be null");
-        Q_ASSERT_X(m_pRenderer, Q_FUNC_INFO, "Renderer cannot be null");
         Q_ASSERT_X(m_pScene, Q_FUNC_INFO, "Scene cannot be null");
+        Q_ASSERT_X(m_pRenderer, Q_FUNC_INFO, "Renderer cannot be null");
     }
 
     void SceneRenderer::render(const SceneCamera *camera)
     {
         if ( !camera )
+        {
             return;
+        }
+
+        Q_ASSERT(m_pShaderPalette);
+        if ( !m_pShaderPalette )
+        {
+            return;
+        }
 
         m_matRecursiveUpdateMatrix.setToIdentity();
         updateObjectRecursive(m_pScene->rootObject());
@@ -28,6 +35,12 @@ namespace Model
 
     void SceneRenderer::render(const QMatrix4x4 &worldToCamera, const QMatrix4x4 &projection)
     {
+        Q_ASSERT(m_pShaderPalette);
+        if ( !m_pShaderPalette )
+        {
+            return;
+        }
+
         m_matRecursiveUpdateMatrix.setToIdentity();
         updateObjectRecursive(m_pScene->rootObject());
         drawAllObjects(worldToCamera, projection);
@@ -44,7 +57,7 @@ namespace Model
         if ( object->needsRendererUpdate() )
         {
             GeometryBuilder builder(resourceEnv->renderFunctors(),
-                                    m_ShaderPalette,
+                                    m_pShaderPalette,
                                     0,
                                     m_matRecursiveUpdateMatrix);
             object->rendererUpdate(builder);
@@ -52,7 +65,7 @@ namespace Model
             m_pRenderer->updateObject(
                 RendererInputObjectParams(
                     object->objectId(),
-                    m_pRenderPassClassifier->classify(object->objectId()),
+                    m_pScene->classify(object->objectId()),
                     builder
                 )
             );
@@ -81,12 +94,12 @@ namespace Model
 
     Renderer::BaseShaderPalette* SceneRenderer::shaderPalette() const
     {
-        return m_ShaderPalette;
+        return m_pShaderPalette;
     }
 
     void SceneRenderer::setShaderPalette(Renderer::BaseShaderPalette* palette)
     {
-        m_ShaderPalette = palette;
+        m_pShaderPalette = palette;
     }
 
     QVector3D SceneRenderer::directionalLight() const
