@@ -14,6 +14,11 @@ namespace AppCalliper
         connectDataChangedSignals(m_pProject);
     }
 
+    ApplicationProject::~ApplicationProject()
+    {
+        // TODO: Make a current context and delete the file store.
+    }
+
     QString ApplicationProject::fullPath() const
     {
         return m_strFullPath;

@@ -2,6 +2,7 @@
 #include <QtDebug>
 #include "renderer/opengl/openglerrors.h"
 #include "renderer/rendermodel/rendererobjectflags.h"
+#include "renderer/opengl/scopedcurrentcontext.h"
 
 namespace
 {
@@ -28,6 +29,9 @@ namespace Renderer
           m_DrawParams(),
           m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
     {
+        ScopedCurrentContext scopedContext;
+        Q_UNUSED(scopedContext);
+
         m_VAO.create();
         m_GlobalShaderUniforms.create();
         updateGlobalShaderUniforms();
@@ -35,6 +39,9 @@ namespace Renderer
 
     RenderModel::~RenderModel()
     {
+        ScopedCurrentContext scopedContext;
+        Q_UNUSED(scopedContext);
+
         clearRenderPasses();
         m_GlobalShaderUniforms.destroy();
         m_VAO.destroy();

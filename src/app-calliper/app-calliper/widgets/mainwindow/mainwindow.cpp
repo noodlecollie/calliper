@@ -33,7 +33,17 @@ namespace AppCalliper
 
     MainWindow::~MainWindow()
     {
+        // Do this first, so viewports release their models.
+        deleteViewports();
+
         delete ui;
+    }
+
+    void MainWindow::deleteViewports()
+    {
+        QWidget* central = centralWidget();
+        setCentralWidget(Q_NULLPTR);
+        delete central;
     }
 
     void MainWindow::menuOpenProject()
@@ -316,12 +326,8 @@ namespace AppCalliper
             return;
         }
 
-        Renderer::OpenGLBackgroundContext::globalInstance()->makeCurrent();
-
         QString errorString;
         ModelLoaders::BaseFileLoader::SuccessCode success = files.loadFile(fullPath, &errorString);
-
-        Renderer::OpenGLBackgroundContext::globalInstance()->doneCurrent();
 
         switch ( success )
         {

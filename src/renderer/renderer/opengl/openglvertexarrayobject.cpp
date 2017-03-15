@@ -33,6 +33,7 @@ namespace Renderer
 
         GL_CURRENT_F;
         GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
+        m_iVAOID = 0;
     }
 
     void OpenGLVertexArrayObject::bind()

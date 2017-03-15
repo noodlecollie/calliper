@@ -42,6 +42,7 @@ namespace AppCalliper
         void addNewProjectFiles();
 
     private:
+        void deleteViewports();
         void initDockWidgets();
         void initDockWidget(VisibleActionDockWidget* widget, QAction* action, Qt::DockWidgetArea area);
         void setNewApplicationProject(const QString& filePath, const QJsonDocument& project);

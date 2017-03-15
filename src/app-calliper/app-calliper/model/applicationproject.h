@@ -13,6 +13,7 @@ namespace AppCalliper
         Q_OBJECT
     public:
         explicit ApplicationProject(QObject* parent = 0);
+        ~ApplicationProject();
 
         QString fullPath() const;
         void setFullPath(const QString& path);

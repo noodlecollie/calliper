@@ -34,9 +34,7 @@ namespace UserInterface
 
     MapViewWindow::~MapViewWindow()
     {
-        makeCurrent();
         destroy();
-        doneCurrent();
     }
 
     void MapViewWindow::destroy()

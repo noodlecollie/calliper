@@ -4,6 +4,7 @@
 #include "model/shaders/unlitpervertexcolorshader.h"
 #include "renderer/global/openglbackgroundcontext.h"
 #include "calliperutil/debug/debug.h"
+#include "renderer/opengl/scopedcurrentcontext.h"
 
 namespace
 {
@@ -11,6 +12,14 @@ namespace
     {
         Model::ResourceEnvironment* resourceEnv = Model::ResourceEnvironment::globalInstance();
         resourceEnv->textureStore()->setDefaultTextureFromFile(":model/textures/_ERROR_");
+    }
+
+    void shutDownOpenGLSystems()
+    {
+        Renderer::ScopedCurrentContext scopedContext;
+        Q_UNUSED(scopedContext);
+
+        Model::ResourceEnvironment::globalShutdown();
     }
 }
 
@@ -22,21 +31,17 @@ namespace AppCalliper
         {
             Renderer::OpenGLBackgroundContext::globalInitialise();
             CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->create());
-            CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->makeCurrent());
+
+            Renderer::ScopedCurrentContext scopedContext;
+            Q_UNUSED(scopedContext);
 
             Model::ResourceEnvironment::globalInitialise();
             loadFailsafeTextures();
-
-            Renderer::OpenGLBackgroundContext::globalInstance()->doneCurrent();
         }
 
         void shutDownSubSystems()
         {
-            CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->makeCurrent());
-
-            Model::ResourceEnvironment::globalShutdown();
-
-            Renderer::OpenGLBackgroundContext::globalInstance()->doneCurrent();
+            shutDownOpenGLSystems();
 
             Renderer::OpenGLBackgroundContext::globalShutdown();
         }

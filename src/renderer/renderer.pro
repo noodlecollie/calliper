@@ -39,7 +39,8 @@ SOURCES += \
     renderer/shaders/shaderdefs.cpp \
     renderer/shaders/vertexformat.cpp \
     renderer/global/openglbackgroundcontext.cpp \
-    renderer/shaders/baseshaderpalette.cpp
+    renderer/shaders/baseshaderpalette.cpp \
+    renderer/opengl/scopedcurrentcontext.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -76,7 +77,8 @@ HEADERS +=\
     renderer/shaders/vertexformat.h \
     renderer/global/openglbackgroundcontext.h \
     renderer/shaders/baseshaderpalette.h \
-    renderer/functors/renderfunctorgroup.h
+    renderer/functors/renderfunctorgroup.h \
+    renderer/opengl/scopedcurrentcontext.h
 
 unix {
     target.path = /usr/lib

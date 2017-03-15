@@ -40,10 +40,13 @@ int main(int argc, char *argv[])
 
     ApplicationTasks::initSubSystems();
 
-    MainWindow w;
-    w.show();
+    MainWindow* w = new MainWindow();
+    w->show();
 
     int returnVal = a.exec();
+
+    delete w;
+    w = Q_NULLPTR;
 
     ApplicationTasks::shutDownSubSystems();
 

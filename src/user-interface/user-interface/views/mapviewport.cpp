@@ -12,6 +12,10 @@ namespace UserInterface
     {
     }
 
+    MapViewport::~MapViewport()
+    {
+    }
+
     void MapViewport::loadDataModel(const QSharedPointer<Model::BaseFileDataModel> &model)
     {
         m_pDataModel = model.dynamicCast<Model::MapFileDataModel>();

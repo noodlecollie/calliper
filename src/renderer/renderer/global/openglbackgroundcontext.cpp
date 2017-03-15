@@ -79,4 +79,14 @@ namespace Renderer
     {
         m_pContext->doneCurrent();
     }
+
+    QOpenGLContext* OpenGLBackgroundContext::context() const
+    {
+        return m_pContext;
+    }
+
+    QOffscreenSurface* OpenGLBackgroundContext::surface() const
+    {
+        return m_pSurface;
+    }
 }

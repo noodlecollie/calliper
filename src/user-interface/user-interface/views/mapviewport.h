@@ -14,6 +14,7 @@ namespace UserInterface
         Q_OBJECT
     public:
         MapViewport(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+        virtual ~MapViewport();
 
         virtual void loadDataModel(const QSharedPointer<Model::BaseFileDataModel> &model) override;
 
