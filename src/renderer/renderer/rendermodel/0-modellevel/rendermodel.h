@@ -61,10 +61,10 @@ namespace Renderer
                            MatrixBatch::MatrixBatchItemPointer &batchItem) const;
 
         RenderFunctorGroup m_RenderFunctors;
-        RendererDrawParams          m_DrawParams;
+        RendererDrawParams m_DrawParams;
 
-        GlobalShaderUniforms        m_GlobalShaderUniforms;
-        OpenGLVertexArrayObject     m_VAO;
+        GlobalShaderUniforms m_GlobalShaderUniforms;
+        OpenGLVertexArrayObject m_VAO;
 
         QMap<RenderModelPassKey, RenderModelPassPointer>   m_RenderPasses;
         QHash<quint32, RenderModelKeyListPointer> m_StoredObjects;

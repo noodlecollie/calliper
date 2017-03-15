@@ -14,6 +14,8 @@
 #include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
 #include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"
 #include "user-interface/modelviews/modelviewfactory.h"
+#include "user-interface/modelviews/imodelview.h"
+#include "renderer/global/openglbackgroundcontext.h"
 
 namespace AppCalliper
 {
@@ -314,8 +316,12 @@ namespace AppCalliper
             return;
         }
 
+        Renderer::OpenGLBackgroundContext::globalInstance()->makeCurrent();
+
         QString errorString;
         ModelLoaders::BaseFileLoader::SuccessCode success = files.loadFile(fullPath, &errorString);
+
+        Renderer::OpenGLBackgroundContext::globalInstance()->doneCurrent();
 
         switch ( success )
         {
@@ -367,6 +373,10 @@ namespace AppCalliper
         Q_ASSERT(view);
         view->setWindowTitle(QFileInfo(fullPath).fileName());
         ui->gridWidget->setSingleWidget(view);
+
+        UserInterface::IModelView* modelViewInterface = dynamic_cast<UserInterface::IModelView*>(view);
+        Q_ASSERT(modelViewInterface);
+        modelViewInterface->loadDataModel(dataModel);
     }
 
     QString MainWindow::getFullPath(const QString &localFilePath) const

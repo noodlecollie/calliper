@@ -3,27 +3,31 @@
 
 #include "user-interface_global.h"
 #include <QOpenGLWidget>
-#include "model/scene/mapscene.h"
-#include "model/scenerenderer/scenerenderer.h"
-#include <QPointer>
+#include "model/filedatamodels/map/mapfiledatamodel.h"
+#include <QSharedPointer>
+#include "user-interface/modelviews/imodelview.h"
 
 namespace UserInterface
 {
-    class MapViewport : public QOpenGLWidget
+    class MapViewport : public QOpenGLWidget, public IModelView
     {
         Q_OBJECT
     public:
         MapViewport(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 
-        Model::MapScene* scene() const;
-        void setScene(Model::MapScene* scene);
+        virtual void loadDataModel(const QSharedPointer<Model::BaseFileDataModel> &model) override;
 
     signals:
 
     public slots:
 
+    protected:
+        virtual void initializeGL() override;
+        virtual void paintGL() override;
+        virtual void resizeGL(int w, int h) override;
+
     private:
-        QPointer<Model::MapScene> m_pScene;
+        QSharedPointer<Model::MapFileDataModel> m_pDataModel;
     };
 }
 

@@ -1,4 +1,5 @@
 #include "mapfiledatamodel.h"
+#include "model/global/resourceenvironment.h"
 
 namespace Model
 {
@@ -6,7 +7,7 @@ namespace Model
         : BaseFileDataModel(),
           m_pScene(new MapScene())
     {
-
+        m_RenderModel.setRenderFunctors(ResourceEnvironment::globalInstance()->renderFunctors());
     }
 
     MapFileDataModel::~MapFileDataModel()
@@ -27,5 +28,15 @@ namespace Model
     const MapScene* MapFileDataModel::scene() const
     {
         return m_pScene.data();
+    }
+
+    Renderer::RenderModel* MapFileDataModel::renderModel()
+    {
+        return &m_RenderModel;
+    }
+
+    const Renderer::RenderModel* MapFileDataModel::renderModel() const
+    {
+        return &m_RenderModel;
     }
 }

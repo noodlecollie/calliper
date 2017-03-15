@@ -43,7 +43,8 @@ HEADERS +=\
     user-interface/arrangeable-tabs/widget/quadgridwidget.h \
     user-interface/modelviews/modelviewfactory.h \
     user-interface/views/mapviewport.h \
-    user-interface/icons/filedatamodeliconprovider.h
+    user-interface/icons/filedatamodeliconprovider.h \
+    user-interface/modelviews/imodelview.h
 
 unix {
     target.path = /usr/lib
