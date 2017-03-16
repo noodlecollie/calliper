@@ -3,15 +3,14 @@
 
 #include "user-interface_global.h"
 #include "model/filedatamodels/base/basefiledatamodel.h"
-
-class QWidget;
+#include "imodelview.h"
 
 namespace UserInterface
 {
     class USERINTERFACESHARED_EXPORT ModelViewFactory
     {
     public:
-        static QWidget* createView(Model::BaseFileDataModel::ModelType modelType);
+        static IModelView* createView(Model::BaseFileDataModel::ModelType modelType);
 
     private:
         ModelViewFactory() = delete;

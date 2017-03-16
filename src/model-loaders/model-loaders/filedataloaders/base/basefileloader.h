@@ -15,7 +15,6 @@ namespace ModelLoaders
     {
         Q_GADGET
     public:
-        // TODO: Rename these enums to distinguish between the loader and the model.
         enum LoaderType
         {
             UnknownLoader = 0,

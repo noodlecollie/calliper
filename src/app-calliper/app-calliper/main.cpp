@@ -36,8 +36,6 @@ int main(int argc, char *argv[])
     a.setOrganizationName("Infra");
     a.setOrganizationName("Infra");
 
-    // TODO: Set up an OpenGL context we can use to initialise stuff.
-
     ApplicationTasks::initSubSystems();
 
     MainWindow* w = new MainWindow();

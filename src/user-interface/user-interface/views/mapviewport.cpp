@@ -16,9 +16,30 @@ namespace UserInterface
     {
     }
 
-    void MapViewport::loadDataModel(const QSharedPointer<Model::BaseFileDataModel> &model)
+    QWidget* MapViewport::modelViewToWidget()
     {
-        m_pDataModel = model.dynamicCast<Model::MapFileDataModel>();
+        return this;
+    }
+
+    const QWidget* MapViewport::modelViewToWidget() const
+    {
+        return this;
+    }
+
+    QWeakPointer<Model::BaseFileDataModel> MapViewport::dataModel() const
+    {
+        return m_pDataModel;
+    }
+
+    void MapViewport::setDataModel(const QWeakPointer<Model::BaseFileDataModel> &model)
+    {
+        QSharedPointer<Model::MapFileDataModel> mapModel = qSharedPointerDynamicCast<Model::MapFileDataModel>(model);
+        if ( mapModel.isNull() )
+        {
+            m_pDataModel = QWeakPointer<Model::MapFileDataModel>();
+        }
+
+        m_pDataModel = mapModel.toWeakRef();
     }
 
     void MapViewport::initializeGL()
@@ -34,29 +55,31 @@ namespace UserInterface
 
     void MapViewport::paintGL()
     {
-        if ( !m_pDataModel )
+        MapFileDataModelPointer mapModel = m_pDataModel.toStrongRef();
+        if ( !mapModel )
         {
             return;
         }
 
-        Model::SceneRenderer sceneRenderer(m_pDataModel->scene(), m_pDataModel->renderModel());
+        Model::SceneRenderer sceneRenderer(mapModel->scene(), mapModel->renderModel());
         sceneRenderer.setShaderPalette(Model::ResourceEnvironment::globalInstance()->shaderPaletteStore()
                                        ->shaderPalette(Model::ShaderPaletteStore::SimpleLitTexturedRenderMode));
 
         GL_CURRENT_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-        sceneRenderer.render(m_pDataModel->scene()->defaultCamera());
+        sceneRenderer.render(mapModel->scene()->defaultCamera());
     }
 
     void MapViewport::resizeGL(int w, int h)
     {
-        if ( !m_pDataModel )
+        MapFileDataModelPointer mapModel = m_pDataModel.toStrongRef();
+        if ( !mapModel )
         {
             return;
         }
 
-        Model::SceneCamera* camera = m_pDataModel->scene()->defaultCamera();
+        Model::SceneCamera* camera = mapModel->scene()->defaultCamera();
 
         Model::CameraLens lens = camera->lens();
         lens.setAspectRatio(static_cast<float>(w)/static_cast<float>(h));

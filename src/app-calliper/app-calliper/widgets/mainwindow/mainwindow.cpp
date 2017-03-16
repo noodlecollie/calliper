@@ -375,14 +375,13 @@ namespace AppCalliper
             return;
         }
 
-        QWidget* view = UserInterface::ModelViewFactory::createView(dataModel->type());
-        Q_ASSERT(view);
-        view->setWindowTitle(QFileInfo(fullPath).fileName());
-        ui->gridWidget->setSingleWidget(view);
+        UserInterface::IModelView* view = UserInterface::ModelViewFactory::createView(dataModel->type());
+        QWidget* viewWidget = view->modelViewToWidget();
+        Q_ASSERT(viewWidget);
+        viewWidget->setWindowTitle(QFileInfo(fullPath).fileName());
+        ui->gridWidget->setSingleWidget(viewWidget);
 
-        UserInterface::IModelView* modelViewInterface = dynamic_cast<UserInterface::IModelView*>(view);
-        Q_ASSERT(modelViewInterface);
-        modelViewInterface->loadDataModel(dataModel);
+        view->setDataModel(dataModel);
     }
 
     QString MainWindow::getFullPath(const QString &localFilePath) const

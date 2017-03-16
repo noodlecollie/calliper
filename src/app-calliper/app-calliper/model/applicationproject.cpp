@@ -16,7 +16,6 @@ namespace AppCalliper
 
     ApplicationProject::~ApplicationProject()
     {
-        // TODO: Make a current context and delete the file store.
     }
 
     QString ApplicationProject::fullPath() const

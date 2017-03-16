@@ -4,16 +4,13 @@
 
 namespace UserInterface
 {
-    QWidget* ModelViewFactory::createView(Model::BaseFileDataModel::ModelType modelType)
+    IModelView* ModelViewFactory::createView(Model::BaseFileDataModel::ModelType modelType)
     {
-        QWidget* view = Q_NULLPTR;
-
         switch ( modelType )
         {
             case Model::BaseFileDataModel::MapModel:
             {
-                view = new MapViewport();
-                break;
+                return new MapViewport();
             }
 
             default:
@@ -22,15 +19,5 @@ namespace UserInterface
                 return Q_NULLPTR;
             }
         }
-
-        IModelView* modelViewInterface = dynamic_cast<IModelView*>(view);
-        Q_ASSERT_X(modelViewInterface, Q_FUNC_INFO, "Expected view to implement interface!");
-        if ( !modelViewInterface )
-        {
-            delete view;
-            return Q_NULLPTR;
-        }
-
-        return view;
     }
 }

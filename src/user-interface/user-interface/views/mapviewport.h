@@ -16,7 +16,11 @@ namespace UserInterface
         MapViewport(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
         virtual ~MapViewport();
 
-        virtual void loadDataModel(const QSharedPointer<Model::BaseFileDataModel> &model) override;
+        virtual QWidget* modelViewToWidget() override;
+        virtual const QWidget* modelViewToWidget() const override;
+
+        virtual QWeakPointer<Model::BaseFileDataModel> dataModel() const override;
+        virtual void setDataModel(const QWeakPointer<Model::BaseFileDataModel> &model) override;
 
     signals:
 
@@ -28,7 +32,10 @@ namespace UserInterface
         virtual void resizeGL(int w, int h) override;
 
     private:
-        QSharedPointer<Model::MapFileDataModel> m_pDataModel;
+        typedef QWeakPointer<Model::MapFileDataModel> MapFileDataModelWeakRef;
+        typedef QSharedPointer<Model::MapFileDataModel> MapFileDataModelPointer;
+
+        MapFileDataModelWeakRef m_pDataModel;
     };
 }
 

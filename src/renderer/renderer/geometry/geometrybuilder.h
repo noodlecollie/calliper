@@ -12,7 +12,6 @@ namespace Renderer
     class RENDERERSHARED_EXPORT GeometryBuilder
     {
     public:
-        // TODO: May be better to put all of these inputs (certainly the functors/palette) into some container class/struct?
         GeometryBuilder(const RenderFunctorGroup& renderFunctors,
                         BaseShaderPalette* shaderPalette,
                         quint32 materialId,
