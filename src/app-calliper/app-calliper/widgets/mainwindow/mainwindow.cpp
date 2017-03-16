@@ -376,12 +376,12 @@ namespace AppCalliper
         }
 
         UserInterface::IModelView* view = UserInterface::ModelViewFactory::createView(dataModel->type());
+        view->setDataModel(dataModel);
+
         QWidget* viewWidget = view->modelViewToWidget();
         Q_ASSERT(viewWidget);
         viewWidget->setWindowTitle(QFileInfo(fullPath).fileName());
         ui->gridWidget->setSingleWidget(viewWidget);
-
-        view->setDataModel(dataModel);
     }
 
     QString MainWindow::getFullPath(const QString &localFilePath) const

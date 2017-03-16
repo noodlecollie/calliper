@@ -7,6 +7,13 @@
 #include <QSharedPointer>
 #include "user-interface/modelviews/imodelview.h"
 
+namespace Model
+{
+    class CameraController;
+    class KeyMap;
+    class MouseEventMap;
+}
+
 namespace UserInterface
 {
     class MapViewport : public QOpenGLWidget, public IModelView
@@ -27,15 +34,31 @@ namespace UserInterface
     public slots:
 
     protected:
+        typedef QWeakPointer<Model::MapFileDataModel> MapFileDataModelWeakRef;
+        typedef QSharedPointer<Model::MapFileDataModel> MapFileDataModelPointer;
+
         virtual void initializeGL() override;
         virtual void paintGL() override;
         virtual void resizeGL(int w, int h) override;
 
+        MapFileDataModelPointer mapDataModel();
+
+    private slots:
+        void handleMouseMovedX(float amount);
+        void handleMouseMovedY(float amount);
+
     private:
-        typedef QWeakPointer<Model::MapFileDataModel> MapFileDataModelWeakRef;
-        typedef QSharedPointer<Model::MapFileDataModel> MapFileDataModelPointer;
+        typedef void (Model::CameraController::* CameraControlSlot)(bool);
+
+        void initKeyMap();
+        void initMouseEventMap();
+        void connectCameraControl(Qt::Key key, CameraControlSlot slot);
 
         MapFileDataModelWeakRef m_pDataModel;
+
+        Model::CameraController* m_pCameraController;
+        Model::KeyMap* m_pKeyMap;
+        Model::MouseEventMap* m_pMouseEventMap;
     };
 }
 
