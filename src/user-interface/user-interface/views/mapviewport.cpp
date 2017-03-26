@@ -1,5 +1,7 @@
 #include "mapviewport.h"
 
+#include <QFocusEvent>
+
 #include "renderer/opengl/openglhelpers.h"
 #include "renderer/opengl/openglerrors.h"
 
@@ -11,12 +13,13 @@
 
 namespace
 {
-    const Qt::Key FORWARD_KEY_DEFAULT = Qt::Key_W;
-    const Qt::Key BACKWARD_KEY_DEFAULT = Qt::Key_S;
-    const Qt::Key LEFT_KEY_DEFAULT = Qt::Key_A;
-    const Qt::Key RIGHT_KEY_DEFAULT = Qt::Key_D;
-    const Qt::Key UP_KEY_DEFAULT = Qt::Key_Q;
-    const Qt::Key DOWN_KEY_DEFAULT = Qt::Key_Z;
+    const Qt::Key KEY_FORWARD_DEFAULT = Qt::Key_W;
+    const Qt::Key KEY_BACKWARD_DEFAULT = Qt::Key_S;
+    const Qt::Key KEY_LEFT_DEFAULT = Qt::Key_A;
+    const Qt::Key KEY_RIGHT_DEFAULT = Qt::Key_D;
+    const Qt::Key KEY_UP_DEFAULT = Qt::Key_Q;
+    const Qt::Key KEY_DOWN_DEFAULT = Qt::Key_Z;
+    const Qt::Key KEY_MOUSELOOK_TOGGLE_DEFAULT = Qt::Key_Space;
 }
 
 namespace UserInterface
@@ -28,6 +31,10 @@ namespace UserInterface
           m_pKeyMap(new Model::KeyMap(this)),
           m_pMouseEventMap(new Model::MouseEventMap(this))
     {
+        setFocusPolicy(Qt::StrongFocus);
+        setMouseTracking(true);
+
+        initCameraController();
         initKeyMap();
         initMouseEventMap();
     }
@@ -60,11 +67,24 @@ namespace UserInterface
         }
 
         m_pDataModel = mapModel.toWeakRef();
+        m_pCameraController->setCamera(mapModel->scene()->defaultCamera());
     }
 
     MapViewport::MapFileDataModelPointer MapViewport::mapDataModel()
     {
         return m_pDataModel.toStrongRef();
+    }
+
+    void MapViewport::initCameraController()
+    {
+        // Camera controller is enabled on focus.
+        m_pCameraController->setEnabled(false);
+
+        m_pCameraController->setStrafeSpeed(100.0f);
+        m_pCameraController->setForwardSpeed(100.0f);
+        m_pCameraController->setVerticalSpeed(100.0f);
+
+        connect(m_pCameraController, &Model::CameraController::tickFinished, this, [this]{ update(); });
     }
 
     void MapViewport::initKeyMap()
@@ -73,12 +93,15 @@ namespace UserInterface
 
         installEventFilter(m_pKeyMap);
 
-        connectCameraControl(FORWARD_KEY_DEFAULT, &CameraController::moveForward);
-        connectCameraControl(BACKWARD_KEY_DEFAULT, &CameraController::moveBackward);
-        connectCameraControl(LEFT_KEY_DEFAULT, &CameraController::moveLeft);
-        connectCameraControl(RIGHT_KEY_DEFAULT, &CameraController::moveRight);
-        connectCameraControl(UP_KEY_DEFAULT, &CameraController::moveUp);
-        connectCameraControl(DOWN_KEY_DEFAULT, &CameraController::moveDown);
+        connectCameraControl(KEY_FORWARD_DEFAULT, &CameraController::moveForward);
+        connectCameraControl(KEY_BACKWARD_DEFAULT, &CameraController::moveBackward);
+        connectCameraControl(KEY_LEFT_DEFAULT, &CameraController::moveLeft);
+        connectCameraControl(KEY_RIGHT_DEFAULT, &CameraController::moveRight);
+        connectCameraControl(KEY_UP_DEFAULT, &CameraController::moveUp);
+        connectCameraControl(KEY_DOWN_DEFAULT, &CameraController::moveDown);
+
+        connect(m_pKeyMap->addKeyMap(KEY_MOUSELOOK_TOGGLE_DEFAULT, Model::KeySignalSender::KeyPress), &Model::KeySignalSender::keyEvent,
+                this, &MapViewport::toggleMouseLookEnabled);
     }
 
     void MapViewport::connectCameraControl(Qt::Key key, CameraControlSlot slot)
@@ -91,6 +114,8 @@ namespace UserInterface
         using namespace Model;
 
         installEventFilter(m_pMouseEventMap);
+
+        m_pMouseEventMap->setShouldResetMouse(true);
 
         connect(m_pMouseEventMap, &MouseEventMap::mouseMovedX, this, &MapViewport::handleMouseMovedX);
         connect(m_pMouseEventMap, &MouseEventMap::mouseMovedY, this, &MapViewport::handleMouseMovedY);
@@ -150,5 +175,44 @@ namespace UserInterface
         Model::CameraLens lens = camera->lens();
         lens.setAspectRatio(static_cast<float>(w)/static_cast<float>(h));
         camera->setLens(lens);
+    }
+
+    void MapViewport::focusInEvent(QFocusEvent *event)
+    {
+        QOpenGLWidget::focusInEvent(event);
+
+        m_pCameraController->setEnabled(true);
+    }
+
+    void MapViewport::focusOutEvent(QFocusEvent *event)
+    {
+        QOpenGLWidget::focusOutEvent(event);
+
+        m_pCameraController->setEnabled(false);
+        setMouseLookEnabled(false);
+    }
+
+    bool MapViewport::mouseLookEnabled() const
+    {
+        return m_pMouseEventMap->enabled();
+    }
+
+    void MapViewport::setMouseLookEnabled(bool enabled)
+    {
+        m_pMouseEventMap->setEnabled(enabled);
+
+        if ( enabled )
+        {
+            grabMouse();
+        }
+        else
+        {
+            releaseMouse();
+        }
+    }
+
+    void MapViewport::toggleMouseLookEnabled()
+    {
+        setMouseLookEnabled(!mouseLookEnabled());
     }
 }

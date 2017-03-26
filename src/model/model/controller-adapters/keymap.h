@@ -16,7 +16,7 @@ namespace Model
         bool eventFilter(QObject *watched, QEvent *event) override;
 
         KeySignalSender* keyMap(int key) const;
-        KeySignalSender* addKeyMap(int key);
+        KeySignalSender* addKeyMap(int key, KeySignalSender::SignalModeFlags signalMode = KeySignalSender::KeyPress | KeySignalSender::KeyRelease);
         void removeKeyMap(int key);
 
     private:

@@ -26,6 +26,9 @@ namespace Model
 
         void setLastMousePositionInvalid();
 
+        bool shouldResetMouse() const;
+        void setShouldResetMouse(bool shouldReset);
+
         virtual bool eventFilter(QObject *watched, QEvent *event);
 
     signals:
@@ -35,8 +38,9 @@ namespace Model
     public slots:
 
     private:
-        void processMouseMove(QMouseEvent* e);
+        void processMouseMove(QObject* watched, QMouseEvent* e);
         void setLastMousePosition(const QPoint &p);
+        void setMouseToCentreOfWidget(QObject* watched);
 
         bool m_bEnabled;
         float m_flHorizontalSensitivity;
@@ -44,6 +48,7 @@ namespace Model
 
         QPoint m_LastMousePosition;
         bool m_bLastMousePositionValid;
+        bool m_bShouldResetMouse;
     };
 }
 

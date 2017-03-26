@@ -51,13 +51,13 @@ namespace Model
         return m_KeyMap.value(key, Q_NULLPTR);
     }
 
-    KeySignalSender* KeyMap::addKeyMap(int key)
+    KeySignalSender* KeyMap::addKeyMap(int key, KeySignalSender::SignalModeFlags signalMode)
     {
         KeySignalSender* sender = m_KeyMap.value(key, Q_NULLPTR);
 
         if ( !sender )
         {
-            sender = new KeySignalSender(this);
+            sender = new KeySignalSender(signalMode, this);
             m_KeyMap.insert(key, sender);
         }
 

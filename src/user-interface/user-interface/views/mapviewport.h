@@ -29,13 +29,20 @@ namespace UserInterface
         virtual QWeakPointer<Model::BaseFileDataModel> dataModel() const override;
         virtual void setDataModel(const QWeakPointer<Model::BaseFileDataModel> &model) override;
 
+        bool mouseLookEnabled() const;
+
     signals:
 
     public slots:
+        void toggleMouseLookEnabled();
+        void setMouseLookEnabled(bool enabled);
 
     protected:
         typedef QWeakPointer<Model::MapFileDataModel> MapFileDataModelWeakRef;
         typedef QSharedPointer<Model::MapFileDataModel> MapFileDataModelPointer;
+
+        virtual void focusInEvent(QFocusEvent *event) override;
+        virtual void focusOutEvent(QFocusEvent *event) override;
 
         virtual void initializeGL() override;
         virtual void paintGL() override;
@@ -50,6 +57,7 @@ namespace UserInterface
     private:
         typedef void (Model::CameraController::* CameraControlSlot)(bool);
 
+        void initCameraController();
         void initKeyMap();
         void initMouseEventMap();
         void connectCameraControl(Qt::Key key, CameraControlSlot slot);
