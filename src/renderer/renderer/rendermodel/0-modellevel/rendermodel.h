@@ -2,11 +2,14 @@
 #define RENDERMODEL_H
 
 #include "renderer_global.h"
-#include <QMap>
-#include "renderer/rendermodel/1-passlevel/rendermodelpass.h"
-#include "renderer/rendermodel/1-passlevel/rendermodelpasskey.h"
+
 #include <QHash>
 #include <QList>
+#include <QMap>
+#include <QLoggingCategory>
+
+#include "renderer/rendermodel/1-passlevel/rendermodelpass.h"
+#include "renderer/rendermodel/1-passlevel/rendermodelpasskey.h"
 #include "renderer/shaders/globalshaderuniforms.h"
 #include "renderer/opengl/openglvertexarrayobject.h"
 #include "renderer/rendermodel/rendererinputobjectparams.h"
@@ -15,6 +18,8 @@
 
 namespace Renderer
 {
+    Q_DECLARE_LOGGING_CATEGORY(lcRenderModelVerbose)
+
     class RENDERERSHARED_EXPORT RenderModel
     {
     public:

@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QVector>
 #include <QString>
+#include <QLoggingCategory>
 
 namespace Model
 {
@@ -15,6 +16,8 @@ namespace Model
 
 namespace ModelLoaders
 {
+    Q_DECLARE_LOGGING_CATEGORY(lcVmfDataLoader)
+
     class MODELLOADERSSHARED_EXPORT VmfDataLoader : public BaseFileLoader
     {
     public:

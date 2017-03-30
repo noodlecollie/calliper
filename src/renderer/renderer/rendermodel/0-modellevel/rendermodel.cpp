@@ -24,6 +24,8 @@ namespace
 
 namespace Renderer
 {
+    Q_LOGGING_CATEGORY(lcRenderModelVerbose, "Renderer.RenderModel.Verbose")
+
     RenderModel::RenderModel()
         : m_RenderFunctors(),
           m_DrawParams(),

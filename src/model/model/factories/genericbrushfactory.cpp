@@ -16,11 +16,11 @@ namespace Model
             ModelMath::clipWindingsWithEachOther<TexturedWinding>(windings);
             QList<QVector3D> vertices = ModelMath::windingsToVertices<TexturedWinding>(windings);
 
-            GenericBrush* b = scene->createSceneObject<GenericBrush>(parent);
+            GenericBrush* brush = scene->createSceneObject<GenericBrush>(parent);
             if ( vertices.count() < 1 )
-                return b;
+                return brush;
 
-            b->appendBrushVertices(vertices.toVector());
+            brush->appendBrushVertices(vertices.toVector());
 
             for ( int i = 0; i < windings.count(); i++ )
             {
@@ -28,12 +28,12 @@ namespace Model
                 if ( windingFace->vertexCount() < 1 )
                     continue;
 
-                GenericBrushFace* face = b->createAndObtainBrushFace();
+                GenericBrushFace* face = brush->createAndObtainBrushFace();
                 face->texturePlane()->setMaterialId(windingFace->materialId());
                 face->appendIndices(windingFace->vertexIndices().toVector());
             }
 
-            return b;
+            return brush;
         }
 
         GenericBrush* createBrushFromMinMaxVectors(SceneObject *parent, const QVector3D &min, const QVector3D &max)

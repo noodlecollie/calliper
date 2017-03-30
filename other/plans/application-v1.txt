@@ -5,3 +5,8 @@
 - Float views.
 - Edit project metadata. (Done)
 - Fix all TODOs.
+
+Bugs:
+- Currently textured faces don't show up - this is something to do with the texture, as commenting out the texture sampling in the shader fixes it.
+    However, if the project is opened again while already open and the map file is double clicked again, the faces then show properly.
+- If a map file is double clicked to show a viewport and the viewport is closed, it does not reopen if the map is double clicked again.

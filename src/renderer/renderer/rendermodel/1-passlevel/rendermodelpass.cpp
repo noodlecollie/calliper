@@ -139,7 +139,7 @@ namespace Renderer
 
         for ( TextureUnitMap::const_iterator it = m_TextureUnitMap.constBegin(); it != m_TextureUnitMap.constEnd(); ++it )
         {
-            OpenGLTexturePointer tex = (*m_RenderFunctors.textureFunctor)(it.value());
+             OpenGLTexturePointer tex = (*m_RenderFunctors.textureFunctor)(it.value());
             if ( tex.isNull() )
                 continue;
 

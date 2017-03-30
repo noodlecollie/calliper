@@ -2,12 +2,17 @@
 #define TEXTURESTORE_H
 
 #include "model_global.h"
+
 #include <QHash>
+#include <QLoggingCategory>
+
 #include "renderer/opengl/opengltexture.h"
 #include "renderer/functors/itextureretrievalfunctor.h"
 
 namespace Model
 {
+    Q_DECLARE_LOGGING_CATEGORY(lcTextureStore)
+
     class MODELSHARED_EXPORT TextureStore : public Renderer::ITextureRetrievalFunctor
     {
     public:

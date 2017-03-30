@@ -204,10 +204,12 @@ namespace UserInterface
         if ( enabled )
         {
             grabMouse();
+            setCursor(Qt::BlankCursor);
         }
         else
         {
             releaseMouse();
+            unsetCursor();
         }
     }
 

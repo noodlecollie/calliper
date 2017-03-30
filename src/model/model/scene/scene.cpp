@@ -72,6 +72,11 @@ namespace Model
         }
     }
 
+    int Scene::sceneObjectCount() const
+    {
+        return m_ObjectTable.count();
+    }
+
     SceneObject* Scene::rootObject() const
     {
         return m_pRootObject;

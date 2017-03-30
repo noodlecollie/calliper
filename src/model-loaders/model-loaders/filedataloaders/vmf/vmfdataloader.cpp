@@ -99,6 +99,8 @@ namespace
 
 namespace ModelLoaders
 {
+    Q_LOGGING_CATEGORY(lcVmfDataLoader, "ModelLoaders.VmfDataLoader")
+
     VmfDataLoader::VmfDataLoader()
         : BaseFileLoader(),
           m_iSuccess(Success)
@@ -184,6 +186,8 @@ namespace ModelLoaders
         QJsonObject world = doc.object().value("world").toObject();
         CalliperUtil::Json::JsonArrayWrapper solids = world.value("solid");
 
+        qCDebug(lcVmfDataLoader) << "World contains" << solids.count() << "solids";
+
         for ( int i = 0; i < solids.count(); i++ )
         {
             createBrushForSolid(solids.at(i).toObject());
@@ -197,7 +201,15 @@ namespace ModelLoaders
 
         QList<TexturedWinding*> polygons;
         QJsonArray sides = solid.value("side").toArray();
-        int solidId = solid.value("id").toInt();
+
+        bool bGotId = false;
+        int solidId = solid.value("id").toString().toInt(&bGotId);
+        if ( !bGotId )
+        {
+            qCWarning(lcVmfDataLoader) << "Solid encountered with invalid ID";
+            m_iSuccess = PartialSuccess;
+            return;
+        }
 
         for ( int j = 0; j < sides.count(); j++ )
         {
@@ -208,6 +220,7 @@ namespace ModelLoaders
             }
             else
             {
+                qCWarning(lcVmfDataLoader) << "Unable to create side" << j << "for solid with ID" << solidId;
                 qDeleteAll(polygons);
                 m_iSuccess = PartialSuccess;
                 return;
@@ -249,7 +262,8 @@ namespace ModelLoaders
 
         MaterialStore* materialStore = ResourceEnvironment::globalInstance()->materialStore();
 
-        TexturedWinding* winding = new TexturedWinding(Plane3D(v0, v2, v1), materialStore->getMaterialId(materialPath));
+        quint32 materialId = materialStore->getMaterialId(materialPath);
+        TexturedWinding* winding = new TexturedWinding(Plane3D(v0, v2, v1), materialId);
         Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
 
         return winding;

@@ -3,6 +3,8 @@
 
 namespace Model
 {
+    Q_LOGGING_CATEGORY(lcTextureStore, "Model.TextureStore")
+
     TextureStore::TextureStore()
         : m_iNextTextureId(1),
           m_pDefaultTexture(Renderer::OpenGLTexturePointer::create(0, QOpenGLTexture::Target2D))
@@ -109,7 +111,10 @@ namespace Model
     {
         QImage image(path);
         if ( image.isNull() )
+        {
+            qCWarning(lcTextureStore) << "Failed to get QImage when setting default texture to" << path;
             return;
+        }
 
         m_pDefaultTexture->setData(image.mirrored());
         m_pDefaultTexture->create();
