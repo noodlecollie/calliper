@@ -56,12 +56,12 @@ namespace AppCalliper
 
     void ProjectFileDockWidget::clear()
     {
-
+        m_pTreeWidget->clear();
     }
 
     void ProjectFileDockWidget::clearProjectFiles()
     {
-
+        m_pTreeWidget->clearProjectFiles();
     }
 
     void ProjectFileDockWidget::setProject(const QString &projectFilePath)

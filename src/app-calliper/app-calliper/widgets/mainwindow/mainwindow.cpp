@@ -46,6 +46,11 @@ namespace AppCalliper
         delete central;
     }
 
+    void MainWindow::closeViewports()
+    {
+        ui->gridWidget->clear();
+    }
+
     void MainWindow::menuOpenProject()
     {
         QString defaultPath = getFileDialogueDefaultPath();
@@ -70,8 +75,9 @@ namespace AppCalliper
         if ( !ensureProjectIsSaved() )
             return;
 
+        closeViewports();
         setProject(Q_NULLPTR);
-        repopulateProjectFileTree();
+        clearProjectFileTree();
     }
 
     void MainWindow::menuNewProject()
@@ -223,6 +229,11 @@ namespace AppCalliper
         }
     }
 
+    void MainWindow::clearProjectFileTree()
+    {
+        m_pProjectFileDockWidget->clear();
+    }
+
     void MainWindow::updateProjectFileTreeName()
     {
         if ( !m_pProject )
@@ -321,45 +332,43 @@ namespace AppCalliper
         QString fullPath = getFullPath(localPath);
 
         ModelLoaders::FileDataModelStore& files = m_pProject->fileStore();
-        if ( files.isFileLoaded(fullPath) )
+        if ( !files.isFileLoaded(fullPath) )
         {
-            return;
-        }
+            QString errorString;
+            ModelLoaders::BaseFileLoader::SuccessCode success = files.loadFile(fullPath, &errorString);
 
-        QString errorString;
-        ModelLoaders::BaseFileLoader::SuccessCode success = files.loadFile(fullPath, &errorString);
-
-        switch ( success )
-        {
-            case ModelLoaders::BaseFileLoader::Failure:
+            switch ( success )
             {
-                QMessageBox box(QMessageBox::Critical,
-                                tr("Error loading file"),
-                                tr("There was a critical error loading the file %1").arg(fullPath),
-                                QMessageBox::Ok);
+                case ModelLoaders::BaseFileLoader::Failure:
+                {
+                    QMessageBox box(QMessageBox::Critical,
+                                    tr("Error loading file"),
+                                    tr("There was a critical error loading the file %1").arg(fullPath),
+                                    QMessageBox::Ok);
 
-                box.setDetailedText(errorString);
-                box.exec();
+                    box.setDetailedText(errorString);
+                    box.exec();
 
-                return;
+                    return;
+                }
+
+                case ModelLoaders::BaseFileLoader::PartialSuccess:
+                {
+                    QMessageBox box(QMessageBox::Warning,
+                                    tr("Error loading file"),
+                                    tr("File %1 was loaded, but some errors occurred.").arg(fullPath),
+                                    QMessageBox::Ok);
+
+                    box.setInformativeText(tr("See details."));
+                    box.setDetailedText(errorString);
+                    box.exec();
+
+                    break;
+                }
+
+                default:
+                    break;
             }
-
-            case ModelLoaders::BaseFileLoader::PartialSuccess:
-            {
-                QMessageBox box(QMessageBox::Warning,
-                                tr("Error loading file"),
-                                tr("File %1 was loaded, but some errors occurred.").arg(fullPath),
-                                QMessageBox::Ok);
-
-                box.setInformativeText(tr("See details."));
-                box.setDetailedText(errorString);
-                box.exec();
-
-                break;
-            }
-
-            default:
-                break;
         }
 
         QSharedPointer<Model::BaseFileDataModel> dataModel = files.dataModel(fullPath);
@@ -372,6 +381,11 @@ namespace AppCalliper
                             QMessageBox::Ok);
 
             box.exec();
+            return;
+        }
+
+        if ( ui->gridWidget->singleWidget() )
+        {
             return;
         }
 

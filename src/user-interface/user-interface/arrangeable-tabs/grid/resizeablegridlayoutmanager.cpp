@@ -123,6 +123,11 @@ namespace UserInterface
         return removeWidget(container, container->currentWidgetIndex(), mergePreference);
     }
 
+    QWidget* ResizeableGridLayoutManager::widgetAt(QuadGridLayoutDefs::GridCell cell) const
+    {
+        return m_pModel->widgetAt(cell);
+    }
+
     ResizeableGridLayoutContainer* ResizeableGridLayoutManager::containerAt(QuadGridLayoutDefs::GridCell cell) const
     {
         return qobject_cast<ResizeableGridLayoutContainer*>(m_pModel->widgetAt(cell));
@@ -164,6 +169,11 @@ namespace UserInterface
     {
         removeAllWidgetsFromGridLayout();
         m_pModel->deleteAllWidgets();
+    }
+
+    int ResizeableGridLayoutManager::widgetCount() const
+    {
+        return m_pModel->widgetCount();
     }
 
     void ResizeableGridLayoutManager::resizeButtonDragged(int deltaX, int deltaY)

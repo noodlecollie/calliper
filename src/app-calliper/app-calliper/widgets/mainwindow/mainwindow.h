@@ -42,6 +42,7 @@ namespace AppCalliper
         void addNewProjectFiles();
 
     private:
+        void closeViewports();
         void deleteViewports();
         void initDockWidgets();
         void initDockWidget(VisibleActionDockWidget* widget, QAction* action, Qt::DockWidgetArea area);
@@ -50,6 +51,7 @@ namespace AppCalliper
         QString getFileDialogueDefaultPath() const;
         void updateWindowTitle();
         void repopulateProjectFileTree();
+        void clearProjectFileTree();
         void updateProjectFileTreeName();
         void setProject(ApplicationProject* newProject);
         bool ensureProjectIsSaved();

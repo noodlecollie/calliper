@@ -35,9 +35,11 @@ namespace UserInterface
         void insertWidget(QWidget* widget, QuadGridLayoutDefs::GridCell cell);
 
         QWidget* takeActiveWidget(QuadGridLayoutDefs::GridCell cell, Qt::Orientation mergePreference);
+        QWidget* widgetAt(QuadGridLayoutDefs::GridCell cell) const;
 
         void equaliseCellSizes();
         void clear();
+        int widgetCount() const;
 
     signals:
         void widgetFloated(QWidget* widget, const QPoint& globalPos, bool dragged);

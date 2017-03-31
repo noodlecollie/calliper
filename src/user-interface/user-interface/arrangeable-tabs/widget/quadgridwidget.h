@@ -16,6 +16,7 @@ namespace UserInterface
 
         void clear();
         void setSingleWidget(QWidget* widget);
+        QWidget* singleWidget() const;
 
     signals:
 

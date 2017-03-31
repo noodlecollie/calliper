@@ -38,4 +38,14 @@ namespace UserInterface
         // None of these params apart from the widget actually matter.
         m_pGridManager->addWidget(widget, UserInterface::QuadGridLayoutDefs::NorthWest, Qt::Horizontal);
     }
+
+    QWidget* QuadGridWidget::singleWidget() const
+    {
+        if ( m_pGridManager->widgetCount() != 1 )
+        {
+            return Q_NULLPTR;
+        }
+
+        return m_pGridManager->widgetAt(UserInterface::QuadGridLayoutDefs::NorthWest);
+    }
 }
