@@ -41,6 +41,9 @@ namespace UserInterface
         void loadMap();
         void loadVpks();
 
+    signals:
+        void initialised();
+
     protected:
         virtual void initializeGL() override;
         virtual void paintGL() override;

@@ -14,6 +14,9 @@ public:
     void processBrushes();
     void importTextures();
 
+public slots:
+    void init();
+
 protected:
     virtual void initShaders() override;
     virtual void initTextures() override;

@@ -15,6 +15,7 @@
 MainWindow::MainWindow() : UserInterface::MapViewWindow(),
     m_iPlaceholderMaterial(0)
 {
+    connect(this, SIGNAL(initialised()), this, SLOT(init()));
     resize(640, 480);
 }
 
@@ -85,4 +86,10 @@ void MainWindow::importTextures()
                                    Model::ResourceEnvironment::globalInstance()->textureStore());
     loadVpks();
     loader.loadMaterials(vpkFileCollection());
+}
+
+void MainWindow::init()
+{
+    importTextures();
+    loadMap();
 }

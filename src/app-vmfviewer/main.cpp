@@ -2,6 +2,33 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include "model/global/resourceenvironment.h"
+#include "renderer/global/openglbackgroundcontext.h"
+#include "renderer/opengl/scopedcurrentcontext.h"
+#include "calliperutil/debug/debug.h"
+
+void initSubSystems()
+{
+    Renderer::OpenGLBackgroundContext::globalInitialise();
+    CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->create());
+
+//    Renderer::ScopedCurrentContext scopedContext;
+//    Q_UNUSED(scopedContext);
+
+//    Model::ResourceEnvironment::globalInitialise();
+}
+
+void shutDownSubSystems()
+{
+//    {
+//        Renderer::ScopedCurrentContext scopedContext;
+//        Q_UNUSED(scopedContext);
+
+//        Model::ResourceEnvironment::globalShutdown();
+//    }
+
+    Renderer::OpenGLBackgroundContext::globalShutdown();
+}
 
 int main(int argc, char *argv[])
 {
@@ -50,12 +77,16 @@ int main(int argc, char *argv[])
         filename = opts.at(0);
     }
 
-    MainWindow w;
-    w.setMapPath(filename);
-    w.setVpkPath(parser.value(opVpkPath));
-    w.show();
-    w.importTextures();
-    w.loadMap();
+    initSubSystems();
 
-    return a.exec();
+    MainWindow* w = new MainWindow();
+    w->setMapPath(filename);
+    w->setVpkPath(parser.value(opVpkPath));
+    w->show();
+
+    int ret = a.exec();
+
+    shutDownSubSystems();
+
+    return ret;
 }

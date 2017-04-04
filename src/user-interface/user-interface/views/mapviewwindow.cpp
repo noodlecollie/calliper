@@ -82,6 +82,7 @@ namespace UserInterface
         initMouseEventMap();
 
         m_bInitialised = true;
+        emit initialised();
     }
 
     void MapViewWindow::paintGL()
@@ -103,6 +104,11 @@ namespace UserInterface
 
     void MapViewWindow::resizeGL(int w, int h)
     {
+        if ( !m_bInitialised )
+        {
+            return;
+        }
+
         SceneCamera* camera = m_pVmfData->scene()->defaultCamera();
 
         CameraLens lens = camera->lens();
