@@ -27,6 +27,7 @@ namespace UserInterface
     MapViewport::MapViewport(QWidget *parent, Qt::WindowFlags f)
         : QOpenGLWidget(parent, f),
           m_pDataModel(),
+          m_bOpenGLInitialised(false),
           m_pCameraController(new Model::CameraController(this)),
           m_pKeyMap(new Model::KeyMap(this)),
           m_pMouseEventMap(new Model::MouseEventMap(this))
@@ -142,10 +143,17 @@ namespace UserInterface
 
         GLTRY(f->glEnable(GL_DEPTH_TEST));
         GLTRY(f->glDepthFunc(GL_LESS));
+
+        m_bOpenGLInitialised = true;
     }
 
     void MapViewport::paintGL()
     {
+        if ( !m_bOpenGLInitialised )
+        {
+            return;
+        }
+
         MapFileDataModelPointer mapModel = m_pDataModel.toStrongRef();
         if ( !mapModel )
         {

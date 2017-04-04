@@ -64,6 +64,7 @@ namespace UserInterface
 
         MapFileDataModelWeakRef m_pDataModel;
 
+        bool m_bOpenGLInitialised;
         Model::CameraController* m_pCameraController;
         Model::KeyMap* m_pKeyMap;
         Model::MouseEventMap* m_pMouseEventMap;

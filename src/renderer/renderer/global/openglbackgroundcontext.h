@@ -2,11 +2,15 @@
 #define OPENGLBACKGROUNDCONTEXT_H
 
 #include "renderer_global.h"
+
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
+#include <QLoggingCategory>
 
 namespace Renderer
 {
+    Q_DECLARE_LOGGING_CATEGORY(lcOpenGLBackgroundContext)
+
     class RENDERERSHARED_EXPORT OpenGLBackgroundContext
     {
     public:

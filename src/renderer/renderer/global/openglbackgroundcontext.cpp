@@ -3,6 +3,8 @@
 
 namespace Renderer
 {
+    Q_LOGGING_CATEGORY(lcOpenGLBackgroundContext, "Renderer.OpenGLBackgroundContext")
+
     OpenGLBackgroundContext* OpenGLBackgroundContext::m_pGlobalInstance = Q_NULLPTR;
 
     void OpenGLBackgroundContext::globalInitialise()
@@ -34,8 +36,17 @@ namespace Renderer
           m_pContext(new QOpenGLContext()),
           m_bCreatedSuccessfully(false)
     {
-        m_pSurface->setFormat(QSurfaceFormat::defaultFormat());
+        QSurfaceFormat expectedFormat = QSurfaceFormat::defaultFormat();
+        m_pSurface->setFormat(expectedFormat);
         m_pSurface->create();
+
+        QSurfaceFormat actualFormat = m_pSurface->format();
+
+        if ( actualFormat != expectedFormat )
+        {
+            qCWarning(lcOpenGLBackgroundContext) << "Expected OpenGL format of" << expectedFormat
+                                                 << "but instead got format of" << actualFormat;
+        }
 
         m_pContext->setScreen(QGuiApplication::screens().at(0));
         m_pContext->setShareContext(QOpenGLContext::globalShareContext());
