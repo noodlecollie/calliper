@@ -96,7 +96,7 @@ namespace UserInterface
         sceneRenderer.setShaderPalette(ResourceEnvironment::globalInstance()->shaderPaletteStore()
                                        ->shaderPalette(ShaderPaletteStore::SimpleLitTexturedRenderMode));
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
         sceneRenderer.render(m_pVmfData->scene()->defaultCamera());

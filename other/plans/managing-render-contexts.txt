@@ -1,0 +1,3 @@
+It turns out VAOs can't be shared, and binding one VAO in a different context is probably not a good idea.
+Therefore we need to have one main context that handles all the rendering, to avoid trying to interface with the contexts that are created for QOpenGLWidgets.
+The main context should render into framebuffers, which are shareable. The viewports can then just copy the frames verbatim into their own buffers.

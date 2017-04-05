@@ -6,6 +6,7 @@
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
 #include <QLoggingCategory>
+#include <QOpenGLFunctions_4_1_Core>
 
 namespace Renderer
 {
@@ -25,6 +26,8 @@ namespace Renderer
 
         bool makeCurrent();
         void doneCurrent();
+
+        QOpenGLFunctions_4_1_Core* versionFunctions() const;
 
         static void globalInitialise();
         static void globalShutdown();

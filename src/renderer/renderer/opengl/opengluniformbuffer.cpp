@@ -35,7 +35,7 @@ namespace Renderer
         if ( m_bCreated )
             return true;
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glGenBuffers(1, &m_iHandle));
 
@@ -51,7 +51,7 @@ namespace Renderer
         if ( !m_bCreated )
             return;
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glDeleteBuffers(1, &m_iHandle));
         m_bCreated = false;
@@ -61,7 +61,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glBindBuffer(GL_UNIFORM_BUFFER, m_iHandle));
     }
@@ -70,7 +70,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glBindBuffer(GL_UNIFORM_BUFFER, 0));
     }
@@ -94,7 +94,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glBufferData(GL_UNIFORM_BUFFER, count, data, m_iUsagePattern));
     }
@@ -108,7 +108,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
     }
@@ -117,7 +117,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glGetBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
     }
@@ -129,7 +129,7 @@ namespace Renderer
 
     void OpenGLUniformBuffer::bindToIndex(int bindingPoint)
     {
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle));
         GLTRY(bind());
@@ -139,7 +139,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLint value = -1;
         GLTRY(f->glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &value));
@@ -150,7 +150,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         void* ret = Q_NULLPTR;
         GLTRY(ret = f->glMapBuffer(GL_UNIFORM_BUFFER, access));
@@ -161,7 +161,7 @@ namespace Renderer
     {
         Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glUnmapBuffer(GL_UNIFORM_BUFFER));
     }

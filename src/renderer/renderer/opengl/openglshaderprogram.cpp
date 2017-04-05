@@ -112,7 +112,7 @@ namespace Renderer
 
     void OpenGLShaderProgram::setGlobalUniformBlockBinding()
     {
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         m_iGlobalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), ShaderDefs::GLOBAL_UNIFORM_BLOCK_NAME);
         if ( m_iGlobalShaderBlockIndex != GL_INVALID_INDEX )
@@ -127,7 +127,7 @@ namespace Renderer
 
     void OpenGLShaderProgram::setLocalUniformBlockBinding()
     {
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         m_iLocalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
         if ( m_iLocalShaderBlockIndex != GL_INVALID_INDEX )

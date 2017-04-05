@@ -100,4 +100,9 @@ namespace Renderer
     {
         return m_pSurface;
     }
+
+    QOpenGLFunctions_4_1_Core* MainRenderContext::versionFunctions() const
+    {
+        return context()->versionFunctions<QOpenGLFunctions_4_1_Core>();
+    }
 }

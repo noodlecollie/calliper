@@ -49,7 +49,7 @@ void MainWindow::initMaterials()
 void MainWindow::initLocalOpenGlSettings()
 {
     using namespace Renderer;
-    GL_CURRENT_F;
+    GL_MAIN_F;
 
     GLTRY(f->glEnable(GL_CULL_FACE));
     GLTRY(f->glCullFace(GL_BACK));

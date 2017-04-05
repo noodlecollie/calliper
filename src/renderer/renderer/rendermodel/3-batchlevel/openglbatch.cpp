@@ -381,7 +381,7 @@ namespace Renderer
 
     void OpenGLBatch::draw()
     {
-        GL_CURRENT_F;
+        GL_MAIN_F;
         GLTRY(f->glDrawElements(m_iDrawMode, m_UploadMetadata.m_iIndexBytes / sizeof(quint32), GL_UNSIGNED_INT, (void*)0));
     }
 

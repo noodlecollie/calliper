@@ -136,7 +136,7 @@ namespace UserInterface
 
     void MapViewport::initializeGL()
     {
-        GL_CURRENT_F;
+        GL_MAIN_F;
 
         GLTRY(f->glEnable(GL_CULL_FACE));
         GLTRY(f->glCullFace(GL_BACK));
@@ -164,7 +164,7 @@ namespace UserInterface
         sceneRenderer.setShaderPalette(Model::ResourceEnvironment::globalInstance()->shaderPaletteStore()
                                        ->shaderPalette(Model::ShaderPaletteStore::SimpleLitTexturedRenderMode));
 
-        GL_CURRENT_F;
+        GL_MAIN_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
         sceneRenderer.render(mapModel->scene()->defaultCamera());
