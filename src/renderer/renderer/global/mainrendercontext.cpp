@@ -1,13 +1,13 @@
-#include "openglbackgroundcontext.h"
+#include "mainrendercontext.h"
 #include <QGuiApplication>
 
 namespace Renderer
 {
-    Q_LOGGING_CATEGORY(lcOpenGLBackgroundContext, "Renderer.OpenGLBackgroundContext")
+    Q_LOGGING_CATEGORY(lcMainRenderContext, "Renderer.MainRenderContext")
 
-    OpenGLBackgroundContext* OpenGLBackgroundContext::m_pGlobalInstance = Q_NULLPTR;
+    MainRenderContext* MainRenderContext::m_pGlobalInstance = Q_NULLPTR;
 
-    void OpenGLBackgroundContext::globalInitialise()
+    void MainRenderContext::globalInitialise()
     {
         Q_ASSERT_X(!m_pGlobalInstance, Q_FUNC_INFO, "Global instance already initialised!");
         if ( m_pGlobalInstance )
@@ -15,10 +15,10 @@ namespace Renderer
             return;
         }
 
-        m_pGlobalInstance = new OpenGLBackgroundContext();
+        m_pGlobalInstance = new MainRenderContext();
     }
 
-    void OpenGLBackgroundContext::globalShutdown()
+    void MainRenderContext::globalShutdown()
     {
         Q_ASSERT_X(m_pGlobalInstance, Q_FUNC_INFO, "Global instance not initialised!");
 
@@ -26,12 +26,12 @@ namespace Renderer
         m_pGlobalInstance = Q_NULLPTR;
     }
 
-    OpenGLBackgroundContext* OpenGLBackgroundContext::globalInstance()
+    MainRenderContext* MainRenderContext::globalInstance()
     {
         return m_pGlobalInstance;
     }
 
-    OpenGLBackgroundContext::OpenGLBackgroundContext()
+    MainRenderContext::MainRenderContext()
         : m_pSurface(new QOffscreenSurface()),
           m_pContext(new QOpenGLContext()),
           m_bCreatedSuccessfully(false)
@@ -44,7 +44,7 @@ namespace Renderer
 
         if ( actualFormat != expectedFormat )
         {
-            qCWarning(lcOpenGLBackgroundContext) << "Expected OpenGL format of" << expectedFormat
+            qCWarning(lcMainRenderContext) << "Expected OpenGL format of" << expectedFormat
                                                  << "but instead got format of" << actualFormat;
         }
 
@@ -52,7 +52,7 @@ namespace Renderer
         m_pContext->setShareContext(QOpenGLContext::globalShareContext());
     }
 
-    OpenGLBackgroundContext::~OpenGLBackgroundContext()
+    MainRenderContext::~MainRenderContext()
     {
         if ( QOpenGLContext::currentContext() == m_pContext )
         {
@@ -65,7 +65,7 @@ namespace Renderer
         delete m_pSurface;
     }
 
-    bool OpenGLBackgroundContext::create()
+    bool MainRenderContext::create()
     {
         if ( m_bCreatedSuccessfully )
         {
@@ -76,27 +76,27 @@ namespace Renderer
         return m_bCreatedSuccessfully;
     }
 
-    bool OpenGLBackgroundContext::isCreated() const
+    bool MainRenderContext::isCreated() const
     {
         return m_bCreatedSuccessfully;
     }
 
-    bool OpenGLBackgroundContext::makeCurrent()
+    bool MainRenderContext::makeCurrent()
     {
         return m_pContext->makeCurrent(m_pSurface);
     }
 
-    void OpenGLBackgroundContext::doneCurrent()
+    void MainRenderContext::doneCurrent()
     {
         m_pContext->doneCurrent();
     }
 
-    QOpenGLContext* OpenGLBackgroundContext::context() const
+    QOpenGLContext* MainRenderContext::context() const
     {
         return m_pContext;
     }
 
-    QOffscreenSurface* OpenGLBackgroundContext::surface() const
+    QOffscreenSurface* MainRenderContext::surface() const
     {
         return m_pSurface;
     }

@@ -9,13 +9,13 @@
 
 namespace Renderer
 {
-    Q_DECLARE_LOGGING_CATEGORY(lcOpenGLBackgroundContext)
+    Q_DECLARE_LOGGING_CATEGORY(lcMainRenderContext)
 
-    class RENDERERSHARED_EXPORT OpenGLBackgroundContext
+    class RENDERERSHARED_EXPORT MainRenderContext
     {
     public:
-        OpenGLBackgroundContext();
-        ~OpenGLBackgroundContext();
+        MainRenderContext();
+        ~MainRenderContext();
 
         bool create();
         bool isCreated() const;
@@ -28,10 +28,10 @@ namespace Renderer
 
         static void globalInitialise();
         static void globalShutdown();
-        static OpenGLBackgroundContext* globalInstance();
+        static MainRenderContext* globalInstance();
 
     private:
-        static OpenGLBackgroundContext* m_pGlobalInstance;
+        static MainRenderContext* m_pGlobalInstance;
 
         QOffscreenSurface* m_pSurface;
         QOpenGLContext* m_pContext;

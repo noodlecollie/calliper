@@ -2,7 +2,7 @@
 #include "model/global/resourceenvironment.h"
 #include "model/shaders/simplelitshader.h"
 #include "model/shaders/unlitpervertexcolorshader.h"
-#include "renderer/global/openglbackgroundcontext.h"
+#include "renderer/global/mainrendercontext.h"
 #include "calliperutil/debug/debug.h"
 #include "renderer/opengl/scopedcurrentcontext.h"
 
@@ -29,8 +29,8 @@ namespace AppCalliper
     {
         void initSubSystems()
         {
-            Renderer::OpenGLBackgroundContext::globalInitialise();
-            CUTL_ASSERT_SUCCESS(Renderer::OpenGLBackgroundContext::globalInstance()->create());
+            Renderer::MainRenderContext::globalInitialise();
+            CUTL_ASSERT_SUCCESS(Renderer::MainRenderContext::globalInstance()->create());
 
             Renderer::ScopedCurrentContext scopedContext;
             Q_UNUSED(scopedContext);
@@ -43,7 +43,7 @@ namespace AppCalliper
         {
             shutDownOpenGLSystems();
 
-            Renderer::OpenGLBackgroundContext::globalShutdown();
+            Renderer::MainRenderContext::globalShutdown();
         }
     }
 }

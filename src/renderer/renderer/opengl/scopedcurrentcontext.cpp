@@ -1,6 +1,6 @@
 #include "scopedcurrentcontext.h"
 #include <QOpenGLContext>
-#include "renderer/global/openglbackgroundcontext.h"
+#include "renderer/global/mainrendercontext.h"
 
 namespace Renderer
 {
@@ -10,10 +10,10 @@ namespace Renderer
         : m_bInvalid(false),
           m_bShouldCleanUp(true)
     {
-        OpenGLBackgroundContext* bgContext = OpenGLBackgroundContext::globalInstance();
+        MainRenderContext* renderContext = MainRenderContext::globalInstance();
 
-        Q_ASSERT_X(!m_pContext || m_pContext == bgContext->context(), Q_FUNC_INFO, "ScopedCurrentContext already in use!");
-        if ( m_pContext && m_pContext != bgContext->context() )
+        Q_ASSERT_X(!m_pContext || m_pContext == renderContext->context(), Q_FUNC_INFO, "ScopedCurrentContext already in use!");
+        if ( m_pContext && m_pContext != renderContext->context() )
         {
             m_bInvalid = true;
             return;
@@ -21,8 +21,8 @@ namespace Renderer
 
         if ( !m_pContext )
         {
-            m_pContext = bgContext->context();
-            m_pContext->makeCurrent(bgContext->surface());
+            m_pContext = renderContext->context();
+            m_pContext->makeCurrent(renderContext->surface());
         }
         else
         {

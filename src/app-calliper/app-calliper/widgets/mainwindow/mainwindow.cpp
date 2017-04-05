@@ -15,7 +15,7 @@
 #include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"
 #include "user-interface/modelviews/modelviewfactory.h"
 #include "user-interface/modelviews/imodelview.h"
-#include "renderer/global/openglbackgroundcontext.h"
+#include "renderer/global/mainrendercontext.h"
 
 namespace AppCalliper
 {
