@@ -40,7 +40,9 @@ SOURCES += \
     renderer/shaders/vertexformat.cpp \
     renderer/shaders/baseshaderpalette.cpp \
     renderer/opengl/scopedcurrentcontext.cpp \
-    renderer/global/mainrendercontext.cpp
+    renderer/global/mainrendercontext.cpp \
+    renderer/framebuffers/openglframebuffer.cpp \
+    renderer/framebuffers/framebufferfactory.cpp
 
 HEADERS +=\
         renderer_global.h \
@@ -78,7 +80,9 @@ HEADERS +=\
     renderer/shaders/baseshaderpalette.h \
     renderer/functors/renderfunctorgroup.h \
     renderer/opengl/scopedcurrentcontext.h \
-    renderer/global/mainrendercontext.h
+    renderer/global/mainrendercontext.h \
+    renderer/framebuffers/openglframebuffer.h \
+    renderer/framebuffers/framebufferfactory.h
 
 unix {
     target.path = /usr/lib

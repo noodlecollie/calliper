@@ -28,7 +28,8 @@ namespace UserInterface
         m_pRenderer(Q_NULLPTR),
         m_pCameraController(Q_NULLPTR),
         m_pKeyMap(Q_NULLPTR),
-        m_pMouseEventMap(Q_NULLPTR)
+        m_pMouseEventMap(Q_NULLPTR),
+        m_pFrameBuffer(Q_NULLPTR)
     {
     }
 
@@ -53,6 +54,8 @@ namespace UserInterface
 
         delete m_pVmfData;
         m_pVmfData = Q_NULLPTR;
+
+        // TODO: Destroy frame buffer.
 
         ResourceEnvironment::globalShutdown();
     }
@@ -81,6 +84,8 @@ namespace UserInterface
         m_pMouseEventMap = new MouseEventMap(this);
         initMouseEventMap();
 
+        // TODO: Get frame buffer
+
         m_bInitialised = true;
         emit initialised();
     }
@@ -92,14 +97,15 @@ namespace UserInterface
             return;
         }
 
-        SceneRenderer sceneRenderer(m_pVmfData->scene(), m_pRenderer);
+        SceneRenderer sceneRenderer(m_pVmfData->scene(), m_pRenderer, m_pFrameBuffer);
         sceneRenderer.setShaderPalette(ResourceEnvironment::globalInstance()->shaderPaletteStore()
                                        ->shaderPalette(ShaderPaletteStore::SimpleLitTexturedRenderMode));
+        sceneRenderer.render(m_pVmfData->scene()->defaultCamera());
 
         GL_MAIN_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-        sceneRenderer.render(m_pVmfData->scene()->defaultCamera());
+        // TODO: Copy from frame buffer
     }
 
     void MapViewWindow::resizeGL(int w, int h)

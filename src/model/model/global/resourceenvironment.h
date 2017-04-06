@@ -2,12 +2,15 @@
 #define RESOURCEENVIRONMENT_H
 
 #include "model_global.h"
+
+#include "renderer/functors/renderfunctorgroup.h"
+#include "renderer/framebuffers/framebufferfactory.h"
+
+#include "renderer/shaders/baseshaderpalette.h"
 #include "model/stores/shaderstore.h"
 #include "model/stores/texturestore.h"
 #include "model/stores/materialstore.h"
-#include "renderer/shaders/baseshaderpalette.h"
 #include "model/stores/shaderpalettestore.h"
-#include "renderer/functors/renderfunctorgroup.h"
 
 namespace Model
 {
@@ -29,6 +32,9 @@ namespace Model
         ShaderPaletteStore* shaderPaletteStore();
         const ShaderPaletteStore* shaderPaletteStore() const;
 
+        Renderer::FrameBufferFactory* frameBufferFactory();
+        const Renderer::FrameBufferFactory* frameBufferFactory() const;
+
         Renderer::RenderFunctorGroup renderFunctors() const;
 
         static void globalInitialise();
@@ -44,6 +50,7 @@ namespace Model
         TextureStore* m_pTextureStore;
         MaterialStore* m_pMaterialStore;
         ShaderPaletteStore* m_pShaderPaletteStore;
+        Renderer::FrameBufferFactory* m_pFrameBufferFactory;
     };
 }
 

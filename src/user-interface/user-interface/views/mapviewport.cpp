@@ -4,6 +4,7 @@
 
 #include "renderer/opengl/openglhelpers.h"
 #include "renderer/opengl/openglerrors.h"
+#include "renderer/opengl/scopedcurrentcontext.h"
 
 #include "model/global/resourceenvironment.h"
 #include "model/scenerenderer/scenerenderer.h"
@@ -30,7 +31,8 @@ namespace UserInterface
           m_bOpenGLInitialised(false),
           m_pCameraController(new Model::CameraController(this)),
           m_pKeyMap(new Model::KeyMap(this)),
-          m_pMouseEventMap(new Model::MouseEventMap(this))
+          m_pMouseEventMap(new Model::MouseEventMap(this)),
+          m_pFrameBuffer(Q_NULLPTR)
     {
         setFocusPolicy(Qt::StrongFocus);
         setMouseTracking(true);
@@ -42,6 +44,12 @@ namespace UserInterface
 
     MapViewport::~MapViewport()
     {
+        if ( m_pFrameBuffer )
+        {
+            Renderer::FrameBufferFactory* frameBufferFactory = Model::ResourceEnvironment::globalInstance()->frameBufferFactory();
+            frameBufferFactory->destroyFrameBuffer(m_pFrameBuffer->factoryId());
+            m_pFrameBuffer = Q_NULLPTR;
+        }
     }
 
     QWidget* MapViewport::modelViewToWidget()
@@ -144,6 +152,11 @@ namespace UserInterface
         GLTRY(f->glEnable(GL_DEPTH_TEST));
         GLTRY(f->glDepthFunc(GL_LESS));
 
+        doneCurrent();
+
+        Renderer::FrameBufferFactory* frameBufferFactory = Model::ResourceEnvironment::globalInstance()->frameBufferFactory();
+        m_pFrameBuffer = frameBufferFactory->createFrameBuffer(size());
+
         m_bOpenGLInitialised = true;
     }
 
@@ -160,14 +173,21 @@ namespace UserInterface
             return;
         }
 
-        Model::SceneRenderer sceneRenderer(mapModel->scene(), mapModel->renderModel());
+        validateFrameBuffer();
+        if ( !m_pFrameBuffer )
+        {
+            return;
+        }
+
+        Model::SceneRenderer sceneRenderer(mapModel->scene(),
+                                           mapModel->renderModel(),
+                                           m_pFrameBuffer);
         sceneRenderer.setShaderPalette(Model::ResourceEnvironment::globalInstance()->shaderPaletteStore()
                                        ->shaderPalette(Model::ShaderPaletteStore::SimpleLitTexturedRenderMode));
+        sceneRenderer.render(mapModel->scene()->defaultCamera());
 
         GL_MAIN_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
-        sceneRenderer.render(mapModel->scene()->defaultCamera());
     }
 
     void MapViewport::resizeGL(int w, int h)
@@ -224,5 +244,20 @@ namespace UserInterface
     void MapViewport::toggleMouseLookEnabled()
     {
         setMouseLookEnabled(!mouseLookEnabled());
+    }
+
+    void MapViewport::validateFrameBuffer()
+    {
+        if ( m_pFrameBuffer && size() == m_pFrameBuffer->size() )
+        {
+            return;
+        }
+
+        Renderer::FrameBufferFactory* frameBufferFactory = Model::ResourceEnvironment::globalInstance()->frameBufferFactory();
+
+        if ( m_pFrameBuffer )
+        {
+            m_pFrameBuffer = frameBufferFactory->recreateFrameBuffer(m_pFrameBuffer->factoryId(), size());
+        }
     }
 }

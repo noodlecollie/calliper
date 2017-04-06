@@ -2,7 +2,9 @@
 #define MAPVIEWWINDOW_H
 
 #include "user-interface_global.h"
+
 #include <QOpenGLWindow>
+
 #include "model/global/resourceenvironment.h"
 #include "model/scene/mapscene.h"
 #include "model/camera/scenecamera.h"
@@ -10,9 +12,12 @@
 #include "model/camera/cameracontroller.h"
 #include "model/controller-adapters/keymap.h"
 #include "model/controller-adapters/mouseeventmap.h"
-#include "file-formats/vpk/vpkfilecollection.h"
-#include "renderer/rendermodel/0-modellevel/rendermodel.h"
 #include "model/filedatamodels/map/mapfiledatamodel.h"
+
+#include "renderer/framebuffers/openglframebuffer.h"
+#include "renderer/rendermodel/0-modellevel/rendermodel.h"
+
+#include "file-formats/vpk/vpkfilecollection.h"
 
 namespace UserInterface
 {
@@ -77,6 +82,7 @@ namespace UserInterface
         Model::MouseEventMap* m_pMouseEventMap;
 
         FileFormats::VPKFileCollection m_VpkFiles;
+        Renderer::OpenGLFrameBuffer* m_pFrameBuffer;
     };
 }
 

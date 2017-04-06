@@ -9,6 +9,7 @@
 #include "renderer/functors/imaterialretrievalfunctor.h"
 #include "renderer/rendermodel/0-modellevel/rendermodel.h"
 #include "irenderpassclassifier.h"
+#include "renderer/framebuffers/openglframebuffer.h"
 
 namespace Model
 {
@@ -18,7 +19,8 @@ namespace Model
     {
     public:
         SceneRenderer(Scene* scene,
-                      Renderer::RenderModel* renderer);
+                      Renderer::RenderModel* renderer,
+                      Renderer::OpenGLFrameBuffer* frameBuffer);
 
         Renderer::BaseShaderPalette* shaderPalette() const;
         void setShaderPalette(Renderer::BaseShaderPalette* palette);
@@ -35,6 +37,7 @@ namespace Model
 
         Scene* m_pScene;
         Renderer::RenderModel* m_pRenderer;
+        Renderer::OpenGLFrameBuffer* m_pFrameBuffer;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
         Renderer::BaseShaderPalette* m_pShaderPalette;

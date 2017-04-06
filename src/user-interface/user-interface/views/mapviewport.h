@@ -2,9 +2,14 @@
 #define MAPVIEWPORT_H
 
 #include "user-interface_global.h"
+
 #include <QOpenGLWidget>
-#include "model/filedatamodels/map/mapfiledatamodel.h"
 #include <QSharedPointer>
+
+#include "renderer/framebuffers/openglframebuffer.h"
+
+#include "model/filedatamodels/map/mapfiledatamodel.h"
+
 #include "user-interface/modelviews/imodelview.h"
 
 namespace Model
@@ -61,6 +66,7 @@ namespace UserInterface
         void initKeyMap();
         void initMouseEventMap();
         void connectCameraControl(Qt::Key key, CameraControlSlot slot);
+        void validateFrameBuffer();
 
         MapFileDataModelWeakRef m_pDataModel;
 
@@ -68,6 +74,7 @@ namespace UserInterface
         Model::CameraController* m_pCameraController;
         Model::KeyMap* m_pKeyMap;
         Model::MouseEventMap* m_pMouseEventMap;
+        Renderer::OpenGLFrameBuffer* m_pFrameBuffer;
     };
 }
 

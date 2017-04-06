@@ -1,18 +1,23 @@
 #include "scenerenderer.h"
 #include "model/global/resourceenvironment.h"
+#include "renderer/opengl/scopedcurrentcontext.h"
+#include "calliperutil/debug/debug.h"
 
 namespace Model
 {
     SceneRenderer::SceneRenderer(Scene* scene,
-                                 Renderer::RenderModel* renderer)
+                                 Renderer::RenderModel* renderer,
+                                 Renderer::OpenGLFrameBuffer* frameBuffer)
         : m_pScene(scene),
           m_pRenderer(renderer),
+          m_pFrameBuffer(frameBuffer),
           m_matRecursiveUpdateMatrix(),
           m_pShaderPalette(Q_NULLPTR),
           m_vecDirectionalLight(QVector3D(1,1,1).normalized())
     {
         Q_ASSERT_X(m_pScene, Q_FUNC_INFO, "Scene cannot be null");
         Q_ASSERT_X(m_pRenderer, Q_FUNC_INFO, "Renderer cannot be null");
+        Q_ASSERT_X(m_pFrameBuffer, Q_FUNC_INFO, "Frame buffer cannot be null");
     }
 
     void SceneRenderer::render(const SceneCamera *camera)
@@ -22,15 +27,7 @@ namespace Model
             return;
         }
 
-        Q_ASSERT(m_pShaderPalette);
-        if ( !m_pShaderPalette )
-        {
-            return;
-        }
-
-        m_matRecursiveUpdateMatrix.setToIdentity();
-        updateObjectRecursive(m_pScene->rootObject());
-        drawAllObjects(camera->rootToLocalMatrix(), camera->lens().projectionMatrix());
+        render(camera->rootToLocalMatrix(), camera->lens().projectionMatrix());
     }
 
     void SceneRenderer::render(const QMatrix4x4 &worldToCamera, const QMatrix4x4 &projection)
@@ -41,9 +38,16 @@ namespace Model
             return;
         }
 
+        Renderer::ScopedCurrentContext scopedContext;
+        Q_UNUSED(scopedContext);
+
+        CUTL_ASSERT_SUCCESS(m_pFrameBuffer->bind());
+
         m_matRecursiveUpdateMatrix.setToIdentity();
         updateObjectRecursive(m_pScene->rootObject());
         drawAllObjects(worldToCamera, projection);
+
+        CUTL_ASSERT_SUCCESS(m_pFrameBuffer->release());
     }
 
     void SceneRenderer::updateObjectRecursive(SceneObject *object)
