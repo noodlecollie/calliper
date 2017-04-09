@@ -1,14 +1,32 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWindow *parent) :
+    QOpenGLWindow(QOpenGLWindow::NoPartialUpdate, parent)
 {
-    ui->setupUi(this);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    makeCurrent();
+
+    m_VAO.destroy();
+
+    doneCurrent();
+}
+
+void MainWindow::initializeGL()
+{
+    m_VAO.create();
+}
+
+void MainWindow::resizeGL(int w, int h)
+{
+
+}
+
+void MainWindow::paintGL()
+{
+    m_VAO.bind();
+
+    m_VAO.release();
 }

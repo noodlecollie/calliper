@@ -1,22 +1,23 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#include <QOpenGLWindow>
+#include "renderer/opengl/openglvertexarrayobject.h"
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class MainWindow : public QOpenGLWindow
 {
     Q_OBJECT
-
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWindow *parent = 0);
     ~MainWindow();
 
+protected:
+    virtual void initializeGL() override;
+    virtual void resizeGL(int w, int h) override;
+    virtual void paintGL() override;
+
 private:
-    Ui::MainWindow *ui;
+    Renderer::OpenGLVertexArrayObject m_VAO;
 };
 
 #endif // MAINWINDOW_H
