@@ -11,7 +11,7 @@
 namespace Renderer
 {
     // TODO: Move this into the model.
-    class FrameBufferFactory
+    class RENDERERSHARED_EXPORT FrameBufferFactory
     {
     public:
         FrameBufferFactory();

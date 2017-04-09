@@ -7,7 +7,7 @@
 namespace Renderer
 {
     // TODO: Have this work with the factory once it's in the model.
-    class OpenGLFrameBuffer : public QOpenGLFramebufferObject
+    class RENDERERSHARED_EXPORT OpenGLFrameBuffer : public QOpenGLFramebufferObject
     {
         friend class FrameBufferFactory;
     public:

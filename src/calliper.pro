@@ -13,7 +13,8 @@ SUBDIRS += \
     tst-keyvaluesparser \
     user-interface \
     app-calliper \
-    app-vpkbrowser
+    app-vpkbrowser \
+    sb-frame-buffer-rendering
 
 renderer-sandbox.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
 model.depends = renderer calliperutil
@@ -27,3 +28,4 @@ tst-keyvaluesparser.depends = file-formats calliperutil
 user-interface.depends = renderer calliperutil model file-formats model-loaders dep-vtflib
 app-calliper.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
 app-vpkbrowser.depends = calliperutil file-formats user-interface
+sb-frame-buffer-rendering.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
