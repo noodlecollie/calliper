@@ -82,7 +82,7 @@ namespace UserInterface
         Model::MouseEventMap* m_pMouseEventMap;
 
         FileFormats::VPKFileCollection m_VpkFiles;
-        Renderer::OpenGLFrameBuffer* m_pFrameBuffer;
+        QOpenGLFramebufferObject* m_pFrameBuffer;
     };
 }
 

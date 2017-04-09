@@ -2,6 +2,9 @@
 #define SCENERENDERER_H
 
 #include "model_global.h"
+
+#include <QOpenGLFramebufferObject>
+
 #include "model/scene/scene.h"
 #include "model/camera/scenecamera.h"
 #include "renderer/functors/ishaderretrievalfunctor.h"
@@ -20,7 +23,7 @@ namespace Model
     public:
         SceneRenderer(Scene* scene,
                       Renderer::RenderModel* renderer,
-                      Renderer::OpenGLFrameBuffer* frameBuffer);
+                      QOpenGLFramebufferObject* frameBuffer);
 
         Renderer::BaseShaderPalette* shaderPalette() const;
         void setShaderPalette(Renderer::BaseShaderPalette* palette);
@@ -37,7 +40,7 @@ namespace Model
 
         Scene* m_pScene;
         Renderer::RenderModel* m_pRenderer;
-        Renderer::OpenGLFrameBuffer* m_pFrameBuffer;
+        QOpenGLFramebufferObject* m_pFrameBuffer;
 
         QMatrix4x4  m_matRecursiveUpdateMatrix;
         Renderer::BaseShaderPalette* m_pShaderPalette;

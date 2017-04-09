@@ -6,6 +6,7 @@
 #include "renderer/global/mainrendercontext.h"
 #include "renderer/opengl/scopedcurrentcontext.h"
 #include "calliperutil/debug/debug.h"
+#include "model/global/resourceenvironment.h"
 
 void initSubSystems()
 {

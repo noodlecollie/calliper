@@ -186,7 +186,9 @@ namespace UserInterface
                                        ->shaderPalette(Model::ShaderPaletteStore::SimpleLitTexturedRenderMode));
         sceneRenderer.render(mapModel->scene()->defaultCamera());
 
-        GL_MAIN_F;
+        makeCurrent();
+
+        GL_CURRENT_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     }
 

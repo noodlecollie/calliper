@@ -55,7 +55,10 @@ namespace UserInterface
         delete m_pVmfData;
         m_pVmfData = Q_NULLPTR;
 
-        // TODO: Destroy frame buffer.
+        Renderer::MainRenderContext::globalInstance()->makeCurrent();
+        delete m_pFrameBuffer;
+        m_pFrameBuffer = Q_NULLPTR;
+        Renderer::MainRenderContext::globalInstance()->doneCurrent();
 
         ResourceEnvironment::globalShutdown();
     }
@@ -84,7 +87,10 @@ namespace UserInterface
         m_pMouseEventMap = new MouseEventMap(this);
         initMouseEventMap();
 
-        // TODO: Get frame buffer
+        doneCurrent();
+        Renderer::MainRenderContext::globalInstance()->makeCurrent();
+        m_pFrameBuffer = new QOpenGLFramebufferObject(size());
+        Renderer::MainRenderContext::globalInstance()->doneCurrent();
 
         m_bInitialised = true;
         emit initialised();
@@ -102,7 +108,9 @@ namespace UserInterface
                                        ->shaderPalette(ShaderPaletteStore::SimpleLitTexturedRenderMode));
         sceneRenderer.render(m_pVmfData->scene()->defaultCamera());
 
-        GL_MAIN_F;
+        makeCurrent();
+
+        GL_CURRENT_F;
         GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
         // TODO: Copy from frame buffer
@@ -120,6 +128,12 @@ namespace UserInterface
         CameraLens lens = camera->lens();
         lens.setAspectRatio(static_cast<float>(w)/static_cast<float>(h));
         camera->setLens(lens);
+
+        doneCurrent();
+        Renderer::MainRenderContext::globalInstance()->makeCurrent();
+        delete m_pFrameBuffer;
+        m_pFrameBuffer = new QOpenGLFramebufferObject(size());
+        Renderer::MainRenderContext::globalInstance()->doneCurrent();
     }
 
     void MapViewWindow::initShaders()

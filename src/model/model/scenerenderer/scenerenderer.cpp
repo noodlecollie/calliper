@@ -7,7 +7,7 @@ namespace Model
 {
     SceneRenderer::SceneRenderer(Scene* scene,
                                  Renderer::RenderModel* renderer,
-                                 Renderer::OpenGLFrameBuffer* frameBuffer)
+                                 QOpenGLFramebufferObject* frameBuffer)
         : m_pScene(scene),
           m_pRenderer(renderer),
           m_pFrameBuffer(frameBuffer),
