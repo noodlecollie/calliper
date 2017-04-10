@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QOpenGLWindow>
+#include <QOpenGLBuffer>
+#include <QOpenGLShaderProgram>
+
 #include "renderer/opengl/openglvertexarrayobject.h"
 
 class MainWindow : public QOpenGLWindow
@@ -18,6 +21,11 @@ protected:
 
 private:
     Renderer::OpenGLVertexArrayObject m_VAO;
+    QOpenGLBuffer m_VertexBuffer;
+    QOpenGLBuffer m_IndexBuffer;
+    QOpenGLShaderProgram m_ShaderProgram;
+    int m_iVertexLocation;
+    bool m_bInitialised;
 };
 
 #endif // MAINWINDOW_H

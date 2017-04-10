@@ -20,7 +20,7 @@ namespace Renderer
         if ( m_iVAOID != 0 )
             return true;
 
-        GL_MAIN_F;
+        GL_CURRENT_F;
 
         GLTRY(f->glGenVertexArrays(1, &m_iVAOID));
         return isCreated();
@@ -31,20 +31,20 @@ namespace Renderer
         if ( m_iVAOID == 0 )
             return;
 
-        GL_MAIN_F;
+        GL_CURRENT_F;
         GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
         m_iVAOID = 0;
     }
 
     void OpenGLVertexArrayObject::bind()
     {
-        GL_MAIN_F;
+        GL_CURRENT_F;
         GLTRY(f->glBindVertexArray(m_iVAOID));
     }
 
     void OpenGLVertexArrayObject::release()
     {
-        GL_MAIN_F;
+        GL_CURRENT_F;
         GLTRY(f->glBindVertexArray(0));
     }
 
