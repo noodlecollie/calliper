@@ -4,6 +4,7 @@
 #include <QOpenGLWindow>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLTexture>
 
 #include "renderer/opengl/openglvertexarrayobject.h"
 
@@ -25,6 +26,7 @@ private:
     QOpenGLBuffer m_IndexBuffer;
     QOpenGLShaderProgram m_ShaderProgram;
     int m_iVertexLocation;
+    QOpenGLTexture* m_pTexture;
     bool m_bInitialised;
 };
 

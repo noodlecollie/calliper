@@ -11,9 +11,10 @@ const char* vertexShader =
 const char* fragmentShader =
         "#version 410 core\n"
         "out vec4 color;\n"
+        "uniform sampler2D tex;\n"
         "void main()\n"
         "{\n"
-        "    color = vec4(1,0,0,1);\n"
+        "    color = texture(tex, vec2(0,0));\n"
         "}\n";
 
 const float vertexData[] =
@@ -34,6 +35,7 @@ MainWindow::MainWindow(QWindow *parent) :
     m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
     m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
     m_ShaderProgram(),
+    m_pTexture(Q_NULLPTR),
     m_bInitialised(false)
 {
 }
@@ -42,6 +44,12 @@ MainWindow::~MainWindow()
 {
     makeCurrent();
 
+    if ( m_pTexture )
+    {
+        m_pTexture->destroy();
+        delete m_pTexture;
+    }
+
     m_VAO.destroy();
 
     doneCurrent();
@@ -49,7 +57,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::initializeGL()
 {
-    QOpenGLContext* currentContext = QOpenGLContext::currentContext();
     m_VAO.create();
 
     m_VertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -63,6 +70,8 @@ void MainWindow::initializeGL()
     m_IndexBuffer.bind();
     m_IndexBuffer.allocate(indexData, 3 * sizeof(unsigned int));
     m_IndexBuffer.release();
+
+    m_pTexture = new QOpenGLTexture(QImage("/Users/Vesper/Desktop/temp.png").mirrored());
 
     m_ShaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShader);
     m_ShaderProgram.addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShader);
@@ -95,12 +104,15 @@ void MainWindow::paintGL()
     m_VertexBuffer.bind();
     m_IndexBuffer.bind();
     m_ShaderProgram.bind();
+    m_pTexture->bind();
 
     m_ShaderProgram.enableAttributeArray(m_iVertexLocation);
     m_ShaderProgram.setAttributeBuffer(m_iVertexLocation, GL_FLOAT, 0, 2, 0);
     context()->functions()->glDrawArrays(GL_TRIANGLES, 0, 3);
     m_ShaderProgram.disableAttributeArray(m_iVertexLocation);
 
+    m_pTexture->release();
+    m_ShaderProgram.release();
     m_VertexBuffer.release();
     m_IndexBuffer.release();
     m_VAO.release();
