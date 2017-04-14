@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include <QStandardPaths>
+#include "renderer/global/mainrendercontext.h"
+#include "temprender.h"
 
 const char* vertexShader =
         "#version 410 core\n"
@@ -118,11 +120,26 @@ void MainWindow::paintGL()
         return;
     }
 
+    doneCurrent();
+    Renderer::MainRenderContext* renderContext = Renderer::MainRenderContext::globalInstance();
+    renderContext->makeCurrent();
+
+    tempRenderInstance->m_pFrameBuffer->bind();
+    QOpenGLFunctions* functions = renderContext->context()->functions();
+    functions->glClearColor(1, 0, 0, 1);
+    functions->glClear(GL_COLOR_BUFFER_BIT);
+    tempRenderInstance->m_pFrameBuffer->release();
+
+    renderContext->doneCurrent();
+    makeCurrent();
+
     m_VAO.bind();
     m_VertexBuffer.bind();
     m_IndexBuffer.bind();
     m_ShaderProgram.bind();
-    m_pTexture->bind();
+    //m_pTexture->bind();
+
+    context()->functions()->glBindTexture(GL_TEXTURE_2D, tempRenderInstance->m_pFrameBuffer->texture());
 
     m_ShaderProgram.enableAttributeArray(m_iVertexLocation);
     m_ShaderProgram.setAttributeBuffer(m_iVertexLocation, GL_FLOAT, 0, 2, 0);
@@ -135,7 +152,8 @@ void MainWindow::paintGL()
     m_ShaderProgram.disableAttributeArray(m_iVertexLocation);
     m_ShaderProgram.disableAttributeArray(m_iTexCoordLocation);
 
-    m_pTexture->release();
+    //m_pTexture->release();
+    context()->functions()->glBindTexture(GL_TEXTURE_2D, 0);
     m_ShaderProgram.release();
     m_VertexBuffer.release();
     m_IndexBuffer.release();

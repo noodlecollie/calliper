@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QSurfaceFormat>
+#include "renderer/global/mainrendercontext.h"
+#include "temprender.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,8 +25,24 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
 
-    return a.exec();
+    Renderer::MainRenderContext::globalInitialise();
+    Renderer::MainRenderContext::globalInstance()->create();
+    bool success = Renderer::MainRenderContext::globalInstance()->makeCurrent();
+    Q_ASSERT(success);
+    tempRenderInstance = new TempRender();
+    Renderer::MainRenderContext::globalInstance()->doneCurrent();
+
+    MainWindow* w = new MainWindow();
+    w->show();
+
+    int ret = a.exec();
+
+    delete w;
+    success = Renderer::MainRenderContext::globalInstance()->makeCurrent();
+    Q_ASSERT(success);
+    delete tempRenderInstance;
+    Renderer::MainRenderContext::globalInstance()->doneCurrent();
+    Renderer::MainRenderContext::globalShutdown();
+    return ret;
 }
