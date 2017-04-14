@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QStandardPaths>
 
 const char* vertexShader =
         "#version 410 core\n"
@@ -84,7 +85,10 @@ void MainWindow::initializeGL()
     m_IndexBuffer.allocate(indexData, sizeof(indexData));
     m_IndexBuffer.release();
 
-    m_pTexture = new QOpenGLTexture(QImage("/Users/Vesper/Desktop/temp.png").mirrored());
+    QStringList paths = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation);
+    Q_ASSERT(!paths.isEmpty());
+
+    m_pTexture = new QOpenGLTexture(QImage(paths.at(0) + "/temp.png").mirrored());
 
     m_ShaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShader);
     m_ShaderProgram.addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShader);

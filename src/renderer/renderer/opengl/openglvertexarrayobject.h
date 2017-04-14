@@ -6,7 +6,7 @@
 
 namespace Renderer
 {
-    class OpenGLVertexArrayObject
+    class RENDERERSHARED_EXPORT OpenGLVertexArrayObject
     {
     public:
         OpenGLVertexArrayObject();
