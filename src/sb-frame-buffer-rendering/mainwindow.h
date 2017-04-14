@@ -26,6 +26,7 @@ private:
     QOpenGLBuffer m_IndexBuffer;
     QOpenGLShaderProgram m_ShaderProgram;
     int m_iVertexLocation;
+    int m_iTexCoordLocation;
     QOpenGLTexture* m_pTexture;
     bool m_bInitialised;
 };
