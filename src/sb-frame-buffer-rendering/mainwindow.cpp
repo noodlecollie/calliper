@@ -21,12 +21,14 @@ const float vertexData[] =
 {
     -1, -1,
     1, -1,
-    0, 1,
+    1, 1,
+    -1, 1,
 };
 
 const unsigned int indexData[] =
 {
     0, 1, 2,
+    0, 2, 3,
 };
 
 MainWindow::MainWindow(QWindow *parent) :
@@ -62,13 +64,13 @@ void MainWindow::initializeGL()
     m_VertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_VertexBuffer.create();
     m_VertexBuffer.bind();
-    m_VertexBuffer.allocate(vertexData, 6 * sizeof(float));
+    m_VertexBuffer.allocate(vertexData, 8 * sizeof(float));
     m_VertexBuffer.release();
 
     m_IndexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_IndexBuffer.create();
     m_IndexBuffer.bind();
-    m_IndexBuffer.allocate(indexData, 3 * sizeof(unsigned int));
+    m_IndexBuffer.allocate(indexData, 6 * sizeof(unsigned int));
     m_IndexBuffer.release();
 
     m_pTexture = new QOpenGLTexture(QImage("/Users/Vesper/Desktop/temp.png").mirrored());
@@ -108,7 +110,7 @@ void MainWindow::paintGL()
 
     m_ShaderProgram.enableAttributeArray(m_iVertexLocation);
     m_ShaderProgram.setAttributeBuffer(m_iVertexLocation, GL_FLOAT, 0, 2, 0);
-    context()->functions()->glDrawArrays(GL_TRIANGLES, 0, 3);
+    context()->functions()->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     m_ShaderProgram.disableAttributeArray(m_iVertexLocation);
 
     m_pTexture->release();
