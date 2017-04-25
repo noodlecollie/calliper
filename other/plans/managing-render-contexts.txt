@@ -1,3 +1,9 @@
 It turns out VAOs can't be shared, and binding one VAO in a different context is probably not a good idea.
 Therefore we need to have one main context that handles all the rendering, to avoid trying to interface with the contexts that are created for QOpenGLWidgets.
 The main context should render into framebuffers, which are shareable. The viewports can then just copy the frames verbatim into their own buffers.
+
+Some notes on this:
+- Frame buffers must be recreated if they need to be resized.
+- It may be easier to wrap frame buffers in some kind of interface, so that the object that wants the rendered texture doesn't actually have to know about that implementation.
+  They can then just request the texture ID to bind once the frame buffer has been rendered into. In effect, it can say "Render this scene from this viewpoint into a frame
+  buffer of this size, and give me back the texture ID."

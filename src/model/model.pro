@@ -58,7 +58,8 @@ SOURCES += \
     model/stores/shaderpalettestore.cpp \
     model/shaderpalettes/simplelittexturedshaderpalette.cpp \
     model/renderunit/renderunit.cpp \
-    model/presetmaterials/unlitpervertexcolourpresetmaterial.cpp
+    model/presetmaterials/unlitpervertexcolourpresetmaterial.cpp \
+    model/scenerenderer/sceneframerenderer.cpp
 
 HEADERS += \
     model_global.h \
@@ -110,7 +111,8 @@ HEADERS += \
     model/shaders/knownshaderdefs.h \
     model/shaderpalettes/simplelittexturedshaderpalette.h \
     model/renderunit/renderunit.h \
-    model/presetmaterials/unlitpervertexcolourpresetmaterial.h
+    model/presetmaterials/unlitpervertexcolourpresetmaterial.h \
+    model/scenerenderer/sceneframerenderer.h
 
 unix {
     target.path = /usr/lib
