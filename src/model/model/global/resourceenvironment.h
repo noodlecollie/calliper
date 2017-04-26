@@ -32,9 +32,6 @@ namespace Model
         ShaderPaletteStore* shaderPaletteStore();
         const ShaderPaletteStore* shaderPaletteStore() const;
 
-        SceneFrameRenderer* sceneFrameRenderer();
-        const SceneFrameRenderer* sceneFrameRenderer() const;
-
         Renderer::RenderFunctorGroup renderFunctors() const;
 
         static void globalInitialise();
@@ -50,7 +47,6 @@ namespace Model
         TextureStore* m_pTextureStore;
         MaterialStore* m_pMaterialStore;
         ShaderPaletteStore* m_pShaderPaletteStore;
-        SceneFrameRenderer* m_pSceneFrameRenderer;
     };
 }
 

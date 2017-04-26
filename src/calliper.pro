@@ -14,7 +14,8 @@ SUBDIRS += \
     user-interface \
     app-calliper \
     app-vpkbrowser \
-    sb-frame-buffer-rendering
+    sb-frame-buffer-rendering \
+    rendersystem
 
 renderer-sandbox.depends = calliperutil renderer model file-formats model-loaders dep-vtflib user-interface
 model.depends = renderer calliperutil

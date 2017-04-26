@@ -64,7 +64,6 @@ namespace UserInterface
         void initKeyMap();
         void initMouseEventMap();
         void connectCameraControl(Qt::Key key, CameraControlSlot slot);
-        void validateFrameBuffer();
 
         MapFileDataModelWeakRef m_pDataModel;
 
