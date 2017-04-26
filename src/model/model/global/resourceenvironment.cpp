@@ -33,7 +33,7 @@ namespace Model
           m_pTextureStore(Q_NULLPTR),
           m_pMaterialStore(Q_NULLPTR)
     {
-        m_pFrameBufferFactory = new Renderer::FrameBufferFactory();
+        m_pSceneFrameRenderer = new SceneFrameRenderer();
         m_pShaderStore = new ShaderStore();
         m_pShaderPaletteStore = new ShaderPaletteStore();
         m_pTextureStore = new TextureStore();
@@ -46,7 +46,7 @@ namespace Model
         delete m_pTextureStore;
         delete m_pShaderPaletteStore;
         delete m_pShaderStore;
-        delete m_pFrameBufferFactory;
+        delete m_pSceneFrameRenderer;
     }
 
     ShaderStore* ResourceEnvironment::shaderStore()

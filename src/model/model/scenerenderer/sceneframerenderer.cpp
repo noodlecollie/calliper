@@ -6,6 +6,9 @@
 #include "model/scene/mapscene.h"
 #include "model/global/resourceenvironment.h"
 
+#include "renderer/global/mainrendercontext.h"
+#include "renderer/opengl/scopedcurrentcontext.h"
+
 namespace Model
 {
     SceneFrameRenderer::SceneFrameRenderer()
@@ -17,7 +20,6 @@ namespace Model
 
     SceneFrameRenderer::~SceneFrameRenderer()
     {
-
     }
 
     SceneFrameRenderer::FrameBufferId SceneFrameRenderer::createFrameBuffer(const QSize &size)
