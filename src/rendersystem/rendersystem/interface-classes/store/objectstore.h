@@ -10,21 +10,21 @@ namespace RenderSystem
     // Type T should be an object, not a pointer. It should implement a default constructor
     // that returns a null instance of the object. It should also implement one or more
     // constructors that take an ID as the first argument, and any number of other arguments.
-    // If a pointer is required, a wrapper class should be implemented first.
-    // Type ID should be some kind of integer - an unsigned type is recommended.
-    template<typename T, typename INTID>
+    // If a pointer is required, use ObjectStoreItemPointer.
+    template<typename T>
     class ObjectStore
     {
     public:
-        static const INTID INVALID_ID;
+        typedef typename T::ObjectId ObjectId;  // T::ObjectId should be an unsigned integral type.
+        static const ObjectId INVALID_ID;
 
         ObjectStore();
         virtual ~ObjectStore();
 
         template<typename... Args>
-        INTID createObject(Args... args)
+        ObjectId createObject(Args... args)
         {
-            INTID nextId = acquireNextId();
+            ObjectId nextId = acquireNextId();
             if ( nextId == INVALID_ID )
             {
                 return INVALID_ID;
@@ -35,42 +35,42 @@ namespace RenderSystem
             return nextId;
         }
 
-        bool destroyObject(INTID id);
-        bool containsObject(INTID id) const;
-        T object(INTID id) const;
+        bool destroyObject(ObjectId id);
+        bool containsObject(ObjectId id) const;
+        T object(ObjectId id) const;
 
     protected:
-        virtual void objectCreated(const INTID id);
-        virtual void objectAboutToBeDestroyed(const INTID id);
+        virtual void objectCreated(const ObjectId id);
+        virtual void objectAboutToBeDestroyed(const ObjectId id);
 
     private:
-        INTID acquireNextId();
+        ObjectId acquireNextId();
 
-        INTID m_nIdCounter;
-        QHash<INTID, T> m_ObjectHash;
+        ObjectId m_nIdCounter;
+        QHash<ObjectId, T> m_ObjectHash;
     };
 
-    template<typename T, typename INTID>
-    const INTID ObjectStore<T,INTID>::INVALID_ID = 0;
+    template<typename T>
+    const typename ObjectStore<T>::ObjectId ObjectStore<T>::INVALID_ID = 0;
 
-    template<typename T, typename INTID>
-    ObjectStore<T,INTID>::ObjectStore()
+    template<typename T>
+    ObjectStore<T>::ObjectStore()
         : m_nIdCounter(INVALID_ID)
     {
 
     }
 
-    template<typename T, typename INTID>
-    ObjectStore<T,INTID>::~ObjectStore()
+    template<typename T>
+    ObjectStore<T>::~ObjectStore()
     {
-        foreach ( INTID id, m_ObjectHash.keys() )
+        foreach ( ObjectId id, m_ObjectHash.keys() )
         {
             destroyObject(id);
         }
     }
 
-    template<typename T, typename INTID>
-    bool ObjectStore<T,INTID>::destroyObject(INTID id)
+    template<typename T>
+    bool ObjectStore<T>::destroyObject(ObjectId id)
     {
         if ( !containsObject(id) )
         {
@@ -82,32 +82,32 @@ namespace RenderSystem
         return true;
     }
 
-    template<typename T, typename INTID>
-    bool ObjectStore<T,INTID>::containsObject(INTID id) const
+    template<typename T>
+    bool ObjectStore<T>::containsObject(ObjectId id) const
     {
         return m_ObjectHash.contains(id);
     }
 
-    template<typename T, typename INTID>
-    T ObjectStore<T,INTID>::object(INTID id) const
+    template<typename T>
+    T ObjectStore<T>::object(ObjectId id) const
     {
         return m_ObjectHash.value(id, T());
     }
 
-    template<typename T, typename INTID>
-    void ObjectStore<T,INTID>::objectCreated(const INTID id)
+    template<typename T>
+    void ObjectStore<T>::objectCreated(const ObjectId id)
     {
         Q_UNUSED(id);
     }
 
-    template<typename T, typename INTID>
-    void ObjectStore<T,INTID>::objectAboutToBeDestroyed(const INTID id)
+    template<typename T>
+    void ObjectStore<T>::objectAboutToBeDestroyed(const ObjectId id)
     {
         Q_UNUSED(id);
     }
 
-    template<typename T, typename INTID>
-    INTID ObjectStore<T,INTID>::acquireNextId()
+    template<typename T>
+    typename ObjectStore<T>::ObjectId ObjectStore<T>::acquireNextId()
     {
         ++m_nIdCounter;
 
