@@ -11,7 +11,7 @@ namespace RenderSystem
         RENDERSYSTEMSHARED_EXPORT void shutdown();
 
         RENDERSYSTEMSHARED_EXPORT bool makeCurrent();
-        RENDERSYSTEMSHARED_EXPORT bool doneCurrent();
+        RENDERSYSTEMSHARED_EXPORT void doneCurrent();
     }
 }
 

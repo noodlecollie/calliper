@@ -73,15 +73,14 @@ namespace RenderSystem
             return g_pMainContext->makeCurrent(g_pOffscreenSurface);
         }
 
-        bool doneCurrent()
+        void doneCurrent()
         {
             if ( !g_bInitialised || QOpenGLContext::currentContext() != g_pMainContext )
             {
-                return false;
+                return;
             }
 
             g_pMainContext->doneCurrent();
-            return true;
         }
     }
 }

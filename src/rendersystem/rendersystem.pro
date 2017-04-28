@@ -24,12 +24,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += global/rendersystem.cpp \
-    rendersystem_global.cpp
+SOURCES += rendersystem/global/rendersystem.cpp \
+    rendersystem_global.cpp \
+    rendersystem/interface-classes/currentcontextguard/contextreferencecounter.cpp \
+    rendersystem/private/test/testinterface.cpp \
+    rendersystem/endpoints/testinterfaceendpoint.cpp
 
-HEADERS += global/rendersystem.h\
+HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
-    interface-classes/store/objectstore.h
+    rendersystem/interface-classes/store/objectstore.h \
+    rendersystem/interface-classes/currentcontextguard/currentcontextguard.h \
+    rendersystem/interface-classes/currentcontextguard/contextreferencecounter.h \
+    rendersystem/interfaces/itestinterface.h \
+    rendersystem/private/test/testinterface.h \
+    rendersystem/endpoints/testinterfaceendpoint.h
 
 unix {
     target.path = /usr/lib

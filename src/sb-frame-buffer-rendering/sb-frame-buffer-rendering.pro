@@ -78,3 +78,10 @@ else:unix: LIBS += -L$$OUT_PWD/../user-interface/ -luser-interface
 
 INCLUDEPATH += $$PWD/../user-interface
 DEPENDPATH += $$PWD/../user-interface
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/release/ -lrendersystem
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/debug/ -lrendersystem
+else:unix: LIBS += -L$$OUT_PWD/../rendersystem/ -lrendersystem
+
+INCLUDEPATH += $$PWD/../rendersystem
+DEPENDPATH += $$PWD/../rendersystem
