@@ -1,19 +1,14 @@
 #ifndef OPENGLTEXTURESTORE_H
 #define OPENGLTEXTURESTORE_H
 
-#include "rendersystem_global.h"
+#include "rendersystem/private/store/objectstore.h"
+#include "rendersystem/private/store/objectstoreitempointer.h"
+#include "rendersystem/private/store-objects/storedopengltexture.h"
 
-#include "rendersystem/interface-classes/store/objectstore.h"
-#include "rendersystem/interface-classes/store/objectstoreitempointer.h"
-#include "rendersystem/interface-classes/store-objects/storedopengltexture.h"
+typedef ObjectStoreItemPointer<StoredOpenGLTexture> StoredOpenGLTexturePointer;
 
-namespace RenderSystem
+class OpenGLTextureStore : public ObjectStore<StoredOpenGLTexturePointer>
 {
-    typedef ObjectStoreItemPointer<StoredOpenGLTexture> StoredOpenGLTexturePointer;
-
-    class OpenGLTextureStore : public ObjectStore<StoredOpenGLTexturePointer>
-    {
-    };
-}
+};
 
 #endif // OPENGLTEXTURESTORE_H

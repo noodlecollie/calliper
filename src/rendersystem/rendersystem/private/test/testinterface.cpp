@@ -1,14 +1,11 @@
 #include "testinterface.h"
 
-namespace RenderSystem
+TestInterface::TestInterface()
 {
-    TestInterface::TestInterface()
-    {
 
-    }
+}
 
-    QString TestInterface::giveMeAString()
-    {
-        return "Weasels";
-    }
+QString TestInterface::giveMeAString()
+{
+    return "Weasels";
 }

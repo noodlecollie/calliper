@@ -3,7 +3,7 @@
 
 namespace
 {
-    RenderSystem::TestInterface localTestInterface;
+    TestInterface localTestInterface;
 }
 
 namespace RenderSystem

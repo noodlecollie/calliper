@@ -4,15 +4,12 @@
 #include "rendersystem_global.h"
 #include "rendersystem/interfaces/itestinterface.h"
 
-namespace RenderSystem
+class TestInterface : public RenderSystem::ITestInterface
 {
-    class TestInterface : public ITestInterface
-    {
-    public:
-        TestInterface();
+public:
+    TestInterface();
 
-        QString giveMeAString() override;
-    };
-}
+    QString giveMeAString() override;
+};
 
 #endif // TESTINTERFACE_H
