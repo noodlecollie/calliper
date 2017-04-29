@@ -22,7 +22,7 @@ namespace RenderSystem
         virtual ~ObjectStore();
 
         template<typename... Args>
-        ObjectId createObject(Args... args)
+        ObjectId create(Args... args)
         {
             ObjectId nextId = acquireNextId();
             if ( nextId == INVALID_ID )
@@ -35,9 +35,11 @@ namespace RenderSystem
             return nextId;
         }
 
-        bool destroyObject(ObjectId id);
-        bool containsObject(ObjectId id) const;
+        bool destroy(ObjectId id);
+        bool contains(ObjectId id) const;
         T object(ObjectId id) const;
+        void clear();
+        int count() const;
 
     protected:
         virtual void objectCreated(const ObjectId id);
@@ -55,7 +57,8 @@ namespace RenderSystem
 
     template<typename T>
     ObjectStore<T>::ObjectStore()
-        : m_nIdCounter(INVALID_ID)
+        : m_nIdCounter(INVALID_ID),
+          m_ObjectHash()
     {
 
     }
@@ -70,7 +73,7 @@ namespace RenderSystem
     }
 
     template<typename T>
-    bool ObjectStore<T>::destroyObject(ObjectId id)
+    bool ObjectStore<T>::destroy(ObjectId id)
     {
         if ( !containsObject(id) )
         {
@@ -83,7 +86,7 @@ namespace RenderSystem
     }
 
     template<typename T>
-    bool ObjectStore<T>::containsObject(ObjectId id) const
+    bool ObjectStore<T>::contains(ObjectId id) const
     {
         return m_ObjectHash.contains(id);
     }
@@ -92,6 +95,18 @@ namespace RenderSystem
     T ObjectStore<T>::object(ObjectId id) const
     {
         return m_ObjectHash.value(id, T());
+    }
+
+    template<typename T>
+    void ObjectStore<T>::clear()
+    {
+        m_ObjectHash.clear();
+    }
+
+    template<typename T>
+    int ObjectStore<T>::count()
+    {
+        return m_ObjectHash.count();
     }
 
     template<typename T>
