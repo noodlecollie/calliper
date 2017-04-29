@@ -28,16 +28,21 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem_global.cpp \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.cpp \
     rendersystem/private/test/testinterface.cpp \
-    rendersystem/endpoints/testinterfaceendpoint.cpp
+    rendersystem/endpoints/testinterfaceendpoint.cpp \
+    rendersystem/private/store/opengltexturestore.cpp \
+    rendersystem/private/store-objects/storedopengltexture.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
-    rendersystem/interface-classes/store/objectstore.h \
+    rendersystem/private/store/objectstore.h \
     rendersystem/interface-classes/currentcontextguard/currentcontextguard.h \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.h \
     rendersystem/interfaces/itestinterface.h \
     rendersystem/private/test/testinterface.h \
-    rendersystem/endpoints/testinterfaceendpoint.h
+    rendersystem/endpoints/testinterfaceendpoint.h \
+    rendersystem/private/store/objectstoreitempointer.h \
+    rendersystem/private/store/opengltexturestore.h \
+    rendersystem/private/store-objects/storedopengltexture.h
 
 unix {
     target.path = /usr/lib
