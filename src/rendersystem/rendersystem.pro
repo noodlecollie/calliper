@@ -42,7 +42,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/endpoints/testinterfaceendpoint.h \
     rendersystem/private/store/objectstoreitempointer.h \
     rendersystem/private/store/opengltexturestore.h \
-    rendersystem/private/store-objects/storedopengltexture.h
+    rendersystem/private/store-objects/storedopengltexture.h \
+    rendersystem/interfaces/itexturestore.h
 
 unix {
     target.path = /usr/lib
