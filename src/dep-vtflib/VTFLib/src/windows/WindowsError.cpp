@@ -12,6 +12,7 @@
 
 #include "../Error.h"
 #include <QString>
+#include <QTextStream>
 
 using namespace VTFLib::Diagnostics;
 
@@ -25,7 +26,8 @@ typedef LPSTR CERROR_PSTR;
 
 vlVoid CError::Set(const vlChar *cErrorMessage, vlBool bSystemError)
 {
-	vlChar cBuffer[2048];
+    QString strBuffer;
+
 	if(bSystemError)
 	{
 		LPVOID lpMessage;
@@ -33,25 +35,28 @@ vlVoid CError::Set(const vlChar *cErrorMessage, vlBool bSystemError)
 
         if(FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, uiLastError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (CERROR_PSTR)&lpMessage, 0, NULL))
 		{
-            snprintf(cBuffer, sizeof(cBuffer), "Error:\n%s\n\nSystem Error: 0x%.8x:\n%s", cErrorMessage, uiLastError, QString::fromLocal8Bit((const char *)lpMessage).toLatin1().constData());
+            QTextStream stream(&strBuffer, QIODevice::WriteOnly);
+            stream << "Error:\n" << cErrorMessage << "\n\nSystem Error: 0x" << QString::number(uiLastError, 16) << ": \n" << QString::fromLocal8Bit((const char *)lpMessage);
 
 			LocalFree(lpMessage);
 		}
 		else
 		{
-			snprintf(cBuffer, sizeof(cBuffer), "Error:\n%s\n\nSystem Error: 0x%.8x.", cErrorMessage, uiLastError); 
+            QTextStream stream(&strBuffer, QIODevice::WriteOnly);
+            stream << "Error:\n" << cErrorMessage << "\n\nSystem Error: 0x" << QString::number(uiLastError, 16) << ".";
 		}
 
 		
 	}
 	else
 	{
-		snprintf(cBuffer, sizeof(cBuffer), "Error:\n%s", cErrorMessage); 
+        QTextStream stream(&strBuffer, QIODevice::WriteOnly);
+        stream << "Error:\n" << cErrorMessage;
 	}
 
 	this->Clear();
-	this->cErrorMessage = new vlChar[strlen(cBuffer) + 1];
-	strcpy(this->cErrorMessage, cBuffer);
+    this->cErrorMessage = new vlChar[strBuffer.length() + 1];
+    strcpy(this->cErrorMessage, strBuffer.toLatin1().constData());
 }
 
 #endif

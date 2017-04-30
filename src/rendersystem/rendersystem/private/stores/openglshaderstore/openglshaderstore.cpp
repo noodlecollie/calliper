@@ -1,14 +1,12 @@
 #include "openglshaderstore.h"
 
-void OpenGLShaderStore::objectCreated(const ObjectId id)
+void OpenGLShaderStore::storeInitialised()
 {
     // TODO
-    Q_UNUSED(id);
 }
 
-void OpenGLShaderStore::objectAboutToBeDestroyed(const ObjectId id)
+void OpenGLShaderStore::storeDestroyed()
 {
-    // TODO
-    Q_UNUSED(id);
+    qDeleteAll(m_Objects.values());
 }
 

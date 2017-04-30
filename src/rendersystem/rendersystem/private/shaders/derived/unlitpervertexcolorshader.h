@@ -1,14 +1,14 @@
-#ifndef SIMPLELITSHADER_H
-#define SIMPLELITSHADER_H
+#ifndef UNLITPERVERTEXCOLORSHADER_H
+#define UNLITPERVERTEXCOLORSHADER_H
 
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
 
-class SimpleLitShader : public OpenGLShaderProgram
+class UnlitPerVertexColorShader : public OpenGLShaderProgram
 {
     Q_OBJECT
 public:
-    SimpleLitShader(QObject* parent = 0);
-    virtual ~SimpleLitShader();
+    UnlitPerVertexColorShader(QObject* parent = 0);
+    virtual ~UnlitPerVertexColorShader();
 
     virtual void construct() override;
     virtual bool hasLocalUniformBlockBinding() const override;
@@ -16,4 +16,4 @@ public:
     virtual int maxBatchedItems() const override;
 };
 
-#endif // SIMPLELITSHADER_H
+#endif // UNLITPERVERTEXCOLORSHADER_H

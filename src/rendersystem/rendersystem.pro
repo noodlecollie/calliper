@@ -39,7 +39,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/openglshaderstore/openglshaderstore.cpp \
     rendersystem/private/stores/opengltexturestore/namedopengltexture.cpp \
     rendersystem/private/shaders/common/globalshaderuniforms.cpp \
-    rendersystem/private/shaders/derived/simplelitshader.cpp
+    rendersystem/private/shaders/derived/simplelitshader.cpp \
+    rendersystem/private/shaders/derived/unlitpervertexcolorshader.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -67,7 +68,9 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/stores/opengltexturestore/namedopengltexture.h \
     rendersystem/private/shaders/common/globalshaderuniforms.h \
     rendersystem/private/shaders/common/knownshaderdefs.h \
-    rendersystem/private/shaders/derived/simplelitshader.h
+    rendersystem/private/shaders/derived/simplelitshader.h \
+    rendersystem/private/store-classes/staticobjectstore.h \
+    rendersystem/private/shaders/derived/unlitpervertexcolorshader.h
 
 unix {
     target.path = /usr/lib

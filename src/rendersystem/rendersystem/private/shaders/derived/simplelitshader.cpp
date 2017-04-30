@@ -1,9 +1,7 @@
 #include "simplelitshader.h"
 
 SimpleLitShader::SimpleLitShader(QObject* parent)
-    : OpenGLShaderProgram(KnownShaderDefs::SimpleLitShaderId,
-                                    SimpleLitShader::staticMetaObject.className(),
-                                    parent)
+    : OpenGLShaderProgram(SimpleLitShader::staticMetaObject.className(), parent)
 {
 
 }
@@ -11,11 +9,6 @@ SimpleLitShader::SimpleLitShader(QObject* parent)
 SimpleLitShader::~SimpleLitShader()
 {
 
-}
-
-KnownShaderDefs::KnownShaderId SimpleLitShader::knownShaderId() const
-{
-    return static_cast<KnownShaderDefs::KnownShaderId>(shaderStoreId());
 }
 
 void SimpleLitShader::construct()
@@ -30,9 +23,9 @@ bool SimpleLitShader::hasLocalUniformBlockBinding() const
     return true;
 }
 
-Renderer::VertexFormat SimpleLitShader::vertexFormat() const
+VertexFormat SimpleLitShader::vertexFormat() const
 {
-    return Renderer::VertexFormat(4, 3, 4, 2);
+    return VertexFormat(4, 3, 4, 2);
 }
 
 int SimpleLitShader::maxBatchedItems() const
