@@ -3,7 +3,7 @@
 
 #include "rendersystem/private/store-classes/staticobjectstore.h"
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
-#include "rendersystem/private/shaders/common/knownshaderdefs.h"
+#include "rendersystem/interface-classes/shaders/knownshaderdefs.h"
 
 class OpenGLShaderStore : public StaticObjectStore<OpenGLShaderProgram*, KnownShaderDefs::KnownShaderId, KnownShaderDefs::TOTAL_SHADERS>
 {

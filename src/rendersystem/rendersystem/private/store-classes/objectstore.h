@@ -34,6 +34,20 @@ public:
     int count() const;
 
 protected:
+    template<typename... Args>
+    ObjectId createDefaultObject(Args... args)
+    {
+        if ( m_ObjectHash.contains(INVALID_ID) )
+        {
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Default object already exists!");
+            return INVALID_ID;
+        }
+
+        m_ObjectHash.insert(T(INVALID_ID, std::move(args)...));
+        objectCreated(INVALID_ID);
+        return INVALID_ID;
+    }
+
     virtual void objectCreated(const ObjectId id);
     virtual void objectAboutToBeDestroyed(const ObjectId id);
 

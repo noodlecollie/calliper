@@ -1,7 +1,7 @@
 #include "globalshaderuniforms.h"
 
 #include "rendersystem/private/opengl/openglerrors.h"
-#include "rendersystem/private/shaders/common/shaderdefs.h"
+#include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 namespace
 {
@@ -110,7 +110,7 @@ void GlobalShaderUniforms::upload()
     GLTRY(m_UniformBuffer.allocate(DATA_SIZE));
     GLTRY(m_UniformBuffer.release());
 
-    GLTRY(m_UniformBuffer.bindToIndex(ShaderDefs::GlobalUniformBlockBindingPoint));
+    GLTRY(m_UniformBuffer.bindToIndex(PrivateShaderDefs::GlobalUniformBlockBindingPoint));
 
     GLTRY(m_UniformBuffer.bind());
     int offset = 0;

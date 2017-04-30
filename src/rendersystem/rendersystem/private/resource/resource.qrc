@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/errorshader.frag</file>
+        <file>shaders/errorshader.vert</file>
+        <file>shaders/simplelitshader.frag</file>
+        <file>shaders/simplelitshader.vert</file>
+        <file>shaders/unlitpervertexcolorshader.frag</file>
+        <file>shaders/unlitpervertexcolorshader.vert</file>
+        <file>shaders/unlitshader.frag</file>
+        <file>shaders/unlitshader.vert</file>
+        <file>shaders/commonvertexheaders.glsl</file>
+        <file>textures/_internal/error.png</file>
+    </qresource>
+</RCC>

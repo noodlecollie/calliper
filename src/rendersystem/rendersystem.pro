@@ -31,7 +31,6 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/endpoints/testinterfaceendpoint.cpp \
     rendersystem/private/stores/opengltexturestore/opengltexturestore.cpp \
     rendersystem/private/opengl/openglerrors.cpp \
-    rendersystem/private/shaders/common/shaderdefs.cpp \
     rendersystem/private/shaders/common/vertexformat.cpp \
     rendersystem/private/opengl/opengluniformbuffer.cpp \
     rendersystem/private/opengl/openglvertexarrayobject.cpp \
@@ -40,7 +39,9 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/opengltexturestore/namedopengltexture.cpp \
     rendersystem/private/shaders/common/globalshaderuniforms.cpp \
     rendersystem/private/shaders/derived/simplelitshader.cpp \
-    rendersystem/private/shaders/derived/unlitpervertexcolorshader.cpp
+    rendersystem/private/shaders/derived/unlitpervertexcolorshader.cpp \
+    rendersystem/interface-classes/rendermaterial/rendermaterial.cpp \
+    rendersystem/private/shaders/common/privateshaderdefs.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -54,7 +55,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/stores/opengltexturestore/opengltexturestore.h \
     rendersystem/interfaces/itexturestore.h \
     rendersystem/private/opengl/openglerrors.h \
-    rendersystem/private/shaders/common/shaderdefs.h \
     rendersystem/private/shaders/common/vertexformat.h \
     rendersystem/private/opengl/openglhelpers.h \
     rendersystem/private/opengl/opengluniformbuffer.h \
@@ -67,12 +67,18 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/stores/openglshaderstore/openglshaderstore.h \
     rendersystem/private/stores/opengltexturestore/namedopengltexture.h \
     rendersystem/private/shaders/common/globalshaderuniforms.h \
-    rendersystem/private/shaders/common/knownshaderdefs.h \
     rendersystem/private/shaders/derived/simplelitshader.h \
     rendersystem/private/store-classes/staticobjectstore.h \
-    rendersystem/private/shaders/derived/unlitpervertexcolorshader.h
+    rendersystem/private/shaders/derived/unlitpervertexcolorshader.h \
+    rendersystem/interface-classes/rendermaterial/rendermaterial.h \
+    rendersystem/private/shaders/common/privateshaderdefs.h \
+    rendersystem/interface-classes/shader/publicshaderdefs.h \
+    rendersystem/interface-classes/texture/publictexturedefs.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+RESOURCES += \
+    rendersystem/private/resource/resource.qrc

@@ -4,12 +4,14 @@
 #include <QFile>
 #include <QtDebug>
 
-#include "rendersystem/private/shaders/common/shaderdefs.h"
+#include "rendersystem/private/shaders/common/privateshaderdefs.h"
 #include "rendersystem/private/opengl/openglhelpers.h"
 #include "rendersystem/private/opengl/openglerrors.h"
 
 namespace
 {
+    const QString COMMON_VERTEX_HEADERS_PATH = ":/shaders/commonvertexheaders.glsl";
+
     QByteArray g_CommonVertexHeaders;
 
     const QByteArray& commonVertexHeaders()
@@ -61,22 +63,22 @@ void OpenGLShaderProgram::enableAttributeArrays()
 
     if ( format.positionComponents() > 0 )
     {
-        enableAttributeArray(ShaderDefs::PositionAttribute);
+        enableAttributeArray(PrivateShaderDefs::PositionAttribute);
     }
 
     if ( format.normalComponents() > 0 )
     {
-        enableAttributeArray(ShaderDefs::NormalAttribute);
+        enableAttributeArray(PrivateShaderDefs::NormalAttribute);
     }
 
     if ( format.colorComponents() > 0 )
     {
-        enableAttributeArray(ShaderDefs::ColorAttribute);
+        enableAttributeArray(PrivateShaderDefs::ColorAttribute);
     }
 
     if ( format.textureCoordinateComponents() > 0 )
     {
-        enableAttributeArray(ShaderDefs::TextureCoordinateAttribute);
+        enableAttributeArray(PrivateShaderDefs::TextureCoordinateAttribute);
     }
 }
 
@@ -86,22 +88,22 @@ void OpenGLShaderProgram::disableAttributeArrays()
 
     if ( format.positionComponents() > 0 )
     {
-        disableAttributeArray(ShaderDefs::PositionAttribute);
+        disableAttributeArray(PrivateShaderDefs::PositionAttribute);
     }
 
     if ( format.normalComponents() > 0 )
     {
-        disableAttributeArray(ShaderDefs::NormalAttribute);
+        disableAttributeArray(PrivateShaderDefs::NormalAttribute);
     }
 
     if ( format.colorComponents() > 0 )
     {
-        disableAttributeArray(ShaderDefs::ColorAttribute);
+        disableAttributeArray(PrivateShaderDefs::ColorAttribute);
     }
 
     if ( format.textureCoordinateComponents() > 0 )
     {
-        disableAttributeArray(ShaderDefs::TextureCoordinateAttribute);
+        disableAttributeArray(PrivateShaderDefs::TextureCoordinateAttribute);
     }
 }
 
@@ -109,10 +111,10 @@ void OpenGLShaderProgram::setGlobalUniformBlockBinding()
 {
     GL_CURRENT_F;
 
-    m_iGlobalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), ShaderDefs::GLOBAL_UNIFORM_BLOCK_NAME);
+    m_iGlobalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), PrivateShaderDefs::GLOBAL_UNIFORM_BLOCK_NAME);
     if ( m_iGlobalShaderBlockIndex != GL_INVALID_INDEX )
     {
-        f->glUniformBlockBinding(programId(), m_iGlobalShaderBlockIndex, ShaderDefs::GlobalUniformBlockBindingPoint);
+        f->glUniformBlockBinding(programId(), m_iGlobalShaderBlockIndex, PrivateShaderDefs::GlobalUniformBlockBindingPoint);
     }
     else
     {
@@ -124,10 +126,10 @@ void OpenGLShaderProgram::setLocalUniformBlockBinding()
 {
     GL_CURRENT_F;
 
-    m_iLocalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), ShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
+    m_iLocalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), PrivateShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
     if ( m_iLocalShaderBlockIndex != GL_INVALID_INDEX )
     {
-        GLTRY(f->glUniformBlockBinding(programId(), m_iLocalShaderBlockIndex, ShaderDefs::LocalUniformBlockBindingPoint));
+        GLTRY(f->glUniformBlockBinding(programId(), m_iLocalShaderBlockIndex, PrivateShaderDefs::LocalUniformBlockBindingPoint));
     }
     else
     {
@@ -145,7 +147,7 @@ void OpenGLShaderProgram::cacheCommonHeaders()
     if ( !g_CommonVertexHeaders.isEmpty() )
         return;
 
-    QFile headers(":/renderer/shaders/commonvertexheaders.glsl");
+    QFile headers(COMMON_VERTEX_HEADERS_PATH);
     if ( headers.open(QIODevice::ReadOnly) )
     {
         g_CommonVertexHeaders = headers.readAll();

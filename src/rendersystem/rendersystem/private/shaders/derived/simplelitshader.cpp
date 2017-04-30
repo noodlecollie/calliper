@@ -13,8 +13,8 @@ SimpleLitShader::~SimpleLitShader()
 
 void SimpleLitShader::construct()
 {
-    addShaderFileWithCommonHeaders(QOpenGLShader::Vertex, ":/model/shaders/simplelitshader.vert");
-    addShaderFileWithCommonHeaders(QOpenGLShader::Fragment, ":/model/shaders/simplelitshader.frag");
+    addShaderFileWithCommonHeaders(QOpenGLShader::Vertex, ":/shaders/simplelitshader.vert");
+    addShaderFileWithCommonHeaders(QOpenGLShader::Fragment, ":/shaders/simplelitshader.frag");
     link();
 }
 
