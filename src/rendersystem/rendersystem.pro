@@ -30,7 +30,13 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/test/testinterface.cpp \
     rendersystem/endpoints/testinterfaceendpoint.cpp \
     rendersystem/private/store/opengltexturestore.cpp \
-    rendersystem/private/store-objects/storedopengltexture.cpp
+    rendersystem/private/store-objects/storedopengltexture.cpp \
+    rendersystem/private/opengl/openglerrors.cpp \
+    rendersystem/private/shaders/shaderdefs.cpp \
+    rendersystem/private/shaders/vertexformat.cpp \
+    rendersystem/private/opengl/opengluniformbuffer.cpp \
+    rendersystem/private/opengl/openglvertexarrayobject.cpp \
+    rendersystem/private/shaders/openglshaderprogram.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -43,7 +49,15 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/store/objectstoreitempointer.h \
     rendersystem/private/store/opengltexturestore.h \
     rendersystem/private/store-objects/storedopengltexture.h \
-    rendersystem/interfaces/itexturestore.h
+    rendersystem/interfaces/itexturestore.h \
+    rendersystem/private/opengl/openglerrors.h \
+    rendersystem/private/shaders/shaderdefs.h \
+    rendersystem/private/shaders/vertexformat.h \
+    rendersystem/private/opengl/openglhelpers.h \
+    rendersystem/private/opengl/opengluniformbuffer.h \
+    rendersystem/private/opengl/openglvertexarrayobject.h \
+    rendersystem/private/shaders/ishaderspec.h \
+    rendersystem/private/shaders/openglshaderprogram.h
 
 unix {
     target.path = /usr/lib
