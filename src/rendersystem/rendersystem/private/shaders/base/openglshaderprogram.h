@@ -2,7 +2,8 @@
 #define OPENGLSHADERPROGRAM_H
 
 #include <QOpenGLShaderProgram>
-#include "ishaderspec.h"
+
+#include "rendersystem/private/shaders/common/ishaderspec.h"
 
 class OpenGLShaderProgram : public QOpenGLShaderProgram, public IShaderSpec
 {

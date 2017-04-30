@@ -29,35 +29,40 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.cpp \
     rendersystem/private/test/testinterface.cpp \
     rendersystem/endpoints/testinterfaceendpoint.cpp \
-    rendersystem/private/store/opengltexturestore.cpp \
-    rendersystem/private/store-objects/storedopengltexture.cpp \
+    rendersystem/private/stores/opengltexturestore/opengltexturestore.cpp \
     rendersystem/private/opengl/openglerrors.cpp \
-    rendersystem/private/shaders/shaderdefs.cpp \
-    rendersystem/private/shaders/vertexformat.cpp \
+    rendersystem/private/shaders/common/shaderdefs.cpp \
+    rendersystem/private/shaders/common/vertexformat.cpp \
     rendersystem/private/opengl/opengluniformbuffer.cpp \
     rendersystem/private/opengl/openglvertexarrayobject.cpp \
-    rendersystem/private/shaders/openglshaderprogram.cpp
+    rendersystem/private/shaders/base/openglshaderprogram.cpp \
+    rendersystem/private/stores/openglshaderstore/openglshaderstore.cpp \
+    rendersystem/private/stores/opengltexturestore/namedopengltexture.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
-    rendersystem/private/store/objectstore.h \
+    rendersystem/private/store-classes/objectstore.h \
     rendersystem/interface-classes/currentcontextguard/currentcontextguard.h \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.h \
     rendersystem/interfaces/itestinterface.h \
     rendersystem/private/test/testinterface.h \
     rendersystem/endpoints/testinterfaceendpoint.h \
-    rendersystem/private/store/objectstoreitempointer.h \
-    rendersystem/private/store/opengltexturestore.h \
-    rendersystem/private/store-objects/storedopengltexture.h \
+    rendersystem/private/store-classes/objectstoreitempointer.h \
+    rendersystem/private/stores/opengltexturestore/opengltexturestore.h \
     rendersystem/interfaces/itexturestore.h \
     rendersystem/private/opengl/openglerrors.h \
-    rendersystem/private/shaders/shaderdefs.h \
-    rendersystem/private/shaders/vertexformat.h \
+    rendersystem/private/shaders/common/shaderdefs.h \
+    rendersystem/private/shaders/common/vertexformat.h \
     rendersystem/private/opengl/openglhelpers.h \
     rendersystem/private/opengl/opengluniformbuffer.h \
     rendersystem/private/opengl/openglvertexarrayobject.h \
-    rendersystem/private/shaders/ishaderspec.h \
-    rendersystem/private/shaders/openglshaderprogram.h
+    rendersystem/private/shaders/common/ishaderspec.h \
+    rendersystem/private/shaders/base/openglshaderprogram.h \
+    rendersystem/private/store-classes/objectstoreitem.h \
+    rendersystem/private/store-classes/itembasedobjectstore.h \
+    rendersystem/private/store-classes/itempointerbasedobjectstore.h \
+    rendersystem/private/stores/openglshaderstore/openglshaderstore.h \
+    rendersystem/private/stores/opengltexturestore/namedopengltexture.h
 
 unix {
     target.path = /usr/lib

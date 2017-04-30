@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QtDebug>
 
-#include "shaderdefs.h"
+#include "rendersystem/private/shaders/common/shaderdefs.h"
 #include "rendersystem/private/opengl/openglhelpers.h"
 #include "rendersystem/private/opengl/openglerrors.h"
 
