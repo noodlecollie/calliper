@@ -41,7 +41,10 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/shaders/derived/simplelitshader.cpp \
     rendersystem/private/shaders/derived/unlitpervertexcolorshader.cpp \
     rendersystem/interface-classes/rendermaterial/rendermaterial.cpp \
-    rendersystem/private/shaders/common/privateshaderdefs.cpp
+    rendersystem/private/shaders/common/privateshaderdefs.cpp \
+    rendersystem/private/stores/materialstore/materialstore.cpp \
+    rendersystem/interface-classes/geometry/geometrysection.cpp \
+    rendersystem/interface-classes/geometry/geometrybuilder.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -73,7 +76,11 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/rendermaterial/rendermaterial.h \
     rendersystem/private/shaders/common/privateshaderdefs.h \
     rendersystem/interface-classes/shader/publicshaderdefs.h \
-    rendersystem/interface-classes/texture/publictexturedefs.h
+    rendersystem/interface-classes/texture/publictexturedefs.h \
+    rendersystem/private/stores/materialstore/materialstore.h \
+    rendersystem/interface-classes/store-defs/publicstoredefs.h \
+    rendersystem/interface-classes/geometry/geometrysection.h \
+    rendersystem/interface-classes/geometry/geometrybuilder.h
 
 unix {
     target.path = /usr/lib
