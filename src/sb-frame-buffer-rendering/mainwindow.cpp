@@ -26,17 +26,10 @@ const char* fragmentShader =
 
 const float vertexData[] =
 {
-    // Positions
-    -1, -1,
-    1, -1,
-    1, 1,
-    -1, 1,
-
-    // Texture co-ordinates
-    0, 0,
-    1, 0,
-    1, 1,
-    0, 1,
+    -1, -1,     0, 0,
+    1, -1,      1, 0,
+    1, 1,       1, 1,
+    -1, 1,      0, 1,
 };
 
 const unsigned int indexData[] =
@@ -141,11 +134,19 @@ void MainWindow::paintGL()
 
     context()->functions()->glBindTexture(GL_TEXTURE_2D, tempRenderInstance->m_pFrameBuffer->texture());
 
+    // IMPORTANT NOTE
+    //
+    // Vertex stride is the number of bytes between the BEGINNING of each component.
+    // This means that in this case, where the position and texture co-ordinates are
+    // interleaved and are 2 floats each, the number of bytes between the BEGINNING
+    // of each position is 2 * sizeof(float) (for the position) + 2 * sizeof(float)
+    // (for the texture co-ords) = 4 * sizeof(float).
+
     m_ShaderProgram.enableAttributeArray(m_iVertexLocation);
-    m_ShaderProgram.setAttributeBuffer(m_iVertexLocation, GL_FLOAT, 0, 2, 0);
+    m_ShaderProgram.setAttributeBuffer(m_iVertexLocation, GL_FLOAT, 0, 2, 4 * sizeof(float));
 
     m_ShaderProgram.enableAttributeArray(m_iTexCoordLocation);
-    m_ShaderProgram.setAttributeBuffer(m_iTexCoordLocation, GL_FLOAT, 8 * sizeof(float), 2, 0);
+    m_ShaderProgram.setAttributeBuffer(m_iTexCoordLocation, GL_FLOAT, 2 * sizeof(float), 2, 4 * sizeof(float));
 
     context()->functions()->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
