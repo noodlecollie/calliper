@@ -6,6 +6,7 @@
 #include <QVector>
 #include <QVector4D>
 #include <QColor>
+#include <QMatrix4x4>
 
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
 

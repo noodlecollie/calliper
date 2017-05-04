@@ -2,7 +2,7 @@
 
 namespace
 {
-    inline bool attributeIndexValid(RenderSystem::GeometrySection::AttributeType attribute) const
+    inline bool attributeIndexValid(RenderSystem::GeometrySection::AttributeType attribute)
     {
         return attribute >= 0 && attribute < RenderSystem::GeometrySection::TOTAL_ATTRIBUTE_TYPES;
     }

@@ -47,18 +47,23 @@ bool BufferDataContainer::isEmpty() const
     return m_Items.isEmpty();
 }
 
-bool BufferDataContainer::addItem(const QMatrix4x4 modelToWorldMatrix, ObjectDataPointer data)
+bool BufferDataContainer::addItem(const ObjectDataPointer& data)
 {
     if ( isFull() )
     {
         return false;
     }
 
-    m_Items.append(ItemData(modelToWorldMatrix, data));
+    m_Items.append(data);
     return true;
 }
 
 void BufferDataContainer::clearItems()
 {
     m_Items.clear();
+}
+
+const BufferDataContainer::ObjectDataPointer& BufferDataContainer::objectData(int batchItem) const
+{
+    return m_Items.at(batchItem);
 }

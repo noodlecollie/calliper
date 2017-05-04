@@ -2,30 +2,48 @@
 #define OBJECTSECTIONGEOMETRYDATA_H
 
 #include <QVector>
+#include <QMatrix4x4>
 
-struct ObjectSectionGeometryData
+class ObjectSectionGeometryData
 {
+public:
+    ObjectSectionGeometryData();
+
+    bool isDirty() const;
+    void markAsCleaned();
+    void markAsDirty();
+
+    const QMatrix4x4& modelToWorldMatrix() const;
+    void setModelToWorldMatrix(const QMatrix4x4& matrix);
+
+    const QVector<float>& positions() const;
+    void setPositions(const QVector<float>& vec);
+
+    const QVector<float>& normals() const;
+    void setNormals(const QVector<float>& vec);
+
+    const QVector<float>& colors() const;
+    void setColors(const QVector<float>& vec);
+
+    const QVector<float>& textureCoordinates() const;
+    void setTextureCoordinates(const QVector<float>& vec);
+
+    const QVector<quint32>& indices() const;
+    void setIndices(const QVector<quint32>& vec);
+
+    quint32 computeTotalVertexBytes() const;
+    quint32 computeTotalIndexBytes() const;
+
+private:
+    bool m_bDirty;
+
+    QMatrix4x4 m_matModelToWorld;
+
     QVector<float> m_Positions;
     QVector<float> m_Normals;
     QVector<float> m_Colors;
     QVector<float> m_TextureCoordinates;
     QVector<quint32> m_Indices;
-
-    template<typename T>
-    inline quint32 totalBytes(const QVector<T>& vec)
-    {
-        return vec.count() * sizeof(T);
-    }
-
-    inline quint32 totalBytes() const
-    {
-        return totalBytes(m_Positions) +
-                totalBytes(m_Normals) +
-                totalBytes(m_Colors) +
-                totalBytes(m_TextureCoordinates) +
-                totalBytes(m_Indices);
-
-    }
 };
 
 #endif // OBJECTSECTIONGEOMETRYDATA_H

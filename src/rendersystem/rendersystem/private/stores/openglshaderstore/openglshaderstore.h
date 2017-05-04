@@ -3,9 +3,9 @@
 
 #include "rendersystem/private/store-classes/staticobjectstore.h"
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
-#include "rendersystem/interface-classes/shaders/knownshaderdefs.h"
+#include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
-class OpenGLShaderStore : public StaticObjectStore<OpenGLShaderProgram*, KnownShaderDefs::KnownShaderId, KnownShaderDefs::TOTAL_SHADERS>
+class OpenGLShaderStore : public StaticObjectStore<OpenGLShaderProgram*, PrivateShaderDefs::ShaderId, PrivateShaderDefs::TOTAL_SHADERS>
 {
 protected:
     virtual void storeInitialised() override;

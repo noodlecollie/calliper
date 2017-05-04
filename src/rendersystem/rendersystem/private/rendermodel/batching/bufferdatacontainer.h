@@ -25,26 +25,16 @@ public:
     bool isFull() const;
     bool isEmpty() const;
 
-    bool addItem(const QMatrix4x4 modelToWorldMatrix, const ObjectDataPointer& data);
+    bool addItem(const ObjectDataPointer& data);
     void clearItems();
 
+    const ObjectDataPointer& objectData(int batchItem) const;
+
 private:
-    struct ItemData
-    {
-        QMatrix4x4 m_matModelToWorld;
-        ObjectDataPointer m_Data;
-
-        ItemData(const QMatrix4x4& mat, const ObjectDataPointer& data)
-            : m_matModelToWorld(mat),
-              m_Data(data)
-        {
-        }
-    };
-
     const int m_nMaxBatches;
     const int m_nMaxItemsPerBatch;
 
-    QVector<ItemData> m_Items;
+    QVector<ObjectDataPointer> m_Items;
 };
 
 #endif // BUFFERDATACONTAINER_H
