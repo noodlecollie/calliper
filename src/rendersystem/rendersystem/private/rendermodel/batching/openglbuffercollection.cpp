@@ -109,3 +109,18 @@ bool OpenGLBufferCollection::isCreated() const
 {
     return m_bCreated;
 }
+
+int OpenGLBufferCollection::batchSize() const
+{
+    return m_nBatchSize;
+}
+
+void OpenGLBufferCollection::setBatchSize(int size)
+{
+    if ( size < 1 )
+    {
+        size = 1;
+    }
+
+    m_nBatchSize = size;
+}

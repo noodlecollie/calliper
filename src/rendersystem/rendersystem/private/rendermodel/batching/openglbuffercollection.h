@@ -14,6 +14,9 @@ public:
 
     QOpenGLBuffer::UsagePattern usagePattern() const;
 
+    int batchSize() const;
+    void setBatchSize(int size);
+
     bool create();
     void destroy();
     bool isCreated() const;
@@ -34,6 +37,8 @@ private:
     QOpenGLBuffer       m_IndexBuffer;
     OpenGLUniformBuffer m_UniformBuffer;
     bool m_bCreated;
+
+    int m_nBatchSize;
 };
 
 #endif // OPENGLBATCH_H

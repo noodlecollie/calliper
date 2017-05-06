@@ -1,4 +1,4 @@
-#include "bufferdatatransfermanager.h"
+#include "renderbatch.h"
 
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 #include "rendersystem/private/opengl/openglerrors.h"
@@ -48,21 +48,23 @@ namespace
     }
 }
 
-BufferDataTransferManager::BufferDataTransferManager(OpenGLBufferCollection &buffers,
-                                                     BufferDataContainer &data,
-                                                     const VertexFormat &vertexFormat)
-    : m_Buffers(buffers),
-      m_Data(data),
+RenderBatch::RenderBatch(const VertexFormat &vertexFormat,
+                         int maxBatches,
+                         int maxItemsPerBatch,
+                         QOpenGLBuffer::UsagePattern usagePattern)
+    : m_Buffers(usagePattern),
+      m_Data(maxBatches, maxItemsPerBatch),
       m_VertexFormat(vertexFormat),
       m_nVertexFloatsUploadedSoFar(0),
       m_nIndexIntsUploadedSoFar(0),
       m_pVertexBufferPointer(Q_NULLPTR),
-      m_pIndexBufferPointer(Q_NULLPTR)
+      m_pIndexBufferPointer(Q_NULLPTR),
+      m_nObjectIdMask(calculateObjectIdMask()),
+      m_nCurrentObjectId(0)
 {
-
 }
 
-bool BufferDataTransferManager::ensureUploaded()
+bool RenderBatch::ensureUploaded()
 {
     if ( !m_Buffers.isCreated() )
     {
@@ -75,8 +77,12 @@ bool BufferDataTransferManager::ensureUploaded()
     }
 
     // We don't do any clever optimisations here - if anything is dirty,
-    // reallocate the buffer. Profiling may show whether this approach
-    // is too slow later on.
+    // reallocate the buffer and re-upload everything.
+    // Profiling may show whether this approach is too slow later on.
+
+    m_BatchMetadata.clear();
+    markAllObjectsDirty();
+    m_Buffers.setBatchSize(m_Data.maxItemsPerBatch());
 
     m_nVertexFloatsUploadedSoFar = 0;
     m_nIndexIntsUploadedSoFar = 0;
@@ -96,7 +102,7 @@ bool BufferDataTransferManager::ensureUploaded()
     return true;
 }
 
-void BufferDataTransferManager::uploadData(int index)
+void RenderBatch::uploadData(int index)
 {
     QSharedPointer<ObjectSectionGeometryData> objectGeometry = m_Data.objectData(index);
 
@@ -104,9 +110,9 @@ void BufferDataTransferManager::uploadData(int index)
 
     QVector<float> vertexData;
     QVector<quint32> indexData;
-    quint8 batchId = index % m_Data.maxItemsPerBatch();
+    m_nCurrentObjectId = index % m_Data.maxItemsPerBatch();
 
-    consolidateVetexData(objectGeometry, vertexData, batchId);
+    consolidateVetexData(objectGeometry, vertexData);
     consolidateIndexData(objectGeometry, indexData);
 
     quint32 indexIncrement = m_nVertexFloatsUploadedSoFar / m_VertexFormat.totalVertexComponents();
@@ -114,13 +120,18 @@ void BufferDataTransferManager::uploadData(int index)
     uploadVertexData(vertexData, m_nVertexFloatsUploadedSoFar);
     uploadIndexData(indexData, m_nIndexIntsUploadedSoFar, indexIncrement);
 
+    m_BatchMetadata.append(BatchMetadata(m_nVertexFloatsUploadedSoFar * sizeof(float),
+                                         vertexData.count() * sizeof(float),
+                                         m_nIndexIntsUploadedSoFar * sizeof(quint32),
+                                         indexData.count() * sizeof(quint32)));
+
     m_nVertexFloatsUploadedSoFar += vertexData.count();
     m_nIndexIntsUploadedSoFar += indexData.count();
 
     objectGeometry->markAsCleaned();
 }
 
-bool BufferDataTransferManager::allocateAndMapBuffers()
+bool RenderBatch::allocateAndMapBuffers()
 {
     if ( !m_Buffers.vertexBuffer().bind() || !m_Buffers.indexBuffer().bind() )
     {
@@ -148,7 +159,7 @@ bool BufferDataTransferManager::allocateAndMapBuffers()
     return m_pVertexBufferPointer && m_pIndexBufferPointer;
 }
 
-void BufferDataTransferManager::unmapBuffers()
+void RenderBatch::unmapBuffers()
 {
     m_Buffers.vertexBuffer().unmap();
     m_Buffers.indexBuffer().unmap();
@@ -158,13 +169,13 @@ void BufferDataTransferManager::unmapBuffers()
     m_Buffers.uniformBuffer().release();
 }
 
-void BufferDataTransferManager::uploadVertexData(const QVector<float> &vertexData, int offsetInFloats)
+void RenderBatch::uploadVertexData(const QVector<float> &vertexData, int offsetInFloats)
 {
     float* bufferPointer = m_pVertexBufferPointer + offsetInFloats;
     memcpy(bufferPointer, vertexData.constData(), vertexData.count() * sizeof(float));
 }
 
-void BufferDataTransferManager::uploadIndexData(const QVector<quint32> &indexData, int offsetInInts, quint32 indexIncrement)
+void RenderBatch::uploadIndexData(const QVector<quint32> &indexData, int offsetInInts, quint32 indexIncrement)
 {
     quint32* bufferPointer = m_pIndexBufferPointer + offsetInInts;
 
@@ -174,7 +185,7 @@ void BufferDataTransferManager::uploadIndexData(const QVector<quint32> &indexDat
     }
 }
 
-bool BufferDataTransferManager::anyDirtyObjectData() const
+bool RenderBatch::anyDirtyObjectData() const
 {
     for ( int i = 0; i < m_Data.totalBatchItems(); ++i )
     {
@@ -187,7 +198,7 @@ bool BufferDataTransferManager::anyDirtyObjectData() const
     return false;
 }
 
-void BufferDataTransferManager::markAllObjectsDirty()
+void RenderBatch::markAllObjectsDirty()
 {
     for ( int i = 0; i < m_Data.totalBatchItems(); ++i )
     {
@@ -195,7 +206,7 @@ void BufferDataTransferManager::markAllObjectsDirty()
     }
 }
 
-quint32 BufferDataTransferManager::totalRequiredVertexBytes() const
+quint32 RenderBatch::totalRequiredVertexBytes() const
 {
     quint32 bytes = 0;
 
@@ -207,7 +218,7 @@ quint32 BufferDataTransferManager::totalRequiredVertexBytes() const
     return bytes;
 }
 
-quint32 BufferDataTransferManager::totalRequiredIndexBytes() const
+quint32 RenderBatch::totalRequiredIndexBytes() const
 {
     quint32 bytes = 0;
 
@@ -219,9 +230,8 @@ quint32 BufferDataTransferManager::totalRequiredIndexBytes() const
     return bytes;
 }
 
-void BufferDataTransferManager::consolidateVetexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
-                                                     QVector<float> &vertexData,
-                                                     quint8 batchId)
+void RenderBatch::consolidateVetexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
+                                                     QVector<float> &vertexData)
 {
     quint32 totalVertexDataBytes = objectGeometry->computeTotalVertexBytes();
     int totalVertexComponents = m_VertexFormat.totalVertexComponents();
@@ -231,39 +241,38 @@ void BufferDataTransferManager::consolidateVetexData(const QSharedPointer<Object
     int beginOffset = 0;
 
     consolidate<float>(objectGeometry->positions(),
-                         vertexData,
-                         m_VertexFormat.positionComponents(),
-                         beginOffset,
-                         totalVertexComponents);
-
-    insertBatchId(vertexData, batchId, beginOffset + m_VertexFormat.positionComponents() - 1, totalVertexComponents);
+                       vertexData,
+                       m_VertexFormat.positionComponents(),
+                       beginOffset,
+                       totalVertexComponents,
+                       true);
 
     beginOffset += m_VertexFormat.positionComponents();
 
     consolidate<float>(objectGeometry->normals(),
-                         vertexData,
-                         m_VertexFormat.normalComponents(),
-                         beginOffset,
-                         totalVertexComponents);
+                       vertexData,
+                       m_VertexFormat.normalComponents(),
+                       beginOffset,
+                       totalVertexComponents);
 
     beginOffset += m_VertexFormat.normalComponents();
 
     consolidate<float>(objectGeometry->colors(),
-                         vertexData,
-                         m_VertexFormat.colorComponents(),
-                         beginOffset,
-                         totalVertexComponents);
+                       vertexData,
+                       m_VertexFormat.colorComponents(),
+                       beginOffset,
+                       totalVertexComponents);
 
     beginOffset += m_VertexFormat.colorComponents();
 
     consolidate<float>(objectGeometry->textureCoordinates(),
-                         vertexData,
-                         m_VertexFormat.textureCoordinateComponents(),
-                         beginOffset,
-                         totalVertexComponents);
+                       vertexData,
+                       m_VertexFormat.textureCoordinateComponents(),
+                       beginOffset,
+                       totalVertexComponents);
 }
 
-void BufferDataTransferManager::consolidateIndexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
+void RenderBatch::consolidateIndexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
                                                      QVector<quint32> &indexData)
 {
     quint32 totalIndexBytes = objectGeometry->computeTotalIndexBytes();
@@ -276,13 +285,7 @@ void BufferDataTransferManager::consolidateIndexData(const QSharedPointer<Object
                          1);
 }
 
-void BufferDataTransferManager::insertBatchId(QVector<float>& vertexData, quint8 batchId, int offset, int stride)
+quint32 RenderBatch::calculateObjectIdMask() const
 {
-    quint32 batchIdMask = maskFromNumberOfBits(bitsRequired(m_Data.maxItemsPerBatch()));
-    quint32 batchIdToWrite = static_cast<quint32>(batchId) & batchIdMask;
-
-    for ( int i = offset; i < vertexData.count(); i += stride )
-    {
-        vertexData[i] = static_cast<float>(static_cast<quint32>(vertexData[i]) | batchIdToWrite);
-    }
+    return maskFromNumberOfBits(bitsRequired(m_Data.maxItemsPerBatch()));
 }

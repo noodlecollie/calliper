@@ -3,6 +3,8 @@
 
 #include <QOpenGLBuffer>
 
+// TODO: Rewrite this so that errors are handled internally and returned as bools.
+// Also use the OpenGL types for arguments?
 class OpenGLUniformBuffer
 {
 public:
@@ -20,6 +22,7 @@ public:
 
     void bind();
     void bindToIndex(int bindingPoint);
+    void bindRange(int bindingPoint, quint32 offset, quint32 size);
     void release();
     bool create();
     void destroy();
