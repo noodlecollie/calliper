@@ -2,6 +2,7 @@
 
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 #include "rendersystem/private/opengl/openglerrors.h"
+#include "rendersystem/private/opengl/openglhelpers.h"
 
 namespace
 {
@@ -62,6 +63,52 @@ RenderBatch::RenderBatch(const VertexFormat &vertexFormat,
       m_nObjectIdMask(calculateObjectIdMask()),
       m_nCurrentObjectId(0)
 {
+    m_Buffers.create();
+}
+
+BufferDataContainer& RenderBatch::data()
+{
+    return m_Data;
+}
+
+const BufferDataContainer RenderBatch::data() const
+{
+    return m_Data;
+}
+
+void RenderBatch::draw()
+{
+    m_Buffers.vertexBuffer().bind();
+    m_Buffers.indexBuffer().bind();
+
+    for ( int i = 0; i < m_BatchMetadata.count(); ++i )
+    {
+        drawBatch(i);
+    }
+
+    m_Buffers.vertexBuffer().release();
+    m_Buffers.indexBuffer().release();
+}
+
+void RenderBatch::drawBatch(int index)
+{
+    const quint32 matricesPerBatch = m_Data.maxItemsPerBatch();
+    const quint32 offsetInMatrices = index * matricesPerBatch;
+    const quint32 offsetInBytes = offsetInMatrices * SIZEOF_MATRIX_4X4;
+
+    quint32 lengthInMatrices = matricesPerBatch;
+    if ( offsetInMatrices + lengthInMatrices > m_Data.totalBatchItems() )
+    {
+        lengthInMatrices = m_Data.totalBatchItems() % matricesPerBatch;
+    }
+
+    const quint32 lengthInBytes = lengthInMatrices * SIZEOF_MATRIX_4X4;
+
+    m_Buffers.uniformBuffer().bindRange(PrivateShaderDefs::LocalUniformBlockBindingPoint, offsetInBytes, lengthInBytes);
+
+    // TODO: DRAW
+
+    m_Buffers.uniformBuffer().release();
 }
 
 bool RenderBatch::ensureUploaded()
@@ -102,6 +149,25 @@ bool RenderBatch::ensureUploaded()
     return true;
 }
 
+void RenderBatch::uploadBatchData(int batchIndex)
+{
+    // Leave the lengths as 0 until we know how much data has been uploaded in this batch.
+    m_BatchMetadata.append(BatchMetadata(m_nVertexFloatsUploadedSoFar * sizeof(float), 0,
+                                         m_nIndexIntsUploadedSoFar * sizeof(quint32), 0));
+
+    for ( int batchItemIndex = 0;
+          batchItemIndex < m_Data.maxItemsPerBatch() && (batchIndex + batchItemIndex) < m_Data.totalBatchItems();
+          ++batchItemIndex )
+    {
+        uploadData(batchIndex + batchItemIndex);
+    }
+
+    // Now update the lengths.
+    BatchMetadata& metadata = m_BatchMetadata.last();
+    metadata.vertexLengthBytes = (m_nVertexFloatsUploadedSoFar * sizeof(float)) - metadata.vertexOffsetBytes;
+    metadata.indexLengthBytes = (m_nIndexIntsUploadedSoFar * sizeof(quint32)) - metadata.indexOffsetBytes;
+}
+
 void RenderBatch::uploadData(int index)
 {
     QSharedPointer<ObjectSectionGeometryData> objectGeometry = m_Data.objectData(index);
@@ -119,11 +185,6 @@ void RenderBatch::uploadData(int index)
 
     uploadVertexData(vertexData, m_nVertexFloatsUploadedSoFar);
     uploadIndexData(indexData, m_nIndexIntsUploadedSoFar, indexIncrement);
-
-    m_BatchMetadata.append(BatchMetadata(m_nVertexFloatsUploadedSoFar * sizeof(float),
-                                         vertexData.count() * sizeof(float),
-                                         m_nIndexIntsUploadedSoFar * sizeof(quint32),
-                                         indexData.count() * sizeof(quint32)));
 
     m_nVertexFloatsUploadedSoFar += vertexData.count();
     m_nIndexIntsUploadedSoFar += indexData.count();

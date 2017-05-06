@@ -36,7 +36,6 @@ private:
     QOpenGLBuffer       m_VertexBuffer;
     QOpenGLBuffer       m_IndexBuffer;
     OpenGLUniformBuffer m_UniformBuffer;
-    bool m_bCreated;
 
     int m_nBatchSize;
 };

@@ -6,8 +6,7 @@ OpenGLBufferCollection::OpenGLBufferCollection(QOpenGLBuffer::UsagePattern usage
     : m_nUsagePattern(usagePattern),
       m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
       m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
-      m_UniformBuffer(m_nUsagePattern),
-      m_bCreated(false)
+      m_UniformBuffer(m_nUsagePattern)
 {
     GLTRY(m_VertexBuffer.setUsagePattern(m_nUsagePattern));
     GLTRY(m_IndexBuffer.setUsagePattern(m_nUsagePattern));
@@ -51,49 +50,43 @@ const OpenGLUniformBuffer& OpenGLBufferCollection::uniformBuffer() const
 
 bool OpenGLBufferCollection::create()
 {
-    if ( m_bCreated )
+    if ( isCreated() )
     {
         return true;
     }
 
-    m_bCreated = true;
+    bool createResult = true;
 
-    GLTRY(m_bCreated = (m_bCreated && m_VertexBuffer.create()));
-    if ( !m_bCreated )
+    GLTRY(createResult = (createResult && m_VertexBuffer.create()));
+    if ( !createResult )
     {
         m_VertexBuffer.destroy();
-
-        m_bCreated = false;
-        return m_bCreated;
+        return false;
     }
 
-    GLTRY(m_bCreated = (m_bCreated && m_IndexBuffer.create()));
-    if ( !m_bCreated )
+    GLTRY(createResult = (createResult && m_IndexBuffer.create()));
+    if ( !createResult )
     {
         m_VertexBuffer.destroy();
         m_IndexBuffer.destroy();
-
-        m_bCreated = false;
-        return m_bCreated;
+        return false;
     }
 
-    GLTRY(m_bCreated = (m_bCreated && m_UniformBuffer.create()));
-    if ( !m_bCreated )
+    GLTRY(createResult = (createResult && m_UniformBuffer.create()));
+    if ( !createResult )
     {
         m_VertexBuffer.destroy();
         m_IndexBuffer.destroy();
         m_UniformBuffer.destroy();
-
-        m_bCreated = false;
-        return m_bCreated;
+        return false;
     }
 
-    return m_bCreated;
+    return true;
 }
 
 void OpenGLBufferCollection::destroy()
 {
-    if ( !m_bCreated )
+    if ( !isCreated() )
     {
         return;
     }
@@ -101,13 +94,11 @@ void OpenGLBufferCollection::destroy()
     GLTRY(m_VertexBuffer.destroy());
     GLTRY(m_IndexBuffer.destroy());
     GLTRY(m_UniformBuffer.destroy());
-
-    m_bCreated = false;
 }
 
 bool OpenGLBufferCollection::isCreated() const
 {
-    return m_bCreated;
+    return m_VertexBuffer.isCreated() && m_IndexBuffer.isCreated() && m_UniformBuffer.isCreated();
 }
 
 int OpenGLBufferCollection::batchSize() const

@@ -16,7 +16,11 @@ public:
                 int maxItemsPerBatch,
                 QOpenGLBuffer::UsagePattern usagePattern);
 
+    BufferDataContainer& data();
+    const BufferDataContainer& data() const;
+
     bool ensureUploaded();
+    void draw();
 
 private:
     struct BatchMetadata
@@ -85,16 +89,17 @@ private:
     void uploadIndexData(const QVector<quint32>& indexData, int offsetInInts, quint32 indexIncrement);
 
     // Assumes OpenGL buffers are already created.
+    void uploadBatchData(int batchIndex);
     void uploadData(int index);
-
     bool allocateAndMapBuffers();
     void unmapBuffers();
+
+    void drawBatch(int index);
 
     void markAllObjectsDirty();
     bool anyDirtyObjectData() const;
     quint32 totalRequiredVertexBytes() const;
     quint32 totalRequiredIndexBytes() const;
-
     quint32 calculateObjectIdMask() const;
 
     OpenGLBufferCollection m_Buffers;
@@ -104,7 +109,6 @@ private:
 
     int m_nVertexFloatsUploadedSoFar;
     int m_nIndexIntsUploadedSoFar;
-
     float* m_pVertexBufferPointer;
     quint32* m_pIndexBufferPointer;
 
