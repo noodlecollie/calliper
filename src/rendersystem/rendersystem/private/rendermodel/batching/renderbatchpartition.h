@@ -8,16 +8,19 @@
 #include "openglbuffercollection.h"
 #include "bufferdatacontainer.h"
 
-class RenderBatch
+class RenderBatchPartition
 {
 public:
-    RenderBatch(const VertexFormat& vertexFormat,
+    RenderBatchPartition(const VertexFormat& vertexFormat,
                 int maxBatches,
                 int maxItemsPerBatch,
                 QOpenGLBuffer::UsagePattern usagePattern);
 
     BufferDataContainer& data();
     const BufferDataContainer& data() const;
+
+    GLenum drawMode() const;
+    void setDrawMode(GLenum mode);
 
     bool ensureUploaded();
     void draw();
@@ -106,6 +109,7 @@ private:
     BufferDataContainer m_Data;
     const VertexFormat m_VertexFormat;
     QVector<BatchMetadata> m_BatchMetadata;
+    GLenum m_nDrawMode;
 
     int m_nVertexFloatsUploadedSoFar;
     int m_nIndexIntsUploadedSoFar;

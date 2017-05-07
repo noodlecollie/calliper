@@ -1,4 +1,4 @@
-#include "renderbatch.h"
+#include "renderbatchpartition.h"
 
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 #include "rendersystem/private/opengl/openglerrors.h"
@@ -49,13 +49,15 @@ namespace
     }
 }
 
-RenderBatch::RenderBatch(const VertexFormat &vertexFormat,
+RenderBatchPartition::RenderBatchPartition(const VertexFormat &vertexFormat,
                          int maxBatches,
                          int maxItemsPerBatch,
                          QOpenGLBuffer::UsagePattern usagePattern)
     : m_Buffers(usagePattern),
       m_Data(maxBatches, maxItemsPerBatch),
       m_VertexFormat(vertexFormat),
+      m_BatchMetadata(),
+      m_nDrawMode(GL_TRIANGLES),
       m_nVertexFloatsUploadedSoFar(0),
       m_nIndexIntsUploadedSoFar(0),
       m_pVertexBufferPointer(Q_NULLPTR),
@@ -66,17 +68,27 @@ RenderBatch::RenderBatch(const VertexFormat &vertexFormat,
     m_Buffers.create();
 }
 
-BufferDataContainer& RenderBatch::data()
+BufferDataContainer& RenderBatchPartition::data()
 {
     return m_Data;
 }
 
-const BufferDataContainer RenderBatch::data() const
+const BufferDataContainer& RenderBatchPartition::data() const
 {
     return m_Data;
 }
 
-void RenderBatch::draw()
+GLenum RenderBatchPartition::drawMode() const
+{
+    return m_nDrawMode;
+}
+
+void RenderBatchPartition::setDrawMode(GLenum mode)
+{
+    m_nDrawMode = mode;
+}
+
+void RenderBatchPartition::draw()
 {
     m_Buffers.vertexBuffer().bind();
     m_Buffers.indexBuffer().bind();
@@ -90,14 +102,14 @@ void RenderBatch::draw()
     m_Buffers.indexBuffer().release();
 }
 
-void RenderBatch::drawBatch(int index)
+void RenderBatchPartition::drawBatch(int index)
 {
     const quint32 matricesPerBatch = m_Data.maxItemsPerBatch();
     const quint32 offsetInMatrices = index * matricesPerBatch;
     const quint32 offsetInBytes = offsetInMatrices * SIZEOF_MATRIX_4X4;
 
     quint32 lengthInMatrices = matricesPerBatch;
-    if ( offsetInMatrices + lengthInMatrices > m_Data.totalBatchItems() )
+    if ( offsetInMatrices + lengthInMatrices > static_cast<quint32>(m_Data.totalBatchItems()) )
     {
         lengthInMatrices = m_Data.totalBatchItems() % matricesPerBatch;
     }
@@ -106,12 +118,17 @@ void RenderBatch::drawBatch(int index)
 
     m_Buffers.uniformBuffer().bindRange(PrivateShaderDefs::LocalUniformBlockBindingPoint, offsetInBytes, lengthInBytes);
 
-    // TODO: DRAW
+    const BatchMetadata& metadata = m_BatchMetadata.at(index);
+    const quint32 indicesToDraw = metadata.indexLengthBytes / sizeof(quint32);
+    const quint32 indexByteOffset = metadata.indexOffsetBytes;
+
+    GL_CURRENT_F;
+    GLTRY(f->glDrawElements(m_nDrawMode, indicesToDraw, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(indexByteOffset)));
 
     m_Buffers.uniformBuffer().release();
 }
 
-bool RenderBatch::ensureUploaded()
+bool RenderBatchPartition::ensureUploaded()
 {
     if ( !m_Buffers.isCreated() )
     {
@@ -149,7 +166,7 @@ bool RenderBatch::ensureUploaded()
     return true;
 }
 
-void RenderBatch::uploadBatchData(int batchIndex)
+void RenderBatchPartition::uploadBatchData(int batchIndex)
 {
     // Leave the lengths as 0 until we know how much data has been uploaded in this batch.
     m_BatchMetadata.append(BatchMetadata(m_nVertexFloatsUploadedSoFar * sizeof(float), 0,
@@ -168,7 +185,7 @@ void RenderBatch::uploadBatchData(int batchIndex)
     metadata.indexLengthBytes = (m_nIndexIntsUploadedSoFar * sizeof(quint32)) - metadata.indexOffsetBytes;
 }
 
-void RenderBatch::uploadData(int index)
+void RenderBatchPartition::uploadData(int index)
 {
     QSharedPointer<ObjectSectionGeometryData> objectGeometry = m_Data.objectData(index);
 
@@ -192,7 +209,7 @@ void RenderBatch::uploadData(int index)
     objectGeometry->markAsCleaned();
 }
 
-bool RenderBatch::allocateAndMapBuffers()
+bool RenderBatchPartition::allocateAndMapBuffers()
 {
     if ( !m_Buffers.vertexBuffer().bind() || !m_Buffers.indexBuffer().bind() )
     {
@@ -220,7 +237,7 @@ bool RenderBatch::allocateAndMapBuffers()
     return m_pVertexBufferPointer && m_pIndexBufferPointer;
 }
 
-void RenderBatch::unmapBuffers()
+void RenderBatchPartition::unmapBuffers()
 {
     m_Buffers.vertexBuffer().unmap();
     m_Buffers.indexBuffer().unmap();
@@ -230,13 +247,13 @@ void RenderBatch::unmapBuffers()
     m_Buffers.uniformBuffer().release();
 }
 
-void RenderBatch::uploadVertexData(const QVector<float> &vertexData, int offsetInFloats)
+void RenderBatchPartition::uploadVertexData(const QVector<float> &vertexData, int offsetInFloats)
 {
     float* bufferPointer = m_pVertexBufferPointer + offsetInFloats;
     memcpy(bufferPointer, vertexData.constData(), vertexData.count() * sizeof(float));
 }
 
-void RenderBatch::uploadIndexData(const QVector<quint32> &indexData, int offsetInInts, quint32 indexIncrement)
+void RenderBatchPartition::uploadIndexData(const QVector<quint32> &indexData, int offsetInInts, quint32 indexIncrement)
 {
     quint32* bufferPointer = m_pIndexBufferPointer + offsetInInts;
 
@@ -246,7 +263,7 @@ void RenderBatch::uploadIndexData(const QVector<quint32> &indexData, int offsetI
     }
 }
 
-bool RenderBatch::anyDirtyObjectData() const
+bool RenderBatchPartition::anyDirtyObjectData() const
 {
     for ( int i = 0; i < m_Data.totalBatchItems(); ++i )
     {
@@ -259,7 +276,7 @@ bool RenderBatch::anyDirtyObjectData() const
     return false;
 }
 
-void RenderBatch::markAllObjectsDirty()
+void RenderBatchPartition::markAllObjectsDirty()
 {
     for ( int i = 0; i < m_Data.totalBatchItems(); ++i )
     {
@@ -267,7 +284,7 @@ void RenderBatch::markAllObjectsDirty()
     }
 }
 
-quint32 RenderBatch::totalRequiredVertexBytes() const
+quint32 RenderBatchPartition::totalRequiredVertexBytes() const
 {
     quint32 bytes = 0;
 
@@ -279,7 +296,7 @@ quint32 RenderBatch::totalRequiredVertexBytes() const
     return bytes;
 }
 
-quint32 RenderBatch::totalRequiredIndexBytes() const
+quint32 RenderBatchPartition::totalRequiredIndexBytes() const
 {
     quint32 bytes = 0;
 
@@ -291,7 +308,7 @@ quint32 RenderBatch::totalRequiredIndexBytes() const
     return bytes;
 }
 
-void RenderBatch::consolidateVetexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
+void RenderBatchPartition::consolidateVetexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
                                                      QVector<float> &vertexData)
 {
     quint32 totalVertexDataBytes = objectGeometry->computeTotalVertexBytes();
@@ -333,7 +350,7 @@ void RenderBatch::consolidateVetexData(const QSharedPointer<ObjectSectionGeometr
                        totalVertexComponents);
 }
 
-void RenderBatch::consolidateIndexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
+void RenderBatchPartition::consolidateIndexData(const QSharedPointer<ObjectSectionGeometryData> &objectGeometry,
                                                      QVector<quint32> &indexData)
 {
     quint32 totalIndexBytes = objectGeometry->computeTotalIndexBytes();
@@ -346,7 +363,7 @@ void RenderBatch::consolidateIndexData(const QSharedPointer<ObjectSectionGeometr
                          1);
 }
 
-quint32 RenderBatch::calculateObjectIdMask() const
+quint32 RenderBatchPartition::calculateObjectIdMask() const
 {
     return maskFromNumberOfBits(bitsRequired(m_Data.maxItemsPerBatch()));
 }
