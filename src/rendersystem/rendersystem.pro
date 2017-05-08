@@ -48,7 +48,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel/batching/openglbuffercollection.cpp \
     rendersystem/private/rendermodel/batching/bufferdatacontainer.cpp \
     rendersystem/private/rendermodel/raw-data/objectsectiongeometrydata.cpp \
-    rendersystem/private/rendermodel/batching/renderbatchpartition.cpp
+    rendersystem/private/rendermodel/batching/renderbatchpartition.cpp \
+    rendersystem/private/rendermodel/batching/renderbatch.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -88,7 +89,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/raw-data/objectsectiongeometrydata.h \
     rendersystem/private/rendermodel/batching/openglbuffercollection.h \
     rendersystem/private/rendermodel/batching/bufferdatacontainer.h \
-    rendersystem/private/rendermodel/batching/renderbatchpartition.h
+    rendersystem/private/rendermodel/batching/renderbatchpartition.h \
+    rendersystem/private/rendermodel/batching/renderbatch.h
 
 unix {
     target.path = /usr/lib

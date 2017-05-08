@@ -3,8 +3,7 @@
 
 #include <QOpenGLBuffer>
 
-// TODO: Rewrite this so that errors are handled internally and returned as bools.
-// Also use the OpenGL types for arguments?
+// TODO: Use the OpenGL types for arguments?
 class OpenGLUniformBuffer
 {
 public:
@@ -20,21 +19,21 @@ public:
 
     GLuint bufferId() const;
 
-    void bind();
-    void bindToIndex(int bindingPoint);
-    void bindRange(int bindingPoint, quint32 offset, quint32 size);
-    void release();
+    bool bind();
+    bool bindToIndex(int bindingPoint);
+    bool bindRange(int bindingPoint, quint32 offset, quint32 size);
+    bool release();
     bool create();
     void destroy();
     bool isCreated() const;
     int size() const;
 
-    void allocate(const void* data, int count);
-    void allocate(int count);
-    void write(int offset, const void *data, int count);
-    void read(int offset, void *data, int count);
+    bool allocate(const void* data, int count);
+    bool allocate(int count);
+    bool write(int offset, const void *data, int count);
+    bool read(int offset, void *data, int count);
     void* map(QOpenGLBuffer::Access access);
-    void unmap();
+    bool unmap();
 
     // This should not be called after allocate() or write().
     QOpenGLBuffer::UsagePattern usagePattern() const;

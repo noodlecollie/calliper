@@ -13,6 +13,9 @@ public:
     void markAsCleaned();
     void markAsDirty();
 
+    quint32 objectId() const;
+    void setObjectId(quint32 id);
+
     const QMatrix4x4& modelToWorldMatrix() const;
     void setModelToWorldMatrix(const QMatrix4x4& matrix);
 
@@ -37,6 +40,7 @@ public:
 private:
     bool m_bDirty;
 
+    quint32 m_nObjectId;
     QMatrix4x4 m_matModelToWorld;
 
     QVector<float> m_Positions;

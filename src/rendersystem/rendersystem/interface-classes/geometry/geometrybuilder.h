@@ -15,7 +15,7 @@ namespace RenderSystem
     class RENDERSYSTEMSHARED_EXPORT GeometryBuilder
     {
     public:
-        GeometryBuilder(PublicStoreDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
+        GeometryBuilder(quint32 objectId, PublicStoreDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
 
         QSharedPointer<GeometrySection> section(int index) const;
         QSharedPointer<GeometrySection> createNewSection(PublicStoreDefs::MaterialId materialId, const QMatrix4x4 &matrix);
@@ -30,7 +30,10 @@ namespace RenderSystem
         PublicStoreDefs::MaterialId materialId() const;
         void setMaterialId(PublicStoreDefs::MaterialId id);
 
+        quint32 objectId() const;
+
     private:
+        quint32 m_nObjectId;
         PublicStoreDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
         QVector<QSharedPointer<GeometrySection> > m_Sections;

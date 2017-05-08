@@ -55,30 +55,30 @@ void OpenGLUniformBuffer::destroy()
     m_bCreated = false;
 }
 
-void OpenGLUniformBuffer::bind()
+bool OpenGLUniformBuffer::bind()
 {
     Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
     if ( !m_bCreated )
     {
-        return;
+        return false;
     }
 
     GL_CURRENT_F;
 
-    GLTRY(f->glBindBuffer(GL_UNIFORM_BUFFER, m_iHandle));
+    return GLTRY_RET(f->glBindBuffer(GL_UNIFORM_BUFFER, m_iHandle));
 }
 
-void OpenGLUniformBuffer::release()
+bool OpenGLUniformBuffer::release()
 {
     Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
     if ( !m_bCreated )
     {
-        return;
+        return false;
     }
 
     GL_CURRENT_F;
 
-    GLTRY(f->glBindBuffer(GL_UNIFORM_BUFFER, 0));
+    return GLTRY_RET(f->glBindBuffer(GL_UNIFORM_BUFFER, 0));
 }
 
 GLuint OpenGLUniformBuffer::bufferId() const
@@ -96,48 +96,48 @@ void OpenGLUniformBuffer::setUsagePattern(QOpenGLBuffer::UsagePattern pattern)
     m_iUsagePattern = pattern;
 }
 
-void OpenGLUniformBuffer::allocate(const void *data, int count)
+bool OpenGLUniformBuffer::allocate(const void *data, int count)
 {
     Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
     if ( !m_bCreated )
     {
-        return;
+        return false;
     }
 
     GL_CURRENT_F;
 
-    GLTRY(f->glBufferData(GL_UNIFORM_BUFFER, count, data, m_iUsagePattern));
+    return GLTRY_RET(f->glBufferData(GL_UNIFORM_BUFFER, count, data, m_iUsagePattern));
 }
 
-void OpenGLUniformBuffer::allocate(int count)
+bool OpenGLUniformBuffer::allocate(int count)
 {
-    allocate(Q_NULLPTR, count);
+    return allocate(Q_NULLPTR, count);
 }
 
-void OpenGLUniformBuffer::write(int offset, const void *data, int count)
-{
-    Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
-    if ( !m_bCreated )
-    {
-        return;
-    }
-
-    GL_CURRENT_F;
-
-    GLTRY(f->glBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
-}
-
-void OpenGLUniformBuffer::read(int offset, void *data, int count)
+bool OpenGLUniformBuffer::write(int offset, const void *data, int count)
 {
     Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
     if ( !m_bCreated )
     {
-        return;
+        return false;
     }
 
     GL_CURRENT_F;
 
-    GLTRY(f->glGetBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
+    return GLTRY_RET(f->glBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
+}
+
+bool OpenGLUniformBuffer::read(int offset, void *data, int count)
+{
+    Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
+    if ( !m_bCreated )
+    {
+        return false;
+    }
+
+    GL_CURRENT_F;
+
+    return GLTRY_RET(f->glGetBufferSubData(GL_UNIFORM_BUFFER, offset, count, data));
 }
 
 bool OpenGLUniformBuffer::isCreated() const
@@ -145,26 +145,24 @@ bool OpenGLUniformBuffer::isCreated() const
     return m_bCreated;
 }
 
-void OpenGLUniformBuffer::bindToIndex(int bindingPoint)
+bool OpenGLUniformBuffer::bindToIndex(int bindingPoint)
 {
     GL_CURRENT_F;
 
-    GLTRY(f->glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle));
-    GLTRY(bind());
+    return GLTRY_RET(f->glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle)) && GLTRY_RET(bind());
 }
 
-void OpenGLUniformBuffer::bindRange(int bindingPoint, quint32 offset, quint32 size)
+bool OpenGLUniformBuffer::bindRange(int bindingPoint, quint32 offset, quint32 size)
 {
     Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
     if ( !m_bCreated )
     {
-        return;
+        return false;
     }
 
     GL_CURRENT_F;
 
-    GLTRY(f->glBindBufferRange(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle, offset, size));
-    GLTRY(bind());
+    return GLTRY_RET(f->glBindBufferRange(GL_UNIFORM_BUFFER, bindingPoint, m_iHandle, offset, size)) && GLTRY_RET(bind());
 }
 
 int OpenGLUniformBuffer::size() const
@@ -193,19 +191,24 @@ void* OpenGLUniformBuffer::map(QOpenGLBuffer::Access access)
     GL_CURRENT_F;
 
     void* ret = Q_NULLPTR;
-    GLTRY(ret = f->glMapBuffer(GL_UNIFORM_BUFFER, access));
+
+    if ( !GLTRY_RET(ret = f->glMapBuffer(GL_UNIFORM_BUFFER, access)) )
+    {
+        ret = Q_NULLPTR;
+    }
+
     return ret;
 }
 
-void OpenGLUniformBuffer::unmap()
+bool OpenGLUniformBuffer::unmap()
 {
     Q_ASSERT_X(m_bCreated, Q_FUNC_INFO, "Buffer must be created first!");
     if ( !m_bCreated )
     {
-        return;
+        return false;
     }
 
     GL_CURRENT_F;
 
-    GLTRY(f->glUnmapBuffer(GL_UNIFORM_BUFFER));
+    return GLTRY_RET(f->glUnmapBuffer(GL_UNIFORM_BUFFER));
 }

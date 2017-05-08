@@ -1,5 +1,5 @@
-#ifndef RENDERBATCH_H
-#define RENDERBATCH_H
+#ifndef RENDERBATCHPARTITION_H
+#define RENDERBATCHPARTITION_H
 
 #include <QHash>
 
@@ -120,4 +120,4 @@ private:
     quint8 m_nCurrentObjectId;
 };
 
-#endif // RENDERBATCH_H
+#endif // RENDERBATCHPARTITION_H

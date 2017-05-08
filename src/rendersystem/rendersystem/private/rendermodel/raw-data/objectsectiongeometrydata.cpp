@@ -11,6 +11,7 @@ namespace
 
 ObjectSectionGeometryData::ObjectSectionGeometryData()
     : m_bDirty(true),
+      m_nObjectId(0),
       m_matModelToWorld(),
       m_Positions(),
       m_Normals(),
@@ -34,6 +35,16 @@ void ObjectSectionGeometryData::markAsCleaned()
 void ObjectSectionGeometryData::markAsDirty()
 {
     m_bDirty = true;
+}
+
+quint32 ObjectSectionGeometryData::objectId() const
+{
+    return m_nObjectId;
+}
+
+void ObjectSectionGeometryData::setObjectId(quint32 id)
+{
+    m_nObjectId = id;
 }
 
 const QMatrix4x4& ObjectSectionGeometryData::modelToWorldMatrix() const
