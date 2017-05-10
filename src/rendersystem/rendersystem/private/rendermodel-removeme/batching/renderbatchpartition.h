@@ -8,6 +8,9 @@
 #include "openglbuffercollection.h"
 #include "bufferdatacontainer.h"
 
+// TODO: Separate this class out into data and operations.
+// It'd be nice to easily be able to add drawing methods,
+// eg. for picking vs. for drawing normally.
 class RenderBatchPartition
 {
 public:
@@ -21,6 +24,8 @@ public:
 
     GLenum drawMode() const;
     void setDrawMode(GLenum mode);
+
+    bool isFull() const;
 
     bool ensureUploaded();
     void draw();

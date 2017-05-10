@@ -9,9 +9,10 @@ namespace
     }
 }
 
-ObjectSectionGeometryData::ObjectSectionGeometryData()
+ObjectSectionGeometryData::ObjectSectionGeometryData(quint32 objectId, quint8 sectionId)
     : m_bDirty(true),
-      m_nObjectId(0),
+      m_nObjectId(objectId),
+      m_nSectionId(sectionId),
       m_matModelToWorld(),
       m_Positions(),
       m_Normals(),
@@ -42,9 +43,9 @@ quint32 ObjectSectionGeometryData::objectId() const
     return m_nObjectId;
 }
 
-void ObjectSectionGeometryData::setObjectId(quint32 id)
+quint8 ObjectSectionGeometryData::sectionId() const
 {
-    m_nObjectId = id;
+    return m_nSectionId;
 }
 
 const QMatrix4x4& ObjectSectionGeometryData::modelToWorldMatrix() const

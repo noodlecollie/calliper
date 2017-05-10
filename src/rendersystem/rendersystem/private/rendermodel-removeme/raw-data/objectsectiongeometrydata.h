@@ -7,14 +7,14 @@
 class ObjectSectionGeometryData
 {
 public:
-    ObjectSectionGeometryData();
+    ObjectSectionGeometryData(quint32 objectId, quint8 sectionId);
 
     bool isDirty() const;
     void markAsCleaned();
     void markAsDirty();
 
     quint32 objectId() const;
-    void setObjectId(quint32 id);
+    quint8 sectionId() const;
 
     const QMatrix4x4& modelToWorldMatrix() const;
     void setModelToWorldMatrix(const QMatrix4x4& matrix);
@@ -41,6 +41,7 @@ private:
     bool m_bDirty;
 
     quint32 m_nObjectId;
+    quint8 m_nSectionId;
     QMatrix4x4 m_matModelToWorld;
 
     QVector<float> m_Positions;

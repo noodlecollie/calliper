@@ -45,11 +45,10 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/materialstore/materialstore.cpp \
     rendersystem/interface-classes/geometry/geometrysection.cpp \
     rendersystem/interface-classes/geometry/geometrybuilder.cpp \
-    rendersystem/private/rendermodel/batching/openglbuffercollection.cpp \
-    rendersystem/private/rendermodel/batching/bufferdatacontainer.cpp \
-    rendersystem/private/rendermodel/raw-data/objectsectiongeometrydata.cpp \
-    rendersystem/private/rendermodel/batching/renderbatchpartition.cpp \
-    rendersystem/private/rendermodel/batching/renderbatch.cpp
+    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection.cpp \
+    rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.cpp \
+    rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.cpp \
+    rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -86,11 +85,11 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/store-defs/publicstoredefs.h \
     rendersystem/interface-classes/geometry/geometrysection.h \
     rendersystem/interface-classes/geometry/geometrybuilder.h \
-    rendersystem/private/rendermodel/raw-data/objectsectiongeometrydata.h \
-    rendersystem/private/rendermodel/batching/openglbuffercollection.h \
-    rendersystem/private/rendermodel/batching/bufferdatacontainer.h \
-    rendersystem/private/rendermodel/batching/renderbatchpartition.h \
-    rendersystem/private/rendermodel/batching/renderbatch.h
+    rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.h \
+    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection.h \
+    rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.h \
+    rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.h \
+    rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h
 
 unix {
     target.path = /usr/lib
