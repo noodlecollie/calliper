@@ -19,11 +19,19 @@ namespace RenderSystem
     {
     }
 
-    GeometrySection::GeometrySection(PublicStoreDefs::MaterialId materialId, const QMatrix4x4 &modelToWorldMatrix)
-        : m_nMaterialId(materialId),
+    GeometrySection::GeometrySection(PublicRenderModelDefs::ObjectId objectId,
+                                     PublicStoreDefs::MaterialId materialId,
+                                     const QMatrix4x4 &modelToWorldMatrix)
+        : m_nObjectId(objectId),
+          m_nMaterialId(materialId),
           m_matModelToWorld(modelToWorldMatrix),
           m_AttributeVectors()
     {
+    }
+
+    PublicRenderModelDefs::ObjectId GeometrySection::objectId() const
+    {
+        return m_nObjectId;
     }
 
     PublicStoreDefs::MaterialId GeometrySection::materialId() const

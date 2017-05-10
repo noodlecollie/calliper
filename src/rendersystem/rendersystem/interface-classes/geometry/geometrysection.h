@@ -9,6 +9,7 @@
 #include <QMatrix4x4>
 
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
 
 namespace RenderSystem
 {
@@ -26,7 +27,9 @@ namespace RenderSystem
         };
 
         GeometrySection();
-        GeometrySection(PublicStoreDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
+        GeometrySection(PublicRenderModelDefs::ObjectId objectId, PublicStoreDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
+
+        PublicRenderModelDefs::ObjectId objectId() const;
 
         PublicStoreDefs::MaterialId materialId() const;
         void setMaterialId(PublicStoreDefs::MaterialId id);
@@ -49,6 +52,7 @@ namespace RenderSystem
         const QVector<QVector4D>& attributeVector(AttributeType attribute) const;
 
     private:
+        PublicRenderModelDefs::ObjectId m_nObjectId;
         PublicStoreDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
         QVector<QVector4D> m_AttributeVectors[TOTAL_ATTRIBUTE_TYPES];

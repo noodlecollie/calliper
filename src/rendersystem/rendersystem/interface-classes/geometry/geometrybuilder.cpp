@@ -2,7 +2,9 @@
 
 namespace RenderSystem
 {
-    GeometryBuilder::GeometryBuilder(quint32 objectId, PublicStoreDefs::MaterialId materialId, const QMatrix4x4 &modelToWorldMatrix)
+    GeometryBuilder::GeometryBuilder(PublicRenderModelDefs::ObjectId objectId,
+                                     PublicStoreDefs::MaterialId materialId,
+                                     const QMatrix4x4 &modelToWorldMatrix)
         : m_nObjectId(objectId),
           m_nMaterialId(materialId),
           m_matModelToWorld(modelToWorldMatrix),
@@ -70,7 +72,7 @@ namespace RenderSystem
         m_nMaterialId = id;
     }
 
-    quint32 GeometryBuilder::objectId() const
+    PublicRenderModelDefs::ObjectId GeometryBuilder::objectId() const
     {
         return m_nObjectId;
     }
