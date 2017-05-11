@@ -27,8 +27,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem_global.cpp \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.cpp \
-    rendersystem/private/test/testinterface.cpp \
-    rendersystem/endpoints/testinterfaceendpoint.cpp \
     rendersystem/private/stores/opengltexturestore/opengltexturestore.cpp \
     rendersystem/private/opengl/openglerrors.cpp \
     rendersystem/private/shaders/common/vertexformat.cpp \
@@ -56,9 +54,7 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/store-classes/objectstore.h \
     rendersystem/interface-classes/currentcontextguard/currentcontextguard.h \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.h \
-    rendersystem/interfaces/itestinterface.h \
     rendersystem/private/test/testinterface.h \
-    rendersystem/endpoints/testinterfaceendpoint.h \
     rendersystem/private/store-classes/objectstoreitempointer.h \
     rendersystem/private/stores/opengltexturestore/opengltexturestore.h \
     rendersystem/interfaces/itexturestore.h \
