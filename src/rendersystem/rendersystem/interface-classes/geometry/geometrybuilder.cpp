@@ -26,7 +26,7 @@ namespace RenderSystem
     {
         if ( m_Sections.isEmpty() || !latestSection()->isEmpty() )
         {
-            m_Sections.append(QSharedPointer<GeometrySection>::create(materialId, matrix));
+            m_Sections.append(QSharedPointer<GeometrySection>::create(m_nObjectId, materialId, matrix));
         }
 
         return latestSection();

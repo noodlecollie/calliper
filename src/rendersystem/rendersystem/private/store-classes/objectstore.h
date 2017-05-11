@@ -23,7 +23,7 @@ public:
             return INVALID_ID;
         }
 
-        m_ObjectHash.insert(T(nextId, std::move(args)...));
+        m_ObjectHash.insert(nextId, T(nextId, std::move(args)...));
         objectCreated(nextId);
         return nextId;
     }
@@ -64,8 +64,8 @@ const typename ObjectStore<T>::ObjectId ObjectStore<T>::INVALID_ID = 0;
 
 template<typename T>
 ObjectStore<T>::ObjectStore()
-    : m_nIdCounter(INVALID_ID),
-      m_ObjectHash()
+    : m_ObjectHash(),
+      m_nIdCounter(INVALID_ID)
 {
 
 }

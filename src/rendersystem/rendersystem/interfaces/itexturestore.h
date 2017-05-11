@@ -5,33 +5,32 @@
 
 #include <QImage>
 
+#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+
 namespace RenderSystem
 {
     class ITextureStore
     {
     public:
-        // A texture ID of 0 is invalid.
-        typedef quint32 TextureId;
-
         virtual ~ITextureStore() {}
 
         // Adds a texture to the store, using the provided image.
         // The texture is assigned the given path.
         // Returns the ID of the texture.
-        virtual quint32 addTexture(const QImage& image, const QString& path) = 0;
+        virtual PublicStoreDefs::TextureId addTexture(const QImage& image, const QString& path) = 0;
 
         // Removes the texture with the given ID from the store.
         // If a texture with this ID does not exist, this function does nothing.
-        virtual void removeTexture(const TextureId id) = 0;
+        virtual void removeTexture(const PublicStoreDefs::TextureId id) = 0;
 
         // Returns whether a texture with the given ID exists in the store.
-        virtual bool containsTexture(const TextureId id) const = 0;
+        virtual bool containsTexture(const PublicStoreDefs::TextureId id) const = 0;
 
         // Returns the ID for the texture with the given path, or 0 if it doesn't exist.
-        virtual TextureId textureIdFromPath(const QString& path) const = 0;
+        virtual PublicStoreDefs::TextureId textureIdFromPath(const QString& path) const = 0;
 
         // Returns the path for the texture with the given ID, or 0 if it doesn't exist.
-        virtual QString texturePathFromId(const TextureId id) const = 0;
+        virtual QString texturePathFromId(const PublicStoreDefs::TextureId id) const = 0;
     };
 };
 

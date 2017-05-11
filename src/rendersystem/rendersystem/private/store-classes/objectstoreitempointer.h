@@ -8,6 +8,7 @@ class ObjectStoreItemPointer : public QSharedPointer<T>
 {
 public:
     typedef INTID ObjectId;
+    static const ObjectId INVALID_ID;
 
     template<typename... Args>
     ObjectStoreItemPointer(const ObjectId id, Args... args)
@@ -16,11 +17,20 @@ public:
     {
     }
 
+    ObjectStoreItemPointer()
+        : QSharedPointer<T>(),
+          m_nId(INVALID_ID)
+    {
+    }
+
     ObjectId objectId() const;
 
 private:
-    const ObjectId m_nId;
+    ObjectId m_nId;
 };
+
+template<typename T, typename INTID>
+const typename ObjectStoreItemPointer<T, INTID>::ObjectId ObjectStoreItemPointer<T, INTID>::INVALID_ID = 0;
 
 template<typename T, typename INTID>
 typename ObjectStoreItemPointer<T, INTID>::ObjectId ObjectStoreItemPointer<T, INTID>::objectId() const

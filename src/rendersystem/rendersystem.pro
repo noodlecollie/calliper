@@ -48,7 +48,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel-removeme/batching/openglbuffercollection.cpp \
     rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.cpp \
     rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.cpp \
-    rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.cpp
+    rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.cpp \
+    rendersystem/endpoints/texturestoreendpoint.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -89,7 +90,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel-removeme/batching/openglbuffercollection.h \
     rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.h \
     rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.h \
-    rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h
+    rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h \
+    rendersystem/endpoints/texturestoreendpoint.h
 
 unix {
     target.path = /usr/lib

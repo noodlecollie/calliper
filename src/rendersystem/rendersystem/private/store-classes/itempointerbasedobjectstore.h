@@ -33,7 +33,7 @@ template<typename T, typename INTID>
 QSharedPointer<T> ItemPointerBasedObjectStore<T, INTID>::object(ObjectId id) const
 {
     // This has to be fully qualified or it's treated as undeclared..?
-    return ObjectStore<ObjectStoreItemPointer<T, INTID> >::m_ObjectHash.value(id, QSharedPointer<T>());
+    return ObjectStore<ObjectStoreItemPointer<T, INTID> >::m_ObjectHash.value(id, ObjectStoreItemPointer<T, INTID>());
 }
 
 #endif // ITEMPOINTERBASEDOBJECTSTORE_H

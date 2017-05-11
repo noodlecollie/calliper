@@ -3,6 +3,8 @@
 
 #include "rendersystem_global.h"
 
+#include <QObject>
+
 namespace RenderSystem
 {
     class PublicRenderModelDefs
