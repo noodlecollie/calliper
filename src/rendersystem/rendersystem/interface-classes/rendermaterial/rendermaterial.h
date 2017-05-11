@@ -13,7 +13,9 @@ namespace RenderSystem
     class RENDERSYSTEMSHARED_EXPORT RenderMaterial
     {
     public:
-        RenderMaterial();
+        RenderMaterial(const QString& path);
+
+        QString path() const;
 
         PublicShaderDefs::ShaderStyle shaderStyle() const;
         void setShaderStyle(PublicShaderDefs::ShaderStyle style);
@@ -24,6 +26,7 @@ namespace RenderSystem
         void clearTextureMappings();
 
     private:
+        const QString m_strPath;
         PublicShaderDefs::ShaderStyle m_nShaderStyle;
         QHash<PublicTextureDefs::TextureUnit, QString> m_TextureUnitMap;
     };

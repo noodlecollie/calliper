@@ -6,12 +6,11 @@
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
 #include "rendersystem/interfaces/itexturestore.h"
 
-#include "rendersystem/private/store-classes/itempointerbasedobjectstore.h"
-#include "rendersystem/private/store-classes/objectstoreitempointer.h"
+#include "rendersystem/private/store-classes/pathmanagingobjectstore.h"
 
 #include "namedopengltexture.h"
 
-class OpenGLTextureStore : public ItemPointerBasedObjectStore<NamedOpenGLTexture, RenderSystem::PublicStoreDefs::TextureId>,
+class OpenGLTextureStore : public PathManagingObjectStore<NamedOpenGLTexture, RenderSystem::PublicStoreDefs::TextureId>,
                            public RenderSystem::ITextureStore
 {
 public:

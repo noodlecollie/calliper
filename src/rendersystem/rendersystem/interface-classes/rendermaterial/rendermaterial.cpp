@@ -2,11 +2,17 @@
 
 namespace RenderSystem
 {
-    RenderMaterial::RenderMaterial()
-        : m_nShaderStyle(PublicShaderDefs::UnknownShaderStyle),
+    RenderMaterial::RenderMaterial(const QString& path)
+        : m_strPath(path),
+          m_nShaderStyle(PublicShaderDefs::UnknownShaderStyle),
           m_TextureUnitMap()
     {
 
+    }
+
+    QString RenderMaterial::path() const
+    {
+        return m_strPath;
     }
 
     PublicShaderDefs::ShaderStyle RenderMaterial::shaderStyle() const

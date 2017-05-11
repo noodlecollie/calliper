@@ -54,7 +54,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/store-classes/objectstore.h \
     rendersystem/interface-classes/currentcontextguard/currentcontextguard.h \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.h \
-    rendersystem/private/test/testinterface.h \
     rendersystem/private/store-classes/objectstoreitempointer.h \
     rendersystem/private/stores/opengltexturestore/opengltexturestore.h \
     rendersystem/interfaces/itexturestore.h \
@@ -87,7 +86,9 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.h \
     rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.h \
     rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h \
-    rendersystem/endpoints/texturestoreendpoint.h
+    rendersystem/endpoints/texturestoreendpoint.h \
+    rendersystem/interfaces/imaterialstore.h \
+    rendersystem/private/store-classes/pathmanagingobjectstore.h
 
 unix {
     target.path = /usr/lib

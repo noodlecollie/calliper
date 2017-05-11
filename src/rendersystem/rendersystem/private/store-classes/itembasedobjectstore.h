@@ -34,8 +34,7 @@ ItemBasedObjectStore<T, INTID>::~ItemBasedObjectStore()
 template<typename T, typename INTID>
 T ItemBasedObjectStore<T, INTID>::object(ObjectId id) const
 {
-    // This has to be fully qualified or it's treated as undeclared..?
-    return ObjectStore<ObjectStoreItem<T> >::m_ObjectHash.value(id, T());
+    return this->m_ObjectHash.value(id, T());
 }
 
 #endif // ITEMBASEDOBJECTSTORE_H

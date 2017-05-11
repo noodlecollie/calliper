@@ -25,6 +25,7 @@ namespace RenderSystem
 
         // Returns whether a texture with the given ID exists in the store.
         virtual bool containsTexture(const PublicStoreDefs::TextureId id) const = 0;
+        // TODO: A path version of this
 
         // Returns the ID for the texture with the given path, or 0 if it doesn't exist.
         virtual PublicStoreDefs::TextureId textureIdFromPath(const QString& path) const = 0;
