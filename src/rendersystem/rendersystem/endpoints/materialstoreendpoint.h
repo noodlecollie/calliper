@@ -7,7 +7,10 @@
 
 namespace RenderSystem
 {
-    RENDERSYSTEMSHARED_EXPORT CurrentContextGuard<IMaterialStore> materialStoreEndpoint();
+    namespace MaterialStoreEndpoint
+    {
+        RENDERSYSTEMSHARED_EXPORT CurrentContextGuard<IMaterialStore> materialStore();
+    }
 };
 
 #endif // MATERIALSTOREENDPOINT_H

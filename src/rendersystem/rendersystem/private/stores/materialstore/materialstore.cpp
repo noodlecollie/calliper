@@ -1,8 +1,25 @@
 #include "materialstore.h"
 
+MaterialStore::MaterialStore()
+    : PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::PublicStoreDefs::MaterialId>()
+{
+    createDefaultMaterial();
+}
+
+MaterialStore::~MaterialStore()
+{
+    // No resources need to be cleaned up in the material store.
+    m_ObjectHash.clear();
+}
+
 MaterialStore::MaterialId MaterialStore::createMaterial(const QString& path)
 {
-    MaterialId existingMaterial = m_PathToMaterialIdMap.value(path, INVALID_ID);
+    if ( path.isEmpty() )
+    {
+        return INVALID_ID;
+    }
+
+    MaterialId existingMaterial = objectIdFromPath(path);
     if ( existingMaterial != INVALID_ID )
     {
         destroy(existingMaterial);
@@ -54,4 +71,9 @@ void MaterialStore::objectCreated(const ObjectId id)
 void MaterialStore::objectAboutToBeDestroyed(const ObjectId id)
 {
     removePathForDestroyedObject(id);
+}
+
+void MaterialStore::createDefaultMaterial()
+{
+    createDefaultObject(QString());
 }

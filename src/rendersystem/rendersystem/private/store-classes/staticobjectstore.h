@@ -18,6 +18,8 @@ public:
     const T& object(const KEY& key) const;
 
 protected:
+    typedef QHash<KEY, T> StaticObjectStoreHash;
+
     virtual void storeInitialised() = 0;
     virtual void storeDestroyed() = 0;
 

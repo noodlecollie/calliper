@@ -8,8 +8,11 @@ namespace
 
 namespace RenderSystem
 {
-    CurrentContextGuard<ITextureStore> textureStoreEndpoint()
+    namespace TextureStoreEndpoint
     {
-        return CurrentContextGuard<ITextureStore>(localTextureStore);
+        CurrentContextGuard<ITextureStore> textureStore()
+        {
+            return CurrentContextGuard<ITextureStore>(localTextureStore);
+        }
     }
 }

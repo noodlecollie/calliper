@@ -15,6 +15,11 @@ namespace RenderSystem
         // Different ways in which we might want to draw geometry.
         // Some other examples might be unlit textured, or
         // refract (for water).
+        // These are NOT the same as rendering modes (eg. simple lit):
+        // rendering modes act as the mapping from the conceptual shader
+        // style to the concrete shader, meaning that depending on what
+        // context the rendering is happening in, each shader style can be
+        // mapped to the appropriate shader.
         enum ShaderStyle
         {
             UnknownShaderStyle = -1,
@@ -24,10 +29,6 @@ namespace RenderSystem
             UnlitPerVertexColor3D,
 
             TOTAL_SHADER_STYLES,
-
-            // The lower byte of a quint16 is reserved for shader styles.
-            // The upper byte is for individual shader overrides.
-            MAX_SHADER_STYLES = 0x00ff,
         };
         Q_ENUM(ShaderStyle)
     };

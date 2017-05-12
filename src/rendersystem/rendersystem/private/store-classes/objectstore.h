@@ -14,6 +14,14 @@ public:
     ObjectStore();
     virtual ~ObjectStore();
 
+    bool destroy(ObjectId id);
+    bool contains(ObjectId id) const;
+    void clear();
+    int count() const;
+
+protected:
+    typedef QHash<ObjectId, T> ObjectStoreHash;
+
     template<typename... Args>
     ObjectId create(Args... args)
     {
@@ -28,12 +36,6 @@ public:
         return nextId;
     }
 
-    bool destroy(ObjectId id);
-    bool contains(ObjectId id) const;
-    void clear();
-    int count() const;
-
-protected:
     template<typename... Args>
     ObjectId createDefaultObject(Args... args)
     {
@@ -43,7 +45,7 @@ protected:
             return INVALID_ID;
         }
 
-        m_ObjectHash.insert(T(INVALID_ID, std::move(args)...));
+        m_ObjectHash.insert(INVALID_ID, T(INVALID_ID, std::move(args)...));
         objectCreated(INVALID_ID);
         return INVALID_ID;
     }
@@ -51,7 +53,7 @@ protected:
     virtual void objectCreated(const ObjectId id);
     virtual void objectAboutToBeDestroyed(const ObjectId id);
 
-    QHash<ObjectId, T> m_ObjectHash;
+    ObjectStoreHash m_ObjectHash;
 
 private:
     ObjectId acquireNextId();

@@ -35,6 +35,6 @@ namespace RenderSystem
         // Returns the path for the texture with the given ID, or 0 if it doesn't exist.
         virtual QString texturePathFromId(const PublicStoreDefs::TextureId id) const = 0;
     };
-};
+}
 
 #endif // ITEXTURESTORE_H

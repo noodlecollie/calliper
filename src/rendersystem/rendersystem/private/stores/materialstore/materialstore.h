@@ -16,6 +16,9 @@ class MaterialStore : public PathManagingObjectStore<RenderSystem::RenderMateria
 public:
     typedef RenderSystem::PublicStoreDefs::MaterialId MaterialId;
 
+    MaterialStore();
+    virtual ~MaterialStore();
+
     virtual MaterialId createMaterial(const QString& path) override;
     virtual void removeMaterial(const MaterialId id) override;
     virtual QWeakPointer<RenderSystem::RenderMaterial> material(const MaterialId id) const override;
@@ -25,11 +28,13 @@ public:
     virtual QString materialPathFromId(const MaterialId id) const override;
 
 protected:
+    typedef PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::PublicStoreDefs::MaterialId> BasePathManagingObjectStore;
+
     virtual void objectCreated(const ObjectId id) override;
     virtual void objectAboutToBeDestroyed(const ObjectId id) override;
 
 private:
-    QHash<QString, MaterialId> m_PathToMaterialIdMap;
+    void createDefaultMaterial();
 };
 
 #endif // MATERIALSTORE_H

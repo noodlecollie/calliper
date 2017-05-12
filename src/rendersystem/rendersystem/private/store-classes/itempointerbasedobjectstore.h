@@ -16,7 +16,8 @@ public:
     QSharedPointer<T> object(ObjectId id) const;
 
 protected:
-    typedef ObjectStore<ObjectStoreItemPointer<T, INTID> > BaseObjectStore;
+    typedef ObjectStoreItemPointer<T, INTID> BaseObjectStoreItemPointer;
+    typedef ObjectStore<BaseObjectStoreItemPointer> BaseObjectStore;
 };
 
 template<typename T, typename INTID>

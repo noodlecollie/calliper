@@ -9,8 +9,11 @@ namespace
 
 namespace RenderSystem
 {
-    CurrentContextGuard<IMaterialStore> materialStoreEndpoint()
+    namespace MaterialStoreEndpoint
     {
-        return CurrentContextGuard<IMaterialStore>(localMaterialStore);
+        CurrentContextGuard<IMaterialStore> materialStore()
+        {
+            return CurrentContextGuard<IMaterialStore>(localMaterialStore);
+        }
     }
 }

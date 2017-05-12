@@ -18,6 +18,17 @@ public:
 protected:
     typedef ItemPointerBasedObjectStore<T, INTID> BaseItemPointerBasedObjectStore;
 
+    template<typename... Args>
+    ObjectId createWithPath(const QString& path, Args... args)
+    {
+        if ( path.isEmpty() )
+        {
+            return this->INVALID_ID;
+        }
+
+        return this->create(path, std::move(args)...);
+    }
+
     void storePathForCreatedObject(const ObjectId id);
     void removePathForDestroyedObject(const ObjectId id);
 

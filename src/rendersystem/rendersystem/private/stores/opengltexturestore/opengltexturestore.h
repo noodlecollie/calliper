@@ -16,6 +16,9 @@ class OpenGLTextureStore : public PathManagingObjectStore<NamedOpenGLTexture, Re
 public:
     typedef RenderSystem::PublicStoreDefs::TextureId TextureId;
 
+    OpenGLTextureStore();
+    virtual ~OpenGLTextureStore();
+
     virtual TextureId addTexture(const QImage& image, const QString& path) override;
     virtual void removeTexture(const TextureId id) override;
     virtual bool containsTexture(const TextureId id) const override;
@@ -28,6 +31,9 @@ protected:
 
     virtual void objectCreated(const ObjectId id) override;
     virtual void objectAboutToBeDestroyed(const ObjectId id) override;
+
+private:
+    void createDefaultTexture();
 };
 
 #endif // OPENGLTEXTURESTORE_H

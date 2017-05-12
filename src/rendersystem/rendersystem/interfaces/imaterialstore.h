@@ -22,8 +22,8 @@ namespace RenderSystem
         // If a material with this ID does not exist, this function does nothing.
         virtual void removeMaterial(const PublicStoreDefs::MaterialId id) = 0;
 
-        // Returns the material corresponding to the given ID, or a null pointer
-        // if a material with the given ID does not exist.
+        // Returns the material corresponding to the given ID, or a default material
+        // if the ID does not exist in the store.
         virtual QWeakPointer<RenderMaterial> material(const PublicStoreDefs::MaterialId id) const = 0;
 
         // Returns whether a material with the given ID exists in the store.

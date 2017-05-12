@@ -7,6 +7,10 @@
 
 namespace
 {
+    // This is an array of std::functions because we don't actually
+    // want to store pointers to the programs outside of the store,
+    // or this would conflict with the ownership the store is
+    // supposed to have over the objects.
     std::function<OpenGLShaderProgram*()> g_Initialisers[] =
     {
         [] { return new SimpleLitShader(); },
@@ -26,17 +30,22 @@ namespace
 OpenGLShaderStore::OpenGLShaderStore()
     : StaticObjectStore<OpenGLShaderProgram*, PrivateShaderDefs::ShaderId, PrivateShaderDefs::TOTAL_SHADERS>()
 {
-
-}
-
-void OpenGLShaderStore::storeInitialised()
-{
     static_assert(sizeof(SizeofArrayHelper(g_Initialisers)) == PrivateShaderDefs::TOTAL_SHADERS,
                   "Initialiser array size mismatch - has a new shader ID been added?");
 
     for ( int i = 0; i < PrivateShaderDefs::TOTAL_SHADERS; ++i )
     {
         m_Objects.insert(static_cast<PrivateShaderDefs::ShaderId>(i), g_Initialisers[i]());
+    }
+}
+
+void OpenGLShaderStore::storeInitialised()
+{
+    for ( StaticObjectStoreHash::iterator itShader = m_Objects.begin();
+          itShader != m_Objects.end();
+          ++itShader )
+    {
+        itShader.value()->construct();
     }
 }
 

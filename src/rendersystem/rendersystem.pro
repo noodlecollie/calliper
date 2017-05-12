@@ -48,7 +48,10 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.cpp \
     rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.cpp \
     rendersystem/endpoints/texturestoreendpoint.cpp \
-    rendersystem/endpoints/materialstoreendpoint.cpp
+    rendersystem/endpoints/materialstoreendpoint.cpp \
+    rendersystem/private/rendermodel/rendermodel.cpp \
+    rendersystem/private/stores/publicstoredefs.cpp \
+    rendersystem/private/rendermodel/rendergroup.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -90,7 +93,9 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/endpoints/texturestoreendpoint.h \
     rendersystem/interfaces/imaterialstore.h \
     rendersystem/private/store-classes/pathmanagingobjectstore.h \
-    rendersystem/endpoints/materialstoreendpoint.h
+    rendersystem/endpoints/materialstoreendpoint.h \
+    rendersystem/private/rendermodel/rendermodel.h \
+    rendersystem/private/rendermodel/rendergroup.h
 
 unix {
     target.path = /usr/lib
