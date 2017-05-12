@@ -7,6 +7,9 @@
 
 class OpenGLShaderStore : public StaticObjectStore<OpenGLShaderProgram*, PrivateShaderDefs::ShaderId, PrivateShaderDefs::TOTAL_SHADERS>
 {
+public:
+    OpenGLShaderStore();
+
 protected:
     virtual void storeInitialised() override;
     virtual void storeDestroyed() override;
