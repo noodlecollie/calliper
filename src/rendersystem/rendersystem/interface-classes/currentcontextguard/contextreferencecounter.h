@@ -3,11 +3,20 @@
 
 #include "rendersystem_global.h"
 
+#include <QLoggingCategory>
+
 class QOpenGLContext;
 class QSurface;
 
 namespace RenderSystem
 {
+    Q_DECLARE_LOGGING_CATEGORY(lcContextReferenceCounter)
+
+    // Ensures that the RenderSystem context is kept current while
+    // at least one instance of this class is alive.
+    // Note that this doesn't prevent other contexts from being made current,
+    // but it will throw an error if a different context is current
+    // when the main one should finish being current.
     class RENDERSYSTEMSHARED_EXPORT ContextReferenceCounter
     {
     public:
