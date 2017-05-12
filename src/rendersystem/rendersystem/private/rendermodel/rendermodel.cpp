@@ -17,11 +17,13 @@ RenderModel::RenderGroupKey::RenderGroupKey(RenderSystem::PublicStoreDefs::Mater
     using namespace RenderSystem;
 
     CurrentContextGuard<IMaterialStore> materialStore = MaterialStoreEndpoint::materialStore();
+    CurrentContextGuard<ITextureStore> textureStore = TextureStoreEndpoint::textureStore();
+
     QSharedPointer<RenderMaterial> material = materialStore->material(materialId).toStrongRef();
 
     shaderStyle = material->shaderStyle();
-
-    static_assert(false, "Set main and secondary textures - material returns their paths");
+    mainTextureId = textureStore->textureIdFromPath(material->textureMapping(PublicTextureDefs::MainTexture));
+    secondaryTextureId = textureStore->textureIdFromPath(material->textureMapping(PublicTextureDefs::SecondaryTexture));
 }
 
 bool RenderModel::RenderGroupKey::operator <(const RenderModel::RenderGroupKey& other) const
