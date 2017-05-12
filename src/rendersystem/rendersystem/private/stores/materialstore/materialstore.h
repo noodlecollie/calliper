@@ -20,6 +20,7 @@ public:
     virtual void removeMaterial(const MaterialId id) override;
     virtual QWeakPointer<RenderSystem::RenderMaterial> material(const MaterialId id) const override;
     virtual bool containsMaterial(const MaterialId id) const override;
+    virtual bool containsMaterial(const QString& path) const override;
     virtual MaterialId materialIdFromPath(const QString& path) const override;
     virtual QString materialPathFromId(const MaterialId id) const override;
 

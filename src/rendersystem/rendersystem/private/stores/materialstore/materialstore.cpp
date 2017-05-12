@@ -28,7 +28,12 @@ QWeakPointer<RenderSystem::RenderMaterial> MaterialStore::material(const Materia
 
 bool MaterialStore::containsMaterial(const MaterialId id) const
 {
-    return contains(id);
+    return BaseObjectStore::contains(id);
+}
+
+bool MaterialStore::containsMaterial(const QString &path) const
+{
+    return contains(path);
 }
 
 MaterialStore::MaterialId MaterialStore::materialIdFromPath(const QString& path) const

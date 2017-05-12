@@ -28,7 +28,9 @@ namespace RenderSystem
 
         // Returns whether a material with the given ID exists in the store.
         virtual bool containsMaterial(const PublicStoreDefs::MaterialId id) const = 0;
-        // TODO: A path version of this.
+
+        // Returns whether a material with the giveb path exists.
+        virtual bool containsMaterial(const QString& path) const = 0;
 
         // Returns the ID for the material with the given path, or 0 if it doesn't exist.
         virtual PublicStoreDefs::MaterialId materialIdFromPath(const QString& path) const = 0;

@@ -2,7 +2,7 @@
 
 OpenGLTextureStore::TextureId OpenGLTextureStore::addTexture(const QImage& image, const QString& path)
 {
-    TextureId existingTexture = m_PathToTextureIdMap.value(path, INVALID_ID);
+    TextureId existingTexture = objectIdFromPath(path);
     if ( existingTexture != INVALID_ID )
     {
         destroy(existingTexture);
@@ -23,7 +23,12 @@ void OpenGLTextureStore::removeTexture(const TextureId id)
 
 bool OpenGLTextureStore::containsTexture(const TextureId id) const
 {
-    return contains(id);
+    return BaseObjectStore::contains(id);
+}
+
+bool OpenGLTextureStore::containsTexture(const QString &path) const
+{
+    return contains(path);
 }
 
 OpenGLTextureStore::TextureId OpenGLTextureStore::textureIdFromPath(const QString& path) const

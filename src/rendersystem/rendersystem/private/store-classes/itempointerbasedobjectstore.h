@@ -14,6 +14,9 @@ public:
     virtual ~ItemPointerBasedObjectStore();
 
     QSharedPointer<T> object(ObjectId id) const;
+
+protected:
+    typedef ObjectStore<ObjectStoreItemPointer<T, INTID> > BaseObjectStore;
 };
 
 template<typename T, typename INTID>

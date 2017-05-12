@@ -19,15 +19,15 @@ public:
     virtual TextureId addTexture(const QImage& image, const QString& path) override;
     virtual void removeTexture(const TextureId id) override;
     virtual bool containsTexture(const TextureId id) const override;
+    virtual bool containsTexture(const QString& path) const override;
     virtual TextureId textureIdFromPath(const QString& path) const override;
     virtual QString texturePathFromId(const TextureId id) const override;
 
 protected:
+    typedef PathManagingObjectStore<NamedOpenGLTexture, RenderSystem::PublicStoreDefs::TextureId> BasePathManagingObjectStore;
+
     virtual void objectCreated(const ObjectId id) override;
     virtual void objectAboutToBeDestroyed(const ObjectId id) override;
-
-private:
-    QHash<QString, TextureId> m_PathToTextureIdMap;
 };
 
 #endif // OPENGLTEXTURESTORE_H

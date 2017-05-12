@@ -7,15 +7,21 @@
 template<typename T, typename INTID>
 class PathManagingObjectStore : public ItemPointerBasedObjectStore<T, INTID>
 {
-protected:
+public:
     typedef typename ItemPointerBasedObjectStore<T, INTID>::ObjectId ObjectId;
 
-    void storePathForCreatedObject(const ObjectId id);
-    void removePathForDestroyedObject(const ObjectId id);
+    bool contains(const QString& path) const;
 
     ObjectId objectIdFromPath(const QString& path) const;
     QString objectPathFromId(const ObjectId id) const;
 
+protected:
+    typedef ItemPointerBasedObjectStore<T, INTID> BaseItemPointerBasedObjectStore;
+
+    void storePathForCreatedObject(const ObjectId id);
+    void removePathForDestroyedObject(const ObjectId id);
+
+private:
     QHash<QString, INTID> m_PathToObjectMap;
 };
 
@@ -75,6 +81,12 @@ QString PathManagingObjectStore<T, INTID>::objectPathFromId(const ObjectId id) c
     }
 
     return objectPointer->path();
+}
+
+template<typename T, typename INTID>
+bool PathManagingObjectStore<T, INTID>::contains(const QString& path) const
+{
+    return m_PathToObjectMap.contains(path);
 }
 
 #endif // PATHMANAGINGOBJECTSTORE_H
