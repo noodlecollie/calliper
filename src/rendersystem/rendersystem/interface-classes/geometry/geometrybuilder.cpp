@@ -76,4 +76,16 @@ namespace RenderSystem
     {
         return m_nObjectId;
     }
+
+    QSet<PublicStoreDefs::MaterialId> GeometryBuilder::referencedMaterials() const
+    {
+        QSet<PublicStoreDefs::MaterialId> materials;
+
+        for ( int i = 0; i < sectionCount(); ++i )
+        {
+            materials.insert(section(i)->materialId());
+        }
+
+        return materials;
+    }
 }

@@ -2,33 +2,32 @@
 #define RENDERMODEL_H
 
 #include <QMap>
+#include <QMultiHash>
 
 #include "rendergroup.h"
+#include "rendergroupkey.h"
 
 #include "rendersystem/interface-classes/shader/publicshaderdefs.h"
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/geometry/geometrybuilder.h"
+#include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
 
 class RenderModel
 {
 public:
     RenderModel();
 
+    // Replaces any geometry for the given object.
+    void setGeometry(const RenderSystem::GeometryBuilder& geometry);
+    void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
+
 private:
-    struct RenderGroupKey
-    {
-        RenderSystem::PublicShaderDefs::ShaderStyle shaderStyle;
-        RenderSystem::PublicStoreDefs::TextureId mainTextureId;
-        RenderSystem::PublicStoreDefs::TextureId secondaryTextureId;
+    typedef QSharedPointer<RenderGroup> RenderGroupPointer;
 
-        RenderGroupKey();
-        RenderGroupKey(RenderSystem::PublicStoreDefs::MaterialId materialId);
-        bool operator <(const RenderGroupKey& other) const;
-    };
+    void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
 
-    bool renderGroupExists(RenderSystem::PublicStoreDefs::MaterialId materialId) const;
-    bool renderGroupExists(const RenderGroupKey& key) const;
-
-    QMap<RenderGroupKey, RenderGroup> m_RenderGroups;
+    QMap<RenderGroupKey, RenderGroupPointer> m_RenderGroups;
+    QMultiHash<RenderSystem::PublicRenderModelDefs::ObjectId, RenderGroupPointer> m_ObjectIdToRenderGroup;
 };
 
 #endif // RENDERMODEL_H

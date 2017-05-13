@@ -5,6 +5,7 @@
 
 #include <QVector>
 #include <QSharedPointer>
+#include <QSet>
 
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
 #include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
@@ -32,6 +33,8 @@ namespace RenderSystem
         void setMaterialId(PublicStoreDefs::MaterialId id);
 
         PublicRenderModelDefs::ObjectId objectId() const;
+
+        QSet<PublicStoreDefs::MaterialId> referencedMaterials() const;
 
     private:
         PublicRenderModelDefs::ObjectId m_nObjectId;

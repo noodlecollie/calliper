@@ -51,7 +51,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/endpoints/materialstoreendpoint.cpp \
     rendersystem/private/rendermodel/rendermodel.cpp \
     rendersystem/private/stores/publicstoredefs.cpp \
-    rendersystem/private/rendermodel/rendergroup.cpp
+    rendersystem/private/rendermodel/rendergroup.cpp \
+    rendersystem/private/rendermodel/rendergroupkey.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -95,7 +96,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/store-classes/pathmanagingobjectstore.h \
     rendersystem/endpoints/materialstoreendpoint.h \
     rendersystem/private/rendermodel/rendermodel.h \
-    rendersystem/private/rendermodel/rendergroup.h
+    rendersystem/private/rendermodel/rendergroup.h \
+    rendersystem/private/rendermodel/rendergroupkey.h
 
 unix {
     target.path = /usr/lib

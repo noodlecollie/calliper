@@ -1,52 +1,49 @@
 #include "rendermodel.h"
 
-#include "rendersystem/endpoints/materialstoreendpoint.h"
-#include "rendersystem/endpoints/texturestoreendpoint.h"
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
 
-RenderModel::RenderGroupKey::RenderGroupKey()
-    : shaderStyle(RenderSystem::PublicShaderDefs::UnknownShaderStyle),
-      mainTextureId(RenderSystem::PublicStoreDefs::INVALID_TEXTURE_ID),
-      secondaryTextureId(RenderSystem::PublicStoreDefs::INVALID_TEXTURE_ID)
+RenderModel::RenderModel()
 {
+
 }
 
-RenderModel::RenderGroupKey::RenderGroupKey(RenderSystem::PublicStoreDefs::MaterialId materialId)
-    : RenderGroupKey()
+void RenderModel::setGeometry(const RenderSystem::GeometryBuilder &geometry)
 {
-    using namespace RenderSystem;
+    removeGeometry(geometry.objectId());
 
-    CurrentContextGuard<IMaterialStore> materialStore = MaterialStoreEndpoint::materialStore();
-    CurrentContextGuard<ITextureStore> textureStore = TextureStoreEndpoint::textureStore();
-
-    QSharedPointer<RenderMaterial> material = materialStore->material(materialId).toStrongRef();
-
-    shaderStyle = material->shaderStyle();
-    mainTextureId = textureStore->textureIdFromPath(material->textureMapping(PublicTextureDefs::MainTexture));
-    secondaryTextureId = textureStore->textureIdFromPath(material->textureMapping(PublicTextureDefs::SecondaryTexture));
-}
-
-bool RenderModel::RenderGroupKey::operator <(const RenderModel::RenderGroupKey& other) const
-{
-    if ( shaderStyle != other.shaderStyle )
+    for ( int i = 0; i < geometry.sectionCount(); ++i )
     {
-        return shaderStyle < other.shaderStyle;
+        setGeometry(geometry.section(i));
+    }
+}
+
+void RenderModel::setGeometry(const QSharedPointer<RenderSystem::GeometrySection> &section)
+{
+    if ( section->isEmpty() )
+    {
+        return;
     }
 
-    if ( mainTextureId != other.mainTextureId )
+    RenderGroupKey key(section->materialId());
+    RenderGroupPointer renderGroup = m_RenderGroups.value(key, RenderGroupPointer());
+
+    if ( !renderGroup )
     {
-        return mainTextureId < other.mainTextureId;
+        renderGroup = RenderGroupPointer::create(key);
+        m_RenderGroups.insert(key, renderGroup);
     }
 
-    return secondaryTextureId < other.secondaryTextureId;
+    renderGroup->setGeometry(section);
 }
 
-bool RenderModel::renderGroupExists(const RenderGroupKey &key) const
+void RenderModel::removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId)
 {
-    return m_RenderGroups.contains(key);
-}
+    QList<RenderGroupPointer> renderGroups = m_ObjectIdToRenderGroup.values(objectId);
 
-bool RenderModel::renderGroupExists(RenderSystem::PublicStoreDefs::MaterialId materialId) const
-{
-    return renderGroupExists(RenderGroupKey(materialId));
+    for ( const RenderGroupPointer& group : renderGroups )
+    {
+        group->removeGeometry(objectId);
+    }
+
+    m_ObjectIdToRenderGroup.remove(objectId);
 }
