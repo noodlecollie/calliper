@@ -27,8 +27,12 @@ namespace RenderSystem
         };
 
         GeometrySection();
-        GeometrySection(PublicRenderModelDefs::ObjectId objectId, PublicStoreDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
+        GeometrySection(quint8 sectionId,
+                        PublicRenderModelDefs::ObjectId objectId,
+                        PublicStoreDefs::MaterialId materialId,
+                        const QMatrix4x4& modelToWorldMatrix);
 
+        quint8 sectionId() const;
         PublicRenderModelDefs::ObjectId objectId() const;
 
         PublicStoreDefs::MaterialId materialId() const;
@@ -52,6 +56,7 @@ namespace RenderSystem
         const QVector<QVector4D>& attributeVector(AttributeType attribute) const;
 
     private:
+        quint8 m_nSectionId;
         PublicRenderModelDefs::ObjectId m_nObjectId;
         PublicStoreDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
