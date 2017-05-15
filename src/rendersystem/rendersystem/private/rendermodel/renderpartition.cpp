@@ -21,6 +21,11 @@ bool RenderPartition::isFull() const
     return m_Data.count() >= m_nMaxItems;
 }
 
+int RenderPartition::freeSpaces() const
+{
+    return m_nMaxItems - m_Data.count();
+}
+
 void RenderPartition::setGeometry(const QSharedPointer<RenderSystem::GeometrySection> &section)
 {
     if ( isFull() )

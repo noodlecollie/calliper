@@ -17,6 +17,7 @@ public:
     int maxItems() const;
     int itemCount() const;
     bool isFull() const;
+    int freeSpaces() const;
 
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
     void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
