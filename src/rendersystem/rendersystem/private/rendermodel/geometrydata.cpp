@@ -8,15 +8,16 @@ namespace
         return vec.count() * sizeof(T);
     }
 
-    template<>
-    inline quint32 totalVectorBytes<QVector4D>(const QVector<QVector4D>& vec)
+    template<typename T>
+    inline quint32 totalVectorFloatBytes(const QVector<T>& vec, int components)
     {
-        return vec.count() * 4 * sizeof(float);
+        return vec.count() * components * sizeof(float);
     }
 }
 
 GeometryData::GeometryData(quint32 objectId, quint8 sectionId)
-    : m_bDirty(true),
+    : m_bMatrixDirty(true),
+      m_bVerticesDirty(true),
       m_nObjectId(objectId),
       m_nSectionId(sectionId),
       m_matModelToWorld(),
@@ -29,14 +30,35 @@ GeometryData::GeometryData(quint32 objectId, quint8 sectionId)
 
 }
 
-bool GeometryData::dirty() const
+bool GeometryData::anyDirty() const
 {
-    return m_bDirty;
+    return matrixDirty() || verticesDirty();
 }
 
-void GeometryData::setDirty(bool dirty)
+void GeometryData::clearAllDirtyFlags()
 {
-    m_bDirty = dirty;
+    setMatrixDirty(false);
+    setVerticesDirty(false);
+}
+
+bool GeometryData::matrixDirty() const
+{
+    return m_bMatrixDirty;
+}
+
+void GeometryData::setMatrixDirty(bool dirty)
+{
+    m_bMatrixDirty = dirty;
+}
+
+bool GeometryData::verticesDirty() const
+{
+    return m_bVerticesDirty;
+}
+
+void GeometryData::setVerticesDirty(bool dirty)
+{
+    m_bVerticesDirty = dirty;
 }
 
 quint32 GeometryData::objectId() const
@@ -57,7 +79,7 @@ const QMatrix4x4& GeometryData::modelToWorldMatrix() const
 void GeometryData::setModelToWorldMatrix(const QMatrix4x4 &matrix)
 {
     m_matModelToWorld = matrix;
-    setDirty(true);
+    setMatrixDirty(true);
 }
 
 const QVector<QVector4D>& GeometryData::positions() const
@@ -68,12 +90,12 @@ const QVector<QVector4D>& GeometryData::positions() const
 void GeometryData::setPositions(const QVector<QVector4D>& vec)
 {
     m_Positions = vec;
-    setDirty(true);
+    setVerticesDirty(true);
 }
 
 QVector<QVector4D>& GeometryData::positionsRef()
 {
-    setDirty(true);
+    setVerticesDirty(true);
     return m_Positions;
 }
 
@@ -85,12 +107,12 @@ const QVector<QVector4D>& GeometryData::normals() const
 void GeometryData::setNormals(const QVector<QVector4D>& vec)
 {
     m_Normals = vec;
-    setDirty(true);
+    setVerticesDirty(true);
 }
 
 QVector<QVector4D>& GeometryData::normalsRef()
 {
-    setDirty(true);
+    setVerticesDirty(true);
     return m_Normals;
 }
 
@@ -102,12 +124,12 @@ const QVector<QVector4D>& GeometryData::colors() const
 void GeometryData::setColors(const QVector<QVector4D>& vec)
 {
     m_Colors = vec;
-    setDirty(true);
+    setVerticesDirty(true);
 }
 
 QVector<QVector4D>& GeometryData::colorsRef()
 {
-    setDirty(true);
+    setVerticesDirty(true);
     return m_Colors;
 }
 
@@ -119,12 +141,12 @@ const QVector<QVector4D>& GeometryData::textureCoordinates() const
 void GeometryData::setTextureCoordinates(const QVector<QVector4D>& vec)
 {
     m_TextureCoordinates = vec;
-    setDirty(true);
+    setVerticesDirty(true);
 }
 
 QVector<QVector4D>& GeometryData::textureCoordinatesRef()
 {
-    setDirty(true);
+    setVerticesDirty(true);
     return m_TextureCoordinates;
 }
 
@@ -136,21 +158,21 @@ const QVector<quint32>& GeometryData::indices() const
 void GeometryData::setIndices(const QVector<quint32> &vec)
 {
     m_Indices = vec;
-    setDirty(true);
+    setVerticesDirty(true);
 }
 
 QVector<quint32>& GeometryData::indicesRef()
 {
-    setDirty(true);
+    setVerticesDirty(true);
     return m_Indices;
 }
 
-quint32 GeometryData::computeTotalVertexBytes() const
+quint32 GeometryData::computeTotalVertexBytes(const VertexFormat &format) const
 {
-    return totalVectorBytes(m_Positions) +
-            totalVectorBytes(m_Normals) +
-            totalVectorBytes(m_Colors) +
-            totalVectorBytes(m_TextureCoordinates);
+    return totalVectorFloatBytes(m_Positions, format.positionComponents()) +
+            totalVectorFloatBytes(m_Normals, format.normalComponents()) +
+            totalVectorFloatBytes(m_Colors, format.colorComponents()) +
+            totalVectorFloatBytes(m_TextureCoordinates, format.textureCoordinateComponents());
 }
 
 quint32 GeometryData::computeTotalIndexBytes() const

@@ -4,20 +4,30 @@
 #include <QVector>
 #include <QMatrix4x4>
 #include <QVector4D>
+#include "rendersystem/private/shaders/common/vertexformat.h"
 
 class GeometryData
 {
 public:
     GeometryData(quint32 objectId, quint8 sectionId);
 
-    bool dirty() const;
-    void setDirty(bool dirty);
+    bool matrixDirty() const;
+    void setMatrixDirty(bool dirty);
+
+    bool verticesDirty() const;
+    void setVerticesDirty(bool dirty);
+
+    bool anyDirty() const;
+    void clearAllDirtyFlags();
 
     quint32 objectId() const;
     quint8 sectionId() const;
 
     const QMatrix4x4& modelToWorldMatrix() const;
     void setModelToWorldMatrix(const QMatrix4x4& matrix);
+
+    // *ref() accessors automatically flag the vertex data as dirty when called.
+    // If you don't actually want to modify the data, use the const accessors.
 
     const QVector<QVector4D>& positions() const;
     void setPositions(const QVector<QVector4D>& vec);
@@ -39,11 +49,12 @@ public:
     void setIndices(const QVector<quint32>& vec);
     QVector<quint32>& indicesRef();
 
-    quint32 computeTotalVertexBytes() const;
+    quint32 computeTotalVertexBytes(const VertexFormat& format) const;
     quint32 computeTotalIndexBytes() const;
 
 private:
-    bool m_bDirty;
+    bool m_bMatrixDirty;
+    bool m_bVerticesDirty;
 
     quint32 m_nObjectId;
     quint8 m_nSectionId;

@@ -1,5 +1,11 @@
 #include "rendergroup.h"
 
+namespace
+{
+    // Tweak as necessary, for performance.
+    const int ITEMS_PER_PARTITION = 8 * 8;  // Batches * items per batch
+}
+
 RenderGroup::RenderGroup(const RenderGroupKey &key)
     : m_Key(key)
 {
@@ -8,59 +14,46 @@ RenderGroup::RenderGroup(const RenderGroupKey &key)
 
 void RenderGroup::setGeometry(const QSharedPointer<RenderSystem::GeometrySection> &section)
 {
-    m_Data.insert(GeometryDataKey(section->objectId(), section->sectionId()), sectionToGeometryData(section));
+    static_assert(ITEMS_PER_PARTITION > 0, "There must be at least 1 item per partition!");
+
+    for ( int i = 0; i < m_Partitions.count(); ++i )
+    {
+        RenderPartitionPointer partition = m_Partitions.at(i);
+        if ( partition->isFull() )
+        {
+            continue;
+        }
+
+        partition->setGeometry(section);
+        m_SectionToPartition.insert(GeometryDataKey(section->objectId(), section->sectionId()), partition);
+        return;
+    }
+
+    RenderPartitionPointer partition = RenderPartitionPointer::create(ITEMS_PER_PARTITION);
+    partition->setGeometry(section);
+    m_Partitions.append(partition);
+    m_SectionToPartition.insert(GeometryDataKey(section->objectId(), section->sectionId()), partition);
 }
 
 void RenderGroup::removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId)
 {
-    QMap<GeometryDataKey, GeometryDataPointer>::iterator it = m_Data.begin();
-    while ( it != m_Data.end() )
+    QSet<RenderPartition*> processedPartitions;
+
+    QHash<GeometryDataKey, RenderPartitionPointer>::iterator it = m_SectionToPartition.begin();
+    while ( it != m_SectionToPartition.end() )
     {
-        if ( it.key().objectId == objectId )
-        {
-            it = m_Data.erase(it);
-        }
-        else
+        // We can store raw pointers because the object will not be killed off,
+        // as it still lives inside the partitions vector.
+        RenderPartition* partition = it.value().data();
+
+        if ( it.key().objectId != objectId || processedPartitions.contains(partition) )
         {
             ++it;
+            continue;
         }
-    }
-}
 
-RenderGroup::GeometryDataPointer RenderGroup::sectionToGeometryData(const QSharedPointer<RenderSystem::GeometrySection> &section)
-{
-    GeometryDataPointer data = GeometryDataPointer::create(section->objectId(), section->sectionId());
-
-    data->setModelToWorldMatrix(section->modelToWorldMatrix());
-    data->positionsRef() = section->attributeVector(RenderSystem::GeometrySection::Position);
-    data->normalsRef() = section->attributeVector(RenderSystem::GeometrySection::Normal);
-    data->colorsRef() = section->attributeVector(RenderSystem::GeometrySection::Color);
-    data->textureCoordinatesRef() = section->attributeVector(RenderSystem::GeometrySection::TextureCoordinate);
-
-    generateIndices(data);
-    return data;
-}
-
-void RenderGroup::generateIndices(const GeometryDataPointer &data)
-{
-    const quint32 positionCount = data->positions().count();
-    if ( positionCount < 3 )
-    {
-        return;
-    }
-
-    QVector<quint32>& indices = data->indicesRef();
-
-    // (positionCount - 2) triangles, with 3 indices per triangle.
-    indices.resize((positionCount - 2) * 3);
-
-    int indexOffset = 0;
-    for ( quint32 index = 2; index < positionCount; ++index )
-    {
-        indices[indexOffset] = 0;
-        indices[indexOffset + 1] = index - 1;
-        indices[indexOffset + 2] = index;
-
-        indexOffset += 3;
+        partition->removeGeometry(objectId);
+        it = m_SectionToPartition.erase(it);
+        processedPartitions.insert(partition);
     }
 }

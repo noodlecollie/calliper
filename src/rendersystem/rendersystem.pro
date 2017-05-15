@@ -54,7 +54,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel/rendergroup.cpp \
     rendersystem/private/rendermodel/rendergroupkey.cpp \
     rendersystem/private/rendermodel/geometrydata.cpp \
-    rendersystem/private/rendermodel/geometrydatakey.cpp
+    rendersystem/private/rendermodel/geometrydatakey.cpp \
+    rendersystem/private/rendermodel/renderpartition.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -101,7 +102,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/rendergroup.h \
     rendersystem/private/rendermodel/rendergroupkey.h \
     rendersystem/private/rendermodel/geometrydata.h \
-    rendersystem/private/rendermodel/geometrydatakey.h
+    rendersystem/private/rendermodel/geometrydatakey.h \
+    rendersystem/private/rendermodel/renderpartition.h
 
 unix {
     target.path = /usr/lib

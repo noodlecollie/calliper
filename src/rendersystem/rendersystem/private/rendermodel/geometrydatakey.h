@@ -11,6 +11,9 @@ struct GeometryDataKey
     GeometryDataKey(RenderSystem::PublicRenderModelDefs::ObjectId object,
                     RenderSystem::PublicRenderModelDefs::SectionId section);
     bool operator <(const GeometryDataKey& other) const;
+    bool operator ==(const GeometryDataKey& other) const;
 };
+
+uint qHash(const GeometryDataKey& key, uint seed = 0);
 
 #endif // GEOMETRYDATAKEY_H

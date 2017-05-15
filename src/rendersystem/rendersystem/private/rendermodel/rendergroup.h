@@ -3,10 +3,13 @@
 
 #include <QSharedPointer>
 #include <QMap>
+#include <QVector>
+#include <QHash>
 
 #include "rendergroupkey.h"
 #include "geometrydata.h"
 #include "geometrydatakey.h"
+#include "renderpartition.h"
 
 #include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
@@ -20,14 +23,11 @@ public:
     void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
 
 private:
-    typedef QSharedPointer<GeometryData> GeometryDataPointer;
-
-    GeometryDataPointer sectionToGeometryData(const QSharedPointer<RenderSystem::GeometrySection>& section);
-    void generateIndices(const GeometryDataPointer& data);
+    typedef QSharedPointer<RenderPartition> RenderPartitionPointer;
 
     const RenderGroupKey m_Key;
-
-    QMap<GeometryDataKey, GeometryDataPointer> m_Data;
+    QVector<RenderPartitionPointer> m_Partitions;
+    QHash<GeometryDataKey, RenderPartitionPointer> m_SectionToPartition;
 };
 
 #endif // RENDERGROUP_H
