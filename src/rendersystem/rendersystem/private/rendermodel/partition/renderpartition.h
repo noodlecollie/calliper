@@ -7,6 +7,8 @@
 #include "geometrydatakey.h"
 #include "geometrydata.h"
 #include "openglbuffercollection.h"
+#include "geometryuploader.h"
+#include "geometrydatacontainer.h"
 
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
@@ -24,14 +26,14 @@ public:
     void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
 
 private:
-    typedef QSharedPointer<GeometryData> GeometryDataPointer;
-
-    GeometryDataPointer sectionToGeometryData(const QSharedPointer<RenderSystem::GeometrySection>& section);
-    void generateIndices(const GeometryDataPointer& data);
-
     const int m_nMaxItems;
-    QMap<GeometryDataKey, GeometryDataPointer> m_Data;
+
+    // Data
+    GeometryDataContainer m_GeometryDataContainer;
     OpenGLBufferCollection m_OpenGLBuffers;
+
+    // Operators on data
+    GeometryUploader m_Uploader;
 };
 
 #endif // RENDERPARTITION_H

@@ -57,7 +57,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel/partition/renderpartition.cpp \
     rendersystem/private/rendermodel/partition/openglbuffercollection.cpp \
     rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.cpp \
-    rendersystem/private/rendermodel/partition/geometryuploader.cpp
+    rendersystem/private/rendermodel/partition/geometryuploader.cpp \
+    rendersystem/private/rendermodel/partition/geometrydatacontainer.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -107,7 +108,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/partition/renderpartition.h \
     rendersystem/private/rendermodel/partition/openglbuffercollection.h \
     rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.h \
-    rendersystem/private/rendermodel/partition/geometryuploader.h
+    rendersystem/private/rendermodel/partition/geometryuploader.h \
+    rendersystem/private/rendermodel/partition/geometrydatacontainer.h
 
 unix {
     target.path = /usr/lib
