@@ -16,7 +16,9 @@ OpenGLVertexArrayObject::~OpenGLVertexArrayObject()
 bool OpenGLVertexArrayObject::create()
 {
     if ( m_iVAOID != 0 )
+    {
         return true;
+    }
 
     GL_CURRENT_F;
 
@@ -27,17 +29,19 @@ bool OpenGLVertexArrayObject::create()
 void OpenGLVertexArrayObject::destroy()
 {
     if ( m_iVAOID == 0 )
+    {
         return;
+    }
 
     GL_CURRENT_F;
     GLTRY(f->glDeleteBuffers(1, &m_iVAOID));
     m_iVAOID = 0;
 }
 
-void OpenGLVertexArrayObject::bind()
+bool OpenGLVertexArrayObject::bind()
 {
     GL_CURRENT_F;
-    GLTRY(f->glBindVertexArray(m_iVAOID));
+    return GLTRY_RET(f->glBindVertexArray(m_iVAOID));
 }
 
 void OpenGLVertexArrayObject::release()

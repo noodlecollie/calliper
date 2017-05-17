@@ -6,6 +6,7 @@
 
 #include "geometrydatakey.h"
 #include "geometrydata.h"
+#include "openglbuffercollection.h"
 
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
@@ -30,6 +31,7 @@ private:
 
     const int m_nMaxItems;
     QMap<GeometryDataKey, GeometryDataPointer> m_Data;
+    OpenGLBufferCollection m_OpenGLBuffers;
 };
 
 #endif // RENDERPARTITION_H

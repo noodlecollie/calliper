@@ -43,7 +43,6 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/materialstore/materialstore.cpp \
     rendersystem/interface-classes/geometry/geometrysection.cpp \
     rendersystem/interface-classes/geometry/geometrybuilder.cpp \
-    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection.cpp \
     rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.cpp \
     rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.cpp \
     rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.cpp \
@@ -53,9 +52,12 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/publicstoredefs.cpp \
     rendersystem/private/rendermodel/rendergroup.cpp \
     rendersystem/private/rendermodel/rendergroupkey.cpp \
-    rendersystem/private/rendermodel/geometrydata.cpp \
-    rendersystem/private/rendermodel/geometrydatakey.cpp \
-    rendersystem/private/rendermodel/renderpartition.cpp
+    rendersystem/private/rendermodel/partition/geometrydata.cpp \
+    rendersystem/private/rendermodel/partition/geometrydatakey.cpp \
+    rendersystem/private/rendermodel/partition/renderpartition.cpp \
+    rendersystem/private/rendermodel/partition/openglbuffercollection.cpp \
+    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.cpp \
+    rendersystem/private/rendermodel/partition/geometryuploader.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -90,7 +92,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/geometry/geometrysection.h \
     rendersystem/interface-classes/geometry/geometrybuilder.h \
     rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.h \
-    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection.h \
     rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.h \
     rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.h \
     rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h \
@@ -101,9 +102,12 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/rendermodel.h \
     rendersystem/private/rendermodel/rendergroup.h \
     rendersystem/private/rendermodel/rendergroupkey.h \
-    rendersystem/private/rendermodel/geometrydata.h \
-    rendersystem/private/rendermodel/geometrydatakey.h \
-    rendersystem/private/rendermodel/renderpartition.h
+    rendersystem/private/rendermodel/partition/geometrydata.h \
+    rendersystem/private/rendermodel/partition/geometrydatakey.h \
+    rendersystem/private/rendermodel/partition/renderpartition.h \
+    rendersystem/private/rendermodel/partition/openglbuffercollection.h \
+    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.h \
+    rendersystem/private/rendermodel/partition/geometryuploader.h
 
 unix {
     target.path = /usr/lib

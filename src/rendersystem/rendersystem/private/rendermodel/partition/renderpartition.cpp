@@ -1,7 +1,14 @@
 #include "renderpartition.h"
 
+namespace
+{
+    const QOpenGLBuffer::UsagePattern BUFFER_USAGE_PATTERN = QOpenGLBuffer::DynamicDraw;
+}
+
 RenderPartition::RenderPartition(int maxItems)
-    : m_nMaxItems(maxItems)
+    : m_nMaxItems(maxItems),
+      m_Data(),
+      m_OpenGLBuffers(BUFFER_USAGE_PATTERN)
 {
 
 }

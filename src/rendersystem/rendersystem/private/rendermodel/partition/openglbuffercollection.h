@@ -2,20 +2,17 @@
 #define OPENGLBUFFERCOLLECTION_H
 
 #include <QOpenGLBuffer>
+
 #include "rendersystem/private/opengl/opengluniformbuffer.h"
+#include "rendersystem/private/opengl/openglvertexarrayobject.h"
+#include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 class OpenGLBufferCollection
 {
 public:
-    // TODO: Probably need a VAO per vertex format.
-    // Since we're interleaving attributes now, this doesn't
-    // have to be per buffer any more.
     OpenGLBufferCollection(QOpenGLBuffer::UsagePattern usagePattern);
 
     QOpenGLBuffer::UsagePattern usagePattern() const;
-
-    int batchSize() const;
-    void setBatchSize(int size);
 
     bool create();
     void destroy();
@@ -30,14 +27,20 @@ public:
     OpenGLUniformBuffer& uniformBuffer();
     const OpenGLUniformBuffer& uniformBuffer() const;
 
+    PrivateShaderDefs::ShaderId shaderId() const;
+    void setShaderId(PrivateShaderDefs::ShaderId id);
+
 private:
+    void destroyAll();
+
     const QOpenGLBuffer::UsagePattern m_nUsagePattern;
 
+    OpenGLVertexArrayObject m_VAO;
     QOpenGLBuffer       m_VertexBuffer;
     QOpenGLBuffer       m_IndexBuffer;
     OpenGLUniformBuffer m_UniformBuffer;
 
-    int m_nBatchSize;
+    PrivateShaderDefs::ShaderId m_nShaderId;
 };
 
-#endif // OPENGLBATCH_H
+#endif // OPENGLBUFFERCOLLECTION_H

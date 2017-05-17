@@ -4,9 +4,11 @@
 
 OpenGLBufferCollection::OpenGLBufferCollection(QOpenGLBuffer::UsagePattern usagePattern)
     : m_nUsagePattern(usagePattern),
+      m_VAO(),
       m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
       m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
-      m_UniformBuffer(m_nUsagePattern)
+      m_UniformBuffer(m_nUsagePattern),
+      m_nShaderId(PrivateShaderDefs::UnknownShaderId)
 {
     GLTRY(m_VertexBuffer.setUsagePattern(m_nUsagePattern));
     GLTRY(m_IndexBuffer.setUsagePattern(m_nUsagePattern));
@@ -48,6 +50,16 @@ const OpenGLUniformBuffer& OpenGLBufferCollection::uniformBuffer() const
     return m_UniformBuffer;
 }
 
+PrivateShaderDefs::ShaderId OpenGLBufferCollection::shaderId() const
+{
+    return m_nShaderId;
+}
+
+void OpenGLBufferCollection::setShaderId(PrivateShaderDefs::ShaderId id)
+{
+    m_nShaderId = id;
+}
+
 bool OpenGLBufferCollection::create()
 {
     if ( isCreated() )
@@ -55,33 +67,24 @@ bool OpenGLBufferCollection::create()
         return true;
     }
 
-    bool createResult = true;
-
-    GLTRY(createResult = (createResult && m_VertexBuffer.create()));
-    if ( !createResult )
+    if ( !GLTRY_RET(m_VAO.create()) ||
+         !GLTRY_RET(m_VertexBuffer.create()) ||
+         !GLTRY_RET(m_IndexBuffer.create()) ||
+         !GLTRY_RET(m_UniformBuffer.create()) )
     {
-        m_VertexBuffer.destroy();
-        return false;
-    }
-
-    GLTRY(createResult = (createResult && m_IndexBuffer.create()));
-    if ( !createResult )
-    {
-        m_VertexBuffer.destroy();
-        m_IndexBuffer.destroy();
-        return false;
-    }
-
-    GLTRY(createResult = (createResult && m_UniformBuffer.create()));
-    if ( !createResult )
-    {
-        m_VertexBuffer.destroy();
-        m_IndexBuffer.destroy();
-        m_UniformBuffer.destroy();
+        destroyAll();
         return false;
     }
 
     return true;
+}
+
+void OpenGLBufferCollection::destroyAll()
+{
+    GLTRY(m_VertexBuffer.destroy());
+    GLTRY(m_IndexBuffer.destroy());
+    GLTRY(m_UniformBuffer.destroy());
+    GLTRY(m_VAO.destroy());
 }
 
 void OpenGLBufferCollection::destroy()
@@ -91,27 +94,10 @@ void OpenGLBufferCollection::destroy()
         return;
     }
 
-    GLTRY(m_VertexBuffer.destroy());
-    GLTRY(m_IndexBuffer.destroy());
-    GLTRY(m_UniformBuffer.destroy());
+    destroyAll();
 }
 
 bool OpenGLBufferCollection::isCreated() const
 {
-    return m_VertexBuffer.isCreated() && m_IndexBuffer.isCreated() && m_UniformBuffer.isCreated();
-}
-
-int OpenGLBufferCollection::batchSize() const
-{
-    return m_nBatchSize;
-}
-
-void OpenGLBufferCollection::setBatchSize(int size)
-{
-    if ( size < 1 )
-    {
-        size = 1;
-    }
-
-    m_nBatchSize = size;
+    return m_VAO.isCreated() && m_VertexBuffer.isCreated() && m_IndexBuffer.isCreated() && m_UniformBuffer.isCreated();
 }

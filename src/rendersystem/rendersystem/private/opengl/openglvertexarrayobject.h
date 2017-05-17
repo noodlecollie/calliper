@@ -13,7 +13,7 @@ public:
     void destroy();
     bool isCreated() const;
 
-    void bind();
+    bool bind();
     void release();
 
 private:

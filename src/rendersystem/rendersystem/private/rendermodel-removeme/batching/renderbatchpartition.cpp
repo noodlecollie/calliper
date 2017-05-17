@@ -1,5 +1,6 @@
 #include "renderbatchpartition.h"
 
+#if 0
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 #include "rendersystem/private/opengl/openglerrors.h"
 #include "rendersystem/private/opengl/openglhelpers.h"
@@ -372,3 +373,4 @@ quint32 RenderBatchPartition::calculateObjectIdMask() const
 {
     return maskFromNumberOfBits(bitsRequired(m_Data.numItemsPerBatch()));
 }
+#endif

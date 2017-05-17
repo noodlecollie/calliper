@@ -1,11 +1,12 @@
 #ifndef RENDERBATCHPARTITION_H
 #define RENDERBATCHPARTITION_H
 
+#if 0
 #include <QHash>
 
 #include "rendersystem/private/shaders/common/vertexformat.h"
 
-#include "openglbuffercollection.h"
+#include "openglbuffercollection_old.h"
 #include "bufferdatacontainer.h"
 
 // TODO: Separate this class out into data and operations.
@@ -124,5 +125,6 @@ private:
     const quint32 m_nObjectIdMask;
     quint8 m_nCurrentObjectId;
 };
+#endif
 
 #endif // RENDERBATCHPARTITION_H
