@@ -11,6 +11,11 @@ SimpleLitShader::~SimpleLitShader()
 
 }
 
+PrivateShaderDefs::ShaderId SimpleLitShader::shaderId()
+{
+    return PrivateShaderDefs::SimpleLitShaderId;
+}
+
 void SimpleLitShader::construct()
 {
     addShaderFileWithCommonHeaders(QOpenGLShader::Vertex, ":/shaders/simplelitshader.vert");

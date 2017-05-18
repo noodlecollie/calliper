@@ -9,6 +9,11 @@ UnlitPerVertexColorShader::~UnlitPerVertexColorShader()
 {
 }
 
+PrivateShaderDefs::ShaderId UnlitPerVertexColorShader::shaderId()
+{
+    return PrivateShaderDefs::UnlitPerVertexColourShaderId;
+}
+
 void UnlitPerVertexColorShader::construct()
 {
     addShaderFileWithCommonHeaders(QOpenGLShader::Vertex, ":/shaders/unlitpervertexcolorshader.vert");

@@ -4,6 +4,7 @@
 #include <QOpenGLShaderProgram>
 
 #include "rendersystem/private/shaders/common/ishaderspec.h"
+#include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 class OpenGLShaderProgram : public QOpenGLShaderProgram, public IShaderSpec
 {
@@ -29,6 +30,7 @@ public:
 
 private:
     void cacheCommonHeaders();
+
     GLuint m_iGlobalShaderBlockIndex;
     GLuint m_iLocalShaderBlockIndex;
 };

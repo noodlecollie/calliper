@@ -5,20 +5,13 @@
 OpenGLUniformBuffer::OpenGLUniformBuffer(QOpenGLBuffer::UsagePattern pattern)
     : m_iHandle(0),
       m_bCreated(false),
-      m_iUsagePattern(pattern)
+      m_iUsagePattern(pattern),
+      m_bIsMapped(false)
 {
 
 }
 
 OpenGLUniformBuffer::OpenGLUniformBuffer() : OpenGLUniformBuffer(QOpenGLBuffer::StaticDraw)
-{
-
-}
-
-OpenGLUniformBuffer::OpenGLUniformBuffer(const OpenGLUniformBuffer &other)
-    : m_iHandle(other.m_iHandle),
-      m_bCreated(other.m_bCreated),
-      m_iUsagePattern(other.m_iUsagePattern)
 {
 
 }
@@ -197,6 +190,7 @@ void* OpenGLUniformBuffer::map(QOpenGLBuffer::Access access)
         ret = Q_NULLPTR;
     }
 
+    m_bIsMapped = ret != Q_NULLPTR;
     return ret;
 }
 
@@ -208,7 +202,19 @@ bool OpenGLUniformBuffer::unmap()
         return false;
     }
 
+    if ( !m_bIsMapped )
+    {
+        return true;
+    }
+
     GL_CURRENT_F;
 
-    return GLTRY_RET(f->glUnmapBuffer(GL_UNIFORM_BUFFER));
+    bool ret = GLTRY_RET(f->glUnmapBuffer(GL_UNIFORM_BUFFER));
+    m_bIsMapped = false;
+    return ret;
+}
+
+bool OpenGLUniformBuffer::isMapped() const
+{
+    return m_bIsMapped;
 }

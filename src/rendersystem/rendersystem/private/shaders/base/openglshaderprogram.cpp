@@ -43,7 +43,7 @@ namespace
     }
 }
 
-OpenGLShaderProgram::OpenGLShaderProgram(const QString &name, QObject* parent)
+OpenGLShaderProgram::OpenGLShaderProgram(const QString &name, QObject *parent)
     : QOpenGLShaderProgram(parent),
       m_iGlobalShaderBlockIndex(GL_INVALID_INDEX),
       m_iLocalShaderBlockIndex(GL_INVALID_INDEX)

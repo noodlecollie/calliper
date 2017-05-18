@@ -9,7 +9,6 @@ class OpenGLUniformBuffer
 public:
     OpenGLUniformBuffer();
     OpenGLUniformBuffer(QOpenGLBuffer::UsagePattern pattern);
-    OpenGLUniformBuffer(const OpenGLUniformBuffer &other);
     ~OpenGLUniformBuffer();
 
     inline bool operator ==(const OpenGLUniformBuffer &other)
@@ -34,6 +33,7 @@ public:
     bool read(int offset, void *data, int count);
     void* map(QOpenGLBuffer::Access access);
     bool unmap();
+    bool isMapped() const;
 
     // This should not be called after allocate() or write().
     QOpenGLBuffer::UsagePattern usagePattern() const;
@@ -43,6 +43,7 @@ private:
     GLuint  m_iHandle;
     bool    m_bCreated;
     QOpenGLBuffer::UsagePattern m_iUsagePattern;
+    bool m_bIsMapped;
 };
 
 #endif // OPENGLUNIFORMBUFFER_H

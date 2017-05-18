@@ -10,6 +10,8 @@ public:
     SimpleLitShader(QObject* parent = 0);
     virtual ~SimpleLitShader();
 
+    static PrivateShaderDefs::ShaderId shaderId();
+
     virtual void construct() override;
     virtual bool hasLocalUniformBlockBinding() const override;
     virtual VertexFormat vertexFormat() const override;
