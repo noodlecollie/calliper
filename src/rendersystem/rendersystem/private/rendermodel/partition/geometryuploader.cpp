@@ -4,20 +4,38 @@
 
 GeometryUploader::GeometryUploader(GeometryDataContainer &data, OpenGLBufferCollection &buffers)
     : m_GeometryDataContainer(data),
-      m_OpenGLBuffers(buffers)
+      m_OpenGLBuffers(buffers),
+      m_nLastShaderId(PrivateShaderDefs::UnknownShaderId)
 {
 
 }
 
-void GeometryUploader::uploadIfRequired(PrivateShaderDefs::ShaderId shaderId)
+bool GeometryUploader::uploadIfRequired(PrivateShaderDefs::ShaderId shaderId)
 {
+    if ( shaderId == PrivateShaderDefs::UnknownShaderId )
+    {
+        return false;
+    }
+
     quint32 flags = shouldUpload(shaderId);
     if ( flags == NoUploadFlags )
     {
         return;
     }
 
-    // TODO: Upload
+    m_nLastShaderId = shaderId;
+
+    if ( (flags & MatricesUploadFlag) == MatricesUploadFlag && !uploadAllMatrices() )
+    {
+        return false;
+    }
+
+    if ( (flag & VerticesUploadFlag) == VerticesUploadFlag && !uploadAllVertexData() )
+    {
+        return false;
+    }
+
+    return true;
 }
 
 quint32 GeometryUploader::shouldUpload(PrivateShaderDefs::ShaderId shaderId) const
@@ -32,7 +50,7 @@ quint32 GeometryUploader::shouldUpload(PrivateShaderDefs::ShaderId shaderId) con
         return NoUploadFlags;
     }
 
-    if ( m_OpenGLBuffers.shaderId() == PrivateShaderDefs::UnknownShaderId)
+    if ( m_nLastShaderId == PrivateShaderDefs::UnknownShaderId)
     {
         return AllUploadFlags;
     }
@@ -42,15 +60,27 @@ quint32 GeometryUploader::shouldUpload(PrivateShaderDefs::ShaderId shaderId) con
 
     OpenGLShaderStore* shaderStore = OpenGLShaderStore::globalInstance();
 
-    OpenGLShaderProgram* currentShader = shaderStore->object(m_OpenGLBuffers.shaderId());
+    OpenGLShaderProgram* lastShader = shaderStore->object(m_nLastShaderId);
     OpenGLShaderProgram* newShader = shaderStore->object(shaderId);
 
-    if ( currentShader->vertexFormat() != newShader->vertexFormat() )
+    if ( lastShader->vertexFormat() != newShader->vertexFormat() )
     {
         return AllUploadFlags;
     }
 
     return checkForDirtyGeometry();
+}
+
+bool GeometryUploader::uploadAllMatrices()
+{
+    if ( !m_OpenGLBuffers.isCreated() && !m_OpenGLBuffers.create() )
+    {
+        return false;
+    }
+
+    m_OpenGLBuffers.uniformBuffer().bind();
+
+    m_OpenGLBuffers.uniformBuffer().release();
 }
 
 quint32 GeometryUploader::checkForDirtyGeometry() const

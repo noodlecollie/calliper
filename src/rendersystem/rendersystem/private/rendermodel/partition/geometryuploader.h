@@ -13,7 +13,7 @@ class GeometryUploader
 public:
     GeometryUploader(GeometryDataContainer& data, OpenGLBufferCollection& buffers);
 
-    void uploadIfRequired(PrivateShaderDefs::ShaderId shaderId);
+    bool uploadIfRequired(PrivateShaderDefs::ShaderId shaderId);
 
 private:
     enum UploadFlags
@@ -28,9 +28,13 @@ private:
 
     quint32 shouldUpload(PrivateShaderDefs::ShaderId shaderId) const;
     quint32 checkForDirtyGeometry() const;
+    bool uploadAllMatrices();
+    bool uploadAllVertexData();
 
     GeometryDataContainer& m_GeometryDataContainer;
     OpenGLBufferCollection& m_OpenGLBuffers;
+
+    PrivateShaderDefs::ShaderId m_nLastShaderId;
 };
 
 #endif // GEOMETRYUPLOADER_H

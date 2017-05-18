@@ -7,8 +7,7 @@ OpenGLBufferCollection::OpenGLBufferCollection(QOpenGLBuffer::UsagePattern usage
       m_VAO(),
       m_VertexBuffer(QOpenGLBuffer::VertexBuffer),
       m_IndexBuffer(QOpenGLBuffer::IndexBuffer),
-      m_UniformBuffer(m_nUsagePattern),
-      m_nShaderId(PrivateShaderDefs::UnknownShaderId)
+      m_UniformBuffer(m_nUsagePattern)
 {
     GLTRY(m_VertexBuffer.setUsagePattern(m_nUsagePattern));
     GLTRY(m_IndexBuffer.setUsagePattern(m_nUsagePattern));
@@ -48,16 +47,6 @@ OpenGLUniformBuffer& OpenGLBufferCollection::uniformBuffer()
 const OpenGLUniformBuffer& OpenGLBufferCollection::uniformBuffer() const
 {
     return m_UniformBuffer;
-}
-
-PrivateShaderDefs::ShaderId OpenGLBufferCollection::shaderId() const
-{
-    return m_nShaderId;
-}
-
-void OpenGLBufferCollection::setShaderId(PrivateShaderDefs::ShaderId id)
-{
-    m_nShaderId = id;
 }
 
 bool OpenGLBufferCollection::create()

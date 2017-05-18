@@ -27,9 +27,6 @@ public:
     OpenGLUniformBuffer& uniformBuffer();
     const OpenGLUniformBuffer& uniformBuffer() const;
 
-    PrivateShaderDefs::ShaderId shaderId() const;
-    void setShaderId(PrivateShaderDefs::ShaderId id);
-
 private:
     void destroyAll();
 
@@ -39,8 +36,6 @@ private:
     QOpenGLBuffer       m_VertexBuffer;
     QOpenGLBuffer       m_IndexBuffer;
     OpenGLUniformBuffer m_UniformBuffer;
-
-    PrivateShaderDefs::ShaderId m_nShaderId;
 };
 
 #endif // OPENGLBUFFERCOLLECTION_H
