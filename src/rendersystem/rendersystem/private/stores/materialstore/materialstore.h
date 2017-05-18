@@ -6,12 +6,14 @@
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
 
 #include "rendersystem/private/store-classes/pathmanagingobjectstore.h"
+#include "rendersystem/private/store-classes/globalinstancehelper.h"
 
 #include "rendersystem/interface-classes/rendermaterial/rendermaterial.h"
 #include "rendersystem/interfaces/imaterialstore.h"
 
 class MaterialStore : public PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::PublicStoreDefs::MaterialId>,
-                      public RenderSystem::IMaterialStore
+                      public RenderSystem::IMaterialStore,
+                      public GlobalInstanceHelper<MaterialStore>
 {
 public:
     typedef RenderSystem::PublicStoreDefs::MaterialId MaterialId;

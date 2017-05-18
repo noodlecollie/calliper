@@ -19,6 +19,9 @@ public:
 
     int totalVertexComponents() const;
 
+    bool operator ==(const VertexFormat& other) const;
+    bool operator !=(const VertexFormat& other) const;
+
 private:
     int m_iPositionComponents;
     int m_iNormalComponents;

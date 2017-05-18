@@ -51,6 +51,16 @@ GeometryDataContainer::ConstIterator GeometryDataContainer::constEnd() const
     return m_Data.constEnd();
 }
 
+GeometryDataContainer::Iterator GeometryDataContainer::begin()
+{
+    return m_Data.begin();
+}
+
+GeometryDataContainer::Iterator GeometryDataContainer::end()
+{
+    return m_Data.end();
+}
+
 GeometryDataContainer::GeometryDataPointer GeometryDataContainer::sectionToGeometryData(const QSharedPointer<RenderSystem::GeometrySection>& section)
 {
     GeometryDataPointer data = GeometryDataPointer::create(section->objectId(), section->sectionId());

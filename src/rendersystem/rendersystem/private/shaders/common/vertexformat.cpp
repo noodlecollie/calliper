@@ -45,3 +45,16 @@ int VertexFormat::totalVertexComponents() const
             + colorComponents()
             + textureCoordinateComponents();
 }
+
+bool VertexFormat::operator ==(const VertexFormat& other) const
+{
+    return m_iPositionComponents == other.m_iPositionComponents &&
+            m_iNormalComponents == other.m_iNormalComponents &&
+            m_iColorComponents == other.m_iColorComponents &&
+            m_iTextureCoordinateComponents == other.m_iTextureCoordinateComponents;
+}
+
+bool VertexFormat::operator !=(const VertexFormat& other) const
+{
+    return !(*this == other);
+}

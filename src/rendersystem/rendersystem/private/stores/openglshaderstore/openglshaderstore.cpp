@@ -11,7 +11,7 @@ namespace
     // want to store pointers to the programs outside of the store,
     // or this would conflict with the ownership the store is
     // supposed to have over the objects.
-    std::function<OpenGLShaderProgram*()> g_Initialisers[] =
+    std::function<OpenGLShaderProgram*(void)> g_Initialisers[] =
     {
         [] { return new SimpleLitShader(); },
         [] { return new UnlitPerVertexColorShader(); },

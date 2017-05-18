@@ -14,8 +14,7 @@ public:
     void initialise();
     void destroy();
 
-    T& object(const KEY& key);
-    const T& object(const KEY& key) const;
+    T object(const KEY& key) const;
 
 protected:
     typedef QHash<KEY, T> StaticObjectStoreHash;
@@ -74,15 +73,7 @@ void StaticObjectStore<T, KEY, COUNT>::destroy()
 }
 
 template<typename T, typename KEY, quint32 COUNT>
-T& StaticObjectStore<T, KEY, COUNT>::object(const KEY &key)
-{
-    Q_ASSERT_X(m_Objects.contains(key), Q_FUNC_INFO, "Object not found for key!");
-
-    return m_Objects.value(key);
-}
-
-template<typename T, typename KEY, quint32 COUNT>
-const T& StaticObjectStore<T, KEY, COUNT>::object(const KEY &key) const
+T StaticObjectStore<T, KEY, COUNT>::object(const KEY &key) const
 {
     Q_ASSERT_X(m_Objects.contains(key), Q_FUNC_INFO, "Object not found for key!");
 

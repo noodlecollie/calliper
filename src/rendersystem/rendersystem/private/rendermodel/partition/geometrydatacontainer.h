@@ -15,6 +15,7 @@ class GeometryDataContainer
 public:
     typedef QSharedPointer<GeometryData> GeometryDataPointer;
     typedef QMap<GeometryDataKey, GeometryDataPointer>::const_iterator ConstIterator;
+    typedef QMap<GeometryDataKey, GeometryDataPointer>::iterator Iterator;
 
     GeometryDataContainer();
 
@@ -26,6 +27,8 @@ public:
     int count() const;
     ConstIterator constBegin() const;
     ConstIterator constEnd() const;
+    Iterator begin();
+    Iterator end();
 
 private:
     static GeometryDataPointer sectionToGeometryData(const QSharedPointer<RenderSystem::GeometrySection>& section);

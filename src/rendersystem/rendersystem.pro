@@ -109,7 +109,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/partition/openglbuffercollection.h \
     rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.h \
     rendersystem/private/rendermodel/partition/geometryuploader.h \
-    rendersystem/private/rendermodel/partition/geometrydatacontainer.h
+    rendersystem/private/rendermodel/partition/geometrydatacontainer.h \
+    rendersystem/private/store-classes/globalinstancehelper.h
 
 unix {
     target.path = /usr/lib

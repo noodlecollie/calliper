@@ -3,11 +3,29 @@
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
 
+#include "rendersystem/private/stores/openglshaderstore/openglshaderstore.h"
+#include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
+#include "rendersystem/private/stores/materialstore/materialstore.h"
+
 namespace
 {
     QOpenGLContext* g_pMainContext = Q_NULLPTR;
     QOffscreenSurface* g_pOffscreenSurface = Q_NULLPTR;
     bool g_bInitialised = false;
+}
+
+void initialiseStores()
+{
+    OpenGLShaderStore::globalInitialise();
+    OpenGLTextureStore::globalInitialise();
+    MaterialStore::globalInitialise();
+}
+
+void shutdownStores()
+{
+    MaterialStore::globalShutdown();
+    OpenGLTextureStore::globalShutdown();
+    OpenGLShaderStore::globalShutdown();
 }
 
 namespace RenderSystem
@@ -39,6 +57,8 @@ namespace RenderSystem
                 return false;
             }
 
+            initialiseStores();
+
             g_bInitialised = true;
             return true;
         }
@@ -50,6 +70,8 @@ namespace RenderSystem
             {
                 return;
             }
+
+            shutdownStores();
 
             doneCurrent();
 

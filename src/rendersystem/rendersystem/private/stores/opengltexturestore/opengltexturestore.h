@@ -3,15 +3,17 @@
 
 #include <QHash>
 
+#include "namedopengltexture.h"
+
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
 #include "rendersystem/interfaces/itexturestore.h"
 
 #include "rendersystem/private/store-classes/pathmanagingobjectstore.h"
-
-#include "namedopengltexture.h"
+#include "rendersystem/private/store-classes/globalinstancehelper.h"
 
 class OpenGLTextureStore : public PathManagingObjectStore<NamedOpenGLTexture, RenderSystem::PublicStoreDefs::TextureId>,
-                           public RenderSystem::ITextureStore
+                           public RenderSystem::ITextureStore,
+                           public GlobalInstanceHelper<OpenGLTextureStore>
 {
 public:
     typedef RenderSystem::PublicStoreDefs::TextureId TextureId;
@@ -33,6 +35,8 @@ protected:
     virtual void objectAboutToBeDestroyed(const ObjectId id) override;
 
 private:
+    static OpenGLTextureStore* m_pGlobalInstance;
+
     void createDefaultTexture();
 };
 

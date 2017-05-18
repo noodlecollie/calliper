@@ -7,9 +7,8 @@
 #include <QHash>
 
 #include "rendergroupkey.h"
-#include "geometrydata.h"
-#include "geometrydatakey.h"
-#include "renderpartition.h"
+#include "rendersystem/private/rendermodel/partition/geometrydatakey.h"
+#include "rendersystem/private/rendermodel/partition/renderpartition.h"
 
 #include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"

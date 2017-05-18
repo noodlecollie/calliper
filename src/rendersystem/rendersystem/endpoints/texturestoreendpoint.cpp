@@ -1,18 +1,13 @@
 #include "texturestoreendpoint.h"
 #include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
 
-namespace
-{
-    OpenGLTextureStore localTextureStore;
-}
-
 namespace RenderSystem
 {
     namespace TextureStoreEndpoint
     {
         CurrentContextGuard<ITextureStore> textureStore()
         {
-            return CurrentContextGuard<ITextureStore>(localTextureStore);
+            return CurrentContextGuard<ITextureStore>(*OpenGLTextureStore::globalInstance());
         }
     }
 }
