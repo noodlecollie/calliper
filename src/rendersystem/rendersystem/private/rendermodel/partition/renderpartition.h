@@ -9,6 +9,7 @@
 #include "openglbuffercollection.h"
 #include "geometryuploader.h"
 #include "geometrydatacontainer.h"
+#include "geometryoffsettable.h"
 
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
@@ -31,6 +32,7 @@ private:
     // Data
     GeometryDataContainer m_GeometryDataContainer;
     OpenGLBufferCollection m_OpenGLBuffers;
+    GeometryOffsetTable m_OffsetTable;
 
     // Operators on data
     GeometryUploader m_Uploader;

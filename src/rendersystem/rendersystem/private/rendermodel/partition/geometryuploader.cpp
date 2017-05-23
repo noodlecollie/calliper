@@ -8,13 +8,16 @@ namespace
     const quint32 SIZEOF_MATRIX_4X4 = 4 * 4 * sizeof(float);
 }
 
-GeometryUploader::GeometryUploader(GeometryDataContainer &data, OpenGLBufferCollection &buffers)
+GeometryUploader::GeometryUploader(GeometryDataContainer &data,
+                                   GeometryOffsetTable &offsetTable,
+                                   OpenGLBufferCollection &buffers)
     : m_GeometryDataContainer(data),
+      m_OffsetTable(offsetTable),
       m_OpenGLBuffers(buffers),
       m_nCurrentShaderId(PrivateShaderDefs::UnknownShaderId),
       m_bShaderChangedSinceLastUpload(false),
       m_pCurrentShaderProgram(Q_NULLPTR),
-      m_Consolidator(m_GeometryDataContainer, m_pCurrentShaderProgram),
+      m_Consolidator(m_GeometryDataContainer, m_OffsetTable, m_pCurrentShaderProgram),
       m_pUniformBufferData(Q_NULLPTR)
 {
 

@@ -21,12 +21,14 @@ namespace
     }
 }
 
-GeometryConsolidator::GeometryConsolidator(GeometryDataContainer &data, OpenGLShaderProgram *shader)
+GeometryConsolidator::GeometryConsolidator(GeometryDataContainer &data,
+                                           GeometryOffsetTable &offsetTable,
+                                           OpenGLShaderProgram *shader)
     : m_GeometryDataContainer(data),
+      m_OffsetTable(offsetTable),
       m_pShader(shader),
       m_VertexData(),
       m_IndexData(),
-      m_OffsetData(),
       m_nItemsPerBatch(0),
       m_nCurrentObjectId(0),
       m_nObjectIdMask(0)
@@ -54,7 +56,7 @@ void GeometryConsolidator::clear()
 {
     m_VertexData.clear();
     m_IndexData.clear();
-    m_OffsetData.clear();
+    m_OffsetTable.clear();
     m_nItemsPerBatch = m_pShader ? m_pShader->maxBatchedItems() : 0;
     m_nCurrentObjectId = 0;
 
@@ -100,7 +102,7 @@ void GeometryConsolidator::consolidate()
 
 void GeometryConsolidator::consolidate(const QSharedPointer<GeometryData> &geometry)
 {
-    m_OffsetData.append(ObjectOffsets());
+    m_OffsetTable.createNewItem();
     consolidateVertices(geometry);
     consolidateIndices(geometry);
 }
@@ -108,7 +110,7 @@ void GeometryConsolidator::consolidate(const QSharedPointer<GeometryData> &geome
 void GeometryConsolidator::consolidateVertices(const QSharedPointer<GeometryData> &geometry)
 {
     const VertexFormat vertexFormat = m_pShader->vertexFormat();
-    ObjectOffsets& offsets = m_OffsetData.last();
+    GeometryOffsetTable::ObjectOffsets& offsets = m_OffsetTable.lastItem();
     offsets.vertexOffsetFloats = m_VertexData.count();
     offsets.vertexCountFloats = geometry->computeTotalVertexBytes(vertexFormat) / sizeof(float);
 
@@ -170,7 +172,7 @@ void GeometryConsolidator::consolidateVertices(const QVector<QVector4D> &source,
 
 void GeometryConsolidator::consolidateIndices(const QSharedPointer<GeometryData> &geometry)
 {
-    ObjectOffsets& offsets = m_OffsetData.last();
+    GeometryOffsetTable::ObjectOffsets& offsets = m_OffsetTable.lastItem();
     offsets.indexOffsetInts = m_IndexData.count();
     offsets.indexCountInts = geometry->computeTotalIndexBytes() / sizeof(quint32);
 

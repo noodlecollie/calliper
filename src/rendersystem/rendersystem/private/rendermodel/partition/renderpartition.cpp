@@ -9,7 +9,8 @@ RenderPartition::RenderPartition(int maxItems)
     : m_nMaxItems(maxItems),
       m_GeometryDataContainer(),
       m_OpenGLBuffers(BUFFER_USAGE_PATTERN),
-      m_Uploader(m_GeometryDataContainer, m_OpenGLBuffers)
+      m_OffsetTable(),
+      m_Uploader(m_GeometryDataContainer, m_OffsetTable, m_OpenGLBuffers)
 {
 
 }

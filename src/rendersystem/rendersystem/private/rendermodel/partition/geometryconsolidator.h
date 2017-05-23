@@ -4,35 +4,15 @@
 #include <QVector>
 
 #include "geometrydatacontainer.h"
+#include "geometryoffsettable.h"
 
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
 
 class GeometryConsolidator
 {
 public:
-    struct ObjectOffsets
-    {
-        quint32 vertexOffsetFloats;
-        quint32 vertexCountFloats;
-        quint32 indexOffsetInts;
-        quint32 indexCountInts;
 
-        ObjectOffsets(quint32 vOffset, quint32 vCount,
-                      quint32 iOffset, quint32 iCount)
-            : vertexOffsetFloats(vOffset),
-              vertexCountFloats(vCount),
-              indexOffsetInts(iOffset),
-              indexCountInts(iCount)
-        {
-        }
-
-        ObjectOffsets()
-            : ObjectOffsets(0,0,0,0)
-        {
-        }
-    };
-
-    GeometryConsolidator(GeometryDataContainer& data, OpenGLShaderProgram* shader);
+    GeometryConsolidator(GeometryDataContainer& data, GeometryOffsetTable& offsetTable, OpenGLShaderProgram* shader);
 
     // Vertices have the appropriate object ID stored in their final position
     // component, if applicable.
@@ -58,11 +38,11 @@ private:
     void consolidateIndices(const QVector<quint32>& indices, quint32 offsetInInts, quint32 indexIncrement);
 
     GeometryDataContainer& m_GeometryDataContainer;
+    GeometryOffsetTable& m_OffsetTable;
     OpenGLShaderProgram* m_pShader;
 
     QVector<float> m_VertexData;
     QVector<quint32> m_IndexData;
-    QVector<ObjectOffsets> m_OffsetData;
 
     int m_nItemsPerBatch;
     quint8 m_nCurrentObjectId;

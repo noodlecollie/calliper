@@ -7,6 +7,7 @@
 #include "openglbuffercollection.h"
 #include "geometrydatacontainer.h"
 #include "geometryconsolidator.h"
+#include "geometryoffsettable.h"
 
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
@@ -15,7 +16,7 @@ class OpenGLShaderProgram;
 class GeometryUploader
 {
 public:
-    GeometryUploader(GeometryDataContainer& data, OpenGLBufferCollection& buffers);
+    GeometryUploader(GeometryDataContainer& data, GeometryOffsetTable& offsetTable, OpenGLBufferCollection& buffers);
 
     PrivateShaderDefs::ShaderId currentShaderId() const;
     void setCurrentShaderId(PrivateShaderDefs::ShaderId shaderId);
@@ -58,6 +59,7 @@ private:
     void releaseIndexBuffer();
 
     GeometryDataContainer& m_GeometryDataContainer;
+    GeometryOffsetTable& m_OffsetTable;
     OpenGLBufferCollection& m_OpenGLBuffers;
     PrivateShaderDefs::ShaderId m_nCurrentShaderId;
 

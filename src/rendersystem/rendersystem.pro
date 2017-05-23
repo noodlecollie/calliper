@@ -59,7 +59,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.cpp \
     rendersystem/private/rendermodel/partition/geometryuploader.cpp \
     rendersystem/private/rendermodel/partition/geometrydatacontainer.cpp \
-    rendersystem/private/rendermodel/partition/geometryconsolidator.cpp
+    rendersystem/private/rendermodel/partition/geometryconsolidator.cpp \
+    rendersystem/private/rendermodel/partition/geometryoffsettable.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -112,7 +113,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/partition/geometryuploader.h \
     rendersystem/private/rendermodel/partition/geometrydatacontainer.h \
     rendersystem/private/store-classes/globalinstancehelper.h \
-    rendersystem/private/rendermodel/partition/geometryconsolidator.h
+    rendersystem/private/rendermodel/partition/geometryconsolidator.h \
+    rendersystem/private/rendermodel/partition/geometryoffsettable.h
 
 unix {
     target.path = /usr/lib
