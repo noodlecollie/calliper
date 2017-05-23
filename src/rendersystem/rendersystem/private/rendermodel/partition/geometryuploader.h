@@ -6,6 +6,7 @@
 
 #include "openglbuffercollection.h"
 #include "geometrydatacontainer.h"
+#include "geometryconsolidator.h"
 
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
@@ -43,28 +44,18 @@ private:
     quint32 checkForDirtyGeometry() const;
     bool uploadAllMatrices();
     bool uploadAllVertexData();
+    void consolidateVerticesAndIndices();
     bool ensureBuffersCreated();
+    void setUpShaderDependentMembers();
 
     void prepareUniformBufferForUpload_x();
     void releaseUniformBuffer();
 
-    void prepareVertexBufferForUpload_x();
+    void uploadVertices_x();
     void releaseVertexBuffer();
 
-    void prepareIndexBufferForUpload_x();
+    void uploadIndices_x();
     void releaseIndexBuffer();
-
-    void consolidateVertexData(QSharedPointer<GeometryData>& geometry, QVector<float>& vertexData);
-    void consolidateIndexData(QSharedPointer<GeometryData>& geometry, QVector<quint32>& indexData);
-
-    void consolidate(const QVector<QVector4D> &source,
-                     QVector<float> &destination,
-                     int components,
-                     int offset,
-                     int stride);
-
-    quint32 computeTotalRequiredVertexBytes();
-    quint32 computeTotalRequiredIndexBytes();
 
     GeometryDataContainer& m_GeometryDataContainer;
     OpenGLBufferCollection& m_OpenGLBuffers;
@@ -72,13 +63,9 @@ private:
 
     bool m_bShaderChangedSinceLastUpload;
     OpenGLShaderProgram* m_pCurrentShaderProgram;
-    quint8 m_nCurrentObjectId;
-    quint32 m_nCurrentObjectIdMask;
-    int m_nMaxBatchedItems;
 
+    GeometryConsolidator m_Consolidator;
     char* m_pUniformBufferData;
-    float* m_pVertexBufferData;
-    quint32* m_pIndexBufferData;
 };
 
 #endif // GEOMETRYUPLOADER_H
