@@ -86,14 +86,14 @@ else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
 INCLUDEPATH += $$PWD/../model
 DEPENDPATH += $$PWD/../model
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../renderer/release/ -lrenderer
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../renderer/debug/ -lrenderer
-else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
-
-INCLUDEPATH += $$PWD/../renderer
-DEPENDPATH += $$PWD/../renderer
-
 FORMS +=
 
 RESOURCES += \
     user-interface/resource/resource.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/release/ -lrendersystem
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/debug/ -lrendersystem
+else:unix: LIBS += -L$$OUT_PWD/../rendersystem/ -lrendersystem
+
+INCLUDEPATH += $$PWD/../rendersystem
+DEPENDPATH += $$PWD/../rendersystem

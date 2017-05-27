@@ -28,13 +28,6 @@ else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 INCLUDEPATH += $$PWD/../calliperutil
 DEPENDPATH += $$PWD/../calliperutil
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../renderer/release/ -lrenderer
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../renderer/debug/ -lrenderer
-else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
-
-INCLUDEPATH += $$PWD/../renderer
-DEPENDPATH += $$PWD/../renderer
-
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../model/release/ -lmodel
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../model/debug/ -lmodel
 else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
@@ -69,3 +62,10 @@ else:unix: LIBS += -L$$OUT_PWD/../user-interface/ -luser-interface
 
 INCLUDEPATH += $$PWD/../user-interface
 DEPENDPATH += $$PWD/../user-interface
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/release/ -lrendersystem
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/debug/ -lrendersystem
+else:unix: LIBS += -L$$OUT_PWD/../rendersystem/ -lrendersystem
+
+INCLUDEPATH += $$PWD/../rendersystem
+DEPENDPATH += $$PWD/../rendersystem

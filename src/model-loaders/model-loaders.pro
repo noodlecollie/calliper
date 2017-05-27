@@ -45,13 +45,6 @@ else:unix: LIBS += -L$$OUT_PWD/../model/ -lmodel
 INCLUDEPATH += $$PWD/../model
 DEPENDPATH += $$PWD/../model
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../renderer/release/ -lrenderer
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../renderer/debug/ -lrenderer
-else:unix: LIBS += -L$$OUT_PWD/../renderer/ -lrenderer
-
-INCLUDEPATH += $$PWD/../renderer
-DEPENDPATH += $$PWD/../renderer
-
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil
 else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
@@ -72,3 +65,10 @@ else:unix: LIBS += -L$$OUT_PWD/../dep-vtflib/ -ldep-vtflib
 
 INCLUDEPATH += $$PWD/../dep-vtflib
 DEPENDPATH += $$PWD/../dep-vtflib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/release/ -lrendersystem
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../rendersystem/debug/ -lrendersystem
+else:unix: LIBS += -L$$OUT_PWD/../rendersystem/ -lrendersystem
+
+INCLUDEPATH += $$PWD/../rendersystem
+DEPENDPATH += $$PWD/../rendersystem

@@ -43,24 +43,25 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/materialstore/materialstore.cpp \
     rendersystem/interface-classes/geometry/geometrysection.cpp \
     rendersystem/interface-classes/geometry/geometrybuilder.cpp \
-    rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.cpp \
-    rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.cpp \
-    rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.cpp \
     rendersystem/endpoints/texturestoreendpoint.cpp \
     rendersystem/endpoints/materialstoreendpoint.cpp \
     rendersystem/private/rendermodel/rendermodel.cpp \
     rendersystem/private/stores/publicstoredefs.cpp \
     rendersystem/private/rendermodel/rendergroup.cpp \
-    rendersystem/private/rendermodel/rendergroupkey.cpp \
     rendersystem/private/rendermodel/partition/geometrydata.cpp \
     rendersystem/private/rendermodel/partition/geometrydatakey.cpp \
     rendersystem/private/rendermodel/partition/renderpartition.cpp \
     rendersystem/private/rendermodel/partition/openglbuffercollection.cpp \
-    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.cpp \
     rendersystem/private/rendermodel/partition/geometryuploader.cpp \
     rendersystem/private/rendermodel/partition/geometrydatacontainer.cpp \
     rendersystem/private/rendermodel/partition/geometryconsolidator.cpp \
-    rendersystem/private/rendermodel/partition/geometryoffsettable.cpp
+    rendersystem/private/rendermodel/partition/geometryoffsettable.cpp \
+    rendersystem/private/rendermodel/partition/geometryrenderer.cpp \
+    rendersystem/private/opengl/openglhelpers.cpp \
+    rendersystem/private/rendermode/baserendermode.cpp \
+    rendersystem/private/rendermode/barebonesrendermode.cpp \
+    rendersystem/private/stores/rendermodestore/rendermodestore.cpp \
+    rendersystem/private/rendermodel/rendermodelcontext.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -94,9 +95,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/store-defs/publicstoredefs.h \
     rendersystem/interface-classes/geometry/geometrysection.h \
     rendersystem/interface-classes/geometry/geometrybuilder.h \
-    rendersystem/private/rendermodel-removeme/raw-data/objectsectiongeometrydata.h \
-    rendersystem/private/rendermodel-removeme/batching/bufferdatacontainer.h \
-    rendersystem/private/rendermodel-removeme/batching/renderbatchpartition.h \
     rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h \
     rendersystem/endpoints/texturestoreendpoint.h \
     rendersystem/interfaces/imaterialstore.h \
@@ -104,17 +102,21 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/endpoints/materialstoreendpoint.h \
     rendersystem/private/rendermodel/rendermodel.h \
     rendersystem/private/rendermodel/rendergroup.h \
-    rendersystem/private/rendermodel/rendergroupkey.h \
     rendersystem/private/rendermodel/partition/geometrydata.h \
     rendersystem/private/rendermodel/partition/geometrydatakey.h \
     rendersystem/private/rendermodel/partition/renderpartition.h \
     rendersystem/private/rendermodel/partition/openglbuffercollection.h \
-    rendersystem/private/rendermodel-removeme/batching/openglbuffercollection_old.h \
     rendersystem/private/rendermodel/partition/geometryuploader.h \
     rendersystem/private/rendermodel/partition/geometrydatacontainer.h \
     rendersystem/private/store-classes/globalinstancehelper.h \
     rendersystem/private/rendermodel/partition/geometryconsolidator.h \
-    rendersystem/private/rendermodel/partition/geometryoffsettable.h
+    rendersystem/private/rendermodel/partition/geometryoffsettable.h \
+    rendersystem/private/rendermodel/partition/geometryrenderer.h \
+    rendersystem/private/rendermodel/rendermodel-defs.h \
+    rendersystem/private/rendermode/baserendermode.h \
+    rendersystem/private/rendermode/barebonesrendermode.h \
+    rendersystem/private/stores/rendermodestore/rendermodestore.h \
+    rendersystem/private/rendermodel/rendermodelcontext.h
 
 unix {
     target.path = /usr/lib

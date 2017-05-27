@@ -9,6 +9,7 @@
 #include "geometryconsolidator.h"
 #include "geometryoffsettable.h"
 
+#include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 class OpenGLShaderProgram;
@@ -16,12 +17,16 @@ class OpenGLShaderProgram;
 class GeometryUploader
 {
 public:
-    GeometryUploader(GeometryDataContainer& data, GeometryOffsetTable& offsetTable, OpenGLBufferCollection& buffers);
-
-    PrivateShaderDefs::ShaderId currentShaderId() const;
-    void setCurrentShaderId(PrivateShaderDefs::ShaderId shaderId);
+    GeometryUploader(const RenderModelContext& context,
+                     RenderSystem::PublicStoreDefs::MaterialId materialId,
+                     GeometryDataContainer& data,
+                     GeometryOffsetTable& offsetTable,
+                     OpenGLBufferCollection& buffers);
 
     bool uploadIfRequired();
+    bool isValid() const;
+
+    PrivateShaderDefs::ShaderId shaderIdWhenLastUploaded() const;
 
 private:
     enum UploadFlags
@@ -47,7 +52,7 @@ private:
     bool uploadAllVertexData();
     void consolidateVerticesAndIndices();
     bool ensureBuffersCreated();
-    void setUpShaderDependentMembers();
+    void getShaderFromMaterial();
 
     void prepareUniformBufferForUpload_x();
     void releaseUniformBuffer();
@@ -58,13 +63,15 @@ private:
     void uploadIndices_x();
     void releaseIndexBuffer();
 
+    const RenderModelContext& m_Context;
+    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
     GeometryDataContainer& m_GeometryDataContainer;
     GeometryOffsetTable& m_OffsetTable;
     OpenGLBufferCollection& m_OpenGLBuffers;
-    PrivateShaderDefs::ShaderId m_nCurrentShaderId;
 
-    bool m_bShaderChangedSinceLastUpload;
     OpenGLShaderProgram* m_pCurrentShaderProgram;
+    PrivateShaderDefs::ShaderId m_nShaderId;
+    PrivateShaderDefs::ShaderId m_nShaderIdWhenLastUploaded;
 
     GeometryConsolidator m_Consolidator;
     char* m_pUniformBufferData;

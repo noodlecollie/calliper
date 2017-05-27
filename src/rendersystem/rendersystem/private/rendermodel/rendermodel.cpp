@@ -1,6 +1,9 @@
 #include "rendermodel.h"
+#include "rendermodel-defs.h"
 
 #include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+
+Q_LOGGING_CATEGORY(lcRenderModel, "Renderer.RenderModel")
 
 RenderModel::RenderModel()
 {
@@ -24,12 +27,12 @@ void RenderModel::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
         return;
     }
 
-    RenderGroupKey key(section->materialId());
+    RenderSystem::PublicStoreDefs::MaterialId key = section->materialId();
     RenderGroupPointer renderGroup = m_RenderGroups.value(key, RenderGroupPointer());
 
     if ( !renderGroup )
     {
-        renderGroup = RenderGroupPointer::create(key);
+        renderGroup = RenderGroupPointer::create(m_Context, key);
         m_RenderGroups.insert(key, renderGroup);
     }
 

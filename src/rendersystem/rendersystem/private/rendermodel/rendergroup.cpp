@@ -6,8 +6,12 @@ namespace
     const int ITEMS_PER_PARTITION = 8 * 8;  // Batches * items per batch
 }
 
-RenderGroup::RenderGroup(const RenderGroupKey &key)
-    : m_Key(key)
+RenderGroup::RenderGroup(const RenderModelContext &context,
+                         RenderSystem::PublicStoreDefs::MaterialId materialId)
+    : m_Context(context),
+      m_nMaterialId(materialId),
+      m_Partitions(),
+      m_SectionToPartition()
 {
 
 }
@@ -29,7 +33,7 @@ void RenderGroup::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
         return;
     }
 
-    RenderPartitionPointer partition = RenderPartitionPointer::create(ITEMS_PER_PARTITION);
+    RenderPartitionPointer partition = RenderPartitionPointer::create(m_Context, m_nMaterialId, ITEMS_PER_PARTITION);
     partition->setGeometry(section);
     m_Partitions.append(partition);
     m_SectionToPartition.insert(GeometryDataKey(section->objectId(), section->sectionId()), partition);

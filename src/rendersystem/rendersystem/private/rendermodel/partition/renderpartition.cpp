@@ -5,12 +5,16 @@ namespace
     const QOpenGLBuffer::UsagePattern BUFFER_USAGE_PATTERN = QOpenGLBuffer::DynamicDraw;
 }
 
-RenderPartition::RenderPartition(int maxItems)
-    : m_nMaxItems(maxItems),
+RenderPartition::RenderPartition(const RenderModelContext &context,
+                                 RenderSystem::PublicStoreDefs::MaterialId materialId,
+                                 int maxItems)
+    : m_Context(context),
+      m_nMaterialId(materialId),
+      m_nMaxItems(maxItems),
       m_GeometryDataContainer(),
       m_OpenGLBuffers(BUFFER_USAGE_PATTERN),
       m_OffsetTable(),
-      m_Uploader(m_GeometryDataContainer, m_OffsetTable, m_OpenGLBuffers)
+      m_Uploader(m_Context, m_nMaterialId, m_GeometryDataContainer, m_OffsetTable, m_OpenGLBuffers)
 {
 
 }

@@ -31,6 +31,16 @@ namespace RenderSystem
             TOTAL_SHADER_STYLES,
         };
         Q_ENUM(ShaderStyle)
+
+        enum RenderMode
+        {
+            UnknownRenderMode = -1,
+
+            BarebonesRenderMode = 0,
+
+            TOTAL_RENDER_MODES
+        };
+        Q_ENUM(RenderMode)
     };
 }
 

@@ -1,60 +1,36 @@
 #include "geometryuploader.h"
 
 #include "rendersystem/private/stores/openglshaderstore/openglshaderstore.h"
+#include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
+#include "rendersystem/private/stores/materialstore/materialstore.h"
+
+#include "rendersystem/private/opengl/openglhelpers.h"
 #include "geometryconsolidator.h"
 
-namespace
-{
-    const quint32 SIZEOF_MATRIX_4X4 = 4 * 4 * sizeof(float);
-}
-
-GeometryUploader::GeometryUploader(GeometryDataContainer &data,
+GeometryUploader::GeometryUploader(const RenderModelContext &context,
+                                   RenderSystem::PublicStoreDefs::MaterialId materialId,
+                                   GeometryDataContainer &data,
                                    GeometryOffsetTable &offsetTable,
                                    OpenGLBufferCollection &buffers)
-    : m_GeometryDataContainer(data),
+    : m_Context(context),
+      m_nMaterialId(materialId),
+      m_GeometryDataContainer(data),
       m_OffsetTable(offsetTable),
       m_OpenGLBuffers(buffers),
-      m_nCurrentShaderId(PrivateShaderDefs::UnknownShaderId),
-      m_bShaderChangedSinceLastUpload(false),
       m_pCurrentShaderProgram(Q_NULLPTR),
-      m_Consolidator(m_GeometryDataContainer, m_OffsetTable, m_pCurrentShaderProgram),
+      m_nShaderId(PrivateShaderDefs::UnknownShaderId),
+      m_nShaderIdWhenLastUploaded(PrivateShaderDefs::UnknownShaderId),
+      m_Consolidator(m_Context, m_nMaterialId, m_GeometryDataContainer, m_OffsetTable),
       m_pUniformBufferData(Q_NULLPTR)
 {
 
 }
 
-PrivateShaderDefs::ShaderId GeometryUploader::currentShaderId() const
-{
-    return m_nCurrentShaderId;
-}
-
-void GeometryUploader::setCurrentShaderId(PrivateShaderDefs::ShaderId shaderId)
-{
-    if ( m_nCurrentShaderId == shaderId )
-    {
-        return;
-    }
-
-    m_nCurrentShaderId = shaderId;
-    m_bShaderChangedSinceLastUpload = true;
-
-    setUpShaderDependentMembers();
-}
-
-void GeometryUploader::setUpShaderDependentMembers()
-{
-    if ( m_nCurrentShaderId == PrivateShaderDefs::UnknownShaderId )
-    {
-        m_pCurrentShaderProgram = Q_NULLPTR;
-        return;
-    }
-
-    m_pCurrentShaderProgram = OpenGLShaderStore::globalInstance()->object(m_nCurrentShaderId);
-}
-
 bool GeometryUploader::uploadIfRequired()
 {
-    if ( m_nCurrentShaderId == PrivateShaderDefs::UnknownShaderId )
+    getShaderFromMaterial();
+
+    if ( !isValid() )
     {
         return false;
     }
@@ -76,13 +52,54 @@ bool GeometryUploader::uploadIfRequired()
         return false;
     }
 
-    m_bShaderChangedSinceLastUpload = false;
+    m_nShaderIdWhenLastUploaded = m_nShaderId;
+    m_pCurrentShaderProgram = Q_NULLPTR;
     return true;
+}
+
+void GeometryUploader::getShaderFromMaterial()
+{
+    m_pCurrentShaderProgram = Q_NULLPTR;
+
+    if ( m_Context.renderMode() == RenderSystem::PublicShaderDefs::UnknownRenderMode )
+    {
+        return;
+    }
+
+    QSharedPointer<RenderSystem::RenderMaterial> material = MaterialStore::globalInstance()->object(m_nMaterialId);
+    if ( !material )
+    {
+        return;
+    }
+
+    BaseRenderMode* mode = RenderModeStore::globalInstance()->object(m_Context.renderMode());
+    if ( !mode )
+    {
+        return;
+    }
+
+    m_nShaderId = mode->shaderId(material->shaderStyle());
+    if ( m_nShaderId == PrivateShaderDefs::UnknownShaderId )
+    {
+        return;
+    }
+
+    m_pCurrentShaderProgram = OpenGLShaderStore::globalInstance()->object(m_nShaderId);
+}
+
+bool GeometryUploader::isValid() const
+{
+    return m_nShaderId != PrivateShaderDefs::UnknownShaderId;
 }
 
 quint32 GeometryUploader::shouldUpload() const
 {
-    if ( m_bShaderChangedSinceLastUpload )
+    if ( m_nShaderId == PrivateShaderDefs::UnknownShaderId )
+    {
+        return NoUploadFlags;
+    }
+
+    if ( m_nShaderId != m_nShaderIdWhenLastUploaded )
     {
         return AllUploadFlags;
     }
@@ -239,6 +256,5 @@ bool GeometryUploader::ensureBuffersCreated()
 
 void GeometryUploader::consolidateVerticesAndIndices()
 {
-    m_Consolidator.setShader(m_pCurrentShaderProgram);
     m_Consolidator.consolidate();
 }

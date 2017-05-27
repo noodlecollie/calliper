@@ -6,13 +6,18 @@
 #include "geometrydatacontainer.h"
 #include "geometryoffsettable.h"
 
+#include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
+#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
 
 class GeometryConsolidator
 {
 public:
 
-    GeometryConsolidator(GeometryDataContainer& data, GeometryOffsetTable& offsetTable, OpenGLShaderProgram* shader);
+    GeometryConsolidator(const RenderModelContext& context,
+                         RenderSystem::PublicStoreDefs::MaterialId materialId,
+                         GeometryDataContainer& data,
+                         GeometryOffsetTable& offsetTable);
 
     // Vertices have the appropriate object ID stored in their final position
     // component, if applicable.
@@ -22,10 +27,8 @@ public:
     void consolidate();
     void clear();
 
-    OpenGLShaderProgram* shader() const;
-    void setShader(OpenGLShaderProgram* shader);
-
 private:
+    void setUpShader();
     void consolidate(const QSharedPointer<GeometryData>& geometry);
 
     void consolidateVertices(const QSharedPointer<GeometryData>& geometry);
@@ -37,6 +40,9 @@ private:
     void consolidateIndices(const QSharedPointer<GeometryData>& geometry);
     void consolidateIndices(const QVector<quint32>& indices, quint32 offsetInInts, quint32 indexIncrement);
 
+    const RenderModelContext& m_Context;
+    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
+
     GeometryDataContainer& m_GeometryDataContainer;
     GeometryOffsetTable& m_OffsetTable;
     OpenGLShaderProgram* m_pShader;
@@ -47,6 +53,7 @@ private:
     int m_nItemsPerBatch;
     quint8 m_nCurrentObjectId;
     quint32 m_nObjectIdMask;
+    VertexFormat m_VertexFormat;
 };
 
 #endif // GEOMETRYCONSOLIDATOR_H

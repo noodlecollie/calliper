@@ -6,7 +6,8 @@
 #include <QVector>
 #include <QHash>
 
-#include "rendergroupkey.h"
+#include "rendermodelcontext.h"
+
 #include "rendersystem/private/rendermodel/partition/geometrydatakey.h"
 #include "rendersystem/private/rendermodel/partition/renderpartition.h"
 
@@ -16,7 +17,8 @@
 class RenderGroup
 {
 public:
-    RenderGroup(const RenderGroupKey& key);
+    RenderGroup(const RenderModelContext& context,
+                RenderSystem::PublicStoreDefs::MaterialId materialId);
 
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
     void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
@@ -24,7 +26,8 @@ public:
 private:
     typedef QSharedPointer<RenderPartition> RenderPartitionPointer;
 
-    const RenderGroupKey m_Key;
+    const RenderModelContext& m_Context;
+    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
     QVector<RenderPartitionPointer> m_Partitions;
     QHash<GeometryDataKey, RenderPartitionPointer> m_SectionToPartition;
 };

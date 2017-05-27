@@ -1,5 +1,9 @@
 #include "geometryconsolidator.h"
 
+#include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
+#include "rendersystem/private/stores/openglshaderstore/openglshaderstore.h"
+#include "rendersystem/private/stores/materialstore/materialstore.h"
+
 namespace
 {
     inline quint32 maskFromNumberOfBits(int numBits)
@@ -21,35 +25,52 @@ namespace
     }
 }
 
-GeometryConsolidator::GeometryConsolidator(GeometryDataContainer &data,
-                                           GeometryOffsetTable &offsetTable,
-                                           OpenGLShaderProgram *shader)
-    : m_GeometryDataContainer(data),
+GeometryConsolidator::GeometryConsolidator(const RenderModelContext &context,
+                                           RenderSystem::PublicStoreDefs::MaterialId materialId,
+                                           GeometryDataContainer &data,
+                                           GeometryOffsetTable &offsetTable)
+    : m_Context(context),
+      m_nMaterialId(materialId),
+      m_GeometryDataContainer(data),
       m_OffsetTable(offsetTable),
-      m_pShader(shader),
+      m_pShader(Q_NULLPTR),
       m_VertexData(),
       m_IndexData(),
       m_nItemsPerBatch(0),
       m_nCurrentObjectId(0),
       m_nObjectIdMask(0)
 {
-
+    setUpShader();
 }
 
-OpenGLShaderProgram* GeometryConsolidator::shader() const
+void GeometryConsolidator::setUpShader()
 {
-    return m_pShader;
-}
+    m_pShader = Q_NULLPTR;
 
-void GeometryConsolidator::setShader(OpenGLShaderProgram *shader)
-{
-    if ( shader == m_pShader )
+    if ( m_Context.renderMode() == RenderSystem::PublicShaderDefs::UnknownRenderMode )
     {
         return;
     }
 
-    m_pShader = shader;
-    clear();
+    QSharedPointer<RenderSystem::RenderMaterial> material = MaterialStore::globalInstance()->object(m_nMaterialId);
+    if ( !material )
+    {
+        return;
+    }
+
+    BaseRenderMode* renderMode = RenderModeStore::globalInstance()->object(m_Context.renderMode());
+    if ( !renderMode )
+    {
+        return;
+    }
+
+    PrivateShaderDefs::ShaderId shaderId = renderMode->shaderId(material->shaderStyle());
+    if ( shaderId == PrivateShaderDefs::UnknownShaderId )
+    {
+        return;
+    }
+
+    m_pShader = OpenGLShaderStore::globalInstance()->object(shaderId);
 }
 
 void GeometryConsolidator::clear()
@@ -59,6 +80,7 @@ void GeometryConsolidator::clear()
     m_OffsetTable.clear();
     m_nItemsPerBatch = m_pShader ? m_pShader->maxBatchedItems() : 0;
     m_nCurrentObjectId = 0;
+    m_VertexFormat = m_pShader ? m_pShader->vertexFormat() : VertexFormat();
 
     if ( m_nItemsPerBatch > 1 )
     {
@@ -176,8 +198,7 @@ void GeometryConsolidator::consolidateIndices(const QSharedPointer<GeometryData>
     offsets.indexOffsetInts = m_IndexData.count();
     offsets.indexCountInts = geometry->computeTotalIndexBytes() / sizeof(quint32);
 
-    const VertexFormat vertexFormat = m_pShader->vertexFormat();
-    const quint32 indexIncrement = offsets.vertexCountFloats / vertexFormat.totalVertexComponents();
+    quint32 indexIncrement = offsets.vertexCountFloats / m_VertexFormat.totalVertexComponents();
 
     m_IndexData.resize(m_IndexData.count() + offsets.indexCountInts);
     consolidateIndices(geometry->indices(), offsets.indexOffsetInts, indexIncrement);

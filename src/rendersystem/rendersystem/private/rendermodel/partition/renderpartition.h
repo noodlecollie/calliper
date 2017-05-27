@@ -11,12 +11,15 @@
 #include "geometrydatacontainer.h"
 #include "geometryoffsettable.h"
 
+#include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 class RenderPartition
 {
 public:
-    RenderPartition(int maxItems);
+    RenderPartition(const RenderModelContext& context,
+                    RenderSystem::PublicStoreDefs::MaterialId materialId,
+                    int maxItems);
 
     int maxItems() const;
     int itemCount() const;
@@ -27,6 +30,8 @@ public:
     void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
 
 private:
+    const RenderModelContext& m_Context;
+    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
     const int m_nMaxItems;
 
     // Data
