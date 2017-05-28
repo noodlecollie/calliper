@@ -11,7 +11,7 @@
 #include "rendersystem/private/rendermodel/partition/geometrydatakey.h"
 #include "rendersystem/private/rendermodel/partition/renderpartition.h"
 
-#include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 class RenderGroup

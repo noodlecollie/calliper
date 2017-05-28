@@ -1,10 +1,13 @@
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 
 #include "rendersystem/private/stores/materialstore/materialstore.h"
 #include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
 
 namespace RenderSystem
 {
-    const PublicStoreDefs::MaterialId PublicStoreDefs::INVALID_MATERIAL_ID = MaterialStore::INVALID_ID;
-    const PublicStoreDefs::TextureId PublicStoreDefs::INVALID_TEXTURE_ID = OpenGLTextureStore::INVALID_ID;
+    namespace PublicStoreDefs
+    {
+        const MaterialId INVALID_MATERIAL_ID = MaterialStore::INVALID_ID;
+        const TextureId INVALID_TEXTURE_ID = OpenGLTextureStore::INVALID_ID;
+    }
 }

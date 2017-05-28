@@ -8,7 +8,7 @@
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 
 class OpenGLShaderProgram;
 

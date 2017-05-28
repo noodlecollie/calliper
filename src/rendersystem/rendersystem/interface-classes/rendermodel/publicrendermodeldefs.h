@@ -7,14 +7,11 @@
 
 namespace RenderSystem
 {
-    class PublicRenderModelDefs
+    namespace PublicRenderModelDefs
     {
-        Q_GADGET
-        PublicRenderModelDefs() = delete;
-    public:
         typedef quint32 ObjectId;
         typedef quint8 SectionId;
-    };
+    }
 }
 
 #endif // PUBLICRENDERMODELDEFS_H

@@ -28,7 +28,7 @@ namespace
 }
 
 OpenGLShaderStore::OpenGLShaderStore()
-    : StaticObjectStore<OpenGLShaderProgram*, PrivateShaderDefs::ShaderId, PrivateShaderDefs::TOTAL_SHADERS>()
+    : StaticObjectStore<OpenGLShaderProgram*, OpenGLShaderStoreKey>()
 {
     static_assert(sizeof(SizeofArrayHelper(g_Initialisers)) == PrivateShaderDefs::TOTAL_SHADERS,
                   "Initialiser array size mismatch - has a new shader ID been added?");

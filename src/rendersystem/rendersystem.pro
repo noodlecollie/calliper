@@ -92,10 +92,10 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/shader/publicshaderdefs.h \
     rendersystem/interface-classes/texture/publictexturedefs.h \
     rendersystem/private/stores/materialstore/materialstore.h \
-    rendersystem/interface-classes/store-defs/publicstoredefs.h \
+    rendersystem/interface-classes/store/publicstoredefs.h \
     rendersystem/interface-classes/geometry/geometrysection.h \
     rendersystem/interface-classes/geometry/geometrybuilder.h \
-    rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h \
+    rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h \
     rendersystem/endpoints/texturestoreendpoint.h \
     rendersystem/interfaces/imaterialstore.h \
     rendersystem/private/store-classes/pathmanagingobjectstore.h \
@@ -112,11 +112,14 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/partition/geometryconsolidator.h \
     rendersystem/private/rendermodel/partition/geometryoffsettable.h \
     rendersystem/private/rendermodel/partition/geometryrenderer.h \
-    rendersystem/private/rendermodel/rendermodel-defs.h \
+    rendersystem/private/rendermodel/rendermodel.h \
     rendersystem/private/rendermode/baserendermode.h \
     rendersystem/private/rendermode/barebonesrendermode.h \
     rendersystem/private/stores/rendermodestore/rendermodestore.h \
-    rendersystem/private/rendermodel/rendermodelcontext.h
+    rendersystem/private/rendermodel/rendermodelcontext.h \
+    rendersystem/private/store-classes/staticobjectstorekey.h \
+    rendersystem/private/stores/openglshaderstore/openglshaderstorekey.h \
+    rendersystem/private/stores/rendermodestore/rendermodestorekey.h
 
 unix {
     target.path = /usr/lib

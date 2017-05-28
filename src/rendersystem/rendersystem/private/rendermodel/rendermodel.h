@@ -8,9 +8,9 @@
 #include "rendermodelcontext.h"
 
 #include "rendersystem/interface-classes/shader/publicshaderdefs.h"
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
-#include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
 
 class RenderModel
 {

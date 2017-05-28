@@ -26,9 +26,7 @@ namespace
 }
 
 RenderModeStore::RenderModeStore()
-    : StaticObjectStore<BaseRenderMode*,
-                        RenderSystem::PublicShaderDefs::RenderMode,
-                        RenderSystem::PublicShaderDefs::TOTAL_RENDER_MODES>()
+    : StaticObjectStore<BaseRenderMode*, RenderModeStoreKey>()
 {
     using namespace RenderSystem;
     static_assert(sizeof(SizeofArrayHelper(g_Initialisers)) == PublicShaderDefs::TOTAL_RENDER_MODES,

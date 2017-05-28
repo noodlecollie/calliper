@@ -8,8 +8,8 @@
 #include <QColor>
 #include <QMatrix4x4>
 
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
-#include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
 
 namespace RenderSystem
 {

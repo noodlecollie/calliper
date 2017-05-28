@@ -3,7 +3,7 @@
 
 #include <QHash>
 
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 
 #include "rendersystem/private/store-classes/pathmanagingobjectstore.h"
 #include "rendersystem/private/store-classes/globalinstancehelper.h"

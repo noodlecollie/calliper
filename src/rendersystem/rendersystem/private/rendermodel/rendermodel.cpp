@@ -1,7 +1,7 @@
 #include "rendermodel.h"
 #include "rendermodel-defs.h"
 
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 
 Q_LOGGING_CATEGORY(lcRenderModel, "Renderer.RenderModel")
 

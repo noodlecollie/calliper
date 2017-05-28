@@ -7,11 +7,8 @@
 
 namespace RenderSystem
 {
-    class PublicShaderDefs
+    namespace PublicShaderDefs
     {
-        Q_GADGET
-        PublicShaderDefs() = delete;
-    public:
         // Different ways in which we might want to draw geometry.
         // Some other examples might be unlit textured, or
         // refract (for water).
@@ -30,7 +27,6 @@ namespace RenderSystem
 
             TOTAL_SHADER_STYLES,
         };
-        Q_ENUM(ShaderStyle)
 
         enum RenderMode
         {
@@ -40,8 +36,7 @@ namespace RenderSystem
 
             TOTAL_RENDER_MODES
         };
-        Q_ENUM(RenderMode)
-    };
+    }
 }
 
 #endif // PUBLICSHADERDEFS_H

@@ -5,7 +5,7 @@
 
 #include "namedopengltexture.h"
 
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 #include "rendersystem/interfaces/itexturestore.h"
 
 #include "rendersystem/private/store-classes/pathmanagingobjectstore.h"

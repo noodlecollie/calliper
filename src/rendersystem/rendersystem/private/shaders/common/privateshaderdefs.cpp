@@ -1,33 +1,36 @@
 #include "privateshaderdefs.h"
 
-const char* PrivateShaderDefs::GLOBAL_UNIFORM_BLOCK_NAME = "GlobalUniformBlock";
-const char* PrivateShaderDefs::LOCAL_UNIFORM_BLOCK_NAME = "LocalUniformBlock";
-
-PrivateShaderDefs::VertexFormatUpperBound PrivateShaderDefs::shaderMaxVertexFormat(RenderSystem::PublicShaderDefs::ShaderStyle style)
+namespace PrivateShaderDefs
 {
-    using namespace RenderSystem;
+    const char* GLOBAL_UNIFORM_BLOCK_NAME = "GlobalUniformBlock";
+    const char* LOCAL_UNIFORM_BLOCK_NAME = "LocalUniformBlock";
 
-    switch ( style )
+    VertexFormatUpperBound shaderMaxVertexFormat(RenderSystem::PublicShaderDefs::ShaderStyle style)
     {
-        case PublicShaderDefs::UnlitTextured3D:
-        {
-            return VertexFormatUpperBound(4, 3, 4, 2);
-        }
+        using namespace RenderSystem;
 
-        case PublicShaderDefs::LitTextured3D:
+        switch ( style )
         {
-            return VertexFormatUpperBound(4, 3, 4, 2);
-        }
+            case PublicShaderDefs::UnlitTextured3D:
+            {
+                return VertexFormatUpperBound(4, 3, 4, 2);
+            }
 
-        case PublicShaderDefs::UnlitPerVertexColor3D:
-        {
-            return VertexFormatUpperBound(4, 3, 4, 0);
-        }
+            case PublicShaderDefs::LitTextured3D:
+            {
+                return VertexFormatUpperBound(4, 3, 4, 2);
+            }
 
-        default:
-        {
-            Q_ASSERT_X(false, Q_FUNC_INFO, "No vertex format specified for this shader technique!");
-            return VertexFormatUpperBound(0, 0, 0, 0);
+            case PublicShaderDefs::UnlitPerVertexColor3D:
+            {
+                return VertexFormatUpperBound(4, 3, 4, 0);
+            }
+
+            default:
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "No vertex format specified for this shader technique!");
+                return VertexFormatUpperBound(0, 0, 0, 0);
+            }
         }
     }
 }

@@ -7,11 +7,8 @@
 
 #include "vertexformat.h"
 
-class PrivateShaderDefs
+namespace PrivateShaderDefs
 {
-    Q_GADGET
-    PrivateShaderDefs() = delete;
-public:
     // The shaders we have available.
     // Each entry should correspond to an OpenGLShaderProgram subclass.
     enum ShaderId
@@ -23,7 +20,6 @@ public:
 
         TOTAL_SHADERS
     };
-    Q_ENUM(ShaderId)
 
     // Canonical array IDs for vertex attributes.
     // This should be kept below MAX_VERTEX_ATTRIBS.
@@ -39,14 +35,12 @@ public:
 
         VertexAttributeLocationCount
     };
-    Q_ENUM(VertexArrayAttribute)
 
     enum UniformBlockBindingPoint
     {
         GlobalUniformBlockBindingPoint = 0, // Camera matrices, fog, colour, etc.
         LocalUniformBlockBindingPoint  = 1, // Model to world matrices
     };
-    Q_ENUM(UniformBlockBindingPoint)
 
     // This is the maximum number of components required per attribute.
     // Eg. some unlit textured shaders might need normals but most could
@@ -56,10 +50,10 @@ public:
     // limit on the number of components shaders that are used for this
     // technique are allowed to ask for.
     typedef VertexFormat VertexFormatUpperBound;
-    static VertexFormatUpperBound shaderMaxVertexFormat(RenderSystem::PublicShaderDefs::ShaderStyle style);
+    VertexFormatUpperBound shaderMaxVertexFormat(RenderSystem::PublicShaderDefs::ShaderStyle style);
 
-    static const char* GLOBAL_UNIFORM_BLOCK_NAME;
-    static const char* LOCAL_UNIFORM_BLOCK_NAME;
+    extern const char* GLOBAL_UNIFORM_BLOCK_NAME;
+    extern const char* LOCAL_UNIFORM_BLOCK_NAME;
 };
 
 #endif // PRIVATESHADERDEFS_H

@@ -5,7 +5,7 @@
 
 #include <QWeakPointer>
 
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 #include "rendersystem/interface-classes/rendermaterial/rendermaterial.h"
 
 namespace RenderSystem

@@ -1,7 +1,7 @@
 #ifndef GEOMETRYDATAKEY_H
 #define GEOMETRYDATAKEY_H
 
-#include "rendersystem/interface-classes/rendermodel-defs/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
 
 struct GeometryDataKey
 {

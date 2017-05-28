@@ -5,7 +5,7 @@
 
 #include <QImage>
 
-#include "rendersystem/interface-classes/store-defs/publicstoredefs.h"
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 
 namespace RenderSystem
 {

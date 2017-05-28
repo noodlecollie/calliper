@@ -7,18 +7,14 @@
 
 namespace RenderSystem
 {
-    class RENDERSYSTEMSHARED_EXPORT PublicStoreDefs
+    namespace PublicStoreDefs
     {
-        Q_GADGET
-        PublicStoreDefs() = delete;
-
-    public:
         typedef quint32 MaterialId;
         typedef quint32 TextureId;
 
-        static const MaterialId INVALID_MATERIAL_ID;
-        static const TextureId INVALID_TEXTURE_ID;
-    };
+        extern const MaterialId INVALID_MATERIAL_ID;
+        extern const TextureId INVALID_TEXTURE_ID;
+    }
 }
 
 #endif // PUBLICSTOREDEFS_H
