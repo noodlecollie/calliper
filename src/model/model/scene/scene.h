@@ -5,9 +5,6 @@
 #include "model/scene/sceneobject.h"
 #include <QHash>
 #include "sceneobjectinitparams.h"
-#include "model/stores/texturestore.h"
-#include "model/stores/shaderstore.h"
-#include "model/stores/materialstore.h"
 #include "model/scenerenderer/irenderpassclassifier.h"
 
 namespace Model

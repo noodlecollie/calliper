@@ -13,8 +13,11 @@ namespace
 namespace RenderSystem
 {
     GeometrySection::GeometrySection()
-        : m_nMaterialId(0),
+        : m_nSectionId(0),
+          m_nObjectId(0),
+          m_nMaterialId(PublicStoreDefs::INVALID_MATERIAL_ID),
           m_matModelToWorld(),
+          m_nDrawMode(GL_TRIANGLES),
           m_AttributeVectors()
     {
     }
@@ -27,6 +30,7 @@ namespace RenderSystem
           m_nObjectId(objectId),
           m_nMaterialId(materialId),
           m_matModelToWorld(modelToWorldMatrix),
+          m_nDrawMode(GL_TRIANGLES),
           m_AttributeVectors()
     {
     }

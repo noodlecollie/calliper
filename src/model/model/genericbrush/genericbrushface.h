@@ -6,8 +6,7 @@
 #include <QVector3D>
 #include <QObject>
 #include "textureplane.h"
-#include "renderer/geometry/geometrybuilder.h"
-#include "renderer/shaders/baseshaderpalette.h"
+#include "rendersystem/interface-classes/geometry/geometrybuilder.h"
 
 namespace Model
 {
@@ -34,7 +33,7 @@ namespace Model
 
         QVector3D normal() const;
 
-        void buildFaceGeometry(Renderer::GeometryBuilder &builder) const;
+        void buildFaceGeometry(RenderSystem::GeometryBuilder &builder) const;
 
     signals:
         void dataChanged();

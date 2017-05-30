@@ -43,23 +43,11 @@ SOURCES += \
     model/sceneobjects/debugcube.cpp \
     model/sceneobjects/debugtriangle.cpp \
     model/sceneobjects/originmarker.cpp \
-    model/scenerenderer/scenerenderer.cpp \
-    model/shaders/simplelitshader.cpp \
-    model/shaders/unlitpervertexcolorshader.cpp \
-    model/stores/materialstore.cpp \
-    model/stores/shaderstore.cpp \
-    model/stores/texturestore.cpp \
-    model/global/resourceenvironment.cpp \
     model/scene/mapscene.cpp \
-    model/scenerenderer/simplerenderpassclassifier.cpp \
     model/filedatamodels/base/basefiledatamodel.cpp \
     model/filedatamodels/map/mapfiledatamodel.cpp \
     model/filedatamodels/filedatamodelfactory.cpp \
-    model/stores/shaderpalettestore.cpp \
-    model/shaderpalettes/simplelittexturedshaderpalette.cpp \
-    model/renderunit/renderunit.cpp \
-    model/presetmaterials/unlitpervertexcolourpresetmaterial.cpp \
-    model/scenerenderer/sceneframerenderer.cpp
+    model/presetmaterials/unlitpervertexcolourpresetmaterial.cpp
 
 HEADERS += \
     model_global.h \
@@ -94,25 +82,11 @@ HEADERS += \
     model/sceneobjects/debugcube.h \
     model/sceneobjects/debugtriangle.h \
     model/sceneobjects/originmarker.h \
-    model/scenerenderer/irenderpassclassifier.h \
-    model/scenerenderer/scenerenderer.h \
-    model/shaders/simplelitshader.h \
-    model/shaders/unlitpervertexcolorshader.h \
-    model/stores/materialstore.h \
-    model/stores/shaderstore.h \
-    model/stores/texturestore.h \
-    model/global/resourceenvironment.h \
     model/scene/mapscene.h \
-    model/scenerenderer/simplerenderpassclassifier.h \
     model/filedatamodels/base/basefiledatamodel.h \
     model/filedatamodels/map/mapfiledatamodel.h \
     model/filedatamodels/filedatamodelfactory.h \
-    model/stores/shaderpalettestore.h \
-    model/shaders/knownshaderdefs.h \
-    model/shaderpalettes/simplelittexturedshaderpalette.h \
-    model/renderunit/renderunit.h \
-    model/presetmaterials/unlitpervertexcolourpresetmaterial.h \
-    model/scenerenderer/sceneframerenderer.h
+    model/presetmaterials/unlitpervertexcolourpresetmaterial.h
 
 unix {
     target.path = /usr/lib

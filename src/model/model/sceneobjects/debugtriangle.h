@@ -17,7 +17,7 @@ namespace Model
         DebugTriangle(const DebugTriangle* cloneFrom, const SceneObjectInitParams& initParams);
         virtual ~DebugTriangle();
 
-        virtual void bakeGeometry(Renderer::GeometryBuilder &builder) const override;
+        virtual void bakeGeometry(RenderSystem::GeometryBuilder &builder) const override;
 
     private:
         void commonInit();

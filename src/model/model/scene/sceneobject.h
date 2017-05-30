@@ -5,9 +5,8 @@
 #include <QObject>
 #include "model/scene/hierarchystate.h"
 #include "model/events/spatialconfigurationchange.h"
-#include "renderer/geometry/geometrybuilder.h"
+#include "rendersystem/interface-classes/geometry/geometrybuilder.h"
 #include "sceneobjectinitparams.h"
-#include "renderer/shaders/baseshaderpalette.h"
 #include <QColor>
 
 namespace Model
@@ -35,7 +34,7 @@ namespace Model
         virtual bool scalable() const;
 
         bool needsRendererUpdate() const;
-        void rendererUpdate(Renderer::GeometryBuilder &builder) const;
+        void rendererUpdate(RenderSystem::GeometryBuilder &builder) const;
 
         // Not cached, so could be expensive if called a lot.
         QMatrix4x4 rootToLocalMatrix() const;
@@ -67,7 +66,7 @@ namespace Model
         virtual ~SceneObject();
 
         virtual void customEvent(QEvent *event);
-        virtual void bakeGeometry(Renderer::GeometryBuilder &builder) const;
+        virtual void bakeGeometry(RenderSystem::GeometryBuilder &builder) const;
 
         // Called by subclasses to convert hierarchy state to non-scalable.
         void updateScalableState(bool isScalable);
@@ -91,8 +90,8 @@ namespace Model
         void commonInit();
         void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
         HierarchyState* initHierarchyState(bool isScalable);
-        void updateGeometryColours(Renderer::GeometryBuilder &builder) const;
-        void updateGeometryColours(Renderer::GeometrySection* section) const;
+        void updateGeometryColours(RenderSystem::GeometryBuilder &builder) const;
+        void updateGeometryColours(RenderSystem::GeometrySection* section) const;
 
         Scene* const m_pParentScene;
         const quint32 m_iObjectId;

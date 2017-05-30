@@ -19,7 +19,7 @@ namespace Model
 
     }
 
-    void GenericBrush::bakeGeometry(Renderer::GeometryBuilder &builder) const
+    void GenericBrush::bakeGeometry(RenderSystem::GeometryBuilder &builder) const
     {
         foreach ( GenericBrushFace* face, m_BrushFaces )
         {

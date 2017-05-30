@@ -5,9 +5,9 @@ namespace Model
 {
     namespace GeometryFactory
     {
-        void cube(Renderer::GeometryBuilder &builder, float radius, const QColor &color)
+        void cube(RenderSystem::GeometryBuilder &builder, float radius, const QColor &color)
         {
-            using namespace Renderer;
+            using namespace RenderSystem;
 
             for (int i = 0; i < 6; i++)
             {
@@ -48,7 +48,7 @@ namespace Model
                     break;
                 }
 
-                GeometrySection* section = builder.createNewSection();
+                QSharedPointer<GeometrySection> section = builder.createNewSection();
 
                 section->addPosition((-radius*u) + (-radius*v) + (radius*normal));
                 section->addPosition((radius*u) + (-radius*v) + (radius*normal));
@@ -69,17 +69,14 @@ namespace Model
                 section->addTextureCoordinate(QVector2D(1,0));
                 section->addTextureCoordinate(QVector2D(1,1));
                 section->addTextureCoordinate(QVector2D(0,1));
-
-                section->addIndexTriangle(0,1,2);
-                section->addIndexTriangle(0,2,3);
             }
         }
 
-        void wireframeCube(Renderer::GeometryBuilder &builder, float radius, const QColor &color)
+        void wireframeCube(RenderSystem::GeometryBuilder &builder, float radius, const QColor &color)
         {
-            using namespace Renderer;
+            using namespace RenderSystem;
 
-            GeometrySection* section = builder.createNewSection();
+            QSharedPointer<GeometrySection> section = builder.createNewSection();
             section->setDrawMode(GL_LINES);
 
             section->addPosition(QVector3D(-radius, -radius, -radius));
