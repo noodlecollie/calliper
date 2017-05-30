@@ -25,6 +25,9 @@ public:
     GLenum drawMode() const;
     void setDrawMode(GLenum mode);
 
+    float lineWidth() const;
+    void setLineWidth(float width);
+
 private:
     class InternalException : public QException
     {
@@ -59,6 +62,7 @@ private:
     int m_nItemsPerBatch;
     OpenGLShaderProgram* m_pCurrentShader;
     GLenum m_nDrawMode;
+    float m_flLineWidth;
 };
 
 #endif // GEOMETRYRENDERER_H

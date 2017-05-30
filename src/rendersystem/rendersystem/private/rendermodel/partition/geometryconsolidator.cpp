@@ -1,8 +1,6 @@
 #include "geometryconsolidator.h"
 
-#include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
-#include "rendersystem/private/stores/openglshaderstore/openglshaderstore.h"
-#include "rendersystem/private/stores/materialstore/materialstore.h"
+#include "renderutils.h"
 
 namespace
 {
@@ -45,32 +43,7 @@ GeometryConsolidator::GeometryConsolidator(const RenderModelContext &context,
 
 void GeometryConsolidator::setUpShader()
 {
-    m_pShader = Q_NULLPTR;
-
-    if ( m_Context.renderMode() == RenderSystem::PublicShaderDefs::UnknownRenderMode )
-    {
-        return;
-    }
-
-    QSharedPointer<RenderSystem::RenderMaterial> material = MaterialStore::globalInstance()->object(m_nMaterialId);
-    if ( !material )
-    {
-        return;
-    }
-
-    BaseRenderMode* renderMode = RenderModeStore::globalInstance()->object(m_Context.renderMode());
-    if ( !renderMode )
-    {
-        return;
-    }
-
-    PrivateShaderDefs::ShaderId shaderId = renderMode->shaderId(material->shaderStyle());
-    if ( shaderId == PrivateShaderDefs::UnknownShaderId )
-    {
-        return;
-    }
-
-    m_pShader = OpenGLShaderStore::globalInstance()->object(shaderId);
+    m_pShader = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
 }
 
 void GeometryConsolidator::clear()

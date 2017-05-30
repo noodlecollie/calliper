@@ -1,11 +1,9 @@
 #include "geometryuploader.h"
 
-#include "rendersystem/private/stores/openglshaderstore/openglshaderstore.h"
-#include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
-#include "rendersystem/private/stores/materialstore/materialstore.h"
+#include "geometryconsolidator.h"
+#include "renderutils.h"
 
 #include "rendersystem/private/opengl/openglhelpers.h"
-#include "geometryconsolidator.h"
 
 GeometryUploader::GeometryUploader(const RenderModelContext &context,
                                    RenderSystem::PublicStoreDefs::MaterialId materialId,
@@ -59,32 +57,7 @@ bool GeometryUploader::uploadIfRequired()
 
 void GeometryUploader::getShaderFromMaterial()
 {
-    m_pCurrentShaderProgram = Q_NULLPTR;
-
-    if ( m_Context.renderMode() == RenderSystem::PublicShaderDefs::UnknownRenderMode )
-    {
-        return;
-    }
-
-    QSharedPointer<RenderSystem::RenderMaterial> material = MaterialStore::globalInstance()->object(m_nMaterialId);
-    if ( !material )
-    {
-        return;
-    }
-
-    BaseRenderMode* mode = RenderModeStore::globalInstance()->object(m_Context.renderMode());
-    if ( !mode )
-    {
-        return;
-    }
-
-    m_nShaderId = mode->shaderId(material->shaderStyle());
-    if ( m_nShaderId == PrivateShaderDefs::UnknownShaderId )
-    {
-        return;
-    }
-
-    m_pCurrentShaderProgram = OpenGLShaderStore::globalInstance()->object(m_nShaderId);
+    m_pCurrentShaderProgram = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
 }
 
 bool GeometryUploader::isValid() const

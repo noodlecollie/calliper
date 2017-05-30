@@ -1,8 +1,0 @@
-- Make classes with static enums etc. into namespaces so that they work with "using".
-- Make some kind of convenience code for getting shaders from materials.
-- Allow for drawing in non-triangles mode.
-- Work out what to do about the fact that material data could change.
-  For example, everything could have been uploaded, but then the shader could be changed in the material before drawing.
-  To mitigate against this, we can store what the ID of the shader was when the last upload happened;
-  if we notice that it's changed when we next access the material, we need to re-upload.
-  Refactor the uploader to account for this. Currently the bool saying whether the shader has changed is a bit useless.

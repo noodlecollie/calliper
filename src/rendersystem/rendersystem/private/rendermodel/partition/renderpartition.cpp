@@ -1,5 +1,7 @@
 #include "renderpartition.h"
 
+#include "geometryrenderer.h"
+
 namespace
 {
     const QOpenGLBuffer::UsagePattern BUFFER_USAGE_PATTERN = QOpenGLBuffer::DynamicDraw;
@@ -52,4 +54,19 @@ void RenderPartition::setGeometry(const QSharedPointer<RenderSystem::GeometrySec
 void RenderPartition::removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId)
 {
     m_GeometryDataContainer.remove(objectId);
+}
+
+void RenderPartition::draw(GLenum drawMode, float lineWidth)
+{
+    if ( !m_Uploader.uploadIfRequired() )
+    {
+        return;
+    }
+
+    GeometryRenderer renderer(m_Context, m_nMaterialId, m_OffsetTable, m_OpenGLBuffers);
+
+    renderer.setDrawMode(drawMode);
+    renderer.setLineWidth(lineWidth);
+
+    renderer.draw();
 }

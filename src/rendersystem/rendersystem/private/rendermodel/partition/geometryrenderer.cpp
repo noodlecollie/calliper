@@ -1,11 +1,10 @@
 #include "geometryrenderer.h"
 
-#include "rendersystem/private/rendermodel/rendermodel-defs.h"
+#include "renderutils.h"
 
-#include "rendersystem/private/stores/openglshaderstore/openglshaderstore.h"
-#include "rendersystem/private/stores/materialstore/materialstore.h"
-#include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
+#include "rendersystem/private/rendermodel/rendermodel-defs.h"
 #include "rendersystem/private/opengl/openglhelpers.h"
+#include "rendersystem/private/opengl/openglerrors.h"
 
 GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
                                    RenderSystem::PublicStoreDefs::MaterialId materialId,
@@ -17,32 +16,10 @@ GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
       m_OpenGLBuffers(openGLBuffers),
       m_nItemsPerBatch(0),
       m_pCurrentShader(Q_NULLPTR),
-      m_nDrawMode(GL_TRIANGLES)
+      m_nDrawMode(GL_TRIANGLES),
+      m_flLineWidth(1.0f)
 {
-    if ( m_nMaterialId == RenderSystem::PublicStoreDefs::INVALID_MATERIAL_ID )
-    {
-        return;
-    }
-
-    QSharedPointer<RenderSystem::RenderMaterial> material = MaterialStore::globalInstance()->object(m_nMaterialId);
-    if ( !material )
-    {
-        return;
-    }
-
-    BaseRenderMode* renderMode = RenderModeStore::globalInstance()->object(m_Context.renderMode());
-    if ( !renderMode )
-    {
-        return;
-    }
-
-    PrivateShaderDefs::ShaderId shaderId = renderMode->shaderId(material->shaderStyle());
-    if ( shaderId == PrivateShaderDefs::UnknownShaderId )
-    {
-        return;
-    }
-
-    m_pCurrentShader = OpenGLShaderStore::globalInstance()->object(shaderId);
+    m_pCurrentShader = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
 }
 
 GLenum GeometryRenderer::drawMode() const
@@ -55,6 +32,21 @@ void GeometryRenderer::setDrawMode(GLenum mode)
     m_nDrawMode = mode;
 }
 
+float GeometryRenderer::lineWidth() const
+{
+    return m_flLineWidth;
+}
+
+void GeometryRenderer::setLineWidth(float width)
+{
+    if ( m_flLineWidth <= 0.0f )
+    {
+        return;
+    }
+
+    m_flLineWidth = width;
+}
+
 void GeometryRenderer::draw()
 {
     if ( !m_pCurrentShader || !m_OpenGLBuffers.isCreated() )
@@ -63,6 +55,9 @@ void GeometryRenderer::draw()
     }
 
     m_nItemsPerBatch = m_pCurrentShader->maxBatchedItems();
+
+    GL_CURRENT_F;
+    GLTRY(f->glLineWidth(m_flLineWidth));
 
     for ( int offsetItemBase = 0; offsetItemBase < m_OffsetTable.count(); offsetItemBase += m_nItemsPerBatch )
     {

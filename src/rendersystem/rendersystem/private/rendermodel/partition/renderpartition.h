@@ -29,6 +29,8 @@ public:
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
     void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
 
+    void draw(GLenum drawMode, float lineWidth);
+
 private:
     const RenderModelContext& m_Context;
     const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;

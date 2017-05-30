@@ -61,7 +61,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermode/baserendermode.cpp \
     rendersystem/private/rendermode/barebonesrendermode.cpp \
     rendersystem/private/stores/rendermodestore/rendermodestore.cpp \
-    rendersystem/private/rendermodel/rendermodelcontext.cpp
+    rendersystem/private/rendermodel/rendermodelcontext.cpp \
+    rendersystem/private/rendermodel/partition/renderutils.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -119,7 +120,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/rendermodelcontext.h \
     rendersystem/private/store-classes/staticobjectstorekey.h \
     rendersystem/private/stores/openglshaderstore/openglshaderstorekey.h \
-    rendersystem/private/stores/rendermodestore/rendermodestorekey.h
+    rendersystem/private/stores/rendermodestore/rendermodestorekey.h \
+    rendersystem/private/rendermodel/partition/renderutils.h
 
 unix {
     target.path = /usr/lib

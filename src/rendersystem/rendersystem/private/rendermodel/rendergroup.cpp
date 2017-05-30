@@ -3,7 +3,9 @@
 namespace
 {
     // Tweak as necessary, for performance.
-    const int ITEMS_PER_PARTITION = 8 * 8;  // Batches * items per batch
+    const int ITEMS_PER_BATCH = 8;
+    const int BATCHES_PER_PARTITION = 8;
+    const int ITEMS_PER_PARTITION = ITEMS_PER_BATCH * BATCHES_PER_PARTITION;
 }
 
 RenderGroup::RenderGroup(const RenderModelContext &context,
