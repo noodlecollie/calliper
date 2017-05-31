@@ -1,0 +1,3 @@
+Model:
+ - genericbrushface.cpp: Implement texture co-ordinates. Need to know the size of the main texture. DONE
+ - originmarker.cpp: Implement preset materials for drawing unlit things.

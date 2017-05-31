@@ -43,6 +43,11 @@ QWeakPointer<RenderSystem::RenderMaterial> MaterialStore::material(const Materia
     return object(id).toWeakRef();
 }
 
+QWeakPointer<RenderSystem::RenderMaterial> MaterialStore::material(const QString &path) const
+{
+    return object(materialIdFromPath(path)).toWeakRef();
+}
+
 bool MaterialStore::containsMaterial(const MaterialId id) const
 {
     return BaseObjectStore::contains(id);

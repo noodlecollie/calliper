@@ -6,6 +6,7 @@
 #include <QImage>
 
 #include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/texture/namedopengltexture.h"
 
 namespace RenderSystem
 {
@@ -34,6 +35,14 @@ namespace RenderSystem
 
         // Returns the path for the texture with the given ID, or 0 if it doesn't exist.
         virtual QString texturePathFromId(const PublicStoreDefs::TextureId id) const = 0;
+
+        // Returns a pointer to the texture with the given ID.
+        // If no texture exists with this ID, the default texture is returned.
+        // Weak pointers are returned to indicate that the store still retains
+        // full ownership of the material - don't store QSharedPointers.
+        // The weak pointer is, however, guaranteed to be valid immediately after the call.
+        virtual QWeakPointer<NamedOpenGLTexture> texture(const PublicStoreDefs::TextureId textureId) const = 0;
+        virtual QWeakPointer<NamedOpenGLTexture> texture(const QString& path) const = 0;
     };
 }
 

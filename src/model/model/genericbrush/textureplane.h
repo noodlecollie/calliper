@@ -2,11 +2,15 @@
 #define TEXTUREPLANE_H
 
 #include "model_global.h"
+
 #include <QObject>
-#include "calliperutil/math/math.h"
 #include <QVector3D>
 #include <QVector2D>
 #include <QString>
+
+#include "calliperutil/math/math.h"
+
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
 
 namespace Model
 {
@@ -17,8 +21,8 @@ namespace Model
         explicit TexturePlane(QObject* parent = 0);
 
         // Material to be used on the face.
-        quint32 materialId() const;
-        void setMaterialId(quint32 id);
+        RenderSystem::PublicStoreDefs::MaterialId materialId() const;
+        void setMaterialId(RenderSystem::PublicStoreDefs::MaterialId id);
 
         // The U and V axes specify the U and V axes of the texture in 3D space.
         // The length of each axis specifies how many texture units there are per world unit.

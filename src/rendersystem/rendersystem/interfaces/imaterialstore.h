@@ -24,7 +24,11 @@ namespace RenderSystem
 
         // Returns the material corresponding to the given ID, or a default material
         // if the ID does not exist in the store.
+        // Weak pointers are returned to indicate that the store still retains
+        // full ownership of the material - don't store QSharedPointers.
+        // The weak pointer is, however, guaranteed to be valid immediately after the call.
         virtual QWeakPointer<RenderMaterial> material(const PublicStoreDefs::MaterialId id) const = 0;
+        virtual QWeakPointer<RenderMaterial> material(const QString& path) const = 0;
 
         // Returns whether a material with the given ID exists in the store.
         virtual bool containsMaterial(const PublicStoreDefs::MaterialId id) const = 0;

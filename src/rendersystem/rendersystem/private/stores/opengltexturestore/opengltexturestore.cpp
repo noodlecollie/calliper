@@ -13,6 +13,16 @@ OpenGLTextureStore::~OpenGLTextureStore()
     m_ObjectHash.clear();
 }
 
+QWeakPointer<RenderSystem::NamedOpenGLTexture> OpenGLTextureStore::texture(const RenderSystem::PublicStoreDefs::TextureId textureId) const
+{
+    return object(textureId).toWeakRef();
+}
+
+QWeakPointer<RenderSystem::NamedOpenGLTexture> OpenGLTextureStore::texture(const QString &path) const
+{
+    return object(textureIdFromPath(path)).toWeakRef();
+}
+
 OpenGLTextureStore::TextureId OpenGLTextureStore::addTexture(const QImage& image, const QString& path)
 {
     if ( path.isEmpty() )

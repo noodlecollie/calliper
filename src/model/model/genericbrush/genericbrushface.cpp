@@ -2,6 +2,9 @@
 #include "genericbrush.h"
 #include "model/scene/scene.h"
 
+#include "rendersystem/endpoints/texturestoreendpoint.h"
+#include "rendersystem/endpoints/materialstoreendpoint.h"
+
 namespace Model
 {
     GenericBrushFace::GenericBrushFace(GenericBrush* parentBrush)
@@ -102,17 +105,22 @@ namespace Model
             section->addNormal(nrm);
         }
 
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement texture co-ordinates");
-//        TextureStore* texStore = ResourceEnvironment::globalInstance()->textureStore();
-//        MaterialStore* matStore = ResourceEnvironment::globalInstance()->materialStore();
+        RenderSystem::CurrentContextGuard<RenderSystem::IMaterialStore> materialStore =
+                RenderSystem::MaterialStoreEndpoint::materialStore();
 
-//        RenderMaterialPointer mat = (*matStore)(m_pTexturePlane->materialId());
-//        OpenGLTexturePointer tex = (*texStore)(mat->texture(ShaderDefs::MainTexture));
+        RenderSystem::CurrentContextGuard<RenderSystem::ITextureStore> textureStore =
+                RenderSystem::TextureStoreEndpoint::textureStore();
 
-//        for ( int i = 0; i < vertices.count(); i++ )
-//        {
-//            section->addTextureCoordinate(m_pTexturePlane->textureCoordinate(vertices.at(i), tex->size(), nrm));
-//        }
+        QSharedPointer<RenderSystem::RenderMaterial> material = materialStore->material(texturePlane()->materialId()).toStrongRef();
+        const QString texturePath = material->textureMapping(RenderSystem::PublicTextureDefs::MainTexture);
+
+        QSharedPointer<RenderSystem::NamedOpenGLTexture> texture = textureStore->texture(texturePath).toStrongRef();
+        const QSize textureSize = texture->size();
+
+        for ( int i = 0; i < vertices.count(); i++ )
+        {
+            section->addTextureCoordinate(m_pTexturePlane->textureCoordinate(vertices.at(i), textureSize, nrm));
+        }
     }
 
     QVector3D GenericBrushFace::normal() const

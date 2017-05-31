@@ -16,12 +16,12 @@ namespace Model
         m_flRotation = 0;
     }
 
-    quint32 TexturePlane::materialId() const
+    RenderSystem::PublicStoreDefs::MaterialId TexturePlane::materialId() const
     {
         return m_iMaterialId;
     }
 
-    void TexturePlane::setMaterialId(quint32 id)
+    void TexturePlane::setMaterialId(RenderSystem::PublicStoreDefs::MaterialId id)
     {
         m_iMaterialId = id;
     }

@@ -34,7 +34,7 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/opengl/openglvertexarrayobject.cpp \
     rendersystem/private/shaders/base/openglshaderprogram.cpp \
     rendersystem/private/stores/openglshaderstore/openglshaderstore.cpp \
-    rendersystem/private/stores/opengltexturestore/namedopengltexture.cpp \
+    rendersystem/interface-classes/texture/namedopengltexture.cpp \
     rendersystem/private/shaders/common/globalshaderuniforms.cpp \
     rendersystem/private/shaders/derived/simplelitshader.cpp \
     rendersystem/private/shaders/derived/unlitpervertexcolorshader.cpp \
@@ -84,7 +84,7 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/store-classes/itembasedobjectstore.h \
     rendersystem/private/store-classes/itempointerbasedobjectstore.h \
     rendersystem/private/stores/openglshaderstore/openglshaderstore.h \
-    rendersystem/private/stores/opengltexturestore/namedopengltexture.h \
+    rendersystem/interface-classes/texture/namedopengltexture.h \
     rendersystem/private/shaders/common/globalshaderuniforms.h \
     rendersystem/private/shaders/derived/simplelitshader.h \
     rendersystem/private/store-classes/staticobjectstore.h \
