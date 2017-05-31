@@ -78,10 +78,10 @@ namespace Model
     private:
         void initDefaults();
 
-        quint32     m_iMaterialId;
-        QVector2D   m_vecScale;
-        QVector2D   m_vecTranslation;
-        float       m_flRotation;
+        RenderSystem::PublicStoreDefs::MaterialId m_iMaterialId;
+        QVector2D m_vecScale;
+        QVector2D m_vecTranslation;
+        float m_flRotation;
     };
 }
 

@@ -2,9 +2,11 @@
 #define SCENE_H
 
 #include "model_global.h"
-#include "model/scene/sceneobject.h"
-#include <QHash>
 #include "sceneobjectinitparams.h"
+
+#include "model/scene/sceneobject.h"
+
+#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
 
 namespace Model
 {
@@ -45,14 +47,14 @@ namespace Model
     private:
         void processSceneObjectCreated(SceneObject* object);
         void processSceneObjectCloned(SceneObject* object);
-        quint32 acquireNextObjectId();
+        RenderSystem::PublicRenderModelDefs::ObjectId acquireNextObjectId();
         void addObjectToTable(SceneObject* object);
         void removeObjectFromTable(SceneObject* object);
         void deleteObjectsRecursive(SceneObject* object);
 
-        quint32 m_iObjectIdCounter;
+        RenderSystem::PublicRenderModelDefs::ObjectId m_iObjectIdCounter;
         SceneObject* m_pRootObject;
-        QHash<quint32, SceneObject*> m_ObjectTable;
+        QHash<RenderSystem::PublicRenderModelDefs::ObjectId, SceneObject*> m_ObjectTable;
     };
 }
 

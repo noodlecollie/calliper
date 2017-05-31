@@ -1,3 +1,4 @@
 Model:
  - genericbrushface.cpp: Implement texture co-ordinates. Need to know the size of the main texture. DONE
  - originmarker.cpp: Implement preset materials for drawing unlit things.
+ - Everywhere: check for quint16/quint23 usage and change to appropriate typedefs. DONE

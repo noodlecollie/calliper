@@ -19,7 +19,7 @@ namespace Model
         virtual ~OriginMarker();
 
         virtual void bakeGeometry(RenderSystem::GeometryBuilder &builder) const override;
-        virtual bool customVertexColours() const override { return true; }
+        virtual bool customVertexColours() const override;
 
     private:
         void commonInit();

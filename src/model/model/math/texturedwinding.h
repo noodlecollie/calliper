@@ -4,18 +4,20 @@
 #include "model_global.h"
 #include "winding3d.h"
 
+#include "rendersystem/interface-classes/store/publicstoredefs.h"
+
 namespace Model
 {
     class MODELSHARED_EXPORT TexturedWinding : public Winding3D
     {
     public:
-        TexturedWinding(const Plane3D &plane, quint32 materialId);
+        TexturedWinding(const Plane3D &plane, RenderSystem::PublicStoreDefs::MaterialId materialId);
 
-        quint32 materialId() const;
-        void setMaterialId(quint32 id);
+        RenderSystem::PublicStoreDefs::MaterialId materialId() const;
+        void setMaterialId(RenderSystem::PublicStoreDefs::MaterialId id);
 
     private:
-        quint32     m_iMaterialId;
+        RenderSystem::PublicStoreDefs::MaterialId m_iMaterialId;
     };
 }
 

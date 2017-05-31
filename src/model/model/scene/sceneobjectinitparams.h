@@ -3,6 +3,8 @@
 
 #include "model_global.h"
 
+#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
+
 namespace Model
 {
     class Scene;
@@ -10,10 +12,10 @@ namespace Model
     class MODELSHARED_EXPORT SceneObjectInitParams
     {
     public:
-        SceneObjectInitParams(Scene* parentScene, quint32 objectId);
+        SceneObjectInitParams(Scene* parentScene, RenderSystem::PublicRenderModelDefs::ObjectId objectId);
 
         Scene* m_pScene;
-        quint32 m_iObjectId;
+        RenderSystem::PublicRenderModelDefs::ObjectId m_iObjectId;
     };
 }
 

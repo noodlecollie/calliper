@@ -65,4 +65,9 @@ namespace Model
     {
         return false;
     }
+
+    bool OriginMarker::customVertexColours() const override
+    {
+        return true;
+    }
 }

@@ -176,7 +176,7 @@ namespace Model
         return m_pParentScene;
     }
 
-    quint32 SceneObject::objectId() const
+    RenderSystem::PublicRenderModelDefs::ObjectId SceneObject::objectId() const
     {
         return m_iObjectId;
     }

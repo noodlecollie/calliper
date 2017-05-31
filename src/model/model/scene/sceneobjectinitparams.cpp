@@ -2,8 +2,9 @@
 
 namespace Model
 {
-    SceneObjectInitParams::SceneObjectInitParams(Scene* parentScene, quint32 objectId)
-        : m_pScene(parentScene), m_iObjectId(objectId)
+    SceneObjectInitParams::SceneObjectInitParams(Scene* parentScene, RenderSystem::PublicRenderModelDefs::ObjectId objectId)
+        : m_pScene(parentScene),
+          m_iObjectId(objectId)
     {
 
     }

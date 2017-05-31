@@ -82,7 +82,7 @@ namespace Model
         return m_pRootObject;
     }
 
-    quint32 Scene::acquireNextObjectId()
+    RenderSystem::PublicRenderModelDefs::ObjectId Scene::acquireNextObjectId()
     {
         Q_ASSERT_X(m_iObjectIdCounter + 1 > 0, Q_FUNC_INFO, "How on earth did you manage to overflow this??");
         return ++m_iObjectIdCounter;

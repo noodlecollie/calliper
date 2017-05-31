@@ -27,7 +27,7 @@ namespace Model
         // that its translation/rotation/scale are maintained.
         void setParentObject(SceneObject* newParent);
 
-        quint32 objectId() const;
+        RenderSystem::PublicRenderModelDefs::ObjectId objectId() const;
 
         HierarchyState& hierarchy();
         const HierarchyState& hierarchy() const;
@@ -94,7 +94,7 @@ namespace Model
         void updateGeometryColours(const QSharedPointer<RenderSystem::GeometrySection>& section) const;
 
         Scene* const m_pParentScene;
-        const quint32 m_iObjectId;
+        const RenderSystem::PublicRenderModelDefs::ObjectId m_iObjectId;
 
         HierarchyState* m_pHierarchy;
         mutable bool m_bNeedsRendererUpdate;
