@@ -46,7 +46,8 @@ SOURCES += \
     model/scene/mapscene.cpp \
     model/filedatamodels/base/basefiledatamodel.cpp \
     model/filedatamodels/map/mapfiledatamodel.cpp \
-    model/filedatamodels/filedatamodelfactory.cpp
+    model/filedatamodels/filedatamodelfactory.cpp \
+    model/preset-materials/presetmaterials.cpp
 
 HEADERS += \
     model_global.h \
@@ -84,7 +85,8 @@ HEADERS += \
     model/scene/mapscene.h \
     model/filedatamodels/base/basefiledatamodel.h \
     model/filedatamodels/map/mapfiledatamodel.h \
-    model/filedatamodels/filedatamodelfactory.h
+    model/filedatamodels/filedatamodelfactory.h \
+    model/preset-materials/presetmaterials.h
 
 unix {
     target.path = /usr/lib

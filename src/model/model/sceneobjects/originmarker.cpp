@@ -1,5 +1,7 @@
 #include "originmarker.h"
+
 #include "model/scene/scene.h"
+#include "model/preset-materials/presetmaterials.h"
 
 namespace Model
 {
@@ -29,14 +31,12 @@ namespace Model
     {
         using namespace RenderSystem;
 
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement preset materials!");
-//        GeometrySection* section = builder.createNewSection(
-//                    ResourceEnvironment::globalInstance()->materialStore()
-//                        ->presetMaterialId(MaterialStore::UnlitPerVertexColor3D),
-//                    builder.modelToWorldMatrix());
+        const RenderSystem::PublicStoreDefs::MaterialId materialId =
+                PresetMaterials::presetMaterialId(PresetMaterials::UnlitPerVertexColor3D);
 
-        QSharedPointer<GeometrySection> section = builder.createNewSection();
+        Q_ASSERT(materialId != PublicStoreDefs::INVALID_MATERIAL_ID);
 
+        QSharedPointer<GeometrySection> section = builder.createNewSection(materialId, builder.modelToWorldMatrix());
         section->setDrawMode(GL_LINES);
 
         section->addPosition(QVector3D(0,0,0));
@@ -66,7 +66,7 @@ namespace Model
         return false;
     }
 
-    bool OriginMarker::customVertexColours() const override
+    bool OriginMarker::customVertexColours() const
     {
         return true;
     }
