@@ -5,12 +5,10 @@
 #include "model/scene/sceneobject.h"
 #include <QHash>
 #include "sceneobjectinitparams.h"
-#include "model/scenerenderer/irenderpassclassifier.h"
 
 namespace Model
 {
-    class MODELSHARED_EXPORT Scene : public QObject,
-                                     public IRenderPassClassifier
+    class MODELSHARED_EXPORT Scene : public QObject
     {
         Q_OBJECT
     public:
@@ -39,8 +37,6 @@ namespace Model
         int sceneObjectCount() const;
 
         SceneObject* rootObject() const;
-
-        virtual int classify(quint32 objectId) const override;
 
     signals:
         void objectCreated(SceneObject*);

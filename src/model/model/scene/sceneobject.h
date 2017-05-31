@@ -91,7 +91,7 @@ namespace Model
         void handleSpatialConfigurationChange(SpatialConfigurationChange* event);
         HierarchyState* initHierarchyState(bool isScalable);
         void updateGeometryColours(RenderSystem::GeometryBuilder &builder) const;
-        void updateGeometryColours(RenderSystem::GeometrySection* section) const;
+        void updateGeometryColours(const QSharedPointer<RenderSystem::GeometrySection>& section) const;
 
         Scene* const m_pParentScene;
         const quint32 m_iObjectId;

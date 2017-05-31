@@ -2,11 +2,6 @@
 
 namespace
 {
-    inline bool attributeIndexValid(RenderSystem::GeometrySection::AttributeType attribute)
-    {
-        return attribute >= 0 && attribute < RenderSystem::GeometrySection::TOTAL_ATTRIBUTE_TYPES;
-    }
-
     QVector<QVector4D> dummyVector;
 }
 
@@ -18,7 +13,8 @@ namespace RenderSystem
           m_nMaterialId(PublicStoreDefs::INVALID_MATERIAL_ID),
           m_matModelToWorld(),
           m_nDrawMode(GL_TRIANGLES),
-          m_AttributeVectors()
+          m_AttributeVectors(),
+          m_Indices()
     {
     }
 
@@ -31,7 +27,8 @@ namespace RenderSystem
           m_nMaterialId(materialId),
           m_matModelToWorld(modelToWorldMatrix),
           m_nDrawMode(GL_TRIANGLES),
-          m_AttributeVectors()
+          m_AttributeVectors(),
+          m_Indices()
     {
     }
 
@@ -63,6 +60,18 @@ namespace RenderSystem
     void GeometrySection::setModelToWorldMatrix(const QMatrix4x4 &mat)
     {
         m_matModelToWorld = mat;
+    }
+
+    GLenum GeometrySection::drawMode() const
+    {
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement this in renderer!");
+        return m_nDrawMode;
+    }
+
+    void GeometrySection::setDrawMode(GLenum mode)
+    {
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement this in renderer!");
+        m_nDrawMode = mode;
     }
 
     void GeometrySection::addAttribute(AttributeType attribute, const QVector4D& vec)
@@ -136,6 +145,16 @@ namespace RenderSystem
         }
     }
 
+    void GeometrySection::clearAttribute(AttributeType attribute)
+    {
+        if ( !attributeIndexValid(attribute) )
+        {
+            return;
+        }
+
+        m_AttributeVectors[attribute].clear();
+    }
+
     bool GeometrySection::isEmpty() const
     {
         for ( int att = 0; att < TOTAL_ATTRIBUTE_TYPES; ++att )
@@ -157,5 +176,100 @@ namespace RenderSystem
         }
 
         return m_AttributeVectors[attribute];
+    }
+
+    const QVector<quint32>& GeometrySection::indicesVector() const
+    {
+        return m_Indices;
+    }
+
+    void GeometrySection::addIndex(quint32 index)
+    {
+        m_Indices.append(index);
+    }
+
+    void GeometrySection::addIndexPair(quint32 index0, quint32 index1)
+    {
+        m_Indices.resize(m_Indices.count() + 2);
+        m_Indices[m_Indices.count() - 2] = index0;
+        m_Indices[m_Indices.count() - 1] = index1;
+    }
+
+    void GeometrySection::addIndexTriangle(quint32 index0, quint32 index1, quint32 index2)
+    {
+        m_Indices.resize(m_Indices.count() + 3);
+        m_Indices[m_Indices.count() - 3] = index0;
+        m_Indices[m_Indices.count() - 2] = index1;
+        m_Indices[m_Indices.count() - 1] = index2;
+    }
+
+    bool GeometrySection::calculateIndices()
+    {
+        m_Indices.clear();
+
+        if ( !allNonZeroAttributeCountsEqual() )
+        {
+            return false;
+        }
+
+        switch ( m_nDrawMode )
+        {
+            case GL_TRIANGLES:
+            {
+                return calculateTriangleIndices();
+            }
+
+            case GL_LINES:
+            case GL_LINE_LOOP:
+            {
+                return calculateLineIndices();
+            }
+
+            default:
+            {
+                return false;
+            }
+        }
+    }
+
+    bool GeometrySection::calculateTriangleIndices()
+    {
+        const int positionCount = count(Position);
+        if ( positionCount < 3 )
+        {
+            return false;
+        }
+
+        // (positionCount - 2) triangles, with 3 indices per triangle.
+        m_Indices.resize((positionCount - 2) * 3);
+
+        int indexOffset = 0;
+        for ( quint32 index = 2; index < static_cast<quint32>(positionCount); ++index )
+        {
+            m_Indices[indexOffset] = 0;
+            m_Indices[indexOffset + 1] = index - 1;
+            m_Indices[indexOffset + 2] = index;
+
+            indexOffset += 3;
+        }
+
+        return true;
+    }
+
+    bool GeometrySection::calculateLineIndices()
+    {
+        const int positionCount = count(Position);
+        if ( positionCount < 2 )
+        {
+            return false;
+        }
+
+        m_Indices.resize(positionCount);
+        for ( quint32 index = 0; index < static_cast<quint32>(positionCount); ++index )
+        {
+            m_Indices[index] = index;
+        }
+
+        return true;
     }
 }

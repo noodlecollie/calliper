@@ -30,7 +30,7 @@ namespace Model
         m_bDrawFrame = false;
     }
 
-    void DebugCube::bakeGeometry(Renderer::GeometryBuilder &builder) const
+    void DebugCube::bakeGeometry(RenderSystem::GeometryBuilder &builder) const
     {
         builder.setMaterialId(1);
         GeometryFactory::cube(builder, m_flRadius, QColor::fromRgb(0xffffffff));

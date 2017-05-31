@@ -5,17 +5,12 @@
 
 #include <QOpenGLWindow>
 
-#include "model/global/resourceenvironment.h"
 #include "model/scene/mapscene.h"
 #include "model/camera/scenecamera.h"
-#include "model/scenerenderer/scenerenderer.h"
 #include "model/camera/cameracontroller.h"
 #include "model/controller-adapters/keymap.h"
 #include "model/controller-adapters/mouseeventmap.h"
 #include "model/filedatamodels/map/mapfiledatamodel.h"
-
-#include "renderer/framebuffers/openglframebuffer.h"
-#include "renderer/rendermodel/0-modellevel/rendermodel.h"
 
 #include "file-formats/vpk/vpkfilecollection.h"
 
@@ -37,9 +32,6 @@ namespace UserInterface
 
         Model::MapFileDataModel* mapDataModel();
         const Model::MapFileDataModel* mapDataModel() const;
-
-        Model::IRenderPassClassifier* renderPassClassifier();
-        const Model::IRenderPassClassifier* renderPassClassifier() const;
 
         const FileFormats::VPKFileCollection& vpkFileCollection() const;
 
@@ -75,14 +67,11 @@ namespace UserInterface
 
         Model::MapFileDataModel* m_pVmfData;
 
-        Renderer::RenderModel* m_pRenderer;
-
         Model::CameraController* m_pCameraController;
         Model::KeyMap* m_pKeyMap;
         Model::MouseEventMap* m_pMouseEventMap;
 
         FileFormats::VPKFileCollection m_VpkFiles;
-        QOpenGLFramebufferObject* m_pFrameBuffer;
     };
 }
 

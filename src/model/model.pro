@@ -46,8 +46,7 @@ SOURCES += \
     model/scene/mapscene.cpp \
     model/filedatamodels/base/basefiledatamodel.cpp \
     model/filedatamodels/map/mapfiledatamodel.cpp \
-    model/filedatamodels/filedatamodelfactory.cpp \
-    model/presetmaterials/unlitpervertexcolourpresetmaterial.cpp
+    model/filedatamodels/filedatamodelfactory.cpp
 
 HEADERS += \
     model_global.h \
@@ -85,8 +84,7 @@ HEADERS += \
     model/scene/mapscene.h \
     model/filedatamodels/base/basefiledatamodel.h \
     model/filedatamodels/map/mapfiledatamodel.h \
-    model/filedatamodels/filedatamodelfactory.h \
-    model/presetmaterials/unlitpervertexcolourpresetmaterial.h
+    model/filedatamodels/filedatamodelfactory.h
 
 unix {
     target.path = /usr/lib

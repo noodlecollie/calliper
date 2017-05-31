@@ -1,22 +1,26 @@
 #include "vtfloader.h"
-#include "file-formats/vpk/vpkindex.h"
-#include "VTFLib/src/VMTFile.h"
-#include "renderer/materials/rendermaterial.h"
-#include "VTFLib/src/VMTNode.h"
+
 #include <QtDebug>
-#include "calliperutil/general/generalutil.h"
 #include <QImageReader>
 #include <QBuffer>
 #include <QJsonValue>
 #include <QJsonObject>
 #include <QJsonArray>
-#include "file-formats/keyvalues/keyvaluesparser.h"
-#include "VTFLib/src/VTFFile.h"
 #include <QOpenGLPixelTransferOptions>
+
+#include "VTFLib/src/VTFFile.h"
 #include "VTFLib/src/VTFLib.h"
+#include "VTFLib/src/VMTFile.h"
+#include "VTFLib/src/VMTNode.h"
+
+#include "file-formats/vpk/vpkindex.h"
+#include "file-formats/keyvalues/keyvaluesparser.h"
+
+#include "calliperutil/general/generalutil.h"
 
 namespace ModelLoaders
 {
+#if 0
     namespace
     {
         inline bool noCaseCompare(const QString& a, const QString& b)
@@ -35,7 +39,7 @@ namespace ModelLoaders
             return matPath;
         }
 
-        bool setTextureFormat(Renderer::OpenGLTexturePointer& texture, VTFImageFormat format)
+        bool setTextureFormat(RenderSystem::OpenGLTexturePointer& texture, VTFImageFormat format)
         {
             switch (format)
             {
@@ -104,15 +108,14 @@ namespace ModelLoaders
             return true;
         }
     }
+#endif
 
-    VTFLoader::VTFLoader(Model::MaterialStore *materialStore, Model::TextureStore *textureStore)
-        : m_pMaterialStore(materialStore),
-          m_pTextureStore(textureStore)
+    VTFLoader::VTFLoader()
     {
-        Q_ASSERT_X(m_pMaterialStore, Q_FUNC_INFO, "Material store cannot be null!");
-        Q_ASSERT_X(m_pTextureStore, Q_FUNC_INFO, "Texture store cannot be null!");
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Fix this entire class");
     }
 
+#if 0
     void VTFLoader::loadMaterials(const FileFormats::VPKFileCollection &vpkFiles)
     {
         m_VmtFileSet = vpkFiles.filesContainingExtension("vmt");
@@ -236,10 +239,12 @@ namespace ModelLoaders
         return vpk->readFromCurrentArchive(record->item());
     }
 
-    void VTFLoader::populateMaterial(Renderer::RenderMaterialPointer &material, const QJsonDocument &vmt)
+    void VTFLoader::populateMaterial(const QSharedPointer<RenderSystem::RenderMaterial> &material, const QJsonDocument &vmt)
     {
         if ( !vmt.isObject() )
+        {
             return;
+        }
 
         QJsonObject root = vmt.object();
         QJsonObject::const_iterator rootKey = root.constBegin();
@@ -278,8 +283,9 @@ namespace ModelLoaders
                 m_ReferencedVtfs.insert(vtfPath, textureId);
             }
 
-            material->addTexture(Renderer::ShaderDefs::MainTexture, m_ReferencedVtfs.value(vtfPath, 0));
+            material->addTextureUnitMapping(RenderSystem::PublicTextureDefs::MainTexture, m_ReferencedVtfs.value(vtfPath, 0));
             return;
         }
     }
+#endif
 }

@@ -7,7 +7,7 @@
 #include "model/filedatamodels/base/basefiledatamodel.h"
 #include "model/scene/mapscene.h"
 
-#include "renderer/rendermodel/0-modellevel/rendermodel.h"
+#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
 
 namespace Model
 {
@@ -22,12 +22,12 @@ namespace Model
         MapScene* scene();
         const MapScene* scene() const;
 
-        Renderer::RenderModel* renderModel();
-        const Renderer::RenderModel* renderModel() const;
+        RenderSystem::PublicRenderModelDefs::RenderModelId renderModelId() const;
+        void setRenderModelId(RenderSystem::PublicRenderModelDefs::RenderModelId renderModelId);
 
     private:
         QScopedPointer<MapScene> m_pScene;
-        Renderer::RenderModel m_RenderModel;
+        RenderSystem::PublicRenderModelDefs::RenderModelId m_nRenderModelId;
     };
 }
 

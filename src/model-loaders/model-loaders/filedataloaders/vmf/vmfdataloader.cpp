@@ -7,7 +7,6 @@
 #include "model/factories/genericbrushfactory.h"
 #include <QJsonObject>
 #include "calliperutil/general/generalutil.h"
-#include "model/global/resourceenvironment.h"
 #include <QTextStream>
 #include "file-formats/keyvalues/keyvaluesparser.h"
 #include <QFile>
@@ -260,13 +259,15 @@ namespace ModelLoaders
             return Q_NULLPTR;
         }
 
-        MaterialStore* materialStore = ResourceEnvironment::globalInstance()->materialStore();
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Hook material store in here!");
+//        MaterialStore* materialStore = ResourceEnvironment::globalInstance()->materialStore();
 
-        quint32 materialId = materialStore->getMaterialId(materialPath);
-        TexturedWinding* winding = new TexturedWinding(Plane3D(v0, v2, v1), materialId);
-        Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
+//        quint32 materialId = materialStore->getMaterialId(materialPath);
+//        TexturedWinding* winding = new TexturedWinding(Plane3D(v0, v2, v1), materialId);
+//        Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
 
-        return winding;
+//        return winding;
+        return Q_NULLPTR;
     }
 
     void VmfDataLoader::addError(int brushId, const QString &error)

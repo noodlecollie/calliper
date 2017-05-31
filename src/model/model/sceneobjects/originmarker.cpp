@@ -1,6 +1,5 @@
 #include "originmarker.h"
 #include "model/scene/scene.h"
-#include "model/global/resourceenvironment.h"
 
 namespace Model
 {
@@ -26,14 +25,18 @@ namespace Model
         updateScalableState(scalable());
     }
 
-    void OriginMarker::bakeGeometry(Renderer::GeometryBuilder &builder) const
+    void OriginMarker::bakeGeometry(RenderSystem::GeometryBuilder &builder) const
     {
-        using namespace Renderer;
+        using namespace RenderSystem;
 
-        GeometrySection* section = builder.createNewSection(
-                    ResourceEnvironment::globalInstance()->materialStore()
-                        ->presetMaterialId(MaterialStore::UnlitPerVertexColor3D),
-                    builder.modelToWorldMatrix());
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement preset materials!");
+//        GeometrySection* section = builder.createNewSection(
+//                    ResourceEnvironment::globalInstance()->materialStore()
+//                        ->presetMaterialId(MaterialStore::UnlitPerVertexColor3D),
+//                    builder.modelToWorldMatrix());
+
+        QSharedPointer<GeometrySection> section = builder.createNewSection();
+
         section->setDrawMode(GL_LINES);
 
         section->addPosition(QVector3D(0,0,0));

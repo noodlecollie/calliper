@@ -1,13 +1,13 @@
 #include "mapfiledatamodel.h"
-#include "model/global/resourceenvironment.h"
 
 namespace Model
 {
     MapFileDataModel::MapFileDataModel()
         : BaseFileDataModel(),
-          m_pScene(new MapScene())
+          m_pScene(new MapScene()),
+          m_nRenderModelId(RenderSystem::PublicRenderModelDefs::INVALID_RENDER_MODEL_ID)
     {
-        m_RenderModel.setRenderFunctors(ResourceEnvironment::globalInstance()->renderFunctors());
+
     }
 
     MapFileDataModel::~MapFileDataModel()
@@ -30,13 +30,13 @@ namespace Model
         return m_pScene.data();
     }
 
-    Renderer::RenderModel* MapFileDataModel::renderModel()
+    RenderSystem::PublicRenderModelDefs::RenderModelId MapFileDataModel::renderModelId() const
     {
-        return &m_RenderModel;
+        return m_nRenderModelId;
     }
 
-    const Renderer::RenderModel* MapFileDataModel::renderModel() const
+    void MapFileDataModel::setRenderModelId(RenderSystem::PublicRenderModelDefs::RenderModelId renderModelId)
     {
-        return &m_RenderModel;
+        m_nRenderModelId = renderModelId;
     }
 }

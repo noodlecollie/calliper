@@ -70,31 +70,7 @@ GeometryDataContainer::GeometryDataPointer GeometryDataContainer::sectionToGeome
     data->normalsRef() = section->attributeVector(RenderSystem::GeometrySection::Normal);
     data->colorsRef() = section->attributeVector(RenderSystem::GeometrySection::Color);
     data->textureCoordinatesRef() = section->attributeVector(RenderSystem::GeometrySection::TextureCoordinate);
+    data->indicesRef() = section->indicesVector();
 
-    generateIndices(data);
     return data;
-}
-
-void GeometryDataContainer::generateIndices(const GeometryDataPointer &data)
-{
-    const quint32 positionCount = data->positions().count();
-    if ( positionCount < 3 )
-    {
-        return;
-    }
-
-    QVector<quint32>& indices = data->indicesRef();
-
-    // (positionCount - 2) triangles, with 3 indices per triangle.
-    indices.resize((positionCount - 2) * 3);
-
-    int indexOffset = 0;
-    for ( quint32 index = 2; index < positionCount; ++index )
-    {
-        indices[indexOffset] = 0;
-        indices[indexOffset + 1] = index - 1;
-        indices[indexOffset + 2] = index;
-
-        indexOffset += 3;
-    }
 }

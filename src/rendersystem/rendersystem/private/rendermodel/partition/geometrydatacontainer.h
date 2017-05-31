@@ -32,7 +32,6 @@ public:
 
 private:
     static GeometryDataPointer sectionToGeometryData(const QSharedPointer<RenderSystem::GeometrySection>& section);
-    static void generateIndices(const GeometryDataPointer& data);
 
     QMap<GeometryDataKey, GeometryDataPointer> m_Data;
 };

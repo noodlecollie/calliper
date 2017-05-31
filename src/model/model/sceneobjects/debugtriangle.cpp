@@ -21,12 +21,11 @@ namespace Model
 
     }
 
-    void DebugTriangle::bakeGeometry(Renderer::GeometryBuilder &builder) const
+    void DebugTriangle::bakeGeometry(RenderSystem::GeometryBuilder &builder) const
     {
-        using namespace Renderer;
+        using namespace RenderSystem;
 
-        GeometrySection* section =
-                builder.createNewSection();
+        QSharedPointer<GeometrySection> section = builder.createNewSection();
 
         section->addPosition(QVector3D(-1,-1,0));
         section->addPosition(QVector3D(1,-1,0));

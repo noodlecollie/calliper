@@ -2,30 +2,29 @@
 #define VTFLOADER_H
 
 #include "model-loaders_global.h"
-#include "file-formats/vpk/vpkfilecollection.h"
-#include "model/stores/materialstore.h"
-#include "model/stores/texturestore.h"
 #include <QSet>
 #include <QHash>
 #include <QString>
+
+#include "file-formats/vpk/vpkfilecollection.h"
+
+#include "rendersystem/interface-classes/rendermaterial/rendermaterial.h"
 
 namespace ModelLoaders
 {
     class MODELLOADERSSHARED_EXPORT VTFLoader
     {
     public:
-        VTFLoader(Model::MaterialStore* materialStore, Model::TextureStore* textureStore);
+        VTFLoader();
 
+#if 0
         void loadMaterials(const FileFormats::VPKFileCollection& vpkFiles);
 
     private:
         void findReferencedVtfs();
         void loadReferencedVtfs();
         QByteArray getData(const FileFormats::VPKFilePointer& vpk, const FileFormats::VPKIndexTreeRecordPointer& record);
-        void populateMaterial(Renderer::RenderMaterialPointer& material, const QJsonDocument& vmt);
-
-        Model::MaterialStore* m_pMaterialStore;
-        Model::TextureStore* m_pTextureStore;
+        void populateMaterial(const QSharedPointer<RenderSystem::RenderMaterial>& material, const QJsonDocument& vmt);
 
         QSet<FileFormats::VPKFilePointer> m_VmtFileSet;
         QSet<FileFormats::VPKFilePointer> m_VtfFileSet;
@@ -33,6 +32,7 @@ namespace ModelLoaders
 
         QList<FileFormats::VPKIndexTreeRecordPointer> m_CurrentRecordSet;
         quint16 m_iCurrentArchiveIndex;
+#endif
     };
 }
 

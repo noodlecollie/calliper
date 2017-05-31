@@ -1,7 +1,6 @@
 #include "genericbrushface.h"
 #include "genericbrush.h"
 #include "model/scene/scene.h"
-#include "model/global/resourceenvironment.h"
 
 namespace Model
 {
@@ -80,17 +79,17 @@ namespace Model
         return parentBrush()->brushVertexList(m_BrushVertexIndices);
     }
 
-    void GenericBrushFace::buildFaceGeometry(Renderer::GeometryBuilder &builder) const
+    void GenericBrushFace::buildFaceGeometry(RenderSystem::GeometryBuilder &builder) const
     {
-        using namespace Renderer;
+        using namespace RenderSystem;
 
-        GeometrySection* section = builder.createNewSection(
+        QSharedPointer<GeometrySection> section = builder.createNewSection(
                     texturePlane()->materialId(),
                     builder.modelToWorldMatrix());
 
         QVector<QVector3D> vertices = referencedBrushVertexList();
 
-        section->addPositions(vertices);
+        section->addAttributeVector<QVector3D>(GeometrySection::Position, vertices);
 
         for ( int i = 2; i < vertices.count(); ++i )
         {
@@ -103,16 +102,17 @@ namespace Model
             section->addNormal(nrm);
         }
 
-        TextureStore* texStore = ResourceEnvironment::globalInstance()->textureStore();
-        MaterialStore* matStore = ResourceEnvironment::globalInstance()->materialStore();
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement texture co-ordinates");
+//        TextureStore* texStore = ResourceEnvironment::globalInstance()->textureStore();
+//        MaterialStore* matStore = ResourceEnvironment::globalInstance()->materialStore();
 
-        RenderMaterialPointer mat = (*matStore)(m_pTexturePlane->materialId());
-        OpenGLTexturePointer tex = (*texStore)(mat->texture(ShaderDefs::MainTexture));
+//        RenderMaterialPointer mat = (*matStore)(m_pTexturePlane->materialId());
+//        OpenGLTexturePointer tex = (*texStore)(mat->texture(ShaderDefs::MainTexture));
 
-        for ( int i = 0; i < vertices.count(); i++ )
-        {
-            section->addTextureCoordinate(m_pTexturePlane->textureCoordinate(vertices.at(i), tex->size(), nrm));
-        }
+//        for ( int i = 0; i < vertices.count(); i++ )
+//        {
+//            section->addTextureCoordinate(m_pTexturePlane->textureCoordinate(vertices.at(i), tex->size(), nrm));
+//        }
     }
 
     QVector3D GenericBrushFace::normal() const

@@ -1,13 +1,10 @@
 #include "mapviewwindow.h"
-#include "model/shaders/unlitpervertexcolorshader.h"
-#include "renderer/opengl/openglerrors.h"
-#include "renderer/opengl/openglhelpers.h"
 #include <QMouseEvent>
+#include <QMessageBox>
 #include <QFile>
 #include "file-formats/keyvalues/keyvaluesparser.h"
 #include <QtDebug>
 #include "model/genericbrush/genericbrush.h"
-#include "model/shaders/simplelitshader.h"
 #include <QtGlobal>
 #include <QMap>
 #include "file-formats/vpk/vpkindextreerecord.h"
@@ -15,7 +12,7 @@
 #include "model-loaders/filedataloaders/vmf/vmfdataloader.h"
 
 using namespace Model;
-using namespace Renderer;
+using namespace RenderSystem;
 
 namespace UserInterface
 {
@@ -25,11 +22,9 @@ namespace UserInterface
         m_strVpkPath(),
         m_bInitialised(false),
         m_pVmfData(Q_NULLPTR),
-        m_pRenderer(Q_NULLPTR),
         m_pCameraController(Q_NULLPTR),
         m_pKeyMap(Q_NULLPTR),
-        m_pMouseEventMap(Q_NULLPTR),
-        m_pFrameBuffer(Q_NULLPTR)
+        m_pMouseEventMap(Q_NULLPTR)
     {
     }
 
@@ -49,34 +44,19 @@ namespace UserInterface
         delete m_pCameraController;
         m_pCameraController = Q_NULLPTR;
 
-        delete m_pRenderer;
-        m_pRenderer = Q_NULLPTR;
-
         delete m_pVmfData;
         m_pVmfData = Q_NULLPTR;
-
-        Renderer::MainRenderContext::globalInstance()->makeCurrent();
-        delete m_pFrameBuffer;
-        m_pFrameBuffer = Q_NULLPTR;
-        Renderer::MainRenderContext::globalInstance()->doneCurrent();
-
-        ResourceEnvironment::globalShutdown();
     }
 
     void MapViewWindow::initializeGL()
     {
         initLocalOpenGlSettings();
 
-        ResourceEnvironment::globalInitialise();
-
         initShaders();
         initTextures();
         initMaterials();
 
         m_pVmfData = new MapFileDataModel();
-
-        m_pRenderer = new Renderer::RenderModel();
-        initRenderer();
 
         m_pCameraController = new CameraController(this);
         initCameraController();
@@ -86,11 +66,6 @@ namespace UserInterface
 
         m_pMouseEventMap = new MouseEventMap(this);
         initMouseEventMap();
-
-        doneCurrent();
-        Renderer::MainRenderContext::globalInstance()->makeCurrent();
-        m_pFrameBuffer = new QOpenGLFramebufferObject(size());
-        Renderer::MainRenderContext::globalInstance()->doneCurrent();
 
         m_bInitialised = true;
         emit initialised();
@@ -102,18 +77,6 @@ namespace UserInterface
         {
             return;
         }
-
-        SceneRenderer sceneRenderer(m_pVmfData->scene(), m_pRenderer, m_pFrameBuffer);
-        sceneRenderer.setShaderPalette(ResourceEnvironment::globalInstance()->shaderPaletteStore()
-                                       ->shaderPalette(ShaderPaletteStore::SimpleLitTexturedRenderMode));
-        sceneRenderer.render(m_pVmfData->scene()->defaultCamera());
-
-        makeCurrent();
-
-        GL_CURRENT_F;
-        GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
-        // TODO: Copy from frame buffer
     }
 
     void MapViewWindow::resizeGL(int w, int h)
@@ -122,18 +85,6 @@ namespace UserInterface
         {
             return;
         }
-
-        SceneCamera* camera = m_pVmfData->scene()->defaultCamera();
-
-        CameraLens lens = camera->lens();
-        lens.setAspectRatio(static_cast<float>(w)/static_cast<float>(h));
-        camera->setLens(lens);
-
-        doneCurrent();
-        Renderer::MainRenderContext::globalInstance()->makeCurrent();
-        delete m_pFrameBuffer;
-        m_pFrameBuffer = new QOpenGLFramebufferObject(size());
-        Renderer::MainRenderContext::globalInstance()->doneCurrent();
     }
 
     void MapViewWindow::initShaders()
@@ -154,9 +105,6 @@ namespace UserInterface
 
     void MapViewWindow::initRenderer()
     {
-        m_pRenderer->setShaderFunctor(ResourceEnvironment::globalInstance()->shaderStore());
-        m_pRenderer->setTextureFunctor(ResourceEnvironment::globalInstance()->textureStore());
-        m_pRenderer->setMaterialFunctor(ResourceEnvironment::globalInstance()->materialStore());
     }
 
     void MapViewWindow::initScene()

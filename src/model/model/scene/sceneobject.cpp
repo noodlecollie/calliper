@@ -114,7 +114,7 @@ namespace Model
         m_bNeedsRendererUpdate = true;
     }
 
-    void SceneObject::rendererUpdate(Renderer::GeometryBuilder &builder) const
+    void SceneObject::rendererUpdate(RenderSystem::GeometryBuilder &builder) const
     {
         // Call virtual function so that subclasses build their own geometry.
         bakeGeometry(builder);
@@ -127,7 +127,7 @@ namespace Model
         m_bNeedsRendererUpdate = false;
     }
 
-    void SceneObject::bakeGeometry(Renderer::GeometryBuilder &builder) const
+    void SceneObject::bakeGeometry(RenderSystem::GeometryBuilder &builder) const
     {
         Q_UNUSED(builder);
     }
@@ -186,9 +186,9 @@ namespace Model
         return false;
     }
 
-    void SceneObject::updateGeometryColours(Renderer::GeometryBuilder &builder) const
+    void SceneObject::updateGeometryColours(RenderSystem::GeometryBuilder &builder) const
     {
-        using namespace Renderer;
+        using namespace RenderSystem;
 
         for ( int i = 0; i < builder.sectionCount(); i++ )
         {
@@ -196,15 +196,13 @@ namespace Model
         }
     }
 
-    void SceneObject::updateGeometryColours(Renderer::GeometrySection *section) const
+    void SceneObject::updateGeometryColours(const QSharedPointer<RenderSystem::GeometrySection>& section) const
     {
-        using namespace Renderer;
+        using namespace RenderSystem;
 
-        section->clearAttribute(GeometrySection::ColorAttribute);
-        if ( section->vertexFormat().colorComponents() < 1 )
-            return;
+        section->clearAttribute(GeometrySection::Color);
 
-        while ( section->attributeCount(GeometrySection::ColorAttribute) < section->attributeCount(GeometrySection::PositionAttribute) )
+        while ( section->count(GeometrySection::Color) < section->count(GeometrySection::Position) )
         {
             section->addColor(m_colColor);
         }

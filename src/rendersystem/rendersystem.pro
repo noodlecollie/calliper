@@ -62,7 +62,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermode/barebonesrendermode.cpp \
     rendersystem/private/stores/rendermodestore/rendermodestore.cpp \
     rendersystem/private/rendermodel/rendermodelcontext.cpp \
-    rendersystem/private/rendermodel/partition/renderutils.cpp
+    rendersystem/private/rendermodel/partition/renderutils.cpp \
+    rendersystem/interface-classes/rendermodel/publicrendermodeldefs.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \

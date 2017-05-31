@@ -11,6 +11,9 @@ namespace RenderSystem
     {
         typedef quint32 ObjectId;
         typedef quint8 SectionId;
+        typedef quint16 RenderModelId;
+
+        extern const RenderModelId INVALID_RENDER_MODEL_ID;
     }
 }
 

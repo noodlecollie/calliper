@@ -97,20 +97,20 @@ namespace Model
             section->addColor(color);
             section->addColor(color);
 
-            section->addIndexLine(0,1);
-            section->addIndexLine(1,3);
-            section->addIndexLine(3,2);
-            section->addIndexLine(2,0);
+            section->addIndexPair(0,1);
+            section->addIndexPair(1,3);
+            section->addIndexPair(3,2);
+            section->addIndexPair(2,0);
 
-            section->addIndexLine(4,5);
-            section->addIndexLine(5,7);
-            section->addIndexLine(7,6);
-            section->addIndexLine(6,4);
+            section->addIndexPair(4,5);
+            section->addIndexPair(5,7);
+            section->addIndexPair(7,6);
+            section->addIndexPair(6,4);
 
-            section->addIndexLine(0,4);
-            section->addIndexLine(1,5);
-            section->addIndexLine(2,6);
-            section->addIndexLine(3,7);
+            section->addIndexPair(0,4);
+            section->addIndexPair(1,5);
+            section->addIndexPair(2,6);
+            section->addIndexPair(3,7);
         }
     }
 }
