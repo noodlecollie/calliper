@@ -15,7 +15,7 @@ uint qHash(const GeometryDataKey& key, uint seed)
 {
     using namespace RenderSystem::RenderModelDefs;
 
-    const quint32 dataSize = sizeof(ObjectId) + sizeof(SectionId) + sizeof(GLenum);
+    const quint32 dataSize = sizeof(ObjectId) + sizeof(SectionId) + sizeof(RenderSystem::GeometrySection::DrawMode);
     char arData[dataSize];
     char* data = arData;
 
@@ -26,7 +26,7 @@ uint qHash(const GeometryDataKey& key, uint seed)
     return qHashBits(arData, dataSize, seed);
 }
 
-GeometryDataKey::GeometryDataKey(GLenum mode,
+GeometryDataKey::GeometryDataKey(RenderSystem::GeometrySection::DrawMode mode,
                                  float width,
                                  RenderSystem::RenderModelDefs::ObjectId object,
                                  RenderSystem::RenderModelDefs::SectionId section)

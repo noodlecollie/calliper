@@ -12,7 +12,7 @@ namespace RenderSystem
           m_nObjectId(0),
           m_nMaterialId(MaterialDefs::INVALID_MATERIAL_ID),
           m_matModelToWorld(),
-          m_nDrawMode(GL_TRIANGLES),
+          m_nDrawMode(DrawTriangles),
           m_flLineWidth(1.0f),
           m_AttributeVectors(),
           m_Indices()
@@ -27,7 +27,7 @@ namespace RenderSystem
           m_nObjectId(objectId),
           m_nMaterialId(materialId),
           m_matModelToWorld(modelToWorldMatrix),
-          m_nDrawMode(GL_TRIANGLES),
+          m_nDrawMode(DrawTriangles),
           m_AttributeVectors(),
           m_Indices()
     {
@@ -63,15 +63,13 @@ namespace RenderSystem
         m_matModelToWorld = mat;
     }
 
-    GLenum GeometrySection::drawMode() const
+    GeometrySection::DrawMode GeometrySection::drawMode() const
     {
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement this in renderer!");
         return m_nDrawMode;
     }
 
-    void GeometrySection::setDrawMode(GLenum mode)
+    void GeometrySection::setDrawMode(DrawMode mode)
     {
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Implement this in renderer!");
         m_nDrawMode = mode;
     }
 
@@ -230,18 +228,18 @@ namespace RenderSystem
 
         switch ( m_nDrawMode )
         {
-            case GL_TRIANGLES:
+            case DrawTriangles:
             {
                 return calculateTriangleIndices();
             }
 
-            case GL_LINES:
-            case GL_LINE_LOOP:
+            case DrawLines:
+            case DrawLineStrip:
             {
                 return calculateLinearIndices(2);
             }
 
-            case GL_TRIANGLE_FAN:
+            case DrawTriangleFan:
             {
                 return calculateLinearIndices(3);
             }

@@ -21,7 +21,7 @@ GeometryData::GeometryData(quint32 objectId, quint8 sectionId)
       m_nObjectId(objectId),
       m_nSectionId(sectionId),
       m_matModelToWorld(),
-      m_nDrawMode(GL_TRIANGLES),
+      m_nDrawMode(RenderSystem::GeometrySection::DrawTriangles),
       m_flLineWidth(1.0f),
       m_Positions(),
       m_Normals(),
@@ -84,12 +84,12 @@ void GeometryData::setModelToWorldMatrix(const QMatrix4x4 &matrix)
     setMatrixDirty(true);
 }
 
-GLenum GeometryData::drawMode() const
+RenderSystem::GeometrySection::DrawMode GeometryData::drawMode() const
 {
     return m_nDrawMode;
 }
 
-void GeometryData::setDrawMode(GLenum mode)
+void GeometryData::setDrawMode(RenderSystem::GeometrySection::DrawMode mode)
 {
     m_nDrawMode = mode;
 }

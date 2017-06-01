@@ -77,7 +77,7 @@ namespace Model
             using namespace RenderSystem;
 
             QSharedPointer<GeometrySection> section = builder.createNewSection();
-            section->setDrawMode(GL_LINES);
+            section->setDrawMode(GeometrySection::DrawLines);
 
             section->addPosition(QVector3D(-radius, -radius, -radius));
             section->addPosition(QVector3D(radius,  -radius, -radius));

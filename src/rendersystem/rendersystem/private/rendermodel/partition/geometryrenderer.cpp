@@ -24,7 +24,7 @@ GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
       m_OpenGLBuffers(openGLBuffers),
       m_nItemsPerBatch(0),
       m_pCurrentShader(Q_NULLPTR),
-      m_nDrawMode(GL_TRIANGLES),
+      m_nDrawMode(RenderSystem::GeometrySection::DrawMode::DrawTriangles),
       m_flLineWidth(1.0f)
 {
     m_pCurrentShader = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
@@ -37,7 +37,7 @@ int GeometryRenderer::getLastItemForNextDraw(int firstItem) const
         return firstItem;
     }
 
-    const GLenum firstItemDrawMode = m_OffsetTable[firstItem].drawMode;
+    const RenderSystem::GeometrySection::DrawMode firstItemDrawMode = m_OffsetTable[firstItem].drawMode;
     const float firstItemLineWidth = m_OffsetTable[firstItem].lineWidth;
 
     for ( int lastItem = firstItem + 1;

@@ -7,6 +7,7 @@
 #include <QVector4D>
 
 #include "rendersystem/private/shaders/common/vertexformat.h"
+#include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 class GeometryData
 {
@@ -28,8 +29,8 @@ public:
     const QMatrix4x4& modelToWorldMatrix() const;
     void setModelToWorldMatrix(const QMatrix4x4& matrix);
 
-    GLenum drawMode() const;
-    void setDrawMode(GLenum mode);
+    RenderSystem::GeometrySection::DrawMode drawMode() const;
+    void setDrawMode(RenderSystem::GeometrySection::DrawMode mode);
 
     float lineWidth() const;
     void setLineWidth(float width);
@@ -67,7 +68,7 @@ private:
     quint32 m_nObjectId;
     quint8 m_nSectionId;
     QMatrix4x4 m_matModelToWorld;
-    GLenum m_nDrawMode;
+    RenderSystem::GeometrySection::DrawMode m_nDrawMode;
     float m_flLineWidth;
 
     QVector<QVector4D> m_Positions;

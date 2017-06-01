@@ -5,15 +5,16 @@
 #include <QOpenGLFunctions>
 
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
+#include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 struct GeometryDataKey
 {
-    GLenum drawMode;
+    RenderSystem::GeometrySection::DrawMode drawMode;
     float lineWidth;
     RenderSystem::RenderModelDefs::ObjectId objectId;
     RenderSystem::RenderModelDefs::SectionId sectionId;
 
-    GeometryDataKey(GLenum mode,
+    GeometryDataKey(RenderSystem::GeometrySection::DrawMode mode,
                     float width,
                     RenderSystem::RenderModelDefs::ObjectId object,
                     RenderSystem::RenderModelDefs::SectionId section);

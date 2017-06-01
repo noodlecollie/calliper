@@ -3,7 +3,7 @@
 
 #include "rendersystem_global.h"
 
-#include <QOpenGLContext>
+#include <QOpenGLFunctions>
 #include <QVector>
 #include <QVector2D>
 #include <QVector4D>
@@ -28,6 +28,14 @@ namespace RenderSystem
             TOTAL_ATTRIBUTE_TYPES
         };
 
+        enum DrawMode : GLenum
+        {
+            DrawTriangles = GL_TRIANGLES,
+            DrawTriangleFan = GL_TRIANGLE_FAN,
+            DrawLines = GL_LINES,
+            DrawLineStrip = GL_LINE_STRIP,
+        };
+
         GeometrySection();
         GeometrySection(quint8 sectionId,
                         RenderModelDefs::ObjectId objectId,
@@ -40,8 +48,8 @@ namespace RenderSystem
         MaterialDefs::MaterialId materialId() const;
         void setMaterialId(MaterialDefs::MaterialId id);
 
-        GLenum drawMode() const;
-        void setDrawMode(GLenum mode);
+        DrawMode drawMode() const;
+        void setDrawMode(DrawMode mode);
 
         float lineWidth() const;
         void setLineWidth(float width);
@@ -92,7 +100,7 @@ namespace RenderSystem
         RenderModelDefs::ObjectId m_nObjectId;
         MaterialDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
-        GLenum m_nDrawMode;
+        DrawMode m_nDrawMode;
         float m_flLineWidth;
         QVector<QVector4D> m_AttributeVectors[TOTAL_ATTRIBUTE_TYPES];
         QVector<quint32> m_Indices;

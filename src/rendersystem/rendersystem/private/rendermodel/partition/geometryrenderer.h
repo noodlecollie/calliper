@@ -9,6 +9,7 @@
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
+#include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 class OpenGLShaderProgram;
 
@@ -57,7 +58,7 @@ private:
 
     int m_nItemsPerBatch;
     OpenGLShaderProgram* m_pCurrentShader;
-    GLenum m_nDrawMode;
+    RenderSystem::GeometrySection::DrawMode m_nDrawMode;
     float m_flLineWidth;
 
 };

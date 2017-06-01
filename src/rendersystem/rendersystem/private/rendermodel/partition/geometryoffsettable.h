@@ -4,6 +4,8 @@
 #include <QVector>
 #include <QOpenGLFunctions>
 
+#include "rendersystem/interface-classes/geometry/geometrysection.h"
+
 class GeometryOffsetTable
 {
 public:
@@ -13,12 +15,12 @@ public:
         quint32 vertexCountFloats;
         quint32 indexOffsetInts;
         quint32 indexCountInts;
-        GLenum drawMode;
+        RenderSystem::GeometrySection::DrawMode drawMode;
         float lineWidth;
 
         ObjectOffsets(quint32 vOffset, quint32 vCount,
                       quint32 iOffset, quint32 iCount,
-                      GLenum dMode = GL_TRIANGLES,
+                      RenderSystem::GeometrySection::DrawMode dMode = RenderSystem::GeometrySection::DrawTriangles,
                       float width = 1.0f)
             : vertexOffsetFloats(vOffset),
               vertexCountFloats(vCount),

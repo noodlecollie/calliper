@@ -37,7 +37,7 @@ namespace Model
         Q_ASSERT(materialId != MaterialDefs::INVALID_MATERIAL_ID);
 
         QSharedPointer<GeometrySection> section = builder.createNewSection(materialId, builder.modelToWorldMatrix());
-        section->setDrawMode(GL_LINES);
+        section->setDrawMode(GeometrySection::DrawLines);
 
         section->addPosition(QVector3D(0,0,0));
         section->addPosition(QVector3D(64,0,0));
