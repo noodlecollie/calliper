@@ -3,8 +3,6 @@
 
 #include "rendersystem_global.h"
 
-#include <QObject>
-
 namespace RenderSystem
 {
     namespace PublicShaderDefs

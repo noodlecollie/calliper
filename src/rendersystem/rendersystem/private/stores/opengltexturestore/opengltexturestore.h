@@ -3,7 +3,7 @@
 
 #include <QHash>
 
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/texturedefs.h"
 #include "rendersystem/interface-classes/texture/namedopengltexture.h"
 #include "rendersystem/interfaces/itexturestore.h"
 
@@ -11,12 +11,12 @@
 #include "rendersystem/private/store-classes/globalinstancehelper.h"
 
 class OpenGLTextureStore : public PathManagingObjectStore<RenderSystem::NamedOpenGLTexture,
-                                                          RenderSystem::PublicStoreDefs::TextureId>,
+                                                          RenderSystem::TextureDefs::TextureId>,
                            public RenderSystem::ITextureStore,
                            public GlobalInstanceHelper<OpenGLTextureStore>
 {
 public:
-    typedef RenderSystem::PublicStoreDefs::TextureId TextureId;
+    typedef RenderSystem::TextureDefs::TextureId TextureId;
 
     OpenGLTextureStore();
     virtual ~OpenGLTextureStore();
@@ -28,11 +28,11 @@ public:
     virtual bool containsTexture(const QString& path) const override;
     virtual TextureId textureIdFromPath(const QString& path) const override;
     virtual QString texturePathFromId(const TextureId id) const override;
-    virtual QWeakPointer<RenderSystem::NamedOpenGLTexture> texture(const RenderSystem::PublicStoreDefs::TextureId textureId) const override;
+    virtual QWeakPointer<RenderSystem::NamedOpenGLTexture> texture(const RenderSystem::TextureDefs::TextureId textureId) const override;
     virtual QWeakPointer<RenderSystem::NamedOpenGLTexture> texture(const QString& path) const override;
 
 protected:
-    typedef PathManagingObjectStore<RenderSystem::NamedOpenGLTexture, RenderSystem::PublicStoreDefs::TextureId> BasePathManagingObjectStore;
+    typedef PathManagingObjectStore<RenderSystem::NamedOpenGLTexture, RenderSystem::TextureDefs::TextureId> BasePathManagingObjectStore;
 
     virtual void objectCreated(const ObjectId id) override;
     virtual void objectAboutToBeDestroyed(const ObjectId id) override;

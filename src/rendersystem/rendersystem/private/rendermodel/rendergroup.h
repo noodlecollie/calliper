@@ -11,14 +11,14 @@
 #include "rendersystem/private/rendermodel/partition/geometrydatakey.h"
 #include "rendersystem/private/rendermodel/partition/renderpartition.h"
 
-#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 class RenderGroup
 {
 public:
     RenderGroup(const RenderModelContext& context,
-                RenderSystem::PublicStoreDefs::MaterialId materialId);
+                RenderSystem::MaterialDefs::MaterialId materialId);
 
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
     void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
@@ -27,7 +27,7 @@ private:
     typedef QSharedPointer<RenderPartition> RenderPartitionPointer;
 
     const RenderModelContext& m_Context;
-    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
+    const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
     QVector<RenderPartitionPointer> m_Partitions;
     QHash<GeometryDataKey, RenderPartitionPointer> m_SectionToPartition;
 };

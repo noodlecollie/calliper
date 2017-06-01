@@ -3,7 +3,7 @@
 namespace RenderSystem
 {
     GeometryBuilder::GeometryBuilder(PublicRenderModelDefs::ObjectId objectId,
-                                     PublicStoreDefs::MaterialId materialId,
+                                     MaterialDefs::MaterialId materialId,
                                      const QMatrix4x4 &modelToWorldMatrix)
         : m_nObjectId(objectId),
           m_nMaterialId(materialId),
@@ -22,7 +22,7 @@ namespace RenderSystem
         return m_Sections.at(index);
     }
 
-    GeometryBuilder::GeometrySectionPointer GeometryBuilder::createNewSection(PublicStoreDefs::MaterialId materialId, const QMatrix4x4 &matrix)
+    GeometryBuilder::GeometrySectionPointer GeometryBuilder::createNewSection(MaterialDefs::MaterialId materialId, const QMatrix4x4 &matrix)
     {
         if ( m_Sections.isEmpty() || !latestSection()->isEmpty() )
         {
@@ -62,12 +62,12 @@ namespace RenderSystem
         m_matModelToWorld = matrix;
     }
 
-    PublicStoreDefs::MaterialId GeometryBuilder::materialId() const
+    MaterialDefs::MaterialId GeometryBuilder::materialId() const
     {
         return m_nMaterialId;
     }
 
-    void GeometryBuilder::setMaterialId(PublicStoreDefs::MaterialId id)
+    void GeometryBuilder::setMaterialId(MaterialDefs::MaterialId id)
     {
         m_nMaterialId = id;
     }
@@ -77,9 +77,9 @@ namespace RenderSystem
         return m_nObjectId;
     }
 
-    QSet<PublicStoreDefs::MaterialId> GeometryBuilder::referencedMaterials() const
+    QSet<MaterialDefs::MaterialId> GeometryBuilder::referencedMaterials() const
     {
-        QSet<PublicStoreDefs::MaterialId> materials;
+        QSet<MaterialDefs::MaterialId> materials;
 
         for ( int i = 0; i < sectionCount(); ++i )
         {

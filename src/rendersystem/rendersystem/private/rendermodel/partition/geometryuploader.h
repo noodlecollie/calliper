@@ -18,7 +18,7 @@ class GeometryUploader
 {
 public:
     GeometryUploader(const RenderModelContext& context,
-                     RenderSystem::PublicStoreDefs::MaterialId materialId,
+                     RenderSystem::MaterialDefs::MaterialId materialId,
                      GeometryDataContainer& data,
                      GeometryOffsetTable& offsetTable,
                      OpenGLBufferCollection& buffers);
@@ -64,7 +64,7 @@ private:
     void releaseIndexBuffer();
 
     const RenderModelContext& m_Context;
-    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
+    const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
     GeometryDataContainer& m_GeometryDataContainer;
     GeometryOffsetTable& m_OffsetTable;
     OpenGLBufferCollection& m_OpenGLBuffers;

@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "rendersystem/interface-classes/shader/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/publicshaderdefs.h"
 
 #include "vertexformat.h"
 

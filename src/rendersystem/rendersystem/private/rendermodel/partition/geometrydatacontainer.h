@@ -7,7 +7,6 @@
 #include "geometrydata.h"
 #include "geometrydatakey.h"
 
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 class GeometryDataContainer

@@ -7,8 +7,8 @@
 #include <QSharedPointer>
 #include <QSet>
 
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
-#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
+#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
 
 #include "geometrysection.h"
 
@@ -19,10 +19,10 @@ namespace RenderSystem
     public:
         typedef QSharedPointer<GeometrySection> GeometrySectionPointer;
 
-        GeometryBuilder(PublicRenderModelDefs::ObjectId objectId, PublicStoreDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
+        GeometryBuilder(PublicRenderModelDefs::ObjectId objectId, MaterialDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
 
         GeometrySectionPointer section(int index) const;
-        GeometrySectionPointer createNewSection(PublicStoreDefs::MaterialId materialId, const QMatrix4x4 &matrix);
+        GeometrySectionPointer createNewSection(MaterialDefs::MaterialId materialId, const QMatrix4x4 &matrix);
         GeometrySectionPointer createNewSection();
         GeometrySectionPointer latestSection();
         const QVector<GeometrySectionPointer>& sections() const;
@@ -31,16 +31,16 @@ namespace RenderSystem
         QMatrix4x4 modelToWorldMatrix() const;
         void setModelToWorldMatrix(const QMatrix4x4 &matrix);
 
-        PublicStoreDefs::MaterialId materialId() const;
-        void setMaterialId(PublicStoreDefs::MaterialId id);
+        MaterialDefs::MaterialId materialId() const;
+        void setMaterialId(MaterialDefs::MaterialId id);
 
         PublicRenderModelDefs::ObjectId objectId() const;
 
-        QSet<PublicStoreDefs::MaterialId> referencedMaterials() const;
+        QSet<MaterialDefs::MaterialId> referencedMaterials() const;
 
     private:
         PublicRenderModelDefs::ObjectId m_nObjectId;
-        PublicStoreDefs::MaterialId m_nMaterialId;
+        MaterialDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
         QVector<GeometrySectionPointer> m_Sections;
     };

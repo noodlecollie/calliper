@@ -4,13 +4,12 @@
 #include <QSharedPointer>
 
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
-#include "rendersystem/interface-classes/shader/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 
 namespace RenderUtils
 {
     OpenGLShaderProgram* shaderFromMaterial(RenderSystem::PublicShaderDefs::RenderMode renderMode,
-                                            RenderSystem::PublicStoreDefs::MaterialId materialId);
+                                            RenderSystem::MaterialDefs::MaterialId materialId);
 }
 
 #endif // RENDERUTILS_H

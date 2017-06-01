@@ -1,7 +1,7 @@
 #ifndef BASERENDERMODE_H
 #define BASERENDERMODE_H
 
-#include "rendersystem/interface-classes/shader/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/publicshaderdefs.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 class BaseRenderMode

@@ -8,14 +8,14 @@
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 
 class GeometryConsolidator
 {
 public:
 
     GeometryConsolidator(const RenderModelContext& context,
-                         RenderSystem::PublicStoreDefs::MaterialId materialId,
+                         RenderSystem::MaterialDefs::MaterialId materialId,
                          GeometryDataContainer& data,
                          GeometryOffsetTable& offsetTable);
 
@@ -41,7 +41,7 @@ private:
     void consolidateIndices(const QVector<quint32>& indices, quint32 offsetInInts, quint32 indexIncrement);
 
     const RenderModelContext& m_Context;
-    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
+    const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
 
     GeometryDataContainer& m_GeometryDataContainer;
     GeometryOffsetTable& m_OffsetTable;

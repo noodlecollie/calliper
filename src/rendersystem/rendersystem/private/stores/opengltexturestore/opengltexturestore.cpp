@@ -13,7 +13,7 @@ OpenGLTextureStore::~OpenGLTextureStore()
     m_ObjectHash.clear();
 }
 
-QWeakPointer<RenderSystem::NamedOpenGLTexture> OpenGLTextureStore::texture(const RenderSystem::PublicStoreDefs::TextureId textureId) const
+QWeakPointer<RenderSystem::NamedOpenGLTexture> OpenGLTextureStore::texture(const RenderSystem::TextureDefs::TextureId textureId) const
 {
     return object(textureId).toWeakRef();
 }

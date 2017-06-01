@@ -8,7 +8,7 @@
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 
 class OpenGLShaderProgram;
 
@@ -16,7 +16,7 @@ class GeometryRenderer
 {
 public:
     GeometryRenderer(const RenderModelContext& context,
-                     RenderSystem::PublicStoreDefs::MaterialId materialId,
+                     RenderSystem::MaterialDefs::MaterialId materialId,
                      GeometryOffsetTable& offsets,
                      OpenGLBufferCollection& openGLBuffers);
 
@@ -55,7 +55,7 @@ private:
     void releaseBuffers();
 
     const RenderModelContext& m_Context;
-    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
+    const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
     GeometryOffsetTable& m_OffsetTable;
     OpenGLBufferCollection& m_OpenGLBuffers;
 

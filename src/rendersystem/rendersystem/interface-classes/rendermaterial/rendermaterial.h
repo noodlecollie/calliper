@@ -6,7 +6,8 @@
 #include <QHash>
 
 #include "rendersystem/interface-classes/texture/publictexturedefs.h"
-#include "rendersystem/interface-classes/shader/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/texturedefs.h"
+#include "rendersystem/interface-classes/definitions/publicshaderdefs.h"
 
 namespace RenderSystem
 {

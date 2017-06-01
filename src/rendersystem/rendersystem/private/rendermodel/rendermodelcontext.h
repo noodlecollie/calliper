@@ -1,7 +1,7 @@
 #ifndef RENDERMODELCONTEXT_H
 #define RENDERMODELCONTEXT_H
 
-#include "rendersystem/interface-classes/shader/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/publicshaderdefs.h"
 
 class RenderModelContext
 {

@@ -7,12 +7,12 @@
 namespace RenderUtils
 {
     OpenGLShaderProgram* shaderFromMaterial(RenderSystem::PublicShaderDefs::RenderMode renderMode,
-                                            RenderSystem::PublicStoreDefs::MaterialId materialId)
+                                            RenderSystem::MaterialDefs::MaterialId materialId)
     {
         using namespace RenderSystem;
 
         if ( renderMode == RenderSystem::PublicShaderDefs::UnknownRenderMode ||
-             materialId == PublicStoreDefs::INVALID_MATERIAL_ID )
+             materialId == MaterialDefs::INVALID_MATERIAL_ID )
         {
             return Q_NULLPTR;
         }

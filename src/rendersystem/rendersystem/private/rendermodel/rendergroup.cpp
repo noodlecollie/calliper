@@ -9,7 +9,7 @@ namespace
 }
 
 RenderGroup::RenderGroup(const RenderModelContext &context,
-                         RenderSystem::PublicStoreDefs::MaterialId materialId)
+                         RenderSystem::MaterialDefs::MaterialId materialId)
     : m_Context(context),
       m_nMaterialId(materialId),
       m_Partitions(),

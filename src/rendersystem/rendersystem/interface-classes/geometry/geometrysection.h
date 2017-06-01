@@ -10,8 +10,8 @@
 #include <QColor>
 #include <QMatrix4x4>
 
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
-#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
+#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
 
 namespace RenderSystem
 {
@@ -31,16 +31,15 @@ namespace RenderSystem
         GeometrySection();
         GeometrySection(quint8 sectionId,
                         PublicRenderModelDefs::ObjectId objectId,
-                        PublicStoreDefs::MaterialId materialId,
+                        MaterialDefs::MaterialId materialId,
                         const QMatrix4x4& modelToWorldMatrix);
 
         quint8 sectionId() const;
         PublicRenderModelDefs::ObjectId objectId() const;
 
-        PublicStoreDefs::MaterialId materialId() const;
-        void setMaterialId(PublicStoreDefs::MaterialId id);
+        MaterialDefs::MaterialId materialId() const;
+        void setMaterialId(MaterialDefs::MaterialId id);
 
-        // TODO: Plumb this into the renderer.
         GLenum drawMode() const;
         void setDrawMode(GLenum mode);
 
@@ -88,7 +87,7 @@ namespace RenderSystem
 
         quint8 m_nSectionId;
         PublicRenderModelDefs::ObjectId m_nObjectId;
-        PublicStoreDefs::MaterialId m_nMaterialId;
+        MaterialDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
         GLenum m_nDrawMode;
         QVector<QVector4D> m_AttributeVectors[TOTAL_ATTRIBUTE_TYPES];

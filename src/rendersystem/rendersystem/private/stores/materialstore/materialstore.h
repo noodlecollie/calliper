@@ -3,7 +3,7 @@
 
 #include <QHash>
 
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 
 #include "rendersystem/private/store-classes/pathmanagingobjectstore.h"
 #include "rendersystem/private/store-classes/globalinstancehelper.h"
@@ -11,12 +11,12 @@
 #include "rendersystem/interface-classes/rendermaterial/rendermaterial.h"
 #include "rendersystem/interfaces/imaterialstore.h"
 
-class MaterialStore : public PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::PublicStoreDefs::MaterialId>,
+class MaterialStore : public PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::MaterialDefs::MaterialId>,
                       public RenderSystem::IMaterialStore,
                       public GlobalInstanceHelper<MaterialStore>
 {
 public:
-    typedef RenderSystem::PublicStoreDefs::MaterialId MaterialId;
+    typedef RenderSystem::MaterialDefs::MaterialId MaterialId;
 
     MaterialStore();
     virtual ~MaterialStore();
@@ -31,7 +31,7 @@ public:
     virtual QString materialPathFromId(const MaterialId id) const override;
 
 protected:
-    typedef PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::PublicStoreDefs::MaterialId> BasePathManagingObjectStore;
+    typedef PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::MaterialDefs::MaterialId> BasePathManagingObjectStore;
 
     virtual void objectCreated(const ObjectId id) override;
     virtual void objectAboutToBeDestroyed(const ObjectId id) override;

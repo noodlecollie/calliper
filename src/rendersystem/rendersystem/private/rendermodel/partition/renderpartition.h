@@ -18,7 +18,7 @@ class RenderPartition
 {
 public:
     RenderPartition(const RenderModelContext& context,
-                    RenderSystem::PublicStoreDefs::MaterialId materialId,
+                    RenderSystem::MaterialDefs::MaterialId materialId,
                     int maxItems);
 
     int maxItems() const;
@@ -33,7 +33,7 @@ public:
 
 private:
     const RenderModelContext& m_Context;
-    const RenderSystem::PublicStoreDefs::MaterialId m_nMaterialId;
+    const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
     const int m_nMaxItems;
 
     // Data

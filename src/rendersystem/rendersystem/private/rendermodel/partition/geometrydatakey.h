@@ -1,7 +1,9 @@
 #ifndef GEOMETRYDATAKEY_H
 #define GEOMETRYDATAKEY_H
 
-#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
+#include <QHash>
+
+#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
 
 struct GeometryDataKey
 {

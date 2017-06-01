@@ -1,7 +1,7 @@
 #include "rendermodel.h"
 #include "rendermodel-defs.h"
 
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 
 Q_LOGGING_CATEGORY(lcRenderModel, "Renderer.RenderModel")
 
@@ -27,7 +27,7 @@ void RenderModel::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
         return;
     }
 
-    RenderSystem::PublicStoreDefs::MaterialId key = section->materialId();
+    RenderSystem::MaterialDefs::MaterialId key = section->materialId();
     RenderGroupPointer renderGroup = m_RenderGroups.value(key, RenderGroupPointer());
 
     if ( !renderGroup )

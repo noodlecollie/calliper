@@ -7,7 +7,7 @@
 #include "rendersystem/private/opengl/openglerrors.h"
 
 GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
-                                   RenderSystem::PublicStoreDefs::MaterialId materialId,
+                                   RenderSystem::MaterialDefs::MaterialId materialId,
                                    GeometryOffsetTable &offsets,
                                    OpenGLBufferCollection &openGLBuffers)
     : m_Context(context),

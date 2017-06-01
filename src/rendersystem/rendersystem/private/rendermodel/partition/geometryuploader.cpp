@@ -6,7 +6,7 @@
 #include "rendersystem/private/opengl/openglhelpers.h"
 
 GeometryUploader::GeometryUploader(const RenderModelContext &context,
-                                   RenderSystem::PublicStoreDefs::MaterialId materialId,
+                                   RenderSystem::MaterialDefs::MaterialId materialId,
                                    GeometryDataContainer &data,
                                    GeometryOffsetTable &offsetTable,
                                    OpenGLBufferCollection &buffers)

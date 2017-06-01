@@ -8,7 +8,7 @@ namespace
 }
 
 RenderPartition::RenderPartition(const RenderModelContext &context,
-                                 RenderSystem::PublicStoreDefs::MaterialId materialId,
+                                 RenderSystem::MaterialDefs::MaterialId materialId,
                                  int maxItems)
     : m_Context(context),
       m_nMaterialId(materialId),

@@ -24,7 +24,7 @@ namespace
 }
 
 GeometryConsolidator::GeometryConsolidator(const RenderModelContext &context,
-                                           RenderSystem::PublicStoreDefs::MaterialId materialId,
+                                           RenderSystem::MaterialDefs::MaterialId materialId,
                                            GeometryDataContainer &data,
                                            GeometryOffsetTable &offsetTable)
     : m_Context(context),

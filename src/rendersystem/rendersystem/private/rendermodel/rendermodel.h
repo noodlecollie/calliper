@@ -7,10 +7,9 @@
 #include "rendergroup.h"
 #include "rendermodelcontext.h"
 
-#include "rendersystem/interface-classes/shader/publicshaderdefs.h"
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
-#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
 
 class RenderModel
 {
@@ -27,7 +26,7 @@ private:
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
 
     RenderModelContext m_Context;
-    QMap<RenderSystem::PublicStoreDefs::MaterialId, RenderGroupPointer> m_RenderGroups;
+    QMap<RenderSystem::MaterialDefs::MaterialId, RenderGroupPointer> m_RenderGroups;
     QMultiHash<RenderSystem::PublicRenderModelDefs::ObjectId, RenderGroupPointer> m_ObjectIdToRenderGroup;
 };
 

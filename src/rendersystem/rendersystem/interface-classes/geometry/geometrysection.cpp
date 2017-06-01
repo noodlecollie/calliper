@@ -10,7 +10,7 @@ namespace RenderSystem
     GeometrySection::GeometrySection()
         : m_nSectionId(0),
           m_nObjectId(0),
-          m_nMaterialId(PublicStoreDefs::INVALID_MATERIAL_ID),
+          m_nMaterialId(MaterialDefs::INVALID_MATERIAL_ID),
           m_matModelToWorld(),
           m_nDrawMode(GL_TRIANGLES),
           m_AttributeVectors(),
@@ -20,7 +20,7 @@ namespace RenderSystem
 
     GeometrySection::GeometrySection(quint8 sectionId,
                                      PublicRenderModelDefs::ObjectId objectId,
-                                     PublicStoreDefs::MaterialId materialId,
+                                     MaterialDefs::MaterialId materialId,
                                      const QMatrix4x4 &modelToWorldMatrix)
         : m_nSectionId(sectionId),
           m_nObjectId(objectId),
@@ -42,12 +42,12 @@ namespace RenderSystem
         return m_nObjectId;
     }
 
-    PublicStoreDefs::MaterialId GeometrySection::materialId() const
+    MaterialDefs::MaterialId GeometrySection::materialId() const
     {
         return m_nMaterialId;
     }
 
-    void GeometrySection::setMaterialId(PublicStoreDefs::MaterialId id)
+    void GeometrySection::setMaterialId(MaterialDefs::MaterialId id)
     {
         m_nMaterialId = id;
     }
