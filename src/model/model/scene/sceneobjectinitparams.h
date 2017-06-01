@@ -12,10 +12,10 @@ namespace Model
     class MODELSHARED_EXPORT SceneObjectInitParams
     {
     public:
-        SceneObjectInitParams(Scene* parentScene, RenderSystem::PublicRenderModelDefs::ObjectId objectId);
+        SceneObjectInitParams(Scene* parentScene, RenderSystem::RenderModelDefs::ObjectId objectId);
 
         Scene* m_pScene;
-        RenderSystem::PublicRenderModelDefs::ObjectId m_iObjectId;
+        RenderSystem::RenderModelDefs::ObjectId m_iObjectId;
     };
 }
 

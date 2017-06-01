@@ -47,14 +47,14 @@ namespace Model
     private:
         void processSceneObjectCreated(SceneObject* object);
         void processSceneObjectCloned(SceneObject* object);
-        RenderSystem::PublicRenderModelDefs::ObjectId acquireNextObjectId();
+        RenderSystem::RenderModelDefs::ObjectId acquireNextObjectId();
         void addObjectToTable(SceneObject* object);
         void removeObjectFromTable(SceneObject* object);
         void deleteObjectsRecursive(SceneObject* object);
 
-        RenderSystem::PublicRenderModelDefs::ObjectId m_iObjectIdCounter;
+        RenderSystem::RenderModelDefs::ObjectId m_iObjectIdCounter;
         SceneObject* m_pRootObject;
-        QHash<RenderSystem::PublicRenderModelDefs::ObjectId, SceneObject*> m_ObjectTable;
+        QHash<RenderSystem::RenderModelDefs::ObjectId, SceneObject*> m_ObjectTable;
     };
 }
 

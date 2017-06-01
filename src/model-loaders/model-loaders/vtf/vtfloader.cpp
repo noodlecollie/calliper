@@ -303,7 +303,7 @@ namespace ModelLoaders
                 m_ReferencedVtfs.insert(vtfPath, textureId);
             }
 
-            material->addTextureUnitMapping(PublicTextureDefs::MainTexture, vtfPath);
+            material->addTextureUnitMapping(TextureDefs::MainTexture, vtfPath);
             return;
         }
     }

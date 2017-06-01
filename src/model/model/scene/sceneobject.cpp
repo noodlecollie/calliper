@@ -176,7 +176,7 @@ namespace Model
         return m_pParentScene;
     }
 
-    RenderSystem::PublicRenderModelDefs::ObjectId SceneObject::objectId() const
+    RenderSystem::RenderModelDefs::ObjectId SceneObject::objectId() const
     {
         return m_iObjectId;
     }

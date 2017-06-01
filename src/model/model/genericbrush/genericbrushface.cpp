@@ -109,7 +109,7 @@ namespace Model
         TextureStoreEndpoint::TextureStoreAccessor textureStore = TextureStoreEndpoint::textureStore();
 
         QSharedPointer<RenderMaterial> material = materialStore->material(texturePlane()->materialId()).toStrongRef();
-        const QString texturePath = material->textureMapping(PublicTextureDefs::MainTexture);
+        const QString texturePath = material->textureMapping(TextureDefs::MainTexture);
 
         QSharedPointer<NamedOpenGLTexture> texture = textureStore->texture(texturePath).toStrongRef();
         const QSize textureSize = texture->size();

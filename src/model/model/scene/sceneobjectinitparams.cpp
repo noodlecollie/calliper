@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    SceneObjectInitParams::SceneObjectInitParams(Scene* parentScene, RenderSystem::PublicRenderModelDefs::ObjectId objectId)
+    SceneObjectInitParams::SceneObjectInitParams(Scene* parentScene, RenderSystem::RenderModelDefs::ObjectId objectId)
         : m_pScene(parentScene),
           m_iObjectId(objectId)
     {

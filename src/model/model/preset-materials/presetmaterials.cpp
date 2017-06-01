@@ -29,7 +29,7 @@ namespace PresetMaterials
     {
         PresetMaterialInfo(
             "unlitPerVertexColor3D",
-            [](const MaterialPointer& material) { material->setShaderStyle(RenderSystem::PublicShaderDefs::UnlitPerVertexColor3D); }
+            [](const MaterialPointer& material) { material->setShaderStyle(RenderSystem::ShaderDefs::UnlitPerVertexColor3D); }
         ),
     };
 
