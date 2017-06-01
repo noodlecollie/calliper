@@ -2,6 +2,7 @@
 #define VTFLOADER_H
 
 #include "model-loaders_global.h"
+
 #include <QSet>
 #include <QHash>
 #include <QString>
@@ -17,7 +18,6 @@ namespace ModelLoaders
     public:
         VTFLoader();
 
-#if 0
         void loadMaterials(const FileFormats::VPKFileCollection& vpkFiles);
 
     private:
@@ -32,7 +32,6 @@ namespace ModelLoaders
 
         QList<FileFormats::VPKIndexTreeRecordPointer> m_CurrentRecordSet;
         quint16 m_iCurrentArchiveIndex;
-#endif
     };
 }
 

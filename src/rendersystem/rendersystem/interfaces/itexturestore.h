@@ -20,6 +20,10 @@ namespace RenderSystem
         // Returns the ID of the texture.
         virtual PublicStoreDefs::TextureId addTexture(const QImage& image, const QString& path) = 0;
 
+        // Creates a texture with the given path. The texture begins uninitialised.
+        // Returns the ID of the texture.
+        virtual PublicStoreDefs::TextureId createBlankTexture(const QString& path) = 0;
+
         // Removes the texture with the given ID from the store.
         // If a texture with this ID does not exist, this function does nothing.
         virtual void removeTexture(const PublicStoreDefs::TextureId id) = 0;

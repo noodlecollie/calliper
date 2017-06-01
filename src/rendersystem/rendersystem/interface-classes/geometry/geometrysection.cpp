@@ -276,6 +276,6 @@ namespace RenderSystem
             m_Indices[index] = index;
         }
 
-        return true
+        return true;
     }
 }

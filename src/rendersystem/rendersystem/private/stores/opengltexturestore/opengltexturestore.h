@@ -22,6 +22,7 @@ public:
     virtual ~OpenGLTextureStore();
 
     virtual TextureId addTexture(const QImage& image, const QString& path) override;
+    virtual TextureId createBlankTexture(const QString &path) override;
     virtual void removeTexture(const TextureId id) override;
     virtual bool containsTexture(const TextureId id) const override;
     virtual bool containsTexture(const QString& path) const override;

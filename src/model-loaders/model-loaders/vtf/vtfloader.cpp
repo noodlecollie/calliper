@@ -1,26 +1,29 @@
 #include "vtfloader.h"
 
-#include <QtDebug>
 #include <QImageReader>
 #include <QBuffer>
 #include <QJsonValue>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QtDebug>
 #include <QOpenGLPixelTransferOptions>
 
-#include "VTFLib/src/VTFFile.h"
-#include "VTFLib/src/VTFLib.h"
 #include "VTFLib/src/VMTFile.h"
 #include "VTFLib/src/VMTNode.h"
+#include "VTFLib/src/VTFFile.h"
+#include "VTFLib/src/VTFLib.h"
+
+#include "calliperutil/general/generalutil.h"
 
 #include "file-formats/vpk/vpkindex.h"
 #include "file-formats/keyvalues/keyvaluesparser.h"
 
-#include "calliperutil/general/generalutil.h"
+#include "rendersystem/interface-classes/texture/namedopengltexture.h"
+#include "rendersystem/endpoints/materialstoreendpoint.h"
+#include "rendersystem/endpoints/texturestoreendpoint.h"
 
 namespace ModelLoaders
 {
-#if 0
     namespace
     {
         inline bool noCaseCompare(const QString& a, const QString& b)
@@ -39,25 +42,21 @@ namespace ModelLoaders
             return matPath;
         }
 
-        bool setTextureFormat(RenderSystem::OpenGLTexturePointer& texture, VTFImageFormat format)
+        bool setTextureFormat(RenderSystem::NamedOpenGLTexture& texture, VTFImageFormat format)
         {
             switch (format)
             {
                 case IMAGE_FORMAT_DXT1:
-                texture->setFormat(QOpenGLTexture::RGBA_DXT1);
+                texture.setFormat(QOpenGLTexture::RGBA_DXT1);
                 break;
 
                 case IMAGE_FORMAT_DXT3:
-                texture->setFormat(QOpenGLTexture::RGBA_DXT3);
+                texture.setFormat(QOpenGLTexture::RGBA_DXT3);
                 break;
 
                 case IMAGE_FORMAT_DXT5:
-                texture->setFormat(QOpenGLTexture::RGBA_DXT5);
+                texture.setFormat(QOpenGLTexture::RGBA_DXT5);
                 break;
-
-//                case IMAGE_FORMAT_RGBA8888:
-//                texture->setFormat(QOpenGLTexture::QOpenGLTexture::RGBA32U);
-//                break;
 
             default:
                 return false;
@@ -66,7 +65,7 @@ namespace ModelLoaders
             return true;
         }
 
-        bool loadVtf(const QByteArray& vtfData, Renderer::OpenGLTexturePointer& texture)
+        bool loadVtf(const QByteArray& vtfData, RenderSystem::NamedOpenGLTexture& texture)
         {
             VTFLib::CVTFFile vtfFile;
             if ( !vtfFile.Load(static_cast<const vlVoid*>(vtfData.constData()), vtfData.length(), false) )
@@ -77,47 +76,53 @@ namespace ModelLoaders
             if ( !setTextureFormat(texture, vtfFile.GetFormat()) )
             {
                 qWarning() << "Currently unsupported format" << VTFLib::CVTFFile::ImageFormatName(vtfFile.GetFormat())
-                           << "for texture" << texture->path();
+                           << "for texture" << texture.path();
                 return false;
             }
 
             if ( !vtfFile.GetData(0,0,0,0) )
             {
-                qWarning() << "VTF for texture" << texture->path()
+                qWarning() << "VTF for texture" << texture.path()
                            << "has no data.";
                 return false;
             }
 
-            texture->setSize(vtfFile.GetWidth(), vtfFile.GetHeight());
-            texture->allocateStorage(QOpenGLTexture::RGBA, QOpenGLTexture::UInt32);
+            texture.setSize(vtfFile.GetWidth(), vtfFile.GetHeight());
+            texture.allocateStorage(QOpenGLTexture::RGBA, QOpenGLTexture::UInt32);
 
             if ( vtfFile.GetFormat() == IMAGE_FORMAT_RGBA8888 )
             {
-                texture->setData(QOpenGLTexture::RGBA, QOpenGLTexture::UInt32, vtfFile.GetData(0, 0, 0, 0));
+                texture.setData(QOpenGLTexture::RGBA, QOpenGLTexture::UInt32, vtfFile.GetData(0, 0, 0, 0));
             }
             else
             {
                 int size = static_cast<int>(VTFLib::CVTFFile::ComputeImageSize(vtfFile.GetWidth(), vtfFile.GetHeight(),
                                                               1,1,
                                                               vtfFile.GetFormat()));
-                texture->setCompressedData(size, vtfFile.GetData(0,0,0,0));
+                texture.setCompressedData(size, vtfFile.GetData(0,0,0,0));
             }
 
-            texture->create();
+            texture.create();
 
             return true;
         }
     }
-#endif
 
     VTFLoader::VTFLoader()
+        : m_VmtFileSet(),
+          m_VtfFileSet(),
+          m_ReferencedVtfs(),
+          m_CurrentRecordSet(),
+          m_iCurrentArchiveIndex(~0)
     {
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Fix this entire class");
     }
 
-#if 0
     void VTFLoader::loadMaterials(const FileFormats::VPKFileCollection &vpkFiles)
     {
+        using namespace RenderSystem;
+
+        TextureStoreEndpoint::TextureStoreAccessor textureStore = TextureStoreEndpoint::textureStore();
+
         m_VmtFileSet = vpkFiles.filesContainingExtension("vmt");
         m_VtfFileSet = vpkFiles.filesContainingExtension("vtf");
 
@@ -132,8 +137,8 @@ namespace ModelLoaders
         // Clean up any remaining VTFs - the files could have referenced some that don't actually exist.
         foreach ( quint32 textureId, m_ReferencedVtfs.values() )
         {
-            qDebug() << "Cleaning up unused texture" << textureId << m_pTextureStore->getTexture(textureId)->path();
-            m_pTextureStore->destroyTexture(textureId);
+            qDebug() << "Cleaning up unused texture" << textureId << textureStore->texture(textureId).toStrongRef()->path();
+            textureStore->removeTexture(textureId);
         }
 
         m_ReferencedVtfs.clear();
@@ -141,6 +146,10 @@ namespace ModelLoaders
 
     void VTFLoader::findReferencedVtfs()
     {
+        using namespace RenderSystem;
+
+        MaterialStoreEndpoint::MaterialStoreAccessor materialStore = MaterialStoreEndpoint::materialStore();
+
         m_ReferencedVtfs.clear();
 
         foreach ( const FileFormats::VPKFilePointer& vpk, m_VmtFileSet )
@@ -169,7 +178,8 @@ namespace ModelLoaders
 
                 QString matPath = materialPath(record);
 
-                Renderer::RenderMaterialPointer material = m_pMaterialStore->createMaterial(matPath);
+                PublicStoreDefs::MaterialId materialId = materialStore->createMaterial(matPath);
+                QSharedPointer<RenderMaterial> material = materialStore->material(materialId).toStrongRef();
                 populateMaterial(material, doc);
             }
 
@@ -179,6 +189,10 @@ namespace ModelLoaders
 
     void VTFLoader::loadReferencedVtfs()
     {
+        using namespace RenderSystem;
+
+        TextureStoreEndpoint::TextureStoreAccessor textureStore = TextureStoreEndpoint::textureStore();
+
         foreach ( const FileFormats::VPKFilePointer& vpk, m_VtfFileSet )
         {
             // These are ordered by archive number.
@@ -200,23 +214,16 @@ namespace ModelLoaders
                 {
                     qDebug() << "VTF data is empty";
                     m_ReferencedVtfs.remove(fullPath);
-                    m_pTextureStore->destroyTexture(textureId);
+                    textureStore->removeTexture(textureId);
                     continue;
                 }
 
-                Renderer::OpenGLTexturePointer texture = m_pTextureStore->getTexture(textureId);
-                if ( texture->textureStoreId() != textureId )
-                {
-                    Q_ASSERT_X(false, Q_FUNC_INFO, "Texture ID mismatch, should never happen!");
-                    m_pTextureStore->destroyTexture(textureId);
-                    m_ReferencedVtfs.remove(fullPath);
-                    continue;
-                }
+                QSharedPointer<NamedOpenGLTexture> texture = textureStore->texture(textureId).toStrongRef();
 
-                if ( !loadVtf(vtfData, texture) )
+                if ( !loadVtf(vtfData, *texture) )
                 {
                     qDebug().nospace() << "Failed to read " << fullPath << ": " << VTFLib::LastError.Get();
-                    m_pTextureStore->destroyTexture(textureId);
+                    textureStore->removeTexture(textureId);
                     m_ReferencedVtfs.remove(fullPath);
                     continue;
                 }
@@ -241,6 +248,10 @@ namespace ModelLoaders
 
     void VTFLoader::populateMaterial(const QSharedPointer<RenderSystem::RenderMaterial> &material, const QJsonDocument &vmt)
     {
+        using namespace RenderSystem;
+
+        TextureStoreEndpoint::TextureStoreAccessor textureStore = TextureStoreEndpoint::textureStore();
+
         if ( !vmt.isObject() )
         {
             return;
@@ -249,7 +260,9 @@ namespace ModelLoaders
         QJsonObject root = vmt.object();
         QJsonObject::const_iterator rootKey = root.constBegin();
         if ( rootKey == root.constEnd() )
+        {
             return;
+        }
 
         QString shaderType = rootKey.key();
 
@@ -262,30 +275,35 @@ namespace ModelLoaders
 
         QJsonValue vProperties = rootKey.value();
         if ( !vProperties.isObject() )
+        {
             return;
+        }
 
         // Annoyingly we can't just index by key because of non-case-sensitivity.
         QJsonObject properties = vProperties.toObject();
         for ( QJsonObject::const_iterator it = properties.constBegin(); it != properties.constEnd(); ++it )
         {
             if ( !noCaseCompare(it.key(), "$basetexture") )
+            {
                 continue;
+            }
 
             QJsonValue val = it.value();
             if ( !val.isString() )
+            {
                 continue;
+            }
 
             QString vtfPath = CalliperUtil::General::normaliseResourcePathSeparators(val.toString().toLower());
 
             if ( !m_ReferencedVtfs.contains(vtfPath) )
             {
-                quint32 textureId = m_pTextureStore->createEmptyTexture(vtfPath)->textureStoreId();
+                quint32 textureId = textureStore->createBlankTexture(vtfPath);
                 m_ReferencedVtfs.insert(vtfPath, textureId);
             }
 
-            material->addTextureUnitMapping(RenderSystem::PublicTextureDefs::MainTexture, m_ReferencedVtfs.value(vtfPath, 0));
+            material->addTextureUnitMapping(PublicTextureDefs::MainTexture, vtfPath);
             return;
         }
     }
-#endif
 }

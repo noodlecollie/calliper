@@ -16,6 +16,7 @@ namespace RenderSystem
     {
     public:
         CurrentContextGuard(T& functions);
+        CurrentContextGuard(const CurrentContextGuard<T>& other);
         ~CurrentContextGuard();
 
         T* operator ->();
@@ -26,7 +27,6 @@ namespace RenderSystem
 
     private:
         bool operator =(const CurrentContextGuard& other) = delete;
-        CurrentContextGuard(const CurrentContextGuard<T>& other) = delete;
 
         ContextReferenceCounter m_RefCounter;
         T& m_Functions;

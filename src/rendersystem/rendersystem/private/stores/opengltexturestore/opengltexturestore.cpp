@@ -39,6 +39,22 @@ OpenGLTextureStore::TextureId OpenGLTextureStore::addTexture(const QImage& image
     return createWithPath(path, image);
 }
 
+OpenGLTextureStore::TextureId OpenGLTextureStore::createBlankTexture(const QString &path)
+{
+    if ( path.isEmpty() )
+    {
+        return INVALID_ID;
+    }
+
+    TextureId existingTexture = objectIdFromPath(path);
+    if ( existingTexture != INVALID_ID )
+    {
+        destroy(existingTexture);
+    }
+
+    return createWithPath(path, QOpenGLTexture::Target2D);
+}
+
 void OpenGLTextureStore::removeTexture(const TextureId id)
 {
     if ( id == INVALID_ID )
