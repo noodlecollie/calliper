@@ -3,15 +3,15 @@
 
 #include <QHash>
 
-#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 
 struct GeometryDataKey
 {
-    RenderSystem::PublicRenderModelDefs::ObjectId objectId;
-    RenderSystem::PublicRenderModelDefs::SectionId sectionId;
+    RenderSystem::RenderModelDefs::ObjectId objectId;
+    RenderSystem::RenderModelDefs::SectionId sectionId;
 
-    GeometryDataKey(RenderSystem::PublicRenderModelDefs::ObjectId object,
-                    RenderSystem::PublicRenderModelDefs::SectionId section);
+    GeometryDataKey(RenderSystem::RenderModelDefs::ObjectId object,
+                    RenderSystem::RenderModelDefs::SectionId section);
     bool operator <(const GeometryDataKey& other) const;
     bool operator ==(const GeometryDataKey& other) const;
 };

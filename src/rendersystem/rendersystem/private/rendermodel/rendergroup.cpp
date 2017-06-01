@@ -41,7 +41,7 @@ void RenderGroup::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
     m_SectionToPartition.insert(GeometryDataKey(section->objectId(), section->sectionId()), partition);
 }
 
-void RenderGroup::removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId)
+void RenderGroup::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId)
 {
     QSet<RenderPartition*> processedPartitions;
 

@@ -3,8 +3,6 @@
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
 
-Q_LOGGING_CATEGORY(lcRenderModel, "Renderer.RenderModel")
-
 RenderModel::RenderModel()
 {
 
@@ -39,7 +37,7 @@ void RenderModel::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
     renderGroup->setGeometry(section);
 }
 
-void RenderModel::removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId)
+void RenderModel::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId)
 {
     QList<RenderGroupPointer> renderGroups = m_ObjectIdToRenderGroup.values(objectId);
 

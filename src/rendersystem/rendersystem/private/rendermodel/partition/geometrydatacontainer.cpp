@@ -20,7 +20,7 @@ void GeometryDataContainer::insert(const GeometryDataKey &key, const GeometryDat
     m_Data.insert(key, data);
 }
 
-void GeometryDataContainer::remove(RenderSystem::PublicRenderModelDefs::ObjectId objectId)
+void GeometryDataContainer::remove(RenderSystem::RenderModelDefs::ObjectId objectId)
 {
     QMap<GeometryDataKey, GeometryDataPointer>::iterator it = m_Data.begin();
     while ( it != m_Data.end() )

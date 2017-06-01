@@ -9,7 +9,7 @@
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
-#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 
 class RenderModel
 {
@@ -18,7 +18,7 @@ public:
 
     // Replaces any geometry for the given object.
     void setGeometry(const RenderSystem::GeometryBuilder& geometry);
-    void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
+    void removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId);
 
 private:
     typedef QSharedPointer<RenderGroup> RenderGroupPointer;
@@ -27,7 +27,7 @@ private:
 
     RenderModelContext m_Context;
     QMap<RenderSystem::MaterialDefs::MaterialId, RenderGroupPointer> m_RenderGroups;
-    QMultiHash<RenderSystem::PublicRenderModelDefs::ObjectId, RenderGroupPointer> m_ObjectIdToRenderGroup;
+    QMultiHash<RenderSystem::RenderModelDefs::ObjectId, RenderGroupPointer> m_ObjectIdToRenderGroup;
 };
 
 #endif // RENDERMODEL_H

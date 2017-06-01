@@ -11,7 +11,7 @@
 #include <QMatrix4x4>
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
-#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 
 namespace RenderSystem
 {
@@ -30,12 +30,12 @@ namespace RenderSystem
 
         GeometrySection();
         GeometrySection(quint8 sectionId,
-                        PublicRenderModelDefs::ObjectId objectId,
+                        RenderModelDefs::ObjectId objectId,
                         MaterialDefs::MaterialId materialId,
                         const QMatrix4x4& modelToWorldMatrix);
 
         quint8 sectionId() const;
-        PublicRenderModelDefs::ObjectId objectId() const;
+        RenderModelDefs::ObjectId objectId() const;
 
         MaterialDefs::MaterialId materialId() const;
         void setMaterialId(MaterialDefs::MaterialId id);
@@ -86,7 +86,7 @@ namespace RenderSystem
         bool calculateLinearIndices(int minRequiredPositions);
 
         quint8 m_nSectionId;
-        PublicRenderModelDefs::ObjectId m_nObjectId;
+        RenderModelDefs::ObjectId m_nObjectId;
         MaterialDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
         GLenum m_nDrawMode;

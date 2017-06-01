@@ -51,7 +51,7 @@ void RenderPartition::setGeometry(const QSharedPointer<RenderSystem::GeometrySec
     m_GeometryDataContainer.insert(section);
 }
 
-void RenderPartition::removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId)
+void RenderPartition::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId)
 {
     m_GeometryDataContainer.remove(objectId);
 }

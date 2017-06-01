@@ -20,7 +20,7 @@ public:
 
     void insert(const QSharedPointer<RenderSystem::GeometrySection>& section);
     void insert(const GeometryDataKey& key, const GeometryDataPointer& data);
-    void remove(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
+    void remove(RenderSystem::RenderModelDefs::ObjectId objectId);
     void clear();
 
     int count() const;

@@ -6,7 +6,7 @@
 
 #include "model/scene/sceneobject.h"
 
-#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 
 namespace Model
 {

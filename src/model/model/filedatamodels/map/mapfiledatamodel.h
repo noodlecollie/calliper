@@ -7,7 +7,7 @@
 #include "model/filedatamodels/base/basefiledatamodel.h"
 #include "model/scene/mapscene.h"
 
-#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 
 namespace Model
 {

@@ -1,23 +1,23 @@
 #include "barebonesrendermode.h"
 
 BarebonesRenderMode::BarebonesRenderMode()
-    : BaseRenderMode(RenderSystem::PublicShaderDefs::BarebonesRenderMode)
+    : BaseRenderMode(RenderSystem::ShaderDefs::BarebonesRenderMode)
 {
 
 }
 
-PrivateShaderDefs::ShaderId BarebonesRenderMode::shaderId(RenderSystem::PublicShaderDefs::ShaderStyle style) const
+PrivateShaderDefs::ShaderId BarebonesRenderMode::shaderId(RenderSystem::ShaderDefs::ShaderStyle style) const
 {
     using namespace RenderSystem;
 
     switch ( style )
     {
-        case PublicShaderDefs::LitTextured3D:
+        case ShaderDefs::LitTextured3D:
         {
             return PrivateShaderDefs::SimpleLitShaderId;
         }
 
-        case PublicShaderDefs::UnlitPerVertexColor3D:
+        case ShaderDefs::UnlitPerVertexColor3D:
         {
             return PrivateShaderDefs::UnlitPerVertexColourShaderId;
         }

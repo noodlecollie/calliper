@@ -8,7 +8,7 @@
 
 namespace RenderUtils
 {
-    OpenGLShaderProgram* shaderFromMaterial(RenderSystem::PublicShaderDefs::RenderMode renderMode,
+    OpenGLShaderProgram* shaderFromMaterial(RenderSystem::ShaderDefs::RenderMode renderMode,
                                             RenderSystem::MaterialDefs::MaterialId materialId);
 }
 

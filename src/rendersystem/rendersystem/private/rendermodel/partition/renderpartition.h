@@ -27,7 +27,7 @@ public:
     int freeSpaces() const;
 
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
-    void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
+    void removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId);
 
     void draw(GLenum drawMode, float lineWidth);
 

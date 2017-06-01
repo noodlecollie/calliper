@@ -10,6 +10,13 @@ namespace RenderSystem
         typedef quint32 TextureId;
 
         RENDERSYSTEMSHARED_EXPORT extern const TextureId INVALID_TEXTURE_ID;
+
+        enum TextureUnit
+        {
+            MainTexture = 0,
+            SecondaryTexture = 1,
+            NormalMap = 2,
+        };
     }
 }
 

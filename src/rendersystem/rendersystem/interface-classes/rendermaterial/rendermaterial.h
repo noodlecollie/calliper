@@ -5,9 +5,8 @@
 
 #include <QHash>
 
-#include "rendersystem/interface-classes/texture/publictexturedefs.h"
 #include "rendersystem/interface-classes/definitions/texturedefs.h"
-#include "rendersystem/interface-classes/definitions/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/shaderdefs.h"
 
 namespace RenderSystem
 {
@@ -18,18 +17,18 @@ namespace RenderSystem
 
         QString path() const;
 
-        PublicShaderDefs::ShaderStyle shaderStyle() const;
-        void setShaderStyle(PublicShaderDefs::ShaderStyle style);
+        ShaderDefs::ShaderStyle shaderStyle() const;
+        void setShaderStyle(ShaderDefs::ShaderStyle style);
 
-        void addTextureUnitMapping(PublicTextureDefs::TextureUnit textureUnit, const QString& texturePath);
-        void removeTextureUnitMapping(PublicTextureDefs::TextureUnit textureUnit);
-        QString textureMapping(PublicTextureDefs::TextureUnit textureUnit) const;
+        void addTextureUnitMapping(TextureDefs::TextureUnit textureUnit, const QString& texturePath);
+        void removeTextureUnitMapping(TextureDefs::TextureUnit textureUnit);
+        QString textureMapping(TextureDefs::TextureUnit textureUnit) const;
         void clearTextureMappings();
 
     private:
         const QString m_strPath;
-        PublicShaderDefs::ShaderStyle m_nShaderStyle;
-        QHash<PublicTextureDefs::TextureUnit, QString> m_TextureUnitMap;
+        ShaderDefs::ShaderStyle m_nShaderStyle;
+        QHash<TextureDefs::TextureUnit, QString> m_TextureUnitMap;
     };
 }
 

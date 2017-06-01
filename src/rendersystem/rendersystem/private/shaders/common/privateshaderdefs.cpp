@@ -5,23 +5,23 @@ namespace PrivateShaderDefs
     const char* GLOBAL_UNIFORM_BLOCK_NAME = "GlobalUniformBlock";
     const char* LOCAL_UNIFORM_BLOCK_NAME = "LocalUniformBlock";
 
-    VertexFormatUpperBound shaderMaxVertexFormat(RenderSystem::PublicShaderDefs::ShaderStyle style)
+    VertexFormatUpperBound shaderMaxVertexFormat(RenderSystem::ShaderDefs::ShaderStyle style)
     {
         using namespace RenderSystem;
 
         switch ( style )
         {
-            case PublicShaderDefs::UnlitTextured3D:
+            case ShaderDefs::UnlitTextured3D:
             {
                 return VertexFormatUpperBound(4, 3, 4, 2);
             }
 
-            case PublicShaderDefs::LitTextured3D:
+            case ShaderDefs::LitTextured3D:
             {
                 return VertexFormatUpperBound(4, 3, 4, 2);
             }
 
-            case PublicShaderDefs::UnlitPerVertexColor3D:
+            case ShaderDefs::UnlitPerVertexColor3D:
             {
                 return VertexFormatUpperBound(4, 3, 4, 0);
             }

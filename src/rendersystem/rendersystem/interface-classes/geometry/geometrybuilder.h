@@ -8,7 +8,7 @@
 #include <QSet>
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
-#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 
 #include "geometrysection.h"
 
@@ -19,7 +19,7 @@ namespace RenderSystem
     public:
         typedef QSharedPointer<GeometrySection> GeometrySectionPointer;
 
-        GeometryBuilder(PublicRenderModelDefs::ObjectId objectId, MaterialDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
+        GeometryBuilder(RenderModelDefs::ObjectId objectId, MaterialDefs::MaterialId materialId, const QMatrix4x4& modelToWorldMatrix);
 
         GeometrySectionPointer section(int index) const;
         GeometrySectionPointer createNewSection(MaterialDefs::MaterialId materialId, const QMatrix4x4 &matrix);
@@ -34,12 +34,12 @@ namespace RenderSystem
         MaterialDefs::MaterialId materialId() const;
         void setMaterialId(MaterialDefs::MaterialId id);
 
-        PublicRenderModelDefs::ObjectId objectId() const;
+        RenderModelDefs::ObjectId objectId() const;
 
         QSet<MaterialDefs::MaterialId> referencedMaterials() const;
 
     private:
-        PublicRenderModelDefs::ObjectId m_nObjectId;
+        RenderModelDefs::ObjectId m_nObjectId;
         MaterialDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
         QVector<GeometrySectionPointer> m_Sections;

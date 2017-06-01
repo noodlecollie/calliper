@@ -1,18 +1,19 @@
-#ifndef PUBLICRENDERMODELDEFS_H
-#define PUBLICRENDERMODELDEFS_H
+#ifndef RENDERMODELDEFS_H
+#define RENDERMODELDEFS_H
 
 #include "rendersystem_global.h"
 
 namespace RenderSystem
 {
-    namespace PublicRenderModelDefs
+    namespace RenderModelDefs
     {
         typedef quint32 ObjectId;
         typedef quint8 SectionId;
         typedef quint16 RenderModelId;
 
+        extern const ObjectId INVALID_OBJECT_ID;
         extern const RenderModelId INVALID_RENDER_MODEL_ID;
     }
 }
 
-#endif // PUBLICRENDERMODELDEFS_H
+#endif // RENDERMODELDEFS_H

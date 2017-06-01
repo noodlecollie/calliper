@@ -2,7 +2,7 @@
 
 namespace RenderSystem
 {
-    GeometryBuilder::GeometryBuilder(PublicRenderModelDefs::ObjectId objectId,
+    GeometryBuilder::GeometryBuilder(RenderModelDefs::ObjectId objectId,
                                      MaterialDefs::MaterialId materialId,
                                      const QMatrix4x4 &modelToWorldMatrix)
         : m_nObjectId(objectId),
@@ -72,7 +72,7 @@ namespace RenderSystem
         m_nMaterialId = id;
     }
 
-    PublicRenderModelDefs::ObjectId GeometryBuilder::objectId() const
+    RenderModelDefs::ObjectId GeometryBuilder::objectId() const
     {
         return m_nObjectId;
     }

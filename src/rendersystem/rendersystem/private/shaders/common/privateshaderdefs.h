@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "rendersystem/interface-classes/definitions/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/shaderdefs.h"
 
 #include "vertexformat.h"
 
@@ -50,7 +50,7 @@ namespace PrivateShaderDefs
     // limit on the number of components shaders that are used for this
     // technique are allowed to ask for.
     typedef VertexFormat VertexFormatUpperBound;
-    VertexFormatUpperBound shaderMaxVertexFormat(RenderSystem::PublicShaderDefs::ShaderStyle style);
+    VertexFormatUpperBound shaderMaxVertexFormat(RenderSystem::ShaderDefs::ShaderStyle style);
 
     extern const char* GLOBAL_UNIFORM_BLOCK_NAME;
     extern const char* LOCAL_UNIFORM_BLOCK_NAME;

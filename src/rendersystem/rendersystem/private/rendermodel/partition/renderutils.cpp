@@ -6,12 +6,12 @@
 
 namespace RenderUtils
 {
-    OpenGLShaderProgram* shaderFromMaterial(RenderSystem::PublicShaderDefs::RenderMode renderMode,
+    OpenGLShaderProgram* shaderFromMaterial(RenderSystem::ShaderDefs::RenderMode renderMode,
                                             RenderSystem::MaterialDefs::MaterialId materialId)
     {
         using namespace RenderSystem;
 
-        if ( renderMode == RenderSystem::PublicShaderDefs::UnknownRenderMode ||
+        if ( renderMode == RenderSystem::ShaderDefs::UnknownRenderMode ||
              materialId == MaterialDefs::INVALID_MATERIAL_ID )
         {
             return Q_NULLPTR;
@@ -23,8 +23,8 @@ namespace RenderUtils
             return Q_NULLPTR;
         }
 
-        PublicShaderDefs::ShaderStyle shaderStyle = material->shaderStyle();
-        if ( shaderStyle == PublicShaderDefs::UnknownShaderStyle )
+        ShaderDefs::ShaderStyle shaderStyle = material->shaderStyle();
+        if ( shaderStyle == ShaderDefs::UnknownShaderStyle )
         {
             return Q_NULLPTR;
         }

@@ -5,7 +5,7 @@
 
 namespace RenderSystem
 {
-    namespace PublicShaderDefs
+    namespace ShaderDefs
     {
         // Different ways in which we might want to draw geometry.
         // Some other examples might be unlit textured, or

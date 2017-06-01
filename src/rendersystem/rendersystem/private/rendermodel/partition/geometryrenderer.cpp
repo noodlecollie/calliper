@@ -71,9 +71,8 @@ void GeometryRenderer::draw()
         {
             draw_x(offsetItemBase, lastItemInBatch);
         }
-        catch (const InternalException& exception)
+        catch (const InternalException&)
         {
-            qCDebug(lcRenderModel) << "An error occurred during rendering:" << exception.error;
             break;
         }
     }

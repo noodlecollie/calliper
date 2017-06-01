@@ -11,7 +11,7 @@
 #include "rendersystem/private/rendermodel/partition/geometrydatakey.h"
 #include "rendersystem/private/rendermodel/partition/renderpartition.h"
 
-#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
 
 class RenderGroup
@@ -21,7 +21,7 @@ public:
                 RenderSystem::MaterialDefs::MaterialId materialId);
 
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
-    void removeGeometry(RenderSystem::PublicRenderModelDefs::ObjectId objectId);
+    void removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId);
 
 private:
     typedef QSharedPointer<RenderPartition> RenderPartitionPointer;

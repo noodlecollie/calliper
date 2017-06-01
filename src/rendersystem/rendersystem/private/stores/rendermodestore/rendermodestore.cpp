@@ -29,12 +29,12 @@ RenderModeStore::RenderModeStore()
     : StaticObjectStore<BaseRenderMode*, RenderModeStoreKey>()
 {
     using namespace RenderSystem;
-    static_assert(sizeof(SizeofArrayHelper(g_Initialisers)) == PublicShaderDefs::TOTAL_RENDER_MODES,
+    static_assert(sizeof(SizeofArrayHelper(g_Initialisers)) == ShaderDefs::TOTAL_RENDER_MODES,
                   "Initialiser array size mismatch - has a new render mode been added?");
 
-    for ( int i = 0; i < PublicShaderDefs::TOTAL_RENDER_MODES; ++i )
+    for ( int i = 0; i < ShaderDefs::TOTAL_RENDER_MODES; ++i )
     {
-        m_Objects.insert(static_cast<PublicShaderDefs::RenderMode>(i), g_Initialisers[i]());
+        m_Objects.insert(static_cast<ShaderDefs::RenderMode>(i), g_Initialisers[i]());
     }
 }
 

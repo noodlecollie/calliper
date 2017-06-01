@@ -1,18 +1,18 @@
 #ifndef RENDERMODELCONTEXT_H
 #define RENDERMODELCONTEXT_H
 
-#include "rendersystem/interface-classes/definitions/publicshaderdefs.h"
+#include "rendersystem/interface-classes/definitions/shaderdefs.h"
 
 class RenderModelContext
 {
 public:
     RenderModelContext();
 
-    RenderSystem::PublicShaderDefs::RenderMode renderMode() const;
-    void setRenderMode(RenderSystem::PublicShaderDefs::RenderMode renderMode);
+    RenderSystem::ShaderDefs::RenderMode renderMode() const;
+    void setRenderMode(RenderSystem::ShaderDefs::RenderMode renderMode);
 
 private:
-    RenderSystem::PublicShaderDefs::RenderMode m_nRenderMode;
+    RenderSystem::ShaderDefs::RenderMode m_nRenderMode;
 };
 
 #endif // RENDERMODELCONTEXT_H

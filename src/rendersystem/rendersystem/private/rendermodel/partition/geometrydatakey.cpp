@@ -8,8 +8,8 @@ uint qHash(const GeometryDataKey& key, uint seed)
     return qHash((static_cast<quint32>(key.sectionId) << 24) ^ key.objectId, seed);
 }
 
-GeometryDataKey::GeometryDataKey(RenderSystem::PublicRenderModelDefs::ObjectId object,
-                                 RenderSystem::PublicRenderModelDefs::SectionId section)
+GeometryDataKey::GeometryDataKey(RenderSystem::RenderModelDefs::ObjectId object,
+                                 RenderSystem::RenderModelDefs::SectionId section)
     : objectId(object),
       sectionId(section)
 {

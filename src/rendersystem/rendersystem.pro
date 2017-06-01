@@ -62,9 +62,9 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/rendermodestore/rendermodestore.cpp \
     rendersystem/private/rendermodel/rendermodelcontext.cpp \
     rendersystem/private/rendermodel/partition/renderutils.cpp \
-    rendersystem/interface-classes/definitions/publicrendermodeldefs.cpp \
     rendersystem/interface-classes/definitions/materialdefs.cpp \
-    rendersystem/interface-classes/definitions/texturedefs.cpp
+    rendersystem/interface-classes/definitions/texturedefs.cpp \
+    rendersystem/interface-classes/definitions/rendermodeldefs.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -92,12 +92,9 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/shaders/derived/unlitpervertexcolorshader.h \
     rendersystem/interface-classes/rendermaterial/rendermaterial.h \
     rendersystem/private/shaders/common/privateshaderdefs.h \
-    rendersystem/interface-classes/definitions/publicshaderdefs.h \
-    rendersystem/interface-classes/texture/publictexturedefs.h \
     rendersystem/private/stores/materialstore/materialstore.h \
     rendersystem/interface-classes/geometry/geometrysection.h \
     rendersystem/interface-classes/geometry/geometrybuilder.h \
-    rendersystem/interface-classes/definitions/publicrendermodeldefs.h \
     rendersystem/endpoints/texturestoreendpoint.h \
     rendersystem/interfaces/imaterialstore.h \
     rendersystem/private/store-classes/pathmanagingobjectstore.h \
@@ -124,7 +121,9 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/stores/rendermodestore/rendermodestorekey.h \
     rendersystem/private/rendermodel/partition/renderutils.h \
     rendersystem/interface-classes/definitions/materialdefs.h \
-    rendersystem/interface-classes/definitions/texturedefs.h
+    rendersystem/interface-classes/definitions/texturedefs.h \
+    rendersystem/interface-classes/definitions/rendermodeldefs.h \
+    rendersystem/interface-classes/definitions/shaderdefs.h
 
 unix {
     target.path = /usr/lib
