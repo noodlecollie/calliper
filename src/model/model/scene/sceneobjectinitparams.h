@@ -3,7 +3,7 @@
 
 #include "model_global.h"
 
-#include "rendersystem/interface-classes/rendermodel/publicrendermodeldefs.h"
+#include "rendersystem/interface-classes/definitions/publicrendermodeldefs.h"
 
 namespace Model
 {

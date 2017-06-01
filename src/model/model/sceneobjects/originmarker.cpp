@@ -31,10 +31,10 @@ namespace Model
     {
         using namespace RenderSystem;
 
-        const RenderSystem::PublicStoreDefs::MaterialId materialId =
+        const RenderSystem::MaterialDefs::MaterialId materialId =
                 PresetMaterials::presetMaterialId(PresetMaterials::UnlitPerVertexColor3D);
 
-        Q_ASSERT(materialId != PublicStoreDefs::INVALID_MATERIAL_ID);
+        Q_ASSERT(materialId != MaterialDefs::INVALID_MATERIAL_ID);
 
         QSharedPointer<GeometrySection> section = builder.createNewSection(materialId, builder.modelToWorldMatrix());
         section->setDrawMode(GL_LINES);

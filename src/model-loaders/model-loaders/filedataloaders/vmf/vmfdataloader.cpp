@@ -267,7 +267,7 @@ namespace ModelLoaders
         }
 
         MaterialStoreEndpoint::MaterialStoreAccessor materialStore = MaterialStoreEndpoint::materialStore();
-        const PublicStoreDefs::MaterialId materialId = materialStore->materialIdFromPath(materialPath);
+        const MaterialDefs::MaterialId materialId = materialStore->materialIdFromPath(materialPath);
 
         TexturedWinding* winding = new TexturedWinding(Plane3D(v0, v2, v1), materialId);
         Q_ASSERT(!QVector3D::crossProduct(v1-v0, v2-v0).isNull());

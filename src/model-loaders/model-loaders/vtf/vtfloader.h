@@ -10,7 +10,7 @@
 #include "file-formats/vpk/vpkfilecollection.h"
 
 #include "rendersystem/interface-classes/rendermaterial/rendermaterial.h"
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/texturedefs.h"
 
 namespace ModelLoaders
 {
@@ -29,7 +29,7 @@ namespace ModelLoaders
 
         QSet<FileFormats::VPKFilePointer> m_VmtFileSet;
         QSet<FileFormats::VPKFilePointer> m_VtfFileSet;
-        QHash<QString, RenderSystem::PublicStoreDefs::TextureId> m_ReferencedVtfs;
+        QHash<QString, RenderSystem::TextureDefs::TextureId> m_ReferencedVtfs;
 
         QList<FileFormats::VPKIndexTreeRecordPointer> m_CurrentRecordSet;
         quint16 m_iCurrentArchiveIndex;

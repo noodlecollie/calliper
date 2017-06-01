@@ -10,7 +10,7 @@
 
 #include "calliperutil/math/math.h"
 
-#include "rendersystem/interface-classes/store/publicstoredefs.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 
 namespace Model
 {
@@ -21,8 +21,8 @@ namespace Model
         explicit TexturePlane(QObject* parent = 0);
 
         // Material to be used on the face.
-        RenderSystem::PublicStoreDefs::MaterialId materialId() const;
-        void setMaterialId(RenderSystem::PublicStoreDefs::MaterialId id);
+        RenderSystem::MaterialDefs::MaterialId materialId() const;
+        void setMaterialId(RenderSystem::MaterialDefs::MaterialId id);
 
         // The U and V axes specify the U and V axes of the texture in 3D space.
         // The length of each axis specifies how many texture units there are per world unit.
@@ -78,7 +78,7 @@ namespace Model
     private:
         void initDefaults();
 
-        RenderSystem::PublicStoreDefs::MaterialId m_iMaterialId;
+        RenderSystem::MaterialDefs::MaterialId m_iMaterialId;
         QVector2D m_vecScale;
         QVector2D m_vecTranslation;
         float m_flRotation;

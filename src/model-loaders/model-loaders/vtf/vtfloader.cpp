@@ -21,6 +21,7 @@
 #include "rendersystem/interface-classes/texture/namedopengltexture.h"
 #include "rendersystem/endpoints/materialstoreendpoint.h"
 #include "rendersystem/endpoints/texturestoreendpoint.h"
+#include "rendersystem/interface-classes/definitions/materialdefs.h"
 
 namespace ModelLoaders
 {
@@ -135,7 +136,7 @@ namespace ModelLoaders
         loadReferencedVtfs();
 
         // Clean up any remaining VTFs - the files could have referenced some that don't actually exist.
-        foreach ( PublicStoreDefs::TextureId textureId, m_ReferencedVtfs.values() )
+        foreach ( TextureDefs::TextureId textureId, m_ReferencedVtfs.values() )
         {
             qDebug() << "Cleaning up unused texture" << textureId << textureStore->texture(textureId).toStrongRef()->path();
             textureStore->removeTexture(textureId);
@@ -178,7 +179,7 @@ namespace ModelLoaders
 
                 QString matPath = materialPath(record);
 
-                PublicStoreDefs::MaterialId materialId = materialStore->createMaterial(matPath);
+                MaterialDefs::MaterialId materialId = materialStore->createMaterial(matPath);
                 QSharedPointer<RenderMaterial> material = materialStore->material(materialId).toStrongRef();
                 populateMaterial(material, doc);
             }
@@ -207,7 +208,7 @@ namespace ModelLoaders
                     continue;
                 }
 
-                PublicStoreDefs::TextureId textureId = m_ReferencedVtfs.value(fullPath);
+                TextureDefs::TextureId textureId = m_ReferencedVtfs.value(fullPath);
 
                 QByteArray vtfData = getData(vpk, record);
                 if ( vtfData.isEmpty() )
@@ -298,7 +299,7 @@ namespace ModelLoaders
 
             if ( !m_ReferencedVtfs.contains(vtfPath) )
             {
-                PublicStoreDefs::TextureId textureId = textureStore->createBlankTexture(vtfPath);
+                TextureDefs::TextureId textureId = textureStore->createBlankTexture(vtfPath);
                 m_ReferencedVtfs.insert(vtfPath, textureId);
             }
 

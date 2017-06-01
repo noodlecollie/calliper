@@ -13,7 +13,7 @@ namespace PresetMaterials
     };
 
     void initialisePresetMaterials();
-    RenderSystem::PublicStoreDefs::MaterialId presetMaterialId(PresetMaterial presetMaterial);
+    RenderSystem::MaterialDefs::MaterialId presetMaterialId(PresetMaterial presetMaterial);
 }
 
 #endif // PRESETMATERIALS_H

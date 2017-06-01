@@ -9,12 +9,12 @@ namespace Model
 
     }
 
-    RenderSystem::PublicStoreDefs::MaterialId TexturedWinding::materialId() const
+    RenderSystem::MaterialDefs::MaterialId TexturedWinding::materialId() const
     {
         return m_iMaterialId;
     }
 
-    void TexturedWinding::setMaterialId(RenderSystem::PublicStoreDefs::MaterialId id)
+    void TexturedWinding::setMaterialId(RenderSystem::MaterialDefs::MaterialId id)
     {
         m_iMaterialId = id;
     }

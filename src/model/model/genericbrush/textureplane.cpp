@@ -16,12 +16,12 @@ namespace Model
         m_flRotation = 0;
     }
 
-    RenderSystem::PublicStoreDefs::MaterialId TexturePlane::materialId() const
+    RenderSystem::MaterialDefs::MaterialId TexturePlane::materialId() const
     {
         return m_iMaterialId;
     }
 
-    void TexturePlane::setMaterialId(RenderSystem::PublicStoreDefs::MaterialId id)
+    void TexturePlane::setMaterialId(RenderSystem::MaterialDefs::MaterialId id)
     {
         m_iMaterialId = id;
     }
