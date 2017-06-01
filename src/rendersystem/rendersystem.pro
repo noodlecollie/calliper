@@ -79,7 +79,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/opengl/openglhelpers.h \
     rendersystem/private/opengl/opengluniformbuffer.h \
     rendersystem/private/opengl/openglvertexarrayobject.h \
-    rendersystem/private/shaders/common/ishaderspec.h \
     rendersystem/private/shaders/base/openglshaderprogram.h \
     rendersystem/private/store-classes/objectstoreitem.h \
     rendersystem/private/store-classes/itembasedobjectstore.h \

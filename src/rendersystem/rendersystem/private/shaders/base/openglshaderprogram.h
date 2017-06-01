@@ -3,10 +3,9 @@
 
 #include <QOpenGLShaderProgram>
 
-#include "rendersystem/private/shaders/common/ishaderspec.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
-class OpenGLShaderProgram : public QOpenGLShaderProgram, public IShaderSpec
+class OpenGLShaderProgram : public QOpenGLShaderProgram
 {
 public:
     // Subclasses should have a constructor which takes a quint16 ID and a default parent argument.
@@ -15,6 +14,12 @@ public:
 
     virtual void construct() = 0;
     virtual bool link() override;
+
+    virtual VertexFormat vertexFormat() const = 0;
+
+    // Maximum number of items supported in a batch.
+    // Return 1 if the shader doesn't support batching.
+    virtual int maxBatchedItems() const = 0;
 
     // Should be bound before calling, and released after!
     virtual void setGlobalUniformBlockBinding();
