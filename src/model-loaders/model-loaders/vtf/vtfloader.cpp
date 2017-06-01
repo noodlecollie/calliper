@@ -200,7 +200,7 @@ namespace ModelLoaders
             m_CurrentRecordSet = vpk->index().recordsForExtension("vtf");
             m_iCurrentArchiveIndex = ~0;
 
-            foreach ( const FileFormats::VPKIndexTreeRecordPointer& record, m_CurrentRecordSet )
+            for ( const FileFormats::VPKIndexTreeRecordPointer& record : m_CurrentRecordSet )
             {
                 QString fullPath = materialPath(record);
                 if ( !m_ReferencedVtfs.contains(fullPath) )
