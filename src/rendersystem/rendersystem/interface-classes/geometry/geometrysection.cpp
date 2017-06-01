@@ -13,6 +13,7 @@ namespace RenderSystem
           m_nMaterialId(MaterialDefs::INVALID_MATERIAL_ID),
           m_matModelToWorld(),
           m_nDrawMode(GL_TRIANGLES),
+          m_flLineWidth(1.0f),
           m_AttributeVectors(),
           m_Indices()
     {
@@ -72,6 +73,21 @@ namespace RenderSystem
     {
         Q_ASSERT_X(false, Q_FUNC_INFO, "Implement this in renderer!");
         m_nDrawMode = mode;
+    }
+
+    float GeometrySection::lineWidth() const
+    {
+        return m_flLineWidth;
+    }
+
+    void GeometrySection::setLineWidth(float width)
+    {
+        if ( width <= 0.0f )
+        {
+            return;
+        }
+
+        m_flLineWidth = width;
     }
 
     void GeometrySection::addAttribute(AttributeType attribute, const QVector4D& vec)

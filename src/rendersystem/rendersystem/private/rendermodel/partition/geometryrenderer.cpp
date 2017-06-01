@@ -6,6 +6,14 @@
 #include "rendersystem/private/opengl/openglhelpers.h"
 #include "rendersystem/private/opengl/openglerrors.h"
 
+namespace
+{
+    inline int itemsInRange(int firstItem, int lastItem)
+    {
+        return lastItem - firstItem + 1;
+    }
+}
+
 GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,
                                    GeometryOffsetTable &offsets,
@@ -22,29 +30,36 @@ GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
     m_pCurrentShader = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
 }
 
-GLenum GeometryRenderer::drawMode() const
+int GeometryRenderer::getLastItemForNextDraw(int firstItem) const
 {
-    return m_nDrawMode;
-}
-
-void GeometryRenderer::setDrawMode(GLenum mode)
-{
-    m_nDrawMode = mode;
-}
-
-float GeometryRenderer::lineWidth() const
-{
-    return m_flLineWidth;
-}
-
-void GeometryRenderer::setLineWidth(float width)
-{
-    if ( m_flLineWidth <= 0.0f )
+    if ( firstItem + 1 >= m_OffsetTable.count() )
     {
-        return;
+        return firstItem;
     }
 
-    m_flLineWidth = width;
+    const GLenum firstItemDrawMode = m_OffsetTable[firstItem].drawMode;
+    const float firstItemLineWidth = m_OffsetTable[firstItem].lineWidth;
+
+    for ( int lastItem = firstItem + 1;
+          itemsInRange(firstItem, lastItem) <= m_nItemsPerBatch && lastItem < m_OffsetTable.count();
+          ++lastItem )
+    {
+        // If draw params are different on this item, the last item
+        // should be the previous one.
+        if ( m_OffsetTable[lastItem].drawMode != firstItemDrawMode ||
+             m_OffsetTable[lastItem].lineWidth != firstItemLineWidth )
+        {
+            return lastItem - 1;
+        }
+
+        // If this item is the last in the table, don't go any further.
+        if ( lastItem == m_OffsetTable.count() - 1 )
+        {
+            return lastItem;
+        }
+    }
+
+    return firstItem + m_nItemsPerBatch - 1;
 }
 
 void GeometryRenderer::draw()
@@ -56,25 +71,26 @@ void GeometryRenderer::draw()
 
     m_nItemsPerBatch = m_pCurrentShader->maxBatchedItems();
 
-    GL_CURRENT_F;
-    GLTRY(f->glLineWidth(m_flLineWidth));
-
-    for ( int offsetItemBase = 0; offsetItemBase < m_OffsetTable.count(); offsetItemBase += m_nItemsPerBatch )
+    int firstItem = 0;
+    while ( firstItem < m_OffsetTable.count() )
     {
-        int lastItemInBatch = offsetItemBase + m_nItemsPerBatch - 1;
-        if ( lastItemInBatch >= m_OffsetTable.count() )
-        {
-            lastItemInBatch = m_OffsetTable.count() - 1;
-        }
+        int lastItem = getLastItemForNextDraw(firstItem);
+
+        // The draw mode and line widths will be the same for all items
+        // in the batch, so we can just sample them from the first item.
+        m_nDrawMode = m_OffsetTable[firstItem].drawMode;
+        m_flLineWidth = m_OffsetTable[firstItem].lineWidth;
 
         try
         {
-            draw_x(offsetItemBase, lastItemInBatch);
+            draw_x(firstItem, lastItem);
         }
         catch (const InternalException&)
         {
             break;
         }
+
+        firstItem = lastItem + 1;
     }
 
     releaseBuffers();
@@ -121,5 +137,6 @@ void GeometryRenderer::draw_x(int firstItem, int lastItem)
 
     GL_CURRENT_F;
 
+    GLTRY(f->glLineWidth(m_flLineWidth));
     f->glDrawElements(m_nDrawMode, indicesCount, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(beginOffsetInts));
 }

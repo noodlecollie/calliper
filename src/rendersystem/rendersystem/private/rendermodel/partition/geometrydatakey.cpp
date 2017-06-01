@@ -1,22 +1,54 @@
 #include "geometrydatakey.h"
 #include <QByteArray>
 
-uint qHash(const GeometryDataKey& key, uint seed)
+namespace
 {
-    // It's less likely that the upper byte of the object ID will be used,
-    // so do an XOR with that.
-    return qHash((static_cast<quint32>(key.sectionId) << 24) ^ key.objectId, seed);
+    template<typename T>
+    inline void coerceToBytes(char*& data, const T& value)
+    {
+        *reinterpret_cast<T*>(data) = value;
+        data += sizeof(T);
+    }
 }
 
-GeometryDataKey::GeometryDataKey(RenderSystem::RenderModelDefs::ObjectId object,
+uint qHash(const GeometryDataKey& key, uint seed)
+{
+    using namespace RenderSystem::RenderModelDefs;
+
+    const quint32 dataSize = sizeof(ObjectId) + sizeof(SectionId) + sizeof(GLenum);
+    char arData[dataSize];
+    char* data = arData;
+
+    coerceToBytes(data, key.drawMode);
+    coerceToBytes(data, key.objectId);
+    coerceToBytes(data, key.sectionId);
+
+    return qHashBits(arData, dataSize, seed);
+}
+
+GeometryDataKey::GeometryDataKey(GLenum mode,
+                                 float width,
+                                 RenderSystem::RenderModelDefs::ObjectId object,
                                  RenderSystem::RenderModelDefs::SectionId section)
-    : objectId(object),
+    : drawMode(mode),
+      lineWidth(width),
+      objectId(object),
       sectionId(section)
 {
 }
 
 bool GeometryDataKey::operator <(const GeometryDataKey& other) const
 {
+    if ( drawMode != other.drawMode )
+    {
+        return drawMode < other.drawMode;
+    }
+
+    if ( lineWidth != other.lineWidth )
+    {
+        return lineWidth < other.lineWidth;
+    }
+
     if ( objectId != other.objectId )
     {
         return objectId < other.objectId;
@@ -27,5 +59,7 @@ bool GeometryDataKey::operator <(const GeometryDataKey& other) const
 
 bool GeometryDataKey::operator ==(const GeometryDataKey& other) const
 {
-    return objectId == other.objectId && sectionId == other.sectionId;
+    return drawMode == other.drawMode &&
+            objectId == other.objectId &&
+            sectionId == other.sectionId;
 }

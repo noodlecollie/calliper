@@ -56,7 +56,7 @@ void RenderPartition::removeGeometry(RenderSystem::RenderModelDefs::ObjectId obj
     m_GeometryDataContainer.remove(objectId);
 }
 
-void RenderPartition::draw(GLenum drawMode, float lineWidth)
+void RenderPartition::draw()
 {
     if ( !m_Uploader.uploadIfRequired() )
     {
@@ -64,9 +64,5 @@ void RenderPartition::draw(GLenum drawMode, float lineWidth)
     }
 
     GeometryRenderer renderer(m_Context, m_nMaterialId, m_OffsetTable, m_OpenGLBuffers);
-
-    renderer.setDrawMode(drawMode);
-    renderer.setLineWidth(lineWidth);
-
     renderer.draw();
 }

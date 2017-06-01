@@ -22,6 +22,11 @@ void RenderGroup::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
 {
     static_assert(ITEMS_PER_PARTITION > 0, "There must be at least 1 item per partition!");
 
+    const GeometryDataKey key(section->drawMode(),
+                              section->lineWidth(),
+                              section->objectId(),
+                              section->sectionId());
+
     for ( int i = 0; i < m_Partitions.count(); ++i )
     {
         RenderPartitionPointer partition = m_Partitions.at(i);
@@ -31,14 +36,14 @@ void RenderGroup::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
         }
 
         partition->setGeometry(section);
-        m_SectionToPartition.insert(GeometryDataKey(section->objectId(), section->sectionId()), partition);
+        m_SectionToPartition.insert(key, partition);
         return;
     }
 
     RenderPartitionPointer partition = RenderPartitionPointer::create(m_Context, m_nMaterialId, ITEMS_PER_PARTITION);
     partition->setGeometry(section);
     m_Partitions.append(partition);
-    m_SectionToPartition.insert(GeometryDataKey(section->objectId(), section->sectionId()), partition);
+    m_SectionToPartition.insert(key, partition);
 }
 
 void RenderGroup::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId)

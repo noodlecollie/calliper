@@ -1,9 +1,11 @@
 #ifndef GEOMETRYDATA_H
 #define GEOMETRYDATA_H
 
+#include <QOpenGLFunctions>
 #include <QVector>
 #include <QMatrix4x4>
 #include <QVector4D>
+
 #include "rendersystem/private/shaders/common/vertexformat.h"
 
 class GeometryData
@@ -25,6 +27,12 @@ public:
 
     const QMatrix4x4& modelToWorldMatrix() const;
     void setModelToWorldMatrix(const QMatrix4x4& matrix);
+
+    GLenum drawMode() const;
+    void setDrawMode(GLenum mode);
+
+    float lineWidth() const;
+    void setLineWidth(float width);
 
     // *ref() accessors automatically flag the vertex data as dirty when called.
     // If you don't actually want to modify the data, use the const accessors.
@@ -59,6 +67,8 @@ private:
     quint32 m_nObjectId;
     quint8 m_nSectionId;
     QMatrix4x4 m_matModelToWorld;
+    GLenum m_nDrawMode;
+    float m_flLineWidth;
 
     QVector<QVector4D> m_Positions;
     QVector<QVector4D> m_Normals;

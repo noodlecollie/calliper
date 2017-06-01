@@ -29,7 +29,7 @@ public:
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
     void removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId);
 
-    void draw(GLenum drawMode, float lineWidth);
+    void draw();
 
 private:
     const RenderModelContext& m_Context;

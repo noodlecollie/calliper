@@ -43,6 +43,9 @@ namespace RenderSystem
         GLenum drawMode() const;
         void setDrawMode(GLenum mode);
 
+        float lineWidth() const;
+        void setLineWidth(float width);
+
         QMatrix4x4 modelToWorldMatrix() const;
         void setModelToWorldMatrix(const QMatrix4x4& mat);
 
@@ -90,6 +93,7 @@ namespace RenderSystem
         MaterialDefs::MaterialId m_nMaterialId;
         QMatrix4x4 m_matModelToWorld;
         GLenum m_nDrawMode;
+        float m_flLineWidth;
         QVector<QVector4D> m_AttributeVectors[TOTAL_ATTRIBUTE_TYPES];
         QVector<quint32> m_Indices;
     };

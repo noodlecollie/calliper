@@ -2,6 +2,7 @@
 #define GEOMETRYOFFSETTABLE_H
 
 #include <QVector>
+#include <QOpenGLFunctions>
 
 class GeometryOffsetTable
 {
@@ -12,13 +13,19 @@ public:
         quint32 vertexCountFloats;
         quint32 indexOffsetInts;
         quint32 indexCountInts;
+        GLenum drawMode;
+        float lineWidth;
 
         ObjectOffsets(quint32 vOffset, quint32 vCount,
-                      quint32 iOffset, quint32 iCount)
+                      quint32 iOffset, quint32 iCount,
+                      GLenum dMode = GL_TRIANGLES,
+                      float width = 1.0f)
             : vertexOffsetFloats(vOffset),
               vertexCountFloats(vCount),
               indexOffsetInts(iOffset),
-              indexCountInts(iCount)
+              indexCountInts(iCount),
+              drawMode(dMode),
+              lineWidth(width)
         {
         }
 

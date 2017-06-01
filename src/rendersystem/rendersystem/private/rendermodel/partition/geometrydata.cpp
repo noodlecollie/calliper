@@ -21,6 +21,8 @@ GeometryData::GeometryData(quint32 objectId, quint8 sectionId)
       m_nObjectId(objectId),
       m_nSectionId(sectionId),
       m_matModelToWorld(),
+      m_nDrawMode(GL_TRIANGLES),
+      m_flLineWidth(1.0f),
       m_Positions(),
       m_Normals(),
       m_Colors(),
@@ -80,6 +82,31 @@ void GeometryData::setModelToWorldMatrix(const QMatrix4x4 &matrix)
 {
     m_matModelToWorld = matrix;
     setMatrixDirty(true);
+}
+
+GLenum GeometryData::drawMode() const
+{
+    return m_nDrawMode;
+}
+
+void GeometryData::setDrawMode(GLenum mode)
+{
+    m_nDrawMode = mode;
+}
+
+float GeometryData::lineWidth() const
+{
+    return m_flLineWidth;
+}
+
+void GeometryData::setLineWidth(float width)
+{
+    if ( width <= 0.0f )
+    {
+        return;
+    }
+
+    m_flLineWidth = width;
 }
 
 const QVector<QVector4D>& GeometryData::positions() const

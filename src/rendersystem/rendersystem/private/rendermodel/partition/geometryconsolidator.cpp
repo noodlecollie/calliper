@@ -98,8 +98,13 @@ void GeometryConsolidator::consolidate()
 void GeometryConsolidator::consolidate(const QSharedPointer<GeometryData> &geometry)
 {
     m_OffsetTable.createNewItem();
+
     consolidateVertices(geometry);
     consolidateIndices(geometry);
+
+    GeometryOffsetTable::ObjectOffsets& offsets = m_OffsetTable.lastItem();
+    offsets.drawMode = geometry->drawMode();
+    offsets.lineWidth = geometry->lineWidth();
 }
 
 void GeometryConsolidator::consolidateVertices(const QSharedPointer<GeometryData> &geometry)

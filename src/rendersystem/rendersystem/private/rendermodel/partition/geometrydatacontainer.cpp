@@ -12,7 +12,11 @@ int GeometryDataContainer::count() const
 
 void GeometryDataContainer::insert(const QSharedPointer<RenderSystem::GeometrySection>& section)
 {
-    insert(GeometryDataKey(section->objectId(), section->sectionId()), sectionToGeometryData(section));
+    insert(GeometryDataKey(section->drawMode(),
+                           section->lineWidth(),
+                           section->objectId(),
+                           section->sectionId()),
+           sectionToGeometryData(section));
 }
 
 void GeometryDataContainer::insert(const GeometryDataKey &key, const GeometryDataPointer &data)
@@ -71,6 +75,9 @@ GeometryDataContainer::GeometryDataPointer GeometryDataContainer::sectionToGeome
     data->colorsRef() = section->attributeVector(RenderSystem::GeometrySection::Color);
     data->textureCoordinatesRef() = section->attributeVector(RenderSystem::GeometrySection::TextureCoordinate);
     data->indicesRef() = section->indicesVector();
+
+    data->setDrawMode(section->drawMode());
+    data->setLineWidth(section->lineWidth());
 
     return data;
 }
