@@ -1,13 +1,13 @@
-#ifndef GENERALUTIL_H
-#define GENERALUTIL_H
+#ifndef PATHS_H
+#define PATHS_H
 
 #include "calliperutil_global.h"
+
 #include <QString>
-#include <QMetaEnum>
 
 namespace CalliperUtil
 {
-    namespace General
+    namespace Paths
     {
         // As a general rule, this should be called as early as possible on an imported resource path,
         // so that the rest of the code can assume the separators are normalised.
@@ -17,4 +17,4 @@ namespace CalliperUtil
     }
 }
 
-#endif // GENERALUTIL_H
+#endif // PATHS_H

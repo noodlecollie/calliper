@@ -28,7 +28,6 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem_global.cpp \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.cpp \
     rendersystem/private/stores/opengltexturestore/opengltexturestore.cpp \
-    rendersystem/private/opengl/openglerrors.cpp \
     rendersystem/private/shaders/common/vertexformat.cpp \
     rendersystem/private/opengl/opengluniformbuffer.cpp \
     rendersystem/private/opengl/openglvertexarrayobject.cpp \
@@ -56,7 +55,6 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel/partition/geometryconsolidator.cpp \
     rendersystem/private/rendermodel/partition/geometryoffsettable.cpp \
     rendersystem/private/rendermodel/partition/geometryrenderer.cpp \
-    rendersystem/private/opengl/openglhelpers.cpp \
     rendersystem/private/rendermode/baserendermode.cpp \
     rendersystem/private/rendermode/barebonesrendermode.cpp \
     rendersystem/private/stores/rendermodestore/rendermodestore.cpp \
@@ -74,9 +72,7 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/store-classes/objectstoreitempointer.h \
     rendersystem/private/stores/opengltexturestore/opengltexturestore.h \
     rendersystem/interfaces/itexturestore.h \
-    rendersystem/private/opengl/openglerrors.h \
     rendersystem/private/shaders/common/vertexformat.h \
-    rendersystem/private/opengl/openglhelpers.h \
     rendersystem/private/opengl/opengluniformbuffer.h \
     rendersystem/private/opengl/openglvertexarrayobject.h \
     rendersystem/private/shaders/base/openglshaderprogram.h \
@@ -131,3 +127,10 @@ unix {
 
 RESOURCES += \
     rendersystem/private/resource/resource.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil
+else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
+
+INCLUDEPATH += $$PWD/../calliperutil
+DEPENDPATH += $$PWD/../calliperutil

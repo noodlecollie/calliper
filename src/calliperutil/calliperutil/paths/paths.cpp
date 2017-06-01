@@ -1,4 +1,4 @@
-#include "generalutil.h"
+#include "paths.h"
 
 #include <QVector3D>
 #include <QStringList>
@@ -6,7 +6,7 @@
 
 namespace CalliperUtil
 {
-    namespace General
+    namespace Paths
     {
         QString normaliseResourcePathSeparators(const QString &originalPath)
         {

@@ -1,10 +1,9 @@
 #include "plane3d.h"
 #include "calliperutil/math/math.h"
-#include "calliperutil/general/generalutil.h"
 
 namespace Model
 {
-    QDebug operator << (QDebug debug, const Plane3D &plane)
+    QDebug operator <<(QDebug debug, const Plane3D &plane)
     {
         debug.nospace() << "Plane3D(" << plane.normal() << ", " << plane.distance() << ")";
         return debug;

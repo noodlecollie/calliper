@@ -1,6 +1,6 @@
 #include "globalshaderuniforms.h"
 
-#include "rendersystem/private/opengl/openglerrors.h"
+#include "calliperutil/opengl/openglerrors.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 namespace

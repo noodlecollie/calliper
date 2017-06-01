@@ -1,7 +1,7 @@
 #include "vpkindextreeiterator.h"
 #include "calliperutil/string/stringutil.h"
 #include <QtDebug>
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/general/paths.h"
 
 namespace
 {

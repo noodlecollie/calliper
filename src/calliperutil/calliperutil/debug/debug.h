@@ -10,9 +10,4 @@
 #define CUTL_ASSERT_SUCCESS(_expr) _expr;
 #endif
 
-namespace CalliperUtil
-{
-
-}
-
 #endif // DEBUG_H

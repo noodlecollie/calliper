@@ -3,7 +3,7 @@
 #include "geometryconsolidator.h"
 #include "renderutils.h"
 
-#include "rendersystem/private/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglhelpers.h"
 
 GeometryUploader::GeometryUploader(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,

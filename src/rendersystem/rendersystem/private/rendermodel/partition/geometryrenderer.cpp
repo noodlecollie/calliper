@@ -3,8 +3,9 @@
 #include "renderutils.h"
 
 #include "rendersystem/private/rendermodel/rendermodel-defs.h"
-#include "rendersystem/private/opengl/openglhelpers.h"
-#include "rendersystem/private/opengl/openglerrors.h"
+
+#include "calliperutil/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglerrors.h"
 
 namespace
 {

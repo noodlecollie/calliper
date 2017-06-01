@@ -5,8 +5,9 @@
 #include <QtDebug>
 
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
-#include "rendersystem/private/opengl/openglhelpers.h"
-#include "rendersystem/private/opengl/openglerrors.h"
+
+#include "calliperutil/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglerrors.h"
 
 namespace
 {

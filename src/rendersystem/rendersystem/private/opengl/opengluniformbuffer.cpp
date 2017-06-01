@@ -1,6 +1,6 @@
 #include "opengluniformbuffer.h"
-#include "openglhelpers.h"
-#include "openglerrors.h"
+#include "calliperutil/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglerrors.h"
 
 OpenGLUniformBuffer::OpenGLUniformBuffer(QOpenGLBuffer::UsagePattern pattern)
     : m_iHandle(0),

@@ -1,6 +1,6 @@
 #include "openglvertexarrayobject.h"
-#include "openglerrors.h"
-#include "openglhelpers.h"
+#include "calliperutil/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglerrors.h"
 
 OpenGLVertexArrayObject::OpenGLVertexArrayObject()
     : m_iVAOID(0)

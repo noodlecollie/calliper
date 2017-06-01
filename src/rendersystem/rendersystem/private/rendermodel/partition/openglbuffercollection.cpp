@@ -1,6 +1,6 @@
 #include "openglbuffercollection.h"
 
-#include "rendersystem/private/opengl/openglerrors.h"
+#include "calliperutil/opengl/openglerrors.h"
 
 OpenGLBufferCollection::OpenGLBufferCollection(QOpenGLBuffer::UsagePattern usagePattern)
     : m_nUsagePattern(usagePattern),

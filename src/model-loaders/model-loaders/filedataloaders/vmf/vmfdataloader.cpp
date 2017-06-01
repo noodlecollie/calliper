@@ -13,7 +13,7 @@
 
 #include "calliperutil/exceptions/calliperexception.h"
 #include "calliperutil/json/jsonarraywrapper.h"
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/paths/paths.h"
 
 #include "rendersystem/endpoints/materialstoreendpoint.h"
 
@@ -244,7 +244,7 @@ namespace ModelLoaders
         using namespace CalliperUtil;
         using namespace RenderSystem;
 
-        QString materialPath = CalliperUtil::General::normaliseResourcePathSeparators(side.value("material").toString().toLower());
+        QString materialPath = CalliperUtil::Paths::normaliseResourcePathSeparators(side.value("material").toString().toLower());
         QString plane = side.value("plane").toString();
 
         QVector3D v0, v1, v2;

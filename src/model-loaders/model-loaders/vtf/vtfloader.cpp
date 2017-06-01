@@ -13,7 +13,7 @@
 #include "VTFLib/src/VTFFile.h"
 #include "VTFLib/src/VTFLib.h"
 
-#include "calliperutil/general/generalutil.h"
+#include "calliperutil/paths/paths.h"
 
 #include "file-formats/vpk/vpkindex.h"
 #include "file-formats/keyvalues/keyvaluesparser.h"
@@ -295,7 +295,7 @@ namespace ModelLoaders
                 continue;
             }
 
-            QString vtfPath = CalliperUtil::General::normaliseResourcePathSeparators(val.toString().toLower());
+            QString vtfPath = CalliperUtil::Paths::normaliseResourcePathSeparators(val.toString().toLower());
 
             if ( !m_ReferencedVtfs.contains(vtfPath) )
             {
