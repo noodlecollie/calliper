@@ -15,3 +15,4 @@ Rendersystem:
  - Use these in model and model loaders. DONE
  - Namespace things more sensibly, eg. PublicStoreDefs could go under MaterialStore and TextureStore respectively.
  - Make draw mode in geometry section work in render model.
+ - Convert things that use draw mode into an actual enum, whose values correspond to the OpenGL values.
