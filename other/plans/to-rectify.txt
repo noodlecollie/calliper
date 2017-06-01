@@ -5,8 +5,8 @@ Model:
 
 ModelLoaders:
  - vmfdataloader.cpp: Hook material store in for textured windings. DONE
- - vtfloader.cpp: Fix the VTF loader class.
- - Rename quint32/quint16 references to material/texture IDs.
+ - vtfloader.cpp: Fix the VTF loader class. DONE
+ - Rename quint32/quint16 references to material/texture IDs. DONE
  - Investigate vtfloader deleting textures - it probably shouldn't be tasked with actually loading the textures in.
    VPKs should be probed for textures, then the materials should use whatever is available.
 

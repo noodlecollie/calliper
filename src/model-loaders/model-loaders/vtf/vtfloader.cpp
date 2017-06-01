@@ -135,7 +135,7 @@ namespace ModelLoaders
         loadReferencedVtfs();
 
         // Clean up any remaining VTFs - the files could have referenced some that don't actually exist.
-        foreach ( quint32 textureId, m_ReferencedVtfs.values() )
+        foreach ( PublicStoreDefs::TextureId textureId, m_ReferencedVtfs.values() )
         {
             qDebug() << "Cleaning up unused texture" << textureId << textureStore->texture(textureId).toStrongRef()->path();
             textureStore->removeTexture(textureId);
@@ -207,7 +207,7 @@ namespace ModelLoaders
                     continue;
                 }
 
-                quint32 textureId = m_ReferencedVtfs.value(fullPath);
+                PublicStoreDefs::TextureId textureId = m_ReferencedVtfs.value(fullPath);
 
                 QByteArray vtfData = getData(vpk, record);
                 if ( vtfData.isEmpty() )
@@ -298,7 +298,7 @@ namespace ModelLoaders
 
             if ( !m_ReferencedVtfs.contains(vtfPath) )
             {
-                quint32 textureId = textureStore->createBlankTexture(vtfPath);
+                PublicStoreDefs::TextureId textureId = textureStore->createBlankTexture(vtfPath);
                 m_ReferencedVtfs.insert(vtfPath, textureId);
             }
 
