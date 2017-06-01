@@ -1,15 +1,21 @@
 #include "vmfdataloader.h"
+
+#include <QJsonObject>
+#include <QTextStream>
+#include <QFile>
+
 #include "model/filedatamodels/map/mapfiledatamodel.h"
-#include "calliperutil/exceptions/calliperexception.h"
 #include "model/math/texturedwinding.h"
-#include "calliperutil/json/jsonarraywrapper.h"
 #include "model/genericbrush/genericbrush.h"
 #include "model/factories/genericbrushfactory.h"
-#include <QJsonObject>
-#include "calliperutil/general/generalutil.h"
-#include <QTextStream>
+
 #include "file-formats/keyvalues/keyvaluesparser.h"
-#include <QFile>
+
+#include "calliperutil/exceptions/calliperexception.h"
+#include "calliperutil/json/jsonarraywrapper.h"
+#include "calliperutil/general/generalutil.h"
+
+#include "rendersystem/endpoints/materialstoreendpoint.h"
 
 namespace
 {
@@ -236,6 +242,7 @@ namespace ModelLoaders
     {
         using namespace Model;
         using namespace CalliperUtil;
+        using namespace RenderSystem;
 
         QString materialPath = CalliperUtil::General::normaliseResourcePathSeparators(side.value("material").toString().toLower());
         QString plane = side.value("plane").toString();
@@ -259,15 +266,13 @@ namespace ModelLoaders
             return Q_NULLPTR;
         }
 
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Hook material store in here!");
-//        MaterialStore* materialStore = ResourceEnvironment::globalInstance()->materialStore();
+        MaterialStoreEndpoint::MaterialStoreAccessor materialStore = MaterialStoreEndpoint::materialStore();
+        const PublicStoreDefs::MaterialId materialId = materialStore->materialIdFromPath(materialPath);
 
-//        quint32 materialId = materialStore->getMaterialId(materialPath);
-//        TexturedWinding* winding = new TexturedWinding(Plane3D(v0, v2, v1), materialId);
-//        Q_ASSERT(!QVector3D::crossProduct(v1 - v0, v2 - v0).isNull());
+        TexturedWinding* winding = new TexturedWinding(Plane3D(v0, v2, v1), materialId);
+        Q_ASSERT(!QVector3D::crossProduct(v1-v0, v2-v0).isNull());
 
-//        return winding;
-        return Q_NULLPTR;
+        return winding;
     }
 
     void VmfDataLoader::addError(int brushId, const QString &error)

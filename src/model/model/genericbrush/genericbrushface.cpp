@@ -105,16 +105,13 @@ namespace Model
             section->addNormal(nrm);
         }
 
-        RenderSystem::CurrentContextGuard<RenderSystem::IMaterialStore> materialStore =
-                RenderSystem::MaterialStoreEndpoint::materialStore();
+        MaterialStoreEndpoint::MaterialStoreAccessor materialStore = MaterialStoreEndpoint::materialStore();
+        TextureStoreEndpoint::TextureStoreAccessor textureStore = TextureStoreEndpoint::textureStore();
 
-        RenderSystem::CurrentContextGuard<RenderSystem::ITextureStore> textureStore =
-                RenderSystem::TextureStoreEndpoint::textureStore();
+        QSharedPointer<RenderMaterial> material = materialStore->material(texturePlane()->materialId()).toStrongRef();
+        const QString texturePath = material->textureMapping(PublicTextureDefs::MainTexture);
 
-        QSharedPointer<RenderSystem::RenderMaterial> material = materialStore->material(texturePlane()->materialId()).toStrongRef();
-        const QString texturePath = material->textureMapping(RenderSystem::PublicTextureDefs::MainTexture);
-
-        QSharedPointer<RenderSystem::NamedOpenGLTexture> texture = textureStore->texture(texturePath).toStrongRef();
+        QSharedPointer<NamedOpenGLTexture> texture = textureStore->texture(texturePath).toStrongRef();
         const QSize textureSize = texture->size();
 
         for ( int i = 0; i < vertices.count(); i++ )
@@ -126,7 +123,9 @@ namespace Model
     QVector3D GenericBrushFace::normal() const
     {
         if ( indexCount() < 3 )
+        {
             return QVector3D();
+        }
 
         QVector3D v0 = parentBrush()->brushVertexAt(m_BrushVertexIndices.at(0));
         QVector3D v1 = parentBrush()->brushVertexAt(m_BrushVertexIndices.at(1));

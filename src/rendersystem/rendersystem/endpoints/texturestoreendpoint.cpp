@@ -5,9 +5,9 @@ namespace RenderSystem
 {
     namespace TextureStoreEndpoint
     {
-        CurrentContextGuard<ITextureStore> textureStore()
+        TextureStoreAccessor textureStore()
         {
-            return CurrentContextGuard<ITextureStore>(*OpenGLTextureStore::globalInstance());
+            return TextureStoreAccessor(*OpenGLTextureStore::globalInstance());
         }
     }
 }

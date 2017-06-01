@@ -2,3 +2,13 @@ Model:
  - genericbrushface.cpp: Implement texture co-ordinates. Need to know the size of the main texture. DONE
  - originmarker.cpp: Implement preset materials for drawing unlit things. DONE
  - Everywhere: check for quint16/quint23 usage and change to appropriate typedefs. DONE
+
+ModelLoaders:
+ - vmfdataloader.cpp: Hook material store in for textured windings. DONE
+ - vtfloader.cpp: Fix the VTF loader class.
+
+Rendersystem:
+ - Add typedefs for current context guards in their respective endpoints. DONE
+ - Use these in model and model loaders. DONE
+ - Namespace things more sensibly, eg. PublicStoreDefs could go under MaterialStore and TextureStore respectively.
+ - Make draw mode in geometry section work in render model.

@@ -9,7 +9,10 @@ namespace RenderSystem
 {
     namespace TextureStoreEndpoint
     {
-        RENDERSYSTEMSHARED_EXPORT CurrentContextGuard<ITextureStore> textureStore();
+        typedef CurrentContextGuard<ITextureStore> TextureStoreAccessor;
+
+        RENDERSYSTEMSHARED_EXPORT TextureStoreAccessor textureStore();
     }
 }
+
 #endif // TEXTURESTOREENDPOINT_H

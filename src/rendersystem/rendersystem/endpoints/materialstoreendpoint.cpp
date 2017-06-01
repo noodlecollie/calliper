@@ -5,9 +5,9 @@ namespace RenderSystem
 {
     namespace MaterialStoreEndpoint
     {
-        CurrentContextGuard<IMaterialStore> materialStore()
+        MaterialStoreAccessor materialStore()
         {
-            return CurrentContextGuard<IMaterialStore>(*MaterialStore::globalInstance());
+            return MaterialStoreAccessor(*MaterialStore::globalInstance());
         }
     }
 }

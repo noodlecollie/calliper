@@ -12,32 +12,32 @@ namespace RenderSystem
     {
     }
 
-    QSharedPointer<GeometrySection> GeometryBuilder::section(int index) const
+    GeometryBuilder::GeometrySectionPointer GeometryBuilder::section(int index) const
     {
         if ( index < 0 || index > m_Sections.count() )
         {
-            return QSharedPointer<GeometrySection>();
+            return GeometrySectionPointer();
         }
 
         return m_Sections.at(index);
     }
 
-    QSharedPointer<GeometrySection> GeometryBuilder::createNewSection(PublicStoreDefs::MaterialId materialId, const QMatrix4x4 &matrix)
+    GeometryBuilder::GeometrySectionPointer GeometryBuilder::createNewSection(PublicStoreDefs::MaterialId materialId, const QMatrix4x4 &matrix)
     {
         if ( m_Sections.isEmpty() || !latestSection()->isEmpty() )
         {
-            m_Sections.append(QSharedPointer<GeometrySection>::create(m_Sections.count(), m_nObjectId, materialId, matrix));
+            m_Sections.append(GeometrySectionPointer::create(m_Sections.count(), m_nObjectId, materialId, matrix));
         }
 
         return latestSection();
     }
 
-    QSharedPointer<GeometrySection> GeometryBuilder::createNewSection()
+    GeometryBuilder::GeometrySectionPointer GeometryBuilder::createNewSection()
     {
         return createNewSection(m_nMaterialId, m_matModelToWorld);
     }
 
-    QSharedPointer<GeometrySection> GeometryBuilder::latestSection()
+    GeometryBuilder::GeometrySectionPointer GeometryBuilder::latestSection()
     {
         return section(sectionCount() - 1);
     }
@@ -47,7 +47,7 @@ namespace RenderSystem
         return m_Sections.count();
     }
 
-    const QVector<QSharedPointer<GeometrySection> >& GeometryBuilder::sections() const
+    const QVector<GeometryBuilder::GeometrySectionPointer>& GeometryBuilder::sections() const
     {
         return m_Sections;
     }

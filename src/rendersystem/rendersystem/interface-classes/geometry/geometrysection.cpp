@@ -222,7 +222,12 @@ namespace RenderSystem
             case GL_LINES:
             case GL_LINE_LOOP:
             {
-                return calculateLineIndices();
+                return calculateLinearIndices(2);
+            }
+
+            case GL_TRIANGLE_FAN:
+            {
+                return calculateLinearIndices(3);
             }
 
             default:
@@ -256,20 +261,21 @@ namespace RenderSystem
         return true;
     }
 
-    bool GeometrySection::calculateLineIndices()
+    bool GeometrySection::calculateLinearIndices(int minRequiredPositions)
     {
         const int positionCount = count(Position);
-        if ( positionCount < 2 )
+        if ( positionCount < minRequiredPositions )
         {
             return false;
         }
 
         m_Indices.resize(positionCount);
+
         for ( quint32 index = 0; index < static_cast<quint32>(positionCount); ++index )
         {
             m_Indices[index] = index;
         }
 
-        return true;
+        return true
     }
 }

@@ -84,7 +84,7 @@ namespace RenderSystem
         }
 
         bool calculateTriangleIndices();
-        bool calculateLineIndices();
+        bool calculateLinearIndices(int minRequiredPositions);
 
         quint8 m_nSectionId;
         PublicRenderModelDefs::ObjectId m_nObjectId;
