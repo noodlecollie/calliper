@@ -6,7 +6,7 @@
 #include <QScopedArrayPointer>
 #include <QByteArray>
 #include "vpkarchivemd5item.h"
-#include "calliperutil/general/paths.h"
+#include "calliperutil/paths/paths.h"
 #include "vpkindextreeiterator.h"
 
 namespace FileFormats

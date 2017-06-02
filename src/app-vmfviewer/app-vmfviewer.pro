@@ -13,11 +13,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    simplerenderpassclassifier.cpp
+        mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    simplerenderpassclassifier.h
+HEADERS  += mainwindow.h
 
 FORMS    +=
 

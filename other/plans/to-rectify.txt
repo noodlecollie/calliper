@@ -18,3 +18,6 @@ Rendersystem:
  - Namespace things more sensibly, eg. PublicStoreDefs could go under MaterialStore and TextureStore respectively. DONE
  - Make draw mode in geometry section work in render model. DONE
  - Convert things that use draw mode into an actual enum, whose values correspond to the OpenGL values. DONE
+
+ VMFViewer:
+ - mainwindow.cpp: Make functional again.

@@ -1,21 +1,24 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "app-calliper/widgets/projectfiles/projectfiletreewidget.h"
-#include "app-calliper/widgets/dock/projectfiledockwidget.h"
+
 #include <QSignalBlocker>
 #include <QStandardPaths>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QMessageBox>
+#include <QtDebug>
+
+#include "app-calliper/widgets/projectfiles/projectfiletreewidget.h"
+#include "app-calliper/widgets/dock/projectfiledockwidget.h"
+#include "app-calliper/widgets/dock/projectmetadatadockwidget.h"
+
 #include "model-loaders/projects/calliperprojectloader.h"
 #include "model-loaders/json/jsonloaderutils.h"
-#include <QMessageBox>
-#include "app-calliper/widgets/dock/projectmetadatadockwidget.h"
-#include <QtDebug>
-#include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
 #include "model-loaders/filedataloaders/fileextensiondatamodelmap.h"
+
+#include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
 #include "user-interface/modelviews/modelviewfactory.h"
 #include "user-interface/modelviews/imodelview.h"
-#include "renderer/global/mainrendercontext.h"
 
 namespace AppCalliper
 {

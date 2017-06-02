@@ -2,12 +2,9 @@
 
 #include <QFocusEvent>
 
-#include "renderer/opengl/openglhelpers.h"
-#include "renderer/opengl/openglerrors.h"
-#include "renderer/opengl/scopedcurrentcontext.h"
+#include "calliperutil/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglerrors.h"
 
-#include "model/global/resourceenvironment.h"
-#include "model/scenerenderer/scenerenderer.h"
 #include "model/controller-adapters/keymap.h"
 #include "model/camera/cameracontroller.h"
 #include "model/controller-adapters/mouseeventmap.h"

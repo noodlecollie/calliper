@@ -1,7 +1,7 @@
 #include "vpkindextreeiterator.h"
 #include "calliperutil/string/stringutil.h"
 #include <QtDebug>
-#include "calliperutil/general/paths.h"
+#include "calliperutil/paths/paths.h"
 
 namespace
 {
@@ -182,7 +182,7 @@ namespace FileFormats
                     }
                     else
                     {
-                        m_FilePathList.replace(FILE_PATH, CalliperUtil::General::normaliseResourcePathSeparators(next.trimmed()));
+                        m_FilePathList.replace(FILE_PATH, CalliperUtil::Paths::normaliseResourcePathSeparators(next.trimmed()));
                         incrementTargetDepth();
                     }
                 } break;

@@ -4,7 +4,7 @@
 #include "model_global.h"
 #include <QVector3D>
 #include <QHash>
-#include "calliperutil/general/hashfunctions.h"
+#include "calliperutil/hash/hashfunctions.h"
 
 namespace Model
 {

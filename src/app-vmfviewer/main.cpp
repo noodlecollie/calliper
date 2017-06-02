@@ -2,21 +2,19 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
-#include "model/global/resourceenvironment.h"
-#include "renderer/global/mainrendercontext.h"
-#include "renderer/opengl/scopedcurrentcontext.h"
+
 #include "calliperutil/debug/debug.h"
-#include "model/global/resourceenvironment.h"
+
+#include "rendersystem/global/rendersystem.h"
 
 void initSubSystems()
 {
-    Renderer::MainRenderContext::globalInitialise();
-    CUTL_ASSERT_SUCCESS(Renderer::MainRenderContext::globalInstance()->create());
+    RenderSystem::Global::initialise();
 }
 
 void shutDownSubSystems()
 {
-    Renderer::MainRenderContext::globalShutdown();
+    RenderSystem::Global::shutdown();
 }
 
 int main(int argc, char *argv[])

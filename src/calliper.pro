@@ -11,7 +11,6 @@ SUBDIRS += \
     tst-keyvaluesparser \
     user-interface \
     app-calliper \
-    sb-frame-buffer-rendering \
     rendersystem
 
 model.depends = rendersystem calliperutil
@@ -24,4 +23,3 @@ dep-qvtf.depends = dep-vtflib
 tst-keyvaluesparser.depends = file-formats calliperutil
 user-interface.depends = rendersystem calliperutil model file-formats model-loaders dep-vtflib
 app-calliper.depends = calliperutil rendersystem model file-formats model-loaders dep-vtflib user-interface
-sb-frame-buffer-rendering.depends = calliperutil rendersystem model file-formats model-loaders dep-vtflib user-interface rendersystem

@@ -1,16 +1,18 @@
 #include "mainwindow.h"
-#include "model/shaders/unlitpervertexcolorshader.h"
-#include "renderer/opengl/openglerrors.h"
-#include "renderer/opengl/openglhelpers.h"
+
 #include <QtDebug>
-#include "model/genericbrush/genericbrush.h"
-#include "model/shaders/simplelitshader.h"
 #include <QMessageBox>
 #include <QtGlobal>
 #include <QMap>
-#include "file-formats/vpk/vpkindextreerecord.h"
+
+#include "calliperutil/opengl/openglerrors.h"
+#include "calliperutil/opengl/openglhelpers.h"
+
+#include "model/genericbrush/genericbrush.h"
+
 #include "model-loaders/vtf/vtfloader.h"
-#include "model/shaders/knownshaderdefs.h"
+
+#include "file-formats/vpk/vpkindextreerecord.h"
 
 MainWindow::MainWindow() : UserInterface::MapViewWindow(),
     m_iPlaceholderMaterial(0)
@@ -29,26 +31,14 @@ void MainWindow::initShaders()
 
 void MainWindow::initTextures()
 {
-    Model::TextureStore* textureStore = Model::ResourceEnvironment::globalInstance()->textureStore();
-    textureStore->setDefaultTextureFromFile(":model/textures/_ERROR_");
-    textureStore->createTextureFromFile(":model/textures/dev/devwhite");
 }
 
 void MainWindow::initMaterials()
 {
-    Model::MaterialStore* materialStore = Model::ResourceEnvironment::globalInstance()->materialStore();
-    Model::TextureStore* textureStore = Model::ResourceEnvironment::globalInstance()->textureStore();
-
-    // For now the string must be identical.
-    Renderer::RenderMaterialPointer material = materialStore->createMaterial(":model/textures/dev/devwhite");
-    m_iPlaceholderMaterial = material->materialStoreId();
-
-    material->addTexture(Renderer::ShaderDefs::MainTexture, textureStore->getTextureId(":model/textures/dev/devwhite"));
 }
 
 void MainWindow::initLocalOpenGlSettings()
 {
-    using namespace Renderer;
     GL_CURRENT_F;
 
     GLTRY(f->glEnable(GL_CULL_FACE));
@@ -82,14 +72,10 @@ void MainWindow::processBrushes()
 
 void MainWindow::importTextures()
 {
-    ModelLoaders::VTFLoader loader(Model::ResourceEnvironment::globalInstance()->materialStore(),
-                                   Model::ResourceEnvironment::globalInstance()->textureStore());
-    loadVpks();
-    loader.loadMaterials(vpkFileCollection());
+
 }
 
 void MainWindow::init()
 {
-    importTextures();
-    loadMap();
+
 }
