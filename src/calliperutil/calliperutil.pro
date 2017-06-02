@@ -34,7 +34,8 @@ HEADERS +=\
     calliperutil/qobject/qobjectutil.h \
     calliperutil/opengl/openglerrors.h \
     calliperutil/opengl/openglhelpers.h \
-    calliperutil/paths/paths.h
+    calliperutil/paths/paths.h \
+    calliperutil/array/arrayutil.h
 
 unix {
     target.path = /usr/lib

@@ -5,6 +5,7 @@ namespace
     // Tweak as necessary, for performance.
     const int ITEMS_PER_BATCH = 8;
     const int BATCHES_PER_PARTITION = 8;
+
     const int ITEMS_PER_PARTITION = ITEMS_PER_BATCH * BATCHES_PER_PARTITION;
 }
 
@@ -22,10 +23,7 @@ void RenderGroup::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
 {
     static_assert(ITEMS_PER_PARTITION > 0, "There must be at least 1 item per partition!");
 
-    const GeometryDataKey key(section->drawMode(),
-                              section->lineWidth(),
-                              section->objectId(),
-                              section->sectionId());
+    const GeometryDataKey key(*section);
 
     for ( int i = 0; i < m_Partitions.count(); ++i )
     {
@@ -48,13 +46,14 @@ void RenderGroup::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
 
 void RenderGroup::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId)
 {
+    // We can store raw pointers because the object will
+    // still live inside the partitions vector, and raw
+    // pointers are easily hashable.
     QSet<RenderPartition*> processedPartitions;
 
     QHash<GeometryDataKey, RenderPartitionPointer>::iterator it = m_SectionToPartition.begin();
     while ( it != m_SectionToPartition.end() )
     {
-        // We can store raw pointers because the object will not be killed off,
-        // as it still lives inside the partitions vector.
         RenderPartition* partition = it.value().data();
 
         if ( it.key().objectId != objectId || processedPartitions.contains(partition) )
@@ -66,5 +65,13 @@ void RenderGroup::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectI
         partition->removeGeometry(objectId);
         it = m_SectionToPartition.erase(it);
         processedPartitions.insert(partition);
+    }
+}
+
+void RenderGroup::draw()
+{
+    for ( const RenderPartitionPointer& partition : m_Partitions )
+    {
+        partition->draw();
     }
 }

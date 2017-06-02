@@ -8,6 +8,11 @@ RenderModel::RenderModel()
 
 }
 
+RenderModel::~RenderModel()
+{
+    clear();
+}
+
 void RenderModel::setGeometry(const RenderSystem::GeometryBuilder &geometry)
 {
     removeGeometry(geometry.objectId());
@@ -47,4 +52,20 @@ void RenderModel::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectI
     }
 
     m_ObjectIdToRenderGroup.remove(objectId);
+}
+
+void RenderModel::clear()
+{
+    m_RenderGroups.clear();
+    m_ObjectIdToRenderGroup.clear();
+}
+
+void RenderModel::draw()
+{
+    for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
+          itGroup != m_RenderGroups.constEnd();
+          ++itGroup )
+    {
+        itGroup.value()->draw();
+    }
 }

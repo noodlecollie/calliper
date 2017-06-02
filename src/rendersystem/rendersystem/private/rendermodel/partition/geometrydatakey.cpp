@@ -37,6 +37,14 @@ GeometryDataKey::GeometryDataKey(RenderSystem::GeometrySection::DrawMode mode,
 {
 }
 
+GeometryDataKey::GeometryDataKey(const RenderSystem::GeometrySection &section)
+    : GeometryDataKey(section.drawMode(),
+                      section.lineWidth(),
+                      section.objectId(),
+                      section.sectionId())
+{
+}
+
 bool GeometryDataKey::operator <(const GeometryDataKey& other) const
 {
     if ( drawMode != other.drawMode )

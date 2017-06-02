@@ -62,7 +62,9 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel/partition/renderutils.cpp \
     rendersystem/interface-classes/definitions/materialdefs.cpp \
     rendersystem/interface-classes/definitions/texturedefs.cpp \
-    rendersystem/interface-classes/definitions/rendermodeldefs.cpp
+    rendersystem/interface-classes/definitions/rendermodeldefs.cpp \
+    rendersystem/private/stores/rendermodelstore/rendermodelstore.cpp \
+    rendersystem/endpoints/rendermodelstoreendpoint.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -118,7 +120,10 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/definitions/materialdefs.h \
     rendersystem/interface-classes/definitions/texturedefs.h \
     rendersystem/interface-classes/definitions/rendermodeldefs.h \
-    rendersystem/interface-classes/definitions/shaderdefs.h
+    rendersystem/interface-classes/definitions/shaderdefs.h \
+    rendersystem/interfaces/irendermodelstore.h \
+    rendersystem/private/stores/rendermodelstore/rendermodelstore.h \
+    rendersystem/endpoints/rendermodelstoreendpoint.h
 
 unix {
     target.path = /usr/lib

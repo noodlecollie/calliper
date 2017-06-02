@@ -23,11 +23,14 @@ public:
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
     void removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId);
 
+    void draw();
+
 private:
     typedef QSharedPointer<RenderPartition> RenderPartitionPointer;
 
     const RenderModelContext& m_Context;
     const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
+
     QVector<RenderPartitionPointer> m_Partitions;
     QHash<GeometryDataKey, RenderPartitionPointer> m_SectionToPartition;
 };

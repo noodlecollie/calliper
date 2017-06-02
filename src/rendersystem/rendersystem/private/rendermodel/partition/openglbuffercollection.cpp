@@ -14,6 +14,11 @@ OpenGLBufferCollection::OpenGLBufferCollection(QOpenGLBuffer::UsagePattern usage
     GLTRY(m_UniformBuffer.setUsagePattern(m_nUsagePattern));
 }
 
+OpenGLBufferCollection::~OpenGLBufferCollection()
+{
+    destroy();
+}
+
 QOpenGLBuffer::UsagePattern OpenGLBufferCollection::usagePattern() const
 {
     return m_nUsagePattern;

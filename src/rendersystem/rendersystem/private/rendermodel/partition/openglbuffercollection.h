@@ -11,6 +11,7 @@ class OpenGLBufferCollection
 {
 public:
     OpenGLBufferCollection(QOpenGLBuffer::UsagePattern usagePattern);
+    ~OpenGLBufferCollection();
 
     QOpenGLBuffer::UsagePattern usagePattern() const;
 

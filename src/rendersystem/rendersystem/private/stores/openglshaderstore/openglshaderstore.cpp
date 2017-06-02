@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include "calliperutil/array/arrayutil.h"
+
 #include "rendersystem/private/shaders/derived/simplelitshader.h"
 #include "rendersystem/private/shaders/derived/unlitpervertexcolorshader.h"
 
@@ -16,21 +18,12 @@ namespace
         [] { return new SimpleLitShader(); },
         [] { return new UnlitPerVertexColorShader(); },
     };
-
-    template <quint32 N>
-    struct TypeOfSize
-    {
-        typedef char type[N];
-    };
-
-    template <typename T, quint32 N>
-    typename TypeOfSize<N>::type& SizeofArrayHelper(T(&)[N]);
 }
 
 OpenGLShaderStore::OpenGLShaderStore()
     : StaticObjectStore<OpenGLShaderProgram*, OpenGLShaderStoreKey>()
 {
-    static_assert(sizeof(SizeofArrayHelper(g_Initialisers)) == PrivateShaderDefs::TOTAL_SHADERS,
+    static_assert(SIZEOF_ARRAY(g_Initialisers) == PrivateShaderDefs::TOTAL_SHADERS,
                   "Initialiser array size mismatch - has a new shader ID been added?");
 
     for ( int i = 0; i < PrivateShaderDefs::TOTAL_SHADERS; ++i )

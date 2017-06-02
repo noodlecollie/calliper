@@ -7,6 +7,7 @@
 #include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
 #include "rendersystem/private/stores/materialstore/materialstore.h"
 #include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
+#include "rendersystem/private/stores/rendermodelstore/rendermodelstore.h"
 
 namespace
 {
@@ -21,10 +22,12 @@ void initialiseStores()
     RenderModeStore::globalInitialise();
     OpenGLTextureStore::globalInitialise();
     MaterialStore::globalInitialise();
+    RenderModelStore::globalInitialise();
 }
 
 void shutdownStores()
 {
+    RenderModelStore::globalShutdown();
     MaterialStore::globalShutdown();
     OpenGLTextureStore::globalShutdown();
     RenderModeStore::globalShutdown();

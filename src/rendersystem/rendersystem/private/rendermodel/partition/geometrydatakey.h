@@ -19,6 +19,8 @@ struct GeometryDataKey
                     RenderSystem::RenderModelDefs::ObjectId object,
                     RenderSystem::RenderModelDefs::SectionId section);
 
+    explicit GeometryDataKey(const RenderSystem::GeometrySection& section);
+
     bool operator <(const GeometryDataKey& other) const;
     bool operator ==(const GeometryDataKey& other) const;
 };

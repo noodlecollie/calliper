@@ -3,15 +3,16 @@
 
 #include <QHash>
 
+#include "rendersystem/interfaces/imaterialstore.h"
+
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
+#include "rendersystem/interface-classes/rendermaterial/rendermaterial.h"
 
 #include "rendersystem/private/store-classes/pathmanagingobjectstore.h"
 #include "rendersystem/private/store-classes/globalinstancehelper.h"
 
-#include "rendersystem/interface-classes/rendermaterial/rendermaterial.h"
-#include "rendersystem/interfaces/imaterialstore.h"
-
-class MaterialStore : public PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::MaterialDefs::MaterialId>,
+class MaterialStore : public PathManagingObjectStore<RenderSystem::RenderMaterial,
+                                                     RenderSystem::MaterialDefs::MaterialId>,
                       public RenderSystem::IMaterialStore,
                       public GlobalInstanceHelper<MaterialStore>
 {

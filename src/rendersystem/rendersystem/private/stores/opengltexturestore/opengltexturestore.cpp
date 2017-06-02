@@ -98,7 +98,12 @@ void OpenGLTextureStore::objectAboutToBeDestroyed(const ObjectId id)
 void OpenGLTextureStore::createDefaultTexture()
 {
     QImage image(":/textures/_internal/error.png");
-    Q_ASSERT_X(!image.isNull(), Q_FUNC_INFO, "Internal error texture could not be loaded!");
+
+    if ( image.isNull() )
+    {
+        qFatal("Internal error texture could not be loaded!");
+        return;
+    }
 
     createDefaultObject(QString(), image);
 }
