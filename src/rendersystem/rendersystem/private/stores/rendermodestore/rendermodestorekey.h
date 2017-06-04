@@ -1,11 +1,11 @@
 #ifndef RENDERMODESTOREKEY_H
 #define RENDERMODESTOREKEY_H
 
-#include "rendersystem/private/store-classes/staticobjectstorekey.h"
+#include "containers/static/staticobjectstorekey.h"
 #include "rendersystem/interface-classes/definitions/shaderdefs.h"
 
-class RenderModeStoreKey : public StaticObjectStoreKey<RenderSystem::ShaderDefs::RenderMode,
-                                                       RenderSystem::ShaderDefs::TOTAL_RENDER_MODES>
+class RenderModeStoreKey : public Containers::StaticObjectStoreKey<RenderSystem::ShaderDefs::RenderMode,
+                                                                   RenderSystem::ShaderDefs::TOTAL_RENDER_MODES>
 {
 };
 

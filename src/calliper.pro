@@ -15,7 +15,7 @@ SUBDIRS += \
     containers
 
 model.depends = rendersystem calliperutil
-rendersystem.depends = calliperutil
+rendersystem.depends = calliperutil containers
 app-vmfviewer.depends = calliperutil rendersystem model file-formats model-loaders dep-vtflib user-interface
 app-vpkinfo.depends = file-formats calliperutil
 file-formats.depends = calliperutil

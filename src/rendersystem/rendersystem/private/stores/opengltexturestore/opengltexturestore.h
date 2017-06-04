@@ -7,13 +7,14 @@
 #include "rendersystem/interface-classes/texture/namedopengltexture.h"
 #include "rendersystem/interfaces/itexturestore.h"
 
-#include "rendersystem/private/store-classes/pathmanagingobjectstore.h"
-#include "rendersystem/private/store-classes/globalinstancehelper.h"
+#include "containers/path-managing/pathmanagingobjectstore.h"
 
-class OpenGLTextureStore : public PathManagingObjectStore<RenderSystem::NamedOpenGLTexture,
-                                                          RenderSystem::TextureDefs::TextureId>,
+#include "calliperutil/global/globalinstancehelper.h"
+
+class OpenGLTextureStore : public Containers::PathManagingObjectStore<RenderSystem::NamedOpenGLTexture,
+                                                                      RenderSystem::TextureDefs::TextureId>,
                            public RenderSystem::ITextureStore,
-                           public GlobalInstanceHelper<OpenGLTextureStore>
+                           public CalliperUtil::GlobalInstanceHelper<OpenGLTextureStore>
 {
 public:
     typedef RenderSystem::TextureDefs::TextureId TextureId;

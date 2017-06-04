@@ -1,7 +1,7 @@
 #ifndef GLOBALINSTANCEHELPER_H
 #define GLOBALINSTANCEHELPER_H
 
-namespace Containers
+namespace CalliperUtil
 {
     template<typename T>
     class GlobalInstanceHelper

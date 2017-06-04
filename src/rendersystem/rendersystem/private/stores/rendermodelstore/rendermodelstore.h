@@ -2,17 +2,17 @@
 #define RENDERMODELSTORE_H
 
 #include "rendersystem/interfaces/irendermodelstore.h"
-
-#include "rendersystem/private/store-classes/itempointerbasedobjectstore.h"
-#include "rendersystem/private/store-classes/globalinstancehelper.h"
-
 #include "rendersystem/private/rendermodel/rendermodel.h"
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 
-class RenderModelStore : public ItemPointerBasedObjectStore<RenderModel,
-                                                            RenderSystem::RenderModelDefs::RenderModelId>,
+#include "containers/itempointer/itempointerbasedobjectstore.h"
+
+#include "calliperutil/global/globalinstancehelper.h"
+
+class RenderModelStore : public Containers::ItemPointerBasedObjectStore<RenderModel,
+                                                                        RenderSystem::RenderModelDefs::RenderModelId>,
                          public RenderSystem::IRenderModelStore,
-                         public GlobalInstanceHelper<RenderModelStore>
+                         public CalliperUtil::GlobalInstanceHelper<RenderModelStore>
 {
 public:
     typedef RenderSystem::RenderModelDefs::RenderModelId RenderModelId;

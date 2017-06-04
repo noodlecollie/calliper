@@ -3,14 +3,14 @@
 
 #include "openglshaderstorekey.h"
 
-#include "rendersystem/private/store-classes/staticobjectstore.h"
+#include "containers/static/staticobjectstore.h"
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
-#include "rendersystem/private/store-classes/globalinstancehelper.h"
+#include "calliperutil/global/globalinstancehelper.h"
 
 // These are plain shader pointers to indicate they should not be owned or stored by other objects.
-class OpenGLShaderStore : public StaticObjectStore<OpenGLShaderProgram*,
-                                                   OpenGLShaderStoreKey>,
-                          public GlobalInstanceHelper<OpenGLShaderStore>
+class OpenGLShaderStore : public Containers::StaticObjectStore<OpenGLShaderProgram*,
+                                                               OpenGLShaderStoreKey>,
+                          public CalliperUtil::GlobalInstanceHelper<OpenGLShaderStore>
 {
 public:
     OpenGLShaderStore();

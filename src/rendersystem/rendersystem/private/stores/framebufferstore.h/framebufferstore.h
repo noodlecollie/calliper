@@ -4,15 +4,16 @@
 #include <QOpenGLFramebufferObject>
 
 #include "rendersystem/interfaces/iframebufferstore.h"
-
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
-#include "rendersystem/private/store-classes/itempointerbasedobjectstore.h"
-#include "rendersystem/private/store-classes/globalinstancehelper.h"
 
-class FrameBufferStore : public ItemPointerBasedObjectStore<QOpenGLFramebufferObject,
-                                                            RenderSystem::FrameBufferDefs::FrameBufferId>,
+#include "containers/itempointer/itempointerbasedobjectstore.h"
+
+#include "calliperutil/global/globalinstancehelper.h"
+
+class FrameBufferStore : public Containers::ItemPointerBasedObjectStore<QOpenGLFramebufferObject,
+                                                                        RenderSystem::FrameBufferDefs::FrameBufferId>,
                          public RenderSystem::IFrameBufferStore,
-                         public GlobalInstanceHelper<FrameBufferStore>
+                         public CalliperUtil::GlobalInstanceHelper<FrameBufferStore>
 {
 public:
     typedef RenderSystem::FrameBufferDefs::FrameBufferId FrameBufferId;

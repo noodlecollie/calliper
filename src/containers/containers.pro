@@ -27,7 +27,6 @@ SOURCES += \
 
 HEADERS +=\
         containers/containers_global.h \
-    containers/globalinstancehelper/globalinstancehelper.h \
     containers/item/itembasedobjectstore.h \
     containers/item/objectstoreitem.h \
     containers/itempointer/itempointerbasedobjectstore.h \

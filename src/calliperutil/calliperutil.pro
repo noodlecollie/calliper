@@ -35,7 +35,8 @@ HEADERS +=\
     calliperutil/opengl/openglerrors.h \
     calliperutil/opengl/openglhelpers.h \
     calliperutil/paths/paths.h \
-    calliperutil/array/arrayutil.h
+    calliperutil/array/arrayutil.h \
+    calliperutil/global/globalinstancehelper.h
 
 unix {
     target.path = /usr/lib

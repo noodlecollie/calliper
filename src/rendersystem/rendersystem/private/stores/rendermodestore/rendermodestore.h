@@ -3,14 +3,16 @@
 
 #include "rendermodestorekey.h"
 
-#include "rendersystem/private/store-classes/staticobjectstore.h"
 #include "rendersystem/private/rendermode/baserendermode.h"
-#include "rendersystem/private/store-classes/globalinstancehelper.h"
+
+#include "containers/static/staticobjectstore.h"
+
+#include "calliperutil/global/globalinstancehelper.h"
 
 // These are plain shader pointers to indicate they should not be owned or stored by other objects.
-class RenderModeStore : public StaticObjectStore<BaseRenderMode*,
-                                                 RenderModeStoreKey>,
-                        public GlobalInstanceHelper<RenderModeStore>
+class RenderModeStore : public Containers::StaticObjectStore<BaseRenderMode*,
+                                                             RenderModeStoreKey>,
+                        public CalliperUtil::GlobalInstanceHelper<RenderModeStore>
 {
 public:
     RenderModeStore();

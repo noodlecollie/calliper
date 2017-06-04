@@ -71,24 +71,18 @@ SOURCES += rendersystem/global/rendersystem.cpp \
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
-    rendersystem/private/store-classes/objectstore.h \
     rendersystem/interface-classes/currentcontextguard/currentcontextguard.h \
     rendersystem/interface-classes/currentcontextguard/contextreferencecounter.h \
-    rendersystem/private/store-classes/objectstoreitempointer.h \
     rendersystem/private/stores/opengltexturestore/opengltexturestore.h \
     rendersystem/interfaces/itexturestore.h \
     rendersystem/private/shaders/common/vertexformat.h \
     rendersystem/private/opengl/opengluniformbuffer.h \
     rendersystem/private/opengl/openglvertexarrayobject.h \
     rendersystem/private/shaders/base/openglshaderprogram.h \
-    rendersystem/private/store-classes/objectstoreitem.h \
-    rendersystem/private/store-classes/itembasedobjectstore.h \
-    rendersystem/private/store-classes/itempointerbasedobjectstore.h \
     rendersystem/private/stores/openglshaderstore/openglshaderstore.h \
     rendersystem/interface-classes/texture/namedopengltexture.h \
     rendersystem/private/shaders/common/globalshaderuniforms.h \
     rendersystem/private/shaders/derived/simplelitshader.h \
-    rendersystem/private/store-classes/staticobjectstore.h \
     rendersystem/private/shaders/derived/unlitpervertexcolorshader.h \
     rendersystem/interface-classes/rendermaterial/rendermaterial.h \
     rendersystem/private/shaders/common/privateshaderdefs.h \
@@ -97,7 +91,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/geometry/geometrybuilder.h \
     rendersystem/endpoints/texturestoreendpoint.h \
     rendersystem/interfaces/imaterialstore.h \
-    rendersystem/private/store-classes/pathmanagingobjectstore.h \
     rendersystem/endpoints/materialstoreendpoint.h \
     rendersystem/private/rendermodel/rendermodel.h \
     rendersystem/private/rendermodel/rendergroup.h \
@@ -107,7 +100,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/partition/openglbuffercollection.h \
     rendersystem/private/rendermodel/partition/geometryuploader.h \
     rendersystem/private/rendermodel/partition/geometrydatacontainer.h \
-    rendersystem/private/store-classes/globalinstancehelper.h \
     rendersystem/private/rendermodel/partition/geometryconsolidator.h \
     rendersystem/private/rendermodel/partition/geometryoffsettable.h \
     rendersystem/private/rendermodel/partition/geometryrenderer.h \
@@ -116,7 +108,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermode/barebonesrendermode.h \
     rendersystem/private/stores/rendermodestore/rendermodestore.h \
     rendersystem/private/rendermodel/rendermodelcontext.h \
-    rendersystem/private/store-classes/staticobjectstorekey.h \
     rendersystem/private/stores/openglshaderstore/openglshaderstorekey.h \
     rendersystem/private/stores/rendermodestore/rendermodestorekey.h \
     rendersystem/private/rendermodel/partition/renderutils.h \
@@ -146,3 +137,10 @@ else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil
 
 INCLUDEPATH += $$PWD/../calliperutil
 DEPENDPATH += $$PWD/../calliperutil
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../containers/release/ -lcontainers
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../containers/debug/ -lcontainers
+else:unix: LIBS += -L$$OUT_PWD/../containers/ -lcontainers
+
+INCLUDEPATH += $$PWD/../containers
+DEPENDPATH += $$PWD/../containers

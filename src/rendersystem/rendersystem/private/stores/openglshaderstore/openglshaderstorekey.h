@@ -1,11 +1,11 @@
 #ifndef OPENGLSHADERSTOREKEY_H
 #define OPENGLSHADERSTOREKEY_H
 
-#include "rendersystem/private/store-classes/staticobjectstorekey.h"
+#include "containers/static/staticobjectstorekey.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
-class OpenGLShaderStoreKey : public StaticObjectStoreKey<PrivateShaderDefs::ShaderId,
-                                                         PrivateShaderDefs::TOTAL_SHADERS>
+class OpenGLShaderStoreKey : public Containers::StaticObjectStoreKey<PrivateShaderDefs::ShaderId,
+                                                                     PrivateShaderDefs::TOTAL_SHADERS>
 {
 };
 
