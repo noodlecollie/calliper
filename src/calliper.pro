@@ -11,7 +11,8 @@ SUBDIRS += \
     tst-keyvaluesparser \
     user-interface \
     app-calliper \
-    rendersystem
+    rendersystem \
+    containers
 
 model.depends = rendersystem calliperutil
 rendersystem.depends = calliperutil

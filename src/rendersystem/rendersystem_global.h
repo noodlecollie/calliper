@@ -11,7 +11,7 @@
 
 namespace RenderSystem
 {
-    extern const char* STR_NAMESPACE;
+    RENDERSYSTEMSHARED_EXPORT extern const char* STR_NAMESPACE;
 }
 
 #endif // RENDERSYSTEM_GLOBAL_H
