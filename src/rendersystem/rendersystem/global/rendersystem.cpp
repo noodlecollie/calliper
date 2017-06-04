@@ -8,6 +8,7 @@
 #include "rendersystem/private/stores/materialstore/materialstore.h"
 #include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
 #include "rendersystem/private/stores/rendermodelstore/rendermodelstore.h"
+#include "rendersystem/private/stores/framebufferstore.h/framebufferstore.h"
 
 namespace
 {
@@ -18,6 +19,7 @@ namespace
 
 void initialiseStores()
 {
+    FrameBufferStore::globalInitialise();
     OpenGLShaderStore::globalInitialise();
     RenderModeStore::globalInitialise();
     OpenGLTextureStore::globalInitialise();
@@ -32,6 +34,7 @@ void shutdownStores()
     OpenGLTextureStore::globalShutdown();
     RenderModeStore::globalShutdown();
     OpenGLShaderStore::globalShutdown();
+    FrameBufferStore::globalShutdown();
 }
 
 namespace RenderSystem

@@ -37,6 +37,20 @@ protected:
     }
 
     template<typename... Args>
+    bool replace(ObjectId id, Args... args)
+    {
+        if ( id == INVALID_ID || !m_ObjectHash.contains(id) )
+        {
+            return false;
+        }
+
+        objectAboutToBeDestroyed(id);
+        m_ObjectHash.insert(id, T(id, std::move(args)...));
+        objectCreated(id);
+        return true;
+    }
+
+    template<typename... Args>
     ObjectId createDefaultObject(Args... args)
     {
         if ( m_ObjectHash.contains(INVALID_ID) )

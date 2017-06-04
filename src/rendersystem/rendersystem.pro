@@ -64,7 +64,10 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/interface-classes/definitions/texturedefs.cpp \
     rendersystem/interface-classes/definitions/rendermodeldefs.cpp \
     rendersystem/private/stores/rendermodelstore/rendermodelstore.cpp \
-    rendersystem/endpoints/rendermodelstoreendpoint.cpp
+    rendersystem/endpoints/rendermodelstoreendpoint.cpp \
+    rendersystem/interface-classes/definitions/framebufferdefs.cpp \
+    rendersystem/private/stores/framebufferstore.h/framebufferstore.cpp \
+    rendersystem/endpoints/framebufferstoreendpoint.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -123,7 +126,11 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interface-classes/definitions/shaderdefs.h \
     rendersystem/interfaces/irendermodelstore.h \
     rendersystem/private/stores/rendermodelstore/rendermodelstore.h \
-    rendersystem/endpoints/rendermodelstoreendpoint.h
+    rendersystem/endpoints/rendermodelstoreendpoint.h \
+    rendersystem/interfaces/iframebufferstore.h \
+    rendersystem/interface-classes/definitions/framebufferdefs.h \
+    rendersystem/private/stores/framebufferstore.h/framebufferstore.h \
+    rendersystem/endpoints/framebufferstoreendpoint.h
 
 unix {
     target.path = /usr/lib

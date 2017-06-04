@@ -1,7 +1,8 @@
 #include "materialstore.h"
 
 MaterialStore::MaterialStore()
-    : PathManagingObjectStore<RenderSystem::RenderMaterial, RenderSystem::MaterialDefs::MaterialId>()
+    : PathManagingObjectStore<RenderSystem::RenderMaterial,
+                              RenderSystem::MaterialDefs::MaterialId>()
 {
     createDefaultMaterial();
 }
