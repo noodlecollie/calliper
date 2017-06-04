@@ -21,6 +21,7 @@ public:
     RenderModelStore();
     virtual ~RenderModelStore();
 
+    // External
     virtual RenderModelId createRenderModel() override;
     virtual void removeRenderModel(RenderModelId modelId) override;
     virtual void addGeometry(RenderModelId modelId, const RenderSystem::GeometryBuilder& builder) override;

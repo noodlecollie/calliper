@@ -1,8 +1,9 @@
 #include "renderutils.h"
 
 #include "rendersystem/private/stores/materialstore/materialstore.h"
-#include "rendersystem/private/stores/rendermodestore/rendermodestore.h"
-#include "rendersystem/private/stores/openglshaderstore/openglshaderstore.h"
+
+#include "rendersystem/private/static-stores/rendermodestore/rendermodestore.h"
+#include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
 
 namespace RenderUtils
 {

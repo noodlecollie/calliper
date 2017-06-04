@@ -32,7 +32,7 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/opengl/opengluniformbuffer.cpp \
     rendersystem/private/opengl/openglvertexarrayobject.cpp \
     rendersystem/private/shaders/base/openglshaderprogram.cpp \
-    rendersystem/private/stores/openglshaderstore/openglshaderstore.cpp \
+    rendersystem/private/static-stores/openglshaderstore/openglshaderstore.cpp \
     rendersystem/interface-classes/texture/namedopengltexture.cpp \
     rendersystem/private/shaders/common/globalshaderuniforms.cpp \
     rendersystem/private/shaders/derived/simplelitshader.cpp \
@@ -57,7 +57,7 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel/partition/geometryrenderer.cpp \
     rendersystem/private/rendermode/baserendermode.cpp \
     rendersystem/private/rendermode/barebonesrendermode.cpp \
-    rendersystem/private/stores/rendermodestore/rendermodestore.cpp \
+    rendersystem/private/static-stores/rendermodestore/rendermodestore.cpp \
     rendersystem/private/rendermodel/rendermodelcontext.cpp \
     rendersystem/private/rendermodel/partition/renderutils.cpp \
     rendersystem/interface-classes/definitions/materialdefs.cpp \
@@ -79,7 +79,7 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/opengl/opengluniformbuffer.h \
     rendersystem/private/opengl/openglvertexarrayobject.h \
     rendersystem/private/shaders/base/openglshaderprogram.h \
-    rendersystem/private/stores/openglshaderstore/openglshaderstore.h \
+    rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h \
     rendersystem/interface-classes/texture/namedopengltexture.h \
     rendersystem/private/shaders/common/globalshaderuniforms.h \
     rendersystem/private/shaders/derived/simplelitshader.h \
@@ -106,10 +106,10 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/rendermodel.h \
     rendersystem/private/rendermode/baserendermode.h \
     rendersystem/private/rendermode/barebonesrendermode.h \
-    rendersystem/private/stores/rendermodestore/rendermodestore.h \
+    rendersystem/private/static-stores/rendermodestore/rendermodestore.h \
     rendersystem/private/rendermodel/rendermodelcontext.h \
-    rendersystem/private/stores/openglshaderstore/openglshaderstorekey.h \
-    rendersystem/private/stores/rendermodestore/rendermodestorekey.h \
+    rendersystem/private/static-stores/openglshaderstore/openglshaderstorekey.h \
+    rendersystem/private/static-stores/rendermodestore/rendermodestorekey.h \
     rendersystem/private/rendermodel/partition/renderutils.h \
     rendersystem/interface-classes/definitions/materialdefs.h \
     rendersystem/interface-classes/definitions/texturedefs.h \

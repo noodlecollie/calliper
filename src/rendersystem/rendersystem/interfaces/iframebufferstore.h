@@ -21,12 +21,12 @@ namespace RenderSystem
         // Destroys the given frame buffer.
         virtual void removeFrameBuffer(const FrameBufferDefs::FrameBufferId id) = 0;
 
-        // Resizes the given frame buffer.
-        // If the frame buffer doesn't exist, this function does nothing.
-        virtual void resizeFrameBuffer(const FrameBufferDefs::FrameBufferId id, const QSize& newSize) = 0;
-
         // Returns whether a frame buffer exists for the given ID.
         virtual bool frameBufferExists(const FrameBufferDefs::FrameBufferId id) const = 0;
+
+        // Returns the size of the frame buffer.
+        // When a frame buffer is rendered into, the size will be set automatically.
+        virtual QSize frameBufferSize(const FrameBufferDefs::FrameBufferId id) const = 0;
 
         // Returns the OpenGL texture ID for this frame buffer.
         // If the provided frame buffer doesnt' exist, 0 will be returned

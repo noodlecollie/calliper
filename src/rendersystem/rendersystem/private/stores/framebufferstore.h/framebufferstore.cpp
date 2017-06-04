@@ -32,16 +32,6 @@ void FrameBufferStore::removeFrameBuffer(const FrameBufferStore::FrameBufferId i
     destroy(id);
 }
 
-void FrameBufferStore::resizeFrameBuffer(const FrameBufferStore::FrameBufferId id, const QSize& newSize)
-{
-    if ( id == INVALID_ID || !frameBufferExists(id) )
-    {
-        return;
-    }
-
-    replace(id, newSize);
-}
-
 bool FrameBufferStore::frameBufferExists(const FrameBufferStore::FrameBufferId id) const
 {
     if ( id == INVALID_ID )
@@ -66,4 +56,25 @@ GLuint FrameBufferStore::frameBufferTextureId(const FrameBufferStore::FrameBuffe
     }
 
     return frameBuffer->texture();
+}
+
+QSize FrameBufferStore::frameBufferSize(const FrameBufferStore::FrameBufferId id) const
+{
+    if ( id == INVALID_ID )
+    {
+        return QSize();
+    }
+
+    QSharedPointer<QOpenGLFramebufferObject> frameBuffer = object(id);
+    if ( !frameBuffer )
+    {
+        return QSize();
+    }
+
+    return frameBuffer->size();
+}
+
+QSharedPointer<QOpenGLFramebufferObject> FrameBufferStore::frameBuffer(const FrameBufferStore::FrameBufferId id) const
+{
+    return object(id);
 }
