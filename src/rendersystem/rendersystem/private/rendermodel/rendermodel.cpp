@@ -10,12 +10,13 @@ RenderModel::RenderModel()
       m_ObjectIdToRenderGroup(),
       m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
 {
-
+    m_GlobalShaderUniforms.create();
 }
 
 RenderModel::~RenderModel()
 {
     clear();
+    m_GlobalShaderUniforms.destroy();
 }
 
 void RenderModel::setGeometry(const RenderSystem::GeometryBuilder &geometry)

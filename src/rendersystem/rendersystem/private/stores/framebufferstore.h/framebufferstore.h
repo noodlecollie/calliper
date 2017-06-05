@@ -27,6 +27,10 @@ public:
     virtual bool frameBufferExists(const FrameBufferId id) const override;
     virtual GLuint frameBufferTextureId(const FrameBufferId id) const override;
     virtual QSize frameBufferSize(const FrameBufferStore::FrameBufferId id) const override;
+    virtual void setFrameBufferSize(const FrameBufferStore::FrameBufferId id, const QSize size) override;
+
+    // REMOVE ME
+    virtual void save(const FrameBufferStore::FrameBufferId id, const QString &filename) override;
 
     // Internal
     QSharedPointer<QOpenGLFramebufferObject> frameBuffer(const FrameBufferStore::FrameBufferId id) const;

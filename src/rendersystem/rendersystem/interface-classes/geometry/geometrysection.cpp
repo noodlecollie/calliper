@@ -28,6 +28,7 @@ namespace RenderSystem
           m_nMaterialId(materialId),
           m_matModelToWorld(modelToWorldMatrix),
           m_nDrawMode(DrawTriangles),
+          m_flLineWidth(1.0f),
           m_AttributeVectors(),
           m_Indices()
     {

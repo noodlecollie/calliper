@@ -4,6 +4,7 @@
 
 #include "calliperutil/array/arrayutil.h"
 
+#include "rendersystem/private/shaders/derived/errorshader.h"
 #include "rendersystem/private/shaders/derived/simplelitshader.h"
 #include "rendersystem/private/shaders/derived/unlitpervertexcolorshader.h"
 
@@ -15,6 +16,7 @@ namespace
     // supposed to have over the objects.
     std::function<OpenGLShaderProgram*(void)> g_Initialisers[] =
     {
+        [] { return new ErrorShader(); },
         [] { return new SimpleLitShader(); },
         [] { return new UnlitPerVertexColorShader(); },
     };

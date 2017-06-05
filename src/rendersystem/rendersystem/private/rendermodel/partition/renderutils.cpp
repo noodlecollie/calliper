@@ -11,35 +11,36 @@ namespace RenderUtils
                                             RenderSystem::MaterialDefs::MaterialId materialId)
     {
         using namespace RenderSystem;
+        OpenGLShaderProgram* const errorShader =
+                OpenGLShaderStore::globalInstance()->object(PrivateShaderDefs::ErrorShaderId);
 
-        if ( renderMode == RenderSystem::ShaderDefs::UnknownRenderMode ||
-             materialId == MaterialDefs::INVALID_MATERIAL_ID )
+        if ( renderMode == RenderSystem::ShaderDefs::UnknownRenderMode )
         {
-            return Q_NULLPTR;
+            return errorShader;
         }
 
         QSharedPointer<RenderMaterial> material = MaterialStore::globalInstance()->object(materialId);
         if ( !material )
         {
-            return Q_NULLPTR;
+            return errorShader;
         }
 
         ShaderDefs::ShaderStyle shaderStyle = material->shaderStyle();
         if ( shaderStyle == ShaderDefs::UnknownShaderStyle )
         {
-            return Q_NULLPTR;
+            return errorShader;
         }
 
         BaseRenderMode* renderModeObject = RenderModeStore::globalInstance()->object(renderMode);
         if ( !renderModeObject )
         {
-            return Q_NULLPTR;
+            return errorShader;
         }
 
         PrivateShaderDefs::ShaderId shaderId = renderModeObject->shaderId(shaderStyle);
         if ( shaderId == PrivateShaderDefs::UnknownShaderId )
         {
-            return Q_NULLPTR;
+            return errorShader;
         }
 
         return OpenGLShaderStore::globalInstance()->object(shaderId);

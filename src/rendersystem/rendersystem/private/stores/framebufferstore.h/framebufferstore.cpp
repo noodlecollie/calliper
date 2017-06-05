@@ -1,5 +1,8 @@
 #include "framebufferstore.h"
 
+// REMOVE ME
+#include <QImage>
+
 FrameBufferStore::FrameBufferStore()
     : ItemPointerBasedObjectStore<QOpenGLFramebufferObject,
                                   RenderSystem::FrameBufferDefs::FrameBufferId>()
@@ -22,7 +25,7 @@ FrameBufferStore::FrameBufferId FrameBufferStore::createFrameBuffer(const QSize&
     return create(size);
 }
 
-void FrameBufferStore::removeFrameBuffer(const FrameBufferStore::FrameBufferId id)
+void FrameBufferStore::removeFrameBuffer(const FrameBufferId id)
 {
     if ( id == INVALID_ID )
     {
@@ -32,7 +35,7 @@ void FrameBufferStore::removeFrameBuffer(const FrameBufferStore::FrameBufferId i
     destroy(id);
 }
 
-bool FrameBufferStore::frameBufferExists(const FrameBufferStore::FrameBufferId id) const
+bool FrameBufferStore::frameBufferExists(const FrameBufferId id) const
 {
     if ( id == INVALID_ID )
     {
@@ -42,7 +45,7 @@ bool FrameBufferStore::frameBufferExists(const FrameBufferStore::FrameBufferId i
     return contains(id);
 }
 
-GLuint FrameBufferStore::frameBufferTextureId(const FrameBufferStore::FrameBufferId id) const
+GLuint FrameBufferStore::frameBufferTextureId(const FrameBufferId id) const
 {
     if ( id == INVALID_ID )
     {
@@ -58,7 +61,7 @@ GLuint FrameBufferStore::frameBufferTextureId(const FrameBufferStore::FrameBuffe
     return frameBuffer->texture();
 }
 
-QSize FrameBufferStore::frameBufferSize(const FrameBufferStore::FrameBufferId id) const
+QSize FrameBufferStore::frameBufferSize(const FrameBufferId id) const
 {
     if ( id == INVALID_ID )
     {
@@ -74,7 +77,40 @@ QSize FrameBufferStore::frameBufferSize(const FrameBufferStore::FrameBufferId id
     return frameBuffer->size();
 }
 
-QSharedPointer<QOpenGLFramebufferObject> FrameBufferStore::frameBuffer(const FrameBufferStore::FrameBufferId id) const
+QSharedPointer<QOpenGLFramebufferObject> FrameBufferStore::frameBuffer(const FrameBufferId id) const
 {
     return object(id);
+}
+
+void FrameBufferStore::setFrameBufferSize(const FrameBufferId id, const QSize size)
+{
+    if ( id == INVALID_ID )
+    {
+        return;
+    }
+
+    replace(id, size);
+}
+
+// REMOVE ME
+void FrameBufferStore::save(const FrameBufferId id, const QString &filename)
+{
+    if ( id == INVALID_ID )
+    {
+        return;
+    }
+
+    QSharedPointer<QOpenGLFramebufferObject> frameBuffer = object(id);
+    if ( !frameBuffer )
+    {
+        return;
+    }
+
+    QImage image = frameBuffer->toImage();
+    if ( image.isNull() )
+    {
+        return;
+    }
+
+    image.save(filename);
 }

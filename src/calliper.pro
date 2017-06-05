@@ -12,7 +12,8 @@ SUBDIRS += \
     user-interface \
     app-calliper \
     rendersystem \
-    containers
+    containers \
+    sb-rendersystem-test
 
 model.depends = rendersystem calliperutil
 rendersystem.depends = calliperutil containers
@@ -24,3 +25,4 @@ dep-qvtf.depends = dep-vtflib
 tst-keyvaluesparser.depends = file-formats calliperutil
 user-interface.depends = rendersystem calliperutil model file-formats model-loaders dep-vtflib
 app-calliper.depends = calliperutil rendersystem model file-formats model-loaders dep-vtflib user-interface
+sb-rendersystem-test.depends = calliperutil rendersystem containers

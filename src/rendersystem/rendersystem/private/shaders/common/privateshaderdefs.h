@@ -15,7 +15,8 @@ namespace PrivateShaderDefs
     {
         UnknownShaderId = -1,
 
-        SimpleLitShaderId = 0,
+        ErrorShaderId = 0,
+        SimpleLitShaderId,
         UnlitPerVertexColourShaderId,
 
         TOTAL_SHADERS

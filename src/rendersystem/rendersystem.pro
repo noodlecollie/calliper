@@ -67,7 +67,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/endpoints/rendermodelstoreendpoint.cpp \
     rendersystem/interface-classes/definitions/framebufferdefs.cpp \
     rendersystem/private/stores/framebufferstore.h/framebufferstore.cpp \
-    rendersystem/endpoints/framebufferstoreendpoint.cpp
+    rendersystem/endpoints/framebufferstoreendpoint.cpp \
+    rendersystem/private/shaders/derived/errorshader.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -121,7 +122,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interfaces/iframebufferstore.h \
     rendersystem/interface-classes/definitions/framebufferdefs.h \
     rendersystem/private/stores/framebufferstore.h/framebufferstore.h \
-    rendersystem/endpoints/framebufferstoreendpoint.h
+    rendersystem/endpoints/framebufferstoreendpoint.h \
+    rendersystem/private/shaders/derived/errorshader.h
 
 unix {
     target.path = /usr/lib

@@ -16,6 +16,16 @@ namespace
     QOpenGLContext* g_pMainContext = Q_NULLPTR;
     QOffscreenSurface* g_pOffscreenSurface = Q_NULLPTR;
     bool g_bInitialised = false;
+
+    inline bool makeCurrentInternal()
+    {
+        return g_pMainContext->makeCurrent(g_pOffscreenSurface);
+    }
+
+    inline void doneCurrentInternal()
+    {
+        g_pMainContext->doneCurrent();
+    }
 }
 
 void initialiseStores()
@@ -44,9 +54,9 @@ namespace RenderSystem
     {
         bool initialise()
         {
-            Q_ASSERT_X(!g_bInitialised, Q_FUNC_INFO, "Render system already initialised!");
             if ( g_bInitialised )
             {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Render system already initialised!");
                 return false;
             }
 
@@ -55,6 +65,7 @@ namespace RenderSystem
 
             if ( !g_pMainContext->create() )
             {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unable to create main context!");
                 return false;
             }
 
@@ -64,10 +75,18 @@ namespace RenderSystem
 
             if ( !g_pOffscreenSurface->isValid() )
             {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Main offscreen surface not valid!");
+                return false;
+            }
+
+            if ( !makeCurrentInternal() )
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unable to make main context current!");
                 return false;
             }
 
             initialiseStores();
+            doneCurrentInternal();
 
             g_bInitialised = true;
             return true;
@@ -75,15 +94,25 @@ namespace RenderSystem
 
         void shutdown()
         {
-            Q_ASSERT_X(g_bInitialised, Q_FUNC_INFO, "Render system not initialised!");
             if ( !g_bInitialised )
             {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Render system not initialised!");
                 return;
             }
 
-            shutdownStores();
+            if ( QOpenGLContext::currentContext() == g_pMainContext )
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Context is current at point of shutdown - no context should be current here!");
+            }
 
-            doneCurrent();
+            bool current = makeCurrentInternal();
+            if ( !current )
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Could not make context current!");
+            }
+
+            shutdownStores();
+            doneCurrentInternal();
 
             g_pOffscreenSurface->destroy();
             delete g_pOffscreenSurface;

@@ -25,13 +25,18 @@ namespace RenderSystem
         virtual bool frameBufferExists(const FrameBufferDefs::FrameBufferId id) const = 0;
 
         // Returns the size of the frame buffer.
-        // When a frame buffer is rendered into, the size will be set automatically.
         virtual QSize frameBufferSize(const FrameBufferDefs::FrameBufferId id) const = 0;
+
+        // Sets the size of the given frame buffer.
+        virtual void setFrameBufferSize(const FrameBufferDefs::FrameBufferId id, const QSize size) = 0;
 
         // Returns the OpenGL texture ID for this frame buffer.
         // If the provided frame buffer doesnt' exist, 0 will be returned
         // (and should be considered invalid).
         virtual GLuint frameBufferTextureId(const FrameBufferDefs::FrameBufferId id) const = 0;
+
+        // REMOVE ME
+        virtual void save(const FrameBufferDefs::FrameBufferId id, const QString& filename) = 0;
     };
 }
 
