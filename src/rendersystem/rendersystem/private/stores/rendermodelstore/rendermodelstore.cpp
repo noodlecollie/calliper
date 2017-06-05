@@ -54,3 +54,18 @@ void RenderModelStore::clearGeometry(RenderModelId modelId)
 
     model->clear();
 }
+
+void RenderModelStore::draw(const RenderModelId modelId,
+                            const FrameBufferId frameBufferId,
+                            const RenderMode renderMode,
+                            const QMatrix4x4 &worldToCameraMatrix,
+                            const QMatrix4x4 &projectionMatrix)
+{
+    QSharedPointer<RenderModel> model = object(modelId);
+    if ( !model )
+    {
+        return;
+    }
+
+    model->draw(frameBufferId, renderMode, worldToCameraMatrix, projectionMatrix);
+}

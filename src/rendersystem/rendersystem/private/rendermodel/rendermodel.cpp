@@ -2,8 +2,13 @@
 #include "rendermodel-defs.h"
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
+#include "rendersystem/private/stores/framebufferstore.h/framebufferstore.h"
 
 RenderModel::RenderModel()
+    : m_Context(),
+      m_RenderGroups(),
+      m_ObjectIdToRenderGroup(),
+      m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
 {
 
 }
@@ -60,13 +65,23 @@ void RenderModel::clear()
     m_ObjectIdToRenderGroup.clear();
 }
 
-void RenderModel::draw(RenderSystem::ShaderDefs::RenderMode renderMode,
+void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
+                       RenderSystem::ShaderDefs::RenderMode renderMode,
                        const QMatrix4x4 &worldToCameraMatrix,
                        const QMatrix4x4 &projectionMatrix)
 {
+    QSharedPointer<QOpenGLFramebufferObject> frameBufferObject = frameBuffer(frameBufferId);
+    if ( !frameBufferObject || !frameBufferObject->bind() )
+    {
+        return;
+    }
+
     m_Context.setRenderMode(renderMode);
 
-    static_assert(false, "Use global shader uniforms here.");
+    m_GlobalShaderUniforms.setWorldToCameraMatrix(worldToCameraMatrix);
+    m_GlobalShaderUniforms.setProjectionMatrix(projectionMatrix);
+    m_GlobalShaderUniforms.setDirectionalLight(QVector3D(1,1,1).normalized());
+    m_GlobalShaderUniforms.upload();
 
     for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
           itGroup != m_RenderGroups.constEnd();
@@ -74,4 +89,11 @@ void RenderModel::draw(RenderSystem::ShaderDefs::RenderMode renderMode,
     {
         itGroup.value()->draw();
     }
+
+    frameBufferObject->release();
+}
+
+QSharedPointer<QOpenGLFramebufferObject> RenderModel::frameBuffer(RenderSystem::FrameBufferDefs::FrameBufferId id) const
+{
+    return FrameBufferStore::globalInstance()->object(id);
 }

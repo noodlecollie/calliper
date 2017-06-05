@@ -17,6 +17,8 @@ class RenderModelStore : public Containers::ItemPointerBasedObjectStore<RenderMo
 public:
     typedef RenderSystem::RenderModelDefs::RenderModelId RenderModelId;
     typedef RenderSystem::RenderModelDefs::ObjectId ObjectId;
+    typedef RenderSystem::FrameBufferDefs::FrameBufferId FrameBufferId;
+    typedef RenderSystem::ShaderDefs::RenderMode RenderMode;
 
     RenderModelStore();
     virtual ~RenderModelStore();
@@ -27,6 +29,12 @@ public:
     virtual void addGeometry(RenderModelId modelId, const RenderSystem::GeometryBuilder& builder) override;
     virtual void removeGeometry(RenderModelId modelId, ObjectId objectId) override;
     virtual void clearGeometry(RenderModelId modelId) override;
+
+    virtual void draw(const RenderModelId modelId,
+                      const FrameBufferId frameBufferId,
+                      const RenderMode renderMode,
+                      const QMatrix4x4 &worldToCameraMatrix,
+                      const QMatrix4x4 &projectionMatrix) override;
 };
 
 #endif // RENDERMODELSTORE_H
