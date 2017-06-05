@@ -3,6 +3,7 @@
 
 #include <QHash>
 #include <QMultiHash>
+#include <QMatrix4x4>
 
 #include "rendergroup.h"
 #include "rendermodelcontext.h"
@@ -22,7 +23,9 @@ public:
     void removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId);
     void clear();
 
-    void draw();
+    void draw(RenderSystem::ShaderDefs::RenderMode renderMode,
+              const QMatrix4x4& worldToCameraMatrix,
+              const QMatrix4x4& projectionMatrix);
 
 private:
     typedef QSharedPointer<RenderGroup> RenderGroupPointer;

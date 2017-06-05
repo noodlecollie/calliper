@@ -60,8 +60,14 @@ void RenderModel::clear()
     m_ObjectIdToRenderGroup.clear();
 }
 
-void RenderModel::draw()
+void RenderModel::draw(RenderSystem::ShaderDefs::RenderMode renderMode,
+                       const QMatrix4x4 &worldToCameraMatrix,
+                       const QMatrix4x4 &projectionMatrix)
 {
+    m_Context.setRenderMode(renderMode);
+
+    static_assert(false, "Use global shader uniforms here.");
+
     for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
           itGroup != m_RenderGroups.constEnd();
           ++itGroup )

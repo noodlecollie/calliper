@@ -1,11 +1,39 @@
 #include "globalshaderuniforms.h"
 
 #include "calliperutil/opengl/openglerrors.h"
+#include "calliperutil/opengl/openglhelpers.h"
+
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 namespace
 {
-    const int DATA_SIZE = (2 * 16 * sizeof(float)) + (3 * sizeof(float));
+    enum Uniforms
+    {
+        WorldToCameraMatrix = 0,
+        ProjectionMatrix,
+        DirectionalLight,
+
+        TOTAL_UNIFORMS
+    };
+
+    const quint32 UniformSizes[] =
+    {
+        SIZEOF_MATRIX_4X4,
+        SIZEOF_MATRIX_4X4,
+        3 * sizeof(float),
+    };
+
+    inline quint32 calculateUniformBufferSize()
+    {
+        quint32 size = 0;
+
+        for ( int i = 0; i < TOTAL_UNIFORMS; ++i )
+        {
+            size += UniformSizes[i];
+        }
+
+        return size;
+    }
 
     int copy(OpenGLUniformBuffer &dest, const char* source, int offset, int byteCount)
     {
@@ -90,7 +118,9 @@ void GlobalShaderUniforms::setDirectionalLight(const QVector3D &vec)
 {
     QVector3D temp = vec.normalized();
     if ( m_vecDirectionalLight == temp )
+    {
         return;
+    }
 
     m_vecDirectionalLight = temp;
     m_bNeedsUpload = true;
@@ -104,10 +134,14 @@ bool GlobalShaderUniforms::needsUpload() const
 void GlobalShaderUniforms::upload()
 {
     if ( !m_bNeedsUpload )
+    {
         return;
+    }
+
+    static const quint32 uniformBufferSize = calculateUniformBufferSize();
 
     GLTRY(m_UniformBuffer.bind());
-    GLTRY(m_UniformBuffer.allocate(DATA_SIZE));
+    GLTRY(m_UniformBuffer.allocate(uniformBufferSize));
     GLTRY(m_UniformBuffer.release());
 
     GLTRY(m_UniformBuffer.bindToIndex(PrivateShaderDefs::GlobalUniformBlockBindingPoint));

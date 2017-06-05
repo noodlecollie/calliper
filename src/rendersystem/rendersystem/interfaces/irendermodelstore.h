@@ -3,8 +3,12 @@
 
 #include "rendersystem_global.h"
 
+#include <QMatrix4x4>
+
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
+#include "rendersystem/interface-classes/definitions/framebufferdefs.h"
+#include "rendersystem/interface-classes/definitions/shaderdefs.h"
 
 namespace RenderSystem
 {
@@ -29,6 +33,13 @@ namespace RenderSystem
 
         // Clears all geometry from the model, but does not destroy the model itself.
         virtual void clearGeometry(RenderModelDefs::RenderModelId modelId) = 0;
+
+        // Draws the given render model into the given frame buffer.
+        virtual void draw(const RenderModelDefs::RenderModelId modelId,
+                          const FrameBufferDefs::FrameBufferId frameBufferId,
+                          const ShaderDefs::RenderMode renderMode,
+                          const QMatrix4x4& worldToCameraMatrix,
+                          const QMatrix4x4& projectionMatrix) = 0;
     };
 }
 
