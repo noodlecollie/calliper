@@ -58,3 +58,8 @@ bool VertexFormat::operator !=(const VertexFormat& other) const
 {
     return !(*this == other);
 }
+
+bool VertexFormat::isValid() const
+{
+    return totalVertexComponents() > 0;
+}

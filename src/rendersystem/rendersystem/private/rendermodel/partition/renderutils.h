@@ -1,15 +1,14 @@
 #ifndef RENDERUTILS_H
 #define RENDERUTILS_H
 
-#include <QSharedPointer>
-
-#include "rendersystem/private/shaders/base/openglshaderprogram.h"
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
+#include "rendersystem/interface-classes/definitions/shaderdefs.h"
+#include "rendersystem/private/shaders/common/privateshaderdefs.h"
 
 namespace RenderUtils
 {
-    OpenGLShaderProgram* shaderFromMaterial(RenderSystem::ShaderDefs::RenderMode renderMode,
-                                            RenderSystem::MaterialDefs::MaterialId materialId);
+    PrivateShaderDefs::ShaderId shaderFromMaterial(RenderSystem::ShaderDefs::RenderMode renderMode,
+                                                   RenderSystem::MaterialDefs::MaterialId materialId);
 }
 
 #endif // RENDERUTILS_H

@@ -1,23 +1,12 @@
-Model:
- - genericbrushface.cpp: Implement texture co-ordinates. Need to know the size of the main texture. DONE
- - originmarker.cpp: Implement preset materials for drawing unlit things. DONE
- - Everywhere: check for quint16/quint23 usage and change to appropriate typedefs. DONE
-
 ModelLoaders:
- - vmfdataloader.cpp: Hook material store in for textured windings. DONE
- - vtfloader.cpp: Fix the VTF loader class. DONE
- - Rename quint32/quint16 references to material/texture IDs. DONE
  - Investigate vtfloader deleting textures - it probably shouldn't be tasked with actually loading the textures in.
    VPKs should be probed for textures, then the materials should use whatever is available.
    This might need more planning - perhaps build up a table of existing textures, along with the VPK archives
    (and locations within) from which they need to be loaded, then do this in a threaded way on demand?
 
 Rendersystem:
- - Add typedefs for current context guards in their respective endpoints. DONE
- - Use these in model and model loaders. DONE
- - Namespace things more sensibly, eg. PublicStoreDefs could go under MaterialStore and TextureStore respectively. DONE
- - Make draw mode in geometry section work in render model. DONE
- - Convert things that use draw mode into an actual enum, whose values correspond to the OpenGL values. DONE
+ - Should invalid shader ID actually be drawn, or should an error shader be used instead?
+   Maybe the error shader should just be given its own ID?
 
  VMFViewer:
  - mainwindow.cpp: Make functional again.

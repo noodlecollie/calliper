@@ -3,6 +3,7 @@
 #include "renderutils.h"
 
 #include "rendersystem/private/rendermodel/rendermodel-defs.h"
+#include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
 
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/opengl/openglerrors.h"
@@ -28,7 +29,16 @@ GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
       m_nDrawMode(RenderSystem::GeometrySection::DrawMode::DrawTriangles),
       m_flLineWidth(1.0f)
 {
-    m_pCurrentShader = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+    const PrivateShaderDefs::ShaderId shaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+
+    if ( shaderId != PrivateShaderDefs::UnknownShaderId )
+    {
+        m_pCurrentShader = OpenGLShaderStore::globalInstance()->object(shaderId);
+    }
+    else
+    {
+        m_pCurrentShader = Q_NULLPTR;
+    }
 }
 
 int GeometryRenderer::getLastItemForNextDraw(int firstItem) const

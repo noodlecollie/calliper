@@ -3,6 +3,8 @@
 #include "geometryconsolidator.h"
 #include "renderutils.h"
 
+#include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
+
 #include "calliperutil/opengl/openglhelpers.h"
 
 GeometryUploader::GeometryUploader(const RenderModelContext &context,
@@ -57,17 +59,26 @@ bool GeometryUploader::uploadIfRequired()
 
 void GeometryUploader::getShaderFromMaterial()
 {
-    m_pCurrentShaderProgram = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+    m_nShaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+
+    if ( m_nShaderId != PrivateShaderDefs::UnknownShaderId )
+    {
+        m_pCurrentShaderProgram = OpenGLShaderStore::globalInstance()->object(m_nShaderId);
+    }
+    else
+    {
+        m_pCurrentShaderProgram = Q_NULLPTR;
+    }
 }
 
 bool GeometryUploader::isValid() const
 {
-    return m_nShaderId != PrivateShaderDefs::UnknownShaderId;
+    return m_nShaderId != PrivateShaderDefs::UnknownShaderId && m_pCurrentShaderProgram != Q_NULLPTR;
 }
 
 quint32 GeometryUploader::shouldUpload() const
 {
-    if ( m_nShaderId == PrivateShaderDefs::UnknownShaderId )
+    if ( m_nShaderId == PrivateShaderDefs::UnknownShaderId || !m_pCurrentShaderProgram )
     {
         return NoUploadFlags;
     }

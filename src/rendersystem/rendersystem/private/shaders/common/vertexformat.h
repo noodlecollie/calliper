@@ -18,6 +18,7 @@ public:
     int textureCoordinateComponents() const;
 
     int totalVertexComponents() const;
+    bool isValid() const;
 
     bool operator ==(const VertexFormat& other) const;
     bool operator !=(const VertexFormat& other) const;

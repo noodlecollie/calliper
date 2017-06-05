@@ -24,7 +24,7 @@ PrivateShaderDefs::ShaderId BarebonesRenderMode::shaderId(RenderSystem::ShaderDe
 
         default:
         {
-            return PrivateShaderDefs::UnknownShaderId;
+            return BaseRenderMode::shaderId(style);
         }
     }
 }

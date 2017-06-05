@@ -11,7 +11,7 @@ public:
     virtual ~BaseRenderMode();
 
     RenderSystem::ShaderDefs::RenderMode renderMode() const;
-    virtual PrivateShaderDefs::ShaderId shaderId(RenderSystem::ShaderDefs::ShaderStyle style) const = 0;
+    virtual PrivateShaderDefs::ShaderId shaderId(RenderSystem::ShaderDefs::ShaderStyle style) const;
 
 private:
     const RenderSystem::ShaderDefs::RenderMode m_nRenderMode;

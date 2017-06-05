@@ -2,6 +2,8 @@
 
 #include "renderutils.h"
 
+#include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
+
 namespace
 {
     inline quint32 maskFromNumberOfBits(int numBits)
@@ -43,7 +45,15 @@ GeometryConsolidator::GeometryConsolidator(const RenderModelContext &context,
 
 void GeometryConsolidator::setUpShader()
 {
-    m_pShader = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+    const PrivateShaderDefs::ShaderId shaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+    if ( shaderId != PrivateShaderDefs::UnknownShaderId )
+    {
+        m_pShader = OpenGLShaderStore::globalInstance()->object(shaderId);
+    }
+    else
+    {
+        m_pShader = Q_NULLPTR;
+    }
 }
 
 void GeometryConsolidator::clear()
