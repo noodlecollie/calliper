@@ -45,6 +45,7 @@ private:
         }
     };
 
+    void getOpenGLUniformBufferAttributes();
     int getLastItemForNextDraw(int firstItem) const;
 
     void draw_x(int firstItem, int lastItem);

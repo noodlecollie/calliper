@@ -40,7 +40,7 @@ GeometryConsolidator::GeometryConsolidator(const RenderModelContext &context,
       m_nCurrentObjectId(0),
       m_nObjectIdMask(0)
 {
-    setUpShader();
+
 }
 
 void GeometryConsolidator::setUpShader()
@@ -87,6 +87,8 @@ const QVector<quint32>& GeometryConsolidator::indexData() const
 
 void GeometryConsolidator::consolidate()
 {
+    setUpShader();
+
     if ( !m_pShader )
     {
         return;

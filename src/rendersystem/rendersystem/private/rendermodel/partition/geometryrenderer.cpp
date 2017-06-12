@@ -109,12 +109,16 @@ void GeometryRenderer::draw()
 
 void GeometryRenderer::bindBuffers_x(int firstItem, int lastItem)
 {
-    if ( !m_OpenGLBuffers.vertexBuffer().bind() )
+    bool vBindSuccess = false;
+    GLTRY(vBindSuccess = m_OpenGLBuffers.vertexBuffer().bind());
+    if ( !vBindSuccess )
     {
         throw InternalException("Unable to bind vertex buffer.");
     }
 
-    if ( !m_OpenGLBuffers.indexBuffer().bind() )
+    bool iBindSuccess = false;
+    GLTRY(iBindSuccess = m_OpenGLBuffers.indexBuffer().bind());
+    if ( !iBindSuccess )
     {
         throw InternalException("Unable to bind index buffer.");
     }
@@ -122,7 +126,12 @@ void GeometryRenderer::bindBuffers_x(int firstItem, int lastItem)
     const quint32 uniformOffset = firstItem * SIZEOF_MATRIX_4X4;
     const quint32 uniformLength = (lastItem - firstItem + 1) * SIZEOF_MATRIX_4X4;
 
-    if ( !m_OpenGLBuffers.uniformBuffer().bindRange(GL_UNIFORM_BUFFER, uniformOffset, uniformLength) )
+    static_assert(false, "TODO: The uniform offset must be aligned with GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT "
+                         "and the length must be a minimum of GL_UNIFORM_BLOCK_SIZE_DATA.");
+
+    bool uBindSuccess = false;
+    GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(GL_UNIFORM_BUFFER, uniformOffset, uniformLength));
+    if ( !uBindSuccess )
     {
         throw InternalException("Unable to bind uniform buffer.");
     }
@@ -130,9 +139,9 @@ void GeometryRenderer::bindBuffers_x(int firstItem, int lastItem)
 
 void GeometryRenderer::releaseBuffers()
 {
-    m_OpenGLBuffers.vertexBuffer().release();
-    m_OpenGLBuffers.indexBuffer().release();
-    m_OpenGLBuffers.uniformBuffer().release();
+    GLTRY(m_OpenGLBuffers.vertexBuffer().release());
+    GLTRY(m_OpenGLBuffers.indexBuffer().release());
+    GLTRY(m_OpenGLBuffers.uniformBuffer().release());
 }
 
 void GeometryRenderer::draw_x(int firstItem, int lastItem)
@@ -149,5 +158,5 @@ void GeometryRenderer::draw_x(int firstItem, int lastItem)
     GL_CURRENT_F;
 
     GLTRY(f->glLineWidth(m_flLineWidth));
-    f->glDrawElements(m_nDrawMode, indicesCount, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(beginOffsetInts));
+    GLTRY(f->glDrawElements(m_nDrawMode, indicesCount, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(beginOffsetInts)));
 }

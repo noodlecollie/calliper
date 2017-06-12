@@ -51,17 +51,14 @@ private:
     bool uploadAllMatrices();
     bool uploadAllVertexData();
     void consolidateVerticesAndIndices();
-    bool ensureBuffersCreated();
+    bool buffersCreated();
     void getShaderFromMaterial();
 
     void prepareUniformBufferForUpload_x();
     void releaseUniformBuffer();
 
     void uploadVertices_x();
-    void releaseVertexBuffer();
-
     void uploadIndices_x();
-    void releaseIndexBuffer();
 
     const RenderModelContext& m_Context;
     const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;

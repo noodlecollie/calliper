@@ -4,9 +4,8 @@ ModelLoaders:
    This might need more planning - perhaps build up a table of existing textures, along with the VPK archives
    (and locations within) from which they need to be loaded, then do this in a threaded way on demand?
 
-Rendersystem:
- - Should invalid shader ID actually be drawn, or should an error shader be used instead?
-   Maybe the error shader should just be given its own ID?
+RenderSystem:
+ - Change global makeCurrent/doneCurrent calls to use a context guard instead.
 
  VMFViewer:
  - mainwindow.cpp: Make functional again.

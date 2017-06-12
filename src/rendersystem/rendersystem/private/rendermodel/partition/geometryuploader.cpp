@@ -122,7 +122,11 @@ quint32 GeometryUploader::checkForDirtyGeometry() const
 
 bool GeometryUploader::uploadAllMatrices()
 {
-    if ( !ensureBuffersCreated() )
+    Q_ASSERT_X(m_Context.uniformBufferOffsetAlignment() > 0 && m_Context.uniformBlockDataSize() > 0,
+               Q_FUNC_INFO,
+               "Uniform buffer attributes expected to be valid!");
+
+    if ( !buffersCreated() )
     {
         return false;
     }
@@ -177,7 +181,7 @@ void GeometryUploader::releaseUniformBuffer()
 
 bool GeometryUploader::uploadAllVertexData()
 {
-    if ( !ensureBuffersCreated() )
+    if ( !buffersCreated() )
     {
         return false;
     }
@@ -196,8 +200,6 @@ bool GeometryUploader::uploadAllVertexData()
         success = false;
     }
 
-    releaseVertexBuffer();
-    releaseIndexBuffer();
     return success;
 }
 
@@ -209,11 +211,6 @@ void GeometryUploader::uploadVertices_x()
     }
 
     m_OpenGLBuffers.vertexBuffer().allocate(m_Consolidator.vertexData().constBegin(), m_Consolidator.vertexData().count() * sizeof(float));
-}
-
-void GeometryUploader::releaseVertexBuffer()
-{
-    m_OpenGLBuffers.vertexBuffer().unmap();
     m_OpenGLBuffers.vertexBuffer().release();
 }
 
@@ -225,15 +222,10 @@ void GeometryUploader::uploadIndices_x()
     }
 
     m_OpenGLBuffers.indexBuffer().allocate(m_Consolidator.indexData().constBegin(), m_Consolidator.indexData().count() * sizeof(quint32));
-}
-
-void GeometryUploader::releaseIndexBuffer()
-{
-    m_OpenGLBuffers.indexBuffer().unmap();
     m_OpenGLBuffers.indexBuffer().release();
 }
 
-bool GeometryUploader::ensureBuffersCreated()
+bool GeometryUploader::buffersCreated()
 {
     return m_OpenGLBuffers.isCreated() || m_OpenGLBuffers.create();
 }
