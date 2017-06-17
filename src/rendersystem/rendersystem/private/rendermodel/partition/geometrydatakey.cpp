@@ -45,6 +45,11 @@ GeometryDataKey::GeometryDataKey(const RenderSystem::GeometrySection &section)
 {
 }
 
+bool GeometryDataKey::batchableWith(const GeometryDataKey &other) const
+{
+    return drawMode == other.drawMode && lineWidth == other.lineWidth;
+}
+
 bool GeometryDataKey::operator <(const GeometryDataKey& other) const
 {
     if ( drawMode != other.drawMode )

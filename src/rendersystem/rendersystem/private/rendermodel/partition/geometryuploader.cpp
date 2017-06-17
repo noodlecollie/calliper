@@ -21,6 +21,7 @@ GeometryUploader::GeometryUploader(const RenderModelContext &context,
       m_nShaderId(PrivateShaderDefs::UnknownShaderId),
       m_nShaderIdWhenLastUploaded(PrivateShaderDefs::UnknownShaderId),
       m_Consolidator(m_Context, m_nMaterialId, m_GeometryDataContainer, m_OffsetTable),
+      m_BatchGenerator(m_Context, m_GeometryDataContainer),
       m_pUniformBufferData(Q_NULLPTR)
 {
 
@@ -42,7 +43,9 @@ bool GeometryUploader::uploadIfRequired()
         return true;
     }
 
-    if ( (flags & MatricesUploadFlag) == MatricesUploadFlag && !uploadAllMatrices() )
+    generateBatches();
+
+    if ( (flags & MatricesUploadFlag) == MatricesUploadFlag && !uploadAllUniforms() )
     {
         return false;
     }
@@ -120,7 +123,12 @@ quint32 GeometryUploader::checkForDirtyGeometry() const
     return flags;
 }
 
-bool GeometryUploader::uploadAllMatrices()
+void GeometryUploader::generateBatches()
+{
+    m_BatchGenerator.buildBatches(m_pCurrentShaderProgram->maxBatchedItems());
+}
+
+bool GeometryUploader::uploadAllUniforms()
 {
     Q_ASSERT_X(m_Context.uniformBufferOffsetAlignment() > 0 && m_Context.uniformBlockDataSize() > 0,
                Q_FUNC_INFO,
@@ -136,14 +144,7 @@ bool GeometryUploader::uploadAllMatrices()
     try
     {
         prepareUniformBufferForUpload_x();
-
-        for ( GeometryDataContainer::ConstIterator it = m_GeometryDataContainer.constBegin();
-              it != m_GeometryDataContainer.constEnd();
-              ++it )
-        {
-            memcpy(m_pUniformBufferData, it.value()->modelToWorldMatrix().constData(), SIZEOF_MATRIX_4X4);
-            m_pUniformBufferData += SIZEOF_MATRIX_4X4;
-        }
+        uploadUniformsInBatches();
     }
     catch (const InternalException&)
     {
@@ -154,11 +155,56 @@ bool GeometryUploader::uploadAllMatrices()
     return success;
 }
 
+quint32 GeometryUploader::calculateRequiredUniformBufferSize() const
+{
+    quint32 bufferSize = 0;
+
+    for ( int batchIndex = 0; batchIndex < m_BatchGenerator.batchCount(); ++batchIndex )
+    {
+        const BatchGenerator::GeometryDataVector& batch = m_BatchGenerator.batch(batchIndex);
+        bufferSize += calculateBatchSize(batch);
+    }
+
+    return bufferSize;
+}
+
+quint32 GeometryUploader::calculateBatchSize(const BatchGenerator::GeometryDataVector& batch) const
+{
+    quint32 batchSize = qMax<quint32>(batch.count() * SIZEOF_MATRIX_4X4, m_Context.uniformBlockDataSize());
+
+    const quint32 alignmentOvershoot = batchSize % m_Context.uniformBufferOffsetAlignment();
+    if ( alignmentOvershoot > 0 )
+    {
+        batchSize += m_Context.uniformBufferOffsetAlignment() - alignmentOvershoot;
+    }
+
+    return batchSize;
+}
+
+void GeometryUploader::uploadUniformsInBatches()
+{
+    for ( int batchIndex = 0; batchIndex < m_BatchGenerator.batchCount(); ++batchIndex )
+    {
+        const BatchGenerator::GeometryDataVector& batch = m_BatchGenerator.batch(batchIndex);
+        const quint32 batchSize = calculateBatchSize(batch);
+
+        char* batchDataPointer = m_pUniformBufferData;
+        for ( int geometryDataIndex = 0; geometryDataIndex < batch.count(); ++geometryDataIndex )
+        {
+            const BatchGenerator::GeometryDataPointer& geometryData = batch.at(geometryDataIndex);
+            memcpy(batchDataPointer, geometryData->modelToWorldMatrix().constData(), SIZEOF_MATRIX_4X4);
+            batchDataPointer += SIZEOF_MATRIX_4X4;
+        }
+
+        m_pUniformBufferData += batchSize;
+    }
+}
+
 void GeometryUploader::prepareUniformBufferForUpload_x()
 {
     // The order of these may be important. UBOs are awkward.
     if ( !m_OpenGLBuffers.uniformBuffer().bind() ||
-         !m_OpenGLBuffers.uniformBuffer().allocate(m_GeometryDataContainer.count() * SIZEOF_MATRIX_4X4) ||
+         !m_OpenGLBuffers.uniformBuffer().allocate(calculateRequiredUniformBufferSize()) ||
          !m_OpenGLBuffers.uniformBuffer().release() ||
          !m_OpenGLBuffers.uniformBuffer().bindToIndex(PrivateShaderDefs::LocalUniformBlockBindingPoint) )
     {

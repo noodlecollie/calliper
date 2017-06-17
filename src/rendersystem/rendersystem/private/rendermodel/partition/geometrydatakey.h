@@ -21,6 +21,8 @@ struct GeometryDataKey
 
     explicit GeometryDataKey(const RenderSystem::GeometrySection& section);
 
+    bool batchableWith(const GeometryDataKey& other) const;
+
     bool operator <(const GeometryDataKey& other) const;
     bool operator ==(const GeometryDataKey& other) const;
 };

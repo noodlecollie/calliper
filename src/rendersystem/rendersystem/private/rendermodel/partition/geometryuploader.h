@@ -8,6 +8,7 @@
 #include "geometrydatacontainer.h"
 #include "geometryconsolidator.h"
 #include "geometryoffsettable.h"
+#include "batchgenerator.h"
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
@@ -42,20 +43,25 @@ private:
     class InternalException : public QException
     {
     public:
-        void raise() const { throw *this; }
-        InternalException *clone() const { return new InternalException(*this); }
+        void raise() const override { throw *this; }
+        InternalException* clone() const override { return new InternalException(*this); }
     };
 
     quint32 shouldUpload() const;
     quint32 checkForDirtyGeometry() const;
-    bool uploadAllMatrices();
+    bool uploadAllUniforms();
     bool uploadAllVertexData();
     void consolidateVerticesAndIndices();
     bool buffersCreated();
     void getShaderFromMaterial();
 
+    quint32 calculateRequiredUniformBufferSize() const;
+    quint32 calculateBatchSize(const BatchGenerator::GeometryDataVector& batch) const;
+    void generateBatches();
+
     void prepareUniformBufferForUpload_x();
     void releaseUniformBuffer();
+    void uploadUniformsInBatches();
 
     void uploadVertices_x();
     void uploadIndices_x();
@@ -71,6 +77,7 @@ private:
     PrivateShaderDefs::ShaderId m_nShaderIdWhenLastUploaded;
 
     GeometryConsolidator m_Consolidator;
+    BatchGenerator m_BatchGenerator;
     char* m_pUniformBufferData;
 };
 

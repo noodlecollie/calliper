@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QSharedPointer>
+#include <QVector>
 
 #include "geometrydata.h"
 #include "geometrydatakey.h"
