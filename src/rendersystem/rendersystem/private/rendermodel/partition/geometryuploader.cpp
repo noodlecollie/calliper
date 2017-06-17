@@ -11,11 +11,13 @@ GeometryUploader::GeometryUploader(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,
                                    GeometryDataContainer &data,
                                    GeometryOffsetTable &offsetTable,
+                                   UniformBatchTable& batchTable,
                                    OpenGLBufferCollection &buffers)
     : m_Context(context),
       m_nMaterialId(materialId),
       m_GeometryDataContainer(data),
       m_OffsetTable(offsetTable),
+      m_BatchTable(batchTable),
       m_OpenGLBuffers(buffers),
       m_pCurrentShaderProgram(Q_NULLPTR),
       m_nShaderId(PrivateShaderDefs::UnknownShaderId),
@@ -183,6 +185,8 @@ quint32 GeometryUploader::calculateBatchSize(const BatchGenerator::GeometryDataV
 
 void GeometryUploader::uploadUniformsInBatches()
 {
+    quint32 accumulatedSize = 0;
+
     for ( int batchIndex = 0; batchIndex < m_BatchGenerator.batchCount(); ++batchIndex )
     {
         const BatchGenerator::GeometryDataVector& batch = m_BatchGenerator.batch(batchIndex);
@@ -197,6 +201,11 @@ void GeometryUploader::uploadUniformsInBatches()
         }
 
         m_pUniformBufferData += batchSize;
+
+        UniformBatchTable::UniformBatchOffsets& offsets = m_BatchTable.createNewItem();
+        offsets.batchOffsetBytes = accumulatedSize;
+        offsets.batchSizeBytes = batchSize;
+        accumulatedSize += batchSize;
     }
 }
 

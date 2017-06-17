@@ -8,6 +8,7 @@
 #include "geometrydatacontainer.h"
 #include "geometryconsolidator.h"
 #include "geometryoffsettable.h"
+#include "uniformbatchtable.h"
 #include "batchgenerator.h"
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
@@ -22,6 +23,7 @@ public:
                      RenderSystem::MaterialDefs::MaterialId materialId,
                      GeometryDataContainer& data,
                      GeometryOffsetTable& offsetTable,
+                     UniformBatchTable& batchTable,
                      OpenGLBufferCollection& buffers);
 
     bool uploadIfRequired();
@@ -70,6 +72,7 @@ private:
     const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
     GeometryDataContainer& m_GeometryDataContainer;
     GeometryOffsetTable& m_OffsetTable;
+    UniformBatchTable& m_BatchTable;
     OpenGLBufferCollection& m_OpenGLBuffers;
 
     OpenGLShaderProgram* m_pCurrentShaderProgram;

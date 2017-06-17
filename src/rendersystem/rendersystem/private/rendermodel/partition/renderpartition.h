@@ -10,6 +10,7 @@
 #include "geometryuploader.h"
 #include "geometrydatacontainer.h"
 #include "geometryoffsettable.h"
+#include "uniformbatchtable.h"
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
@@ -40,6 +41,7 @@ private:
     GeometryDataContainer m_GeometryDataContainer;
     OpenGLBufferCollection m_OpenGLBuffers;
     GeometryOffsetTable m_OffsetTable;
+    UniformBatchTable m_BatchTable;
 
     // Operators on data
     GeometryUploader m_Uploader;

@@ -19,10 +19,12 @@ namespace
 GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,
                                    GeometryOffsetTable &offsets,
+                                   UniformBatchTable& batchTable,
                                    OpenGLBufferCollection &openGLBuffers)
     : m_Context(context),
       m_nMaterialId(materialId),
       m_OffsetTable(offsets),
+      m_BatchTable(batchTable),
       m_OpenGLBuffers(openGLBuffers),
       m_nItemsPerBatch(0),
       m_pCurrentShader(Q_NULLPTR),

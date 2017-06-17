@@ -69,7 +69,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/framebufferstore.h/framebufferstore.cpp \
     rendersystem/endpoints/framebufferstoreendpoint.cpp \
     rendersystem/private/shaders/derived/errorshader.cpp \
-    rendersystem/private/rendermodel/partition/batchgenerator.cpp
+    rendersystem/private/rendermodel/partition/batchgenerator.cpp \
+    rendersystem/private/rendermodel/partition/uniformbatchtable.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -125,7 +126,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/stores/framebufferstore.h/framebufferstore.h \
     rendersystem/endpoints/framebufferstoreendpoint.h \
     rendersystem/private/shaders/derived/errorshader.h \
-    rendersystem/private/rendermodel/partition/batchgenerator.h
+    rendersystem/private/rendermodel/partition/batchgenerator.h \
+    rendersystem/private/rendermodel/partition/uniformbatchtable.h
 
 unix {
     target.path = /usr/lib

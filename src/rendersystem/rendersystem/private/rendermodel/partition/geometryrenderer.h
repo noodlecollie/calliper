@@ -4,6 +4,7 @@
 #include <QException>
 
 #include "geometryoffsettable.h"
+#include "uniformbatchtable.h"
 #include "openglbuffercollection.h"
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
@@ -19,6 +20,7 @@ public:
     GeometryRenderer(const RenderModelContext& context,
                      RenderSystem::MaterialDefs::MaterialId materialId,
                      GeometryOffsetTable& offsets,
+                     UniformBatchTable& batchTable,
                      OpenGLBufferCollection& openGLBuffers);
 
     void draw();
@@ -55,6 +57,7 @@ private:
     const RenderModelContext& m_Context;
     const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
     GeometryOffsetTable& m_OffsetTable;
+    UniformBatchTable& m_BatchTable;
     OpenGLBufferCollection& m_OpenGLBuffers;
 
     int m_nItemsPerBatch;
