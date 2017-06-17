@@ -1,9 +1,7 @@
 #include "batchgenerator.h"
 
-BatchGenerator::BatchGenerator(const RenderModelContext &context,
-                               const GeometryDataContainer &data)
-    : m_Context(context),
-      m_Data(data),
+BatchGenerator::BatchGenerator(const GeometryDataContainer &data)
+    : m_Data(data),
       m_Batches(),
       m_nMaxBatchedItems(0),
       m_itLastProcessedItem(m_Data.constEnd())
@@ -31,7 +29,7 @@ void BatchGenerator::buildBatches(int maxItemsPerBatch)
         return;
     }
 
-    m_itLastProcessedItem = m_Data::constEnd();
+    m_itLastProcessedItem = m_Data.constEnd();
 
     for ( GeometryDataContainer::ConstIterator itGeometry = m_Data.constBegin();
           itGeometry != m_Data.constEnd();
@@ -45,7 +43,7 @@ void BatchGenerator::buildBatches(int maxItemsPerBatch)
 BatchGenerator::GeometryDataVector& BatchGenerator::nextCompatibleBatch(const GeometryDataKey &key)
 {
     if ( m_Batches.isEmpty() ||
-         m_Batches.last() >= m_nMaxBatchedItems ||
+         m_Batches.last().count() >= m_nMaxBatchedItems ||
          (m_itLastProcessedItem != m_Data.constEnd() && !m_itLastProcessedItem.key().batchableWith(key)) )
     {
         m_Batches.append(GeometryDataVector());

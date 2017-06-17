@@ -14,8 +14,7 @@ public:
     typedef GeometryDataContainer::GeometryDataPointer GeometryDataPointer;
     typedef QVector<GeometryDataPointer> GeometryDataVector;
 
-    BatchGenerator(const RenderModelContext& context,
-                   const GeometryDataContainer& data);
+    BatchGenerator(const GeometryDataContainer& data);
 
     void buildBatches(int maxItemsPerBatch);
     const GeometryDataVector& batch(int index) const;
@@ -24,7 +23,6 @@ public:
 private:
     GeometryDataVector& nextCompatibleBatch(const GeometryDataKey& key);
 
-    const RenderModelContext& m_Context;
     const GeometryDataContainer& m_Data;
 
     QVector<GeometryDataVector> m_Batches;

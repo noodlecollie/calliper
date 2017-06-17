@@ -18,8 +18,8 @@ namespace
 
 GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,
-                                   GeometryOffsetTable &offsets,
-                                   UniformBatchTable& batchTable,
+                                   const GeometryOffsetTable &offsets,
+                                   const UniformBatchTable& batchTable,
                                    OpenGLBufferCollection &openGLBuffers)
     : m_Context(context),
       m_nMaterialId(materialId),
@@ -84,32 +84,47 @@ void GeometryRenderer::draw()
 
     m_nItemsPerBatch = m_pCurrentShader->maxBatchedItems();
 
-    int firstItem = 0;
-    while ( firstItem < m_OffsetTable.count() )
+    for ( int batch = 0; batch < m_BatchTable.count(); ++batch )
     {
-        int lastItem = getLastItemForNextDraw(firstItem);
+        const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
 
         // The draw mode and line widths will be the same for all items
         // in the batch, so we can just sample them from the first item.
-        m_nDrawMode = m_OffsetTable[firstItem].drawMode;
-        m_flLineWidth = m_OffsetTable[firstItem].lineWidth;
+        m_nDrawMode = m_OffsetTable[batchOffsets.firstGeometryItem].drawMode;
+        m_flLineWidth = m_OffsetTable[batchOffsets.firstGeometryItem].lineWidth;
 
         try
         {
-            draw_x(firstItem, lastItem);
+            draw_x(batch);
         }
         catch (const InternalException&)
         {
             break;
         }
-
-        firstItem = lastItem + 1;
     }
 
     releaseBuffers();
 }
 
-void GeometryRenderer::bindBuffers_x(int firstItem, int lastItem)
+void GeometryRenderer::draw_x(int batch)
+{
+    const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
+    quint32 beginOffsetInts = m_OffsetTable.at(batchOffsets.firstGeometryItem).indexOffsetInts;
+
+    const GeometryOffsetTable::ObjectOffsets endOffsets = m_OffsetTable.at(batchOffsets.lastGeometryItem);
+    quint32 endOffsetInts = endOffsets.indexOffsetInts + endOffsets.indexCountInts;
+
+    quint32 indicesCount = endOffsetInts - beginOffsetInts;
+
+    bindBuffers_x(batch);
+
+    GL_CURRENT_F;
+
+    GLTRY(f->glLineWidth(m_flLineWidth));
+    GLTRY(f->glDrawElements(m_nDrawMode, indicesCount, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(beginOffsetInts)));
+}
+
+void GeometryRenderer::bindBuffers_x(int batch)
 {
     bool vBindSuccess = false;
     GLTRY(vBindSuccess = m_OpenGLBuffers.vertexBuffer().bind());
@@ -125,14 +140,12 @@ void GeometryRenderer::bindBuffers_x(int firstItem, int lastItem)
         throw InternalException("Unable to bind index buffer.");
     }
 
-    const quint32 uniformOffset = firstItem * SIZEOF_MATRIX_4X4;
-    const quint32 uniformLength = (lastItem - firstItem + 1) * SIZEOF_MATRIX_4X4;
-
-    static_assert(false, "TODO: The uniform offset must be aligned with GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT "
-                         "and the length must be a minimum of GL_UNIFORM_BLOCK_SIZE_DATA.");
+    const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
 
     bool uBindSuccess = false;
-    GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(GL_UNIFORM_BUFFER, uniformOffset, uniformLength));
+    GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(GL_UNIFORM_BUFFER,
+                                                                   batchOffsets.batchOffsetBytes,
+                                                                   batchOffsets.batchSizeBytes));
     if ( !uBindSuccess )
     {
         throw InternalException("Unable to bind uniform buffer.");
@@ -144,21 +157,4 @@ void GeometryRenderer::releaseBuffers()
     GLTRY(m_OpenGLBuffers.vertexBuffer().release());
     GLTRY(m_OpenGLBuffers.indexBuffer().release());
     GLTRY(m_OpenGLBuffers.uniformBuffer().release());
-}
-
-void GeometryRenderer::draw_x(int firstItem, int lastItem)
-{
-    quint32 beginOffsetInts = m_OffsetTable.at(firstItem).indexOffsetInts;
-
-    const GeometryOffsetTable::ObjectOffsets endOffsets = m_OffsetTable.at(lastItem);
-    quint32 endOffsetInts = endOffsets.indexOffsetInts + endOffsets.indexCountInts;
-
-    quint32 indicesCount = endOffsetInts - beginOffsetInts;
-
-    bindBuffers_x(firstItem, lastItem);
-
-    GL_CURRENT_F;
-
-    GLTRY(f->glLineWidth(m_flLineWidth));
-    GLTRY(f->glDrawElements(m_nDrawMode, indicesCount, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(beginOffsetInts)));
 }

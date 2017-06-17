@@ -19,8 +19,8 @@ class GeometryRenderer
 public:
     GeometryRenderer(const RenderModelContext& context,
                      RenderSystem::MaterialDefs::MaterialId materialId,
-                     GeometryOffsetTable& offsets,
-                     UniformBatchTable& batchTable,
+                     const GeometryOffsetTable& offsets,
+                     const UniformBatchTable& batchTable,
                      OpenGLBufferCollection& openGLBuffers);
 
     void draw();
@@ -50,14 +50,14 @@ private:
     void getOpenGLUniformBufferAttributes();
     int getLastItemForNextDraw(int firstItem) const;
 
-    void draw_x(int firstItem, int lastItem);
-    void bindBuffers_x(int firstItem, int lastItem);
+    void draw_x(int batch);
+    void bindBuffers_x(int batch);
     void releaseBuffers();
 
     const RenderModelContext& m_Context;
     const RenderSystem::MaterialDefs::MaterialId m_nMaterialId;
-    GeometryOffsetTable& m_OffsetTable;
-    UniformBatchTable& m_BatchTable;
+    const GeometryOffsetTable& m_OffsetTable;
+    const UniformBatchTable& m_BatchTable;
     OpenGLBufferCollection& m_OpenGLBuffers;
 
     int m_nItemsPerBatch;

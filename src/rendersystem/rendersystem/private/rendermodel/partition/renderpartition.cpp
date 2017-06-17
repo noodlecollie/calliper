@@ -16,7 +16,12 @@ RenderPartition::RenderPartition(const RenderModelContext &context,
       m_GeometryDataContainer(),
       m_OpenGLBuffers(BUFFER_USAGE_PATTERN),
       m_OffsetTable(),
-      m_Uploader(m_Context, m_nMaterialId, m_GeometryDataContainer, m_OffsetTable, m_OpenGLBuffers)
+      m_Uploader(m_Context,
+                 m_nMaterialId,
+                 m_GeometryDataContainer,
+                 m_OffsetTable,
+                 m_BatchTable,
+                 m_OpenGLBuffers)
 {
 
 }
@@ -63,6 +68,10 @@ void RenderPartition::draw()
         return;
     }
 
-    GeometryRenderer renderer(m_Context, m_nMaterialId, m_OffsetTable, m_OpenGLBuffers);
+    GeometryRenderer renderer(m_Context,
+                              m_nMaterialId,
+                              m_OffsetTable,
+                              m_BatchTable,
+                              m_OpenGLBuffers);
     renderer.draw();
 }

@@ -10,14 +10,18 @@ public:
     {
         quint32 batchOffsetBytes;
         quint32 batchSizeBytes;
+        quint32 firstGeometryItem;
+        quint32 lastGeometryItem;
 
         UniformBatchOffsets(quint32 offset, quint32 size)
             : batchOffsetBytes(offset),
-              batchSizeBytes(size)
+              batchSizeBytes(size),
+              firstGeometryItem(0),
+              lastGeometryItem(0)
         {
         }
 
-        UniformBatchOffsets::UniformBatchOffsets()
+        UniformBatchOffsets()
             : UniformBatchOffsets(0,0)
         {
         }

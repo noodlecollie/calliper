@@ -23,7 +23,7 @@ GeometryUploader::GeometryUploader(const RenderModelContext &context,
       m_nShaderId(PrivateShaderDefs::UnknownShaderId),
       m_nShaderIdWhenLastUploaded(PrivateShaderDefs::UnknownShaderId),
       m_Consolidator(m_Context, m_nMaterialId, m_GeometryDataContainer, m_OffsetTable),
-      m_BatchGenerator(m_Context, m_GeometryDataContainer),
+      m_BatchGenerator(m_GeometryDataContainer),
       m_pUniformBufferData(Q_NULLPTR)
 {
 
@@ -186,6 +186,7 @@ quint32 GeometryUploader::calculateBatchSize(const BatchGenerator::GeometryDataV
 void GeometryUploader::uploadUniformsInBatches()
 {
     quint32 accumulatedSize = 0;
+    quint32 currentGeometryItem = 0;
 
     for ( int batchIndex = 0; batchIndex < m_BatchGenerator.batchCount(); ++batchIndex )
     {
@@ -200,12 +201,16 @@ void GeometryUploader::uploadUniformsInBatches()
             batchDataPointer += SIZEOF_MATRIX_4X4;
         }
 
-        m_pUniformBufferData += batchSize;
-
         UniformBatchTable::UniformBatchOffsets& offsets = m_BatchTable.createNewItem();
+
         offsets.batchOffsetBytes = accumulatedSize;
         offsets.batchSizeBytes = batchSize;
+        offsets.firstGeometryItem = currentGeometryItem;
+        offsets.lastGeometryItem = currentGeometryItem + batch.count() - 1;
+
+        m_pUniformBufferData += batchSize;
         accumulatedSize += batchSize;
+        currentGeometryItem += batch.count();
     }
 }
 
