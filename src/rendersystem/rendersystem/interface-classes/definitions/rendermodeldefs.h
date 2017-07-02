@@ -11,8 +11,8 @@ namespace RenderSystem
         typedef quint8 SectionId;
         typedef quint16 RenderModelId;
 
-        extern const ObjectId INVALID_OBJECT_ID;
-        extern const RenderModelId INVALID_RENDER_MODEL_ID;
+        RENDERSYSTEMSHARED_EXPORT extern const ObjectId INVALID_OBJECT_ID;
+        RENDERSYSTEMSHARED_EXPORT extern const RenderModelId INVALID_RENDER_MODEL_ID;
     }
 }
 

@@ -1,12 +1,14 @@
 #ifndef OPENGLERRORS_H
 #define OPENGLERRORS_H
 
+#include "calliperutil_global.h"
+
 #include <QObject>
 #include <QtOpenGL>
 #include <QOpenGLContext>
 #include <QtDebug>
 
-class OpenGLErrors
+class CALLIPERUTILSHARED_EXPORT OpenGLErrors
 {
     Q_GADGET
     OpenGLErrors()  = delete;
