@@ -92,6 +92,8 @@ namespace CalliperUtil
         CALLIPERUTILSHARED_EXPORT qint64 nearestMultiple(float value, qint64 multiple);
         CALLIPERUTILSHARED_EXPORT void clampToNearestMultiple(QVector3D &vec, qint64 multiple);
 
+        CALLIPERUTILSHARED_EXPORT qint64 alignedValue(qint64 value, qint64 alignment);
+
         CALLIPERUTILSHARED_EXPORT void perspectivePlane(float fov, float aspectRatio, float distance, QVector3D &min, QVector3D &max);
 
         CALLIPERUTILSHARED_EXPORT bool fuzzyVectorEquals(const QVector2D &v1, const QVector2D &v2);

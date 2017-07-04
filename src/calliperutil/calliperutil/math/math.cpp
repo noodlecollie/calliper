@@ -303,5 +303,16 @@ namespace CalliperUtil
             // distance = v dot n
             return QVector3D::dotProduct(point - pointOnPlane, planeNormal);
         }
+
+        qint64 alignedValue(qint64 value, qint64 alignment)
+        {
+            const qint64 modulo = value % alignment;
+            if ( modulo == 0 )
+            {
+                return value;
+            }
+
+            return value + (alignment - modulo);
+        }
     }
 }

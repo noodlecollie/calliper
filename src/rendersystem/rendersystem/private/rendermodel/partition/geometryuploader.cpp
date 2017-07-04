@@ -132,7 +132,7 @@ void GeometryUploader::generateBatches()
 
 bool GeometryUploader::uploadAllUniforms()
 {
-    Q_ASSERT_X(m_Context.uniformBufferOffsetAlignment() > 0 && m_Context.uniformBlockDataSize() > 0,
+    Q_ASSERT_X(m_Context.uniformBufferOffsetAlignment() > 0,
                Q_FUNC_INFO,
                "Uniform buffer attributes expected to be valid!");
 
@@ -172,7 +172,8 @@ quint32 GeometryUploader::calculateRequiredUniformBufferSize() const
 
 quint32 GeometryUploader::calculateBatchSize(const BatchGenerator::GeometryDataVector& batch) const
 {
-    quint32 batchSize = qMax<quint32>(batch.count() * SIZEOF_MATRIX_4X4, m_Context.uniformBlockDataSize());
+    qWarning() << "TODO: Plug in uniform block data size!";
+    quint32 batchSize = qMax<quint32>(batch.count() * SIZEOF_MATRIX_4X4, /*m_Context.uniformBlockDataSize()*/ 0);
 
     const quint32 alignmentOvershoot = batchSize % m_Context.uniformBufferOffsetAlignment();
     if ( alignmentOvershoot > 0 )

@@ -13,5 +13,5 @@ uniform sampler2D tex;
 void main()
 {
 	// Do a simple blend.
-        color = texture(tex, fTexCoord) * fColour;
+    color = texture(tex, fTexCoord) * fColour;
 }

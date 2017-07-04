@@ -8,11 +8,11 @@ namespace CalliperUtil
     template <quint32 N>
     struct TypeOfSize
     {
-        typedef char type[N];
+        typedef char Type[N];
     };
 
     template <typename T, quint32 N>
-    typename TypeOfSize<N>::type& SizeofArrayHelper(T(&)[N]);
+    typename TypeOfSize<N>::Type& SizeofArrayHelper(T(&)[N]);
 }
 
 #define SIZEOF_ARRAY(_arr) (sizeof(CalliperUtil::SizeofArrayHelper(_arr)))

@@ -35,5 +35,5 @@ VertexFormat ErrorShader::vertexFormat() const
 
 int ErrorShader::maxBatchedItems() const
 {
-    return 8;
+    return UniformBlock::batchSize();
 }

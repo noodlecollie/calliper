@@ -70,7 +70,9 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/endpoints/framebufferstoreendpoint.cpp \
     rendersystem/private/shaders/derived/errorshader.cpp \
     rendersystem/private/rendermodel/partition/batchgenerator.cpp \
-    rendersystem/private/rendermodel/partition/uniformbatchtable.cpp
+    rendersystem/private/rendermodel/partition/uniformbatchtable.cpp \
+    rendersystem/private/opengl/uniforms/std140uniformstruct.cpp \
+    rendersystem/private/opengl/uniforms/std140uniformelementbase.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -127,7 +129,13 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/endpoints/framebufferstoreendpoint.h \
     rendersystem/private/shaders/derived/errorshader.h \
     rendersystem/private/rendermodel/partition/batchgenerator.h \
-    rendersystem/private/rendermodel/partition/uniformbatchtable.h
+    rendersystem/private/rendermodel/partition/uniformbatchtable.h \
+    rendersystem/private/opengl/uniforms/std140uniformstruct.h \
+    rendersystem/private/opengl/uniforms/std140uniformelementbase.h \
+    rendersystem/private/opengl/uniforms/std140uniformelement.h \
+    rendersystem/private/opengl/uniforms/std140alignment.h \
+    rendersystem/private/opengl/uniforms/std140serialisation.h \
+    rendersystem/private/shaders/common/batchedmodelmatrixuniformblock.h
 
 unix {
     target.path = /usr/lib
