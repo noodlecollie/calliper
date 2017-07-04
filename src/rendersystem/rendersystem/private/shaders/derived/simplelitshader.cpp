@@ -35,5 +35,5 @@ VertexFormat SimpleLitShader::vertexFormat() const
 
 int SimpleLitShader::maxBatchedItems() const
 {
-    return 8;
+    return UniformBlock::batchSize();
 }

@@ -33,5 +33,5 @@ VertexFormat UnlitPerVertexColorShader::vertexFormat() const
 
 int UnlitPerVertexColorShader::maxBatchedItems() const
 {
-    return 8;
+    return UniformBlock::batchSize();
 }
