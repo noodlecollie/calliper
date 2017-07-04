@@ -23,7 +23,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    containers/containers_global.cpp
+    containers/containers_global.cpp \
+    containers/dummyclass.cpp
 
 HEADERS +=\
         containers/containers_global.h \
@@ -34,7 +35,8 @@ HEADERS +=\
     containers/objectstore/objectstore.h \
     containers/path-managing/pathmanagingobjectstore.h \
     containers/static/staticobjectstore.h \
-    containers/static/staticobjectstorekey.h
+    containers/static/staticobjectstorekey.h \
+    containers/dummyclass.h
 
 unix {
     target.path = /usr/lib
