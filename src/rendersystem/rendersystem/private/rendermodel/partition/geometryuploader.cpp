@@ -4,8 +4,89 @@
 #include "renderutils.h"
 
 #include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
+#include "rendersystem/private/opengl/uniforms/std140alignment.h"
 
 #include "calliperutil/opengl/openglhelpers.h"
+
+namespace
+{
+    int getNumComponents(const VertexFormat& format, PrivateShaderDefs::VertexArrayAttribute attribute)
+    {
+        switch ( attribute )
+        {
+            case PrivateShaderDefs::PositionAttribute:
+            {
+                return format.positionComponents();
+            }
+
+            case PrivateShaderDefs::NormalAttribute:
+            {
+                return format.normalComponents();
+            }
+
+            case PrivateShaderDefs::ColorAttribute:
+            {
+                return format.colorComponents();
+            }
+
+            case PrivateShaderDefs::TextureCoordinateAttribute:
+            {
+                return format.textureCoordinateComponents();
+            }
+
+            default:
+            {
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unrecognised attribute!");
+                return 0;
+            }
+        }
+    }
+
+    int computeOffsetInBytes(const VertexFormat& format, PrivateShaderDefs::VertexArrayAttribute attribute)
+    {
+        int offset = 0;
+        if ( attribute == PrivateShaderDefs::PositionAttribute )
+        {
+            return offset;
+        }
+
+        offset += format.positionComponents() * sizeof(float);
+        if ( attribute == PrivateShaderDefs::NormalAttribute )
+        {
+            return offset;
+        }
+
+        offset += format.normalComponents() * sizeof(float);
+        if ( attribute == PrivateShaderDefs::ColorAttribute )
+        {
+            return offset;
+        }
+
+        offset += format.colorComponents() * sizeof(float);
+        if ( attribute == PrivateShaderDefs::TextureCoordinateAttribute )
+        {
+            return offset;
+        }
+
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Unrecognised attribute type!");
+        return 0;
+    }
+
+    void trySetAttributeBuffer(OpenGLShaderProgram& shaderProgram,
+                               PrivateShaderDefs::VertexArrayAttribute attribute)
+    {
+        const int components = getNumComponents(shaderProgram.vertexFormat(), attribute);
+
+        if ( components > 0 )
+        {
+            shaderProgram.setAttributeBuffer(attribute,
+                                             GL_FLOAT,
+                                             computeOffsetInBytes(shaderProgram.vertexFormat(), attribute),
+                                             components,
+                                             shaderProgram.vertexFormat().totalVertexComponents() * sizeof(float));
+        }
+    }
+}
 
 GeometryUploader::GeometryUploader(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,
@@ -45,17 +126,28 @@ bool GeometryUploader::uploadIfRequired()
         return true;
     }
 
+    m_OpenGLBuffers.vertexArrayObject().bind();
+    m_pCurrentShaderProgram->bindFull();
+
+    bindShaderAttributesToVAO();
     generateBatches();
 
     if ( (flags & MatricesUploadFlag) == MatricesUploadFlag && !uploadAllUniforms() )
     {
+        m_OpenGLBuffers.vertexArrayObject().release();
+        m_pCurrentShaderProgram = Q_NULLPTR;
         return false;
     }
 
     if ( (flags & VerticesUploadFlag) == VerticesUploadFlag && !uploadAllVertexData() )
     {
+        m_OpenGLBuffers.vertexArrayObject().release();
+        m_pCurrentShaderProgram = Q_NULLPTR;
         return false;
     }
+
+    m_pCurrentShaderProgram->releaseFull();
+    m_OpenGLBuffers.vertexArrayObject().release();
 
     m_nShaderIdWhenLastUploaded = m_nShaderId;
     m_pCurrentShaderProgram = Q_NULLPTR;
@@ -132,10 +224,6 @@ void GeometryUploader::generateBatches()
 
 bool GeometryUploader::uploadAllUniforms()
 {
-    Q_ASSERT_X(m_Context.uniformBufferOffsetAlignment() > 0,
-               Q_FUNC_INFO,
-               "Uniform buffer attributes expected to be valid!");
-
     if ( !buffersCreated() )
     {
         return false;
@@ -159,29 +247,12 @@ bool GeometryUploader::uploadAllUniforms()
 
 quint32 GeometryUploader::calculateRequiredUniformBufferSize() const
 {
-    quint32 bufferSize = 0;
-
-    for ( int batchIndex = 0; batchIndex < m_BatchGenerator.batchCount(); ++batchIndex )
-    {
-        const BatchGenerator::GeometryDataVector& batch = m_BatchGenerator.batch(batchIndex);
-        bufferSize += calculateBatchSize(batch);
-    }
-
-    return bufferSize;
+    return m_BatchGenerator.batchCount() * calculateBatchSize();
 }
 
-quint32 GeometryUploader::calculateBatchSize(const BatchGenerator::GeometryDataVector& batch) const
+quint32 GeometryUploader::calculateBatchSize() const
 {
-    qWarning() << "TODO: Plug in uniform block data size!";
-    quint32 batchSize = qMax<quint32>(batch.count() * SIZEOF_MATRIX_4X4, /*m_Context.uniformBlockDataSize()*/ 0);
-
-    const quint32 alignmentOvershoot = batchSize % m_Context.uniformBufferOffsetAlignment();
-    if ( alignmentOvershoot > 0 )
-    {
-        batchSize += m_Context.uniformBufferOffsetAlignment() - alignmentOvershoot;
-    }
-
-    return batchSize;
+    return m_pCurrentShaderProgram->maxBatchedItems() * UniformStd140::baseAlignmentArray<QMatrix4x4>().baseAlignment;
 }
 
 void GeometryUploader::uploadUniformsInBatches()
@@ -192,7 +263,7 @@ void GeometryUploader::uploadUniformsInBatches()
     for ( int batchIndex = 0; batchIndex < m_BatchGenerator.batchCount(); ++batchIndex )
     {
         const BatchGenerator::GeometryDataVector& batch = m_BatchGenerator.batch(batchIndex);
-        const quint32 batchSize = calculateBatchSize(batch);
+        const quint32 batchSize = calculateBatchSize();
 
         char* batchDataPointer = m_pUniformBufferData;
         for ( int geometryDataIndex = 0; geometryDataIndex < batch.count(); ++geometryDataIndex )
@@ -294,4 +365,17 @@ bool GeometryUploader::buffersCreated()
 void GeometryUploader::consolidateVerticesAndIndices()
 {
     m_Consolidator.consolidate();
+}
+
+void GeometryUploader::bindShaderAttributesToVAO()
+{
+    if ( !m_pCurrentShaderProgram )
+    {
+        return;
+    }
+
+    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::PositionAttribute);
+    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::NormalAttribute);
+    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::ColorAttribute);
+    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::TextureCoordinateAttribute);
 }

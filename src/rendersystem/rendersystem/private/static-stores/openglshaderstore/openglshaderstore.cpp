@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "calliperutil/array/arrayutil.h"
+#include "calliperutil/opengl/openglerrors.h"
 
 #include "rendersystem/private/shaders/derived/errorshader.h"
 #include "rendersystem/private/shaders/derived/simplelitshader.h"
@@ -40,6 +41,10 @@ void OpenGLShaderStore::storeInitialised()
           itShader != m_Objects.end();
           ++itShader )
     {
+        bool creationSuccess = false;
+        GLTRY(creationSuccess = itShader.value()->create());
+        Q_ASSERT_X(creationSuccess, Q_FUNC_INFO, "Could not create shader!");
+
         itShader.value()->construct();
     }
 }

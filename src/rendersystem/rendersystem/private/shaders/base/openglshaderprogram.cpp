@@ -190,3 +190,27 @@ bool OpenGLShaderProgram::link()
     Q_ASSERT_X(success, Q_FUNC_INFO, "Shader did not link correctly!");
     return success;
 }
+
+bool OpenGLShaderProgram::bindFull()
+{
+    bool bindSuccess = false;
+    GLTRY(bindSuccess = bind());
+
+    if ( !bindSuccess )
+    {
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Unable to bind shader program!");
+        return false;
+    }
+
+    setGlobalUniformBlockBinding();
+    setLocalUniformBlockBinding();
+    enableAttributeArrays();
+
+    return true;
+}
+
+void OpenGLShaderProgram::releaseFull()
+{
+    disableAttributeArrays();
+    release();
+}

@@ -56,9 +56,10 @@ private:
     void consolidateVerticesAndIndices();
     bool buffersCreated();
     void getShaderFromMaterial();
+    void bindShaderAttributesToVAO();
 
     quint32 calculateRequiredUniformBufferSize() const;
-    quint32 calculateBatchSize(const BatchGenerator::GeometryDataVector& batch) const;
+    quint32 calculateBatchSize() const;
     void generateBatches();
 
     void prepareUniformBufferForUpload_x();

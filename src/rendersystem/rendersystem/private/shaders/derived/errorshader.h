@@ -2,14 +2,11 @@
 #define ERRORSHADER_H
 
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
-#include "rendersystem/private/shaders/common/batchedmodelmatrixuniformblock.h"
 
 class ErrorShader : public OpenGLShaderProgram
 {
     Q_OBJECT
 public:
-    typedef BatchedModelMatrixUniformBlock<8> UniformBlock;
-
     ErrorShader(QObject* parent = 0);
     virtual ~ErrorShader();
 

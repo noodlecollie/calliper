@@ -28,6 +28,9 @@ public:
     OpenGLUniformBuffer& uniformBuffer();
     const OpenGLUniformBuffer& uniformBuffer() const;
 
+    OpenGLVertexArrayObject& vertexArrayObject();
+    const OpenGLVertexArrayObject& vertexArrayObject() const;
+
 private:
     void destroyAll();
 

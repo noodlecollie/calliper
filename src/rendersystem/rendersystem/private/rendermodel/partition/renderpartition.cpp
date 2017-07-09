@@ -63,6 +63,9 @@ void RenderPartition::removeGeometry(RenderSystem::RenderModelDefs::ObjectId obj
 
 void RenderPartition::draw()
 {
+    // TODO: Bind and release shader here, so that we don't double-bind
+    // on upload and render?
+
     if ( !m_Uploader.uploadIfRequired() )
     {
         return;

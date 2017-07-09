@@ -82,6 +82,8 @@ void GeometryRenderer::draw()
         return;
     }
 
+    m_OpenGLBuffers.vertexArrayObject().bind();
+    m_pCurrentShader->bindFull();
     m_nItemsPerBatch = m_pCurrentShader->maxBatchedItems();
 
     for ( int batch = 0; batch < m_BatchTable.count(); ++batch )
@@ -104,6 +106,9 @@ void GeometryRenderer::draw()
     }
 
     releaseBuffers();
+
+    m_pCurrentShader->releaseFull();
+    m_OpenGLBuffers.vertexArrayObject().release();
 }
 
 void GeometryRenderer::draw_x(int batch)
@@ -143,7 +148,7 @@ void GeometryRenderer::bindBuffers_x(int batch)
     const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
 
     bool uBindSuccess = false;
-    GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(GL_UNIFORM_BUFFER,
+    GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(PrivateShaderDefs::LocalUniformBlockBindingPoint,
                                                                    batchOffsets.batchOffsetBytes,
                                                                    batchOffsets.batchSizeBytes));
     if ( !uBindSuccess )

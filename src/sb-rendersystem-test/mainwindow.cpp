@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     section->addColor(QColor::fromRgb(0xff0000ff));
     section->addColor(QColor::fromRgb(0xff0000ff));
 
+    section->addIndexTriangle(0, 1, 2);
+
     renderModelStore->addGeometry(m_nRenderModelId, builder);
     renderModelStore->draw(m_nRenderModelId,
                            m_nFrameBufferId,

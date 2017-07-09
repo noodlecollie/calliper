@@ -54,6 +54,16 @@ const OpenGLUniformBuffer& OpenGLBufferCollection::uniformBuffer() const
     return m_UniformBuffer;
 }
 
+OpenGLVertexArrayObject& OpenGLBufferCollection::vertexArrayObject()
+{
+    return m_VAO;
+}
+
+const OpenGLVertexArrayObject& OpenGLBufferCollection::vertexArrayObject() const
+{
+    return m_VAO;
+}
+
 bool OpenGLBufferCollection::create()
 {
     if ( isCreated() )

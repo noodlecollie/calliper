@@ -10,16 +10,10 @@ class RenderModelContext
 public:
     RenderModelContext();
 
-    GLint uniformBufferOffsetAlignment() const;
-
     RenderSystem::ShaderDefs::RenderMode renderMode() const;
     void setRenderMode(RenderSystem::ShaderDefs::RenderMode renderMode);
 
 private:
-    void getOpenGLAttributes();
-
-    GLint m_nUniformBufferOffsetAlignment;
-
     RenderSystem::ShaderDefs::RenderMode m_nRenderMode;
 };
 

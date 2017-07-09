@@ -177,6 +177,7 @@ void GeometryConsolidator::consolidateVertices(const QVector<QVector4D> &source,
                 *valueAsInt |= (static_cast<quint32>(m_nCurrentObjectId) & m_nObjectIdMask);
             }
 
+            Q_ASSERT_X(destItem + curComponent < m_VertexData.count(), Q_FUNC_INFO, "Index out of range!");
             m_VertexData[destItem + curComponent] = value;
         }
     }

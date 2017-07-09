@@ -29,6 +29,9 @@ public:
     void enableAttributeArrays();
     void disableAttributeArrays();
 
+    bool bindFull();
+    void releaseFull();
+
     bool addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const QByteArray &shader);
     bool addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const char* shader);
     bool addShaderFileWithCommonHeaders(QOpenGLShader::ShaderType type, const QString &filePath);
