@@ -40,12 +40,16 @@ void OpenGLVertexArrayObject::destroy()
 
 bool OpenGLVertexArrayObject::bind()
 {
+    Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
+
     GL_CURRENT_F;
     return GLTRY_RET(f->glBindVertexArray(m_iVAOID));
 }
 
 void OpenGLVertexArrayObject::release()
 {
+    Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
+
     GL_CURRENT_F;
     GLTRY(f->glBindVertexArray(0));
 }

@@ -23,7 +23,12 @@ RenderPartition::RenderPartition(const RenderModelContext &context,
                  m_BatchTable,
                  m_OpenGLBuffers)
 {
+    m_OpenGLBuffers.create();
+}
 
+RenderPartition::~RenderPartition()
+{
+    m_OpenGLBuffers.destroy();
 }
 
 int RenderPartition::maxItems() const

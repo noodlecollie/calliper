@@ -72,9 +72,11 @@ bool OpenGLBufferCollection::create()
     }
 
     if ( !GLTRY_RET(m_VAO.create()) ||
+         !GLTRY_RET(m_VAO.bind()) ||
          !GLTRY_RET(m_VertexBuffer.create()) ||
          !GLTRY_RET(m_IndexBuffer.create()) ||
-         !GLTRY_RET(m_UniformBuffer.create()) )
+         !GLTRY_RET(m_UniformBuffer.create()) ||
+         !GLTRY_RET(m_VAO.release()) )
     {
         destroyAll();
         return false;
@@ -85,9 +87,16 @@ bool OpenGLBufferCollection::create()
 
 void OpenGLBufferCollection::destroyAll()
 {
+    GLTRY(m_VertexBuffer.release());
     GLTRY(m_VertexBuffer.destroy());
+
+    GLTRY(m_IndexBuffer.release());
     GLTRY(m_IndexBuffer.destroy());
+
+    GLTRY(m_UniformBuffer.release());
     GLTRY(m_UniformBuffer.destroy());
+
+    GLTRY(m_VAO.release());
     GLTRY(m_VAO.destroy());
 }
 

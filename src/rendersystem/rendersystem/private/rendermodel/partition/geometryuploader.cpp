@@ -126,6 +126,8 @@ bool GeometryUploader::uploadIfRequired()
         return true;
     }
 
+    // We have things to upload!
+
     m_OpenGLBuffers.vertexArrayObject().bind();
     m_pCurrentShaderProgram->bindFull();
 
@@ -134,6 +136,7 @@ bool GeometryUploader::uploadIfRequired()
 
     if ( (flags & MatricesUploadFlag) == MatricesUploadFlag && !uploadAllUniforms() )
     {
+        m_pCurrentShaderProgram->releaseFull();
         m_OpenGLBuffers.vertexArrayObject().release();
         m_pCurrentShaderProgram = Q_NULLPTR;
         return false;
@@ -141,6 +144,7 @@ bool GeometryUploader::uploadIfRequired()
 
     if ( (flags & VerticesUploadFlag) == VerticesUploadFlag && !uploadAllVertexData() )
     {
+        m_pCurrentShaderProgram->releaseFull();
         m_OpenGLBuffers.vertexArrayObject().release();
         m_pCurrentShaderProgram = Q_NULLPTR;
         return false;

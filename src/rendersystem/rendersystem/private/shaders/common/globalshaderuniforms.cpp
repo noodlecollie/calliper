@@ -54,8 +54,10 @@ namespace
 }
 
 GlobalShaderUniforms::GlobalShaderUniforms(QOpenGLBuffer::UsagePattern usagePattern)
-    : m_bNeedsUpload(true), m_UniformBuffer(usagePattern),
-      m_matWorldToCamera(), m_matProjection(),
+    : m_bNeedsUpload(true),
+      m_UniformBuffer(usagePattern),
+      m_matWorldToCamera(),
+      m_matProjection(),
       m_vecDirectionalLight(QVector3D(1,1,1).normalized())
 {
 }
@@ -140,6 +142,7 @@ void GlobalShaderUniforms::upload()
 
     static const quint32 uniformBufferSize = calculateUniformBufferSize();
 
+    // TODO: Use a Std140 struct here!
     GLTRY(m_UniformBuffer.bind());
     GLTRY(m_UniformBuffer.allocate(uniformBufferSize));
     GLTRY(m_UniformBuffer.release());
