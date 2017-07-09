@@ -26,26 +26,56 @@ namespace
     {
         g_pMainContext->doneCurrent();
     }
+
+    template<typename T>
+    void initialiseStore()
+    {
+        T::globalInitialise();
+    }
+
+    template<typename T>
+    void shutdownStore()
+    {
+        T::globalShutdown();
+    }
+
+    template<typename T>
+    void initialiseStaticStore()
+    {
+        initialiseStore<T>();
+        T::globalInstance()->initialise();
+    }
+
+    template<typename T>
+    void shutdownStaticStore()
+    {
+        T::globalInstance()->destroy();
+        shutdownStore<T>();
+    }
 }
 
 void initialiseStores()
 {
-    FrameBufferStore::globalInitialise();
-    OpenGLShaderStore::globalInitialise();
-    RenderModeStore::globalInitialise();
-    OpenGLTextureStore::globalInitialise();
-    MaterialStore::globalInitialise();
-    RenderModelStore::globalInitialise();
+    initialiseStore<FrameBufferStore>();
+
+    initialiseStaticStore<OpenGLShaderStore>();
+    initialiseStaticStore<RenderModeStore>();
+
+    initialiseStore<OpenGLTextureStore>();
+    initialiseStore<MaterialStore>();
+    initialiseStore<RenderModelStore>();
 }
 
 void shutdownStores()
 {
-    RenderModelStore::globalShutdown();
-    MaterialStore::globalShutdown();
-    OpenGLTextureStore::globalShutdown();
-    RenderModeStore::globalShutdown();
-    OpenGLShaderStore::globalShutdown();
-    FrameBufferStore::globalShutdown();
+    shutdownStore<RenderModelStore>();
+    shutdownStore<MaterialStore>();
+    shutdownStore<OpenGLTextureStore>();
+
+    shutdownStaticStore<RenderModeStore>();
+    shutdownStaticStore<OpenGLShaderStore>();
+
+    shutdownStore<FrameBufferStore>();
 }
 
 namespace RenderSystem

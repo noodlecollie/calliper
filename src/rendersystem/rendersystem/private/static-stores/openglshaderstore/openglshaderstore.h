@@ -16,8 +16,8 @@ public:
     OpenGLShaderStore();
 
 protected:
-    virtual void storeInitialised() override;
-    virtual void storeDestroyed() override;
+    virtual void onStoreInitialised() override;
+    virtual void onStoreDestroyed() override;
 
 private:
     static OpenGLShaderStore* m_pGlobalInstance;

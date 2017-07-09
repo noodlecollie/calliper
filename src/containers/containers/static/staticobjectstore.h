@@ -21,8 +21,8 @@ namespace Containers
     protected:
         typedef QHash<typename STOREKEY::KeyType, T> StaticObjectStoreHash;
 
-        virtual void storeInitialised() = 0;
-        virtual void storeDestroyed() = 0;
+        virtual void onStoreInitialised() = 0;
+        virtual void onStoreDestroyed() = 0;
 
         StaticObjectStoreHash m_Objects;
 
@@ -40,7 +40,6 @@ namespace Containers
     template<typename T, typename STOREKEY>
     StaticObjectStore<T, STOREKEY>::~StaticObjectStore()
     {
-        destroy();
     }
 
     template<typename T, typename STOREKEY>
@@ -51,7 +50,7 @@ namespace Containers
             return;
         }
 
-        storeInitialised();
+        onStoreInitialised();
 
         Q_ASSERT_X(m_Objects.count() == STOREKEY::count(), Q_FUNC_INFO, "Initialised object count did not match expected count!");
         if ( m_Objects.count() != STOREKEY::count() )
@@ -70,7 +69,7 @@ namespace Containers
             return;
         }
 
-        storeDestroyed();
+        onStoreDestroyed();
         m_bStoreInitialised = false;
     }
 

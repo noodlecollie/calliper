@@ -38,12 +38,12 @@ RenderModeStore::RenderModeStore()
     }
 }
 
-void RenderModeStore::storeInitialised()
+void RenderModeStore::onStoreInitialised()
 {
 
 }
 
-void RenderModeStore::storeDestroyed()
+void RenderModeStore::onStoreDestroyed()
 {
     qDeleteAll(m_Objects.values());
 }

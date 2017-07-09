@@ -18,8 +18,8 @@ public:
     RenderModeStore();
 
 protected:
-    virtual void storeInitialised() override;
-    virtual void storeDestroyed() override;
+    virtual void onStoreInitialised() override;
+    virtual void onStoreDestroyed() override;
 
 private:
     static RenderModeStore* m_pGlobalInstance;

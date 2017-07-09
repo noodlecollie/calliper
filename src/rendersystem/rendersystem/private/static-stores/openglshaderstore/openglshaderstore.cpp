@@ -35,7 +35,7 @@ OpenGLShaderStore::OpenGLShaderStore()
     }
 }
 
-void OpenGLShaderStore::storeInitialised()
+void OpenGLShaderStore::onStoreInitialised()
 {
     for ( StaticObjectStoreHash::iterator itShader = m_Objects.begin();
           itShader != m_Objects.end();
@@ -49,7 +49,7 @@ void OpenGLShaderStore::storeInitialised()
     }
 }
 
-void OpenGLShaderStore::storeDestroyed()
+void OpenGLShaderStore::onStoreDestroyed()
 {
     qDeleteAll(m_Objects.values());
 }
