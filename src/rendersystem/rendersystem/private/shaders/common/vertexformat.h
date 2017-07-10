@@ -1,6 +1,8 @@
 #ifndef VERTEXFORMAT_H
 #define VERTEXFORMAT_H
 
+#include "privateshaderdefs.h"
+
 class VertexFormat
 {
 public:
@@ -17,6 +19,8 @@ public:
     int colorComponents() const;
     int textureCoordinateComponents() const;
 
+    int components(PrivateShaderDefs::VertexArrayAttribute attribute) const;
+
     int totalVertexComponents() const;
     bool isValid() const;
 
@@ -24,10 +28,7 @@ public:
     bool operator !=(const VertexFormat& other) const;
 
 private:
-    int m_iPositionComponents;
-    int m_iNormalComponents;
-    int m_iColorComponents;
-    int m_iTextureCoordinateComponents;
+    int m_nComponents[PrivateShaderDefs::VertexAttributeLocationCount];
 };
 
 #endif // VERTEXFORMAT_H

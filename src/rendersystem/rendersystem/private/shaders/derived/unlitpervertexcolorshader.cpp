@@ -1,4 +1,5 @@
 #include "unlitpervertexcolorshader.h"
+#include "rendersystem/private/shaders/common/vertexformat.h"
 
 UnlitPerVertexColorShader::UnlitPerVertexColorShader(QObject* parent)
     : OpenGLShaderProgram(UnlitPerVertexColorShader::staticMetaObject.className(), parent)

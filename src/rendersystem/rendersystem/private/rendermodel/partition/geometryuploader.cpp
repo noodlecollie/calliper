@@ -10,38 +10,6 @@
 
 namespace
 {
-    int getNumComponents(const VertexFormat& format, PrivateShaderDefs::VertexArrayAttribute attribute)
-    {
-        switch ( attribute )
-        {
-            case PrivateShaderDefs::PositionAttribute:
-            {
-                return format.positionComponents();
-            }
-
-            case PrivateShaderDefs::NormalAttribute:
-            {
-                return format.normalComponents();
-            }
-
-            case PrivateShaderDefs::ColorAttribute:
-            {
-                return format.colorComponents();
-            }
-
-            case PrivateShaderDefs::TextureCoordinateAttribute:
-            {
-                return format.textureCoordinateComponents();
-            }
-
-            default:
-            {
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Unrecognised attribute!");
-                return 0;
-            }
-        }
-    }
-
     int computeOffsetInBytes(const VertexFormat& format, PrivateShaderDefs::VertexArrayAttribute attribute)
     {
         int offset = 0;
@@ -75,7 +43,7 @@ namespace
     void trySetAttributeBuffer(OpenGLShaderProgram& shaderProgram,
                                PrivateShaderDefs::VertexArrayAttribute attribute)
     {
-        const int components = getNumComponents(shaderProgram.vertexFormat(), attribute);
+        const int components = shaderProgram.vertexFormat().components(attribute);
 
         if ( components > 0 )
         {

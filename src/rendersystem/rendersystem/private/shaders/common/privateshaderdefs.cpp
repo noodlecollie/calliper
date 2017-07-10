@@ -1,4 +1,5 @@
 #include "privateshaderdefs.h"
+#include "vertexformat.h"
 
 namespace PrivateShaderDefs
 {

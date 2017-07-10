@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-#include "vertexformat.h"
-
 #include "rendersystem/interface-classes/definitions/shaderdefs.h"
+
+class VertexFormat;
 
 namespace PrivateShaderDefs
 {

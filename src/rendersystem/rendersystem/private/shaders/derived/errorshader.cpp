@@ -1,4 +1,5 @@
 #include "errorshader.h"
+#include "rendersystem/private/shaders/common/vertexformat.h"
 
 ErrorShader::ErrorShader(QObject* parent)
     : OpenGLShaderProgram(ErrorShader::staticMetaObject.className(), parent)

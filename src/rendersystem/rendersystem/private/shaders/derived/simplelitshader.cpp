@@ -1,4 +1,5 @@
 #include "simplelitshader.h"
+#include "rendersystem/private/shaders/common/vertexformat.h"
 
 SimpleLitShader::SimpleLitShader(QObject* parent)
     : OpenGLShaderProgram(SimpleLitShader::staticMetaObject.className(), parent)

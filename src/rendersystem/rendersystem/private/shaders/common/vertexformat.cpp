@@ -2,15 +2,17 @@
 #include <QtDebug>
 
 VertexFormat::VertexFormat(int positions, int normals, int colors, int texCoords)
-    : m_iPositionComponents(positions),
-      m_iNormalComponents(normals),
-      m_iColorComponents(colors),
-      m_iTextureCoordinateComponents(texCoords)
+    : m_nComponents()
 {
     Q_ASSERT_X(positions >= 0 && positions <= 4, Q_FUNC_INFO, "Positions value must be between 0 and 4");
     Q_ASSERT_X(normals >= 0 && normals <= 4, Q_FUNC_INFO, "Normals value must be between 0 and 4");
     Q_ASSERT_X(colors >= 0 && colors <= 4, Q_FUNC_INFO, "Colours value must be between 0 and 4");
     Q_ASSERT_X(texCoords >= 0 && texCoords <= 4, Q_FUNC_INFO, "Texture coordinates value must be between 0 and 4");
+
+    m_nComponents[PrivateShaderDefs::PositionAttribute] = positions;
+    m_nComponents[PrivateShaderDefs::NormalAttribute] = normals;
+    m_nComponents[PrivateShaderDefs::ColorAttribute] = colors;
+    m_nComponents[PrivateShaderDefs::TextureCoordinateAttribute] = texCoords;
 }
 
 VertexFormat::VertexFormat()
@@ -18,24 +20,34 @@ VertexFormat::VertexFormat()
 {
 }
 
+int VertexFormat::components(PrivateShaderDefs::VertexArrayAttribute attribute) const
+{
+    if ( attribute < 0 || attribute >= PrivateShaderDefs::VertexAttributeLocationCount )
+    {
+        return 0;
+    }
+
+    return m_nComponents[attribute];
+}
+
 int VertexFormat::positionComponents() const
 {
-    return m_iPositionComponents;
+    return components(PrivateShaderDefs::PositionAttribute);
 }
 
 int VertexFormat::normalComponents() const
 {
-    return m_iNormalComponents;
+    return components(PrivateShaderDefs::NormalAttribute);
 }
 
 int VertexFormat::colorComponents() const
 {
-    return m_iColorComponents;
+    return components(PrivateShaderDefs::ColorAttribute);
 }
 
 int VertexFormat::textureCoordinateComponents() const
 {
-    return m_iTextureCoordinateComponents;
+    return components(PrivateShaderDefs::TextureCoordinateAttribute);
 }
 
 int VertexFormat::totalVertexComponents() const
@@ -48,10 +60,10 @@ int VertexFormat::totalVertexComponents() const
 
 bool VertexFormat::operator ==(const VertexFormat& other) const
 {
-    return m_iPositionComponents == other.m_iPositionComponents &&
-            m_iNormalComponents == other.m_iNormalComponents &&
-            m_iColorComponents == other.m_iColorComponents &&
-            m_iTextureCoordinateComponents == other.m_iTextureCoordinateComponents;
+    return m_nComponents[PrivateShaderDefs::PositionAttribute] == other.positionComponents() &&
+            m_nComponents[PrivateShaderDefs::NormalAttribute] == other.normalComponents() &&
+            m_nComponents[PrivateShaderDefs::ColorAttribute] == other.colorComponents() &&
+            m_nComponents[PrivateShaderDefs::TextureCoordinateAttribute] == other.textureCoordinateComponents();
 }
 
 bool VertexFormat::operator !=(const VertexFormat& other) const
