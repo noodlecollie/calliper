@@ -24,9 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     GeometryBuilder builder(1, 0, QMatrix4x4());
     GeometryBuilder::GeometrySectionPointer section = builder.createNewSection();
 
-    section->addPosition(QVector3D(-1, -1, 0));
-    section->addPosition(QVector3D(1, -1, 0));
-    section->addPosition(QVector3D(0, 1, 0));
+    section->addPosition(QVector3D(-1, -1, -0.1f));
+    section->addPosition(QVector3D(1, -1, -0.1f));
+    section->addPosition(QVector3D(0, 1, -0.1f));
 
     section->addColor(QColor::fromRgb(0xff0000ff));
     section->addColor(QColor::fromRgb(0xff0000ff));

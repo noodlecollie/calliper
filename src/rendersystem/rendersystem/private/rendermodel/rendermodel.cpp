@@ -4,6 +4,9 @@
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
 #include "rendersystem/private/stores/framebufferstore.h/framebufferstore.h"
 
+// REMOVE ME
+#include "calliperutil/opengl/openglhelpers.h"
+
 RenderModel::RenderModel()
     : m_Context(),
       m_RenderGroups(),
@@ -76,6 +79,14 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     {
         return;
     }
+
+    GL_CURRENT_F;
+    f->glEnable(GL_DEPTH_TEST);
+    f->glEnable(GL_CULL_FACE);
+    f->glDepthFunc(GL_LESS);
+    f->glCullFace(GL_BACK);
+    f->glClearColor(0,0,0,1);
+    f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_Context.setRenderMode(renderMode);
 

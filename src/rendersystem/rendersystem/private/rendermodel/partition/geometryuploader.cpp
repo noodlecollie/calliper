@@ -47,11 +47,14 @@ namespace
 
         if ( components > 0 )
         {
+            const int offset = computeOffsetInBytes(shaderProgram.vertexFormat(), attribute);
+            const int stride = shaderProgram.vertexFormat().totalVertexComponents() * sizeof(float);
+
             shaderProgram.setAttributeBuffer(attribute,
                                              GL_FLOAT,
-                                             computeOffsetInBytes(shaderProgram.vertexFormat(), attribute),
+                                             offset,
                                              components,
-                                             shaderProgram.vertexFormat().totalVertexComponents() * sizeof(float));
+                                             stride);
         }
     }
 }
@@ -347,6 +350,8 @@ void GeometryUploader::bindShaderAttributesToVAO()
         return;
     }
 
+    m_OpenGLBuffers.vertexBuffer().bind();
+
     m_OpenGLBuffers.vertexArrayObject().disableAttributeArrays();
     m_OpenGLBuffers.vertexArrayObject().enableAttributeArrays(m_pCurrentShaderProgram->vertexFormat());
 
@@ -354,4 +359,6 @@ void GeometryUploader::bindShaderAttributesToVAO()
     trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::NormalAttribute);
     trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::ColorAttribute);
     trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::TextureCoordinateAttribute);
+
+    m_OpenGLBuffers.vertexBuffer().release();
 }

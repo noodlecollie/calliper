@@ -10,7 +10,7 @@ void main()
 {
     if ( state(int(gl_FragCoord.x)) == state(int(gl_FragCoord.y)) )
     {
-	color = vec4(1, 0.322, 0.875, 1);
+        color = vec4(1, 0.322, 0.875, 1);
     }
     else
     {
