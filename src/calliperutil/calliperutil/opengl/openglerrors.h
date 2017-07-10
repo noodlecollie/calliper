@@ -50,7 +50,7 @@ public:
                    .toUtf8().constData()
                   );
 
-            // For some reason qFatal doesn't kill us on Windows...?
+            // For some reason qFatal sometimes doesn't kill us on Windows...?
             Q_ASSERT(false);
 
             return false;

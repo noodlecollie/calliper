@@ -1,6 +1,37 @@
 #include "openglvertexarrayobject.h"
+
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/opengl/openglerrors.h"
+
+#include "rendersystem/private/shaders/common/vertexformat.h"
+#include "rendersystem/private/shaders/common/privateshaderdefs.h"
+
+namespace
+{
+    template<typename LAMBDA>
+    void callForNonZeroAttributes(const VertexFormat& format, LAMBDA lambda)
+    {
+        if ( format.positionComponents() > 0 )
+        {
+            GLTRY(lambda(PrivateShaderDefs::PositionAttribute));
+        }
+
+        if ( format.normalComponents() > 0 )
+        {
+            GLTRY(lambda(PrivateShaderDefs::NormalAttribute));
+        }
+
+        if ( format.colorComponents() > 0 )
+        {
+            GLTRY(lambda(PrivateShaderDefs::ColorAttribute));
+        }
+
+        if ( format.textureCoordinateComponents() > 0 )
+        {
+            GLTRY(lambda(PrivateShaderDefs::TextureCoordinateAttribute));
+        }
+    }
+}
 
 OpenGLVertexArrayObject::OpenGLVertexArrayObject()
     : m_iVAOID(0)
@@ -57,4 +88,55 @@ void OpenGLVertexArrayObject::release()
 bool OpenGLVertexArrayObject::isCreated() const
 {
     return m_iVAOID != 0;
+}
+
+void OpenGLVertexArrayObject::enableAttributeArrays(const VertexFormat &format)
+{
+    Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
+
+    if ( !isCreated() )
+    {
+        return;
+    }
+
+    GL_CURRENT_F;
+
+    callForNonZeroAttributes(format, [&f](PrivateShaderDefs::VertexArrayAttribute attribute)
+    {
+        f->glEnableVertexAttribArray(attribute);
+    });
+}
+
+void OpenGLVertexArrayObject::disableAttributeArrays(const VertexFormat &format)
+{
+    Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
+
+    if ( !isCreated() )
+    {
+        return;
+    }
+
+    GL_CURRENT_F;
+
+    callForNonZeroAttributes(format, [&f](PrivateShaderDefs::VertexArrayAttribute attribute)
+    {
+        f->glDisableVertexAttribArray(attribute);
+    });
+}
+
+void OpenGLVertexArrayObject::disableAttributeArrays()
+{
+    Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
+
+    if ( !isCreated() )
+    {
+        return;
+    }
+
+    GL_CURRENT_F;
+
+    for ( int attribute = 0; attribute < PrivateShaderDefs::VertexAttributeLocationCount; ++attribute )
+    {
+        f->glDisableVertexAttribArray(attribute);
+    }
 }

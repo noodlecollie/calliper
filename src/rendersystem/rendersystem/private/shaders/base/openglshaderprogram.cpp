@@ -58,56 +58,6 @@ OpenGLShaderProgram::~OpenGLShaderProgram()
 
 }
 
-void OpenGLShaderProgram::enableAttributeArrays()
-{
-    VertexFormat format = vertexFormat();
-
-    if ( format.positionComponents() > 0 )
-    {
-        enableAttributeArray(PrivateShaderDefs::PositionAttribute);
-    }
-
-    if ( format.normalComponents() > 0 )
-    {
-        enableAttributeArray(PrivateShaderDefs::NormalAttribute);
-    }
-
-    if ( format.colorComponents() > 0 )
-    {
-        enableAttributeArray(PrivateShaderDefs::ColorAttribute);
-    }
-
-    if ( format.textureCoordinateComponents() > 0 )
-    {
-        enableAttributeArray(PrivateShaderDefs::TextureCoordinateAttribute);
-    }
-}
-
-void OpenGLShaderProgram::disableAttributeArrays()
-{
-    VertexFormat format = vertexFormat();
-
-    if ( format.positionComponents() > 0 )
-    {
-        disableAttributeArray(PrivateShaderDefs::PositionAttribute);
-    }
-
-    if ( format.normalComponents() > 0 )
-    {
-        disableAttributeArray(PrivateShaderDefs::NormalAttribute);
-    }
-
-    if ( format.colorComponents() > 0 )
-    {
-        disableAttributeArray(PrivateShaderDefs::ColorAttribute);
-    }
-
-    if ( format.textureCoordinateComponents() > 0 )
-    {
-        disableAttributeArray(PrivateShaderDefs::TextureCoordinateAttribute);
-    }
-}
-
 void OpenGLShaderProgram::setGlobalUniformBlockBinding()
 {
     GL_CURRENT_F;
@@ -191,7 +141,7 @@ bool OpenGLShaderProgram::link()
     return success;
 }
 
-bool OpenGLShaderProgram::bindFull()
+bool OpenGLShaderProgram::bindWithUniforms()
 {
     bool bindSuccess = false;
     GLTRY(bindSuccess = bind());
@@ -204,13 +154,6 @@ bool OpenGLShaderProgram::bindFull()
 
     setGlobalUniformBlockBinding();
     setLocalUniformBlockBinding();
-    enableAttributeArrays();
 
     return true;
-}
-
-void OpenGLShaderProgram::releaseFull()
-{
-    disableAttributeArrays();
-    release();
 }

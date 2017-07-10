@@ -26,11 +26,7 @@ public:
     void setLocalUniformBlockBinding();
     virtual bool hasLocalUniformBlockBinding() const;
 
-    void enableAttributeArrays();
-    void disableAttributeArrays();
-
-    bool bindFull();
-    void releaseFull();
+    bool bindWithUniforms();
 
     bool addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const QByteArray &shader);
     bool addShaderWithCommonHeaders(QOpenGLShader::ShaderType type, const char* shader);

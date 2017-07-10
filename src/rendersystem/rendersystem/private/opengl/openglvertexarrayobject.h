@@ -3,6 +3,8 @@
 
 #include <QOpenGLFunctions>
 
+class VertexFormat;
+
 /*
  * Some helpful documentation from good old StackOverflow:
  * https://stackoverflow.com/questions/26552642/when-is-what-bound-to-a-vao
@@ -52,6 +54,7 @@
  * Therefore, setup of a VAO should include creating VBOs, binding them and
  * specifying the vertex attributes.
  */
+
 class OpenGLVertexArrayObject
 {
 public:
@@ -64,6 +67,11 @@ public:
 
     bool bind();
     void release();
+
+    // These functions assume the VAO is bound.
+    void enableAttributeArrays(const VertexFormat& format);
+    void disableAttributeArrays(const VertexFormat& format);
+    void disableAttributeArrays();
 
 private:
     GLuint  m_iVAOID;

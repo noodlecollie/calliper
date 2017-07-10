@@ -71,12 +71,21 @@ bool OpenGLBufferCollection::create()
         return true;
     }
 
-    if ( !GLTRY_RET(m_VAO.create()) ||
-         !GLTRY_RET(m_VAO.bind()) ||
-         !GLTRY_RET(m_VertexBuffer.create()) ||
-         !GLTRY_RET(m_IndexBuffer.create()) ||
-         !GLTRY_RET(m_UniformBuffer.create()) ||
-         !GLTRY_RET(m_VAO.release()) )
+    bool success = true;
+
+    // If one step fails, short-circuiting should ensure no others are run.
+    GLTRY(success = success && m_VAO.create());
+    GLTRY(success = success && m_VertexBuffer.create());
+    GLTRY(success = success && m_IndexBuffer.create());
+    GLTRY(success = success && m_UniformBuffer.create());
+
+    // VAO remembers which index buffer was bound, so we do that here.
+    GLTRY(success = success && m_VAO.bind());
+    GLTRY(success = success && m_IndexBuffer.bind());
+    GLTRY(m_IndexBuffer.release());
+    GLTRY(m_VAO.release());
+
+    if ( !success )
     {
         destroyAll();
         return false;

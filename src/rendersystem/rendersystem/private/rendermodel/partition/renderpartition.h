@@ -25,18 +25,34 @@
  * drawn by using glBindBufferRange() and by drawing what's in the buffers one section at a
  * time.
  *
+ * Good example code for an OpenGL life cycle is:
+ * https://www.khronos.org/opengl/wiki/Tutorial1:_Rendering_shapes_with_glDrawRangeElements,_VAO,_VBO,_shaders_(C++_/_freeGLUT)
+ *
  * The general life cycle should be as follows:
  *
  * === Initialisation ===
  * Create VAO, bind.
  * Create buffer collection (vertex, index, uniform buffers).
  * Set up vertex attributes (this may need to be re-done if the
- *      shader referenced by a material changes).
- * Release VAO
+ *      shader referenced by a material changes). The VAO will
+ *      remember which buffer was bound for which attribute.
+ * Create, bind and release index buffer.
+ * Release VAO.
  *
  * === Uploading ===
- * TODO
+ * Bind relevant buffers, upload, unbind.
+ *
+ * === Drawing ===
+ * Bind VAO.
+ * Make draw calls.
+ * Unbind VAO.
+ *
+ * As it happens, creation and uploading of VBOs and index buffers doesn't need interaction
+ * with the VAO. We just need to make sure that the VBOs are bound and have their vertex
+ * attributes set when the VAO is active, and that the index buffer is bound once when the
+ * VAO is active.
  */
+
 class RenderPartition
 {
 public:

@@ -51,9 +51,10 @@ namespace Containers
         }
 
         onStoreInitialised();
+        const quint32 count = static_cast<quint32>(m_Objects.count());
 
-        Q_ASSERT_X(m_Objects.count() == STOREKEY::count(), Q_FUNC_INFO, "Initialised object count did not match expected count!");
-        if ( m_Objects.count() != STOREKEY::count() )
+        Q_ASSERT_X(count == STOREKEY::count(), Q_FUNC_INFO, "Initialised object count did not match expected count!");
+        if ( count != STOREKEY::count() )
         {
             qFatal("%s: Expected static object count of %d but got %d.", Q_FUNC_INFO, STOREKEY::count(), m_Objects.count());
         }

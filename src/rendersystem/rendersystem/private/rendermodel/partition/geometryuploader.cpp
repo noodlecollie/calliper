@@ -129,14 +129,14 @@ bool GeometryUploader::uploadIfRequired()
     // We have things to upload!
 
     m_OpenGLBuffers.vertexArrayObject().bind();
-    m_pCurrentShaderProgram->bindFull();
+    m_pCurrentShaderProgram->bindWithUniforms();
 
     bindShaderAttributesToVAO();
     generateBatches();
 
     if ( (flags & MatricesUploadFlag) == MatricesUploadFlag && !uploadAllUniforms() )
     {
-        m_pCurrentShaderProgram->releaseFull();
+        m_pCurrentShaderProgram->release();
         m_OpenGLBuffers.vertexArrayObject().release();
         m_pCurrentShaderProgram = Q_NULLPTR;
         return false;
@@ -144,13 +144,13 @@ bool GeometryUploader::uploadIfRequired()
 
     if ( (flags & VerticesUploadFlag) == VerticesUploadFlag && !uploadAllVertexData() )
     {
-        m_pCurrentShaderProgram->releaseFull();
+        m_pCurrentShaderProgram->release();
         m_OpenGLBuffers.vertexArrayObject().release();
         m_pCurrentShaderProgram = Q_NULLPTR;
         return false;
     }
 
-    m_pCurrentShaderProgram->releaseFull();
+    m_pCurrentShaderProgram->release();
     m_OpenGLBuffers.vertexArrayObject().release();
 
     m_nShaderIdWhenLastUploaded = m_nShaderId;
@@ -373,10 +373,14 @@ void GeometryUploader::consolidateVerticesAndIndices()
 
 void GeometryUploader::bindShaderAttributesToVAO()
 {
-    if ( !m_pCurrentShaderProgram )
+    // Don't set same attributes again if the shader is the same as when we last uploaded.
+    if ( !m_pCurrentShaderProgram || m_nShaderIdWhenLastUploaded == m_nShaderId )
     {
         return;
     }
+
+    m_OpenGLBuffers.vertexArrayObject().disableAttributeArrays();
+    m_OpenGLBuffers.vertexArrayObject().enableAttributeArrays(m_pCurrentShaderProgram->vertexFormat());
 
     trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::PositionAttribute);
     trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::NormalAttribute);

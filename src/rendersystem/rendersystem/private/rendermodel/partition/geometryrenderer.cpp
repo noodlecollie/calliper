@@ -82,8 +82,8 @@ void GeometryRenderer::draw()
         return;
     }
 
+    m_pCurrentShader->bindWithUniforms();
     m_OpenGLBuffers.vertexArrayObject().bind();
-    m_pCurrentShader->bindFull();
     m_nItemsPerBatch = m_pCurrentShader->maxBatchedItems();
 
     for ( int batch = 0; batch < m_BatchTable.count(); ++batch )
@@ -107,7 +107,7 @@ void GeometryRenderer::draw()
 
     releaseBuffers();
 
-    m_pCurrentShader->releaseFull();
+    m_pCurrentShader->release();
     m_OpenGLBuffers.vertexArrayObject().release();
 }
 
