@@ -10,5 +10,7 @@
         <file>shaders/unlitshader.vert</file>
         <file>shaders/commonvertexheaders.glsl</file>
         <file>textures/_internal/error.png</file>
+        <file>shaders/debugminimalshader.frag</file>
+        <file>shaders/debugminimalshader.vert</file>
     </qresource>
 </RCC>

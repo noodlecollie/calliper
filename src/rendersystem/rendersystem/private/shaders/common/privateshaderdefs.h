@@ -18,6 +18,7 @@ namespace PrivateShaderDefs
         ErrorShaderId = 0,
         SimpleLitShaderId,
         UnlitPerVertexColourShaderId,
+        DebugMinimalShaderId,
 
         TOTAL_SHADERS
     };

@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
                            QMatrix4x4(),
                            QMatrix4x4());
 
-    frameBufferStore->save(m_nFrameBufferId, "/Users/vesper/Desktop/temp.png");
+    //frameBufferStore->save(m_nFrameBufferId, "/Users/vesper/Desktop/temp.png");
 }
 
 MainWindow::~MainWindow()

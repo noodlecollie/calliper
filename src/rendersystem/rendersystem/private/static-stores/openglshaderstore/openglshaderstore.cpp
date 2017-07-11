@@ -8,6 +8,7 @@
 #include "rendersystem/private/shaders/derived/errorshader.h"
 #include "rendersystem/private/shaders/derived/simplelitshader.h"
 #include "rendersystem/private/shaders/derived/unlitpervertexcolorshader.h"
+#include "rendersystem/private/shaders/derived/debugminimalshader.h"
 
 namespace
 {
@@ -15,11 +16,13 @@ namespace
     // want to store pointers to the programs outside of the store,
     // or this would conflict with the ownership the store is
     // supposed to have over the objects.
+    // Shaders should be added in the same order as the IDs enum.
     std::function<OpenGLShaderProgram*(void)> g_Initialisers[] =
     {
         [] { return new ErrorShader(); },
         [] { return new SimpleLitShader(); },
         [] { return new UnlitPerVertexColorShader(); },
+        [] { return new DebugMinimalShader(); },
     };
 }
 

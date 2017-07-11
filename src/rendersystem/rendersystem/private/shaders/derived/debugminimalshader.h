@@ -1,14 +1,14 @@
-#ifndef ERRORSHADER_H
-#define ERRORSHADER_H
+#ifndef DEBUGMINIMALSHADER_H
+#define DEBUGMINIMALSHADER_H
 
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
 
-class ErrorShader : public OpenGLShaderProgram
+class DebugMinimalShader : public OpenGLShaderProgram
 {
     Q_OBJECT
 public:
-    explicit ErrorShader(QObject* parent = Q_NULLPTR);
-    virtual ~ErrorShader();
+    explicit DebugMinimalShader(QObject* parent = Q_NULLPTR);
+    virtual ~DebugMinimalShader();
 
     static PrivateShaderDefs::ShaderId shaderId();
 
@@ -18,4 +18,4 @@ public:
     virtual int maxBatchedItems() const override;
 };
 
-#endif // ERRORSHADER_H
+#endif // DEBUGMINIMALSHADER_H
