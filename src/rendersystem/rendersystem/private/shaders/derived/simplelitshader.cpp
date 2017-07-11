@@ -24,11 +24,6 @@ void SimpleLitShader::construct()
     link();
 }
 
-bool SimpleLitShader::hasLocalUniformBlockBinding() const
-{
-    return true;
-}
-
 VertexFormat SimpleLitShader::vertexFormat() const
 {
     return VertexFormat(4, 3, 4, 2);

@@ -23,6 +23,8 @@ namespace RenderSystem
             LitTextured3D,
             UnlitPerVertexColor3D,
 
+            DebugMinimal2D,
+
             TOTAL_SHADER_STYLES,
         };
 
@@ -31,6 +33,8 @@ namespace RenderSystem
             UnknownRenderMode = -1,
 
             BarebonesRenderMode = 0,
+
+            DebugMinimalMode,
 
             TOTAL_RENDER_MODES
         };

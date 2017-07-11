@@ -41,6 +41,7 @@ protected:
 
 private:
     void createDefaultMaterial();
+    void createDebugMinimalMaterial();
 };
 
 #endif // MATERIALSTORE_H

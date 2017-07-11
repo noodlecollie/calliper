@@ -21,10 +21,12 @@ public:
     // Return 1 if the shader doesn't support batching.
     virtual int maxBatchedItems() const = 0;
 
-    // Should be bound before calling, and released after!
-    virtual void setGlobalUniformBlockBinding();
+    void setGlobalUniformBlockBinding();
     void setLocalUniformBlockBinding();
-    virtual bool hasLocalUniformBlockBinding() const;
+
+    // Only valid if the relevant function from above has been called.
+    bool hasGlobalUniformBlockBinding() const;
+    bool hasLocalUniformBlockBinding() const;
 
     bool bindWithUniforms();
 

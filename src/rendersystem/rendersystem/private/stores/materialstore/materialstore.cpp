@@ -5,6 +5,7 @@ MaterialStore::MaterialStore()
                               RenderSystem::MaterialDefs::MaterialId>()
 {
     createDefaultMaterial();
+    createDebugMinimalMaterial();
 }
 
 MaterialStore::~MaterialStore()
@@ -82,4 +83,13 @@ void MaterialStore::objectAboutToBeDestroyed(const ObjectId id)
 void MaterialStore::createDefaultMaterial()
 {
     createDefaultObject(QString());
+}
+
+void MaterialStore::createDebugMinimalMaterial()
+{
+    MaterialId id = createMaterial("_debug/debugminimal");
+    QWeakPointer<RenderSystem::RenderMaterial> dbgMaterialWeak = material(id);
+    QSharedPointer<RenderSystem::RenderMaterial> dbgMaterial = dbgMaterialWeak.toStrongRef();
+
+    dbgMaterial->setShaderStyle(RenderSystem::ShaderDefs::DebugMinimal2D);
 }

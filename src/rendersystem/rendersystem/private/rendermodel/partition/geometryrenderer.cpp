@@ -126,7 +126,7 @@ void GeometryRenderer::draw_x(int batch)
     GL_CURRENT_F;
 
     GLTRY(f->glLineWidth(m_flLineWidth));
-    GLTRY(f->glDrawElements(m_nDrawMode, indicesCount, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(beginOffsetInts)));
+    GLTRY(f->glDrawElements(m_nDrawMode, indicesCount, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(beginOffsetInts * sizeof(quint32))));
 }
 
 void GeometryRenderer::bindBuffers_x(int batch)
@@ -147,13 +147,16 @@ void GeometryRenderer::bindBuffers_x(int batch)
 
     const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
 
-    bool uBindSuccess = false;
-    GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(PrivateShaderDefs::LocalUniformBlockBindingPoint,
-                                                                   batchOffsets.batchOffsetBytes,
-                                                                   batchOffsets.batchSizeBytes));
-    if ( !uBindSuccess )
+    if ( m_pCurrentShader->hasLocalUniformBlockBinding() )
     {
-        throw InternalException("Unable to bind uniform buffer.");
+        bool uBindSuccess = false;
+        GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(PrivateShaderDefs::LocalUniformBlockBindingPoint,
+                                                                       batchOffsets.batchOffsetBytes,
+                                                                       batchOffsets.batchSizeBytes));
+        if ( !uBindSuccess )
+        {
+            throw InternalException("Unable to bind uniform buffer.");
+        }
     }
 }
 

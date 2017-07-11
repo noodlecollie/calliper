@@ -13,7 +13,6 @@ public:
     static PrivateShaderDefs::ShaderId shaderId();
 
     virtual void construct() override;
-    virtual bool hasLocalUniformBlockBinding() const override;
     virtual VertexFormat vertexFormat() const override;
     virtual int maxBatchedItems() const override;
 };

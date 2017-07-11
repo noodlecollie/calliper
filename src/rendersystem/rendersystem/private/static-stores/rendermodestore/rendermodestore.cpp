@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "rendersystem/private/rendermode/barebonesrendermode.h"
+#include "rendersystem/private/rendermode/debugminimalrendermode.h"
 
 namespace
 {
@@ -13,6 +14,7 @@ namespace
     std::function<BaseRenderMode*(void)> g_Initialisers[] =
     {
         [] { return new BarebonesRenderMode(); },
+        [] { return new DebugMinimalRenderMode(); },
     };
 
     template <quint32 N>

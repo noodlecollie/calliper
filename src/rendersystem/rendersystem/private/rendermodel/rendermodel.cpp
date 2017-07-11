@@ -10,6 +10,7 @@
 #include "rendersystem/private/opengl/openglvertexarrayobject.h"
 #include <QOpenGLBuffer>
 #include <QImage>
+#include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
 
 RenderModel::RenderModel()
     : m_Context(),
@@ -73,39 +74,24 @@ void RenderModel::clear()
     m_ObjectIdToRenderGroup.clear();
 }
 
+#define DRAW_OVERRIDE 0
+
 void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
                        RenderSystem::ShaderDefs::RenderMode renderMode,
                        const QMatrix4x4 &worldToCameraMatrix,
                        const QMatrix4x4 &projectionMatrix)
 {
-//    QSharedPointer<QOpenGLFramebufferObject> frameBufferObject = frameBuffer(frameBufferId);
-//    if ( !frameBufferObject || !frameBufferObject->bind() )
-//    {
-//        return;
-//    }
+    QSharedPointer<QOpenGLFramebufferObject> frameBufferObject = frameBuffer(frameBufferId);
+    if ( !frameBufferObject || !frameBufferObject->bind() )
+    {
+        return;
+    }
 
-//    // This is needed so that drawing into the frame buffer happens in the right place!
-//    GL_CURRENT_F;
-//    f->glViewport(0, 0, frameBufferObject->width(), frameBufferObject->height());
+    // This is needed so that drawing into the frame buffer happens in the right place!
+    GL_CURRENT_F;
+    f->glViewport(0, 0, frameBufferObject->width(), frameBufferObject->height());
 
-    static const char* vertexShader =
-            "#version 410 core\n"
-            "layout (location=0) in vec2 vPosition;\n"
-            "void main()\n"
-            "{\n"
-            "    gl_Position = vec4(vPosition.xy, 0, 1);\n"
-            "}\n"
-            ;
-
-    static const char* fragmentShader =
-            "#version 410 core\n"
-            "layout(location = 0) out vec4 color;\n"
-            "void main()\n"
-            "{\n"
-            "    color = vec4(1,0,0,1);\n"
-            "}\n"
-            ;
-
+#if DRAW_OVERRIDE
     static const float vertexData[] =
     {
         -1.0f, -1.0f,
@@ -118,10 +104,6 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
         0, 1, 2,
     };
 
-    QOpenGLFramebufferObject* frameBufferObject = new QOpenGLFramebufferObject(QSize(512, 512));
-    frameBufferObject->bind();
-
-    GL_CURRENT_F;
     f->glEnable(GL_DEPTH_TEST);
     f->glEnable(GL_CULL_FACE);
     f->glDepthFunc(GL_LESS);
@@ -129,10 +111,7 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     f->glClearColor(0,0,0,1);
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QOpenGLShaderProgram program;
-    program.addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShader);
-    program.addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShader);
-    program.link();
+    OpenGLShaderProgram& program = *OpenGLShaderStore::globalInstance()->object(PrivateShaderDefs::DebugMinimalShaderId);
     program.bind();
 
     OpenGLVertexArrayObject vao;
@@ -154,7 +133,6 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     program.enableAttributeArray(0);
     program.setAttributeBuffer(0, GL_FLOAT, 0, 2);
 
-    f->glViewport(0,0,512,512); // Why is this needed??
     f->glDrawArrays(GL_TRIANGLES, 0, 3);
 
     indexBuffer.release();
@@ -162,28 +140,25 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     vao.release();
     indexBuffer.destroy();
     vertexBuffer.destroy();
+
     program.release();
+#else
+    m_Context.setRenderMode(renderMode);
+
+    m_GlobalShaderUniforms.setWorldToCameraMatrix(worldToCameraMatrix);
+    m_GlobalShaderUniforms.setProjectionMatrix(projectionMatrix);
+    m_GlobalShaderUniforms.setDirectionalLight(QVector3D(1,1,1).normalized());
+    m_GlobalShaderUniforms.upload();
+
+    for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
+          itGroup != m_RenderGroups.constEnd();
+          ++itGroup )
+    {
+        itGroup.value()->draw();
+    }
+#endif
 
     frameBufferObject->release();
-    frameBufferObject->toImage(true).save("/Users/vesper/Desktop/temp.png");
-    delete frameBufferObject;
-    frameBufferObject = Q_NULLPTR;
-
-//    m_Context.setRenderMode(renderMode);
-
-//    m_GlobalShaderUniforms.setWorldToCameraMatrix(worldToCameraMatrix);
-//    m_GlobalShaderUniforms.setProjectionMatrix(projectionMatrix);
-//    m_GlobalShaderUniforms.setDirectionalLight(QVector3D(1,1,1).normalized());
-//    m_GlobalShaderUniforms.upload();
-
-//    for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
-//          itGroup != m_RenderGroups.constEnd();
-//          ++itGroup )
-//    {
-//        itGroup.value()->draw();
-//    }
-
-//    frameBufferObject->release();
 }
 
 QSharedPointer<QOpenGLFramebufferObject> RenderModel::frameBuffer(RenderSystem::FrameBufferDefs::FrameBufferId id) const

@@ -22,11 +22,6 @@ void UnlitPerVertexColorShader::construct()
     link();
 }
 
-bool UnlitPerVertexColorShader::hasLocalUniformBlockBinding() const
-{
-    return true;
-}
-
 VertexFormat UnlitPerVertexColorShader::vertexFormat() const
 {
     return VertexFormat(4, 0, 4, 0);

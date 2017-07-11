@@ -189,7 +189,7 @@ void GeometryConsolidator::consolidateIndices(const QSharedPointer<GeometryData>
     offsets.indexOffsetInts = m_IndexData.count();
     offsets.indexCountInts = geometry->computeTotalIndexBytes() / sizeof(quint32);
 
-    quint32 indexIncrement = offsets.vertexCountFloats / m_VertexFormat.totalVertexComponents();
+    quint32 indexIncrement = offsets.vertexOffsetFloats / m_VertexFormat.totalVertexComponents();
 
     m_IndexData.resize(m_IndexData.count() + offsets.indexCountInts);
     consolidateIndices(geometry->indices(), offsets.indexOffsetInts, indexIncrement);

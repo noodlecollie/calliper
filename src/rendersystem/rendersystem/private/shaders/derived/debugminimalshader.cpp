@@ -25,11 +25,6 @@ void DebugMinimalShader::construct()
     link();
 }
 
-bool DebugMinimalShader::hasLocalUniformBlockBinding() const
-{
-    return false;
-}
-
 VertexFormat DebugMinimalShader::vertexFormat() const
 {
     return VertexFormat(2, 0, 0, 0);

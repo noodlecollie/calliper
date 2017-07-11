@@ -24,11 +24,6 @@ void ErrorShader::construct()
     link();
 }
 
-bool ErrorShader::hasLocalUniformBlockBinding() const
-{
-    return true;
-}
-
 VertexFormat ErrorShader::vertexFormat() const
 {
     return VertexFormat(4, 0, 0, 0);

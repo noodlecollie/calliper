@@ -63,13 +63,9 @@ void OpenGLShaderProgram::setGlobalUniformBlockBinding()
     GL_CURRENT_F;
 
     m_iGlobalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), PrivateShaderDefs::GLOBAL_UNIFORM_BLOCK_NAME);
-    if ( m_iGlobalShaderBlockIndex != GL_INVALID_INDEX )
+    if ( hasGlobalUniformBlockBinding() )
     {
         f->glUniformBlockBinding(programId(), m_iGlobalShaderBlockIndex, PrivateShaderDefs::GlobalUniformBlockBindingPoint);
-    }
-    else
-    {
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Global uniform block not found in shader!");
     }
 }
 
@@ -78,19 +74,20 @@ void OpenGLShaderProgram::setLocalUniformBlockBinding()
     GL_CURRENT_F;
 
     m_iLocalShaderBlockIndex = f->glGetUniformBlockIndex(programId(), PrivateShaderDefs::LOCAL_UNIFORM_BLOCK_NAME);
-    if ( m_iLocalShaderBlockIndex != GL_INVALID_INDEX )
+    if ( hasLocalUniformBlockBinding() )
     {
         GLTRY(f->glUniformBlockBinding(programId(), m_iLocalShaderBlockIndex, PrivateShaderDefs::LocalUniformBlockBindingPoint));
     }
-    else
-    {
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Local uniform block not found in shader!");
-    }
+}
+
+bool OpenGLShaderProgram::hasGlobalUniformBlockBinding() const
+{
+    return m_iGlobalShaderBlockIndex != GL_INVALID_INDEX;
 }
 
 bool OpenGLShaderProgram::hasLocalUniformBlockBinding() const
 {
-    return false;
+    return m_iLocalShaderBlockIndex != GL_INVALID_INDEX;
 }
 
 void OpenGLShaderProgram::cacheCommonHeaders()
