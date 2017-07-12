@@ -83,11 +83,6 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
         return;
     }
 
-    GL_CURRENT_F;
-
-    // This is needed so that drawing into the frame buffer happens in the right place!
-    f->glViewport(0, 0, frameBufferObject->width(), frameBufferObject->height());
-
     m_Context.setRenderMode(drawParams.renderMode());
 
     m_GlobalShaderUniforms.setWorldToCameraMatrix(drawParams.worldToCameraMatrix());
@@ -103,6 +98,8 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
 
     m_GlobalShaderUniforms.upload();
 
+    drawPreFrame(*frameBufferObject, drawParams);
+
     for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
           itGroup != m_RenderGroups.constEnd();
           ++itGroup )
@@ -111,6 +108,19 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     }
 
     frameBufferObject->release();
+}
+
+void RenderModel::drawPreFrame(QOpenGLFramebufferObject &frameBuffer, const RenderSystem::FrameDrawParams &drawParams)
+{
+    GL_CURRENT_F;
+
+    // This is needed so that drawing into the frame buffer happens in the right place!
+    f->glViewport(0, 0, frameBuffer.width(), frameBuffer.height());
+
+    const QColor clearColor = drawParams.backgroundColor();
+    f->glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
+
+    f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 QSharedPointer<QOpenGLFramebufferObject> RenderModel::frameBuffer(RenderSystem::FrameBufferDefs::FrameBufferId id) const

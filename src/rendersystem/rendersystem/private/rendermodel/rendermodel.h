@@ -39,6 +39,8 @@ private:
     void setGeometry(const QSharedPointer<RenderSystem::GeometrySection>& section);
     QSharedPointer<QOpenGLFramebufferObject> frameBuffer(RenderSystem::FrameBufferDefs::FrameBufferId id) const;
 
+    void drawPreFrame(QOpenGLFramebufferObject& frameBuffer, const RenderSystem::FrameDrawParams& drawParams);
+
     RenderModelContext m_Context;
     RenderGroupHash m_RenderGroups;
     QMultiHash<RenderSystem::RenderModelDefs::ObjectId, RenderGroupPointer> m_ObjectIdToRenderGroup;

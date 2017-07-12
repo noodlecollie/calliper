@@ -76,7 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     createTriangles(builder, 10);
 
     RenderSystem::FrameDrawParams drawParams;
-    drawParams.setRenderMode(ShaderDefs::DebugMinimalMode);
+    drawParams.setRenderMode(ShaderDefs::BarebonesRenderMode);
+    drawParams.setBackgroundColor(QColor::fromRgb(0xFF0000FF));
 
     renderModelStore->addGeometry(m_nRenderModelId, builder);
     renderModelStore->draw(m_nRenderModelId,
