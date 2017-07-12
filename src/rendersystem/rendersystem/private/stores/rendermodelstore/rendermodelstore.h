@@ -32,9 +32,7 @@ public:
 
     virtual void draw(const RenderModelId modelId,
                       const FrameBufferId frameBufferId,
-                      const RenderMode renderMode,
-                      const QMatrix4x4 &worldToCameraMatrix,
-                      const QMatrix4x4 &projectionMatrix) override;
+                      const RenderSystem::FrameDrawParams& drawParams) override;
 };
 
 #endif // RENDERMODELSTORE_H

@@ -74,7 +74,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/opengl/uniforms/std140uniformstruct.cpp \
     rendersystem/private/opengl/uniforms/std140uniformelementbase.cpp \
     rendersystem/private/shaders/derived/debugminimalshader.cpp \
-    rendersystem/private/rendermode/debugminimalrendermode.cpp
+    rendersystem/private/rendermode/debugminimalrendermode.cpp \
+    rendersystem/interface-classes/drawing/framedrawparams.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -139,7 +140,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/opengl/uniforms/std140serialisation.h \
     rendersystem/private/shaders/common/batchedmodelmatrixuniformblock.h \
     rendersystem/private/shaders/derived/debugminimalshader.h \
-    rendersystem/private/rendermode/debugminimalrendermode.h
+    rendersystem/private/rendermode/debugminimalrendermode.h \
+    rendersystem/interface-classes/drawing/framedrawparams.h
 
 unix {
     target.path = /usr/lib

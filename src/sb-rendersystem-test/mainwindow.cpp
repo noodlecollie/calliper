@@ -73,14 +73,15 @@ MainWindow::MainWindow(QWidget *parent) :
     GeometryBuilder builder(1, 0, QMatrix4x4());
     builder.setMaterialId(materialStore->materialIdFromPath("_debug/debugminimal"));
 
-    createTriangles(builder, 5);
+    createTriangles(builder, 10);
+
+    RenderSystem::FrameDrawParams drawParams;
+    drawParams.setRenderMode(ShaderDefs::DebugMinimalMode);
 
     renderModelStore->addGeometry(m_nRenderModelId, builder);
     renderModelStore->draw(m_nRenderModelId,
                            m_nFrameBufferId,
-                           ShaderDefs::DebugMinimalMode,
-                           QMatrix4x4(),
-                           QMatrix4x4());
+                           drawParams);
 
     frameBufferStore->save(m_nFrameBufferId, "/Users/vesper/Desktop/temp.png");
 }

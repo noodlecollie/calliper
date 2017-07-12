@@ -74,12 +74,8 @@ void RenderModel::clear()
     m_ObjectIdToRenderGroup.clear();
 }
 
-#define DRAW_OVERRIDE 0
-
 void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
-                       RenderSystem::ShaderDefs::RenderMode renderMode,
-                       const QMatrix4x4 &worldToCameraMatrix,
-                       const QMatrix4x4 &projectionMatrix)
+                       const RenderSystem::FrameDrawParams& drawParams)
 {
     QSharedPointer<QOpenGLFramebufferObject> frameBufferObject = frameBuffer(frameBufferId);
     if ( !frameBufferObject || !frameBufferObject->bind() )
@@ -87,67 +83,24 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
         return;
     }
 
-    // This is needed so that drawing into the frame buffer happens in the right place!
     GL_CURRENT_F;
+
+    // This is needed so that drawing into the frame buffer happens in the right place!
     f->glViewport(0, 0, frameBufferObject->width(), frameBufferObject->height());
 
-#if DRAW_OVERRIDE
-    static const float vertexData[] =
+    m_Context.setRenderMode(drawParams.renderMode());
+
+    m_GlobalShaderUniforms.setWorldToCameraMatrix(drawParams.worldToCameraMatrix());
+    m_GlobalShaderUniforms.setProjectionMatrix(drawParams.projectionMatrix());
+
+    QVector3D directionalLight = drawParams.directionalLight();
+    if ( !directionalLight.isNull() )
     {
-        -1.0f, -1.0f,
-        1.0f, -1.0f,
-        0.0f, 1.0f,
-    };
+        directionalLight.normalize();
+    }
 
-    static const quint32 indexData[] =
-    {
-        0, 1, 2,
-    };
+    m_GlobalShaderUniforms.setDirectionalLight(directionalLight);
 
-    f->glEnable(GL_DEPTH_TEST);
-    f->glEnable(GL_CULL_FACE);
-    f->glDepthFunc(GL_LESS);
-    f->glCullFace(GL_BACK);
-    f->glClearColor(0,0,0,1);
-    f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    OpenGLShaderProgram& program = *OpenGLShaderStore::globalInstance()->object(PrivateShaderDefs::DebugMinimalShaderId);
-    program.bind();
-
-    OpenGLVertexArrayObject vao;
-    vao.create();
-
-    QOpenGLBuffer vertexBuffer(QOpenGLBuffer::VertexBuffer);
-    vertexBuffer.create();
-
-    QOpenGLBuffer indexBuffer(QOpenGLBuffer::IndexBuffer);
-    indexBuffer.create();
-
-    vao.bind();
-    vertexBuffer.bind();
-    vertexBuffer.allocate(vertexData, 6 * sizeof(float));
-
-    indexBuffer.bind();
-    indexBuffer.allocate(indexData, 3 * sizeof(quint32));
-
-    program.enableAttributeArray(0);
-    program.setAttributeBuffer(0, GL_FLOAT, 0, 2);
-
-    f->glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    indexBuffer.release();
-    vertexBuffer.release();
-    vao.release();
-    indexBuffer.destroy();
-    vertexBuffer.destroy();
-
-    program.release();
-#else
-    m_Context.setRenderMode(renderMode);
-
-    m_GlobalShaderUniforms.setWorldToCameraMatrix(worldToCameraMatrix);
-    m_GlobalShaderUniforms.setProjectionMatrix(projectionMatrix);
-    m_GlobalShaderUniforms.setDirectionalLight(QVector3D(1,1,1).normalized());
     m_GlobalShaderUniforms.upload();
 
     for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
@@ -156,7 +109,6 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     {
         itGroup.value()->draw();
     }
-#endif
 
     frameBufferObject->release();
 }

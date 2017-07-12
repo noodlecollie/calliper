@@ -14,6 +14,8 @@
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
+#include "rendersystem/interface-classes/drawing/framedrawparams.h"
+
 #include "rendersystem/private/shaders/common/globalshaderuniforms.h"
 
 class RenderModel
@@ -28,9 +30,7 @@ public:
     void clear();
 
     void draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
-              RenderSystem::ShaderDefs::RenderMode renderMode,
-              const QMatrix4x4& worldToCameraMatrix,
-              const QMatrix4x4& projectionMatrix);
+              const RenderSystem::FrameDrawParams& drawParams);
 
 private:
     typedef QSharedPointer<RenderGroup> RenderGroupPointer;

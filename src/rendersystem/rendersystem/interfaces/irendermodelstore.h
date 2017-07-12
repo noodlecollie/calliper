@@ -9,6 +9,7 @@
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
 #include "rendersystem/interface-classes/definitions/shaderdefs.h"
+#include "rendersystem/interface-classes/drawing/framedrawparams.h"
 
 namespace RenderSystem
 {
@@ -37,9 +38,7 @@ namespace RenderSystem
         // Draws the given render model into the given frame buffer.
         virtual void draw(const RenderModelDefs::RenderModelId modelId,
                           const FrameBufferDefs::FrameBufferId frameBufferId,
-                          const ShaderDefs::RenderMode renderMode,
-                          const QMatrix4x4& worldToCameraMatrix,
-                          const QMatrix4x4& projectionMatrix) = 0;
+                          const RenderSystem::FrameDrawParams& drawParams) = 0;
     };
 }
 
