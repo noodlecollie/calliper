@@ -10,8 +10,6 @@ class QSurface;
 
 namespace RenderSystem
 {
-    Q_DECLARE_LOGGING_CATEGORY(lcContextReferenceCounter)
-
     // Ensures that the RenderSystem context is kept current while
     // at least one instance of this class is alive.
     // Note that this doesn't prevent other contexts from being made current,

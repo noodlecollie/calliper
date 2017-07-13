@@ -81,3 +81,10 @@ else:unix: LIBS += -L$$OUT_PWD/../rendersystem/ -lrendersystem
 
 INCLUDEPATH += $$PWD/../rendersystem
 DEPENDPATH += $$PWD/../rendersystem
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../containers/release/ -lcontainers
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../containers/debug/ -lcontainers
+else:unix: LIBS += -L$$OUT_PWD/../containers/ -lcontainers
+
+INCLUDEPATH += $$PWD/../containers
+DEPENDPATH += $$PWD/../containers

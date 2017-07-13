@@ -6,8 +6,6 @@
 
 namespace RenderSystem
 {
-    Q_LOGGING_CATEGORY(lcContextReferenceCounter, "RenderSystem.ContextReferenceCounter")
-
     quint32 ContextReferenceCounter::m_nRefCount = 0;
     QOpenGLContext* ContextReferenceCounter::m_pPreviouslyCurrentContext = Q_NULLPTR;
     QSurface* ContextReferenceCounter::m_pPreviouslyCurrentSurface = Q_NULLPTR;
@@ -23,14 +21,10 @@ namespace RenderSystem
             return;
         }
 
-        qCDebug(lcContextReferenceCounter) << "Main render context being made current.";
-
         m_pPreviouslyCurrentContext = QOpenGLContext::currentContext();
 
         if ( m_pPreviouslyCurrentContext )
         {
-            qCDebug(lcContextReferenceCounter) << "Previously current context being stored.";
-
             m_pPreviouslyCurrentSurface = m_pPreviouslyCurrentContext->surface();
             m_pPreviouslyCurrentContext->doneCurrent();
         }
@@ -57,7 +51,7 @@ namespace RenderSystem
 
         if ( m_bMadeCurrent && QOpenGLContext::currentContext() != m_pOwnContext )
         {
-            qCWarning(lcContextReferenceCounter) << "Expecting main render context to be current, but a different context was current instead!";
+            qWarning() << "Expecting main render context to be current, but a different context was current instead!";
         }
 
         --m_nRefCount;
@@ -76,8 +70,6 @@ namespace RenderSystem
 
         if ( m_pPreviouslyCurrentContext )
         {
-            qCDebug(lcContextReferenceCounter) << "Previously current context being restored.";
-
             m_pPreviouslyCurrentContext->makeCurrent(m_pPreviouslyCurrentSurface);
             m_pPreviouslyCurrentContext = Q_NULLPTR;
             m_pPreviouslyCurrentSurface = Q_NULLPTR;

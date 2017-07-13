@@ -17,6 +17,8 @@ namespace Model
         CameraLens lens() const;
         void setLens(const CameraLens &lens);
 
+        QMatrix4x4 cameraMatrix() const;
+
     protected:
         SceneCamera(const SceneObjectInitParams &initParams, SceneObject* parentObject);
         explicit SceneCamera(const SceneCamera* cloneFrom, const SceneObjectInitParams &initParams);

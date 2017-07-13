@@ -40,4 +40,9 @@ namespace Model
     {
         m_Lens = lens;
     }
+
+    QMatrix4x4 SceneCamera::cameraMatrix() const
+    {
+        return rootToLocalMatrix();
+    }
 }

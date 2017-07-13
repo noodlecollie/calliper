@@ -9,6 +9,9 @@
 #include "model/camera/cameracontroller.h"
 #include "model/controller-adapters/mouseeventmap.h"
 
+#include "rendersystem/endpoints/framebufferstoreendpoint.h"
+#include "rendersystem/endpoints/rendermodelstoreendpoint.h"
+
 namespace
 {
     const Qt::Key KEY_FORWARD_DEFAULT = Qt::Key_W;
@@ -28,7 +31,8 @@ namespace UserInterface
           m_bOpenGLInitialised(false),
           m_pCameraController(new Model::CameraController(this)),
           m_pKeyMap(new Model::KeyMap(this)),
-          m_pMouseEventMap(new Model::MouseEventMap(this))
+          m_pMouseEventMap(new Model::MouseEventMap(this)),
+          m_nRenderFrameBufferId(RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID)
     {
         setFocusPolicy(Qt::StrongFocus);
         setMouseTracking(true);
@@ -40,6 +44,14 @@ namespace UserInterface
 
     MapViewport::~MapViewport()
     {
+        using namespace RenderSystem;
+
+        if ( m_nRenderFrameBufferId != FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
+        {
+            FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
+            frameBufferStore->removeFrameBuffer(m_nRenderFrameBufferId);
+            m_nRenderFrameBufferId = FrameBufferDefs::INVALID_FRAME_BUFFER_ID;
+        }
     }
 
     QWidget* MapViewport::modelViewToWidget()
@@ -83,6 +95,7 @@ namespace UserInterface
         m_pCameraController->setForwardSpeed(100.0f);
         m_pCameraController->setVerticalSpeed(100.0f);
 
+        // Why won't this connect to update without wrapping it in a lambda??
         connect(m_pCameraController, &Model::CameraController::tickFinished, this, [this]{ update(); });
     }
 
@@ -134,20 +147,27 @@ namespace UserInterface
 
     void MapViewport::initializeGL()
     {
-        GL_CURRENT_F;
+        using namespace RenderSystem;
 
-        GLTRY(f->glEnable(GL_CULL_FACE));
-        GLTRY(f->glCullFace(GL_BACK));
+        Q_ASSERT_X(m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
+                   Q_FUNC_INFO,
+                   "Expected frame buffer to be uninitialised!");
 
-        GLTRY(f->glEnable(GL_DEPTH_TEST));
-        GLTRY(f->glDepthFunc(GL_LESS));
+        FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
+        m_nRenderFrameBufferId = frameBufferStore->createFrameBuffer(size());
+
+        Q_ASSERT_X(m_nRenderFrameBufferId != RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
+                   Q_FUNC_INFO,
+                   "Expected valid frame buffer ID!");
 
         m_bOpenGLInitialised = true;
     }
 
     void MapViewport::paintGL()
     {
-        if ( !m_bOpenGLInitialised )
+        using namespace RenderSystem;
+
+        if ( !m_bOpenGLInitialised || m_nRenderFrameBufferId == FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
         {
             return;
         }
@@ -157,10 +177,38 @@ namespace UserInterface
         {
             return;
         }
+
+        RenderModelDefs::RenderModelId renderModelId = mapModel->renderModelId();
+        if ( renderModelId == RenderModelDefs::INVALID_RENDER_MODEL_ID )
+        {
+            return;
+        }
+
+        FrameDrawParams drawParams;
+        drawParams.setBackgroundColor(QColor::fromRgb(0xFF000000));
+        drawParams.setDirectionalLight(QVector3D(1,1,1));
+        drawParams.setWorldToCameraMatrix(mapModel->scene()->defaultCamera()->rootToLocalMatrix());
+        drawParams.setProjectionMatrix(mapModel->scene()->defaultCamera()->lens().projectionMatrix());
+
+        RenderModelStoreEndpoint::RenderModelStoreAccessor renderModelStore = RenderModelStoreEndpoint::renderModelStore();
+
+        renderModelStore->draw(renderModelId, m_nRenderFrameBufferId, drawParams);
     }
 
     void MapViewport::resizeGL(int w, int h)
     {
+        using namespace RenderSystem;
+
+        if ( m_nRenderFrameBufferId == FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
+        {
+            return;
+        }
+
+        {
+            FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
+            frameBufferStore->setFrameBufferSize(m_nRenderFrameBufferId, QSize(w, h));
+        }
+
         MapFileDataModelPointer mapModel = m_pDataModel.toStrongRef();
         if ( !mapModel )
         {

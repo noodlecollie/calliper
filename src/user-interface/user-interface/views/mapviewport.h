@@ -6,6 +6,8 @@
 #include <QOpenGLWidget>
 #include <QSharedPointer>
 
+#include "rendersystem/interface-classes/definitions/framebufferdefs.h"
+
 #include "model/filedatamodels/map/mapfiledatamodel.h"
 
 #include "user-interface/modelviews/imodelview.h"
@@ -71,6 +73,7 @@ namespace UserInterface
         Model::CameraController* m_pCameraController;
         Model::KeyMap* m_pKeyMap;
         Model::MouseEventMap* m_pMouseEventMap;
+        RenderSystem::FrameBufferDefs::FrameBufferId m_nRenderFrameBufferId;
     };
 }
 

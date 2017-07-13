@@ -3,7 +3,8 @@ layout(location = 0) out vec4 color;
 
 bool state(int val)
 {
-    return val % 8 < 3;
+    const int delta = 16;
+    return val % delta < (delta/2);
 }
 
 void main()
