@@ -139,25 +139,36 @@ void GeometryConsolidator::consolidateVertices(const QSharedPointer<GeometryData
 
     consolidateVertices(geometry->normals(),
                         vertexFormat.normalComponents(),
-                        beginOffsetInFloats);
+                        beginOffsetInFloats,
+                        false,
+                        vertexFormat.normalComponents() > 0 ? geometry->positions().count() : 0,
+                        QVector4D(0,0,0,1));
 
     beginOffsetInFloats += vertexFormat.normalComponents();
 
     consolidateVertices(geometry->colors(),
                         vertexFormat.colorComponents(),
-                        beginOffsetInFloats);
+                        beginOffsetInFloats,
+                        false,
+                        vertexFormat.colorComponents() > 0 ? geometry->positions().count() : 0,
+                        QVector4D(1,1,1,1));
 
     beginOffsetInFloats += vertexFormat.colorComponents();
 
     consolidateVertices(geometry->textureCoordinates(),
                         vertexFormat.textureCoordinateComponents(),
-                        beginOffsetInFloats);
+                        beginOffsetInFloats,
+                        false,
+                        vertexFormat.textureCoordinateComponents() > 0 ? geometry->positions().count() : 0,
+                        QVector4D(0,0,0,0));
 }
 
 void GeometryConsolidator::consolidateVertices(const QVector<QVector4D> &source,
                                                int components,
                                                quint32 offset,
-                                               bool encodeId)
+                                               bool encodeId,
+                                               int minimumItemCount,
+                                               const QVector4D &substituteValue)
 {
     int stride = m_pShader->vertexFormat().totalVertexComponents();
 
@@ -179,6 +190,24 @@ void GeometryConsolidator::consolidateVertices(const QVector<QVector4D> &source,
 
             Q_ASSERT_X(destItem + curComponent < m_VertexData.count(), Q_FUNC_INFO, "Index out of range!");
             m_VertexData[destItem + curComponent] = value;
+        }
+    }
+
+    if ( minimumItemCount < 1 || source.count() >= minimumItemCount )
+    {
+        return;
+    }
+
+    const int extraItemsToAdd = minimumItemCount - source.count();
+    const int firstItem = offset + (source.count() * stride);
+
+    for ( int item = 0; item < extraItemsToAdd; ++item )
+    {
+        const int itemIndex = firstItem + (item * stride);
+
+        for ( int curComponent = 0; curComponent < components; ++curComponent )
+        {
+            m_VertexData[itemIndex + curComponent] = substituteValue[curComponent];
         }
     }
 }

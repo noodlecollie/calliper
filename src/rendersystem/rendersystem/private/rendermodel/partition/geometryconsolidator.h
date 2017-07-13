@@ -35,7 +35,9 @@ private:
     void consolidateVertices(const QVector<QVector4D> &source,
                              int components,
                              quint32 offset,
-                             bool encodeId = false);
+                             bool encodeId = false,
+                             int minimumItemCount = 0,
+                             const QVector4D& substituteValue = QVector4D());
 
     void consolidateIndices(const QSharedPointer<GeometryData>& geometry);
     void consolidateIndices(const QVector<quint32>& indices, quint32 offsetInInts, quint32 indexIncrement);

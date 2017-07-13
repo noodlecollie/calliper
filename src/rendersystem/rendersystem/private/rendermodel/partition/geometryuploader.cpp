@@ -227,7 +227,15 @@ quint32 GeometryUploader::calculateRequiredUniformBufferSize() const
 
 quint32 GeometryUploader::calculateBatchSize() const
 {
-    return m_pCurrentShaderProgram->maxBatchedItems() * UniformStd140::baseAlignmentArray<QMatrix4x4>().baseAlignment;
+    int maxItems = m_pCurrentShaderProgram->maxBatchedItems();
+
+    // Be careful with alignment. This is the byte boundary the array will be aligned to
+    // as an item in a Std140 struct. It is NOT the size of the array OR the size of one
+    // of its elements!
+    quint32 mat4ArrayBaseAlignment = UniformStd140::baseAlignmentArray<QMatrix4x4>().baseAlignment;
+
+    const quint32 bytesPerBatch = maxItems * SIZEOF_MATRIX_4X4;
+    return CalliperUtil::Math::alignedValue(bytesPerBatch, mat4ArrayBaseAlignment);
 }
 
 void GeometryUploader::uploadUniformsInBatches()
@@ -243,6 +251,9 @@ void GeometryUploader::uploadUniformsInBatches()
         char* batchDataPointer = m_pUniformBufferData;
         for ( int geometryDataIndex = 0; geometryDataIndex < batch.count(); ++geometryDataIndex )
         {
+            // When uniforms change from just being QMatrix4x4s, we'll need to add some
+            // padding after the end of the array. For now, we don't need to worry.
+
             const BatchGenerator::GeometryDataPointer& geometryData = batch.at(geometryDataIndex);
             memcpy(batchDataPointer, geometryData->modelToWorldMatrix().constData(), SIZEOF_MATRIX_4X4);
             batchDataPointer += SIZEOF_MATRIX_4X4;
@@ -263,9 +274,11 @@ void GeometryUploader::uploadUniformsInBatches()
 
 void GeometryUploader::prepareUniformBufferForUpload_x()
 {
+    const quint32 size = calculateRequiredUniformBufferSize();
+
     // The order of these may be important. UBOs are awkward.
     if ( !m_OpenGLBuffers.uniformBuffer().bind() ||
-         !m_OpenGLBuffers.uniformBuffer().allocate(calculateRequiredUniformBufferSize()) ||
+         !m_OpenGLBuffers.uniformBuffer().allocate(size) ||
          !m_OpenGLBuffers.uniformBuffer().release() ||
          !m_OpenGLBuffers.uniformBuffer().bindToIndex(PrivateShaderDefs::LocalUniformBlockBindingPoint) )
     {

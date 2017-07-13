@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     GeometryBuilder builder(1, 0, QMatrix4x4());
     builder.setMaterialId(materialStore->materialIdFromPath("_debug/debugminimal"));
 
-    createTriangles(builder, 10);
+    createTriangles(builder, 1);
 
     RenderSystem::FrameDrawParams drawParams;
     drawParams.setRenderMode(ShaderDefs::BarebonesRenderMode);
