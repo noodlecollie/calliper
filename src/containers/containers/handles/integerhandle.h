@@ -3,7 +3,7 @@
 
 #include <utility>
 
-namespace CalliperUtil
+namespace Containers
 {
     template<typename T>
     class IntegerHandle
