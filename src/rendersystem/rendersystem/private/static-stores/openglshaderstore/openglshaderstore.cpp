@@ -9,6 +9,7 @@
 #include "rendersystem/private/shaders/derived/simplelitshader.h"
 #include "rendersystem/private/shaders/derived/unlitpervertexcolorshader.h"
 #include "rendersystem/private/shaders/derived/debugminimalshader.h"
+#include "rendersystem/private/shaders/derived/screenspacequadshader.h"
 
 namespace
 {
@@ -23,6 +24,7 @@ namespace
         [] { return new SimpleLitShader(); },
         [] { return new UnlitPerVertexColorShader(); },
         [] { return new DebugMinimalShader(); },
+        [] { return new ScreenSpaceQuadShader(); }
     };
 }
 

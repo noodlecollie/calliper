@@ -19,6 +19,7 @@ namespace PrivateShaderDefs
         SimpleLitShaderId,
         UnlitPerVertexColourShaderId,
         DebugMinimalShaderId,
+        ScreenSpaceQuadShaderId,
 
         TOTAL_SHADERS
     };

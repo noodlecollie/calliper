@@ -40,6 +40,8 @@ namespace Model
 
         SceneObject* rootObject() const;
 
+        void updateRenderGeometry(RenderSystem::RenderModelDefs::RenderModelId renderModelId);
+
     signals:
         void objectCreated(SceneObject*);
         void objectDestroyed(SceneObject*);

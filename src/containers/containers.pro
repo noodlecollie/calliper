@@ -36,7 +36,8 @@ HEADERS +=\
     containers/path-managing/pathmanagingobjectstore.h \
     containers/static/staticobjectstore.h \
     containers/static/staticobjectstorekey.h \
-    containers/dummyclass.h
+    containers/dummyclass.h \
+    containers/handles/integerhandle.h
 
 unix {
     target.path = /usr/lib

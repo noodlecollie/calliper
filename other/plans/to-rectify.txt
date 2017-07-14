@@ -5,7 +5,12 @@ ModelLoaders:
    (and locations within) from which they need to be loaded, then do this in a threaded way on demand?
 
 RenderSystem:
- - Change global makeCurrent/doneCurrent calls to use a context guard instead.
+ - Change global makeCurrent/doneCurrent calls to use a context guard instead. (Or just leave them removed?)
+ - Bind textures when rendering.
+ - Update VertexFormat max batched items to be an unsigned short.
+
+ Containers:
+ - Update everything to use IntegerHandles.
 
  VMFViewer:
  - mainwindow.cpp: Make functional again.

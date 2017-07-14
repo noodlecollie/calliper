@@ -1,5 +1,7 @@
 #include "scene.h"
 
+#include "rendersystem/endpoints/rendermodelstoreendpoint.h"
+
 namespace Model
 {
     Scene::Scene(QObject* parent)
@@ -99,5 +101,27 @@ namespace Model
     {
         Q_ASSERT_X(object->objectId() > 0, Q_FUNC_INFO, "Object cannot have an ID of zero!");
         m_ObjectTable.remove(object->objectId());
+    }
+
+    void Scene::updateRenderGeometry(RenderSystem::RenderModelDefs::RenderModelId renderModelId)
+    {
+        using namespace RenderSystem;
+
+        typedef QHash<RenderSystem::RenderModelDefs::ObjectId, SceneObject*> ObjectTable;
+
+        RenderModelStoreEndpoint::RenderModelStoreAccessor renderModelStore = RenderModelStoreEndpoint::renderModelStore();
+
+        for ( ObjectTable::const_iterator it = m_ObjectTable.begin(); it != m_ObjectTable.end(); ++it )
+        {
+            SceneObject* object = it.value();
+            if ( !object->needsRendererUpdate() )
+            {
+                continue;
+            }
+
+            GeometryBuilder builder(object->objectId(), MaterialDefs::INVALID_MATERIAL_ID, object->localToRootMatrix());
+            object->rendererUpdate(builder);
+            renderModelStore->addGeometry(renderModelId, builder);
+        }
     }
 }

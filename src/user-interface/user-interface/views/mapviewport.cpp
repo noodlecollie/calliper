@@ -184,6 +184,8 @@ namespace UserInterface
             return;
         }
 
+        mapModel->scene()->updateRenderGeometry(renderModelId);
+
         FrameDrawParams drawParams;
         drawParams.setBackgroundColor(QColor::fromRgb(0xFF000000));
         drawParams.setDirectionalLight(QVector3D(1,1,1));
