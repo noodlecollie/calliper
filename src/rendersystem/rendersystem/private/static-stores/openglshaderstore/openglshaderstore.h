@@ -1,26 +1,20 @@
 #ifndef OPENGLSHADERSTORE_H
 #define OPENGLSHADERSTORE_H
 
-#include "openglshaderstorekey.h"
-
-#include "containers/static/staticobjectstore.h"
+#include "containers/static/staticobjectstorearray.h"
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
 #include "calliperutil/global/globalinstancehelper.h"
 
 // These are plain shader pointers to indicate they should not be owned or stored by other objects.
-class OpenGLShaderStore : public Containers::StaticObjectStore<OpenGLShaderProgram*,
-                                                               OpenGLShaderStoreKey>,
+class OpenGLShaderStore : public Containers::StaticObjectStoreArray<OpenGLShaderProgram*, PrivateShaderDefs::TOTAL_SHADERS>,
                           public CalliperUtil::GlobalInstanceHelper<OpenGLShaderStore>
 {
 public:
     OpenGLShaderStore();
-
-protected:
-    virtual void onStoreInitialised() override;
-    virtual void onStoreDestroyed() override;
+    virtual ~OpenGLShaderStore();
 
 private:
-    static OpenGLShaderStore* m_pGlobalInstance;
+    typedef Containers::StaticObjectStoreArray<OpenGLShaderProgram*, PrivateShaderDefs::TOTAL_SHADERS> StoreType;
 };
 
 #endif // OPENGLSHADERSTORE_H

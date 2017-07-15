@@ -38,28 +38,14 @@ namespace
     {
         T::globalShutdown();
     }
-
-    template<typename T>
-    void initialiseStaticStore()
-    {
-        initialiseStore<T>();
-        T::globalInstance()->initialise();
-    }
-
-    template<typename T>
-    void shutdownStaticStore()
-    {
-        T::globalInstance()->destroy();
-        shutdownStore<T>();
-    }
 }
 
 void initialiseStores()
 {
     initialiseStore<FrameBufferStore>();
 
-    initialiseStaticStore<OpenGLShaderStore>();
-    initialiseStaticStore<RenderModeStore>();
+    initialiseStore<OpenGLShaderStore>();
+    initialiseStore<RenderModeStore>();
 
     initialiseStore<OpenGLTextureStore>();
     initialiseStore<MaterialStore>();
@@ -72,8 +58,8 @@ void shutdownStores()
     shutdownStore<MaterialStore>();
     shutdownStore<OpenGLTextureStore>();
 
-    shutdownStaticStore<RenderModeStore>();
-    shutdownStaticStore<OpenGLShaderStore>();
+    shutdownStore<RenderModeStore>();
+    shutdownStore<OpenGLShaderStore>();
 
     shutdownStore<FrameBufferStore>();
 }

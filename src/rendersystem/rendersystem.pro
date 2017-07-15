@@ -117,8 +117,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermode/barebonesrendermode.h \
     rendersystem/private/static-stores/rendermodestore/rendermodestore.h \
     rendersystem/private/rendermodel/rendermodelcontext.h \
-    rendersystem/private/static-stores/openglshaderstore/openglshaderstorekey.h \
-    rendersystem/private/static-stores/rendermodestore/rendermodestorekey.h \
     rendersystem/private/rendermodel/partition/renderutils.h \
     rendersystem/interface-classes/definitions/materialdefs.h \
     rendersystem/interface-classes/definitions/texturedefs.h \

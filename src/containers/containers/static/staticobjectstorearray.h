@@ -1,6 +1,9 @@
 #ifndef STATICOBJECTSTOREARRAY_H
 #define STATICOBJECTSTOREARRAY_H
 
+#include <QtGlobal>
+#include <functional>
+
 namespace Containers
 {
     /*
@@ -49,7 +52,7 @@ namespace Containers
         };
 
         template<quint32 N>
-        inline StaticObjectStoreArray(const InitialiserFunction(&array)[N])
+        inline void initialise(const InitialiserFunction(&array)[N])
         {
             static_assert(N == COUNT, "Size of initialiser array does not match expected number of objects.");
 
@@ -60,7 +63,7 @@ namespace Containers
         }
 
         template<quint32 N>
-        inline StaticObjectStoreArray(const Initialiser(&array)[N])
+        inline void initialise(const Initialiser(&array)[N])
         {
             static_assert(N == COUNT, "Size of initialiser array does not match expected number of objects.");
 
@@ -78,6 +81,10 @@ namespace Containers
             }
         }
 
+        virtual ~StaticObjectStoreArray()
+        {
+        }
+
         inline T object(quint32 index) const
         {
             return m_ObjectArray[index];
@@ -88,7 +95,7 @@ namespace Containers
             return m_ObjectArray[index];
         }
 
-    private:
+    protected:
         T m_ObjectArray[COUNT];
     };
 }

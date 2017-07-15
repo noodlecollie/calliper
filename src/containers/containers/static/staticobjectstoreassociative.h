@@ -1,6 +1,9 @@
 #ifndef STATICOBJECTSTOREASSOCIATIVE_H
 #define STATICOBJECTSTOREASSOCIATIVE_H
 
+#include <QHash>
+#include <functional>
+
 namespace Containers
 {
     /*
@@ -33,7 +36,7 @@ namespace Containers
         };
 
         template<quint32 N>
-        inline StaticObjectStoreAssociative(const Initialiser(&array)[N])
+        inline void initialise(const Initialiser(&array)[N])
         {
             static_assert(COUNT == 0 || N == COUNT, "Size of initialiser array does not match expected number of objects.");
 
@@ -47,6 +50,10 @@ namespace Containers
             }
         }
 
+        virtual ~StaticObjectStoreAssociative()
+        {
+        }
+
         inline T object(const KEY& key) const
         {
             return m_ObjectHash.value(key, T());
@@ -57,7 +64,7 @@ namespace Containers
             return m_ObjectHash[key];
         }
 
-    private:
+    protected:
         QHash<KEY, T> m_ObjectHash;
     };
 }

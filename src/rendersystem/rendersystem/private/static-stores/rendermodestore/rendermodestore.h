@@ -1,28 +1,20 @@
 #ifndef RENDERMODESTORE_H
 #define RENDERMODESTORE_H
 
-#include "rendermodestorekey.h"
-
 #include "rendersystem/private/rendermode/baserendermode.h"
-
-#include "containers/static/staticobjectstore.h"
-
+#include "containers/static/staticobjectstorearray.h"
 #include "calliperutil/global/globalinstancehelper.h"
 
 // These are plain shader pointers to indicate they should not be owned or stored by other objects.
-class RenderModeStore : public Containers::StaticObjectStore<BaseRenderMode*,
-                                                             RenderModeStoreKey>,
+class RenderModeStore : public Containers::StaticObjectStoreArray<BaseRenderMode*, RenderSystem::ShaderDefs::TOTAL_RENDER_MODES>,
                         public CalliperUtil::GlobalInstanceHelper<RenderModeStore>
 {
 public:
     RenderModeStore();
-
-protected:
-    virtual void onStoreInitialised() override;
-    virtual void onStoreDestroyed() override;
+    virtual ~RenderModeStore();
 
 private:
-    static RenderModeStore* m_pGlobalInstance;
+    typedef Containers::StaticObjectStoreArray<BaseRenderMode*, RenderSystem::ShaderDefs::TOTAL_RENDER_MODES> StoreType;
 };
 
 #endif // RENDERMODESTORE_H

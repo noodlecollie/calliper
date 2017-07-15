@@ -13,49 +13,36 @@
 
 namespace
 {
-    // This is an array of std::functions because we don't actually
-    // want to store pointers to the programs outside of the store,
-    // or this would conflict with the ownership the store is
-    // supposed to have over the objects.
-    // Shaders should be added in the same order as the IDs enum.
-    std::function<OpenGLShaderProgram*(void)> g_Initialisers[] =
+    template<typename T>
+    inline OpenGLShaderProgram* create()
     {
-        [] { return new ErrorShader(); },
-        [] { return new SimpleLitShader(); },
-        [] { return new UnlitPerVertexColorShader(); },
-        [] { return new DebugMinimalShader(); },
-        [] { return new ScreenSpaceQuadShader(); }
+        T* program = new T();
+        program->create();
+        program->construct();
+        return program;
+    }
+
+    OpenGLShaderStore::InitialiserFunction initialisers[] =
+    {
+        [](){ return create<ErrorShader>(); },
+        [](){ return create<SimpleLitShader>(); },
+        [](){ return create<UnlitPerVertexColorShader>(); },
+        [](){ return create<DebugMinimalShader>(); },
+        [](){ return create<ScreenSpaceQuadShader>(); },
     };
 }
 
 OpenGLShaderStore::OpenGLShaderStore()
-    : StaticObjectStore<OpenGLShaderProgram*, OpenGLShaderStoreKey>()
+    : StoreType()
 {
-    static_assert(SIZEOF_ARRAY(g_Initialisers) == PrivateShaderDefs::TOTAL_SHADERS,
-                  "Initialiser array size mismatch - has a new shader ID been added?");
+    initialise(initialisers);
+}
 
-    for ( int i = 0; i < PrivateShaderDefs::TOTAL_SHADERS; ++i )
+OpenGLShaderStore::~OpenGLShaderStore()
+{
+    for ( quint32 i = 0; i < PrivateShaderDefs::TOTAL_SHADERS; ++i )
     {
-        m_Objects.insert(static_cast<PrivateShaderDefs::ShaderId>(i), g_Initialisers[i]());
+        delete m_ObjectArray[i];
+        m_ObjectArray[i] = Q_NULLPTR;
     }
 }
-
-void OpenGLShaderStore::onStoreInitialised()
-{
-    for ( StaticObjectStoreHash::iterator itShader = m_Objects.begin();
-          itShader != m_Objects.end();
-          ++itShader )
-    {
-        bool creationSuccess = false;
-        GLTRY(creationSuccess = itShader.value()->create());
-        Q_ASSERT_X(creationSuccess, Q_FUNC_INFO, "Could not create shader!");
-
-        itShader.value()->construct();
-    }
-}
-
-void OpenGLShaderStore::onStoreDestroyed()
-{
-    qDeleteAll(m_Objects.values());
-}
-
