@@ -7,8 +7,8 @@
 
 namespace RenderUtils
 {
-    PrivateShaderDefs::ShaderId shaderFromMaterial(RenderSystem::ShaderDefs::RenderMode renderMode,
-                                                   RenderSystem::MaterialDefs::MaterialId materialId);
+    RenderSystem::ShaderDefs::ShaderId shaderFromMaterial(RenderSystem::ShaderDefs::RenderMode renderMode,
+                                                          RenderSystem::MaterialDefs::MaterialId materialId);
 }
 
 #endif // RENDERUTILS_H

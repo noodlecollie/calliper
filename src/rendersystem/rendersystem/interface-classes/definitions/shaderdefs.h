@@ -7,25 +7,17 @@ namespace RenderSystem
 {
     namespace ShaderDefs
     {
-        // Different ways in which we might want to draw geometry.
-        // Some other examples might be unlit textured, or
-        // refract (for water).
-        // These are NOT the same as rendering modes (eg. simple lit):
-        // rendering modes act as the mapping from the conceptual shader
-        // style to the concrete shader, meaning that depending on what
-        // context the rendering is happening in, each shader style can be
-        // mapped to the appropriate shader.
-        enum ShaderStyle
+        enum ShaderId
         {
-            UnknownShaderStyle = -1,
+            // TODO: Remove the unknown ID and have everything default to the error shader.
+            UnknownShaderId = -1,
 
-            UnlitTextured3D = 0,
-            LitTextured3D,
-            UnlitPerVertexColor3D,
+            ErrorShaderId = 0,
+            LitGenericShaderId,
+            UnlitGenericShaderId,
+            DebugMinimalShaderId,
 
-            DebugMinimal2D,
-
-            TOTAL_SHADER_STYLES,
+            TOTAL_SHADERS
         };
 
         enum RenderMode

@@ -6,25 +6,8 @@ BarebonesRenderMode::BarebonesRenderMode()
 
 }
 
-PrivateShaderDefs::ShaderId BarebonesRenderMode::shaderId(RenderSystem::ShaderDefs::ShaderStyle style) const
+RenderSystem::ShaderDefs::ShaderId BarebonesRenderMode::shaderId(RenderSystem::ShaderDefs::ShaderId originalId) const
 {
-    using namespace RenderSystem;
-
-    switch ( style )
-    {
-        case ShaderDefs::LitTextured3D:
-        {
-            return PrivateShaderDefs::SimpleLitShaderId;
-        }
-
-        case ShaderDefs::UnlitPerVertexColor3D:
-        {
-            return PrivateShaderDefs::UnlitPerVertexColourShaderId;
-        }
-
-        default:
-        {
-            return BaseRenderMode::shaderId(style);
-        }
-    }
+    // TODO
+    return BaseRenderMode::shaderId(originalId);
 }

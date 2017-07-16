@@ -12,9 +12,9 @@ ErrorShader::~ErrorShader()
 
 }
 
-PrivateShaderDefs::ShaderId ErrorShader::shaderId()
+RenderSystem::ShaderDefs::ShaderId ErrorShader::shaderId()
 {
-    return PrivateShaderDefs::SimpleLitShaderId;
+    return RenderSystem::ShaderDefs::ErrorShaderId;
 }
 
 void ErrorShader::construct()

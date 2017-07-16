@@ -13,9 +13,9 @@ DebugMinimalShader::~DebugMinimalShader()
 }
 
 
-PrivateShaderDefs::ShaderId DebugMinimalShader::shaderId()
+RenderSystem::ShaderDefs::ShaderId DebugMinimalShader::shaderId()
 {
-    return PrivateShaderDefs::DebugMinimalShaderId;
+    return RenderSystem::ShaderDefs::DebugMinimalShaderId;
 }
 
 void DebugMinimalShader::construct()

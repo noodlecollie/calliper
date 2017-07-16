@@ -45,8 +45,8 @@ GeometryConsolidator::GeometryConsolidator(const RenderModelContext &context,
 
 void GeometryConsolidator::setUpShader()
 {
-    const PrivateShaderDefs::ShaderId shaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
-    if ( shaderId != PrivateShaderDefs::UnknownShaderId )
+    const RenderSystem::ShaderDefs::ShaderId shaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+    if ( shaderId != RenderSystem::ShaderDefs::UnknownShaderId )
     {
         m_pShader = OpenGLShaderStore::globalInstance()->object(shaderId);
     }

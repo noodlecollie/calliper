@@ -6,6 +6,7 @@
 
 #include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
 #include "rendersystem/private/static-stores/rendermodestore/rendermodestore.h"
+#include "rendersystem/private/static-stores/presetmaterialmanager/presetmaterialmanager.h"
 
 #include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
 #include "rendersystem/private/stores/materialstore/materialstore.h"
@@ -27,42 +28,43 @@ namespace
     {
         g_pMainContext->doneCurrent();
     }
-
-    template<typename T>
-    void initialiseStore()
-    {
-        T::globalInitialise();
-    }
-
-    template<typename T>
-    void shutdownStore()
-    {
-        T::globalShutdown();
-    }
 }
 
 void initialiseStores()
 {
-    initialiseStore<FrameBufferStore>();
+    // Frame buffers
+    FrameBufferStore::globalInitialise();
 
-    initialiseStore<OpenGLShaderStore>();
-    initialiseStore<RenderModeStore>();
+    // Shader-related stores
+    OpenGLShaderStore::globalInitialise();
+    RenderModeStore::globalInitialise();
 
-    initialiseStore<OpenGLTextureStore>();
-    initialiseStore<MaterialStore>();
-    initialiseStore<RenderModelStore>();
+    // Textures
+    OpenGLTextureStore::globalInitialise();
+
+    // Material-related stores
+    MaterialStore::globalInitialise();
+    PresetMaterialManager::globalInitialise();
+
+    // Render models
+    RenderModelStore::globalInitialise();
 }
 
 void shutdownStores()
 {
-    shutdownStore<RenderModelStore>();
-    shutdownStore<MaterialStore>();
-    shutdownStore<OpenGLTextureStore>();
+    // This should be the reverse of the above, unless there's a good reason.
 
-    shutdownStore<RenderModeStore>();
-    shutdownStore<OpenGLShaderStore>();
+    RenderModelStore::globalShutdown();
 
-    shutdownStore<FrameBufferStore>();
+    PresetMaterialManager::globalShutdown();
+    MaterialStore::globalShutdown();
+
+    OpenGLTextureStore::globalShutdown();
+
+    RenderModeStore::globalShutdown();
+    OpenGLShaderStore::globalShutdown();
+
+    FrameBufferStore::globalShutdown();
 }
 
 namespace RenderSystem

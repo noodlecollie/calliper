@@ -6,8 +6,9 @@ DebugMinimalRenderMode::DebugMinimalRenderMode()
 
 }
 
-PrivateShaderDefs::ShaderId DebugMinimalRenderMode::shaderId(RenderSystem::ShaderDefs::ShaderStyle style) const
+RenderSystem::ShaderDefs::ShaderId DebugMinimalRenderMode::shaderId(RenderSystem::ShaderDefs::ShaderId originalId) const
 {
-    Q_UNUSED(style);
-    return PrivateShaderDefs::DebugMinimalShaderId;
+    Q_UNUSED(originalId);
+
+    return RenderSystem::ShaderDefs::DebugMinimalShaderId;
 }

@@ -31,9 +31,9 @@ GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
       m_nDrawMode(RenderSystem::GeometrySection::DrawMode::DrawTriangles),
       m_flLineWidth(1.0f)
 {
-    const PrivateShaderDefs::ShaderId shaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
+    const RenderSystem::ShaderDefs::ShaderId shaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
 
-    if ( shaderId != PrivateShaderDefs::UnknownShaderId )
+    if ( shaderId != RenderSystem::ShaderDefs::UnknownShaderId )
     {
         m_pCurrentShader = OpenGLShaderStore::globalInstance()->object(shaderId);
     }

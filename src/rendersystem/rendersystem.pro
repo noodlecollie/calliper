@@ -35,8 +35,6 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/static-stores/openglshaderstore/openglshaderstore.cpp \
     rendersystem/interface-classes/texture/namedopengltexture.cpp \
     rendersystem/private/shaders/common/globalshaderuniforms.cpp \
-    rendersystem/private/shaders/derived/simplelitshader.cpp \
-    rendersystem/private/shaders/derived/unlitpervertexcolorshader.cpp \
     rendersystem/interface-classes/rendermaterial/rendermaterial.cpp \
     rendersystem/private/shaders/common/privateshaderdefs.cpp \
     rendersystem/private/stores/materialstore/materialstore.cpp \
@@ -76,9 +74,12 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/shaders/derived/debugminimalshader.cpp \
     rendersystem/private/rendermode/debugminimalrendermode.cpp \
     rendersystem/interface-classes/drawing/framedrawparams.cpp \
-    rendersystem/private/shaders/derived/screenspacequadshader.cpp \
     rendersystem/private/framebuffer/framebufferoperations.cpp \
-    rendersystem/endpoints/framebufferoperationsendpoint.cpp
+    rendersystem/endpoints/framebufferoperationsendpoint.cpp \
+    rendersystem/private/static-stores/presetmaterialmanager/presetmaterialmanager.cpp \
+    rendersystem/endpoints/presetmaterialsendpoint.cpp \
+    rendersystem/private/shaders/derived/litgenericshader.cpp \
+    rendersystem/private/shaders/derived/unlitgenericshader.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -93,8 +94,6 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h \
     rendersystem/interface-classes/texture/namedopengltexture.h \
     rendersystem/private/shaders/common/globalshaderuniforms.h \
-    rendersystem/private/shaders/derived/simplelitshader.h \
-    rendersystem/private/shaders/derived/unlitpervertexcolorshader.h \
     rendersystem/interface-classes/rendermaterial/rendermaterial.h \
     rendersystem/private/shaders/common/privateshaderdefs.h \
     rendersystem/private/stores/materialstore/materialstore.h \
@@ -143,12 +142,18 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/shaders/derived/debugminimalshader.h \
     rendersystem/private/rendermode/debugminimalrendermode.h \
     rendersystem/interface-classes/drawing/framedrawparams.h \
-    rendersystem/private/shaders/derived/screenspacequadshader.h \
     rendersystem/interfaces/iframebufferoperations.h \
     rendersystem/private/framebuffer/framebufferoperations.h \
     rendersystem/endpoints/framebufferoperationsendpoint.h \
     rendersystem/private/global/globalinternal.h \
-    rendersystem/private/opengl/uniforms/std140uniformarray.h
+    rendersystem/private/opengl/uniforms/std140uniformarray.h \
+    rendersystem/interfaces/ipresetmaterials.h \
+    rendersystem/private/static-stores/presetmaterialmanager/presetmaterialmanager.h \
+    rendersystem/private/static-stores/presetmaterialmanager/initialisers/ipresetmaterialinitialiser.h \
+    rendersystem/endpoints/presetmaterialsendpoint.h \
+    rendersystem/private/static-stores/presetmaterialmanager/initialisers/unlitpresetmaterialinitialiser.h \
+    rendersystem/private/shaders/derived/litgenericshader.h \
+    rendersystem/private/shaders/derived/unlitgenericshader.h
 
 unix {
     target.path = /usr/lib

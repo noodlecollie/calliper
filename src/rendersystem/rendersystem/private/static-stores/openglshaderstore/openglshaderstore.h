@@ -6,7 +6,7 @@
 #include "calliperutil/global/globalinstancehelper.h"
 
 // These are plain shader pointers to indicate they should not be owned or stored by other objects.
-class OpenGLShaderStore : public Containers::StaticObjectStoreArray<OpenGLShaderProgram*, PrivateShaderDefs::TOTAL_SHADERS>,
+class OpenGLShaderStore : public Containers::StaticObjectStoreArray<OpenGLShaderProgram*, RenderSystem::ShaderDefs::TOTAL_SHADERS>,
                           public CalliperUtil::GlobalInstanceHelper<OpenGLShaderStore>
 {
 public:
@@ -14,7 +14,7 @@ public:
     virtual ~OpenGLShaderStore();
 
 private:
-    typedef Containers::StaticObjectStoreArray<OpenGLShaderProgram*, PrivateShaderDefs::TOTAL_SHADERS> StoreType;
+    typedef Containers::StaticObjectStoreArray<OpenGLShaderProgram*, RenderSystem::ShaderDefs::TOTAL_SHADERS> StoreType;
 };
 
 #endif // OPENGLSHADERSTORE_H

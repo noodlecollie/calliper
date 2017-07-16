@@ -21,8 +21,8 @@ GeometryUploader::GeometryUploader(const RenderModelContext &context,
       m_BatchTable(batchTable),
       m_OpenGLBuffers(buffers),
       m_pCurrentShaderProgram(Q_NULLPTR),
-      m_nShaderId(PrivateShaderDefs::UnknownShaderId),
-      m_nShaderIdWhenLastUploaded(PrivateShaderDefs::UnknownShaderId),
+      m_nShaderId(RenderSystem::ShaderDefs::UnknownShaderId),
+      m_nShaderIdWhenLastUploaded(RenderSystem::ShaderDefs::UnknownShaderId),
       m_Consolidator(m_Context, m_nMaterialId, m_GeometryDataContainer, m_OffsetTable),
       m_BatchGenerator(m_GeometryDataContainer),
       m_pUniformBufferData(Q_NULLPTR)
@@ -82,7 +82,7 @@ void GeometryUploader::getShaderFromMaterial()
 {
     m_nShaderId = RenderUtils::shaderFromMaterial(m_Context.renderMode(), m_nMaterialId);
 
-    if ( m_nShaderId != PrivateShaderDefs::UnknownShaderId )
+    if ( m_nShaderId != RenderSystem::ShaderDefs::UnknownShaderId )
     {
         m_pCurrentShaderProgram = OpenGLShaderStore::globalInstance()->object(m_nShaderId);
     }
@@ -94,12 +94,12 @@ void GeometryUploader::getShaderFromMaterial()
 
 bool GeometryUploader::isValid() const
 {
-    return m_nShaderId != PrivateShaderDefs::UnknownShaderId && m_pCurrentShaderProgram != Q_NULLPTR;
+    return m_nShaderId != RenderSystem::ShaderDefs::UnknownShaderId && m_pCurrentShaderProgram != Q_NULLPTR;
 }
 
 quint32 GeometryUploader::shouldUpload() const
 {
-    if ( m_nShaderId == PrivateShaderDefs::UnknownShaderId || !m_pCurrentShaderProgram )
+    if ( m_nShaderId == RenderSystem::ShaderDefs::UnknownShaderId || !m_pCurrentShaderProgram )
     {
         return NoUploadFlags;
     }

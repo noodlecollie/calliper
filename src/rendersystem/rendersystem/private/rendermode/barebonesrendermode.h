@@ -8,7 +8,7 @@ class BarebonesRenderMode : public BaseRenderMode
 public:
     BarebonesRenderMode();
 
-    virtual PrivateShaderDefs::ShaderId shaderId(RenderSystem::ShaderDefs::ShaderStyle style) const override;
+    virtual RenderSystem::ShaderDefs::ShaderId shaderId(RenderSystem::ShaderDefs::ShaderId originalId) const override;
 };
 
 #endif // BAREBONESRENDERMODE_H

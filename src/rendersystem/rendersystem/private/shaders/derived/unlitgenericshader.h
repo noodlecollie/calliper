@@ -1,15 +1,15 @@
-#ifndef DEBUGMINIMALSHADER_H
-#define DEBUGMINIMALSHADER_H
+#ifndef UNLITGENERICSHADER_H
+#define UNLITGENERICSHADER_H
 
 #include "rendersystem/private/shaders/base/openglshaderprogram.h"
 #include "rendersystem/interface-classes/definitions/shaderdefs.h"
 
-class DebugMinimalShader : public OpenGLShaderProgram
+class UnlitGenericShader : public OpenGLShaderProgram
 {
     Q_OBJECT
 public:
-    explicit DebugMinimalShader(QObject* parent = Q_NULLPTR);
-    virtual ~DebugMinimalShader();
+    UnlitGenericShader(QObject* parent = 0);
+    virtual ~UnlitGenericShader();
 
     static RenderSystem::ShaderDefs::ShaderId shaderId();
 
@@ -18,4 +18,4 @@ public:
     virtual int maxBatchedItems() const override;
 };
 
-#endif // DEBUGMINIMALSHADER_H
+#endif // UNLITGENERICSHADER_H

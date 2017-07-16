@@ -91,5 +91,5 @@ void MaterialStore::createDebugMinimalMaterial()
     QWeakPointer<RenderSystem::RenderMaterial> dbgMaterialWeak = material(id);
     QSharedPointer<RenderSystem::RenderMaterial> dbgMaterial = dbgMaterialWeak.toStrongRef();
 
-    dbgMaterial->setShaderStyle(RenderSystem::ShaderDefs::DebugMinimal2D);
+    dbgMaterial->setShaderId(RenderSystem::ShaderDefs::DebugMinimalShaderId);
 }

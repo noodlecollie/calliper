@@ -3,7 +3,6 @@
 #include "calliperutil/debug/debug.h"
 
 #include "rendersystem/global/rendersystem.h"
-#include "model/preset-materials/presetmaterials.h"
 
 namespace AppCalliper
 {
@@ -12,7 +11,6 @@ namespace AppCalliper
         void initSubSystems()
         {
             RenderSystem::Global::initialise();
-            PresetMaterials::initialisePresetMaterials();
         }
 
         void shutDownSubSystems()

@@ -4,7 +4,7 @@ namespace RenderSystem
 {
     RenderMaterial::RenderMaterial(const QString& path)
         : m_strPath(path),
-          m_nShaderStyle(ShaderDefs::UnknownShaderStyle),
+          m_nShaderId(ShaderDefs::UnknownShaderId),
           m_TextureUnitMap()
     {
 
@@ -15,14 +15,14 @@ namespace RenderSystem
         return m_strPath;
     }
 
-    ShaderDefs::ShaderStyle RenderMaterial::shaderStyle() const
+    ShaderDefs::ShaderId RenderMaterial::shaderId() const
     {
-        return m_nShaderStyle;
+        return m_nShaderId;
     }
 
-    void RenderMaterial::setShaderStyle(ShaderDefs::ShaderStyle style)
+    void RenderMaterial::setShaderId(ShaderDefs::ShaderId shader)
     {
-        m_nShaderStyle = style;
+        m_nShaderId = shader;
     }
 
     void RenderMaterial::addTextureUnitMapping(TextureDefs::TextureUnit textureUnit, const QString &texturePath)

@@ -29,7 +29,7 @@ public:
     bool uploadIfRequired();
     bool isValid() const;
 
-    PrivateShaderDefs::ShaderId shaderIdWhenLastUploaded() const;
+    RenderSystem::ShaderDefs::ShaderId shaderIdWhenLastUploaded() const;
 
 private:
     enum UploadFlags
@@ -77,8 +77,8 @@ private:
     OpenGLBufferCollection& m_OpenGLBuffers;
 
     OpenGLShaderProgram* m_pCurrentShaderProgram;
-    PrivateShaderDefs::ShaderId m_nShaderId;
-    PrivateShaderDefs::ShaderId m_nShaderIdWhenLastUploaded;
+    RenderSystem::ShaderDefs::ShaderId m_nShaderId;
+    RenderSystem::ShaderDefs::ShaderId m_nShaderIdWhenLastUploaded;
 
     GeometryConsolidator m_Consolidator;
     BatchGenerator m_BatchGenerator;

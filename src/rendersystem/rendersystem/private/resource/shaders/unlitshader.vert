@@ -17,12 +17,12 @@ out vec2 fTexCoord;
 
 void main()
 {
-        // Pull the object ID out of w.
-        uint id = uint(vPosition.w);
+    // Pull the object ID out of w.
+    uint id = uint(vPosition.w);
 
-        gl_Position = projectionMatrix * COORD_TRANSFORM_HAMMER_OPENGL
-                *  worldToCameraMatrix * modelToWorldMatrices[id] * vec4(vPosition.xyz, 1);
+    gl_Position = projectionMatrix * COORD_TRANSFORM_HAMMER_OPENGL
+        *  worldToCameraMatrix * modelToWorldMatrices[id] * vec4(vPosition.xyz, 1);
 
-        fColour = vColour;
-        fTexCoord = vTexCoord;
+    fColour = vColour;
+    fTexCoord = vTexCoord;
 }

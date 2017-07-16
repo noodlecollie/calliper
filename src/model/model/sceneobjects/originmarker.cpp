@@ -1,7 +1,8 @@
 #include "originmarker.h"
 
 #include "model/scene/scene.h"
-#include "model/preset-materials/presetmaterials.h"
+
+#include "rendersystem/endpoints/presetmaterialsendpoint.h"
 
 namespace Model
 {
@@ -31,8 +32,7 @@ namespace Model
     {
         using namespace RenderSystem;
 
-        const RenderSystem::MaterialDefs::MaterialId materialId =
-                PresetMaterials::presetMaterialId(PresetMaterials::UnlitPerVertexColor3D);
+        const RenderSystem::MaterialDefs::MaterialId materialId = getPresetMaterialId();
 
         Q_ASSERT(materialId != MaterialDefs::INVALID_MATERIAL_ID);
 
@@ -69,5 +69,11 @@ namespace Model
     bool OriginMarker::customVertexColours() const
     {
         return true;
+    }
+
+    RenderSystem::MaterialDefs::MaterialId OriginMarker::getPresetMaterialId() const
+    {
+        return RenderSystem::PresetMaterialsEndpoint::presetMaterials()
+                ->material(RenderSystem::MaterialDefs::UnlitPerVertexColor3DMaterial);
     }
 }

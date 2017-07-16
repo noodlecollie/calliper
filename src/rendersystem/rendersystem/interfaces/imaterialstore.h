@@ -1,8 +1,6 @@
 #ifndef IMATERIALSTORE_H
 #define IMATERIALSTORE_H
 
-#include "rendersystem_global.h"
-
 #include <QWeakPointer>
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"

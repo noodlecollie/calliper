@@ -12,6 +12,13 @@ namespace RenderSystem
         typedef quint32 MaterialId;
 
         RENDERSYSTEMSHARED_EXPORT extern const MaterialId INVALID_MATERIAL_ID;
+
+        enum PresetMaterial
+        {
+            UnlitPerVertexColor3DMaterial = 0,
+
+            TOTAL_PRESET_MATERIALS
+        };
     }
 }
 

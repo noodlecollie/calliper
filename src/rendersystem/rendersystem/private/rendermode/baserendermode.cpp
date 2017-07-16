@@ -16,8 +16,8 @@ RenderSystem::ShaderDefs::RenderMode BaseRenderMode::renderMode() const
     return m_nRenderMode;
 }
 
-PrivateShaderDefs::ShaderId BaseRenderMode::shaderId(RenderSystem::ShaderDefs::ShaderStyle style) const
+RenderSystem::ShaderDefs::ShaderId BaseRenderMode::shaderId(RenderSystem::ShaderDefs::ShaderId originalId) const
 {
-    Q_UNUSED(style);
-    return PrivateShaderDefs::ErrorShaderId;
+    // By default don't override the shader.
+    return originalId;
 }

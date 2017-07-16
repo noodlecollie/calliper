@@ -23,6 +23,7 @@ namespace Model
 
     private:
         void commonInit();
+        RenderSystem::MaterialDefs::MaterialId getPresetMaterialId() const;
     };
 }
 

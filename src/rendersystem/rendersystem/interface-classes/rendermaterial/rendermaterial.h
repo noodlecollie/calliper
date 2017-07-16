@@ -17,8 +17,8 @@ namespace RenderSystem
 
         QString path() const;
 
-        ShaderDefs::ShaderStyle shaderStyle() const;
-        void setShaderStyle(ShaderDefs::ShaderStyle style);
+        ShaderDefs::ShaderId shaderId() const;
+        void setShaderId(ShaderDefs::ShaderId shader);
 
         void addTextureUnitMapping(TextureDefs::TextureUnit textureUnit, const QString& texturePath);
         void removeTextureUnitMapping(TextureDefs::TextureUnit textureUnit);
@@ -27,7 +27,7 @@ namespace RenderSystem
 
     private:
         const QString m_strPath;
-        ShaderDefs::ShaderStyle m_nShaderStyle;
+        ShaderDefs::ShaderId m_nShaderId;
         QHash<TextureDefs::TextureUnit, QString> m_TextureUnitMap;
     };
 }

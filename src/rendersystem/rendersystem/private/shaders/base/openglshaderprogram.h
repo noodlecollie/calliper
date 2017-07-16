@@ -3,7 +3,7 @@
 
 #include <QOpenGLShaderProgram>
 
-#include "rendersystem/private/shaders/common/privateshaderdefs.h"
+#include "rendersystem/private/shaders/common/vertexformat.h"
 
 class OpenGLShaderProgram : public QOpenGLShaderProgram
 {
