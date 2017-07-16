@@ -2,15 +2,9 @@
 #include "rendermodel-defs.h"
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
-#include "rendersystem/private/stores/framebufferstore.h/framebufferstore.h"
+#include "rendersystem/private/stores/framebufferstore/framebufferstore.h"
 
-// REMOVE ME
 #include "calliperutil/opengl/openglhelpers.h"
-#include <QOpenGLShaderProgram>
-#include "rendersystem/private/opengl/openglvertexarrayobject.h"
-#include <QOpenGLBuffer>
-#include <QImage>
-#include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
 
 RenderModel::RenderModel()
     : m_Context(),

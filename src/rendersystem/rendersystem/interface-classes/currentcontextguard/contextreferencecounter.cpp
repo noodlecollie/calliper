@@ -2,7 +2,7 @@
 
 #include <QOpenGLContext>
 
-#include "rendersystem/global/rendersystem.h"
+#include "rendersystem/private/global/globalinternal.h"
 
 namespace RenderSystem
 {

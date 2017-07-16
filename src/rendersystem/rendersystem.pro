@@ -146,7 +146,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/shaders/derived/screenspacequadshader.h \
     rendersystem/interfaces/iframebufferoperations.h \
     rendersystem/private/framebuffer/framebufferoperations.h \
-    rendersystem/endpoints/framebufferoperationsendpoint.h
+    rendersystem/endpoints/framebufferoperationsendpoint.h \
+    rendersystem/private/global/globalinternal.h
 
 unix {
     target.path = /usr/lib

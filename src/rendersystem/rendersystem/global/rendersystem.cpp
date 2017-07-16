@@ -1,4 +1,5 @@
 #include "rendersystem.h"
+#include "rendersystem/private/global/globalinternal.h"
 
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
@@ -9,7 +10,7 @@
 #include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
 #include "rendersystem/private/stores/materialstore/materialstore.h"
 #include "rendersystem/private/stores/rendermodelstore/rendermodelstore.h"
-#include "rendersystem/private/stores/framebufferstore.h/framebufferstore.h"
+#include "rendersystem/private/stores/framebufferstore/framebufferstore.h"
 
 namespace
 {
