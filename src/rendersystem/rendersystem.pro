@@ -66,7 +66,7 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/stores/rendermodelstore/rendermodelstore.cpp \
     rendersystem/endpoints/rendermodelstoreendpoint.cpp \
     rendersystem/interface-classes/definitions/framebufferdefs.cpp \
-    rendersystem/private/stores/framebufferstore.h/framebufferstore.cpp \
+    rendersystem/private/stores/framebufferstore/framebufferstore.cpp \
     rendersystem/endpoints/framebufferstoreendpoint.cpp \
     rendersystem/private/shaders/derived/errorshader.cpp \
     rendersystem/private/rendermodel/partition/batchgenerator.cpp \
@@ -76,7 +76,9 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/shaders/derived/debugminimalshader.cpp \
     rendersystem/private/rendermode/debugminimalrendermode.cpp \
     rendersystem/interface-classes/drawing/framedrawparams.cpp \
-    rendersystem/private/shaders/derived/screenspacequadshader.cpp
+    rendersystem/private/shaders/derived/screenspacequadshader.cpp \
+    rendersystem/private/framebuffer/framebufferoperations.cpp \
+    rendersystem/endpoints/framebufferoperationsendpoint.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -127,7 +129,7 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/endpoints/rendermodelstoreendpoint.h \
     rendersystem/interfaces/iframebufferstore.h \
     rendersystem/interface-classes/definitions/framebufferdefs.h \
-    rendersystem/private/stores/framebufferstore.h/framebufferstore.h \
+    rendersystem/private/stores/framebufferstore/framebufferstore.h \
     rendersystem/endpoints/framebufferstoreendpoint.h \
     rendersystem/private/shaders/derived/errorshader.h \
     rendersystem/private/rendermodel/partition/batchgenerator.h \
@@ -141,7 +143,10 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/shaders/derived/debugminimalshader.h \
     rendersystem/private/rendermode/debugminimalrendermode.h \
     rendersystem/interface-classes/drawing/framedrawparams.h \
-    rendersystem/private/shaders/derived/screenspacequadshader.h
+    rendersystem/private/shaders/derived/screenspacequadshader.h \
+    rendersystem/interfaces/iframebufferoperations.h \
+    rendersystem/private/framebuffer/framebufferoperations.h \
+    rendersystem/endpoints/framebufferoperationsendpoint.h
 
 unix {
     target.path = /usr/lib

@@ -1,8 +1,6 @@
 #ifndef IFRAMEBUFFERSTORE_H
 #define IFRAMEBUFFERSTORE_H
 
-#include "rendersystem_global.h"
-
 #include <QSize>
 #include <QOpenGLFunctions>
 
@@ -35,7 +33,7 @@ namespace RenderSystem
         // (and should be considered invalid).
         virtual GLuint frameBufferTextureId(const FrameBufferDefs::FrameBufferId id) const = 0;
 
-        // REMOVE ME
+        // REMOVE ME when debugging is finished!
         virtual void save(const FrameBufferDefs::FrameBufferId id, const QString& filename) = 0;
     };
 }
