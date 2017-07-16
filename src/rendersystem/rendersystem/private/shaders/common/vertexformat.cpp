@@ -1,8 +1,13 @@
 #include "vertexformat.h"
 #include <QtDebug>
 
+// Thanks Microsoft.
+#ifdef Q_OS_WIN
+#pragma warning (disable:4351)
+#endif
+
 VertexFormat::VertexFormat(int positions, int normals, int colors, int texCoords)
-    : m_nComponents()
+    : m_nComponents{}
 {
     Q_ASSERT_X(positions >= 0 && positions <= 4, Q_FUNC_INFO, "Positions value must be between 0 and 4");
     Q_ASSERT_X(normals >= 0 && normals <= 4, Q_FUNC_INFO, "Normals value must be between 0 and 4");

@@ -1,6 +1,7 @@
 #ifndef PRESETMATERIALS_H
 #define PRESETMATERIALS_H
 
+#include "model_global.h"
 #include "rendersystem/endpoints/materialstoreendpoint.h"
 
 namespace PresetMaterials
@@ -12,7 +13,7 @@ namespace PresetMaterials
         TOTAL_PRESET_MATERIALS
     };
 
-    void initialisePresetMaterials();
+    MODELSHARED_EXPORT void initialisePresetMaterials();
     RenderSystem::MaterialDefs::MaterialId presetMaterialId(PresetMaterial presetMaterial);
 }
 
