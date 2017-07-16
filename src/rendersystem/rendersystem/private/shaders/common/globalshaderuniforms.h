@@ -15,15 +15,15 @@ public:
     void create();
     void destroy();
 
-    // Hammer space
+    // Matrix is in Hammer space.
     QMatrix4x4 worldToCameraMatrix() const;
     void setWorldToCameraMatrix(const QMatrix4x4 &mat);
 
-    // OpenGL space
+    // Matrix is in OpenGL space.
     QMatrix4x4 projectionMatrix() const;
     void setProjectionMatrix(const QMatrix4x4 &mat);
 
-    // Hammer space
+    // Vector is in Hammer space.
     QVector3D directionalLight() const;
     void setDirectionalLight(const QVector3D &vec);
 

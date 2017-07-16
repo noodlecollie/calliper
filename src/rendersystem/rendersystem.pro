@@ -49,7 +49,7 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/rendermodel/partition/geometrydata.cpp \
     rendersystem/private/rendermodel/partition/geometrydatakey.cpp \
     rendersystem/private/rendermodel/partition/renderpartition.cpp \
-    rendersystem/private/rendermodel/partition/openglbuffercollection.cpp \
+    rendersystem/private/opengl/openglbuffercollection.cpp \
     rendersystem/private/rendermodel/partition/geometryuploader.cpp \
     rendersystem/private/rendermodel/partition/geometrydatacontainer.cpp \
     rendersystem/private/rendermodel/partition/geometryconsolidator.cpp \
@@ -108,7 +108,7 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/rendermodel/partition/geometrydata.h \
     rendersystem/private/rendermodel/partition/geometrydatakey.h \
     rendersystem/private/rendermodel/partition/renderpartition.h \
-    rendersystem/private/rendermodel/partition/openglbuffercollection.h \
+    rendersystem/private/opengl/openglbuffercollection.h \
     rendersystem/private/rendermodel/partition/geometryuploader.h \
     rendersystem/private/rendermodel/partition/geometrydatacontainer.h \
     rendersystem/private/rendermodel/partition/geometryconsolidator.h \
@@ -147,7 +147,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interfaces/iframebufferoperations.h \
     rendersystem/private/framebuffer/framebufferoperations.h \
     rendersystem/endpoints/framebufferoperationsendpoint.h \
-    rendersystem/private/global/globalinternal.h
+    rendersystem/private/global/globalinternal.h \
+    rendersystem/private/opengl/uniforms/std140uniformarray.h
 
 unix {
     target.path = /usr/lib

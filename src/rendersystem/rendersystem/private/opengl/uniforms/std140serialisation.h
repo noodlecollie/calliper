@@ -100,15 +100,15 @@ namespace UniformStd140
     }
 
     template<typename T>
-    QDataStream& serialise(QDataStream& stream, const T& item)
+    QDataStream& serialise(QDataStream& stream, const T& item, const AlignmentInfo& alignment = baseAlignment<T>())
     {
-        AlignmentInfo alignmentInfo = baseAlignment<T>();
-
+        // Serialise the essential data from the item.
         serialiseHelper(stream, item);
 
-        if ( alignmentInfo.requiresPadding() )
+        if ( alignment.requiresPadding() )
         {
-            const quint16 numPaddingBytes = alignmentInfo.baseAlignment - alignmentInfo.realSize;
+            // Stick padding after the data, to pad the entire serialisation out to the base alignment.
+            const quint16 numPaddingBytes = alignment.baseAlignment - alignment.realSize;
             QByteArray padding(numPaddingBytes, 0);
             stream.writeRawData(padding.constData(), padding.length());
         }
@@ -123,14 +123,7 @@ namespace UniformStd140
 
         for ( int i = 0; i < N; ++i )
         {
-            serialiseHelper(stream, array[i]);
-
-            if ( alignmentInfo.requiresPadding() )
-            {
-                const quint16 numPaddingBytes = alignmentInfo.baseAlignment - alignmentInfo.realSize;
-                QByteArray padding(numPaddingBytes, 0);
-                stream.writeRawData(padding.constData(), padding.length());
-            }
+            serialise(stream, array[i], alignmentInfo);
         }
 
         return stream;

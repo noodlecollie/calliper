@@ -4,7 +4,6 @@
 #include <QSharedPointer>
 #include <QException>
 
-#include "openglbuffercollection.h"
 #include "geometrydatacontainer.h"
 #include "geometryconsolidator.h"
 #include "geometryoffsettable.h"
@@ -13,6 +12,7 @@
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
+#include "rendersystem/private/opengl/openglbuffercollection.h"
 
 class OpenGLShaderProgram;
 

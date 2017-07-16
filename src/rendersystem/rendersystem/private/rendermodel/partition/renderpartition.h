@@ -6,7 +6,6 @@
 
 #include "geometrydatakey.h"
 #include "geometrydata.h"
-#include "openglbuffercollection.h"
 #include "geometryuploader.h"
 #include "geometrydatacontainer.h"
 #include "geometryoffsettable.h"
@@ -14,6 +13,7 @@
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
+#include "rendersystem/private/opengl/openglbuffercollection.h"
 
 /*
  * The render partition is one section of a render group, and encapsulates a set of buffers

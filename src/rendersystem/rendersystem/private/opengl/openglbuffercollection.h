@@ -6,6 +6,7 @@
 #include "rendersystem/private/opengl/opengluniformbuffer.h"
 #include "rendersystem/private/opengl/openglvertexarrayobject.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
+#include "rendersystem/private/shaders/base/openglshaderprogram.h"
 
 class OpenGLBufferCollection
 {
@@ -30,6 +31,8 @@ public:
 
     OpenGLVertexArrayObject& vertexArrayObject();
     const OpenGLVertexArrayObject& vertexArrayObject() const;
+
+    void bindShaderAttributesToVAO(OpenGLShaderProgram& program);
 
 private:
     void destroyAll();

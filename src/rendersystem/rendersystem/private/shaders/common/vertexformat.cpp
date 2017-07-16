@@ -27,7 +27,7 @@ VertexFormat::VertexFormat()
 
 int VertexFormat::components(PrivateShaderDefs::VertexArrayAttribute attribute) const
 {
-    if ( attribute < 0 || attribute >= PrivateShaderDefs::VertexAttributeLocationCount )
+    if ( attribute < 0 || attribute >= PrivateShaderDefs::TOTAL_VERTEX_ARRAY_ATTRIBUTES )
     {
         return 0;
     }

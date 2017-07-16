@@ -28,7 +28,7 @@ public:
     bool operator !=(const VertexFormat& other) const;
 
 private:
-    int m_nComponents[PrivateShaderDefs::VertexAttributeLocationCount];
+    int m_nComponents[PrivateShaderDefs::TOTAL_VERTEX_ARRAY_ATTRIBUTES];
 };
 
 #endif // VERTEXFORMAT_H

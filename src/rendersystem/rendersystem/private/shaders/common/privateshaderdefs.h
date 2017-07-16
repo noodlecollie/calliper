@@ -36,7 +36,7 @@ namespace PrivateShaderDefs
         ColorAttribute              = 2,
         TextureCoordinateAttribute  = 3,
 
-        VertexAttributeLocationCount
+        TOTAL_VERTEX_ARRAY_ATTRIBUTES
     };
 
     enum UniformBlockBindingPoint

@@ -135,7 +135,7 @@ void OpenGLVertexArrayObject::disableAttributeArrays()
 
     GL_CURRENT_F;
 
-    for ( int attribute = 0; attribute < PrivateShaderDefs::VertexAttributeLocationCount; ++attribute )
+    for ( int attribute = 0; attribute < PrivateShaderDefs::TOTAL_VERTEX_ARRAY_ATTRIBUTES; ++attribute )
     {
         f->glDisableVertexAttribArray(attribute);
     }

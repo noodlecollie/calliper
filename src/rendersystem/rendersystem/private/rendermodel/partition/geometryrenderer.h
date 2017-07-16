@@ -5,12 +5,12 @@
 
 #include "geometryoffsettable.h"
 #include "uniformbatchtable.h"
-#include "openglbuffercollection.h"
 
 #include "rendersystem/private/rendermodel/rendermodelcontext.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
+#include "rendersystem/private/opengl/openglbuffercollection.h"
 
 class OpenGLShaderProgram;
 

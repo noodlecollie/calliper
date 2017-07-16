@@ -8,57 +8,6 @@
 
 #include "calliperutil/opengl/openglhelpers.h"
 
-namespace
-{
-    int computeOffsetInBytes(const VertexFormat& format, PrivateShaderDefs::VertexArrayAttribute attribute)
-    {
-        int offset = 0;
-        if ( attribute == PrivateShaderDefs::PositionAttribute )
-        {
-            return offset;
-        }
-
-        offset += format.positionComponents() * sizeof(float);
-        if ( attribute == PrivateShaderDefs::NormalAttribute )
-        {
-            return offset;
-        }
-
-        offset += format.normalComponents() * sizeof(float);
-        if ( attribute == PrivateShaderDefs::ColorAttribute )
-        {
-            return offset;
-        }
-
-        offset += format.colorComponents() * sizeof(float);
-        if ( attribute == PrivateShaderDefs::TextureCoordinateAttribute )
-        {
-            return offset;
-        }
-
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Unrecognised attribute type!");
-        return 0;
-    }
-
-    void trySetAttributeBuffer(OpenGLShaderProgram& shaderProgram,
-                               PrivateShaderDefs::VertexArrayAttribute attribute)
-    {
-        const int components = shaderProgram.vertexFormat().components(attribute);
-
-        if ( components > 0 )
-        {
-            const int offset = computeOffsetInBytes(shaderProgram.vertexFormat(), attribute);
-            const int stride = shaderProgram.vertexFormat().totalVertexComponents() * sizeof(float);
-
-            shaderProgram.setAttributeBuffer(attribute,
-                                             GL_FLOAT,
-                                             offset,
-                                             components,
-                                             stride);
-        }
-    }
-}
-
 GeometryUploader::GeometryUploader(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,
                                    GeometryDataContainer &data,
@@ -363,15 +312,5 @@ void GeometryUploader::bindShaderAttributesToVAO()
         return;
     }
 
-    m_OpenGLBuffers.vertexBuffer().bind();
-
-    m_OpenGLBuffers.vertexArrayObject().disableAttributeArrays();
-    m_OpenGLBuffers.vertexArrayObject().enableAttributeArrays(m_pCurrentShaderProgram->vertexFormat());
-
-    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::PositionAttribute);
-    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::NormalAttribute);
-    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::ColorAttribute);
-    trySetAttributeBuffer(*m_pCurrentShaderProgram, PrivateShaderDefs::TextureCoordinateAttribute);
-
-    m_OpenGLBuffers.vertexBuffer().release();
+    m_OpenGLBuffers.bindShaderAttributesToVAO(*m_pCurrentShaderProgram);
 }
