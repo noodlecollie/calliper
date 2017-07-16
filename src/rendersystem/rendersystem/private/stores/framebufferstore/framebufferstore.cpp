@@ -91,26 +91,3 @@ void FrameBufferStore::setFrameBufferSize(const FrameBufferId id, const QSize si
 
     replace(id, size);
 }
-
-// REMOVE ME
-void FrameBufferStore::save(const FrameBufferId id, const QString &filename)
-{
-    if ( id == INVALID_ID )
-    {
-        return;
-    }
-
-    QSharedPointer<QOpenGLFramebufferObject> frameBuffer = object(id);
-    if ( !frameBuffer )
-    {
-        return;
-    }
-
-    QImage image = frameBuffer->toImage();
-    if ( image.isNull() )
-    {
-        return;
-    }
-
-    image.save(filename);
-}

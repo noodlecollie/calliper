@@ -4,6 +4,7 @@
 #include "rendersystem/endpoints/rendermodelstoreendpoint.h"
 #include "rendersystem/endpoints/framebufferstoreendpoint.h"
 #include "rendersystem/endpoints/materialstoreendpoint.h"
+#include "rendersystem/endpoints/framebufferoperationsendpoint.h"
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
 
 namespace
@@ -84,7 +85,8 @@ MainWindow::MainWindow(QWidget *parent) :
                            m_nFrameBufferId,
                            drawParams);
 
-    frameBufferStore->save(m_nFrameBufferId, "/Users/vesper/Desktop/temp.png");
+    RenderSystem::FrameBufferOperationsEndpoint::FrameBufferOperationsAccessor fbOps = RenderSystem::FrameBufferOperationsEndpoint::frameBufferOperations();
+    fbOps->saveToFile(m_nFrameBufferId, "/Users/vesper/Desktop/temp.png");
 }
 
 MainWindow::~MainWindow()

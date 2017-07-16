@@ -1,5 +1,5 @@
 #include "framebufferstoreendpoint.h"
-#include "rendersystem/private/stores/framebufferstore.h/framebufferstore.h"
+#include "rendersystem/private/stores/framebufferstore/framebufferstore.h"
 
 namespace RenderSystem
 {

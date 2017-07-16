@@ -32,9 +32,6 @@ namespace RenderSystem
         // If the provided frame buffer doesnt' exist, 0 will be returned
         // (and should be considered invalid).
         virtual GLuint frameBufferTextureId(const FrameBufferDefs::FrameBufferId id) const = 0;
-
-        // REMOVE ME when debugging is finished!
-        virtual void save(const FrameBufferDefs::FrameBufferId id, const QString& filename) = 0;
     };
 }
 
