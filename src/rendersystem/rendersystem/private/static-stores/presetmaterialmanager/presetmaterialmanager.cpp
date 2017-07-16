@@ -2,7 +2,6 @@
 
 #include "rendersystem/private/stores/materialstore/materialstore.h"
 
-// Initialisers for the materials concerned.
 #include "initialisers/unlitpresetmaterialinitialiser.h"
 
 namespace
@@ -33,11 +32,11 @@ PresetMaterialManager::PresetMaterialManager()
     : Containers::StaticObjectStoreArray<RenderSystem::MaterialDefs::MaterialId,
                                          RenderSystem::MaterialDefs::TOTAL_PRESET_MATERIALS>()
 {
+    initialise(initialisers);
 }
 
 PresetMaterialManager::~PresetMaterialManager()
 {
-
 }
 
 RenderSystem::MaterialDefs::MaterialId PresetMaterialManager::material(const RenderSystem::MaterialDefs::PresetMaterial presetMaterial) const

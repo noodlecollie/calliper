@@ -8,13 +8,6 @@ RenderSystem:
  - Change global makeCurrent/doneCurrent calls to use a context guard instead. (Or just leave them removed?)
  - Bind textures when rendering.
  - Update VertexFormat max batched items to be an unsigned short.
- - Shaders need to be more generic! We should have a shader style be thought of as a "target shader".
-   By default a given shader style should map to its target shader, but a render mode can override this.
-   If we don't do this, every time we add a shader style we'd have to update all the render modes to
-   specify what the style should map to.
-   In addition, instead of having really specialised shaders (eg. the screen space quad), we should have
-   shaders that are widely applicable and data-driven; for example, the screen space quad would be better
-   displayed using the same unlit textured shader as everything else that's unlit and textured.
 
  Containers:
  - Update everything to use IntegerHandles.

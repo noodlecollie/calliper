@@ -9,7 +9,6 @@ namespace RenderSystem
     {
         enum ShaderId
         {
-            // TODO: Remove the unknown ID and have everything default to the error shader.
             UnknownShaderId = -1,
 
             ErrorShaderId = 0,

@@ -79,7 +79,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/static-stores/presetmaterialmanager/presetmaterialmanager.cpp \
     rendersystem/endpoints/presetmaterialsendpoint.cpp \
     rendersystem/private/shaders/derived/litgenericshader.cpp \
-    rendersystem/private/shaders/derived/unlitgenericshader.cpp
+    rendersystem/private/shaders/derived/unlitgenericshader.cpp \
+    rendersystem/private/static-stores/presetrendermodelmanager/presetrendermodelmanager.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -153,7 +154,10 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/endpoints/presetmaterialsendpoint.h \
     rendersystem/private/static-stores/presetmaterialmanager/initialisers/unlitpresetmaterialinitialiser.h \
     rendersystem/private/shaders/derived/litgenericshader.h \
-    rendersystem/private/shaders/derived/unlitgenericshader.h
+    rendersystem/private/shaders/derived/unlitgenericshader.h \
+    rendersystem/private/static-stores/presetrendermodelmanager/presetrendermodelmanager.h \
+    rendersystem/private/static-stores/presetrendermodelmanager/initialisers/screenspacequadrendermodelinitialiser.h \
+    rendersystem/private/static-stores/presetrendermodelmanager/initialisers/irendermodelinitialiser.h
 
 unix {
     target.path = /usr/lib
