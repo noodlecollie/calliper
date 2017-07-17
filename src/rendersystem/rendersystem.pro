@@ -79,8 +79,7 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/shaders/derived/litgenericshader.cpp \
     rendersystem/private/shaders/derived/unlitgenericshader.cpp \
     rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.cpp \
-    rendersystem/endpoints/presetmaterialstoreendpoint.cpp \
-    rendersystem/functions/renderutilities.cpp
+    rendersystem/endpoints/presetmaterialstoreendpoint.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -154,8 +153,7 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/shaders/derived/litgenericshader.h \
     rendersystem/private/shaders/derived/unlitgenericshader.h \
     rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.h \
-    rendersystem/endpoints/presetmaterialstoreendpoint.h \
-    rendersystem/functions/renderutilities.h
+    rendersystem/endpoints/presetmaterialstoreendpoint.h
 
 unix {
     target.path = /usr/lib
