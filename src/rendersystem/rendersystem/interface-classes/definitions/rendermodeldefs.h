@@ -13,6 +13,13 @@ namespace RenderSystem
 
         RENDERSYSTEMSHARED_EXPORT extern const ObjectId INVALID_OBJECT_ID;
         RENDERSYSTEMSHARED_EXPORT extern const RenderModelId INVALID_RENDER_MODEL_ID;
+
+        enum PresetRenderModel
+        {
+            ScreenSpaceQuad = 0,
+
+            TOTAL_PRESET_RENDER_MODELS
+        };
     }
 }
 

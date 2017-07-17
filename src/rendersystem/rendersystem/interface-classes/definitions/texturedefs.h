@@ -16,6 +16,8 @@ namespace RenderSystem
             MainTexture = 0,
             SecondaryTexture = 1,
             NormalMap = 2,
+
+            TOTAL_TEXTURE_UNITS
         };
 
         enum RenderTarget
@@ -23,6 +25,8 @@ namespace RenderSystem
             NoRenderTarget = -1,
 
             RenderTarget0 = 0,
+
+            TOTAL_RENDER_TARGETS
         };
     }
 }

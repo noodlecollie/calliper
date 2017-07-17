@@ -34,8 +34,9 @@ namespace RenderSystem
     private:
         const QString m_strPath;
         ShaderDefs::ShaderId m_nShaderId;
-        QHash<TextureDefs::TextureUnit, QString> m_TextureUnitMap;
-        QHash<TextureDefs::TextureUnit, TextureDefs::RenderTarget> m_RenderTargetMap;
+
+        QString m_TextureUnitMap[TextureDefs::TOTAL_TEXTURE_UNITS];
+        TextureDefs::RenderTarget m_RenderTargetMap[TextureDefs::TOTAL_TEXTURE_UNITS];
     };
 }
 

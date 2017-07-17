@@ -8,17 +8,10 @@
 #include "calliperutil/global/globalinstancehelper.h"
 
 class PresetRenderModelManager : public Containers::StaticObjectStoreArray<RenderSystem::RenderModelDefs::RenderModelId,
-                                                                           PresetRenderModelManager::TOTAL_PRESET_RENDER_MODELS>,
+                                                                           RenderSystem::RenderModelDefs::TOTAL_PRESET_RENDER_MODELS>,
                                  public CalliperUtil::GlobalInstanceHelper<PresetRenderModelManager>
 {
 public:
-    enum PresetRenderModel
-    {
-        ScreenSpaceQuad = 0,
-
-        TOTAL_PRESET_RENDER_MODELS
-    };
-
     PresetRenderModelManager();
     virtual ~PresetRenderModelManager();
 };

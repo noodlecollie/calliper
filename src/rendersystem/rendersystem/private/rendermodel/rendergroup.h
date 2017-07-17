@@ -13,6 +13,7 @@
 
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 #include "rendersystem/interface-classes/geometry/geometrysection.h"
+#include "rendersystem/interface-classes/texture/namedopengltexture.h"
 
 class RenderGroup
 {
@@ -26,6 +27,9 @@ public:
     void draw();
 
 private:
+    void bindTexture();
+    void releaseTexture();
+
     typedef QSharedPointer<RenderPartition> RenderPartitionPointer;
 
     const RenderModelContext& m_Context;
@@ -33,6 +37,7 @@ private:
 
     QVector<RenderPartitionPointer> m_Partitions;
     QHash<GeometryDataKey, RenderPartitionPointer> m_SectionToPartition;
+    QSharedPointer<RenderSystem::NamedOpenGLTexture> m_pCurrentTexture;
 };
 
 #endif // RENDERGROUP_H

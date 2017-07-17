@@ -27,7 +27,7 @@ namespace
 
 PresetRenderModelManager::PresetRenderModelManager()
     : Containers::StaticObjectStoreArray<RenderSystem::RenderModelDefs::RenderModelId,
-                                         PresetRenderModelManager::TOTAL_PRESET_RENDER_MODELS>()
+                                         RenderSystem::RenderModelDefs::TOTAL_PRESET_RENDER_MODELS>()
 {
     initialise(initialisers);
 }

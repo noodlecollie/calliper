@@ -1,5 +1,8 @@
 #include "rendergroup.h"
 
+#include "rendersystem/private/stores/materialstore/materialstore.h"
+#include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
+
 namespace
 {
     // Tweak as necessary, for performance.
@@ -14,7 +17,8 @@ RenderGroup::RenderGroup(const RenderModelContext &context,
     : m_Context(context),
       m_nMaterialId(materialId),
       m_Partitions(),
-      m_SectionToPartition()
+      m_SectionToPartition(),
+      m_pCurrentTexture()
 {
 
 }
@@ -70,8 +74,44 @@ void RenderGroup::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectI
 
 void RenderGroup::draw()
 {
+    bindTexture();
+
     for ( const RenderPartitionPointer& partition : m_Partitions )
     {
         partition->draw();
     }
+
+    releaseTexture();
+}
+
+void RenderGroup::bindTexture()
+{
+    MaterialStore* materialStore = MaterialStore::globalInstance();
+    QSharedPointer<RenderSystem::RenderMaterial> material = materialStore->material(m_nMaterialId).toStrongRef();
+
+    if ( !material )
+    {
+        return;
+    }
+
+    const QString texturePath = material->textureMapping(RenderSystem::TextureDefs::MainTexture);
+    OpenGLTextureStore* textureStore = OpenGLTextureStore::globalInstance();
+    m_pCurrentTexture = textureStore->texture(texturePath).toStrongRef();
+
+    if ( !m_pCurrentTexture )
+    {
+        return;
+    }
+
+    m_pCurrentTexture->bind();
+}
+
+void RenderGroup::releaseTexture()
+{
+    if ( !m_pCurrentTexture )
+    {
+        return;
+    }
+
+    m_pCurrentTexture->release();
 }

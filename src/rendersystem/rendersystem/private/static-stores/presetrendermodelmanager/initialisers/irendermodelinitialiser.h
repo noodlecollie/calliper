@@ -9,6 +9,6 @@ public:
     virtual ~IRenderModelInitialiser() {}
 
     virtual void initialise(RenderSystem::RenderModelDefs::RenderModelId renderModelId) const = 0;
-}
+};
 
 #endif // IRENDERMODELINITIALISER_H
