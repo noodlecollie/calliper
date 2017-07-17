@@ -6,7 +6,7 @@
 
 #include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
 #include "rendersystem/private/static-stores/rendermodestore/rendermodestore.h"
-#include "rendersystem/private/static-stores/presetmaterialmanager/presetmaterialmanager.h"
+#include "rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.h"
 
 #include "rendersystem/private/stores/opengltexturestore/opengltexturestore.h"
 #include "rendersystem/private/stores/materialstore/materialstore.h"
@@ -44,7 +44,7 @@ void initialiseStores()
 
     // Material-related stores
     MaterialStore::globalInitialise();
-    PresetMaterialManager::globalInitialise();
+    PresetMaterialStore::globalInitialise();
 
     // Render models
     RenderModelStore::globalInitialise();
@@ -56,7 +56,7 @@ void shutdownStores()
 
     RenderModelStore::globalShutdown();
 
-    PresetMaterialManager::globalShutdown();
+    PresetMaterialStore::globalShutdown();
     MaterialStore::globalShutdown();
 
     OpenGLTextureStore::globalShutdown();

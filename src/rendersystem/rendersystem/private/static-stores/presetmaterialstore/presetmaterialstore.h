@@ -1,5 +1,5 @@
-#ifndef PRESETMATERIALMANAGER_H
-#define PRESETMATERIALMANAGER_H
+#ifndef PRESETMATERIALSTORE_H
+#define PRESETMATERIALSTORE_H
 
 #include "rendersystem/interfaces/ipresetmaterials.h"
 
@@ -7,17 +7,17 @@
 
 #include "calliperutil/global/globalinstancehelper.h"
 
-class PresetMaterialManager : public Containers::StaticObjectStoreArray<RenderSystem::MaterialDefs::MaterialId,
+class PresetMaterialStore : public Containers::StaticObjectStoreArray<RenderSystem::MaterialDefs::MaterialId,
                                                                         RenderSystem::MaterialDefs::TOTAL_PRESET_MATERIALS>,
                               public RenderSystem::IPresetMaterials,
-                              public CalliperUtil::GlobalInstanceHelper<PresetMaterialManager>
+                              public CalliperUtil::GlobalInstanceHelper<PresetMaterialStore>
 {
 public:
-    PresetMaterialManager();
-    virtual ~PresetMaterialManager();
+    PresetMaterialStore();
+    virtual ~PresetMaterialStore();
 
     // External
     virtual RenderSystem::MaterialDefs::MaterialId material(const RenderSystem::MaterialDefs::PresetMaterial presetMaterial) const override;
 };
 
-#endif // PRESETMATERIALMANAGER_H
+#endif // PRESETMATERIALSTORE_H

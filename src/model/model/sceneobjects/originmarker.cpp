@@ -2,7 +2,7 @@
 
 #include "model/scene/scene.h"
 
-#include "rendersystem/endpoints/presetmaterialsendpoint.h"
+#include "rendersystem/endpoints/presetmaterialstoreendpoint.h"
 
 namespace Model
 {
@@ -73,7 +73,7 @@ namespace Model
 
     RenderSystem::MaterialDefs::MaterialId OriginMarker::getPresetMaterialId() const
     {
-        return RenderSystem::PresetMaterialsEndpoint::presetMaterials()
-                ->material(RenderSystem::MaterialDefs::UnlitPerVertexColor3DMaterial);
+        return RenderSystem::PresetMaterialStoreEndpoint::presetMaterialStore()
+                ->material(RenderSystem::MaterialDefs::UnlitMaterial);
     }
 }

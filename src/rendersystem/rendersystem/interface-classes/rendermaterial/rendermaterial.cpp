@@ -5,10 +5,8 @@ namespace RenderSystem
     RenderMaterial::RenderMaterial(const QString& path)
         : m_strPath(path),
           m_nShaderId(ShaderDefs::UnknownShaderId),
-          m_TextureUnitMap{},
-          m_RenderTargetMap{}
+          m_TextureUnitMap{}
     {
-        clearRenderTargetMappings();
         clearTextureMappings();
     }
 
@@ -62,44 +60,6 @@ namespace RenderSystem
         for ( quint32 i = 0; i < TextureDefs::TOTAL_TEXTURE_UNITS; ++i )
         {
             m_TextureUnitMap[i] = QString();
-        }
-    }
-
-    void RenderMaterial::addRenderTargetMapping(TextureDefs::TextureUnit textureUnit, TextureDefs::RenderTarget renderTarget)
-    {
-        if ( textureUnit < 0 || textureUnit >= TextureDefs::TOTAL_TEXTURE_UNITS )
-        {
-            return;
-        }
-
-        m_RenderTargetMap[textureUnit] = renderTarget;
-    }
-
-    void RenderMaterial::removeRenderTargetMapping(TextureDefs::TextureUnit textureUnit)
-    {
-        if ( textureUnit < 0 || textureUnit >= TextureDefs::TOTAL_TEXTURE_UNITS )
-        {
-            return;
-        }
-
-        m_RenderTargetMap[textureUnit] = TextureDefs::NoRenderTarget;
-    }
-
-    TextureDefs::RenderTarget RenderMaterial::renderTargetMapping(TextureDefs::TextureUnit textureUnit) const
-    {
-        if ( textureUnit < 0 || textureUnit >= TextureDefs::TOTAL_TEXTURE_UNITS )
-        {
-            return TextureDefs::NoRenderTarget;
-        }
-
-        return m_RenderTargetMap[textureUnit];
-    }
-
-    void RenderMaterial::clearRenderTargetMappings()
-    {
-        for ( quint32 i = 0; i < TextureDefs::TOTAL_TEXTURE_UNITS; ++i )
-        {
-            m_RenderTargetMap[i] = TextureDefs::NoRenderTarget;
         }
     }
 }

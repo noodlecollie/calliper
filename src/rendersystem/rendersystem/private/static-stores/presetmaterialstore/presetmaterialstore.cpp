@@ -1,4 +1,4 @@
-#include "presetmaterialmanager.h"
+#include "presetmaterialstore.h"
 
 #include "rendersystem/private/stores/materialstore/materialstore.h"
 
@@ -22,24 +22,24 @@ namespace
         return materialId;
     }
 
-    PresetMaterialManager::InitialiserFunction initialisers[] =
+    PresetMaterialStore::InitialiserFunction initialisers[] =
     {
         [](){ return createPresetMaterial(UnlitPresetMaterialInitialiser()); }
     };
 }
 
-PresetMaterialManager::PresetMaterialManager()
+PresetMaterialStore::PresetMaterialStore()
     : Containers::StaticObjectStoreArray<RenderSystem::MaterialDefs::MaterialId,
                                          RenderSystem::MaterialDefs::TOTAL_PRESET_MATERIALS>()
 {
     initialise(initialisers);
 }
 
-PresetMaterialManager::~PresetMaterialManager()
+PresetMaterialStore::~PresetMaterialStore()
 {
 }
 
-RenderSystem::MaterialDefs::MaterialId PresetMaterialManager::material(const RenderSystem::MaterialDefs::PresetMaterial presetMaterial) const
+RenderSystem::MaterialDefs::MaterialId PresetMaterialStore::material(const RenderSystem::MaterialDefs::PresetMaterial presetMaterial) const
 {
     return object(presetMaterial);
 }

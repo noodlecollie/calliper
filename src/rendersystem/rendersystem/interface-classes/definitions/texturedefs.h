@@ -19,15 +19,6 @@ namespace RenderSystem
 
             TOTAL_TEXTURE_UNITS
         };
-
-        enum RenderTarget
-        {
-            NoRenderTarget = -1,
-
-            RenderTarget0 = 0,
-
-            TOTAL_RENDER_TARGETS
-        };
     }
 }
 

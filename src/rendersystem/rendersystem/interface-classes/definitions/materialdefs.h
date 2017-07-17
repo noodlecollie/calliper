@@ -15,7 +15,7 @@ namespace RenderSystem
 
         enum PresetMaterial
         {
-            UnlitPerVertexColor3DMaterial = 0,
+            UnlitMaterial = 0,
 
             TOTAL_PRESET_MATERIALS
         };

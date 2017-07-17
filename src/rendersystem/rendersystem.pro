@@ -73,14 +73,14 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/opengl/uniforms/std140uniformelementbase.cpp \
     rendersystem/private/shaders/derived/debugminimalshader.cpp \
     rendersystem/private/rendermode/debugminimalrendermode.cpp \
-    rendersystem/interface-classes/drawing/framedrawparams.cpp \
+    rendersystem/interface-classes/rendering/framedrawparams.cpp \
     rendersystem/private/framebuffer/framebufferoperations.cpp \
     rendersystem/endpoints/framebufferoperationsendpoint.cpp \
-    rendersystem/private/static-stores/presetmaterialmanager/presetmaterialmanager.cpp \
-    rendersystem/endpoints/presetmaterialsendpoint.cpp \
     rendersystem/private/shaders/derived/litgenericshader.cpp \
     rendersystem/private/shaders/derived/unlitgenericshader.cpp \
-    rendersystem/private/static-stores/presetrendermodelmanager/presetrendermodelmanager.cpp
+    rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.cpp \
+    rendersystem/endpoints/presetmaterialstoreendpoint.cpp \
+    rendersystem/functions/renderutilities.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -142,22 +142,20 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/shaders/common/batchedmodelmatrixuniformblock.h \
     rendersystem/private/shaders/derived/debugminimalshader.h \
     rendersystem/private/rendermode/debugminimalrendermode.h \
-    rendersystem/interface-classes/drawing/framedrawparams.h \
+    rendersystem/interface-classes/rendering/framedrawparams.h \
     rendersystem/interfaces/iframebufferoperations.h \
     rendersystem/private/framebuffer/framebufferoperations.h \
     rendersystem/endpoints/framebufferoperationsendpoint.h \
     rendersystem/private/global/globalinternal.h \
     rendersystem/private/opengl/uniforms/std140uniformarray.h \
     rendersystem/interfaces/ipresetmaterials.h \
-    rendersystem/private/static-stores/presetmaterialmanager/presetmaterialmanager.h \
-    rendersystem/private/static-stores/presetmaterialmanager/initialisers/ipresetmaterialinitialiser.h \
-    rendersystem/endpoints/presetmaterialsendpoint.h \
-    rendersystem/private/static-stores/presetmaterialmanager/initialisers/unlitpresetmaterialinitialiser.h \
+    rendersystem/private/static-stores/presetmaterialstore/initialisers/ipresetmaterialinitialiser.h \
+    rendersystem/private/static-stores/presetmaterialstore/initialisers/unlitpresetmaterialinitialiser.h \
     rendersystem/private/shaders/derived/litgenericshader.h \
     rendersystem/private/shaders/derived/unlitgenericshader.h \
-    rendersystem/private/static-stores/presetrendermodelmanager/presetrendermodelmanager.h \
-    rendersystem/private/static-stores/presetrendermodelmanager/initialisers/screenspacequadrendermodelinitialiser.h \
-    rendersystem/private/static-stores/presetrendermodelmanager/initialisers/irendermodelinitialiser.h
+    rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.h \
+    rendersystem/endpoints/presetmaterialstoreendpoint.h \
+    rendersystem/functions/renderutilities.h
 
 unix {
     target.path = /usr/lib

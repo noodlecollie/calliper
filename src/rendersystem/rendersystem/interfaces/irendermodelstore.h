@@ -9,7 +9,7 @@
 #include "rendersystem/interface-classes/geometry/geometrybuilder.h"
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
 #include "rendersystem/interface-classes/definitions/shaderdefs.h"
-#include "rendersystem/interface-classes/drawing/framedrawparams.h"
+#include "rendersystem/interface-classes/rendering/framedrawparams.h"
 
 namespace RenderSystem
 {
