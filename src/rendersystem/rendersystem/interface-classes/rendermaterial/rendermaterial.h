@@ -25,10 +25,17 @@ namespace RenderSystem
         QString textureMapping(TextureDefs::TextureUnit textureUnit) const;
         void clearTextureMappings();
 
+        // Render target mappings override texture paths.
+        void addRenderTargetMapping(TextureDefs::TextureUnit textureUnit, TextureDefs::RenderTarget renderTarget);
+        void removeRenderTargetMapping(TextureDefs::TextureUnit textureUnit);
+        TextureDefs::RenderTarget renderTargetMapping(TextureDefs::TextureUnit textureUnit) const;
+        void clearRenderTargetMappings();
+
     private:
         const QString m_strPath;
         ShaderDefs::ShaderId m_nShaderId;
         QHash<TextureDefs::TextureUnit, QString> m_TextureUnitMap;
+        QHash<TextureDefs::TextureUnit, TextureDefs::RenderTarget> m_RenderTargetMap;
     };
 }
 

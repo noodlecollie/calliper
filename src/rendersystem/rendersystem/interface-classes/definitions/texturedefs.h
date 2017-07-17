@@ -17,6 +17,13 @@ namespace RenderSystem
             SecondaryTexture = 1,
             NormalMap = 2,
         };
+
+        enum RenderTarget
+        {
+            NoRenderTarget = -1,
+
+            RenderTarget0 = 0,
+        };
     }
 }
 

@@ -5,7 +5,8 @@ namespace RenderSystem
     RenderMaterial::RenderMaterial(const QString& path)
         : m_strPath(path),
           m_nShaderId(ShaderDefs::UnknownShaderId),
-          m_TextureUnitMap()
+          m_TextureUnitMap(),
+          m_RenderTargetMap()
     {
 
     }
@@ -48,5 +49,25 @@ namespace RenderSystem
     void RenderMaterial::clearTextureMappings()
     {
         m_TextureUnitMap.clear();
+    }
+
+    void RenderMaterial::addRenderTargetMapping(TextureDefs::TextureUnit textureUnit, TextureDefs::RenderTarget renderTarget)
+    {
+        m_RenderTargetMap.insert(textureUnit, renderTarge);
+    }
+
+    void RenderMaterial::removeTextureUnitMapping(TextureDefs::TextureUnit textureUnit)
+    {
+        m_RenderTargetMap.remove(textureUnit);
+    }
+
+    TextureDefs::RenderTarget RenderMaterial::renderTargetMapping(TextureDefs::TextureUnit textureUnit) const
+    {
+        return m_RenderTargetMap.value(textureUnit, TextureDefs::NoRenderTarget);
+    }
+
+    void RenderMaterial::clearRenderTargetMappings()
+    {
+        m_RenderTargetMap.clear();
     }
 }
