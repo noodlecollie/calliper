@@ -35,19 +35,3 @@ void FrameBufferOperations::saveToFile(const RenderSystem::FrameBufferDefs::Fram
 
     image.save(filename);
 }
-
-void FrameBufferOperations::drawContentsToCurrent(const RenderSystem::FrameBufferDefs::FrameBufferId id)
-{
-    if ( !checkStore() || id == FrameBufferStore::INVALID_ID )
-    {
-        return;
-    }
-
-    QSharedPointer<QOpenGLFramebufferObject> frameBuffer = FrameBufferStore::globalInstance()->object(id);
-    if ( !frameBuffer )
-    {
-        return;
-    }
-
-    // TODO: Continue from here.
-}
