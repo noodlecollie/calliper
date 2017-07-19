@@ -26,7 +26,8 @@ SOURCES += \
     user-interface/arrangeable-tabs/widget/quadgridwidget.cpp \
     user-interface/modelviews/modelviewfactory.cpp \
     user-interface/views/mapviewport.cpp \
-    user-interface/icons/filedatamodeliconprovider.cpp
+    user-interface/icons/filedatamodeliconprovider.cpp \
+    user-interface/opengl/framebuffercopier.cpp
 
 HEADERS +=\
     user-interface_global.h \
@@ -44,7 +45,8 @@ HEADERS +=\
     user-interface/modelviews/modelviewfactory.h \
     user-interface/views/mapviewport.h \
     user-interface/icons/filedatamodeliconprovider.h \
-    user-interface/modelviews/imodelview.h
+    user-interface/modelviews/imodelview.h \
+    user-interface/opengl/framebuffercopier.h
 
 unix {
     target.path = /usr/lib

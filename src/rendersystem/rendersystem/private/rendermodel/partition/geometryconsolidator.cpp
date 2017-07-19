@@ -23,6 +23,11 @@ namespace
 
         return sizeof(quint32) * 8;
     }
+
+    inline quint32 totalRequiredVertexFloats(int numPositions, const VertexFormat& format)
+    {
+        return format.totalVertexComponents() * numPositions;
+    }
 }
 
 GeometryConsolidator::GeometryConsolidator(const RenderModelContext &context,
@@ -124,7 +129,7 @@ void GeometryConsolidator::consolidateVertices(const QSharedPointer<GeometryData
     const VertexFormat vertexFormat = m_pShader->vertexFormat();
     GeometryOffsetTable::ObjectOffsets& offsets = m_OffsetTable.lastItem();
     offsets.vertexOffsetFloats = m_VertexData.count();
-    offsets.vertexCountFloats = geometry->computeTotalVertexBytes(vertexFormat) / sizeof(float);
+    offsets.vertexCountFloats = totalRequiredVertexFloats(geometry->positions().count(), vertexFormat);
 
     quint32 beginOffsetInFloats = offsets.vertexOffsetFloats;
 

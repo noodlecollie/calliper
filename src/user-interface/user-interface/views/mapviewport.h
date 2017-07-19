@@ -6,6 +6,8 @@
 #include <QOpenGLWidget>
 #include <QSharedPointer>
 
+#include "user-interface/opengl/framebuffercopier.h"
+
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
 
 #include "model/filedatamodels/map/mapfiledatamodel.h"
@@ -66,6 +68,9 @@ namespace UserInterface
         void initKeyMap();
         void initMouseEventMap();
         void connectCameraControl(Qt::Key key, CameraControlSlot slot);
+        bool drawRenderModel();
+        void tempSaveFrameBufferOnMouseToggle();
+        void destroyFrameBuffer();
 
         MapFileDataModelWeakRef m_pDataModel;
 
@@ -74,6 +79,7 @@ namespace UserInterface
         Model::KeyMap* m_pKeyMap;
         Model::MouseEventMap* m_pMouseEventMap;
         RenderSystem::FrameBufferDefs::FrameBufferId m_nRenderFrameBufferId;
+        FrameBufferCopier m_FrameBufferCopier;
     };
 }
 

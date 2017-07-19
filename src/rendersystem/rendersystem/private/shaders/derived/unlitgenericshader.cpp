@@ -24,7 +24,7 @@ void UnlitGenericShader::construct()
 
 VertexFormat UnlitGenericShader::vertexFormat() const
 {
-    return VertexFormat(4, 0, 4, 0);
+    return VertexFormat(4, 0, 4, 2);
 }
 
 int UnlitGenericShader::maxBatchedItems() const

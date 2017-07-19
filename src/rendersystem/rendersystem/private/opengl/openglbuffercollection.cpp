@@ -3,6 +3,9 @@
 #include "calliperutil/opengl/openglerrors.h"
 #include "rendersystem/private/shaders/common/vertexformat.h"
 
+// Remove me
+#include "calliperutil/opengl/openglhelpers.h"
+
 namespace
 {
     void trySetAttributeBuffer(OpenGLShaderProgram& shaderProgram,
@@ -15,11 +18,11 @@ namespace
         {
             const int stride = shaderProgram.vertexFormat().totalVertexComponents() * sizeof(float);
 
-            shaderProgram.setAttributeBuffer(attribute,
-                                             GL_FLOAT,
-                                             offset,
-                                             components,
-                                             stride);
+            GLTRY(shaderProgram.setAttributeBuffer(attribute,
+                                                   GL_FLOAT,
+                                                   offset,
+                                                   components,
+                                                   stride));
         }
     }
 }
@@ -151,6 +154,9 @@ void OpenGLBufferCollection::bindShaderAttributesToVAO(OpenGLShaderProgram &prog
     const VertexFormat format = program.vertexFormat();
 
     m_VAO.bind();
+    m_IndexBuffer.bind();
+    m_VertexBuffer.bind();
+
     m_VAO.disableAttributeArrays();
     m_VAO.enableAttributeArrays(program.vertexFormat());
 
@@ -164,5 +170,7 @@ void OpenGLBufferCollection::bindShaderAttributesToVAO(OpenGLShaderProgram &prog
         offset += format.components(attribute) * sizeof(float);
     }
 
+    m_VertexBuffer.release();
+    m_IndexBuffer.release();
     m_VAO.release();
 }

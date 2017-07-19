@@ -10,7 +10,7 @@ namespace RenderSystem
             // As the class currently doesn't store any state,
             // we don't need to control its creation and destruction.
             // Keeping it on the stack should work for now.
-            FrameBufferOperations frameBufferOperationsInstance;
+            static FrameBufferOperations frameBufferOperationsInstance;
 
             return FrameBufferOperationsAccessor(frameBufferOperationsInstance);
         }

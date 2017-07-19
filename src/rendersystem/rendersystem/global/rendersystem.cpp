@@ -143,6 +143,11 @@ namespace RenderSystem
             g_bInitialised = false;
         }
 
+        bool renderSystemContextIsCurrent()
+        {
+            return g_pMainContext && QOpenGLContext::currentContext() == g_pMainContext;
+        }
+
         bool makeCurrent()
         {
             if ( !g_bInitialised || QOpenGLContext::currentContext() == g_pMainContext )

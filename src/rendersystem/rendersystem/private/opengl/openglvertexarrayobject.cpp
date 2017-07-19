@@ -5,6 +5,7 @@
 
 #include "rendersystem/private/shaders/common/vertexformat.h"
 #include "rendersystem/private/shaders/common/privateshaderdefs.h"
+#include "rendersystem/global/rendersystem.h"
 
 namespace
 {
@@ -13,22 +14,22 @@ namespace
     {
         if ( format.positionComponents() > 0 )
         {
-            GLTRY(lambda(PrivateShaderDefs::PositionAttribute));
+            lambda(PrivateShaderDefs::PositionAttribute);
         }
 
         if ( format.normalComponents() > 0 )
         {
-            GLTRY(lambda(PrivateShaderDefs::NormalAttribute));
+            lambda(PrivateShaderDefs::NormalAttribute);
         }
 
         if ( format.colorComponents() > 0 )
         {
-            GLTRY(lambda(PrivateShaderDefs::ColorAttribute));
+            lambda(PrivateShaderDefs::ColorAttribute);
         }
 
         if ( format.textureCoordinateComponents() > 0 )
         {
-            GLTRY(lambda(PrivateShaderDefs::TextureCoordinateAttribute));
+            lambda(PrivateShaderDefs::TextureCoordinateAttribute);
         }
     }
 }
@@ -46,6 +47,8 @@ OpenGLVertexArrayObject::~OpenGLVertexArrayObject()
 
 bool OpenGLVertexArrayObject::create()
 {
+    checkContext();
+
     if ( m_iVAOID != 0 )
     {
         return true;
@@ -59,6 +62,8 @@ bool OpenGLVertexArrayObject::create()
 
 void OpenGLVertexArrayObject::destroy()
 {
+    checkContext();
+
     if ( m_iVAOID == 0 )
     {
         return;
@@ -71,14 +76,20 @@ void OpenGLVertexArrayObject::destroy()
 
 bool OpenGLVertexArrayObject::bind()
 {
+    checkContext();
+
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
     GL_CURRENT_F;
-    return GLTRY_RET(f->glBindVertexArray(m_iVAOID));
+    bool success = GLTRY_RET(f->glBindVertexArray(m_iVAOID));
+    Q_ASSERT(success);
+    return success;
 }
 
 void OpenGLVertexArrayObject::release()
 {
+    checkContext();
+
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
     GL_CURRENT_F;
@@ -92,6 +103,8 @@ bool OpenGLVertexArrayObject::isCreated() const
 
 void OpenGLVertexArrayObject::enableAttributeArrays(const VertexFormat &format)
 {
+    checkContext();
+
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
     if ( !isCreated() )
@@ -103,12 +116,14 @@ void OpenGLVertexArrayObject::enableAttributeArrays(const VertexFormat &format)
 
     callForNonZeroAttributes(format, [&f](PrivateShaderDefs::VertexArrayAttribute attribute)
     {
-        f->glEnableVertexAttribArray(attribute);
+        GLTRY(f->glEnableVertexAttribArray(attribute));
     });
 }
 
 void OpenGLVertexArrayObject::disableAttributeArrays(const VertexFormat &format)
 {
+    checkContext();
+
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
     if ( !isCreated() )
@@ -120,12 +135,14 @@ void OpenGLVertexArrayObject::disableAttributeArrays(const VertexFormat &format)
 
     callForNonZeroAttributes(format, [&f](PrivateShaderDefs::VertexArrayAttribute attribute)
     {
-        f->glDisableVertexAttribArray(attribute);
+        GLTRY(f->glDisableVertexAttribArray(attribute));
     });
 }
 
 void OpenGLVertexArrayObject::disableAttributeArrays()
 {
+    checkContext();
+
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
     if ( !isCreated() )
@@ -137,6 +154,11 @@ void OpenGLVertexArrayObject::disableAttributeArrays()
 
     for ( int attribute = 0; attribute < PrivateShaderDefs::TOTAL_VERTEX_ARRAY_ATTRIBUTES; ++attribute )
     {
-        f->glDisableVertexAttribArray(attribute);
+        GLTRY(f->glDisableVertexAttribArray(attribute));
     }
+}
+
+void OpenGLVertexArrayObject::checkContext() const
+{
+    Q_ASSERT_X(RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Expected render system context to be current!");
 }

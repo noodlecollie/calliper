@@ -114,12 +114,12 @@ void GeometryRenderer::draw()
 void GeometryRenderer::draw_x(int batch)
 {
     const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
-    quint32 beginOffsetInts = m_OffsetTable.at(batchOffsets.firstGeometryItem).indexOffsetInts;
+    const quint32 beginOffsetInts = m_OffsetTable.at(batchOffsets.firstGeometryItem).indexOffsetInts;
 
     const GeometryOffsetTable::ObjectOffsets endOffsets = m_OffsetTable.at(batchOffsets.lastGeometryItem);
-    quint32 endOffsetInts = endOffsets.indexOffsetInts + endOffsets.indexCountInts;
+    const quint32 endOffsetInts = endOffsets.indexOffsetInts + endOffsets.indexCountInts;
 
-    quint32 indicesCount = endOffsetInts - beginOffsetInts;
+    const quint32 indicesCount = endOffsetInts - beginOffsetInts;
 
     bindBuffers_x(batch);
 

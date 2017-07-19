@@ -11,6 +11,7 @@
 
 #include "rendersystem/endpoints/framebufferstoreendpoint.h"
 #include "rendersystem/endpoints/rendermodelstoreendpoint.h"
+#include "rendersystem/endpoints/framebufferoperationsendpoint.h"
 
 namespace
 {
@@ -43,6 +44,16 @@ namespace UserInterface
     }
 
     MapViewport::~MapViewport()
+    {
+        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
+        destroyFrameBuffer();
+
+        makeCurrent();
+        m_FrameBufferCopier.destroy();
+        doneCurrent();
+    }
+
+    void MapViewport::destroyFrameBuffer()
     {
         using namespace RenderSystem;
 
@@ -149,52 +160,54 @@ namespace UserInterface
     {
         using namespace RenderSystem;
 
-        Q_ASSERT_X(m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
-                   Q_FUNC_INFO,
-                   "Expected frame buffer to be uninitialised!");
+        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
 
-        FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
-        m_nRenderFrameBufferId = frameBufferStore->createFrameBuffer(size());
+        GL_CURRENT_F;
+        GLTRY(f->glEnable(GL_DEPTH_TEST));
+        GLTRY(f->glClearColor(0,0,1,1));
 
-        Q_ASSERT_X(m_nRenderFrameBufferId != RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
-                   Q_FUNC_INFO,
-                   "Expected valid frame buffer ID!");
+        m_FrameBufferCopier.create();
+
+        {
+            Q_ASSERT_X(m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
+                       Q_FUNC_INFO,
+                       "Expected frame buffer to be uninitialised!");
+
+            FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
+            m_nRenderFrameBufferId = frameBufferStore->createFrameBuffer(size());
+
+            Q_ASSERT_X(m_nRenderFrameBufferId != RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
+                       Q_FUNC_INFO,
+                       "Expected valid frame buffer ID!");
+        }
 
         m_bOpenGLInitialised = true;
     }
 
     void MapViewport::paintGL()
     {
-        using namespace RenderSystem;
+        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
 
-        if ( !m_bOpenGLInitialised || m_nRenderFrameBufferId == FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
+        if ( !m_bOpenGLInitialised || m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
         {
             return;
         }
 
-        MapFileDataModelPointer mapModel = m_pDataModel.toStrongRef();
-        if ( !mapModel )
+        if ( !drawRenderModel() )
         {
             return;
         }
 
-        RenderModelDefs::RenderModelId renderModelId = mapModel->renderModelId();
-        if ( renderModelId == RenderModelDefs::INVALID_RENDER_MODEL_ID )
+        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
+        GL_CURRENT_F;
+
+        f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        GLuint textureId = 0;
         {
-            return;
+            RenderSystem::FrameBufferStoreEndpoint::frameBufferStore()->frameBufferTextureId(m_nRenderFrameBufferId);
         }
 
-        mapModel->scene()->updateRenderGeometry(renderModelId);
-
-        FrameDrawParams drawParams;
-        drawParams.setBackgroundColor(QColor::fromRgb(0xFF000000));
-        drawParams.setDirectionalLight(QVector3D(1,1,1));
-        drawParams.setWorldToCameraMatrix(mapModel->scene()->defaultCamera()->rootToLocalMatrix());
-        drawParams.setProjectionMatrix(mapModel->scene()->defaultCamera()->lens().projectionMatrix());
-
-        RenderModelStoreEndpoint::RenderModelStoreAccessor renderModelStore = RenderModelStoreEndpoint::renderModelStore();
-
-        renderModelStore->draw(renderModelId, m_nRenderFrameBufferId, drawParams);
+        m_FrameBufferCopier.draw(textureId);
     }
 
     void MapViewport::resizeGL(int w, int h)
@@ -222,6 +235,37 @@ namespace UserInterface
         Model::CameraLens lens = camera->lens();
         lens.setAspectRatio(static_cast<float>(w)/static_cast<float>(h));
         camera->setLens(lens);
+    }
+
+    bool MapViewport::drawRenderModel()
+    {
+        using namespace RenderSystem;
+
+        MapFileDataModelPointer mapModel = m_pDataModel.toStrongRef();
+        if ( !mapModel )
+        {
+            return false;
+        }
+
+        RenderModelDefs::RenderModelId renderModelId = mapModel->renderModelId();
+        if ( renderModelId == RenderModelDefs::INVALID_RENDER_MODEL_ID )
+        {
+            return false;
+        }
+
+        mapModel->scene()->updateRenderGeometry(renderModelId);
+
+        FrameDrawParams drawParams;
+        drawParams.setBackgroundColor(QColor::fromRgb(0xFF000000));
+        drawParams.setDirectionalLight(QVector3D(1,1,1));
+        drawParams.setWorldToCameraMatrix(mapModel->scene()->defaultCamera()->rootToLocalMatrix());
+        drawParams.setProjectionMatrix(mapModel->scene()->defaultCamera()->lens().projectionMatrix());
+
+        RenderModelStoreEndpoint::RenderModelStoreAccessor renderModelStore = RenderModelStoreEndpoint::renderModelStore();
+
+        renderModelStore->draw(renderModelId, m_nRenderFrameBufferId, drawParams);
+
+        return true;
     }
 
     void MapViewport::focusInEvent(QFocusEvent *event)
@@ -263,5 +307,19 @@ namespace UserInterface
     void MapViewport::toggleMouseLookEnabled()
     {
         setMouseLookEnabled(!mouseLookEnabled());
+        tempSaveFrameBufferOnMouseToggle();
+    }
+
+    void MapViewport::tempSaveFrameBufferOnMouseToggle()
+    {
+        if ( m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
+        {
+            return;
+        }
+
+        RenderSystem::FrameBufferOperationsEndpoint::FrameBufferOperationsAccessor fbOps =
+                RenderSystem::FrameBufferOperationsEndpoint::frameBufferOperations();
+
+        fbOps->saveToFile(m_nRenderFrameBufferId, "/Users/vesper/Desktop/temp.png");
     }
 }

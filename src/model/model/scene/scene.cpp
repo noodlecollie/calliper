@@ -103,6 +103,7 @@ namespace Model
         m_ObjectTable.remove(object->objectId());
     }
 
+    // TODO: This should be event-driven! Iterating over everything each frame is slow.
     void Scene::updateRenderGeometry(RenderSystem::RenderModelDefs::RenderModelId renderModelId)
     {
         using namespace RenderSystem;

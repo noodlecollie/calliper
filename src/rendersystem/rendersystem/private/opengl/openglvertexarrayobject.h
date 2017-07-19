@@ -55,6 +55,12 @@ class VertexFormat;
  * specifying the vertex attributes.
  */
 
+/*
+ * VAOS. ARE. NOT. SHAREABLE.
+ * If any functions are called on a VAO while the render system context is not current,
+ * an assertion error will result. VAOs can ONLY be used from within the render system context!
+ */
+
 class OpenGLVertexArrayObject
 {
 public:
@@ -74,6 +80,8 @@ public:
     void disableAttributeArrays();
 
 private:
+    void checkContext() const;
+
     GLuint  m_iVAOID;
 };
 

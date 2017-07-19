@@ -21,7 +21,8 @@ SOURCES += \
     calliperutil/qobject/qobjectutil.cpp \
     calliperutil/opengl/openglerrors.cpp \
     calliperutil/opengl/openglhelpers.cpp \
-    calliperutil/paths/paths.cpp
+    calliperutil/paths/paths.cpp \
+    calliperutil/opengl/openglcontextchecker.cpp
 
 HEADERS +=\
         calliperutil_global.h \
@@ -36,7 +37,8 @@ HEADERS +=\
     calliperutil/opengl/openglhelpers.h \
     calliperutil/paths/paths.h \
     calliperutil/array/arrayutil.h \
-    calliperutil/global/globalinstancehelper.h
+    calliperutil/global/globalinstancehelper.h \
+    calliperutil/opengl/openglcontextchecker.h
 
 unix {
     target.path = /usr/lib

@@ -9,6 +9,8 @@ namespace RenderSystem
     {
         RENDERSYSTEMSHARED_EXPORT bool initialise();
         RENDERSYSTEMSHARED_EXPORT void shutdown();
+
+        RENDERSYSTEMSHARED_EXPORT bool renderSystemContextIsCurrent();
     }
 }
 
