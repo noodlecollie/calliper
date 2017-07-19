@@ -156,37 +156,46 @@ namespace UserInterface
         update();
     }
 
-    void MapViewport::initializeGL()
+    void MapViewport::checkRenderSystemContextIsNotCurrent()
+    {
+        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
+    }
+
+    void MapViewport::updateFrameBufferId()
     {
         using namespace RenderSystem;
 
-        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
+        Q_ASSERT_X(m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
+                   Q_FUNC_INFO,
+                   "Expected frame buffer to be uninitialised!");
+
+        FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
+        m_nRenderFrameBufferId = frameBufferStore->createFrameBuffer(size());
+
+        Q_ASSERT_X(m_nRenderFrameBufferId != RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
+                   Q_FUNC_INFO,
+                   "Expected valid frame buffer ID!");
+    }
+
+    void MapViewport::initializeGL()
+    {
+        checkRenderSystemContextIsNotCurrent();
+        snapCreationContext();
 
         GL_CURRENT_F;
         GLTRY(f->glEnable(GL_DEPTH_TEST));
         GLTRY(f->glClearColor(0,0,1,1));
 
         m_FrameBufferCopier.create();
+        updateFrameBufferId();
 
-        {
-            Q_ASSERT_X(m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
-                       Q_FUNC_INFO,
-                       "Expected frame buffer to be uninitialised!");
-
-            FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
-            m_nRenderFrameBufferId = frameBufferStore->createFrameBuffer(size());
-
-            Q_ASSERT_X(m_nRenderFrameBufferId != RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID,
-                       Q_FUNC_INFO,
-                       "Expected valid frame buffer ID!");
-        }
-
+        verifyCurrentContext();
         m_bOpenGLInitialised = true;
     }
 
     void MapViewport::paintGL()
     {
-        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
+        verifyCurrentContext();
 
         if ( !m_bOpenGLInitialised || m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
         {
@@ -198,31 +207,37 @@ namespace UserInterface
             return;
         }
 
-        Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
+        verifyCurrentContext();
+
         GL_CURRENT_F;
 
         f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        GLuint textureId = 0;
-        {
-            RenderSystem::FrameBufferStoreEndpoint::frameBufferStore()->frameBufferTextureId(m_nRenderFrameBufferId);
-        }
+
+        const GLuint textureId = RenderSystem::FrameBufferStoreEndpoint::constFrameBufferStore()
+                ->frameBufferTextureId(m_nRenderFrameBufferId);
 
         m_FrameBufferCopier.draw(textureId);
     }
 
-    void MapViewport::resizeGL(int w, int h)
+    void MapViewport::resizeFrameBuffer(const QSize &size)
     {
         using namespace RenderSystem;
 
-        if ( m_nRenderFrameBufferId == FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
+        FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
+        frameBufferStore->setFrameBufferSize(m_nRenderFrameBufferId, size);
+    }
+
+    void MapViewport::resizeGL(int w, int h)
+    {
+        verifyCurrentContext();
+
+        if ( m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
         {
             return;
         }
 
-        {
-            FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
-            frameBufferStore->setFrameBufferSize(m_nRenderFrameBufferId, QSize(w, h));
-        }
+        resizeFrameBuffer(QSize(w, h));
+        verifyCurrentContext();
 
         MapFileDataModelPointer mapModel = m_pDataModel.toStrongRef();
         if ( !mapModel )

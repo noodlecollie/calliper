@@ -7,12 +7,13 @@
 #include <QSharedPointer>
 
 #include "user-interface/opengl/framebuffercopier.h"
+#include "user-interface/modelviews/imodelview.h"
 
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
 
 #include "model/filedatamodels/map/mapfiledatamodel.h"
 
-#include "user-interface/modelviews/imodelview.h"
+#include "calliperutil/opengl/openglcontextchecker.h"
 
 namespace Model
 {
@@ -23,7 +24,9 @@ namespace Model
 
 namespace UserInterface
 {
-    class MapViewport : public QOpenGLWidget, public IModelView
+    class MapViewport : public QOpenGLWidget,
+                        public IModelView,
+                        public CalliperUtil::OpenGLContextChecker
     {
         Q_OBJECT
     public:
@@ -71,6 +74,9 @@ namespace UserInterface
         bool drawRenderModel();
         void tempSaveFrameBufferOnMouseToggle();
         void destroyFrameBuffer();
+        void checkRenderSystemContextIsNotCurrent();
+        void updateFrameBufferId();
+        void resizeFrameBuffer(const QSize& size);
 
         MapFileDataModelWeakRef m_pDataModel;
 

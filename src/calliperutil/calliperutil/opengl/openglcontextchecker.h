@@ -5,18 +5,21 @@
 
 #include <QOpenGLContext>
 
-class CALLIPERUTILSHARED_EXPORT OpenGLContextChecker
+namespace CalliperUtil
 {
-public:
-    OpenGLContextChecker();
+    class CALLIPERUTILSHARED_EXPORT OpenGLContextChecker
+    {
+    public:
+        OpenGLContextChecker();
 
-    void snapCreationContext();
-    void clearCreationContext();
+        void snapCreationContext();
+        void clearCreationContext();
 
-    bool verifyCurrentContext() const;
+        bool verifyCurrentContext() const;
 
-private:
-    quint64 m_nContextAddress;
-};
+    private:
+        quint64 m_nContextAddress;
+    };
+}
 
 #endif // OPENGLCONTEXTCHECKER_H

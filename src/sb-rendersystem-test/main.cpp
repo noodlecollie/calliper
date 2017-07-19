@@ -4,7 +4,6 @@
 #include <QSurfaceFormat>
 
 #include "rendersystem/global/rendersystem.h"
-#include "window.h"
 
 int main(int argc, char *argv[])
 {
@@ -30,19 +29,13 @@ int main(int argc, char *argv[])
 
     RenderSystem::Global::initialise();
 
-//    MainWindow* w = new MainWindow;
-//    w->show();
-
-    Window* win = new Window();
-    win->show();
+    MainWindow* w = new MainWindow;
+    w->show();
 
     int ret = a.exec();
 
-//    delete w;
-//    w = Q_NULLPTR;
-
-    delete win;
-    win = Q_NULLPTR;
+    delete w;
+    w = Q_NULLPTR;
 
     RenderSystem::Global::shutdown();
 

@@ -63,7 +63,7 @@ class VertexFormat;
  * an assertion error will result. VAOs can ONLY be used from within the render system context!
  */
 
-class OpenGLVertexArrayObject : private OpenGLContextChecker
+class OpenGLVertexArrayObject : private CalliperUtil::OpenGLContextChecker
 {
 public:
     OpenGLVertexArrayObject();
