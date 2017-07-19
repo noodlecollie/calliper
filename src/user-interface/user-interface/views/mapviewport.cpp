@@ -161,7 +161,7 @@ namespace UserInterface
         Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
     }
 
-    void MapViewport::updateFrameBufferId()
+    void MapViewport::createFrameBuffer()
     {
         using namespace RenderSystem;
 
@@ -187,7 +187,7 @@ namespace UserInterface
         GLTRY(f->glClearColor(0,0,1,1));
 
         m_FrameBufferCopier.create();
-        updateFrameBufferId();
+        createFrameBuffer();
 
         verifyCurrentContext();
         m_bOpenGLInitialised = true;

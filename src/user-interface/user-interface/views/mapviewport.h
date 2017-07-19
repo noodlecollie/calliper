@@ -75,7 +75,7 @@ namespace UserInterface
         void tempSaveFrameBufferOnMouseToggle();
         void destroyFrameBuffer();
         void checkRenderSystemContextIsNotCurrent();
-        void updateFrameBufferId();
+        void createFrameBuffer();
         void resizeFrameBuffer(const QSize& size);
 
         MapFileDataModelWeakRef m_pDataModel;

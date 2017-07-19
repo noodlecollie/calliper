@@ -1,8 +1,5 @@
 #include "framebufferstore.h"
 
-// REMOVE ME
-#include <QImage>
-
 FrameBufferStore::FrameBufferStore()
     : ItemPointerBasedObjectStore<QOpenGLFramebufferObject,
                                   RenderSystem::FrameBufferDefs::FrameBufferId>()
@@ -22,7 +19,7 @@ FrameBufferStore::FrameBufferId FrameBufferStore::createFrameBuffer(const QSize&
         return INVALID_ID;
     }
 
-    return create(size);
+    return create(size, GL_TEXTURE_2D);
 }
 
 void FrameBufferStore::removeFrameBuffer(const FrameBufferId id)

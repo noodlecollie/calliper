@@ -38,7 +38,7 @@ namespace
             "in vec2 fPosition;\n"
             "layout(location = 0) out vec4 color;\n"
             "uniform sampler2D tex;\n"
-            "void main() { color = /*texture(tex, fPosition)*/ vec4(1,1,0,1); }\n"
+            "void main() { color = texture(tex, fPosition); }\n"
             ;
 }
 
