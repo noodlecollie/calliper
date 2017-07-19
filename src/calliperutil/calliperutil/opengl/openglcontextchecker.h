@@ -1,9 +1,11 @@
 #ifndef OPENGLCONTEXTCHECKER_H
 #define OPENGLCONTEXTCHECKER_H
 
+#include "calliperutil_global.h"
+
 #include <QOpenGLContext>
 
-class OpenGLContextChecker
+class CALLIPERUTILSHARED_EXPORT OpenGLContextChecker
 {
 public:
     OpenGLContextChecker();

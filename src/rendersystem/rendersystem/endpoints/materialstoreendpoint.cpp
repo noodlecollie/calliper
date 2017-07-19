@@ -5,9 +5,14 @@ namespace RenderSystem
 {
     namespace MaterialStoreEndpoint
     {
-        MaterialStoreAccessor materialStore()
+        IMaterialStore* materialStore()
         {
-            return MaterialStoreAccessor(*MaterialStore::globalInstance());
+            return MaterialStore::globalInstance();
+        }
+
+        const IMaterialStore* constMaterialStore()
+        {
+            return materialStore();
         }
     }
 }

@@ -9,5 +9,10 @@ namespace RenderSystem
         {
             return FrameBufferStoreAccessor(*FrameBufferStore::globalInstance());
         }
+
+        const IFrameBufferStore* constFrameBufferStore()
+        {
+            return FrameBufferStore::globalInstance();
+        }
     }
 }

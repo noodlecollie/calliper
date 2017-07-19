@@ -12,6 +12,7 @@ namespace RenderSystem
         typedef CurrentContextGuard<ITextureStore> TextureStoreAccessor;
 
         RENDERSYSTEMSHARED_EXPORT TextureStoreAccessor textureStore();
+        RENDERSYSTEMSHARED_EXPORT const ITextureStore* constTextureStore();
     }
 }
 

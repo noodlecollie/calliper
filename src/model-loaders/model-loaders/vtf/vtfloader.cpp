@@ -149,7 +149,7 @@ namespace ModelLoaders
     {
         using namespace RenderSystem;
 
-        MaterialStoreEndpoint::MaterialStoreAccessor materialStore = MaterialStoreEndpoint::materialStore();
+        IMaterialStore* materialStore = MaterialStoreEndpoint::materialStore();
 
         m_ReferencedVtfs.clear();
 

@@ -12,6 +12,7 @@ namespace RenderSystem
         typedef CurrentContextGuard<IRenderModelStore> RenderModelStoreAccessor;
 
         RENDERSYSTEMSHARED_EXPORT RenderModelStoreAccessor renderModelStore();
+        RENDERSYSTEMSHARED_EXPORT const IRenderModelStore* constRenderModelStore();
     }
 }
 

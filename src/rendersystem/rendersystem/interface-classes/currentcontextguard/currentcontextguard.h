@@ -9,6 +9,14 @@
 
 #include "rendersystem/global/rendersystem.h"
 
+/*
+ * When using this class, the interface provided as the type T
+ * should have functions that require the render system context
+ * be marked as non-const, and functions that don't require this
+ * be marked as const. The const functions can then be used
+ * via a raw const T*, and the non-const functions should require
+ * a context guard in order to be used.
+ */
 namespace RenderSystem
 {
     template<typename T>

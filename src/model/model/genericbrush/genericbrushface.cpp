@@ -105,8 +105,8 @@ namespace Model
             section->addNormal(nrm);
         }
 
-        MaterialStoreEndpoint::MaterialStoreAccessor materialStore = MaterialStoreEndpoint::materialStore();
-        TextureStoreEndpoint::TextureStoreAccessor textureStore = TextureStoreEndpoint::textureStore();
+        const IMaterialStore* materialStore = MaterialStoreEndpoint::constMaterialStore();
+        const ITextureStore* textureStore = TextureStoreEndpoint::constTextureStore();
 
         QSharedPointer<RenderMaterial> material = materialStore->material(texturePlane()->materialId()).toStrongRef();
         const QString texturePath = material->textureMapping(TextureDefs::MainTexture);

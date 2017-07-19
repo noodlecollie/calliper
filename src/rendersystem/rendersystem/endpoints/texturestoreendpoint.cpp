@@ -9,5 +9,10 @@ namespace RenderSystem
         {
             return TextureStoreAccessor(*OpenGLTextureStore::globalInstance());
         }
+
+        const ITextureStore* constTextureStore()
+        {
+            return OpenGLTextureStore::globalInstance();
+        }
     }
 }

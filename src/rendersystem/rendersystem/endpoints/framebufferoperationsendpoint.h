@@ -12,6 +12,7 @@ namespace RenderSystem
         typedef CurrentContextGuard<IFrameBufferOperations> FrameBufferOperationsAccessor;
 
         RENDERSYSTEMSHARED_EXPORT FrameBufferOperationsAccessor frameBufferOperations();
+        RENDERSYSTEMSHARED_EXPORT const IFrameBufferOperations* constFrameBufferOperations();
     }
 }
 

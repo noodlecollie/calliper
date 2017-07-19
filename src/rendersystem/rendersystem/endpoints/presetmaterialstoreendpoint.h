@@ -3,15 +3,14 @@
 
 #include "rendersystem_global.h"
 #include "rendersystem/interface-classes/currentcontextguard/currentcontextguard.h"
-#include "rendersystem/interfaces/ipresetmaterials.h"
+#include "rendersystem/interfaces/ipresetmaterialstore.h"
 
 namespace RenderSystem
 {
     namespace PresetMaterialStoreEndpoint
     {
-        typedef CurrentContextGuard<IPresetMaterials> PresetMaterialStoreAccessor;
-
-        RENDERSYSTEMSHARED_EXPORT PresetMaterialStoreAccessor presetMaterialStore();
+        RENDERSYSTEMSHARED_EXPORT IPresetMaterialStore* presetMaterialStore();
+        RENDERSYSTEMSHARED_EXPORT const IPresetMaterialStore* constPresetMaterialStore();
     }
 }
 

@@ -1,7 +1,7 @@
 #ifndef PRESETMATERIALSTORE_H
 #define PRESETMATERIALSTORE_H
 
-#include "rendersystem/interfaces/ipresetmaterials.h"
+#include "rendersystem/interfaces/ipresetmaterialstore.h"
 
 #include "containers/static/staticobjectstorearray.h"
 
@@ -9,7 +9,7 @@
 
 class PresetMaterialStore : public Containers::StaticObjectStoreArray<RenderSystem::MaterialDefs::MaterialId,
                                                                         RenderSystem::MaterialDefs::TOTAL_PRESET_MATERIALS>,
-                              public RenderSystem::IPresetMaterials,
+                              public RenderSystem::IPresetMaterialStore,
                               public CalliperUtil::GlobalInstanceHelper<PresetMaterialStore>
 {
 public:

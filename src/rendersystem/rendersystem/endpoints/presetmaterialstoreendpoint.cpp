@@ -5,9 +5,14 @@ namespace RenderSystem
 {
     namespace PresetMaterialStoreEndpoint
     {
-        PresetMaterialStoreAccessor presetMaterialStore()
+        IPresetMaterialStore* presetMaterialStore()
         {
-            return PresetMaterialStoreAccessor(*PresetMaterialStore::globalInstance());
+            return PresetMaterialStore::globalInstance();
+        }
+
+        const IPresetMaterialStore* constPresetMaterialStore()
+        {
+            return presetMaterialStore();
         }
     }
 }

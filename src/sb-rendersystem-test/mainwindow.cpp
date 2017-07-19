@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     FrameBufferStoreEndpoint::FrameBufferStoreAccessor frameBufferStore = FrameBufferStoreEndpoint::frameBufferStore();
     RenderModelStoreEndpoint::RenderModelStoreAccessor renderModelStore = RenderModelStoreEndpoint::renderModelStore();
-    MaterialStoreEndpoint::MaterialStoreAccessor materialStore = MaterialStoreEndpoint::materialStore();
+    const IMaterialStore* materialStore = MaterialStoreEndpoint::constMaterialStore();
 
     m_nFrameBufferId = frameBufferStore->createFrameBuffer(QSize(128, 128));
     m_nRenderModelId = renderModelStore->createRenderModel();

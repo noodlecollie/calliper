@@ -147,13 +147,13 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/endpoints/framebufferoperationsendpoint.h \
     rendersystem/private/global/globalinternal.h \
     rendersystem/private/opengl/uniforms/std140uniformarray.h \
-    rendersystem/interfaces/ipresetmaterials.h \
     rendersystem/private/static-stores/presetmaterialstore/initialisers/ipresetmaterialinitialiser.h \
     rendersystem/private/static-stores/presetmaterialstore/initialisers/unlitpresetmaterialinitialiser.h \
     rendersystem/private/shaders/derived/litgenericshader.h \
     rendersystem/private/shaders/derived/unlitgenericshader.h \
     rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.h \
-    rendersystem/endpoints/presetmaterialstoreendpoint.h
+    rendersystem/endpoints/presetmaterialstoreendpoint.h \
+    rendersystem/interfaces/ipresetmaterialstore.h
 
 unix {
     target.path = /usr/lib

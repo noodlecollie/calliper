@@ -3,6 +3,8 @@
 
 #include <QOpenGLFunctions>
 
+#include "calliperutil/opengl/openglcontextchecker.h"
+
 class VertexFormat;
 
 /*
@@ -61,7 +63,7 @@ class VertexFormat;
  * an assertion error will result. VAOs can ONLY be used from within the render system context!
  */
 
-class OpenGLVertexArrayObject
+class OpenGLVertexArrayObject : private OpenGLContextChecker
 {
 public:
     OpenGLVertexArrayObject();

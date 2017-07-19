@@ -9,5 +9,10 @@ namespace RenderSystem
         {
             return RenderModelStoreAccessor(*RenderModelStore::globalInstance());
         }
+
+        const IRenderModelStore* constRenderModelStore()
+        {
+            return RenderModelStore::globalInstance();
+        }
     }
 }

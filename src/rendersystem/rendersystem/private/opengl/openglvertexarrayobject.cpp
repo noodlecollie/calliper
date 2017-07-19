@@ -48,6 +48,7 @@ OpenGLVertexArrayObject::~OpenGLVertexArrayObject()
 bool OpenGLVertexArrayObject::create()
 {
     checkContext();
+    snapCreationContext();
 
     if ( m_iVAOID != 0 )
     {
@@ -62,7 +63,7 @@ bool OpenGLVertexArrayObject::create()
 
 void OpenGLVertexArrayObject::destroy()
 {
-    checkContext();
+    verifyCurrentContext();
 
     if ( m_iVAOID == 0 )
     {
@@ -76,7 +77,7 @@ void OpenGLVertexArrayObject::destroy()
 
 bool OpenGLVertexArrayObject::bind()
 {
-    checkContext();
+    verifyCurrentContext();
 
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
@@ -88,7 +89,7 @@ bool OpenGLVertexArrayObject::bind()
 
 void OpenGLVertexArrayObject::release()
 {
-    checkContext();
+    verifyCurrentContext();
 
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
@@ -103,7 +104,7 @@ bool OpenGLVertexArrayObject::isCreated() const
 
 void OpenGLVertexArrayObject::enableAttributeArrays(const VertexFormat &format)
 {
-    checkContext();
+    verifyCurrentContext();
 
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
@@ -122,7 +123,7 @@ void OpenGLVertexArrayObject::enableAttributeArrays(const VertexFormat &format)
 
 void OpenGLVertexArrayObject::disableAttributeArrays(const VertexFormat &format)
 {
-    checkContext();
+    verifyCurrentContext();
 
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
@@ -141,7 +142,7 @@ void OpenGLVertexArrayObject::disableAttributeArrays(const VertexFormat &format)
 
 void OpenGLVertexArrayObject::disableAttributeArrays()
 {
-    checkContext();
+    verifyCurrentContext();
 
     Q_ASSERT_X(isCreated(), Q_FUNC_INFO, "VAO must be valid!");
 
