@@ -72,7 +72,6 @@ namespace UserInterface
         void initMouseEventMap();
         void connectCameraControl(Qt::Key key, CameraControlSlot slot);
         bool drawRenderModel();
-        void tempSaveFrameBufferOnMouseToggle();
         void destroyFrameBuffer();
         void checkRenderSystemContextIsNotCurrent();
         void createFrameBuffer();

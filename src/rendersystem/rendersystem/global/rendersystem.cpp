@@ -82,6 +82,10 @@ namespace RenderSystem
             g_pMainContext = new QOpenGLContext();
             g_pMainContext->setFormat(QSurfaceFormat::defaultFormat());
 
+            QOpenGLContext* globalShareContext = QOpenGLContext::globalShareContext();
+            Q_ASSERT(globalShareContext);
+            g_pMainContext->setShareContext(globalShareContext);
+
             if ( !g_pMainContext->create() )
             {
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Unable to create main context!");

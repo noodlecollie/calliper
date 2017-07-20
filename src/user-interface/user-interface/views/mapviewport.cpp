@@ -322,19 +322,5 @@ namespace UserInterface
     void MapViewport::toggleMouseLookEnabled()
     {
         setMouseLookEnabled(!mouseLookEnabled());
-        tempSaveFrameBufferOnMouseToggle();
-    }
-
-    void MapViewport::tempSaveFrameBufferOnMouseToggle()
-    {
-        if ( m_nRenderFrameBufferId == RenderSystem::FrameBufferDefs::INVALID_FRAME_BUFFER_ID )
-        {
-            return;
-        }
-
-        RenderSystem::FrameBufferOperationsEndpoint::FrameBufferOperationsAccessor fbOps =
-                RenderSystem::FrameBufferOperationsEndpoint::frameBufferOperations();
-
-        fbOps->saveToFile(m_nRenderFrameBufferId, "/Users/vesper/Desktop/temp.png");
     }
 }
