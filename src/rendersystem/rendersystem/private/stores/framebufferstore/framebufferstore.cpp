@@ -1,5 +1,7 @@
 #include "framebufferstore.h"
 
+#include <QOpenGLFramebufferObject>
+
 FrameBufferStore::FrameBufferStore()
     : ItemPointerBasedObjectStore<QOpenGLFramebufferObject,
                                   RenderSystem::FrameBufferDefs::FrameBufferId>()
@@ -19,7 +21,11 @@ FrameBufferStore::FrameBufferId FrameBufferStore::createFrameBuffer(const QSize&
         return INVALID_ID;
     }
 
-    return create(size, GL_TEXTURE_2D);
+    QOpenGLFramebufferObjectFormat format;
+    format.setAttachment(QOpenGLFramebufferObject::Depth);
+    format.setTextureTarget(GL_TEXTURE_2D);
+
+    return create(size, format);
 }
 
 void FrameBufferStore::removeFrameBuffer(const FrameBufferId id)

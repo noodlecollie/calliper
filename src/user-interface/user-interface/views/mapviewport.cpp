@@ -184,7 +184,7 @@ namespace UserInterface
 
         GL_CURRENT_F;
         GLTRY(f->glEnable(GL_DEPTH_TEST));
-        GLTRY(f->glClearColor(0,0,1,1));
+        GLTRY(f->glClearColor(0,0,0,1));
 
         m_FrameBufferCopier.create();
         createFrameBuffer();

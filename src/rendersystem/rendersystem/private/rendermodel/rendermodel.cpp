@@ -3,8 +3,10 @@
 
 #include "rendersystem/interface-classes/definitions/materialdefs.h"
 #include "rendersystem/private/stores/framebufferstore/framebufferstore.h"
+#include "rendersystem/global/rendersystem.h"
 
 #include "calliperutil/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglerrors.h"
 
 RenderModel::RenderModel()
     : m_Context(),
@@ -12,17 +14,24 @@ RenderModel::RenderModel()
       m_ObjectIdToRenderGroup(),
       m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
 {
+    Q_ASSERT(RenderSystem::Global::renderSystemContextIsCurrent());
+    snapCreationContext();
+
     m_GlobalShaderUniforms.create();
 }
 
 RenderModel::~RenderModel()
 {
+    verifyCurrentContext();
+
     clear();
     m_GlobalShaderUniforms.destroy();
 }
 
 void RenderModel::setGeometry(const RenderSystem::GeometryBuilder &geometry)
 {
+    verifyCurrentContext();
+
     removeGeometry(geometry.objectId());
 
     for ( int i = 0; i < geometry.sectionCount(); ++i )
@@ -33,6 +42,8 @@ void RenderModel::setGeometry(const RenderSystem::GeometryBuilder &geometry)
 
 void RenderModel::setGeometry(const QSharedPointer<RenderSystem::GeometrySection> &section)
 {
+    verifyCurrentContext();
+
     if ( section->isEmpty() )
     {
         return;
@@ -52,6 +63,8 @@ void RenderModel::setGeometry(const QSharedPointer<RenderSystem::GeometrySection
 
 void RenderModel::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectId)
 {
+    verifyCurrentContext();
+
     QList<RenderGroupPointer> renderGroups = m_ObjectIdToRenderGroup.values(objectId);
 
     for ( const RenderGroupPointer& group : renderGroups )
@@ -64,6 +77,8 @@ void RenderModel::removeGeometry(RenderSystem::RenderModelDefs::ObjectId objectI
 
 void RenderModel::clear()
 {
+    verifyCurrentContext();
+
     m_RenderGroups.clear();
     m_ObjectIdToRenderGroup.clear();
 }
@@ -71,6 +86,8 @@ void RenderModel::clear()
 void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
                        const RenderSystem::FrameDrawParams& drawParams)
 {
+    verifyCurrentContext();
+
     QSharedPointer<QOpenGLFramebufferObject> frameBufferObject = frameBuffer(frameBufferId);
     if ( !frameBufferObject || !frameBufferObject->bind() )
     {
@@ -109,12 +126,12 @@ void RenderModel::drawPreFrame(QOpenGLFramebufferObject &frameBuffer, const Rend
     GL_CURRENT_F;
 
     // This is needed so that drawing into the frame buffer happens in the right place!
-    f->glViewport(0, 0, frameBuffer.width(), frameBuffer.height());
+    GLTRY(f->glViewport(0, 0, frameBuffer.width(), frameBuffer.height()));
 
     const QColor clearColor = drawParams.backgroundColor();
-    f->glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
+    GLTRY(f->glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF()));
 
-    f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    GLTRY(f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 QSharedPointer<QOpenGLFramebufferObject> RenderModel::frameBuffer(RenderSystem::FrameBufferDefs::FrameBufferId id) const

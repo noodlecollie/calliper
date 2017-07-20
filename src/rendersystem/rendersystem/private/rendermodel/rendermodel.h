@@ -18,7 +18,9 @@
 
 #include "rendersystem/private/shaders/common/globalshaderuniforms.h"
 
-class RenderModel
+#include "calliperutil/opengl/openglcontextchecker.h"
+
+class RenderModel : private CalliperUtil::OpenGLContextChecker
 {
 public:
     RenderModel();

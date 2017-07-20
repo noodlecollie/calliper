@@ -10,16 +10,28 @@ namespace
 {
     const float vertexData[] =
     {
-        -1,-1,
-        1,-1,
-        1,1,
-        -1,1,
+        // Actual rect
+        -1, -1,
+        1, -1,
+        1, 1,
+        -1, 1,
+
+        // Debug rect in the corner
+        -1, 0.9f,
+        -0.9f, 0.9f,
+        -0.9f, 1,
+        -1, 1,
     };
 
     const quint32 indexData[] =
     {
+        // Actual rect
         0,1,2,
         0,2,3,
+
+        // Debug rect in the corner
+        4,5,6,
+        4,6,7,
     };
 
     const char* localVertexShaderSource =
@@ -38,7 +50,18 @@ namespace
             "in vec2 fPosition;\n"
             "layout(location = 0) out vec4 color;\n"
             "uniform sampler2D tex;\n"
-            "void main() { color = texture(tex, fPosition); }\n"
+            "uniform vec4 debugColor;\n"
+            "void main()\n"
+            "{\n"
+            "   if ( debugColor.w == 0.0 )\n"
+            "   {\n"
+            "       color = texture(tex, fPosition);\n"
+            "   }\n"
+            "   else\n"
+            "   {\n"
+            "       color = debugColor;\n"
+            "   }\n"
+            "}\n"
             ;
 }
 
@@ -48,7 +71,8 @@ FrameBufferCopier::FrameBufferCopier()
       m_VAOID(0),
       m_pVertexBuffer(Q_NULLPTR),
       m_pIndexBuffer(Q_NULLPTR),
-      m_nCreationContext(0)
+      m_nCreationContext(0),
+      m_nCounter(0)
 {
 
 }
@@ -94,7 +118,7 @@ bool FrameBufferCopier::create()
         return false;
     }
 
-    m_pVertexBuffer->allocate(vertexData, 8 * sizeof(float));
+    m_pVertexBuffer->allocate(vertexData, 16 * sizeof(float));
 
     m_pIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
     if ( !m_pIndexBuffer->create() || !m_pIndexBuffer->bind() )
@@ -104,7 +128,7 @@ bool FrameBufferCopier::create()
         return false;
     }
 
-    m_pIndexBuffer->allocate(indexData, 6 * sizeof(quint32));
+    m_pIndexBuffer->allocate(indexData, 12 * sizeof(quint32));
 
     m_pShaderProgram->enableAttributeArray(0);
     m_pShaderProgram->setAttributeBuffer("vPosition", GL_FLOAT, 0, 2);
@@ -192,9 +216,24 @@ void FrameBufferCopier::draw(GLuint textureId)
     }
 
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, textureId));
+
+    m_pShaderProgram->setUniformValue("debugColor", QVector4D(0,0,0,0));
     GLTRY(f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
+    GLTRY(f->glClear(GL_DEPTH_BUFFER_BIT));
+
+    const QVector4D debugColor((m_nCounter % 100) / 100.0f,
+                          (m_nCounter % 1000) / 1000.0f,
+                          (m_nCounter % 10000) / 10000.0f,
+                          1);
+
+    m_pShaderProgram->setUniformValue("debugColor", debugColor);
+
+    GLTRY(f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, reinterpret_cast<const GLvoid*>(6 * sizeof(quint32))));
+
     releaseAll();
+
+    ++m_nCounter;
 }
 
 void FrameBufferCopier::releaseAll()

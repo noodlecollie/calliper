@@ -28,6 +28,7 @@ private:
     QOpenGLBuffer* m_pIndexBuffer;
 
     quint64 m_nCreationContext;
+    quint32 m_nCounter;
 };
 
 #endif // FRAMEBUFFERCOPIER_H
