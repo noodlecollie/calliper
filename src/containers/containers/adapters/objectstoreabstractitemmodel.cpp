@@ -59,8 +59,29 @@ namespace Containers
         return m_pAdapterInterface->data(index, role);
     }
 
+    QVariant ObjectStoreAbstractItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+    {
+        if ( !m_pAdapterInterface )
+        {
+            return QVariant();
+        }
+
+        return m_pAdapterInterface->headerData(section, orientation, role);
+    }
+
     QModelIndex ObjectStoreAbstractItemModel::createIndexHelper(int row, int column, quintptr id) const
     {
         return createIndex(row, column, id);
+    }
+
+    QVariant ObjectStoreAbstractItemModel::defaultHeaderData(int section, Qt::Orientation orientation, int role) const
+    {
+        return QAbstractItemModel::headerData(section, orientation, role);
+    }
+
+    void ObjectStoreAbstractItemModel::notifyDataChanged()
+    {
+        beginResetModel();
+        endResetModel();
     }
 }

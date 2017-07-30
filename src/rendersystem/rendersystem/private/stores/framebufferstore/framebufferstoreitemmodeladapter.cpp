@@ -26,14 +26,20 @@ QVariant FrameBufferStoreItemModelAdapter::itemData(const ObjectId &id, int role
         return QVariant();
     }
 
-    const QString text = QString("FBO %0 [%1x%2] (%3, %4)")
-            .arg(id)
+    const QString text = QString("FBO %0 [%1x%2]")
+            .arg(fbo->handle())
             .arg(fbo->width())
-            .arg(fbo->height())
-            .arg(fbo->isValid() ? QApplication::translate("FrameBufferStoreItemModelAdapter", "Valid")
-                                : QApplication::translate("FrameBufferStoreItemModelAdapter", "Invalid"))
-            .arg(fbo->isBound() ? QApplication::translate("FrameBufferStoreItemModelAdapter", "Bound")
-                                : QApplication::translate("FrameBufferStoreItemModelAdapter", "Unbound"));
+            .arg(fbo->height());
 
     return QVariant(text);
+}
+
+QVariant FrameBufferStoreItemModelAdapter::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if ( orientation != Qt::Horizontal || section != 0 || role != Qt::DisplayRole )
+    {
+        return abstractItemModel()->defaultHeaderData(section, orientation, role);
+    }
+
+    return QApplication::translate("FrameBufferStoreItemModelAdapter", "Frame Buffer Object");
 }

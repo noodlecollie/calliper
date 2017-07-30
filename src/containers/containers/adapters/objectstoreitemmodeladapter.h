@@ -28,6 +28,10 @@ namespace Containers
         virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+        // Should return a QVariant to represent the header data for the given section, with the given role.
+        // The default implementation just calls through to the abstract item model.
+        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+
         const ObjectStoreAbstractItemModel* abstractItemModel() const;
         ObjectStoreAbstractItemModel* abstractItemModel();
 
@@ -81,6 +85,8 @@ namespace Containers
         }
 
         qSort(m_IndexToId);
+
+        m_AbstractItemModel.notifyDataChanged();
     }
 
     template<typename T>
@@ -158,6 +164,12 @@ namespace Containers
     const ObjectStoreAbstractItemModel* ObjectStoreItemModelAdapter<T>::abstractItemModel() const
     {
         return &m_AbstractItemModel;
+    }
+
+    template<typename T>
+    QVariant ObjectStoreItemModelAdapter<T>::headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    {
+        return m_AbstractItemModel.headerData(section, orientation, role);
     }
 }
 

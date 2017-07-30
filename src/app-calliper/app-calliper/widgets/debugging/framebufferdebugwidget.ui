@@ -11,11 +11,15 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Frame Buffer Store</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTableView" name="tableView"/>
+    <widget class="QTableView" name="tableView">
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+    </widget>
    </item>
   </layout>
  </widget>

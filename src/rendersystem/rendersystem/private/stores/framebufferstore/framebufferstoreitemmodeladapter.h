@@ -16,6 +16,7 @@ public:
 
 protected:
     virtual QVariant itemData(const ObjectId& id, int role) const override;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 private:
     const FrameBufferStore& m_Store;
