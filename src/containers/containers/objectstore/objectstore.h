@@ -3,6 +3,8 @@
 
 #include <QHash>
 
+#include "changenotifier.h"
+
 namespace Containers
 {
     // Suitable for use with ObjectStoreItem or ObjectStoreItemPointer.
@@ -21,6 +23,12 @@ namespace Containers
         void clear();
         int count() const;
 
+        ChangeNotifier* changeNotifier() const;
+
+        typedef typename QHash<ObjectId, T>::const_iterator ConstIterator;
+        ConstIterator constBegin() const;
+        ConstIterator constEnd() const;
+
     protected:
         typedef QHash<ObjectId, T> ObjectStoreHash;
 
@@ -34,6 +42,8 @@ namespace Containers
             }
 
             m_ObjectHash.insert(nextId, T(nextId, std::move(args)...));
+            ++m_nChangeCount;
+
             objectCreated(nextId);
             return nextId;
         }
@@ -48,6 +58,8 @@ namespace Containers
 
             objectAboutToBeDestroyed(id);
             m_ObjectHash.insert(id, T(id, std::move(args)...));
+            ++m_nChangeCount;
+
             objectCreated(id);
             return true;
         }
@@ -62,6 +74,8 @@ namespace Containers
             }
 
             m_ObjectHash.insert(INVALID_ID, T(INVALID_ID, std::move(args)...));
+            ++m_nChangeCount;
+
             objectCreated(INVALID_ID);
             return INVALID_ID;
         }
@@ -75,6 +89,7 @@ namespace Containers
         ObjectId acquireNextId();
 
         ObjectId m_nIdCounter;
+        quint32 m_nChangeCount;
     };
 
     template<typename T>
@@ -95,6 +110,8 @@ namespace Containers
         {
             destroy(id);
         }
+
+        m_nChangeCount = 0;
     }
 
     template<typename T>
@@ -107,6 +124,8 @@ namespace Containers
 
         objectAboutToBeDestroyed(id);
         m_ObjectHash.remove(id);
+        ++m_nChangeCount;
+
         return true;
     }
 
@@ -120,6 +139,7 @@ namespace Containers
     void ObjectStore<T>::clear()
     {
         m_ObjectHash.clear();
+        m_nChangeCount = 0;
     }
 
     template<typename T>
@@ -147,6 +167,18 @@ namespace Containers
 
         Q_ASSERT_X(m_nIdCounter != INVALID_ID, Q_FUNC_INFO, "Object ID overflow!");
         return m_nIdCounter;
+    }
+
+    template<typename T>
+    typename ObjectStore<T>::ConstIterator ObjectStore<T>::constBegin() const
+    {
+        return m_ObjectHash.constBegin();
+    }
+
+    template<typename T>
+    typename ObjectStore<T>::ConstIterator ObjectStore<T>::constEnd() const
+    {
+        return m_ObjectHash.constEnd();
     }
 }
 

@@ -23,11 +23,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    containers/containers_global.cpp \
-    containers/dummyclass.cpp
+    containers_global.cpp \
+    containers/objectstore/changenotifier.cpp \
+    containers/adapters/changereceiver.cpp \
+    containers/adapters/objectstoreabstractitemmodel.cpp
 
 HEADERS +=\
-        containers/containers_global.h \
+        containers_global.h \
     containers/item/itembasedobjectstore.h \
     containers/item/objectstoreitem.h \
     containers/itempointer/itempointerbasedobjectstore.h \
@@ -36,10 +38,14 @@ HEADERS +=\
     containers/path-managing/pathmanagingobjectstore.h \
     containers/static/staticobjectstore.h \
     containers/static/staticobjectstorekey.h \
-    containers/dummyclass.h \
     containers/handles/integerhandle.h \
     containers/static/staticobjectstoreassociative.h \
-    containers/static/staticobjectstorearray.h
+    containers/static/staticobjectstorearray.h \
+    containers/objectstore/changenotifier.h \
+    containers/adapters/changereceiver.h \
+    containers/adapters/objectstoreitemmodeladapter.h \
+    containers/adapters/iobjectstoreitemmodel.h \
+    containers/adapters/objectstoreabstractitemmodel.h
 
 unix {
     target.path = /usr/lib
