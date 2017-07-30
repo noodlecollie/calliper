@@ -37,7 +37,7 @@ namespace Containers
 
     protected:
         // Should return a QVariant to represent the object at the given ID, with the given role.
-        virtual QVariant itemData(const ObjectId& id, int role) const = 0;
+        virtual QVariant itemData(const ObjectId& id, const QModelIndex &index, int role) const = 0;
 
     private:
         void changeNotificationReceived();
@@ -97,7 +97,7 @@ namespace Containers
             return QModelIndex();
         }
 
-        if ( parent.isValid() || row < 0 || row >= m_pObjectStore->count() || column != 0 )
+        if ( parent.isValid() || row < 0 || row >= m_pObjectStore->count() || column < 0 || column >= columnCount() )
         {
             return QModelIndex();
         }
@@ -146,12 +146,12 @@ namespace Containers
             return QVariant();
         }
 
-        if ( index.row() < 0 || index.row() >= m_IndexToId.count() || index.column() != 0 )
+        if ( index.row() < 0 || index.row() >= m_IndexToId.count() || index.column() < 0 || index.column() >= columnCount() )
         {
             return QVariant();
         }
 
-        return itemData(m_IndexToId.at(index.row()), role);
+        return itemData(m_IndexToId.at(index.row()), index, role);
     }
 
     template<typename T>

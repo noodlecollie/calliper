@@ -14,9 +14,11 @@ class FrameBufferStoreItemModelAdapter : public Containers::ItemPointerBasedItem
 public:
     FrameBufferStoreItemModelAdapter(const FrameBufferStore& store);
 
-protected:
-    virtual QVariant itemData(const ObjectId& id, int role) const override;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual int columnCount(const QModelIndex &parent) const override;
+
+protected:
+    virtual QVariant itemData(const ObjectId &id, const QModelIndex &index, int role) const override;
 
 private:
     const FrameBufferStore& m_Store;
