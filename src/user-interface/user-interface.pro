@@ -27,7 +27,11 @@ SOURCES += \
     user-interface/modelviews/modelviewfactory.cpp \
     user-interface/views/mapviewport.cpp \
     user-interface/icons/filedatamodeliconprovider.cpp \
-    user-interface/opengl/framebuffercopier.cpp
+    user-interface/opengl/framebuffercopier.cpp \
+    user-interface/widgets/mainwindowslavewidget.cpp \
+    user-interface/signal-handlers/visibilityactionhandler.cpp \
+    user-interface/widgets/visibility-action/visibilityactiondockwidget.cpp \
+    user-interface/widgets/visibility-action/visibilityactionwidget.cpp
 
 HEADERS +=\
     user-interface_global.h \
@@ -46,7 +50,11 @@ HEADERS +=\
     user-interface/views/mapviewport.h \
     user-interface/icons/filedatamodeliconprovider.h \
     user-interface/modelviews/imodelview.h \
-    user-interface/opengl/framebuffercopier.h
+    user-interface/opengl/framebuffercopier.h \
+    user-interface/widgets/mainwindowslavewidget.h \
+    user-interface/signal-handlers/visibilityactionhandler.h \
+    user-interface/widgets/visibility-action/visibilityactiondockwidget.h \
+    user-interface/widgets/visibility-action/visibilityactionwidget.h
 
 unix {
     target.path = /usr/lib

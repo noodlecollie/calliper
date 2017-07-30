@@ -2,13 +2,15 @@
 #define PROJECTMETADATADOCKWIDGET_H
 
 #include "app-calliper_global.h"
-#include "app-calliper/widgets/dock/visibleactiondockwidget.h"
-#include "model/projects/calliperprojectmetadata.h"
 #include <QPointer>
+
+#include "model/projects/calliperprojectmetadata.h"
+
+#include "user-interface/widgets/visibility-action/visibilityactiondockwidget.h"
 
 namespace AppCalliper
 {
-    class ProjectMetadataDockWidget : public VisibleActionDockWidget
+    class ProjectMetadataDockWidget : public UserInterface::VisibilityActionDockWidget
     {
         Q_OBJECT
     public:

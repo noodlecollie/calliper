@@ -2,12 +2,13 @@
 #define PROJECTFILEDOCKWIDGET_H
 
 #include "app-calliper_global.h"
-#include "app-calliper/widgets/dock/visibleactiondockwidget.h"
 #include "app-calliper/widgets/projectfiles/projectfiletreewidget.h"
+
+#include "user-interface/widgets/visibility-action/visibilityactiondockwidget.h"
 
 namespace AppCalliper
 {
-    class ProjectFileDockWidget : public VisibleActionDockWidget
+    class ProjectFileDockWidget : public UserInterface::VisibilityActionDockWidget
     {
         Q_OBJECT
     public:

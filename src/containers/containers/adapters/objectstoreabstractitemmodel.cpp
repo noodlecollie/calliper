@@ -58,4 +58,9 @@ namespace Containers
 
         return m_pAdapterInterface->data(index, role);
     }
+
+    QModelIndex ObjectStoreAbstractItemModel::createIndexHelper(int row, int column, quintptr id) const
+    {
+        return createIndex(row, column, id);
+    }
 }

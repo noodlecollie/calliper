@@ -9,7 +9,7 @@
 namespace AppCalliper
 {
     ProjectFileDockWidget::ProjectFileDockWidget(QWidget *parent, Qt::WindowFlags flags)
-        : VisibleActionDockWidget(tr("Project Files"), parent, flags)
+        : UserInterface::VisibilityActionDockWidget(tr("Project Files"), parent, flags)
     {
         m_pTreeWidget = new ProjectFileTreeWidget();
         m_pTreeWidget->setHeaderLabel(tr("Files"));

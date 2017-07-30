@@ -3,6 +3,8 @@
 
 #include <QOpenGLFramebufferObject>
 
+#include "framebufferstoreitemmodeladapter.h"
+
 #include "rendersystem/interfaces/iframebufferstore.h"
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
 
@@ -28,9 +30,13 @@ public:
     virtual GLuint frameBufferTextureId(const FrameBufferId id) const override;
     virtual QSize frameBufferSize(const FrameBufferStore::FrameBufferId id) const override;
     virtual void setFrameBufferSize(const FrameBufferStore::FrameBufferId id, const QSize size) override;
+    virtual QAbstractItemModel* itemModel() const override;
 
     // Internal
     QSharedPointer<QOpenGLFramebufferObject> frameBuffer(const FrameBufferStore::FrameBufferId id) const;
+
+private:
+    mutable FrameBufferStoreItemModelAdapter m_ItemModelAdapter;
 };
 
 #endif // FRAMEBUFFERSTORE_H

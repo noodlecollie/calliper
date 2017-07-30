@@ -41,7 +41,7 @@ namespace
 namespace AppCalliper
 {
     ProjectMetadataDockWidget::ProjectMetadataDockWidget(QWidget *parent, Qt::WindowFlags flags)
-        : VisibleActionDockWidget(tr("Project Metadata"), parent, flags),
+        : UserInterface::VisibilityActionDockWidget(tr("Project Metadata"), parent, flags),
           m_pProjectMetadata(Q_NULLPTR)
     {
         setupUi();

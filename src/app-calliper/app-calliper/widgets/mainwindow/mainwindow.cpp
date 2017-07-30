@@ -11,6 +11,7 @@
 #include "app-calliper/widgets/projectfiles/projectfiletreewidget.h"
 #include "app-calliper/widgets/dock/projectfiledockwidget.h"
 #include "app-calliper/widgets/dock/projectmetadatadockwidget.h"
+#include "app-calliper/widgets/debugging/framebufferdebugwidget.h"
 
 #include "model-loaders/projects/calliperprojectloader.h"
 #include "model-loaders/json/jsonloaderutils.h"
@@ -19,6 +20,7 @@
 #include "user-interface/arrangeable-tabs/widget/quadgridwidget.h"
 #include "user-interface/modelviews/modelviewfactory.h"
 #include "user-interface/modelviews/imodelview.h"
+#include "user-interface/widgets/visibility-action/visibilityactiondockwidget.h"
 
 namespace AppCalliper
 {
@@ -30,6 +32,8 @@ namespace AppCalliper
         ui->setupUi(this);
 
         initDockWidgets();
+        initDebugWidgets();
+
         connect(ui->actionQuit, &QAction::triggered, qApp, &QApplication::quit);
         setProject(Q_NULLPTR);
     }
@@ -65,7 +69,7 @@ namespace AppCalliper
         QJsonDocument doc;
         if ( !ModelLoaders::JsonLoaderUtils::loadJsonFile(filePath, doc) )
         {
-            QMessageBox::critical(this, tr("Error"), QString("Unable to load project file %1").arg(filePath));
+            QMessageBox::critical(this, tr("Error"), tr("Unable to load project file %1").arg(filePath));
             return;
         }
 
@@ -163,7 +167,7 @@ namespace AppCalliper
         QFile outFile(fullPath);
         if ( !outFile.open(QIODevice::WriteOnly) )
         {
-            QMessageBox::critical(this, tr("Error"), QString("Unable to open project file %1 for writing").arg(fullPath));
+            QMessageBox::critical(this, tr("Error"), tr("Unable to open project file %1 for writing").arg(fullPath));
             return;
         }
 
@@ -198,12 +202,18 @@ namespace AppCalliper
             QString title;
 
             if ( name.isNull() || name.isEmpty() )
-                title = tr("[Unnamed Project]");
+            {
+                title = "[" + tr("Unnamed Project") + "]";
+            }
             else
+            {
                 title = name;
+            }
 
             if ( m_bUnsavedProjectChanges )
+            {
                 title += "*";
+            }
 
             setWindowTitle(title);
         }
@@ -288,11 +298,17 @@ namespace AppCalliper
         initDockWidget(m_pProjectMetadataDockWidget, ui->actionProject_Metadata, Qt::LeftDockWidgetArea);
     }
 
-    void MainWindow::initDockWidget(VisibleActionDockWidget *widget, QAction *action, Qt::DockWidgetArea area)
+    void MainWindow::initDockWidget(UserInterface::VisibilityActionDockWidget *widget, QAction *action, Qt::DockWidgetArea area)
     {
-        widget->setVisibilityAction(action);
+        widget->visibilityActionHandler()->setVisibilityAction(action);
         addDockWidget(area, widget);
         widget->setVisible(action->isChecked());
+    }
+
+    void MainWindow::initDebugWidgets()
+    {
+        m_pFramebufferDebugWidget = new FrameBufferDebugWidget();
+        m_pFramebufferDebugWidget->visibilityActionHandler()->setVisibilityAction(ui->action_DebugWidget_Framebuffers);
     }
 
     QString MainWindow::getFileDialogueDefaultPath() const

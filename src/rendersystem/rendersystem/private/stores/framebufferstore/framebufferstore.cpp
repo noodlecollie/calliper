@@ -4,7 +4,8 @@
 
 FrameBufferStore::FrameBufferStore()
     : ItemPointerBasedObjectStore<QOpenGLFramebufferObject,
-                                  RenderSystem::FrameBufferDefs::FrameBufferId>()
+                                  RenderSystem::FrameBufferDefs::FrameBufferId>(),
+      m_ItemModelAdapter(*this)
 {
 
 }
@@ -93,4 +94,9 @@ void FrameBufferStore::setFrameBufferSize(const FrameBufferId id, const QSize si
     }
 
     replace(id, size);
+}
+
+QAbstractItemModel* FrameBufferStore::itemModel() const
+{
+    return m_ItemModelAdapter.abstractItemModel();
 }

@@ -23,7 +23,7 @@ namespace Containers
         void clear();
         int count() const;
 
-        ChangeNotifier* changeNotifier() const;
+        const ChangeNotifier* changeNotifier() const;
 
         typedef typename QHash<ObjectId, T>::const_iterator ConstIterator;
         ConstIterator constBegin() const;
@@ -42,7 +42,7 @@ namespace Containers
             }
 
             m_ObjectHash.insert(nextId, T(nextId, std::move(args)...));
-            ++m_nChangeCount;
+            m_ChangeNotifier.notifyStoreChanged();
 
             objectCreated(nextId);
             return nextId;
@@ -58,7 +58,7 @@ namespace Containers
 
             objectAboutToBeDestroyed(id);
             m_ObjectHash.insert(id, T(id, std::move(args)...));
-            ++m_nChangeCount;
+            m_ChangeNotifier.notifyStoreChanged();
 
             objectCreated(id);
             return true;
@@ -74,7 +74,7 @@ namespace Containers
             }
 
             m_ObjectHash.insert(INVALID_ID, T(INVALID_ID, std::move(args)...));
-            ++m_nChangeCount;
+            m_ChangeNotifier.notifyStoreChanged();
 
             objectCreated(INVALID_ID);
             return INVALID_ID;
@@ -89,7 +89,7 @@ namespace Containers
         ObjectId acquireNextId();
 
         ObjectId m_nIdCounter;
-        quint32 m_nChangeCount;
+        ChangeNotifier m_ChangeNotifier;
     };
 
     template<typename T>
@@ -110,8 +110,6 @@ namespace Containers
         {
             destroy(id);
         }
-
-        m_nChangeCount = 0;
     }
 
     template<typename T>
@@ -124,7 +122,7 @@ namespace Containers
 
         objectAboutToBeDestroyed(id);
         m_ObjectHash.remove(id);
-        ++m_nChangeCount;
+        m_ChangeNotifier.notifyStoreChanged();
 
         return true;
     }
@@ -139,7 +137,7 @@ namespace Containers
     void ObjectStore<T>::clear()
     {
         m_ObjectHash.clear();
-        m_nChangeCount = 0;
+        m_ChangeNotifier.notifyStoreChanged();
     }
 
     template<typename T>
@@ -179,6 +177,12 @@ namespace Containers
     typename ObjectStore<T>::ConstIterator ObjectStore<T>::constEnd() const
     {
         return m_ObjectHash.constEnd();
+    }
+
+    template<typename T>
+    const ChangeNotifier* ObjectStore<T>::changeNotifier() const
+    {
+        return &m_ChangeNotifier;
     }
 }
 

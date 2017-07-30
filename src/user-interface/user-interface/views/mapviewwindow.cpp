@@ -85,6 +85,10 @@ namespace UserInterface
         {
             return;
         }
+
+        // TODO
+        Q_UNUSED(w);
+        Q_UNUSED(h);
     }
 
     void MapViewWindow::initShaders()

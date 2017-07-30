@@ -14,13 +14,14 @@ class MainWindow;
 namespace UserInterface
 {
     class QuadGridWidget;
+    class VisibilityActionDockWidget;
 }
 
 namespace AppCalliper
 {
-    class VisibleActionDockWidget;
     class ProjectFileDockWidget;
     class ProjectMetadataDockWidget;
+    class FrameBufferDebugWidget;
 
     class MainWindow : public QMainWindow
     {
@@ -44,8 +45,12 @@ namespace AppCalliper
     private:
         void closeViewports();
         void deleteViewports();
+
         void initDockWidgets();
-        void initDockWidget(VisibleActionDockWidget* widget, QAction* action, Qt::DockWidgetArea area);
+        void initDockWidget(UserInterface::VisibilityActionDockWidget* widget, QAction* action, Qt::DockWidgetArea area);
+
+        void initDebugWidgets();
+
         void setNewApplicationProject(const QString& filePath, const QJsonDocument& project);
         void saveCurrentProject(const QString& fullPath);
         QString getFileDialogueDefaultPath() const;
@@ -64,6 +69,8 @@ namespace AppCalliper
 
         ProjectFileDockWidget* m_pProjectFileDockWidget;
         ProjectMetadataDockWidget* m_pProjectMetadataDockWidget;
+
+        FrameBufferDebugWidget* m_pFramebufferDebugWidget;
 
         QScopedPointer<ApplicationProject> m_pProject;
         bool m_bUnsavedProjectChanges;

@@ -48,7 +48,8 @@ namespace Containers
     ObjectStoreItemModelAdapter<T>::ObjectStoreItemModelAdapter(const StoreType *store)
         : m_pObjectStore(store),
           m_IndexToId(),
-          m_ChangeReceiver()
+          m_ChangeReceiver(),
+          m_AbstractItemModel(this)
     {
         m_ChangeReceiver.setChangeCallback([this]
         {
@@ -94,6 +95,8 @@ namespace Containers
         {
             return QModelIndex();
         }
+
+        return m_AbstractItemModel.createIndexHelper(row, column, 0);
     }
 
     template<typename T>

@@ -45,7 +45,8 @@ HEADERS +=\
     containers/adapters/changereceiver.h \
     containers/adapters/objectstoreitemmodeladapter.h \
     containers/adapters/iobjectstoreitemmodel.h \
-    containers/adapters/objectstoreabstractitemmodel.h
+    containers/adapters/objectstoreabstractitemmodel.h \
+    containers/adapters/itempointerbaseditemmodeladapter.h
 
 unix {
     target.path = /usr/lib
