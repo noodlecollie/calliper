@@ -109,7 +109,7 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
 
     m_GlobalShaderUniforms.upload();
 
-    drawPreFrame(*frameBufferObject, drawParams);
+    drawPreFrame(QSize(frameBufferObject->width(), frameBufferObject->height()), drawParams);
 
     for ( RenderGroupHash::const_iterator itGroup = m_RenderGroups.constBegin();
           itGroup != m_RenderGroups.constEnd();
@@ -121,12 +121,12 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     frameBufferObject->release();
 }
 
-void RenderModel::drawPreFrame(QOpenGLFramebufferObject &frameBuffer, const RenderSystem::FrameDrawParams &drawParams)
+void RenderModel::drawPreFrame(const QSize& size, const RenderSystem::FrameDrawParams &drawParams)
 {
     GL_CURRENT_F;
 
     // This is needed so that drawing into the frame buffer happens in the right place!
-    GLTRY(f->glViewport(0, 0, frameBuffer.width(), frameBuffer.height()));
+    GLTRY(f->glViewport(0, 0, size.width(), size.height()));
 
     const QColor clearColor = drawParams.backgroundColor();
     GLTRY(f->glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF()));

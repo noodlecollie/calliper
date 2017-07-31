@@ -79,12 +79,12 @@ namespace Containers
         m_IndexToId.clear();
         m_IndexToId.reserve(m_pObjectStore->count());
 
-        for ( StoreType::ConstIterator it = m_pObjectStore->constBegin(); it != m_pObjectStore->constEnd(); ++it )
+        for ( typename StoreType::ConstIterator it = m_pObjectStore->constBegin(); it != m_pObjectStore->constEnd(); ++it )
         {
             m_IndexToId.append(it.key());
         }
 
-        qSort(m_IndexToId);
+        std::sort(m_IndexToId.begin(), m_IndexToId.end());
 
         m_AbstractItemModel.notifyDataChanged();
     }
@@ -167,7 +167,7 @@ namespace Containers
     }
 
     template<typename T>
-    QVariant ObjectStoreItemModelAdapter<T>::headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    QVariant ObjectStoreItemModelAdapter<T>::headerData(int section, Qt::Orientation orientation, int role) const
     {
         return m_AbstractItemModel.headerData(section, orientation, role);
     }

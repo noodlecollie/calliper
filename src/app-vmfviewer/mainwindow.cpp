@@ -14,7 +14,8 @@
 
 #include "file-formats/vpk/vpkindextreerecord.h"
 
-MainWindow::MainWindow() : UserInterface::MapViewWindow(),
+MainWindow::MainWindow()
+    : UserInterface::MapViewWindow(),
     m_iPlaceholderMaterial(0)
 {
     connect(this, SIGNAL(initialised()), this, SLOT(init()));
@@ -77,5 +78,5 @@ void MainWindow::importTextures()
 
 void MainWindow::init()
 {
-
+    loadMap();
 }

@@ -7,6 +7,27 @@
 
 #include "rendersystem/global/rendersystem.h"
 
+void initOpenGL()
+{
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
+    QSurfaceFormat format;
+    format.setMajorVersion(4);
+    format.setMinorVersion(1);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+    format.setSamples(2);
+    format.setDepthBufferSize(24);
+    format.setRedBufferSize(8);
+    format.setGreenBufferSize(8);
+    format.setBlueBufferSize(8);
+    format.setAlphaBufferSize(0);   // The window surface itself doesn't need any alpha component.
+    format.setStencilBufferSize(8);
+
+    QSurfaceFormat::setDefaultFormat(format);
+}
+
 void initSubSystems()
 {
     RenderSystem::Global::initialise();
@@ -19,6 +40,8 @@ void shutDownSubSystems()
 
 int main(int argc, char *argv[])
 {
+    initOpenGL();
+
     QApplication a(argc, argv);
     QCoreApplication::setApplicationName("vmfviewer");
     QCoreApplication::setApplicationVersion("1.0");
@@ -41,21 +64,6 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
 
     parser.process(a);
-
-    QSurfaceFormat format;
-    format.setMajorVersion(4);
-    format.setMinorVersion(1);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-    format.setSamples(2);
-    format.setDepthBufferSize(24);
-    format.setRedBufferSize(8);
-    format.setGreenBufferSize(8);
-    format.setBlueBufferSize(8);
-    format.setAlphaBufferSize(0);
-    format.setStencilBufferSize(8);
-    QSurfaceFormat::setDefaultFormat(format);
 
     QString filename;
     QStringList opts = parser.positionalArguments();

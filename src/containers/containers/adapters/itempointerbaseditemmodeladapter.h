@@ -11,7 +11,7 @@ namespace Containers
     class ItemPointerBasedItemModelAdapter : public ObjectStoreItemModelAdapter<ObjectStoreItemPointer<T, INTID>>
     {
     public:
-        typedef ObjectStoreItemModelAdapter<ObjectStoreItemPointer<T, INTID>>::StoreType StoreType;
+        typedef typename ObjectStoreItemModelAdapter<ObjectStoreItemPointer<T, INTID>>::StoreType StoreType;
 
         ItemPointerBasedItemModelAdapter(const StoreType* store)
             : ObjectStoreItemModelAdapter<ObjectStoreItemPointer<T, INTID>>(store)
