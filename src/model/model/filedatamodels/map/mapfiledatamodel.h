@@ -23,7 +23,6 @@ namespace Model
         const MapScene* scene() const;
 
         RenderSystem::RenderModelDefs::RenderModelId renderModelId() const;
-        void setRenderModelId(RenderSystem::RenderModelDefs::RenderModelId renderModelId);
 
     private:
         QScopedPointer<MapScene> m_pScene;

@@ -50,9 +50,4 @@ namespace Model
     {
         return m_nRenderModelId;
     }
-
-    void MapFileDataModel::setRenderModelId(RenderSystem::RenderModelDefs::RenderModelId renderModelId)
-    {
-        m_nRenderModelId = renderModelId;
-    }
 }

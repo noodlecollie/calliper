@@ -14,6 +14,9 @@
 
 #include "file-formats/vpk/vpkfilecollection.h"
 
+#include "rendersystem/interface-classes/definitions/framebufferdefs.h"
+#include "user-interface/opengl/framebuffercopier.h"
+
 namespace UserInterface
 {
     class USERINTERFACESHARED_EXPORT MapViewWindow : public QOpenGLWindow
@@ -61,6 +64,9 @@ namespace UserInterface
         void initKeyMap();
         void initMouseEventMap();
 
+        void createFrameBuffer();
+        void destroyFrameBuffer();
+
         QString m_strMapPath;
         QString m_strVpkPath;
         bool m_bInitialised;
@@ -72,6 +78,9 @@ namespace UserInterface
         Model::MouseEventMap* m_pMouseEventMap;
 
         FileFormats::VPKFileCollection m_VpkFiles;
+
+        RenderSystem::FrameBufferDefs::FrameBufferId m_nRenderFrameBufferId;
+        FrameBufferCopier m_FrameBufferCopier;
     };
 }
 
