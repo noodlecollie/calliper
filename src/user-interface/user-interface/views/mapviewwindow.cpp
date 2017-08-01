@@ -130,6 +130,7 @@ namespace UserInterface
         drawParams.setProjectionMatrix(m_pVmfData->scene()->defaultCamera()->lens().projectionMatrix());
         drawParams.setRenderMode(RenderSystem::ShaderDefs::BarebonesRenderMode);
         drawParams.setBackgroundColor(QColor::fromRgb(0xff040404));
+        drawParams.setDirectionalLight(QVector3D(1,1,1).normalized());
 
         {
             RenderSystem::RenderModelStoreEndpoint::RenderModelStoreAccessor rms = RenderSystem::RenderModelStoreEndpoint::renderModelStore();

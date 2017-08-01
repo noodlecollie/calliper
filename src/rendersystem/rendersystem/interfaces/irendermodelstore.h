@@ -38,7 +38,7 @@ namespace RenderSystem
         // Draws the given render model into the given frame buffer.
         virtual void draw(const RenderModelDefs::RenderModelId modelId,
                           const FrameBufferDefs::FrameBufferId frameBufferId,
-                          const RenderSystem::FrameDrawParams& drawParams) = 0;
+                          const FrameDrawParams& drawParams) = 0;
     };
 }
 
