@@ -1,28 +1,45 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#include <QOpenGLWindow>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLBuffer>
+#include <QTimer>
+#include <QOpenGLFramebufferObject>
 
-#include "rendersystem/interface-classes/definitions/framebufferdefs.h"
-#include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
-
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class MainWindow : public QOpenGLWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow();
     ~MainWindow();
 
-private:
-    Ui::MainWindow *ui;
+protected:
+    virtual void initializeGL() override;
+    virtual void resizeGL(int w, int h) override;
+    virtual void paintGL() override;
 
-    RenderSystem::RenderModelDefs::RenderModelId m_nRenderModelId;
-    RenderSystem::FrameBufferDefs::FrameBufferId m_nFrameBufferId;
+private:
+    void drawCube();
+
+    QOpenGLFramebufferObject* m_pFrameBuffer;
+
+    QOpenGLShaderProgram* m_pCubeShaderProgram;
+    QOpenGLShaderProgram* m_pQuadShaderProgram;
+
+    QOpenGLBuffer* m_pCubeVertexBuffer;
+    QOpenGLBuffer* m_pCubeIndexBuffer;
+
+    QOpenGLBuffer* m_pQuadVertexBuffer;
+    QOpenGLBuffer* m_pQuadIndexBuffer;
+
+    QTimer m_RefreshTimer;
+    bool m_bInitialised;
+    quint32 m_nFrames;
+
+    GLuint m_nVAOID;
+    int m_nModelToWorldMatrixLocation;
 };
 
 #endif // MAINWINDOW_H

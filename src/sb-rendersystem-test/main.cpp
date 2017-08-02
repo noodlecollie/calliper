@@ -27,8 +27,6 @@ int main(int argc, char *argv[])
 
     QSurfaceFormat::setDefaultFormat(format);
 
-    RenderSystem::Global::initialise();
-
     MainWindow* w = new MainWindow;
     w->show();
 
@@ -36,8 +34,6 @@ int main(int argc, char *argv[])
 
     delete w;
     w = Q_NULLPTR;
-
-    RenderSystem::Global::shutdown();
 
     return ret;
 }
