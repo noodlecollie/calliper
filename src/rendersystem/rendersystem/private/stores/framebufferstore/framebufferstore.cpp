@@ -24,8 +24,6 @@ FrameBufferStore::FrameBufferId FrameBufferStore::createFrameBuffer(const QSize&
 
     QOpenGLFramebufferObjectFormat format;
     format.setAttachment(QOpenGLFramebufferObject::Depth);
-    format.setTextureTarget(GL_COLOR_ATTACHMENT0);
-    format.setSamples(1);
 
     return create(size, format);
 }
@@ -94,7 +92,10 @@ void FrameBufferStore::setFrameBufferSize(const FrameBufferId id, const QSize si
         return;
     }
 
-    replace(id, size);
+    QOpenGLFramebufferObjectFormat format;
+    format.setAttachment(QOpenGLFramebufferObject::Depth);
+
+    replace(id, size, format);
 }
 
 QAbstractItemModel* FrameBufferStore::itemModel() const
