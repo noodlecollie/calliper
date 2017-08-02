@@ -2,10 +2,14 @@
 #include "ui_mainwindow.h"
 
 #include <QOpenGLFunctions>
+#include <QGuiApplication>
+#include <QOpenGLFramebufferObjectFormat>
 
 #include "calliperutil/opengl/openglerrors.h"
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/math/math.h"
+
+//#define USE_FRAMEBUFFER
 
 namespace
 {
@@ -113,7 +117,8 @@ MainWindow::MainWindow() :
     m_RefreshTimer(),
     m_bInitialised(false),
     m_nFrames(0),
-    m_nVAOID(0)
+    m_nVAOID(0),
+    m_nModelToWorldMatrixLocation(0)
 {
 
 }
@@ -155,12 +160,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::initializeGL()
 {
-    m_pFrameBuffer = new QOpenGLFramebufferObject(size());
+    QOpenGLFramebufferObjectFormat fboFormat;
+    fboFormat.setAttachment(QOpenGLFramebufferObject::Depth);
+    fboFormat.setTextureTarget(GL_TEXTURE_2D);
+
+    m_pFrameBuffer = new QOpenGLFramebufferObject(size(), fboFormat);
+
+    m_pFrameBuffer->bind();
+    setOpenGLOptionsForBoundFrameBuffer();
+    m_pFrameBuffer->release();
+    setOpenGLOptionsForBoundFrameBuffer();
 
     GL_CURRENT_F;
-
-    GLTRY(f->glEnable(GL_DEPTH_TEST));
-    GLTRY(f->glDepthFunc(GL_LEQUAL));
 
     GLTRY(f->glGenVertexArrays(1, &m_nVAOID));
     GLTRY(f->glBindVertexArray(m_nVAOID));
@@ -211,6 +222,16 @@ void MainWindow::initializeGL()
     m_bInitialised = true;
 }
 
+void MainWindow::setOpenGLOptionsForBoundFrameBuffer()
+{
+    GL_CURRENT_F;
+
+    GLTRY(f->glEnable(GL_DEPTH_TEST));
+    GLTRY(f->glDepthFunc(GL_LEQUAL));
+    GLTRY(f->glCullFace(GL_BACK));
+    GLTRY(f->glFrontFace(GL_CCW));
+}
+
 void MainWindow::resizeGL(int w, int h)
 {
     if ( !m_bInitialised || !context() || QOpenGLContext::currentContext() != context() )
@@ -231,18 +252,27 @@ void MainWindow::paintGL()
 
     GL_CURRENT_F;
 
-    GLTRY(f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
-
     GLTRY(f->glBindVertexArray(m_nVAOID));
 
-    // TODO:
-    // - Bind FBO
-    // - Render cube to FBO
-    // - Release FBO
-    // - Take FBO texture
-    // - Render quad with texture
+#ifdef USE_FRAMEBUFFER
+    const int pixelRatio = (int)qApp->devicePixelRatio();
 
+    m_pFrameBuffer->bind();
+    GLTRY(f->glViewport(0, 0, m_pFrameBuffer->width(), m_pFrameBuffer->height()));
+#endif
+
+    GLTRY(f->glClearColor(0.4f, 0.4f, 0.4f, 1.0f));
+    GLTRY(f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
     drawCube();
+
+#ifdef USE_FRAMEBUFFER
+    m_pFrameBuffer->release();
+
+    GLTRY(f->glViewport(0, 0, size().width() * pixelRatio, size().height() * pixelRatio));
+    GLTRY(f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+    GLTRY(f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
+    drawQuad();
+#endif
 
     GLTRY(f->glBindVertexArray(0));
 
@@ -251,9 +281,13 @@ void MainWindow::paintGL()
 
 void MainWindow::drawCube()
 {
+    GL_CURRENT_F;
+
+    const float sinFrames = qSin((float)m_nFrames / 15.0f);
+
     QMatrix4x4 modelToWorld;
     modelToWorld = CalliperUtil::Math::matrixRotateY((float)m_nFrames / 10.0f) * modelToWorld;
-    modelToWorld = CalliperUtil::Math::matrixRotateX(-0.25f) * modelToWorld;
+    modelToWorld = CalliperUtil::Math::matrixRotateX(0.25f * sinFrames) * modelToWorld;
     modelToWorld = CalliperUtil::Math::matrixScaleUniform(0.5f) * modelToWorld;
 
     m_pCubeShaderProgram->bind();
@@ -271,4 +305,24 @@ void MainWindow::drawCube()
     m_pCubeIndexBuffer->release();
     m_pCubeVertexBuffer->release();
     m_pCubeShaderProgram->release();
+}
+
+void MainWindow::drawQuad()
+{
+    GL_CURRENT_F;
+
+    m_pQuadShaderProgram->bind();
+    m_pQuadVertexBuffer->bind();
+    m_pQuadIndexBuffer->bind();
+
+    m_pQuadShaderProgram->enableAttributeArray(0);
+    m_pQuadShaderProgram->setAttributeBuffer(0, GL_FLOAT, 0, 2);
+
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_pFrameBuffer->texture()));
+    GLTRY(f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
+
+    m_pQuadIndexBuffer->release();
+    m_pQuadVertexBuffer->release();
+    m_pQuadShaderProgram->release();
 }

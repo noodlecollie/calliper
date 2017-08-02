@@ -21,7 +21,9 @@ protected:
     virtual void paintGL() override;
 
 private:
+    void setOpenGLOptionsForBoundFrameBuffer();
     void drawCube();
+    void drawQuad();
 
     QOpenGLFramebufferObject* m_pFrameBuffer;
 

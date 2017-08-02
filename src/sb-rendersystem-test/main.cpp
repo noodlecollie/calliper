@@ -3,8 +3,6 @@
 #include <QApplication>
 #include <QSurfaceFormat>
 
-#include "rendersystem/global/rendersystem.h"
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -17,7 +15,7 @@ int main(int argc, char *argv[])
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setRenderableType(QSurfaceFormat::OpenGL);
     format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-    format.setSamples(2);
+    format.setSamples(1);
     format.setDepthBufferSize(24);
     format.setRedBufferSize(8);
     format.setGreenBufferSize(8);

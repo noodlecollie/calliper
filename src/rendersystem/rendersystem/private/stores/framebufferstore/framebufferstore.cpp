@@ -24,7 +24,8 @@ FrameBufferStore::FrameBufferId FrameBufferStore::createFrameBuffer(const QSize&
 
     QOpenGLFramebufferObjectFormat format;
     format.setAttachment(QOpenGLFramebufferObject::Depth);
-    format.setTextureTarget(GL_TEXTURE_2D);
+    format.setTextureTarget(GL_COLOR_ATTACHMENT0);
+    format.setSamples(1);
 
     return create(size, format);
 }
