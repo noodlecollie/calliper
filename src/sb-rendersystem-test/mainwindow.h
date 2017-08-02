@@ -30,6 +30,8 @@ private:
 #ifdef FOLLOW_FBO_EXAMPLE
     void generateTexture();
     void generateRenderBuffer();
+#else
+    void generateFrameBufferObject();
 #endif
 
 #ifndef FOLLOW_FBO_EXAMPLE

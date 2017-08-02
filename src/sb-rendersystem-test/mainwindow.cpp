@@ -174,13 +174,7 @@ void MainWindow::initializeGL()
     GL_CURRENT_F;
 
 #ifndef FOLLOW_FBO_EXAMPLE
-    QOpenGLFramebufferObjectFormat fboFormat;
-    fboFormat.setAttachment(QOpenGLFramebufferObject::Depth);
-    fboFormat.setTextureTarget(GL_TEXTURE_2D);
-    fboFormat.setMipmap(false);
-    fboFormat.setSamples(1);
-
-    m_pFrameBuffer = new QOpenGLFramebufferObject(size(), fboFormat);
+    generateFrameBufferObject();
 
     m_pFrameBuffer->bind();
     setOpenGLOptionsForBoundFrameBuffer();
@@ -288,23 +282,32 @@ void MainWindow::generateRenderBuffer()
 
     GLTRY(f->glFramebufferRenderbuffer(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_nRBID));
 }
+#else
+void MainWindow::generateFrameBufferObject()
+{
+    QOpenGLFramebufferObjectFormat fboFormat;
+    fboFormat.setAttachment(QOpenGLFramebufferObject::Depth);
+    fboFormat.setTextureTarget(GL_TEXTURE_2D);
+
+    m_pFrameBuffer = new QOpenGLFramebufferObject(size(), fboFormat);
+}
 #endif
 
 void MainWindow::resizeGL(int w, int h)
 {
+    Q_UNUSED(w);
+    Q_UNUSED(h);
+
     if ( !m_bInitialised || !context() || QOpenGLContext::currentContext() != context() )
     {
         return;
     }
 
-    GL_CURRENT_F;
-
 #ifndef FOLLOW_FBO_EXAMPLE
     delete m_pFrameBuffer;
-    m_pFrameBuffer = new QOpenGLFramebufferObject(QSize(w,h));
+    generateFrameBufferObject();
 #else
-    Q_UNUSED(w);
-    Q_UNUSED(h);
+    GL_CURRENT_F;
 
     GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
 
