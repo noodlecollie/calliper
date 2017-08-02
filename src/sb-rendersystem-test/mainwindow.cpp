@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 #include <QOpenGLFunctions>
 #include <QGuiApplication>
@@ -9,7 +8,7 @@
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/math/math.h"
 
-//#define USE_FRAMEBUFFER
+#define USE_FRAMEBUFFER
 
 namespace
 {
@@ -49,9 +48,9 @@ namespace
     const float quadVerts[] =
     {
         -1, -1,
-        1, -1,
-        1, 1,
-        -1, 1,
+         1, -1,
+         1,  1,
+        -1,  1,
     };
 
     const quint32 quadIndices[] =
@@ -107,7 +106,13 @@ namespace
 
 MainWindow::MainWindow() :
     QOpenGLWindow(),
+#ifndef FOLLOW_FBO_EXAMPLE
     m_pFrameBuffer(Q_NULLPTR),
+#else
+    m_nFBOID(0),
+    m_nRBID(0),
+    m_nFBTextureID(0),
+#endif
     m_pCubeShaderProgram(Q_NULLPTR),
     m_pQuadShaderProgram(Q_NULLPTR),
     m_pCubeVertexBuffer(Q_NULLPTR),
@@ -152,17 +157,28 @@ MainWindow::~MainWindow()
     delete m_pQuadShaderProgram;
     m_pQuadShaderProgram = Q_NULLPTR;
 
+#ifndef FOLLOW_FBO_EXAMPLE
     delete m_pFrameBuffer;
     m_pFrameBuffer = Q_NULLPTR;
+#else
+    GLTRY(f->glDeleteTextures(1, &m_nFBTextureID));
+    GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
+    GLTRY(f->glDeleteFramebuffers(1, &m_nFBOID));
+#endif
 
     doneCurrent();
 }
 
 void MainWindow::initializeGL()
 {
+    GL_CURRENT_F;
+
+#ifndef FOLLOW_FBO_EXAMPLE
     QOpenGLFramebufferObjectFormat fboFormat;
     fboFormat.setAttachment(QOpenGLFramebufferObject::Depth);
     fboFormat.setTextureTarget(GL_TEXTURE_2D);
+    fboFormat.setMipmap(false);
+    fboFormat.setSamples(1);
 
     m_pFrameBuffer = new QOpenGLFramebufferObject(size(), fboFormat);
 
@@ -170,8 +186,20 @@ void MainWindow::initializeGL()
     setOpenGLOptionsForBoundFrameBuffer();
     m_pFrameBuffer->release();
     setOpenGLOptionsForBoundFrameBuffer();
+#else
+    GLTRY(f->glGenFramebuffers(1, &m_nFBOID));
+    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
 
-    GL_CURRENT_F;
+    generateTexture();
+    generateRenderBuffer();
+    setOpenGLOptionsForBoundFrameBuffer();
+
+    GLTRY(f->glBindRenderbuffer(GL_RENDERBUFFER_EXT, 0));
+    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
+
+    setOpenGLOptionsForBoundFrameBuffer();
+#endif
 
     GLTRY(f->glGenVertexArrays(1, &m_nVAOID));
     GLTRY(f->glBindVertexArray(m_nVAOID));
@@ -228,9 +256,39 @@ void MainWindow::setOpenGLOptionsForBoundFrameBuffer()
 
     GLTRY(f->glEnable(GL_DEPTH_TEST));
     GLTRY(f->glDepthFunc(GL_LEQUAL));
+    GLTRY(f->glClearDepth(1.0f));
     GLTRY(f->glCullFace(GL_BACK));
     GLTRY(f->glFrontFace(GL_CCW));
 }
+
+#ifdef FOLLOW_FBO_EXAMPLE
+void MainWindow::generateTexture()
+{
+    GL_CURRENT_F;
+
+    GLTRY(f->glGenTextures(1, &m_nFBTextureID));
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTextureID));
+
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+
+    GLTRY(f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size().width(), size().height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL));
+    GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nFBTextureID, 0));
+}
+
+void MainWindow::generateRenderBuffer()
+{
+    GL_CURRENT_F;
+
+    GLTRY(f->glGenRenderbuffers(1, &m_nRBID));
+    GLTRY(f->glBindRenderbuffer(GL_RENDERBUFFER_EXT, m_nRBID));
+    GLTRY(f->glRenderbufferStorage(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, size().width(), size().height()));
+
+    GLTRY(f->glFramebufferRenderbuffer(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_nRBID));
+}
+#endif
 
 void MainWindow::resizeGL(int w, int h)
 {
@@ -239,8 +297,28 @@ void MainWindow::resizeGL(int w, int h)
         return;
     }
 
+    GL_CURRENT_F;
+
+#ifndef FOLLOW_FBO_EXAMPLE
     delete m_pFrameBuffer;
     m_pFrameBuffer = new QOpenGLFramebufferObject(QSize(w,h));
+#else
+    Q_UNUSED(w);
+    Q_UNUSED(h);
+
+    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
+
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
+    GLTRY(f->glDeleteTextures(1, &m_nFBTextureID));
+
+    GLTRY(f->glBindRenderbuffer(GL_RENDERBUFFER_EXT, 0));
+    GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
+
+    generateTexture();
+    generateRenderBuffer();
+
+    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
+#endif
 }
 
 void MainWindow::paintGL()
@@ -257,8 +335,13 @@ void MainWindow::paintGL()
 #ifdef USE_FRAMEBUFFER
     const int pixelRatio = (int)qApp->devicePixelRatio();
 
+    #ifndef FOLLOW_FBO_EXAMPLE
     m_pFrameBuffer->bind();
     GLTRY(f->glViewport(0, 0, m_pFrameBuffer->width(), m_pFrameBuffer->height()));
+    #else
+    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
+    GLTRY(f->glViewport(0, 0, size().width(), size().height()));
+    #endif
 #endif
 
     GLTRY(f->glClearColor(0.4f, 0.4f, 0.4f, 1.0f));
@@ -266,7 +349,11 @@ void MainWindow::paintGL()
     drawCube();
 
 #ifdef USE_FRAMEBUFFER
+    #ifndef FOLLOW_FBO_EXAMPLE
     m_pFrameBuffer->release();
+    #else
+    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
+    #endif
 
     GLTRY(f->glViewport(0, 0, size().width() * pixelRatio, size().height() * pixelRatio));
     GLTRY(f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
@@ -318,7 +405,12 @@ void MainWindow::drawQuad()
     m_pQuadShaderProgram->enableAttributeArray(0);
     m_pQuadShaderProgram->setAttributeBuffer(0, GL_FLOAT, 0, 2);
 
+#ifndef FOLLOW_FBO_EXAMPLE
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_pFrameBuffer->texture()));
+#else
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTextureID));
+#endif
+
     GLTRY(f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
 
