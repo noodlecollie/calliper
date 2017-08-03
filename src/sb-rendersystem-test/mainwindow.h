@@ -31,9 +31,9 @@ private:
     void drawQuad();
 
 #ifdef FOLLOW_FBO_EXAMPLE
-    void generateTextures();
+    void generateTexture(GLuint& outTexture);
     void generateRenderBuffer();
-    void deleteFBTextures();
+    void deleteTexture(GLuint& outTexture);
 #else
     void generateFrameBufferObject();
 #endif
@@ -47,6 +47,7 @@ private:
     GLuint m_nFBOID;
     GLuint m_nRBID;
     GLuint m_nFBTexture;
+    GLuint m_nLocalFBTexture;
 #endif
 
     QOpenGLShaderProgram* m_pCubeShaderProgram;
