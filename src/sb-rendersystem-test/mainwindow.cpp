@@ -106,13 +106,7 @@ namespace
 
 MainWindow::MainWindow() :
     QOpenGLWindow(),
-#ifndef FOLLOW_FBO_EXAMPLE
     m_pFrameBuffer(Q_NULLPTR),
-#else
-    m_nFBOID(0),
-    m_nRBID(0),
-    m_nFBTextureID(0),
-#endif
     m_pCubeShaderProgram(Q_NULLPTR),
     m_pQuadShaderProgram(Q_NULLPTR),
     m_pCubeVertexBuffer(Q_NULLPTR),
@@ -123,106 +117,122 @@ MainWindow::MainWindow() :
     m_bInitialised(false),
     m_nFrames(0),
     m_nVAOID(0),
-    m_nModelToWorldMatrixLocation(0)
+    m_nModelToWorldMatrixLocation(0),
+    m_pSeparateContext(Q_NULLPTR),
+    m_pOffscreenSurface(Q_NULLPTR),
+    m_nCubeVAOID(0)
 {
+    m_pSeparateContext = new QOpenGLContext();
+    m_pSeparateContext->setFormat(QSurfaceFormat::defaultFormat());
 
+    QOpenGLContext* globalShareContext = QOpenGLContext::globalShareContext();
+    Q_ASSERT(globalShareContext);
+    m_pSeparateContext->setShareContext(globalShareContext);
+    m_pSeparateContext->create();
+
+    m_pOffscreenSurface = new QOffscreenSurface();
+    m_pOffscreenSurface->setFormat(QSurfaceFormat::defaultFormat());
+    m_pOffscreenSurface->create();
 }
 
 MainWindow::~MainWindow()
 {
-    makeCurrent();
-
     m_bInitialised = false;
     m_RefreshTimer.stop();
 
-    GL_CURRENT_F;
+    {
+        makeCurrent();
 
-    GLTRY(f->glDeleteVertexArrays(1, &m_nVAOID));
+        GL_CURRENT_F;
+        GLTRY(f->glDeleteVertexArrays(1, &m_nVAOID));
 
-    delete m_pCubeVertexBuffer;
-    m_pCubeVertexBuffer = Q_NULLPTR;
+        delete m_pQuadVertexBuffer;
+        m_pQuadVertexBuffer = Q_NULLPTR;
 
-    delete m_pCubeIndexBuffer;
-    m_pCubeIndexBuffer = Q_NULLPTR;
+        delete m_pQuadIndexBuffer;
+        m_pQuadIndexBuffer = Q_NULLPTR;
 
-    delete m_pQuadVertexBuffer;
-    m_pQuadVertexBuffer = Q_NULLPTR;
+        delete m_pQuadShaderProgram;
+        m_pQuadShaderProgram = Q_NULLPTR;
 
-    delete m_pQuadIndexBuffer;
-    m_pQuadIndexBuffer = Q_NULLPTR;
+        doneCurrent();
+    }
 
-    delete m_pCubeShaderProgram;
-    m_pCubeShaderProgram = Q_NULLPTR;
+    {
+        makeCurrentInternal();
 
-    delete m_pQuadShaderProgram;
-    m_pQuadShaderProgram = Q_NULLPTR;
+        delete m_pFrameBuffer;
+        m_pFrameBuffer = Q_NULLPTR;
 
-#ifndef FOLLOW_FBO_EXAMPLE
-    delete m_pFrameBuffer;
-    m_pFrameBuffer = Q_NULLPTR;
-#else
-    GLTRY(f->glDeleteTextures(1, &m_nFBTextureID));
-    GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
-    GLTRY(f->glDeleteFramebuffers(1, &m_nFBOID));
-#endif
+        delete m_pCubeVertexBuffer;
+        m_pCubeVertexBuffer = Q_NULLPTR;
 
-    doneCurrent();
+        delete m_pCubeIndexBuffer;
+        m_pCubeIndexBuffer = Q_NULLPTR;
+
+        delete m_pCubeShaderProgram;
+        m_pCubeShaderProgram = Q_NULLPTR;
+
+        doneCurrentInternal();
+    }
+
+    delete m_pSeparateContext;
+    m_pSeparateContext = Q_NULLPTR;
+
+    delete m_pOffscreenSurface;
+    m_pOffscreenSurface = Q_NULLPTR;
 }
 
 void MainWindow::initializeGL()
 {
+    {
+        makeCurrentInternal();
+
+        generateFrameBufferObject();
+        m_pFrameBuffer->bind();
+        setOpenGLOptionsForBoundFrameBuffer();
+        m_pFrameBuffer->release();
+
+        GL_CURRENT_F;
+        GLTRY(f->glGenVertexArrays(1, &m_nCubeVAOID));
+        GLTRY(f->glBindVertexArray(m_nCubeVAOID));
+
+        m_pCubeShaderProgram = new QOpenGLShaderProgram();
+        m_pCubeShaderProgram->create();
+        m_pCubeShaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, cubeVertexShader);
+        m_pCubeShaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, cubeFragmentShader);
+        m_pCubeShaderProgram->link();
+
+        m_nModelToWorldMatrixLocation = m_pCubeShaderProgram->uniformLocation("modelToWorldMatrix");
+
+        m_pCubeVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+        m_pCubeVertexBuffer->create();
+        m_pCubeVertexBuffer->bind();
+        m_pCubeVertexBuffer->allocate(cubeVerts, 8 * 3 * sizeof(float));
+        m_pCubeVertexBuffer->release();
+
+        m_pCubeIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+        m_pCubeIndexBuffer->create();
+        m_pCubeIndexBuffer->bind();
+        m_pCubeIndexBuffer->allocate(cubeIndices, 3 * 12 * sizeof(quint32));
+        m_pCubeIndexBuffer->release();
+
+        GLTRY(f->glBindVertexArray(0));
+
+        makeCurrent();
+    }
+
+    setOpenGLOptionsForBoundFrameBuffer();
+
     GL_CURRENT_F;
-
-#ifndef FOLLOW_FBO_EXAMPLE
-    generateFrameBufferObject();
-
-    m_pFrameBuffer->bind();
-    setOpenGLOptionsForBoundFrameBuffer();
-    m_pFrameBuffer->release();
-    setOpenGLOptionsForBoundFrameBuffer();
-#else
-    GLTRY(f->glGenFramebuffers(1, &m_nFBOID));
-    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
-
-    generateTexture();
-    generateRenderBuffer();
-    setOpenGLOptionsForBoundFrameBuffer();
-
-    GLTRY(f->glBindRenderbuffer(GL_RENDERBUFFER_EXT, 0));
-    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
-
-    setOpenGLOptionsForBoundFrameBuffer();
-#endif
-
     GLTRY(f->glGenVertexArrays(1, &m_nVAOID));
     GLTRY(f->glBindVertexArray(m_nVAOID));
-
-    m_pCubeShaderProgram = new QOpenGLShaderProgram();
-    m_pCubeShaderProgram->create();
-    m_pCubeShaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, cubeVertexShader);
-    m_pCubeShaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, cubeFragmentShader);
-    m_pCubeShaderProgram->link();
-
-    m_nModelToWorldMatrixLocation = m_pCubeShaderProgram->uniformLocation("modelToWorldMatrix");
 
     m_pQuadShaderProgram = new QOpenGLShaderProgram();
     m_pQuadShaderProgram->create();
     m_pQuadShaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, quadVertexShader);
     m_pQuadShaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, quadFragmentShader);
     m_pQuadShaderProgram->link();
-
-    m_pCubeVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    m_pCubeVertexBuffer->create();
-    m_pCubeVertexBuffer->bind();
-    m_pCubeVertexBuffer->allocate(cubeVerts, 8 * 3 * sizeof(float));
-    m_pCubeVertexBuffer->release();
-
-    m_pCubeIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
-    m_pCubeIndexBuffer->create();
-    m_pCubeIndexBuffer->bind();
-    m_pCubeIndexBuffer->allocate(cubeIndices, 3 * 12 * sizeof(quint32));
-    m_pCubeIndexBuffer->release();
 
     m_pQuadVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
     m_pQuadVertexBuffer->create();
@@ -255,34 +265,6 @@ void MainWindow::setOpenGLOptionsForBoundFrameBuffer()
     GLTRY(f->glFrontFace(GL_CCW));
 }
 
-#ifdef FOLLOW_FBO_EXAMPLE
-void MainWindow::generateTexture()
-{
-    GL_CURRENT_F;
-
-    GLTRY(f->glGenTextures(1, &m_nFBTextureID));
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTextureID));
-
-    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-
-    GLTRY(f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size().width(), size().height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL));
-    GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nFBTextureID, 0));
-}
-
-void MainWindow::generateRenderBuffer()
-{
-    GL_CURRENT_F;
-
-    GLTRY(f->glGenRenderbuffers(1, &m_nRBID));
-    GLTRY(f->glBindRenderbuffer(GL_RENDERBUFFER_EXT, m_nRBID));
-    GLTRY(f->glRenderbufferStorage(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, size().width(), size().height()));
-
-    GLTRY(f->glFramebufferRenderbuffer(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_nRBID));
-}
-#else
 void MainWindow::generateFrameBufferObject()
 {
     QOpenGLFramebufferObjectFormat fboFormat;
@@ -291,7 +273,6 @@ void MainWindow::generateFrameBufferObject()
 
     m_pFrameBuffer = new QOpenGLFramebufferObject(size(), fboFormat);
 }
-#endif
 
 void MainWindow::resizeGL(int w, int h)
 {
@@ -303,25 +284,14 @@ void MainWindow::resizeGL(int w, int h)
         return;
     }
 
-#ifndef FOLLOW_FBO_EXAMPLE
-    delete m_pFrameBuffer;
-    generateFrameBufferObject();
-#else
-    GL_CURRENT_F;
+    {
+        makeCurrentInternal();
 
-    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
+        delete m_pFrameBuffer;
+        generateFrameBufferObject();
 
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
-    GLTRY(f->glDeleteTextures(1, &m_nFBTextureID));
-
-    GLTRY(f->glBindRenderbuffer(GL_RENDERBUFFER_EXT, 0));
-    GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
-
-    generateTexture();
-    generateRenderBuffer();
-
-    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
-#endif
+        makeCurrent();
+    }
 }
 
 void MainWindow::paintGL()
@@ -331,38 +301,35 @@ void MainWindow::paintGL()
         return;
     }
 
+    {
+        makeCurrentInternal();
+
+        GL_CURRENT_F;
+        GLTRY(f->glBindVertexArray(m_nCubeVAOID));
+
+        m_pFrameBuffer->bind();
+        GLTRY(f->glViewport(0, 0, m_pFrameBuffer->width(), m_pFrameBuffer->height()));
+
+        GLTRY(f->glClearColor(0.4f, 0.4f, 0.4f, 1.0f));
+        GLTRY(f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
+        drawCube();
+
+        m_pFrameBuffer->release();
+        GLTRY(f->glBindVertexArray(0));
+
+        makeCurrent();
+    }
+
     GL_CURRENT_F;
+    GLTRY(f->glFinish());
 
     GLTRY(f->glBindVertexArray(m_nVAOID));
 
-#ifdef USE_FRAMEBUFFER
     const int pixelRatio = (int)qApp->devicePixelRatio();
-
-    #ifndef FOLLOW_FBO_EXAMPLE
-    m_pFrameBuffer->bind();
-    GLTRY(f->glViewport(0, 0, m_pFrameBuffer->width(), m_pFrameBuffer->height()));
-    #else
-    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
-    GLTRY(f->glViewport(0, 0, size().width(), size().height()));
-    #endif
-#endif
-
-    GLTRY(f->glClearColor(0.4f, 0.4f, 0.4f, 1.0f));
-    GLTRY(f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
-    drawCube();
-
-#ifdef USE_FRAMEBUFFER
-    #ifndef FOLLOW_FBO_EXAMPLE
-    m_pFrameBuffer->release();
-    #else
-    GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
-    #endif
-
     GLTRY(f->glViewport(0, 0, size().width() * pixelRatio, size().height() * pixelRatio));
     GLTRY(f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLTRY(f->glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
     drawQuad();
-#endif
 
     GLTRY(f->glBindVertexArray(0));
 
@@ -408,11 +375,7 @@ void MainWindow::drawQuad()
     m_pQuadShaderProgram->enableAttributeArray(0);
     m_pQuadShaderProgram->setAttributeBuffer(0, GL_FLOAT, 0, 2);
 
-#ifndef FOLLOW_FBO_EXAMPLE
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_pFrameBuffer->texture()));
-#else
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTextureID));
-#endif
 
     GLTRY(f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
@@ -420,4 +383,14 @@ void MainWindow::drawQuad()
     m_pQuadIndexBuffer->release();
     m_pQuadVertexBuffer->release();
     m_pQuadShaderProgram->release();
+}
+
+void MainWindow::makeCurrentInternal()
+{
+    m_pSeparateContext->makeCurrent(m_pOffscreenSurface);
+}
+
+void MainWindow::doneCurrentInternal()
+{
+    m_pSeparateContext->doneCurrent();
 }

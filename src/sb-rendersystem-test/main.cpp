@@ -5,8 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     QSurfaceFormat format;
@@ -24,6 +22,8 @@ int main(int argc, char *argv[])
     format.setStencilBufferSize(8);
 
     QSurfaceFormat::setDefaultFormat(format);
+
+    QApplication a(argc, argv);
 
     MainWindow* w = new MainWindow;
     w->show();

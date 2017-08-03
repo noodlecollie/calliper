@@ -6,8 +6,8 @@
 #include <QOpenGLBuffer>
 #include <QTimer>
 #include <QOpenGLFramebufferObject>
-
-//#define FOLLOW_FBO_EXAMPLE
+#include <QOpenGLContext>
+#include <QOffscreenSurface>
 
 class MainWindow : public QOpenGLWindow
 {
@@ -26,21 +26,11 @@ private:
     void setOpenGLOptionsForBoundFrameBuffer();
     void drawCube();
     void drawQuad();
-
-#ifdef FOLLOW_FBO_EXAMPLE
-    void generateTexture();
-    void generateRenderBuffer();
-#else
     void generateFrameBufferObject();
-#endif
+    void makeCurrentInternal();
+    void doneCurrentInternal();
 
-#ifndef FOLLOW_FBO_EXAMPLE
     QOpenGLFramebufferObject* m_pFrameBuffer;
-#else
-    GLuint m_nFBOID;
-    GLuint m_nRBID;
-    GLuint m_nFBTextureID;
-#endif
 
     QOpenGLShaderProgram* m_pCubeShaderProgram;
     QOpenGLShaderProgram* m_pQuadShaderProgram;
@@ -57,6 +47,10 @@ private:
 
     GLuint m_nVAOID;
     int m_nModelToWorldMatrixLocation;
+
+    QOpenGLContext* m_pSeparateContext;
+    QOffscreenSurface* m_pOffscreenSurface;
+    GLuint m_nCubeVAOID;
 };
 
 #endif // MAINWINDOW_H
