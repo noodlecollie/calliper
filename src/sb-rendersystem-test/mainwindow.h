@@ -9,8 +9,8 @@
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
 
-//#define FOLLOW_FBO_EXAMPLE
-#define TAKE_TEXTURE
+#define FOLLOW_FBO_EXAMPLE
+//#define TAKE_TEXTURE
 
 class MainWindow : public QOpenGLWindow
 {
@@ -31,8 +31,12 @@ private:
     void drawQuad();
 
 #ifdef FOLLOW_FBO_EXAMPLE
-    void generateTexture();
+    void generateTextures();
     void generateRenderBuffer();
+    void deleteFBTextures();
+    GLuint currentFrameBufferTexture() const;
+    GLuint currentUnusedFrameBufferTexture() const;
+    void swapFBTextures();
 #else
     void generateFrameBufferObject();
 #endif
@@ -45,7 +49,8 @@ private:
 #else
     GLuint m_nFBOID;
     GLuint m_nRBID;
-    GLuint m_nFBTextureID;
+    GLuint m_nFBTextures[2];
+    int m_nCurrentFBTexture;
 #endif
 
     QOpenGLShaderProgram* m_pCubeShaderProgram;
