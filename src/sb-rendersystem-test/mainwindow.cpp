@@ -8,8 +8,6 @@
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/math/math.h"
 
-#define USE_FRAMEBUFFER
-
 namespace
 {
     const float cubeVerts[] =
