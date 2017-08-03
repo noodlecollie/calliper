@@ -457,11 +457,19 @@ void MainWindow::drawQuad()
     m_pQuadShaderProgram->enableAttributeArray(0);
     m_pQuadShaderProgram->setAttributeBuffer(0, GL_FLOAT, 0, 2);
 
+    GLuint textureId = 0;
+
 #ifndef FOLLOW_FBO_EXAMPLE
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_pFrameBuffer->texture()));
+    #ifdef TAKE_TEXTURE
+    textureId = m_pFrameBuffer->takeTexture();
+    #else
+    textureId = m_pFrameBuffer->texture();
+    #endif
 #else
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTextureID));
+    textureId = m_nFBTextureID;
 #endif
+
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, textureId));
 
     GLTRY(f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
@@ -469,6 +477,10 @@ void MainWindow::drawQuad()
     m_pQuadIndexBuffer->release();
     m_pQuadVertexBuffer->release();
     m_pQuadShaderProgram->release();
+
+#if !defined(FOLLOW_FBO_EXAMPLE) && defined(TAKE_TEXTURE)
+    GLTRY(f->glDeleteTextures(1, &textureId));
+#endif
 }
 
 void MainWindow::makeCurrentInternal()
