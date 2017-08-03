@@ -214,6 +214,7 @@ void MainWindow::initializeGL()
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
 
         generateTextures();
+        GLTRY(f->glBindTexture(GL_TEXTURE_2D, currentFrameBufferTexture()));
         GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, currentFrameBufferTexture(), 0));
 
         generateRenderBuffer();
@@ -312,6 +313,8 @@ void MainWindow::generateTextures()
         GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 
         GLTRY(f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size().width(), size().height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL));
+
+        GLTRY(glBindTexture(GL_TEXTURE_2D, 0));
     }
 }
 
@@ -373,6 +376,7 @@ void MainWindow::resizeGL(int w, int h)
         GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
 
         generateTextures();
+        GLTRY(f->glBindTexture(GL_TEXTURE_2D, currentFrameBufferTexture()));
         GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, currentFrameBufferTexture(), 0));
 
         generateRenderBuffer();
@@ -412,6 +416,7 @@ void MainWindow::paintGL()
 #ifndef FOLLOW_FBO_EXAMPLE
         m_pFrameBuffer->release();
 #else
+        swapFBTextures();
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
 #endif
 
@@ -421,7 +426,6 @@ void MainWindow::paintGL()
     }
 
     GL_CURRENT_F;
-    GLTRY(f->glFinish());
 
     GLTRY(f->glBindVertexArray(m_nVAOID));
 
@@ -484,7 +488,7 @@ void MainWindow::drawQuad()
     textureId = m_pFrameBuffer->texture();
     #endif
 #else
-    textureId = currentFrameBufferTexture();
+    textureId = currentUnusedFrameBufferTexture();
 #endif
 
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, textureId));
@@ -527,6 +531,8 @@ void MainWindow::swapFBTextures()
     m_nCurrentFBTexture = 0 ? 1 : 0;
 
     GL_CURRENT_F;
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, currentFrameBufferTexture()));
     GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, currentFrameBufferTexture(), 0));
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
 }
 #endif
