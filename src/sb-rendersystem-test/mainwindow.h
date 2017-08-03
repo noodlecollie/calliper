@@ -9,6 +9,8 @@
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
 
+#define FOLLOW_FBO_EXAMPLE
+
 class MainWindow : public QOpenGLWindow
 {
     Q_OBJECT
@@ -26,11 +28,24 @@ private:
     void setOpenGLOptionsForBoundFrameBuffer();
     void drawCube();
     void drawQuad();
+
+#ifdef FOLLOW_FBO_EXAMPLE
+    void generateTexture();
+    void generateRenderBuffer();
+#else
     void generateFrameBufferObject();
+#endif
+
     void makeCurrentInternal();
     void doneCurrentInternal();
 
+#ifndef FOLLOW_FBO_EXAMPLE
     QOpenGLFramebufferObject* m_pFrameBuffer;
+#else
+    GLuint m_nFBOID;
+    GLuint m_nRBID;
+    GLuint m_nFBTextureID;
+#endif
 
     QOpenGLShaderProgram* m_pCubeShaderProgram;
     QOpenGLShaderProgram* m_pQuadShaderProgram;
