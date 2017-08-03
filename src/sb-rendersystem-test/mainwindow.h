@@ -46,7 +46,6 @@ private:
 #else
     GLuint m_nFBOID;
     GLuint m_nRBID;
-    GLuint m_nFBTexture;
     GLuint m_nLocalFBTexture;
 #endif
 

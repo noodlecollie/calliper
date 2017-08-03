@@ -109,7 +109,6 @@ MainWindow::MainWindow() :
     #else
         m_nFBOID(0),
         m_nRBID(0),
-        m_nFBTexture(0),
         m_nLocalFBTexture(0),
     #endif
     m_pCubeShaderProgram(Q_NULLPTR),
@@ -152,7 +151,7 @@ MainWindow::~MainWindow()
         delete m_pFrameBuffer;
         m_pFrameBuffer = Q_NULLPTR;
 #else
-        deleteTexture(m_nFBTexture);
+        deleteTexture(m_nLocalFBTexture);
 
         GL_CURRENT_F;
         GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
@@ -241,9 +240,8 @@ void MainWindow::initializeGL()
         GLTRY(f->glGenFramebuffers(1, &m_nFBOID));
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
 
-        generateTexture(m_nFBTexture);
-        GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTexture));
-        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nFBTexture, 0));
+        GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nLocalFBTexture));
+        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nLocalFBTexture, 0));
 
         generateRenderBuffer();
         setOpenGLOptionsForBoundFrameBuffer();
@@ -357,34 +355,52 @@ void MainWindow::resizeGL(int w, int h)
         return;
     }
 
+#ifdef FOLLOW_FBO_EXAMPLE
     {
         makeCurrentInternal();
 
-#ifndef FOLLOW_FBO_EXAMPLE
-        delete m_pFrameBuffer;
-        generateFrameBufferObject();
-#else
         GL_CURRENT_F;
 
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
 
         GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
-        deleteTexture(m_nFBTexture);
+        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
 
         GLTRY(f->glBindRenderbuffer(GL_RENDERBUFFER_EXT, 0));
         GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
 
-        generateTexture(m_nFBTexture);
-        GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTexture));
-        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nFBTexture, 0));
+        GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
+
+        makeCurrent();
+    }
+
+    deleteTexture(m_nLocalFBTexture);
+    generateTexture(m_nLocalFBTexture);
+
+    {
+        makeCurrentInternal();
+
+        GL_CURRENT_F;
+
+        GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
+
+        GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nLocalFBTexture));
+        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nLocalFBTexture, 0));
 
         generateRenderBuffer();
 
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
-#endif
 
         makeCurrent();
     }
+#else
+    makeCurrentInternal();
+
+    delete m_pFrameBuffer;
+    generateFrameBufferObject();
+
+    makeCurrent();
+#endif
 }
 
 void MainWindow::paintGL()
@@ -486,7 +502,7 @@ void MainWindow::drawQuad()
     textureId = m_pFrameBuffer->texture();
     #endif
 #else
-    textureId = m_nFBTexture;
+    textureId = m_nLocalFBTexture;
 #endif
 
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, textureId));
