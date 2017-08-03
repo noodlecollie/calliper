@@ -109,8 +109,7 @@ MainWindow::MainWindow() :
     #else
         m_nFBOID(0),
         m_nRBID(0),
-        m_nFBTextures{0,0},
-        m_nCurrentFBTexture(0),
+        m_nFBTexture(0),
     #endif
     m_pCubeShaderProgram(Q_NULLPTR),
     m_pQuadShaderProgram(Q_NULLPTR),
@@ -146,24 +145,6 @@ MainWindow::~MainWindow()
     m_RefreshTimer.stop();
 
     {
-        makeCurrent();
-
-        GL_CURRENT_F;
-        GLTRY(f->glDeleteVertexArrays(1, &m_nVAOID));
-
-        delete m_pQuadVertexBuffer;
-        m_pQuadVertexBuffer = Q_NULLPTR;
-
-        delete m_pQuadIndexBuffer;
-        m_pQuadIndexBuffer = Q_NULLPTR;
-
-        delete m_pQuadShaderProgram;
-        m_pQuadShaderProgram = Q_NULLPTR;
-
-        doneCurrent();
-    }
-
-    {
         makeCurrentInternal();
 
 #ifndef FOLLOW_FBO_EXAMPLE
@@ -189,6 +170,24 @@ MainWindow::~MainWindow()
         doneCurrentInternal();
     }
 
+    {
+        makeCurrent();
+
+        GL_CURRENT_F;
+        GLTRY(f->glDeleteVertexArrays(1, &m_nVAOID));
+
+        delete m_pQuadVertexBuffer;
+        m_pQuadVertexBuffer = Q_NULLPTR;
+
+        delete m_pQuadIndexBuffer;
+        m_pQuadIndexBuffer = Q_NULLPTR;
+
+        delete m_pQuadShaderProgram;
+        m_pQuadShaderProgram = Q_NULLPTR;
+
+        doneCurrent();
+    }
+
     delete m_pSeparateContext;
     m_pSeparateContext = Q_NULLPTR;
 
@@ -198,6 +197,31 @@ MainWindow::~MainWindow()
 
 void MainWindow::initializeGL()
 {
+    setOpenGLOptionsForBoundFrameBuffer();
+
+    GL_CURRENT_F;
+    GLTRY(f->glGenVertexArrays(1, &m_nVAOID));
+    GLTRY(f->glBindVertexArray(m_nVAOID));
+
+    m_pQuadShaderProgram = new QOpenGLShaderProgram();
+    m_pQuadShaderProgram->create();
+    m_pQuadShaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, quadVertexShader);
+    m_pQuadShaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, quadFragmentShader);
+    m_pQuadShaderProgram->link();
+
+    m_pQuadVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    m_pQuadVertexBuffer->create();
+    m_pQuadVertexBuffer->bind();
+    m_pQuadVertexBuffer->allocate(quadVerts, 2 * 4 * sizeof(float));
+    m_pQuadVertexBuffer->release();
+
+    m_pQuadIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+    m_pQuadIndexBuffer->create();
+    m_pQuadIndexBuffer->bind();
+    m_pQuadIndexBuffer->allocate(quadIndices, 3 * 2 * sizeof(quint32));
+
+    GLTRY(f->glBindVertexArray(0));
+
     {
         makeCurrentInternal();
 
@@ -214,8 +238,8 @@ void MainWindow::initializeGL()
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_nFBOID));
 
         generateTextures();
-        GLTRY(f->glBindTexture(GL_TEXTURE_2D, currentFrameBufferTexture()));
-        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, currentFrameBufferTexture(), 0));
+        GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTexture));
+        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nFBTexture, 0));
 
         generateRenderBuffer();
         setOpenGLOptionsForBoundFrameBuffer();
@@ -253,31 +277,6 @@ void MainWindow::initializeGL()
         makeCurrent();
     }
 
-    setOpenGLOptionsForBoundFrameBuffer();
-
-    GL_CURRENT_F;
-    GLTRY(f->glGenVertexArrays(1, &m_nVAOID));
-    GLTRY(f->glBindVertexArray(m_nVAOID));
-
-    m_pQuadShaderProgram = new QOpenGLShaderProgram();
-    m_pQuadShaderProgram->create();
-    m_pQuadShaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, quadVertexShader);
-    m_pQuadShaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, quadFragmentShader);
-    m_pQuadShaderProgram->link();
-
-    m_pQuadVertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    m_pQuadVertexBuffer->create();
-    m_pQuadVertexBuffer->bind();
-    m_pQuadVertexBuffer->allocate(quadVerts, 2 * 4 * sizeof(float));
-    m_pQuadVertexBuffer->release();
-
-    m_pQuadIndexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
-    m_pQuadIndexBuffer->create();
-    m_pQuadIndexBuffer->bind();
-    m_pQuadIndexBuffer->allocate(quadIndices, 3 * 2 * sizeof(quint32));
-
-    GLTRY(f->glBindVertexArray(0));
-
     m_RefreshTimer.setInterval((int)(1000.0f / 60.0f));
     connect(&m_RefreshTimer, SIGNAL(timeout()), this, SLOT(update()));
     m_RefreshTimer.start();
@@ -301,21 +300,18 @@ void MainWindow::generateTextures()
 {
     GL_CURRENT_F;
 
-    GLTRY(f->glGenTextures(2, m_nFBTextures));
+    GLTRY(f->glGenTextures(1, &m_nFBTexture));
 
-    for ( int i = 0; i < 2; ++i )
-    {
-        GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTextures[i]));
+    GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTexture));
 
-        GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-        GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-        GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-        GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+    GLTRY(f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 
-        GLTRY(f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size().width(), size().height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL));
+    GLTRY(f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size().width(), size().height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL));
 
-        GLTRY(glBindTexture(GL_TEXTURE_2D, 0));
-    }
+    GLTRY(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 void MainWindow::generateRenderBuffer()
@@ -332,10 +328,9 @@ void MainWindow::generateRenderBuffer()
 void MainWindow::deleteFBTextures()
 {
     GL_CURRENT_F;
-    GLTRY(f->glDeleteTextures(2, m_nFBTextures));
+    GLTRY(f->glDeleteTextures(1, &m_nFBTexture));
 
-    m_nFBTextures[0] = 0;
-    m_nFBTextures[1] = 0;
+    m_nFBTexture = 0;
 }
 #else
 void MainWindow::generateFrameBufferObject()
@@ -376,8 +371,8 @@ void MainWindow::resizeGL(int w, int h)
         GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
 
         generateTextures();
-        GLTRY(f->glBindTexture(GL_TEXTURE_2D, currentFrameBufferTexture()));
-        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, currentFrameBufferTexture(), 0));
+        GLTRY(f->glBindTexture(GL_TEXTURE_2D, m_nFBTexture));
+        GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_nFBTexture, 0));
 
         generateRenderBuffer();
 
@@ -416,7 +411,6 @@ void MainWindow::paintGL()
 #ifndef FOLLOW_FBO_EXAMPLE
         m_pFrameBuffer->release();
 #else
-        swapFBTextures();
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
 #endif
 
@@ -488,7 +482,7 @@ void MainWindow::drawQuad()
     textureId = m_pFrameBuffer->texture();
     #endif
 #else
-    textureId = currentUnusedFrameBufferTexture();
+    textureId = m_nFBTexture;
 #endif
 
     GLTRY(f->glBindTexture(GL_TEXTURE_2D, textureId));
@@ -514,25 +508,3 @@ void MainWindow::doneCurrentInternal()
 {
     m_pSeparateContext->doneCurrent();
 }
-
-#ifdef FOLLOW_FBO_EXAMPLE
-GLuint MainWindow::currentFrameBufferTexture() const
-{
-    return m_nCurrentFBTexture == 0 ? m_nFBTextures[0] : m_nFBTextures[1];
-}
-
-GLuint MainWindow::currentUnusedFrameBufferTexture() const
-{
-    return currentFrameBufferTexture() == m_nFBTextures[0] ? m_nFBTextures[1] : m_nFBTextures[0];
-}
-
-void MainWindow::swapFBTextures()
-{
-    m_nCurrentFBTexture = 0 ? 1 : 0;
-
-    GL_CURRENT_F;
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, currentFrameBufferTexture()));
-    GLTRY(f->glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, currentFrameBufferTexture(), 0));
-    GLTRY(f->glBindTexture(GL_TEXTURE_2D, 0));
-}
-#endif

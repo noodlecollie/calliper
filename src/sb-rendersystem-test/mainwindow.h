@@ -34,9 +34,6 @@ private:
     void generateTextures();
     void generateRenderBuffer();
     void deleteFBTextures();
-    GLuint currentFrameBufferTexture() const;
-    GLuint currentUnusedFrameBufferTexture() const;
-    void swapFBTextures();
 #else
     void generateFrameBufferObject();
 #endif
@@ -49,8 +46,7 @@ private:
 #else
     GLuint m_nFBOID;
     GLuint m_nRBID;
-    GLuint m_nFBTextures[2];
-    int m_nCurrentFBTexture;
+    GLuint m_nFBTexture;
 #endif
 
     QOpenGLShaderProgram* m_pCubeShaderProgram;
