@@ -151,7 +151,6 @@ MainWindow::~MainWindow()
         delete m_pFrameBuffer;
         m_pFrameBuffer = Q_NULLPTR;
 #else
-        deleteTexture(m_nLocalFBTexture);
 
         GL_CURRENT_F;
         GLTRY(f->glDeleteRenderbuffers(1, &m_nRBID));
@@ -175,7 +174,10 @@ MainWindow::~MainWindow()
 
         GL_CURRENT_F;
         GLTRY(f->glDeleteVertexArrays(1, &m_nVAOID));
+
+#ifdef FOLLOW_FBO_EXAMPLE
         deleteTexture(m_nLocalFBTexture);
+#endif
 
         delete m_pQuadVertexBuffer;
         m_pQuadVertexBuffer = Q_NULLPTR;
@@ -204,7 +206,9 @@ void MainWindow::initializeGL()
     GLTRY(f->glGenVertexArrays(1, &m_nVAOID));
     GLTRY(f->glBindVertexArray(m_nVAOID));
 
+#ifdef FOLLOW_FBO_EXAMPLE
     generateTexture(m_nLocalFBTexture);
+#endif
 
     m_pQuadShaderProgram = new QOpenGLShaderProgram();
     m_pQuadShaderProgram->create();

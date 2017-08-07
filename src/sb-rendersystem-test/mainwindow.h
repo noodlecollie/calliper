@@ -9,7 +9,7 @@
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
 
-#define FOLLOW_FBO_EXAMPLE
+//#define FOLLOW_FBO_EXAMPLE
 //#define TAKE_TEXTURE
 
 class MainWindow : public QOpenGLWindow
