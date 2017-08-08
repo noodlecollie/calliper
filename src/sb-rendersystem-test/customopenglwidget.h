@@ -17,6 +17,10 @@ protected:
     virtual void paintGL() override;
 
 private:
+    void initialiseTriangleResources();
+    void destroyTriangleResources();
+    void drawTriangle();
+
     QOpenGLShaderProgram* m_pShaderProgram;
     QOpenGLBuffer* m_pVertexBuffer;
     QOpenGLBuffer* m_pIndexBuffer;

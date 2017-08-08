@@ -36,7 +36,7 @@ namespace
     };
 
     template<typename T>
-    inline void deleteResources(T& pointer)
+    inline void deleteResource(T& pointer)
     {
         delete pointer;
         pointer = Q_NULLPTR;
@@ -59,19 +59,34 @@ CustomOpenGLWidget::~CustomOpenGLWidget()
     m_bInitialised = false;
 
     makeCurrent();
-
-    deleteResources(m_pIndexBuffer);
-    deleteResources(m_pVertexBuffer);
-    deleteResources(m_pShaderProgram);
-
-    GL_CURRENT_F;
-    GLTRY(f->glDeleteVertexArrays(1, &m_nVAOID));
-    m_nVAOID = 0;
-
+    destroyTriangleResources();
     doneCurrent();
 }
 
 void CustomOpenGLWidget::initializeGL()
+{
+    initialiseTriangleResources();
+
+    m_bInitialised = true;
+}
+
+void CustomOpenGLWidget::resizeGL(int w, int h)
+{
+    Q_UNUSED(w);
+    Q_UNUSED(h);
+}
+
+void CustomOpenGLWidget::paintGL()
+{
+    if ( !m_bInitialised )
+    {
+        return;
+    }
+
+    drawTriangle();
+}
+
+void CustomOpenGLWidget::initialiseTriangleResources()
 {
     GL_CURRENT_F;
     GLTRY(f->glGenVertexArrays(1, &m_nVAOID));
@@ -97,23 +112,21 @@ void CustomOpenGLWidget::initializeGL()
     m_pIndexBuffer->release();
 
     GLTRY(f->glBindVertexArray(0));
-
-    m_bInitialised = true;
 }
 
-void CustomOpenGLWidget::resizeGL(int w, int h)
+void CustomOpenGLWidget::destroyTriangleResources()
 {
-    Q_UNUSED(w);
-    Q_UNUSED(h);
+    deleteResource(m_pIndexBuffer);
+    deleteResource(m_pVertexBuffer);
+    deleteResource(m_pShaderProgram);
+
+    GL_CURRENT_F;
+    GLTRY(f->glDeleteVertexArrays(1, &m_nVAOID));
+    m_nVAOID = 0;
 }
 
-void CustomOpenGLWidget::paintGL()
+void CustomOpenGLWidget::drawTriangle()
 {
-    if ( !m_bInitialised )
-    {
-        return;
-    }
-
     GL_CURRENT_F;
     GLTRY(f->glBindVertexArray(m_nVAOID));
 
