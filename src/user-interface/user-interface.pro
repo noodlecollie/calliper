@@ -31,7 +31,8 @@ SOURCES += \
     user-interface/widgets/mainwindowslavewidget.cpp \
     user-interface/signal-handlers/visibilityactionhandler.cpp \
     user-interface/widgets/visibility-action/visibilityactiondockwidget.cpp \
-    user-interface/widgets/visibility-action/visibilityactionwidget.cpp
+    user-interface/widgets/visibility-action/visibilityactionwidget.cpp \
+    user-interface/widgets/openglwidget.cpp
 
 HEADERS +=\
     user-interface_global.h \
@@ -54,7 +55,8 @@ HEADERS +=\
     user-interface/widgets/mainwindowslavewidget.h \
     user-interface/signal-handlers/visibilityactionhandler.h \
     user-interface/widgets/visibility-action/visibilityactiondockwidget.h \
-    user-interface/widgets/visibility-action/visibilityactionwidget.h
+    user-interface/widgets/visibility-action/visibilityactionwidget.h \
+    user-interface/widgets/openglwidget.h
 
 unix {
     target.path = /usr/lib
