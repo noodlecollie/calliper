@@ -21,6 +21,9 @@ public:
     void releaseFBO();
     void flagFlushPending();
 
+protected:
+    virtual void paintEvent(QPaintEvent *event) override;
+
 private:
     void initialiseTriangleResources();
     void destroyTriangleResources();

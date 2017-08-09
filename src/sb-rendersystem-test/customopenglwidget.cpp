@@ -234,3 +234,18 @@ void CustomOpenGLWidget::flagFlushPending()
 {
     m_bFlushPending = true;
 }
+
+void CustomOpenGLWidget::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    makeCurrentWithSurface();
+
+    QOpenGLPaintDevice paintDevice(m_pFrameBuffer->size());
+    QPainter painter(&paintDevice);
+    painter.beginNativePainting();
+
+    drawTriangle();
+
+    painter.endNativePainting();
+    doneCurrent();
+}
