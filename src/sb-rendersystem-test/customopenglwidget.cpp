@@ -1,5 +1,8 @@
 #include "customopenglwidget.h"
 
+#include <QOpenGLPaintDevice>
+#include <QGuiApplication>
+
 #include "calliperutil/opengl/openglerrors.h"
 #include "calliperutil/opengl/openglhelpers.h"
 
@@ -41,49 +44,96 @@ namespace
         delete pointer;
         pointer = Q_NULLPTR;
     }
+
+    class CustomOpenGLWidgetPaintDevice : public QOpenGLPaintDevice
+    {
+    public:
+        CustomOpenGLWidgetPaintDevice(CustomOpenGLWidget *widget)
+            : QOpenGLPaintDevice(widget->size() * (int)qApp->devicePixelRatio()),
+              m_pWidget(widget)
+        {
+        }
+
+        void ensureActiveTarget() override
+        {
+            if ( !m_pWidget->isInitialised() )
+            {
+                return;
+            }
+
+            if (QOpenGLContext::currentContext() != m_pWidget->context())
+            {
+                m_pWidget->makeCurrentWithSurface();
+            }
+
+            m_pWidget->bindFBO();
+            m_pWidget->flagFlushPending();
+        }
+
+    private:
+        CustomOpenGLWidget* m_pWidget;
+    };
 }
 
-CustomOpenGLWidget::CustomOpenGLWidget(QWidget *parent, Qt::WindowFlags f)
-    : QOpenGLWidget(parent, f),
+CustomOpenGLWidget::CustomOpenGLWidget(QOpenGLContext* context, QWidget *parent, Qt::WindowFlags f)
+    : QWidget(parent, f),
       m_pShaderProgram(Q_NULLPTR),
       m_pVertexBuffer(Q_NULLPTR),
       m_pIndexBuffer(Q_NULLPTR),
       m_nVAOID(0),
-      m_bInitialised(false)
+      m_bInitialised(false),
+      m_pContext(context),
+      m_bFlushPending(false),
+      m_pFrameBuffer(Q_NULLPTR),
+      m_pOffscreenSurface(Q_NULLPTR)
 {
+    Q_ASSERT(m_pContext);
 
+    QList<QScreen*> screens = qApp->screens();
+    Q_ASSERT(!screens.isEmpty());
+
+    m_pOffscreenSurface = new QOffscreenSurface(screens.at(0));
+    m_pOffscreenSurface->setFormat(QSurfaceFormat::defaultFormat());
+    m_pOffscreenSurface->create();
+
+    makeCurrentWithSurface();
+    recreateFrameBuffer();
+    initialiseTriangleResources();
+    doneCurrent();
+
+    m_bInitialised = true;
 }
 
 CustomOpenGLWidget::~CustomOpenGLWidget()
 {
     m_bInitialised = false;
 
-    makeCurrent();
+    makeCurrentWithSurface();
     destroyTriangleResources();
+    deleteResource(m_pFrameBuffer);
     doneCurrent();
+
+    deleteResource(m_pOffscreenSurface);
 }
 
-void CustomOpenGLWidget::initializeGL()
+bool CustomOpenGLWidget::isInitialised() const
 {
-    initialiseTriangleResources();
-
-    m_bInitialised = true;
+    return m_bInitialised;
 }
 
-void CustomOpenGLWidget::resizeGL(int w, int h)
+QOpenGLContext* CustomOpenGLWidget::context() const
 {
-    Q_UNUSED(w);
-    Q_UNUSED(h);
+    return m_pContext;
 }
 
-void CustomOpenGLWidget::paintGL()
+void CustomOpenGLWidget::makeCurrentWithSurface()
 {
-    if ( !m_bInitialised )
-    {
-        return;
-    }
+    m_pContext->makeCurrent(m_pOffscreenSurface);
+}
 
-    drawTriangle();
+void CustomOpenGLWidget::doneCurrent()
+{
+    m_pContext->doneCurrent();
 }
 
 void CustomOpenGLWidget::initialiseTriangleResources()
@@ -145,4 +195,42 @@ void CustomOpenGLWidget::drawTriangle()
     m_pShaderProgram->release();
 
     GLTRY(f->glBindVertexArray(0));
+}
+
+void CustomOpenGLWidget::recreateFrameBuffer()
+{
+    deleteResource(m_pFrameBuffer);
+
+    QSize fboSize = size() * (int)qApp->devicePixelRatio();
+
+    QOpenGLFramebufferObjectFormat format;
+    format.setAttachment(QOpenGLFramebufferObject::Depth);
+    format.setSamples(0);
+
+    m_pFrameBuffer = new QOpenGLFramebufferObject(fboSize, format);
+}
+
+void CustomOpenGLWidget::bindFBO()
+{
+    if ( !m_pFrameBuffer )
+    {
+        return;
+    }
+
+    m_pFrameBuffer->bind();
+}
+
+void CustomOpenGLWidget::releaseFBO()
+{
+    if ( !m_pFrameBuffer )
+    {
+        return;
+    }
+
+    m_pFrameBuffer->release();
+}
+
+void CustomOpenGLWidget::flagFlushPending()
+{
+    m_bFlushPending = true;
 }
