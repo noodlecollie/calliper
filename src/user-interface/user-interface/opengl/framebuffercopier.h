@@ -4,7 +4,9 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 
-class FrameBufferCopier
+#include "calliperutil/opengl/openglcontextchecker.h"
+
+class FrameBufferCopier : private CalliperUtil::OpenGLContextChecker
 {
 public:
     FrameBufferCopier();
@@ -15,9 +17,6 @@ public:
     bool isCreated() const;
     void draw(GLuint textureId);
 
-    // TODO: Remove me, only a hack for debugging.
-    quint64 creationContext() const;
-
 private:
     void releaseAll();
 
@@ -26,9 +25,6 @@ private:
     GLuint m_VAOID;
     QOpenGLBuffer* m_pVertexBuffer;
     QOpenGLBuffer* m_pIndexBuffer;
-
-    quint64 m_nCreationContext;
-    quint32 m_nCounter;
 };
 
 #endif // FRAMEBUFFERCOPIER_H

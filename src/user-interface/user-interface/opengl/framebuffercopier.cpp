@@ -50,9 +50,7 @@ FrameBufferCopier::FrameBufferCopier()
       m_pShaderProgram(Q_NULLPTR),
       m_VAOID(0),
       m_pVertexBuffer(Q_NULLPTR),
-      m_pIndexBuffer(Q_NULLPTR),
-      m_nCreationContext(0),
-      m_nCounter(0)
+      m_pIndexBuffer(Q_NULLPTR)
 {
 
 }
@@ -70,10 +68,9 @@ bool FrameBufferCopier::create()
     }
 
     Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
+    snapCreationContext();
 
     GL_CURRENT_F;
-    m_nCreationContext = reinterpret_cast<quint64>(f);
-
     GLTRY(f->glGenVertexArrays(1, &m_VAOID));
     GLTRY(f->glBindVertexArray(m_VAOID));
 
@@ -129,9 +126,7 @@ void FrameBufferCopier::destroy()
         return;
     }
 
-    GL_CURRENT_F;
-    const quint64 currentContext = reinterpret_cast<quint64>(f);
-    Q_ASSERT(m_nCreationContext == 0 || currentContext == m_nCreationContext);
+    verifyCurrentContext();
 
     if ( m_pVertexBuffer )
     {
@@ -156,12 +151,12 @@ void FrameBufferCopier::destroy()
 
     if ( m_VAOID != 0 )
     {
+        GL_CURRENT_F;
         GLTRY(f->glBindVertexArray(0));
         GLTRY(f->glDeleteVertexArrays(1, &m_VAOID));
     }
 
     m_bCreatedSuccessfully = false;
-    m_nCreationContext = 0;
 }
 
 bool FrameBufferCopier::isCreated() const
@@ -171,10 +166,7 @@ bool FrameBufferCopier::isCreated() const
 
 void FrameBufferCopier::draw(GLuint textureId)
 {
-    Q_ASSERT_X(!RenderSystem::Global::renderSystemContextIsCurrent(), Q_FUNC_INFO, "Render system context should not be current!");
-
-    GL_CURRENT_F;
-    Q_ASSERT(m_nCreationContext == 0 || reinterpret_cast<quint64>(f) == m_nCreationContext);
+    verifyCurrentContext();
 
     if ( !m_bCreatedSuccessfully )
     {
@@ -187,6 +179,7 @@ void FrameBufferCopier::draw(GLuint textureId)
         return;
     }
 
+    GL_CURRENT_F;
     GLTRY(f->glBindVertexArray(m_VAOID));
 
     if ( !m_pVertexBuffer->bind() || !m_pIndexBuffer->bind() )
@@ -199,8 +192,6 @@ void FrameBufferCopier::draw(GLuint textureId)
     GLTRY(f->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
     releaseAll();
-
-    ++m_nCounter;
 }
 
 void FrameBufferCopier::releaseAll()
@@ -213,9 +204,4 @@ void FrameBufferCopier::releaseAll()
     m_pShaderProgram->release();
 
     GLTRY(f->glBindVertexArray(0));
-}
-
-quint64 FrameBufferCopier::creationContext() const
-{
-    return m_nCreationContext;
 }
