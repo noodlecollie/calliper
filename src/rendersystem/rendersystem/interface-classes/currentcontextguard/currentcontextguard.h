@@ -9,6 +9,9 @@
 
 #include "rendersystem/global/rendersystem.h"
 
+#include "calliperutil/opengl/openglhelpers.h"
+#include "calliperutil/opengl/openglerrors.h"
+
 /*
  * When using this class, the interface provided as the type T
  * should have functions that require the render system context
@@ -32,6 +35,8 @@ namespace RenderSystem
 
         T& operator *();
         const T& operator *() const;
+
+        void finish();
 
     private:
         bool operator =(const CurrentContextGuard& other) = delete;
@@ -84,6 +89,13 @@ namespace RenderSystem
     const T& CurrentContextGuard<T>::operator *() const
     {
         return m_Functions;
+    }
+
+    template<typename T>
+    void CurrentContextGuard<T>::finish()
+    {
+        GL_CURRENT_F;
+        GLTRY(f->glFinish());
     }
 }
 

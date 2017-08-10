@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += gui
+QT       += gui opengl
 
 TARGET = model-loaders
 TEMPLATE = lib
