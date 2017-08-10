@@ -1,10 +1,7 @@
 #include "mainwindow.h"
-#include "mainwindow2.h"
 
 #include <QApplication>
 #include <QSurfaceFormat>
-
-#define MAINWIN_VERSION 1
 
 int main(int argc, char *argv[])
 {
@@ -28,11 +25,7 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-#if MAINWIN_VERSION == 1
     MainWindow* w = new MainWindow();
-#elif MAINWIN_VERSION == 2
-    MainWindow2* w = new MainWindow2();
-#endif
 
     w->show();
 
