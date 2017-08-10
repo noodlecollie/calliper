@@ -119,6 +119,9 @@ void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferI
     }
 
     frameBufferObject->release();
+
+    GL_CURRENT_F;
+    GLTRY(f->glFinish());
 }
 
 void RenderModel::drawPreFrame(const QSize& size, const RenderSystem::FrameDrawParams &drawParams)

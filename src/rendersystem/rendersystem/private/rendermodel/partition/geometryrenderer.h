@@ -48,7 +48,6 @@ private:
     };
 
     void getOpenGLUniformBufferAttributes();
-    int getLastItemForNextDraw(int firstItem) const;
 
     void draw_x(int batch);
     void bindBuffers_x(int batch);

@@ -279,7 +279,6 @@ namespace UserInterface
         RenderModelStoreEndpoint::RenderModelStoreAccessor renderModelStore = RenderModelStoreEndpoint::renderModelStore();
 
         renderModelStore->draw(renderModelId, m_nRenderFrameBufferId, drawParams);
-        renderModelStore.finish();
 
         return true;
     }

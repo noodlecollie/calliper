@@ -8,14 +8,6 @@
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/opengl/openglerrors.h"
 
-namespace
-{
-    inline int itemsInRange(int firstItem, int lastItem)
-    {
-        return lastItem - firstItem + 1;
-    }
-}
-
 GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
                                    RenderSystem::MaterialDefs::MaterialId materialId,
                                    const GeometryOffsetTable &offsets,
@@ -41,38 +33,6 @@ GeometryRenderer::GeometryRenderer(const RenderModelContext &context,
     {
         m_pCurrentShader = Q_NULLPTR;
     }
-}
-
-int GeometryRenderer::getLastItemForNextDraw(int firstItem) const
-{
-    if ( firstItem + 1 >= m_OffsetTable.count() )
-    {
-        return firstItem;
-    }
-
-    const RenderSystem::GeometrySection::DrawMode firstItemDrawMode = m_OffsetTable[firstItem].drawMode;
-    const float firstItemLineWidth = m_OffsetTable[firstItem].lineWidth;
-
-    for ( int lastItem = firstItem + 1;
-          itemsInRange(firstItem, lastItem) <= m_nItemsPerBatch && lastItem < m_OffsetTable.count();
-          ++lastItem )
-    {
-        // If draw params are different on this item, the last item
-        // should be the previous one.
-        if ( m_OffsetTable[lastItem].drawMode != firstItemDrawMode ||
-             m_OffsetTable[lastItem].lineWidth != firstItemLineWidth )
-        {
-            return lastItem - 1;
-        }
-
-        // If this item is the last in the table, don't go any further.
-        if ( lastItem == m_OffsetTable.count() - 1 )
-        {
-            return lastItem;
-        }
-    }
-
-    return firstItem + m_nItemsPerBatch - 1;
 }
 
 void GeometryRenderer::draw()
@@ -145,10 +105,10 @@ void GeometryRenderer::bindBuffers_x(int batch)
         throw InternalException("Unable to bind index buffer.");
     }
 
-    const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
-
     if ( m_pCurrentShader->hasLocalUniformBlockBinding() )
     {
+        const UniformBatchTable::UniformBatchOffsets& batchOffsets = m_BatchTable.at(batch);
+
         bool uBindSuccess = false;
         GLTRY(uBindSuccess = m_OpenGLBuffers.uniformBuffer().bindRange(PrivateShaderDefs::LocalUniformBlockBindingPoint,
                                                                        batchOffsets.batchOffsetBytes,
