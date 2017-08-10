@@ -434,6 +434,7 @@ void MainWindow::paintGL()
 
 #ifndef FOLLOW_FBO_EXAMPLE
         m_pFrameBuffer->release();
+        GLTRY(f->glFinish());
 #else
         GLTRY(f->glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0));
 #endif

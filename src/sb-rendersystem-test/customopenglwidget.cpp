@@ -247,5 +247,5 @@ void CustomOpenGLWidget::paintEvent(QPaintEvent *event)
     drawTriangle();
 
     painter.endNativePainting();
-    doneCurrent();
+    //doneCurrent();
 }

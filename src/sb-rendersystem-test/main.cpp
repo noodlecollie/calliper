@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QSurfaceFormat>
 
-#define MAINWIN_VERSION 2
+#define MAINWIN_VERSION 1
 
 int main(int argc, char *argv[])
 {
