@@ -83,6 +83,8 @@ void MaterialStore::objectAboutToBeDestroyed(const ObjectId id)
 void MaterialStore::createDefaultMaterial()
 {
     createDefaultObject(QString());
+    QSharedPointer<RenderSystem::RenderMaterial> defaultMaterial = material(INVALID_ID).toStrongRef();
+    defaultMaterial->setShaderId(RenderSystem::ShaderDefs::UnlitGenericShaderId);
 }
 
 void MaterialStore::createDebugMinimalMaterial()

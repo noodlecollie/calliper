@@ -104,11 +104,17 @@ namespace Model
         // Simple check: see which value is the largest.
         // If the normal is null (which it shouldn't be!), the axis will be Z.
         if ( x > y && x > z )
+        {
             normalAxis = CalliperUtil::Math::AxisX;
+        }
         else if ( y > x && y > z )
+        {
             normalAxis = CalliperUtil::Math::AxisY;
+        }
         else
+        {
             normalAxis = CalliperUtil::Math::AxisZ;
+        }
 
         // Get the U and V axes.
         uvAxes(normalAxis, uAxis, vAxis);
