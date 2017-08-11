@@ -37,6 +37,7 @@ namespace Model
         Q_ASSERT(materialId != MaterialDefs::INVALID_MATERIAL_ID);
 
         QSharedPointer<GeometrySection> section = builder.createNewSection(materialId, builder.modelToWorldMatrix());
+
         section->setDrawMode(GeometrySection::DrawLines);
 
         section->addPosition(QVector3D(0,0,0));
@@ -53,12 +54,9 @@ namespace Model
         section->addColor(QColor::fromRgb(0xff0000ff));
         section->addColor(QColor::fromRgb(0xff0000ff));
 
-        section->addIndex(0);
-        section->addIndex(1);
-        section->addIndex(2);
-        section->addIndex(3);
-        section->addIndex(4);
-        section->addIndex(5);
+        section->addIndexPair(0,1);
+        section->addIndexPair(2,3);
+        section->addIndexPair(4,5);
     }
 
     bool OriginMarker::scalable() const

@@ -25,7 +25,7 @@ QWeakPointer<RenderSystem::NamedOpenGLTexture> OpenGLTextureStore::texture(const
 
 OpenGLTextureStore::TextureId OpenGLTextureStore::addTexture(const QImage& image, const QString& path)
 {
-    if ( path.isEmpty() )
+    if ( path.isEmpty() || image.isNull() )
     {
         return INVALID_ID;
     }

@@ -80,7 +80,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/private/shaders/derived/unlitgenericshader.cpp \
     rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.cpp \
     rendersystem/endpoints/presetmaterialstoreendpoint.cpp \
-    rendersystem/private/stores/framebufferstore/framebufferstoreitemmodeladapter.cpp
+    rendersystem/private/stores/framebufferstore/framebufferstoreitemmodeladapter.cpp \
+    rendersystem/private/static-stores/presettexturestore/presettexturestore.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -155,7 +156,9 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.h \
     rendersystem/endpoints/presetmaterialstoreendpoint.h \
     rendersystem/interfaces/ipresetmaterialstore.h \
-    rendersystem/private/stores/framebufferstore/framebufferstoreitemmodeladapter.h
+    rendersystem/private/stores/framebufferstore/framebufferstoreitemmodeladapter.h \
+    rendersystem/private/static-stores/presettexturestore/presettexturestore.h \
+    rendersystem/private/static-stores/presettexturestore/presettexturedefs.h
 
 unix {
     target.path = /usr/lib

@@ -31,6 +31,7 @@ namespace CalliperUtil
 
         static T* globalInstance()
         {
+            Q_ASSERT_X(m_pGlobalInstance, Q_FUNC_INFO, "globalInstance() was called before the store was initialised!");
             return m_pGlobalInstance;
         }
 

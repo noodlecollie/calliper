@@ -8,8 +8,7 @@ namespace
 {
     inline RenderSystem::MaterialDefs::MaterialId createPresetMaterial(const IPresetMaterialInitialiser& initialiser)
     {
-        MaterialStore* store = MaterialStore::globalInstance();
-        Q_ASSERT_X(store, Q_FUNC_INFO, "Expected material store to be initialised!");
+        MaterialStore* const store = MaterialStore::globalInstance();
 
         RenderSystem::MaterialDefs::MaterialId materialId = store->createMaterial("_presetMaterials/" + initialiser.name());
         Q_ASSERT_X(materialId != RenderSystem::MaterialDefs::INVALID_MATERIAL_ID, Q_FUNC_INFO, "Expected valid material ID!");
