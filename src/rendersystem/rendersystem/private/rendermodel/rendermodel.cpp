@@ -8,6 +8,9 @@
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/opengl/openglerrors.h"
 
+#include "rendersystem/private/profiling/generalprofilermodel.h"
+#include "profiling/scoped/scopedprofiler.h"
+
 RenderModel::RenderModel()
     : m_Context(),
       m_RenderGroups(),
@@ -86,6 +89,8 @@ void RenderModel::clear()
 void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
                        const RenderSystem::FrameDrawParams& drawParams)
 {
+    SCOPED_PROFILER("RenderModel draw", *GeneralProfilerModel::globalInstance())
+
     verifyCurrentContext();
 
     QSharedPointer<QOpenGLFramebufferObject> frameBufferObject = frameBuffer(frameBufferId);
