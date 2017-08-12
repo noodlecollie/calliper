@@ -13,7 +13,8 @@ SUBDIRS += \
     app-calliper \
     rendersystem \
     containers \
-    sb-rendersystem-test
+    sb-rendersystem-test \
+    profiling
 
 model.depends = rendersystem calliperutil
 rendersystem.depends = calliperutil containers
