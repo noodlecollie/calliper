@@ -4,6 +4,8 @@
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
 
+#include "rendersystem/private/profiling/generalprofilermodel.h"
+
 #include "rendersystem/private/static-stores/openglshaderstore/openglshaderstore.h"
 #include "rendersystem/private/static-stores/rendermodestore/rendermodestore.h"
 #include "rendersystem/private/static-stores/presetmaterialstore/presetmaterialstore.h"
@@ -33,6 +35,9 @@ namespace
 
 void initialiseStores()
 {
+    // General profiling model
+    GeneralProfilerModel::globalInitialise();
+
     // Frame buffers
     FrameBufferStore::globalInitialise();
 
@@ -68,6 +73,8 @@ void shutdownStores()
     OpenGLShaderStore::globalShutdown();
 
     FrameBufferStore::globalShutdown();
+
+    GeneralProfilerModel::globalShutdown();
 }
 
 namespace RenderSystem

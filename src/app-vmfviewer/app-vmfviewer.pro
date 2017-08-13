@@ -74,3 +74,10 @@ else:unix: LIBS += -L$$OUT_PWD/../containers/ -lcontainers
 
 INCLUDEPATH += $$PWD/../containers
 DEPENDPATH += $$PWD/../containers
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../profiling/release/ -lprofiling
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../profiling/debug/ -lprofiling
+else:unix: LIBS += -L$$OUT_PWD/../profiling/ -lprofiling
+
+INCLUDEPATH += $$PWD/../profiling
+DEPENDPATH += $$PWD/../profiling

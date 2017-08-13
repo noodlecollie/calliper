@@ -158,7 +158,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/interfaces/ipresetmaterialstore.h \
     rendersystem/private/stores/framebufferstore/framebufferstoreitemmodeladapter.h \
     rendersystem/private/static-stores/presettexturestore/presettexturestore.h \
-    rendersystem/private/static-stores/presettexturestore/presettexturedefs.h
+    rendersystem/private/static-stores/presettexturestore/presettexturedefs.h \
+    rendersystem/private/profiling/generalprofilermodel.h
 
 unix {
     target.path = /usr/lib
@@ -181,3 +182,10 @@ else:unix: LIBS += -L$$OUT_PWD/../containers/ -lcontainers
 
 INCLUDEPATH += $$PWD/../containers
 DEPENDPATH += $$PWD/../containers
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../profiling/release/ -lprofiling
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../profiling/debug/ -lprofiling
+else:unix: LIBS += -L$$OUT_PWD/../profiling/ -lprofiling
+
+INCLUDEPATH += $$PWD/../profiling
+DEPENDPATH += $$PWD/../profiling
