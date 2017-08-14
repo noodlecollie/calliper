@@ -14,6 +14,7 @@ namespace Profiling
         {
             ProfilerModel* m_pModel;
             ProfilerModel::ProfilerData* m_pData;
+            int m_nDataSlot;
             const char* const m_szDescription;
             const char* const m_szFunction;
             const char* const m_szFile;
@@ -21,16 +22,23 @@ namespace Profiling
             inline explicit StaticData(const char* description, const char* function, const char* file)
                 : m_pModel(Q_NULLPTR),
                   m_pData(Q_NULLPTR),
+                  m_nDataSlot(-1),
                   m_szDescription(description),
                   m_szFunction(function),
                   m_szFile(file)
             {
             }
 
-            inline void initialise(ProfilerModel& model)
+            inline void ensureInitialised(ProfilerModel& model)
             {
+                if ( m_pModel )
+                {
+                    return;
+                }
+
                 m_pModel = &model;
-                m_pData = &m_pModel->nextAvailableProfilerData();
+                m_nDataSlot = m_pModel->allocateNextAvailableDataSlot();
+                m_pData = &m_pModel->m_pDataArray[m_nDataSlot];
             }
         };
 
@@ -38,19 +46,16 @@ namespace Profiling
             : m_StaticData(staticData),
               m_nMsecOnCreation(QTime::currentTime().msecsSinceStartOfDay())
         {
-            if ( !m_StaticData.m_pModel )
-            {
-                m_StaticData.initialise(model);
-            }
+            m_StaticData.ensureInitialised(model);
 
-            m_StaticData.m_pData->m_nDepth = m_StaticData.m_pModel->onScopedProfilerCreated();
+            m_StaticData.m_pData->m_nDepth = m_StaticData.m_pModel->onScopedProfilerCreated(m_StaticData.m_nDataSlot);
             m_StaticData.m_pData->m_nLine = line;
         }
 
         inline ~ScopedProfiler()
         {
             m_StaticData.m_pData->m_nTimeInMsec = QTime::currentTime().msecsSinceStartOfDay() - m_nMsecOnCreation;
-            m_StaticData.m_pModel->onScopedProfilerDestroyed();
+            m_StaticData.m_pModel->onScopedProfilerDestroyed(m_StaticData.m_nSlot);
         }
 
     private:
