@@ -22,12 +22,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     profiling_global.cpp \
-    profiling/profilermodel/profilermodel.cpp
+    profiling/profilermodel/profilermodel.cpp \
+    profiling/profilermodel/profileritemmodeladatper.cpp
 
 HEADERS += \
         profiling_global.h \ 
     profiling/scoped/scopedprofiler.h \
-    profiling/profilermodel/profilermodel.h
+    profiling/profilermodel/profilermodel.h \
+    profiling/profilermodel/profileritemmodeladatper.h
 
 unix {
     target.path = /usr/lib
