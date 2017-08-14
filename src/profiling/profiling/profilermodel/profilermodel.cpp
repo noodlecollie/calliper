@@ -1,5 +1,10 @@
 #include "profilermodel.h"
 
+namespace
+{
+    static constexpr int NULL_SLOT_ID = -1;
+}
+
 namespace Profiling
 {
     ProfilerModel::ProfilerModel(quint32 maxDataSlots)
@@ -43,21 +48,38 @@ namespace Profiling
         return m_nDataSlotCount;
     }
 
-    QVector<int> ProfilerModel::children(int parentSlot) const
+    void ProfilerModel::exportChildren(QVector<QVector<int> > &childArrays) const
     {
-        // There shouldn't be too many profiler slots and we should get cache benefit,
-        // so a linear parent search should be OK.
+        // There are count+1 arrays, because we want to include the children of the null slot.
+        childArrays.clear();
+        childArrays.reserve(m_nDataSlotCount + 1);
 
-        QVector vec;
-
-        for ( quint32 i = 0; i < m_nDataSlotCount; ++i )
+        for ( int i = 0; i <= static_cast<int>(m_nDataSlotCount); ++i )
         {
-            if ( m_pParentArray[i] == parentSlot )
-            {
-                vec.append(i);
-            }
+            childArrays.append(QVector<int>());
         }
 
-        return vec;
+        for ( int slot = 0; slot < static_cast<int>(m_nDataSlotCount); ++slot )
+        {
+            const int parentOfSlot = m_pParentArray[slot];
+            if ( parentOfSlot == INVALID_PARENT_ID )
+            {
+                continue;
+            }
+
+            Q_ASSERT_X(parentOfSlot + 1 < childArrays.count(), Q_FUNC_INFO, "Parent slot index out of range!");
+
+            childArrays[parentOfSlot + 1].append(slot);
+        }
+    }
+
+    int ProfilerModel::parent(int childSlot) const
+    {
+        if ( childSlot < 0 || childSlot >= static_cast<int>(m_nDataSlotCount) )
+        {
+            return NULL_SLOT_ID;
+        }
+
+        return m_pParentArray[childSlot];
     }
 }

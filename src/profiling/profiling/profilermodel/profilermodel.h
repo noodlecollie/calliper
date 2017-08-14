@@ -33,7 +33,8 @@ namespace Profiling
         ~ProfilerModel();
 
         quint32 dataSlotCount() const;
-        QVector<int> children(int parentSlot) const;
+        void exportChildren(QVector<QVector<int> >& childArrays) const;
+        int parent(int childSlot) const;
 
     private:
         int allocateNextAvailableDataSlot();
@@ -63,7 +64,6 @@ namespace Profiling
         }
 
         static constexpr int INVALID_PARENT_ID = -2;
-        static constexpr int NULL_SLOT_ID = -1;
 
         const quint32 m_nMaxDataSlots;
 

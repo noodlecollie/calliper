@@ -1,6 +1,14 @@
 #include "profileritemmodeladatper.h"
 #include "profilermodel.h"
 
+namespace
+{
+    inline int toSlotIndex(const QModelIndex& modelIndex)
+    {
+        return static_cast<int>(modelIndex.internalId());
+    }
+}
+
 namespace Profiling
 {
     ProfilerItemModelAdatper::ProfilerItemModelAdatper(const ProfilerModel &model, QObject *parent)
@@ -13,15 +21,7 @@ namespace Profiling
     void ProfilerItemModelAdatper::refresh()
     {
         beginResetModel();
-
-        m_ChildLists.clear();
-        m_ChildLists.reserve(m_Model.dataSlotCount());
-
-        for ( quint32 i = 0; i < m_Model.dataSlotCount(); ++i )
-        {
-            m_ChildLists.append(m_Model.children(i));
-        }
-
+        m_Model.exportChildren(m_ChildLists);
         endResetModel();
     }
 
@@ -32,56 +32,99 @@ namespace Profiling
             return QModelIndex();
         }
 
-        const int slotIndex = static_cast<const int>(parent.internalId());
+        const int parentSlotIndex = toSlotIndex(parent);
 
-        if ( !isValidSlot(slotIndex) )
+        if ( !isValidSlot(parentSlotIndex) )
         {
             return QModelIndex();
         }
 
-        Q_ASSERT_X(m_ChildLists.count() > slotIndex, Q_FUNC_INFO, "Expected a child list to exist!");
-
-        const SlotVector& childrenOfParent = m_ChildLists[slotIndex];
-        if ( row < 0 || row >= childrenOfParent.count() )
+        const SlotVector& children = childrenOfParent(parentSlotIndex);
+        if ( row < 0 || row >= children.count() )
         {
             return QModelIndex();
         }
 
-        return createIndex(row, column, children.at(row));
+        return createIndexForSlot(children.at(row), row, column);
     }
 
     QModelIndex ProfilerItemModelAdatper::parent(const QModelIndex &child) const
     {
-        const int slotIndex = static_cast<const int>(child.internalId());
+        const int childSlotIndex = toSlotIndex(child);
 
-        if ( !isValidSlot(slotIndex) )
+        if ( !isValidSlot(childSlotIndex) )
         {
             return QModelIndex();
         }
 
+        const int parentSlotIndex = m_Model.parent(childSlotIndex);
+        if ( parentSlotIndex < 0 )
+        {
+            return QModelIndex();
+        }
 
+        const int grandparentSlotIndex = m_Model.parent(parentSlotIndex);
+        const int parentIndexInGrandparentsChildren = childrenOfParent(grandparentSlotIndex).indexOf(parentSlotIndex);
+        Q_ASSERT_X(parentIndexInGrandparentsChildren >= 0, Q_FUNC_INFO, "Expected parent to be present in grandparent's list of children!");
+
+        return createIndex(parentIndexInGrandparentsChildren, 0, parentSlotIndex);
     }
 
     int ProfilerItemModelAdatper::rowCount(const QModelIndex &parent) const
     {
-        // TODO
-        return 0;
+        const int parentSlotIndex = toSlotIndex(parent);
+        if ( !isValidSlot(parentSlotIndex) )
+        {
+            return 0;
+        }
+
+        return childrenOfParent(parentSlotIndex).count();
     }
 
     int ProfilerItemModelAdatper::columnCount(const QModelIndex &parent) const
     {
-        // TODO
-        return 0;
+        const int parentSlotIndex = toSlotIndex(parent);
+        if ( !isValidSlot(parentSlotIndex) )
+        {
+            return 0;
+        }
+
+        return TOTAL_COLUMNS;
     }
 
     QVariant ProfilerItemModelAdatper::data(const QModelIndex &index, int role) const
     {
-        // TODO
-        return QVariant();
+        const int slotIndex = toSlotIndex(index);
+        if ( !isValidSlot(slotIndex) )
+        {
+            return QVariant();
+        }
+
+        // TODO: Replace placeholder data.
+        if ( role != Qt::DisplayRole )
+        {
+            return QVariant();
+        }
+
+        return QVariant("Placeholder");
     }
 
     bool ProfilerItemModelAdatper::isValidSlot(int slotIndex) const
     {
-        return slotIndex != ProfilerModel::NULL_SLOT_ID && (slotindex < 0 || slotIndex >= m_Model.dataSlotCount());
+        return slotindex >= -1 && slotIndex < m_Model.dataSlotCount();
+    }
+
+    const ProfilerItemModelAdatper::SlotVector& ProfilerItemModelAdatper::childrenOfParent(int parentIndex) const
+    {
+        ++parentIndex;
+
+        Q_ASSERT_X(parentIndex >= 0 && parentIndex < m_ChildLists.count(), Q_FUNC_INFO, "Invalid parent index!");
+
+        return m_ChildLists[parentIndex];
+    }
+
+    QModelIndex ProfilerItemModelAdatper::createIndexForSlot(int slotIndexInProfilerModel, int slotIndexInParentsChildrenList, int column = 0) const
+    {
+        return createIndex(slotIndexInParentsChildrenList, column, slotIndexInProfilerModel);
     }
 }

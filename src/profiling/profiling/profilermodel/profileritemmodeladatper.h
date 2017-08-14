@@ -33,6 +33,8 @@ namespace Profiling
         typedef QVector<int> SlotVector;
 
         bool isValidSlot(int slotIndex) const;
+        const SlotVector& childrenOfParent(int parentIndex) const;
+        QModelIndex createIndexForSlot(int slotIndexInProfilerModel, int slotIndexInParentsChildrenList, int column = 0) const;
 
         const ProfilerModel& m_Model;
 
