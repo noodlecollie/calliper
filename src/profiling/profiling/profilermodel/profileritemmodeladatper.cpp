@@ -111,7 +111,7 @@ namespace Profiling
 
     bool ProfilerItemModelAdatper::isValidSlot(int slotIndex) const
     {
-        return slotindex >= -1 && slotIndex < m_Model.dataSlotCount();
+        return slotIndex >= -1 && slotIndex < static_cast<int>(m_Model.dataSlotCount());
     }
 
     const ProfilerItemModelAdatper::SlotVector& ProfilerItemModelAdatper::childrenOfParent(int parentIndex) const
@@ -123,7 +123,7 @@ namespace Profiling
         return m_ChildLists[parentIndex];
     }
 
-    QModelIndex ProfilerItemModelAdatper::createIndexForSlot(int slotIndexInProfilerModel, int slotIndexInParentsChildrenList, int column = 0) const
+    QModelIndex ProfilerItemModelAdatper::createIndexForSlot(int slotIndexInProfilerModel, int slotIndexInParentsChildrenList, int column) const
     {
         return createIndex(slotIndexInParentsChildrenList, column, slotIndexInProfilerModel);
     }

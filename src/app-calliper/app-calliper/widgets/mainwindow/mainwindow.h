@@ -21,7 +21,7 @@ namespace AppCalliper
 {
     class ProjectFileDockWidget;
     class ProjectMetadataDockWidget;
-    class FrameBufferDebugWidget;
+    class DebugTopLevelWidget;
 
     class MainWindow : public QMainWindow
     {
@@ -70,7 +70,7 @@ namespace AppCalliper
         ProjectFileDockWidget* m_pProjectFileDockWidget;
         ProjectMetadataDockWidget* m_pProjectMetadataDockWidget;
 
-        FrameBufferDebugWidget* m_pFramebufferDebugWidget;
+        DebugTopLevelWidget* m_pDebugDisplay;
 
         QScopedPointer<ApplicationProject> m_pProject;
         bool m_bUnsavedProjectChanges;

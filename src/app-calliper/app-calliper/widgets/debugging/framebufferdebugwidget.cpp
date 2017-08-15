@@ -1,21 +1,12 @@
 #include "framebufferdebugwidget.h"
-#include "ui_framebufferdebugwidget.h"
 
 #include "rendersystem/endpoints/framebufferstoreendpoint.h"
 
 namespace AppCalliper
 {
     FrameBufferDebugWidget::FrameBufferDebugWidget(QWidget *parent)
-        : BaseDebugTopLevelWidget(parent),
-        ui(new Ui::FrameBufferDebugWidget)
+        : QTableView(parent)
     {
-        ui->setupUi(this);
-
-        ui->tableView->setModel(RenderSystem::FrameBufferStoreEndpoint::constFrameBufferStore()->itemModel());
-    }
-
-    FrameBufferDebugWidget::~FrameBufferDebugWidget()
-    {
-        delete ui;
+        setModel(RenderSystem::FrameBufferStoreEndpoint::constFrameBufferStore()->itemModel());
     }
 }

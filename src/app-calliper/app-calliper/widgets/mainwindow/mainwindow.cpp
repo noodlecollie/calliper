@@ -11,7 +11,7 @@
 #include "app-calliper/widgets/projectfiles/projectfiletreewidget.h"
 #include "app-calliper/widgets/dock/projectfiledockwidget.h"
 #include "app-calliper/widgets/dock/projectmetadatadockwidget.h"
-#include "app-calliper/widgets/debugging/framebufferdebugwidget.h"
+#include "app-calliper/widgets/debugging/debugtoplevelwidget.h"
 
 #include "model-loaders/projects/calliperprojectloader.h"
 #include "model-loaders/json/jsonloaderutils.h"
@@ -307,8 +307,8 @@ namespace AppCalliper
 
     void MainWindow::initDebugWidgets()
     {
-        m_pFramebufferDebugWidget = new FrameBufferDebugWidget();
-        m_pFramebufferDebugWidget->visibilityActionHandler()->setVisibilityAction(ui->action_DebugWidget_Framebuffers);
+        m_pDebugDisplay = new DebugTopLevelWidget();
+        m_pDebugDisplay->visibilityActionHandler()->setVisibilityAction(ui->action_DebugWidget_Framebuffers);
     }
 
     QString MainWindow::getFileDialogueDefaultPath() const

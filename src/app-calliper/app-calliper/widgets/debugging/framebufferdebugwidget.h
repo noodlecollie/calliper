@@ -1,26 +1,15 @@
 #ifndef FRAMEBUFFERDEBUGWIDGET_H
 #define FRAMEBUFFERDEBUGWIDGET_H
 
-#include <QWidget>
-
-#include "basedebugtoplevelwidget.h"
-
-namespace Ui {
-class FrameBufferDebugWidget;
-}
+#include <QTableView>
 
 namespace AppCalliper
 {
-    class FrameBufferDebugWidget : public BaseDebugTopLevelWidget
+    class FrameBufferDebugWidget : public QTableView
     {
         Q_OBJECT
-
     public:
         explicit FrameBufferDebugWidget(QWidget *parent = 0);
-        ~FrameBufferDebugWidget();
-
-    private:
-        Ui::FrameBufferDebugWidget *ui;
     };
 }
 

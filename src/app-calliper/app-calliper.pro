@@ -21,7 +21,7 @@ SOURCES += app-calliper/main.cpp\
     app-calliper/application/applicationtasks.cpp \
     app-calliper/widgets/projectfiles/projectfiletreewidget.cpp \
     app-calliper/widgets/debugging/framebufferdebugwidget.cpp \
-    app-calliper/widgets/debugging/basedebugtoplevelwidget.cpp
+    app-calliper/widgets/debugging/debugtoplevelwidget.cpp
 
 HEADERS  += app-calliper/widgets/mainwindow/mainwindow.h \
     app-calliper/widgets/dock/projectfiledockwidget.h \
@@ -31,10 +31,9 @@ HEADERS  += app-calliper/widgets/mainwindow/mainwindow.h \
     app-calliper/application/applicationtasks.h \
     app-calliper/widgets/projectfiles/projectfiletreewidget.h \
     app-calliper/widgets/debugging/framebufferdebugwidget.h \
-    app-calliper/widgets/debugging/basedebugtoplevelwidget.h
+    app-calliper/widgets/debugging/debugtoplevelwidget.h
 
-FORMS    += app-calliper/widgets/mainwindow/mainwindow.ui \
-    app-calliper/widgets/debugging/framebufferdebugwidget.ui
+FORMS    += app-calliper/widgets/mainwindow/mainwindow.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil
