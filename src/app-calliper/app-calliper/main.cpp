@@ -26,8 +26,6 @@ void initOpenGL()
 
 int main(int argc, char *argv[])
 {
-    using namespace AppCalliper;
-
     initOpenGL();
 
     QApplication a(argc, argv);

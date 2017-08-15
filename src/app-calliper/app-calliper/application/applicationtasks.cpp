@@ -4,18 +4,15 @@
 
 #include "rendersystem/global/rendersystem.h"
 
-namespace AppCalliper
+namespace ApplicationTasks
 {
-    namespace ApplicationTasks
+    void initSubSystems()
     {
-        void initSubSystems()
-        {
-            RenderSystem::Global::initialise();
-        }
+        RenderSystem::Global::initialise();
+    }
 
-        void shutDownSubSystems()
-        {
-            RenderSystem::Global::shutdown();
-        }
+    void shutDownSubSystems()
+    {
+        RenderSystem::Global::shutdown();
     }
 }

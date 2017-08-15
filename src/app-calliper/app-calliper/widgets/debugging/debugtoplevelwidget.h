@@ -10,25 +10,22 @@
 
 #include "app-calliper/widgets/debugging/framebufferdebugwidget.h"
 
-namespace AppCalliper
+class DebugTopLevelWidget : public UserInterface::MainWindowSlaveWidget
 {
-    class DebugTopLevelWidget : public UserInterface::MainWindowSlaveWidget
-    {
-        Q_OBJECT
-    public:
-        explicit DebugTopLevelWidget(QWidget *parent = 0);
+    Q_OBJECT
+public:
+    explicit DebugTopLevelWidget(QWidget *parent = 0);
 
-        QSize sizeHint() const;
-        UserInterface::VisibilityActionHandler* visibilityActionHandler();
+    QSize sizeHint() const;
+    UserInterface::VisibilityActionHandler* visibilityActionHandler();
 
-    private:
-        QVBoxLayout* m_pLayout;
+private:
+    QVBoxLayout* m_pLayout;
 
-        QTabWidget* m_pTabWidget;
-        FrameBufferDebugWidget* m_pFrameBufferDebugWidget;
+    QTabWidget* m_pTabWidget;
+    FrameBufferDebugWidget* m_pFrameBufferDebugWidget;
 
-        UserInterface::VisibilityActionHandler* m_pVisibilityActionHandler;
-    };
-}
+    UserInterface::VisibilityActionHandler* m_pVisibilityActionHandler;
+};
 
 #endif // DEBUGTOPLEVELWIDGET_H

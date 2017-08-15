@@ -17,7 +17,6 @@ SOURCES += app-calliper/main.cpp\
     app-calliper/widgets/dock/projectfiledockwidget.cpp \
     app-calliper/model/applicationproject.cpp \
     app-calliper/widgets/dock/projectmetadatadockwidget.cpp \
-    app-calliper_global.cpp \
     app-calliper/application/applicationtasks.cpp \
     app-calliper/widgets/projectfiles/projectfiletreewidget.cpp \
     app-calliper/widgets/debugging/framebufferdebugwidget.cpp \
@@ -27,7 +26,6 @@ SOURCES += app-calliper/main.cpp\
 HEADERS  += app-calliper/widgets/mainwindow/mainwindow.h \
     app-calliper/widgets/dock/projectfiledockwidget.h \
     app-calliper/model/applicationproject.h \
-    app-calliper_global.h \
     app-calliper/widgets/dock/projectmetadatadockwidget.h \
     app-calliper/application/applicationtasks.h \
     app-calliper/widgets/projectfiles/projectfiletreewidget.h \
