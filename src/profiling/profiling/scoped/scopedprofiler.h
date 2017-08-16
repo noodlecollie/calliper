@@ -64,6 +64,7 @@ namespace Profiling
     };
 }
 
+#ifdef ENABLE_PROFILING
 #define SCOPEDPROFILER_STATICDATA_ARGS(_desc) (_desc), Q_FUNC_INFO, __FILE__
 #define SCOPEDPROFILER_ARGS(_item, _model) (_item), (_model), __LINE__
 
@@ -71,5 +72,10 @@ namespace Profiling
     static Profiling::ScopedProfiler::StaticData scopedProfilerStaticData(SCOPEDPROFILER_STATICDATA_ARGS(_desc)); \
     Profiling::ScopedProfiler scopedProfiler(SCOPEDPROFILER_ARGS(scopedProfilerStaticData, _model)); \
     Q_UNUSED(scopedProfiler);
+#else
+#define SCOPEDPROFILER_STATICDATA_ARGS(...)
+#define SCOPEDPROFILER_ARGS(...)
+#define SCOPED_PROFILER(...)
+#endif
 
 #endif // SCOPEDPROFILER_H
