@@ -39,6 +39,9 @@ public:
     virtual QAbstractItemModel* itemModel() const override;
     virtual Profiling::ProfilerItemModelAdatper* profilingData(const RenderModelId modelId) const override;
 
+    // Internal
+    Containers::IObjectStoreItemModel* objectStoreItemModel() const;
+
 private:
     mutable RenderModelStoreItemModelAdapter m_ItemModelAdapter;
 };

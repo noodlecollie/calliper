@@ -1,7 +1,7 @@
 #ifndef RENDERMODELPROFILINGWRAPPER_H
 #define RENDERMODELPROFILINGWRAPPER_H
 
-#include <QAbstractItemModel>
+#include "containers/adapters/iobjectstoreitemmodel.h"
 
 class RenderModelProfilingWrapper : public QAbstractItemModel
 {
@@ -18,7 +18,7 @@ public:
 private:
     QModelIndex getIndexForTopLevelItem(int row, int column) const;
 
-    QAbstractItemModel& m_RenderModelStoreItemModel;
+    Containers::IObjectStoreItemModel* const m_pObjectStoreItemModel;
 };
 
 #endif // RENDERMODELPROFILINGWRAPPER_H

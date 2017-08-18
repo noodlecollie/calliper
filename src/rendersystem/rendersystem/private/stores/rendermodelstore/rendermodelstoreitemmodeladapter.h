@@ -12,9 +12,10 @@ class RenderModelStoreItemModelAdapter : public Containers::ItemPointerBasedItem
                                                                                              RenderSystem::RenderModelDefs::RenderModelId>
 {
 public:
+    // Columns begin from 1, since the object ID is always column 0.
     enum ModelColumn
     {
-        NameColumn = 0,
+        NameColumn = 1,
 
         TOTAL_MODEL_COLUMNS
     };
@@ -28,6 +29,8 @@ protected:
     virtual QVariant itemData(const ObjectId &id, const QModelIndex &index, int role) const override;
 
 private:
+    typedef Containers::ItemPointerBasedItemModelAdapter<RenderModel, RenderSystem::RenderModelDefs::RenderModelId> BaseClass;
+
     const RenderModelStore& m_Store;
 };
 

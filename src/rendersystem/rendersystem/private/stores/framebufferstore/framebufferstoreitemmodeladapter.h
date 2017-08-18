@@ -12,9 +12,10 @@ class FrameBufferStoreItemModelAdapter : public Containers::ItemPointerBasedItem
                                                                                              RenderSystem::FrameBufferDefs::FrameBufferId>
 {
 public:
+    // Columns begin from 1, since the object ID column is always 0.
     enum ModelColumn
     {
-        FBOHandleColumn = 0,
+        FBOHandleColumn = 1,
         SizeColumn,
 
         TOTAL_MODEL_COLUMNS
@@ -29,6 +30,8 @@ protected:
     virtual QVariant itemData(const ObjectId &id, const QModelIndex &index, int role) const override;
 
 private:
+    typedef Containers::ItemPointerBasedItemModelAdapter<QOpenGLFramebufferObject, RenderSystem::FrameBufferDefs::FrameBufferId> BaseClass;
+
     const FrameBufferStore& m_Store;
 };
 

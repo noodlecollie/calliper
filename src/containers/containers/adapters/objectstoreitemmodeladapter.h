@@ -4,6 +4,7 @@
 #include <QVector>
 #include <QString>
 #include <QTextStream>
+#include <QCoreApplication>
 
 #include "containers/objectstore/objectstore.h"
 
@@ -20,6 +21,9 @@ namespace Containers
         typedef typename T::ObjectId ObjectId;
         typedef ObjectStore<T> StoreType;
 
+        // The object ID should always be found at column 0.
+        static constexpr int ObjectIdColumn = 0;
+
         ObjectStoreItemModelAdapter(const StoreType* store);
 
         virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -27,16 +31,19 @@ namespace Containers
         virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+        virtual QVariant objectIdForRow(int row) const override;
+        const QAbstractItemModel* abstractItemModel() const override;
+        QAbstractItemModel* abstractItemModel() override;
 
-        // Should return a QVariant to represent the header data for the given section, with the given role.
-        // The default implementation just calls through to the abstract item model.
-        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+        // headerData() is not implemented because it's not required here.
 
-        const ObjectStoreAbstractItemModel* abstractItemModel() const;
-        ObjectStoreAbstractItemModel* abstractItemModel();
+        const ObjectStoreAbstractItemModel* objectStoreAbstractItemModel() const;
+        ObjectStoreAbstractItemModel* objectStoreAbstractItemModel();
 
     protected:
         // Should return a QVariant to represent the object at the given ID, with the given role.
+        // Note that column 0 with a role of Qt::DisplayRole will be handled automatically
+        // by this class from within data().
         virtual QVariant itemData(const ObjectId& id, const QModelIndex &index, int role) const = 0;
 
     private:
@@ -155,21 +162,33 @@ namespace Containers
     }
 
     template<typename T>
-    ObjectStoreAbstractItemModel* ObjectStoreItemModelAdapter<T>::abstractItemModel()
+    QVariant ObjectStoreItemModelAdapter<T>::objectIdForRow(int row) const
+    {
+        return data(index(row, ObjectIdColumn));
+    }
+
+    template<typename T>
+    ObjectStoreAbstractItemModel* ObjectStoreItemModelAdapter<T>::objectStoreAbstractItemModel()
     {
         return &m_AbstractItemModel;
     }
 
     template<typename T>
-    const ObjectStoreAbstractItemModel* ObjectStoreItemModelAdapter<T>::abstractItemModel() const
+    const ObjectStoreAbstractItemModel* ObjectStoreItemModelAdapter<T>::objectStoreAbstractItemModel() const
     {
         return &m_AbstractItemModel;
     }
 
     template<typename T>
-    QVariant ObjectStoreItemModelAdapter<T>::headerData(int section, Qt::Orientation orientation, int role) const
+    QAbstractItemModel* ObjectStoreItemModelAdapter<T>::abstractItemModel()
     {
-        return m_AbstractItemModel.headerData(section, orientation, role);
+        return objectStoreAbstractItemModel();
+    }
+
+    template<typename T>
+    const QAbstractItemModel* ObjectStoreItemModelAdapter<T>::abstractItemModel() const
+    {
+        return objectStoreAbstractItemModel();
     }
 }
 

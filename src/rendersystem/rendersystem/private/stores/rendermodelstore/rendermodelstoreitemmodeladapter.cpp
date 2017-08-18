@@ -1,7 +1,5 @@
 #include "rendermodelstoreitemmodeladapter.h"
 
-#include <QApplication>
-
 #include "rendersystem/private/stores/rendermodelstore/rendermodelstore.h"
 
 RenderModelStoreItemModelAdapter::RenderModelStoreItemModelAdapter(const RenderModelStore &store)
@@ -38,6 +36,11 @@ QVariant RenderModelStoreItemModelAdapter::itemData(const ObjectId &id, const QM
 
     switch ( index.column() )
     {
+        case ObjectIdColumn:
+        {
+            return QVariant::fromValue(id);
+        }
+
         case NameColumn:
         {
             return QVariant(renderModel->name());
@@ -54,31 +57,31 @@ QVariant RenderModelStoreItemModelAdapter::itemData(const ObjectId &id, const QM
 
 QVariant RenderModelStoreItemModelAdapter::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if ( role != Qt::DisplayRole )
+    if ( role != Qt::DisplayRole || orientation != Qt::Horizontal )
     {
-        return abstractItemModel()->defaultHeaderData(section, orientation, role);
+        return objectStoreAbstractItemModel()->defaultHeaderData(section, orientation, role);
     }
 
-    if ( orientation != Qt::Horizontal )
+    if ( section < ObjectIdColumn || section >= TOTAL_MODEL_COLUMNS )
     {
-        return abstractItemModel()->defaultHeaderData(section, orientation, role);
-    }
-
-    if ( section < 0 || section >= TOTAL_MODEL_COLUMNS )
-    {
-        return abstractItemModel()->defaultHeaderData(section, orientation, role);
+        return objectStoreAbstractItemModel()->defaultHeaderData(section, orientation, role);
     }
 
     switch ( section )
     {
+        case ObjectIdColumn:
+        {
+            return QCoreApplication::translate("RenderModelStoreItemModelAdapter", "Object ID");
+        }
+
         case NameColumn:
         {
-            return QApplication::translate("RenderModelStoreItemModelAdapter", "Name");
+            return QCoreApplication::translate("RenderModelStoreItemModelAdapter", "Name");
         }
 
         default:
         {
-            return abstractItemModel()->defaultHeaderData(section, orientation, role);
+            return objectStoreAbstractItemModel()->defaultHeaderData(section, orientation, role);
         }
     }
 }

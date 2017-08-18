@@ -1,10 +1,10 @@
 #include "rendermodelprofilingwrapper.h"
 
-#include "rendersystem/endpoints/rendermodelstoreendpoint.h"
+#include "rendersystem/private/stores/rendermodelstore/rendermodelstore.h"
 
 RenderModelProfilingWrapper::RenderModelProfilingWrapper(QObject *parent)
     : QAbstractItemModel(parent),
-      m_RenderModelStoreItemModel(*RenderSystem::RenderModelStoreEndpoint::constRenderModelStore()->itemModel())
+      m_pObjectStoreItemModel(RenderModelStore::globalInstance()->objectStoreItemModel())
 {
 
 }
@@ -47,5 +47,5 @@ QVariant RenderModelProfilingWrapper::data(const QModelIndex &index, int role) c
 QModelIndex RenderModelProfilingWrapper::getIndexForTopLevelItem(int row, int column) const
 {
     // TODO
-    return QModelIndex;
+    return QModelIndex();
 }

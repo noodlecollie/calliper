@@ -93,7 +93,7 @@ void RenderModelStore::draw(const RenderModelId modelId,
 
 QAbstractItemModel* RenderModelStore::itemModel() const
 {
-    return m_ItemModelAdapter.abstractItemModel();
+    return m_ItemModelAdapter.objectStoreAbstractItemModel();
 }
 
 Profiling::ProfilerItemModelAdatper* RenderModelStore::profilingData(const RenderModelId modelId) const
@@ -105,4 +105,9 @@ Profiling::ProfilerItemModelAdatper* RenderModelStore::profilingData(const Rende
     }
 
     return model->profilingData();
+}
+
+Containers::IObjectStoreItemModel* RenderModelStore::objectStoreItemModel() const
+{
+    return &m_ItemModelAdapter;
 }

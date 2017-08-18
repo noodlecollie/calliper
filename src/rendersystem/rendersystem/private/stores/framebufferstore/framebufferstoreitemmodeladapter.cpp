@@ -1,7 +1,5 @@
 #include "framebufferstoreitemmodeladapter.h"
 
-#include <QApplication>
-
 #include "rendersystem/private/stores/framebufferstore/framebufferstore.h"
 
 FrameBufferStoreItemModelAdapter::FrameBufferStoreItemModelAdapter(const FrameBufferStore &store)
@@ -38,6 +36,11 @@ QVariant FrameBufferStoreItemModelAdapter::itemData(const ObjectId &id, const QM
 
     switch ( index.column() )
     {
+        case ObjectIdColumn:
+        {
+            return QVariant::fromValue(id);
+        }
+
         case FBOHandleColumn:
         {
             return QVariant(fbo->handle());
@@ -59,36 +62,36 @@ QVariant FrameBufferStoreItemModelAdapter::itemData(const ObjectId &id, const QM
 
 QVariant FrameBufferStoreItemModelAdapter::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if ( role != Qt::DisplayRole )
+    if ( role != Qt::DisplayRole || orientation != Qt::Horizontal )
     {
-        return abstractItemModel()->defaultHeaderData(section, orientation, role);
+        return objectStoreAbstractItemModel()->defaultHeaderData(section, orientation, role);
     }
 
-    if ( orientation != Qt::Horizontal )
+    if ( section < ObjectIdColumn || section >= TOTAL_MODEL_COLUMNS )
     {
-        return abstractItemModel()->defaultHeaderData(section, orientation, role);
-    }
-
-    if ( section < 0 || section >= TOTAL_MODEL_COLUMNS )
-    {
-        return abstractItemModel()->defaultHeaderData(section, orientation, role);
+        return objectStoreAbstractItemModel()->defaultHeaderData(section, orientation, role);
     }
 
     switch ( section )
     {
+        case ObjectIdColumn:
+        {
+            return QCoreApplication::translate("FrameBufferStoreItemModelAdapter", "Object ID");
+        }
+
         case FBOHandleColumn:
         {
-            return QApplication::translate("FrameBufferStoreItemModelAdapter", "OpenGL Handle");
+            return QCoreApplication::translate("FrameBufferStoreItemModelAdapter", "OpenGL Handle");
         }
 
         case SizeColumn:
         {
-            return QApplication::translate("FrameBufferStoreItemModelAdapter", "Size");
+            return QCoreApplication::translate("FrameBufferStoreItemModelAdapter", "Size");
         }
 
         default:
         {
-            return abstractItemModel()->defaultHeaderData(section, orientation, role);
+            return objectStoreAbstractItemModel()->defaultHeaderData(section, orientation, role);
         }
     }
 }

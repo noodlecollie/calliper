@@ -100,5 +100,5 @@ void FrameBufferStore::setFrameBufferSize(const FrameBufferId id, const QSize si
 
 QAbstractItemModel* FrameBufferStore::itemModel() const
 {
-    return m_ItemModelAdapter.abstractItemModel();
+    return m_ItemModelAdapter.objectStoreAbstractItemModel();
 }
