@@ -82,7 +82,8 @@ SOURCES += rendersystem/global/rendersystem.cpp \
     rendersystem/endpoints/presetmaterialstoreendpoint.cpp \
     rendersystem/private/stores/framebufferstore/framebufferstoreitemmodeladapter.cpp \
     rendersystem/private/static-stores/presettexturestore/presettexturestore.cpp \
-    rendersystem/private/stores/rendermodelstore/rendermodelstoreitemmodeladapter.cpp
+    rendersystem/private/stores/rendermodelstore/rendermodelstoreitemmodeladapter.cpp \
+    rendersystem/private/item-model/rendermodelprofilingwrapper.cpp
 
 HEADERS += rendersystem/global/rendersystem.h\
         rendersystem_global.h \
@@ -161,7 +162,8 @@ HEADERS += rendersystem/global/rendersystem.h\
     rendersystem/private/static-stores/presettexturestore/presettexturestore.h \
     rendersystem/private/static-stores/presettexturestore/presettexturedefs.h \
     rendersystem/private/profiling/generalprofilermodel.h \
-    rendersystem/private/stores/rendermodelstore/rendermodelstoreitemmodeladapter.h
+    rendersystem/private/stores/rendermodelstore/rendermodelstoreitemmodeladapter.h \
+    rendersystem/private/item-model/rendermodelprofilingwrapper.h
 
 unix {
     target.path = /usr/lib
