@@ -25,8 +25,11 @@
 class RenderModel : private CalliperUtil::OpenGLContextChecker
 {
 public:
-    RenderModel();
+    RenderModel(const QString& name);
     ~RenderModel();
+
+    QString name() const;
+    void setName(const QString& newName);
 
     // Replaces any geometry for the given object.
     void setGeometry(const RenderSystem::GeometryBuilder& geometry);
@@ -47,6 +50,7 @@ private:
 
     void drawPreFrame(const QSize& size, const RenderSystem::FrameDrawParams& drawParams);
 
+    QString m_strName;
     RenderModelContext m_Context;
     RenderGroupHash m_RenderGroups;
     QMultiHash<RenderSystem::RenderModelDefs::ObjectId, RenderGroupPointer> m_ObjectIdToRenderGroup;

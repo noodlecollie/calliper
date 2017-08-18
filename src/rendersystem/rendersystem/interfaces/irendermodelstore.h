@@ -21,21 +21,28 @@ namespace RenderSystem
         virtual ~IRenderModelStore() {}
 
         // Creates a new, blank render model and returns its ID.
-        virtual RenderModelDefs::RenderModelId createRenderModel() = 0;
+        // The name should be descriptive, and is recommended to be unique.
+        virtual RenderModelDefs::RenderModelId createRenderModel(const QString& name) = 0;
+
+        // Returns the name of the given render model.
+        virtual QString name(const RenderModelDefs::RenderModelId modelId) const = 0;
+
+        // Sets the name of the given render model.
+        virtual void setName(const RenderModelDefs::RenderModelId modelId, const QString& newName) const = 0;
 
         // Destroys an existing render model.
-        virtual void removeRenderModel(RenderModelDefs::RenderModelId modelId) = 0;
+        virtual void removeRenderModel(const RenderModelDefs::RenderModelId modelId) = 0;
 
         // Adds geometry to the render model.
         // If the object ID of this geometry already exists in the render model,
         // the old geometry is replaced.
-        virtual void addGeometry(RenderModelDefs::RenderModelId modelId, const GeometryBuilder& builder) = 0;
+        virtual void addGeometry(const RenderModelDefs::RenderModelId modelId, const GeometryBuilder& builder) = 0;
 
         // Removes any geometry that exists in the model for the given object ID.
-        virtual void removeGeometry(RenderModelDefs::RenderModelId modelId, RenderModelDefs::ObjectId objectId) = 0;
+        virtual void removeGeometry(const RenderModelDefs::RenderModelId modelId, const RenderModelDefs::ObjectId objectId) = 0;
 
         // Clears all geometry from the model, but does not destroy the model itself.
-        virtual void clearGeometry(RenderModelDefs::RenderModelId modelId) = 0;
+        virtual void clearGeometry(const RenderModelDefs::RenderModelId modelId) = 0;
 
         // Draws the given render model into the given frame buffer.
         virtual void draw(const RenderModelDefs::RenderModelId modelId,

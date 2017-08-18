@@ -38,9 +38,9 @@ QVariant RenderModelStoreItemModelAdapter::itemData(const ObjectId &id, const QM
 
     switch ( index.column() )
     {
-        case PlaceholderColumn:
+        case NameColumn:
         {
-            return QVariant("Placeholder value");
+            return QVariant(renderModel->name());
         }
 
         default:
@@ -71,9 +71,9 @@ QVariant RenderModelStoreItemModelAdapter::headerData(int section, Qt::Orientati
 
     switch ( section )
     {
-        case PlaceholderColumn:
+        case NameColumn:
         {
-            return QApplication::translate("RenderModelStoreItemModelAdapter", "Placeholder");
+            return QApplication::translate("RenderModelStoreItemModelAdapter", "Name");
         }
 
         default:

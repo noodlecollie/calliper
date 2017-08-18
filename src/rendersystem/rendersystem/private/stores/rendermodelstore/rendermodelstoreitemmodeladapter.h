@@ -14,7 +14,7 @@ class RenderModelStoreItemModelAdapter : public Containers::ItemPointerBasedItem
 public:
     enum ModelColumn
     {
-        PlaceholderColumn = 0,
+        NameColumn = 0,
 
         TOTAL_MODEL_COLUMNS
     };

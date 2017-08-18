@@ -24,6 +24,8 @@ namespace Model
 
         RenderSystem::RenderModelDefs::RenderModelId renderModelId() const;
 
+        void setRenderModelName(const QString& name) const;
+
     private:
         QScopedPointer<MapScene> m_pScene;
         RenderSystem::RenderModelDefs::RenderModelId m_nRenderModelId;

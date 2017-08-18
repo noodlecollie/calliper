@@ -137,6 +137,7 @@ namespace ModelLoaders
     BaseFileLoader::SuccessCode VmfDataLoader::load(const QString &filePath, QString *errorString)
     {
         clearInternalState();
+        vmfDataModel()->setRenderModelName(filePath);
 
         QFile file(filePath);
         if ( !file.open(QIODevice::ReadOnly) )

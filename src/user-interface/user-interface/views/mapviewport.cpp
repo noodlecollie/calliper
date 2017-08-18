@@ -86,6 +86,8 @@ namespace UserInterface
         if ( mapModel.isNull() )
         {
             m_pDataModel = QWeakPointer<Model::MapFileDataModel>();
+            m_pCameraController->setCamera(Q_NULLPTR);
+            return;
         }
 
         m_pDataModel = mapModel.toWeakRef();

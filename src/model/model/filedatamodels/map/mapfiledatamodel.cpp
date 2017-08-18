@@ -12,7 +12,7 @@ namespace Model
         using namespace RenderSystem;
 
         RenderModelStoreEndpoint::RenderModelStoreAccessor renderModelStore = RenderModelStoreEndpoint::renderModelStore();
-        m_nRenderModelId = renderModelStore->createRenderModel();
+        m_nRenderModelId = renderModelStore->createRenderModel(QString());
 
         Q_ASSERT_X(m_nRenderModelId != RenderModelDefs::INVALID_RENDER_MODEL_ID,
                    Q_FUNC_INFO,
@@ -49,5 +49,10 @@ namespace Model
     RenderSystem::RenderModelDefs::RenderModelId MapFileDataModel::renderModelId() const
     {
         return m_nRenderModelId;
+    }
+
+    void MapFileDataModel::setRenderModelName(const QString &name) const
+    {
+        RenderSystem::RenderModelStoreEndpoint::constRenderModelStore()->setName(m_nRenderModelId, name);
     }
 }

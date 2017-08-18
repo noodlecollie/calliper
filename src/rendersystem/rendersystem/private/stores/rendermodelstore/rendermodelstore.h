@@ -26,13 +26,14 @@ public:
     virtual ~RenderModelStore();
 
     // External
-    virtual RenderModelId createRenderModel() override;
-    virtual void removeRenderModel(RenderModelId modelId) override;
-    virtual void addGeometry(RenderModelId modelId, const RenderSystem::GeometryBuilder& builder) override;
-    virtual void removeGeometry(RenderModelId modelId, ObjectId objectId) override;
-    virtual void clearGeometry(RenderModelId modelId) override;
+    virtual RenderModelId createRenderModel(const QString& name) override;
+    virtual QString name(const RenderModelId modelId) const override;
+    virtual void setName(const RenderModelId modelId, const QString &newName) const override;
+    virtual void removeRenderModel(const RenderModelId modelId) override;
+    virtual void addGeometry(const RenderModelId modelId, const RenderSystem::GeometryBuilder& builder) override;
+    virtual void removeGeometry(const RenderModelId modelId, const ObjectId objectId) override;
+    virtual void clearGeometry(const RenderModelId modelId) override;
     virtual QAbstractItemModel* itemModel() const override;
-
     virtual void draw(const RenderModelId modelId,
                       const FrameBufferId frameBufferId,
                       const RenderSystem::FrameDrawParams& drawParams) override;

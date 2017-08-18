@@ -13,9 +13,31 @@ RenderModelStore::~RenderModelStore()
 
 }
 
-RenderModelStore::RenderModelId RenderModelStore::createRenderModel()
+RenderModelStore::RenderModelId RenderModelStore::createRenderModel(const QString& name)
 {
-    return create();
+    return create(name);
+}
+
+QString RenderModelStore::name(const RenderModelId modelId) const
+{
+    QSharedPointer<RenderModel> model = object(modelId);
+    if ( !model )
+    {
+        return QString();
+    }
+
+    return model->name();
+}
+
+void RenderModelStore::setName(const RenderModelId modelId, const QString &newName) const
+{
+    QSharedPointer<RenderModel> model = object(modelId);
+    if ( !model )
+    {
+        return;
+    }
+
+    model->setName(newName);
 }
 
 void RenderModelStore::removeRenderModel(RenderModelId modelId)

@@ -15,8 +15,9 @@ namespace
     constexpr quint32 MAX_PROFILER_MODEL_SLOTS = 32;
 }
 
-RenderModel::RenderModel()
-    : m_Context(),
+RenderModel::RenderModel(const QString& name)
+    : m_strName(name),
+      m_Context(),
       m_RenderGroups(),
       m_ObjectIdToRenderGroup(),
       m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw),
@@ -35,6 +36,16 @@ RenderModel::~RenderModel()
 
     clear();
     m_GlobalShaderUniforms.destroy();
+}
+
+QString RenderModel::name() const
+{
+    return m_strName;
+}
+
+void RenderModel::setName(const QString &newName)
+{
+    m_strName = newName;
 }
 
 void RenderModel::setGeometry(const RenderSystem::GeometryBuilder &geometry)
