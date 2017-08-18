@@ -1,6 +1,8 @@
 #ifndef RENDERMODELSTORE_H
 #define RENDERMODELSTORE_H
 
+#include "rendermodelstoreitemmodeladapter.h"
+
 #include "rendersystem/interfaces/irendermodelstore.h"
 #include "rendersystem/private/rendermodel/rendermodel.h"
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
@@ -29,10 +31,14 @@ public:
     virtual void addGeometry(RenderModelId modelId, const RenderSystem::GeometryBuilder& builder) override;
     virtual void removeGeometry(RenderModelId modelId, ObjectId objectId) override;
     virtual void clearGeometry(RenderModelId modelId) override;
+    virtual QAbstractItemModel* itemModel() const override;
 
     virtual void draw(const RenderModelId modelId,
                       const FrameBufferId frameBufferId,
                       const RenderSystem::FrameDrawParams& drawParams) override;
+
+private:
+    mutable RenderModelStoreItemModelAdapter m_ItemModelAdapter;
 };
 
 #endif // RENDERMODELSTORE_H

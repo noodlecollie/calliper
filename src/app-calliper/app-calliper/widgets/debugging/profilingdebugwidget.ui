@@ -59,5 +59,26 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnRefresh</sender>
+   <signal>pressed()</signal>
+   <receiver>ProfilingDebugWidget</receiver>
+   <slot>fireRefreshPressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>283</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>refreshPressed()</signal>
+  <slot>fireRefreshPressed()</slot>
+ </slots>
 </ui>

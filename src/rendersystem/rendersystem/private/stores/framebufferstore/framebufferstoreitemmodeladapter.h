@@ -12,6 +12,14 @@ class FrameBufferStoreItemModelAdapter : public Containers::ItemPointerBasedItem
                                                                                              RenderSystem::FrameBufferDefs::FrameBufferId>
 {
 public:
+    enum ModelColumn
+    {
+        FBOHandleColumn = 0,
+        SizeColumn,
+
+        TOTAL_MODEL_COLUMNS
+    };
+
     FrameBufferStoreItemModelAdapter(const FrameBufferStore& store);
 
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;

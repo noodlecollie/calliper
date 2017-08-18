@@ -9,6 +9,7 @@
 #include "user-interface/signal-handlers/visibilityactionhandler.h"
 
 #include "app-calliper/widgets/debugging/framebufferdebugwidget.h"
+#include "app-calliper/widgets/debugging/rendermodeldebugwidget.h"
 
 class DebugTopLevelWidget : public UserInterface::MainWindowSlaveWidget
 {
@@ -24,6 +25,7 @@ private:
 
     QTabWidget* m_pTabWidget;
     FrameBufferDebugWidget* m_pFrameBufferDebugWidget;
+    RenderModelDebugWidget* m_pRenderModelDebugWidget;
 
     UserInterface::VisibilityActionHandler* m_pVisibilityActionHandler;
 };

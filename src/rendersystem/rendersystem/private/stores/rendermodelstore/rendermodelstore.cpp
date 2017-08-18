@@ -2,7 +2,8 @@
 
 RenderModelStore::RenderModelStore()
     : ItemPointerBasedObjectStore<RenderModel,
-                                  RenderSystem::RenderModelDefs::RenderModelId>()
+                                  RenderSystem::RenderModelDefs::RenderModelId>(),
+      m_ItemModelAdapter(*this)
 {
 
 }
@@ -66,4 +67,9 @@ void RenderModelStore::draw(const RenderModelId modelId,
     }
 
     model->draw(frameBufferId, drawParams);
+}
+
+QAbstractItemModel* RenderModelStore::itemModel() const
+{
+    return m_ItemModelAdapter.abstractItemModel();
 }

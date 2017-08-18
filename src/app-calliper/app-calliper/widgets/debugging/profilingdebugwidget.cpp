@@ -12,3 +12,8 @@ ProfilingDebugWidget::~ProfilingDebugWidget()
 {
     delete ui;
 }
+
+void ProfilingDebugWidget::fireRefreshPressed()
+{
+    emit refreshPressed();
+}

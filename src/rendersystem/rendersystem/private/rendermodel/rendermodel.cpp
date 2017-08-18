@@ -8,11 +8,20 @@
 #include "calliperutil/opengl/openglhelpers.h"
 #include "calliperutil/opengl/openglerrors.h"
 
+#include "profiling/scoped/scopedprofiler.h"
+
+namespace
+{
+    constexpr quint32 MAX_PROFILER_MODEL_SLOTS = 32;
+}
+
 RenderModel::RenderModel()
     : m_Context(),
       m_RenderGroups(),
       m_ObjectIdToRenderGroup(),
-      m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw)
+      m_GlobalShaderUniforms(QOpenGLBuffer::DynamicDraw),
+      m_ProfilerModel(MAX_PROFILER_MODEL_SLOTS),
+      m_ProfilerItemModelAdapter(m_ProfilerModel)
 {
     Q_ASSERT(RenderSystem::Global::renderSystemContextIsCurrent());
     snapCreationContext();
@@ -86,6 +95,8 @@ void RenderModel::clear()
 void RenderModel::draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
                        const RenderSystem::FrameDrawParams& drawParams)
 {
+    SCOPED_PROFILER("RenderModel Draw", m_ProfilerModel)
+
     verifyCurrentContext();
 
     QSharedPointer<QOpenGLFramebufferObject> frameBufferObject = frameBuffer(frameBufferId);
@@ -140,4 +151,9 @@ void RenderModel::drawPreFrame(const QSize& size, const RenderSystem::FrameDrawP
 QSharedPointer<QOpenGLFramebufferObject> RenderModel::frameBuffer(RenderSystem::FrameBufferDefs::FrameBufferId id) const
 {
     return FrameBufferStore::globalInstance()->object(id);
+}
+
+Profiling::ProfilerItemModelAdatper* RenderModel::itemModel()
+{
+    return &m_ProfilerItemModelAdapter;
 }

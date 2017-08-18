@@ -55,7 +55,7 @@ namespace Profiling
         inline ~ScopedProfiler()
         {
             m_StaticData.m_pData->m_nTimeInMsec = QTime::currentTime().msecsSinceStartOfDay() - m_nMsecOnCreation;
-            m_StaticData.m_pModel->onScopedProfilerDestroyed(m_StaticData.m_nSlot);
+            m_StaticData.m_pModel->onScopedProfilerDestroyed(m_StaticData.m_nDataSlot);
         }
 
     private:

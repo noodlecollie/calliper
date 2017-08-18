@@ -4,17 +4,6 @@
 
 #include "rendersystem/private/stores/framebufferstore/framebufferstore.h"
 
-namespace
-{
-    enum ModelColumn
-    {
-        FBOHandleColumn = 0,
-        SizeColumn,
-
-        TOTAL_MODEL_COLUMNS
-    };
-}
-
 FrameBufferStoreItemModelAdapter::FrameBufferStoreItemModelAdapter(const FrameBufferStore &store)
     : Containers::ItemPointerBasedItemModelAdapter<QOpenGLFramebufferObject,
                                                    RenderSystem::FrameBufferDefs::FrameBufferId>(&store),

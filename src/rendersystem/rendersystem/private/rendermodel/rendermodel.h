@@ -15,10 +15,12 @@
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
 #include "rendersystem/interface-classes/definitions/framebufferdefs.h"
 #include "rendersystem/interface-classes/rendering/framedrawparams.h"
-
 #include "rendersystem/private/shaders/common/globalshaderuniforms.h"
 
 #include "calliperutil/opengl/openglcontextchecker.h"
+
+#include "profiling/profilermodel/profilermodel.h"
+#include "profiling/profilermodel/profileritemmodeladatper.h"
 
 class RenderModel : private CalliperUtil::OpenGLContextChecker
 {
@@ -34,6 +36,8 @@ public:
     void draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
               const RenderSystem::FrameDrawParams& drawParams);
 
+    Profiling::ProfilerItemModelAdatper* itemModel();
+
 private:
     typedef QSharedPointer<RenderGroup> RenderGroupPointer;
     typedef QHash<RenderSystem::MaterialDefs::MaterialId, RenderGroupPointer> RenderGroupHash;
@@ -47,6 +51,9 @@ private:
     RenderGroupHash m_RenderGroups;
     QMultiHash<RenderSystem::RenderModelDefs::ObjectId, RenderGroupPointer> m_ObjectIdToRenderGroup;
     GlobalShaderUniforms m_GlobalShaderUniforms;
+
+    Profiling::ProfilerModel m_ProfilerModel;
+    Profiling::ProfilerItemModelAdatper m_ProfilerItemModelAdapter;
 };
 
 #endif // RENDERMODEL_H

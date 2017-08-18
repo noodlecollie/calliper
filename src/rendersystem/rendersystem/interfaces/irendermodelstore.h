@@ -11,6 +11,8 @@
 #include "rendersystem/interface-classes/definitions/shaderdefs.h"
 #include "rendersystem/interface-classes/rendering/framedrawparams.h"
 
+#include "profiling/profilermodel/profileritemmodeladatper.h"
+
 namespace RenderSystem
 {
     class IRenderModelStore
@@ -39,6 +41,9 @@ namespace RenderSystem
         virtual void draw(const RenderModelDefs::RenderModelId modelId,
                           const FrameBufferDefs::FrameBufferId frameBufferId,
                           const FrameDrawParams& drawParams) = 0;
+
+        // Returns the QAbstractItemModel interface for displaying items.
+        virtual QAbstractItemModel* itemModel() const = 0;
     };
 }
 

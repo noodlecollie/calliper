@@ -15,6 +15,12 @@ public:
     explicit ProfilingDebugWidget(QWidget *parent = 0);
     ~ProfilingDebugWidget();
 
+signals:
+    void refreshPressed();
+
+private slots:
+    void fireRefreshPressed();
+
 private:
     Ui::ProfilingDebugWidget *ui;
 };
