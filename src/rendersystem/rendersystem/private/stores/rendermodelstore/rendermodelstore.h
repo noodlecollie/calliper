@@ -33,10 +33,11 @@ public:
     virtual void addGeometry(const RenderModelId modelId, const RenderSystem::GeometryBuilder& builder) override;
     virtual void removeGeometry(const RenderModelId modelId, const ObjectId objectId) override;
     virtual void clearGeometry(const RenderModelId modelId) override;
-    virtual QAbstractItemModel* itemModel() const override;
     virtual void draw(const RenderModelId modelId,
                       const FrameBufferId frameBufferId,
                       const RenderSystem::FrameDrawParams& drawParams) override;
+    virtual QAbstractItemModel* itemModel() const override;
+    virtual Profiling::ProfilerItemModelAdatper* profilingData(const RenderModelId modelId) const override;
 
 private:
     mutable RenderModelStoreItemModelAdapter m_ItemModelAdapter;

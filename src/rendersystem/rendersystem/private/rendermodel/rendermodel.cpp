@@ -164,7 +164,7 @@ QSharedPointer<QOpenGLFramebufferObject> RenderModel::frameBuffer(RenderSystem::
     return FrameBufferStore::globalInstance()->object(id);
 }
 
-Profiling::ProfilerItemModelAdatper* RenderModel::itemModel()
+Profiling::ProfilerItemModelAdatper* RenderModel::profilingData()
 {
     return &m_ProfilerItemModelAdapter;
 }

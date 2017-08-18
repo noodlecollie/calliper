@@ -39,7 +39,7 @@ public:
     void draw(RenderSystem::FrameBufferDefs::FrameBufferId frameBufferId,
               const RenderSystem::FrameDrawParams& drawParams);
 
-    Profiling::ProfilerItemModelAdatper* itemModel();
+    Profiling::ProfilerItemModelAdatper* profilingData();
 
 private:
     typedef QSharedPointer<RenderGroup> RenderGroupPointer;

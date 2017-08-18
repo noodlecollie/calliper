@@ -95,3 +95,14 @@ QAbstractItemModel* RenderModelStore::itemModel() const
 {
     return m_ItemModelAdapter.abstractItemModel();
 }
+
+Profiling::ProfilerItemModelAdatper* RenderModelStore::profilingData(const RenderModelId modelId) const
+{
+    QSharedPointer<RenderModel> model = object(modelId);
+    if ( !model )
+    {
+        return Q_NULLPTR;
+    }
+
+    return model->profilingData();
+}
