@@ -122,13 +122,14 @@ QVariant RenderModelProfilingWrapper::data(const QModelIndex &index, int role) c
         return 0;
     }
 
+    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
+
     const IndexRecord& indexRecord = m_IndexRecords.at(indexRecordId);
     if ( !indexRecord.m_InnerIndex.isValid() )
     {
-        return QVariant(indexRecord.m_nRenderModelId);
+        return renderModelStore->name(indexRecord.m_nRenderModelId);
     }
 
-    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
     Profiling::ProfilerItemModelAdatper* const profilerModel = renderModelStore->profilingData(indexRecord.m_nRenderModelId);
     return profilerModel->data(indexRecord.m_InnerIndex, role);
 }

@@ -6,6 +6,7 @@ DebugTopLevelWidget::DebugTopLevelWidget(QWidget *parent)
       m_pTabWidget(new QTabWidget()),
       m_pFrameBufferDebugWidget(new FrameBufferDebugWidget()),
       m_pRenderModelDebugWidget(new RenderModelDebugWidget()),
+      m_pProfilingDebugWidget(new ProfilingDebugWidget()),
       m_pVisibilityActionHandler(new UserInterface::VisibilityActionHandler(this))
 {
     setWindowTitle(tr("Debugging"));
@@ -17,6 +18,7 @@ DebugTopLevelWidget::DebugTopLevelWidget(QWidget *parent)
 
     m_pTabWidget->addTab(m_pFrameBufferDebugWidget, tr("Frame Buffers"));
     m_pTabWidget->addTab(m_pRenderModelDebugWidget, tr("Render Models"));
+    m_pTabWidget->addTab(m_pProfilingDebugWidget, tr("Profiling"));
 }
 
 QSize DebugTopLevelWidget::sizeHint() const

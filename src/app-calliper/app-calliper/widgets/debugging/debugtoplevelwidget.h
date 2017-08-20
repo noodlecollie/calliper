@@ -10,6 +10,7 @@
 
 #include "app-calliper/widgets/debugging/framebufferdebugwidget.h"
 #include "app-calliper/widgets/debugging/rendermodeldebugwidget.h"
+#include "app-calliper/widgets/debugging/profilingdebugwidget.h"
 
 class DebugTopLevelWidget : public UserInterface::MainWindowSlaveWidget
 {
@@ -26,6 +27,7 @@ private:
     QTabWidget* m_pTabWidget;
     FrameBufferDebugWidget* m_pFrameBufferDebugWidget;
     RenderModelDebugWidget* m_pRenderModelDebugWidget;
+    ProfilingDebugWidget* m_pProfilingDebugWidget;
 
     UserInterface::VisibilityActionHandler* m_pVisibilityActionHandler;
 };

@@ -54,6 +54,9 @@ namespace RenderSystem
 
         // Returns the QAbstractItemModel interface for displaying items.
         virtual QAbstractItemModel* itemModel() const = 0;
+
+        // Returns the QAbstractItemModel interface for displaying profiling information of all render models.
+        virtual QAbstractItemModel* profilingItemModel() const = 0;
     };
 }
 

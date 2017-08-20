@@ -64,7 +64,7 @@
    <sender>btnRefresh</sender>
    <signal>pressed()</signal>
    <receiver>ProfilingDebugWidget</receiver>
-   <slot>fireRefreshPressed()</slot>
+   <slot>onRefreshPressed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>44</x>
@@ -78,7 +78,6 @@
   </connection>
  </connections>
  <slots>
-  <signal>refreshPressed()</signal>
-  <slot>fireRefreshPressed()</slot>
+  <slot>onRefreshPressed()</slot>
  </slots>
 </ui>

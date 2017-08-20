@@ -3,7 +3,8 @@
 RenderModelStore::RenderModelStore()
     : ItemPointerBasedObjectStore<RenderModel,
                                   RenderSystem::RenderModelDefs::RenderModelId>(),
-      m_ItemModelAdapter(*this)
+      m_ItemModelAdapter(*this),
+      m_ProfilingItemModelWrapper()
 {
 
 }
@@ -110,4 +111,9 @@ Profiling::ProfilerItemModelAdatper* RenderModelStore::profilingData(const Rende
 Containers::IObjectStoreItemModel* RenderModelStore::objectStoreItemModel() const
 {
     return &m_ItemModelAdapter;
+}
+
+QAbstractItemModel* RenderModelStore::profilingItemModel() const
+{
+    return &m_ProfilingItemModelWrapper;
 }
