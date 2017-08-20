@@ -1,6 +1,8 @@
 #ifndef PROFILERITEMMODELADATPER_H
 #define PROFILERITEMMODELADATPER_H
 
+#include "profiling_global.h"
+
 #include <QAbstractItemModel>
 #include <QVector>
 
@@ -8,7 +10,7 @@ namespace Profiling
 {
     class ProfilerModel;
 
-    class ProfilerItemModelAdatper : public QAbstractItemModel
+    class PROFILINGSHARED_EXPORT ProfilerItemModelAdatper : public QAbstractItemModel
     {
         Q_OBJECT
     public:

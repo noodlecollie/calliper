@@ -1,0 +1,36 @@
+We want to be able to have something like:
+
+Render model 1		Top-level item, row 0
+	draw()			Top-level item in the inner model, but not in the outer one
+		someFunc()	Non-top level item in the inner model
+	...
+	
+Render model 2		Top-level item, row 1
+	draw()			Top-level item in another inner model
+		someFunc()	Non-top level item in the inner model
+	...
+
+The outer model essentially becomes a hierarchical list of other models. We need to be able to convert to and from inner and outer model indices.
+In this simplified scenario we don't care about columns (we'll always just use column 0).
+
+To generate the first item's outer QModelIndex:
+	- Incoming data will be index(0, 0, QModelIndex()). There is no parent, so we know it's a top-level item in the outer model.
+	- Return outer index A, which points to information about which inner model this item corresponds to.
+
+To generate the second item's outer QModelIndex:
+	- Incoming data will be index(0, 0, A). Since there is a parent, we know this item belongs to some inner model.
+	- Find out more information about index A. A has no parent so we know it doesn't belong to the inner model. Therefore, this item is a top-level item in the inner model.
+	- Find out which inner model A corresponds to.
+	- Get the inner index Bi for this item. We call index(0, 0, QModelIndex()) on the inner model.
+	- Return outer index B, which points to the inner index Bi, along with information about which inner model it corresponds to.
+
+To generate the third item's outer QModelIndex:
+	- Incoming data will be index(0, 0, B). Since there is a parent, we know this item belongs to some inner model.
+	- Find out more information about index B. B has a parent, so we know this item is a non-top level item in the inner model.
+	- Find out which inner model B corresponds to.
+	- Get the inner index Ci for this item. We call index(0, 0, B) on the inner model.
+	- Return the outer index C, which points to the inner index Ci, along with information about which inner model it corresponds to.
+
+With this in mind, we should store indices in the following way:
+	- QModelIndexes can store an internal integer ID. This ID can be used to reference an index record within the outer model.
+	- Each index record should store information about which inner model the QModelIndex relates to. It should also store the inner QModelIndex that is required to be passed as a parent into index().
