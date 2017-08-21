@@ -58,7 +58,12 @@ public:
 
         return true;
 #else
-        return hasError();
+        Q_UNUSED(funcName);
+        Q_UNUSED(file);
+        Q_UNUSED(line);
+        Q_UNUSED(parentFuncName);
+
+        return !hasError();
 #endif
     }
 
