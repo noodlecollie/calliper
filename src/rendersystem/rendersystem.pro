@@ -173,6 +173,11 @@ unix {
 RESOURCES += \
     rendersystem/private/resource/resource.qrc
 
+# These are both added to CONFIG when compiling in profiling mode.
+separate_debug_info:force_debug_info {
+    DEFINES += ENABLE_PROFILING
+}
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/release/ -lcalliperutil
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../calliperutil/debug/ -lcalliperutil
 else:unix: LIBS += -L$$OUT_PWD/../calliperutil/ -lcalliperutil

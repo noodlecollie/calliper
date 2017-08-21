@@ -27,8 +27,3 @@ tst-keyvaluesparser.depends = file-formats calliperutil
 app-vpkinfo.depends = file-formats calliperutil
 app-vmfviewer.depends = calliperutil rendersystem model file-formats model-loaders dep-vtflib user-interface profiling
 app-calliper.depends = calliperutil rendersystem model file-formats model-loaders dep-vtflib user-interface profiling
-
-# These are both added to CONFIG when compiling in profiling mode.
-separate_debug_info:force_debug_info {
-    DEFINES += ENABLE_PROFILING
-}
