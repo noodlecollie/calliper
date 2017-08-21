@@ -5,7 +5,7 @@ namespace
 {
     inline int toSlotIndex(const QModelIndex& modelIndex)
     {
-        return static_cast<int>(modelIndex.internalId());
+        return modelIndex.isValid() ? static_cast<int>(modelIndex.internalId()) : -1;
     }
 }
 
@@ -15,7 +15,9 @@ namespace Profiling
         : QAbstractItemModel(parent),
           m_Model(model)
     {
-
+        // Set child lists to have at least one entry, as index 0 represents the null QModelIndex.
+        // We always want to be able to query how many top-level children exist.
+        m_ChildLists.append(SlotVector());
     }
 
     void ProfilerItemModelAdatper::refresh()

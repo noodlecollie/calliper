@@ -54,7 +54,7 @@ namespace Profiling
         childArrays.clear();
         childArrays.reserve(m_nDataSlotCount + 1);
 
-        for ( int i = 0; i <= static_cast<int>(m_nDataSlotCount); ++i )
+        for ( quint32 i = 0; i <= m_nDataSlotCount; ++i )
         {
             childArrays.append(QVector<int>());
         }
