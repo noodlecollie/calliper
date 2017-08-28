@@ -3,8 +3,7 @@
 RenderModelStore::RenderModelStore()
     : ItemPointerBasedObjectStore<RenderModel,
                                   RenderSystem::RenderModelDefs::RenderModelId>(),
-      m_ItemModelAdapter(*this),
-      m_ProfilingItemModelWrapper()
+      m_ItemModelAdapter(*this)
 {
 
 }
@@ -97,7 +96,7 @@ QAbstractItemModel* RenderModelStore::itemModel() const
     return m_ItemModelAdapter.objectStoreAbstractItemModel();
 }
 
-Profiling::ProfilerItemModelAdatper* RenderModelStore::profilingData(const RenderModelId modelId) const
+QAbstractItemModel* RenderModelStore::profilingData(const RenderModelId modelId) const
 {
     QSharedPointer<RenderModel> model = object(modelId);
     if ( !model )
@@ -111,9 +110,4 @@ Profiling::ProfilerItemModelAdatper* RenderModelStore::profilingData(const Rende
 Containers::IObjectStoreItemModel* RenderModelStore::objectStoreItemModel() const
 {
     return &m_ItemModelAdapter;
-}
-
-QAbstractItemModel* RenderModelStore::profilingItemModel() const
-{
-    return &m_ProfilingItemModelWrapper;
 }

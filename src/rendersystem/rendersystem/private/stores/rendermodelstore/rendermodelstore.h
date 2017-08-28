@@ -6,7 +6,6 @@
 #include "rendersystem/interfaces/irendermodelstore.h"
 #include "rendersystem/private/rendermodel/rendermodel.h"
 #include "rendersystem/interface-classes/definitions/rendermodeldefs.h"
-#include "rendersystem/private/item-model/rendermodelprofilingwrapper.h"
 
 #include "containers/itempointer/itempointerbasedobjectstore.h"
 
@@ -37,16 +36,14 @@ public:
     virtual void draw(const RenderModelId modelId,
                       const FrameBufferId frameBufferId,
                       const RenderSystem::FrameDrawParams& drawParams) override;
-    virtual Profiling::ProfilerItemModelAdatper* profilingData(const RenderModelId modelId) const override;
+    virtual QAbstractItemModel* profilingData(const RenderModelId modelId) const override;
     virtual QAbstractItemModel* itemModel() const override;
-    virtual QAbstractItemModel* profilingItemModel() const override;
 
     // Internal
     Containers::IObjectStoreItemModel* objectStoreItemModel() const;
 
 private:
     mutable RenderModelStoreItemModelAdapter m_ItemModelAdapter;
-    mutable RenderModelProfilingWrapper m_ProfilingItemModelWrapper;
 };
 
 #endif // RENDERMODELSTORE_H

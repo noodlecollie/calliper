@@ -50,13 +50,10 @@ namespace RenderSystem
                           const FrameDrawParams& drawParams) = 0;
 
         // Returns the given render model's profiling data.
-        virtual Profiling::ProfilerItemModelAdatper* profilingData(const RenderModelDefs::RenderModelId modelId) const = 0;
+        virtual QAbstractItemModel* profilingData(const RenderModelDefs::RenderModelId modelId) const = 0;
 
         // Returns the QAbstractItemModel interface for displaying items.
         virtual QAbstractItemModel* itemModel() const = 0;
-
-        // Returns the QAbstractItemModel interface for displaying profiling information of all render models.
-        virtual QAbstractItemModel* profilingItemModel() const = 0;
     };
 }
 

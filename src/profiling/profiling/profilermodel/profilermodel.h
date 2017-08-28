@@ -22,7 +22,6 @@ namespace Profiling
             const char* m_szFile;
             int m_nLine;
             quint32 m_nDepth;
-            quint32 m_nParentEntry;
             int m_nTimeInMsec;
 
             inline ProfilerData()
@@ -35,8 +34,9 @@ namespace Profiling
         ~ProfilerModel();
 
         quint32 dataSlotCount() const;
-        void exportChildren(QVector<QVector<int> >& childArrays) const;
         int parent(int childSlot) const;
+
+        void exportChildren(QVector<QVector<int> >& childArrays) const;
 
     signals:
         void depthReachedZero();

@@ -29,6 +29,10 @@ namespace Containers
         ConstIterator constBegin() const;
         ConstIterator constEnd() const;
 
+        typedef typename QHash<ObjectId, T>::iterator Iterator;
+        Iterator begin();
+        Iterator end();
+
     protected:
         typedef QHash<ObjectId, T> ObjectStoreHash;
 
@@ -177,6 +181,18 @@ namespace Containers
     typename ObjectStore<T>::ConstIterator ObjectStore<T>::constEnd() const
     {
         return m_ObjectHash.constEnd();
+    }
+
+    template<typename T>
+    typename ObjectStore<T>::Iterator ObjectStore<T>::begin()
+    {
+        return m_ObjectHash.begin();
+    }
+
+    template<typename T>
+    typename ObjectStore<T>::Iterator ObjectStore<T>::end()
+    {
+        return m_ObjectHash.end();
     }
 
     template<typename T>

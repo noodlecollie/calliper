@@ -31,17 +31,17 @@ namespace Profiling
         virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-        int updateFrequency() const;
-        void setUpdateFrequency(int msec);
+    signals:
+        void internalQueuedUpdate();
 
     private slots:
-        void flagNeedsUpdate();
-        void requestUpdate();
+        void queueUpdate();
+        void performQueuedUpdate();
 
     private:
         typedef QVector<int> SlotVector;
 
-        void refresh();
+        void refreshAllData();
         bool isValidSlot(int slotIndex) const;
         const SlotVector& childrenOfParent(int parentIndex) const;
         QModelIndex createIndexForSlot(int slotIndexInProfilerModel, int slotIndexInParentsChildrenList, int column = 0) const;
@@ -49,8 +49,7 @@ namespace Profiling
         const ProfilerModel& m_Model;
 
         QVector<SlotVector> m_ChildLists;
-        QTimer m_UpdateTimer;
-        bool m_bNeedsUpdate;
+        bool m_bQueuedUpdatePending;
     };
 }
 

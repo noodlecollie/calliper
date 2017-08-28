@@ -14,24 +14,19 @@ namespace Profiling
     ProfilerItemModelAdatper::ProfilerItemModelAdatper(const ProfilerModel &model, QObject *parent)
         : QAbstractItemModel(parent),
           m_Model(model),
-          m_UpdateTimer(),
-          m_bNeedsUpdate(true)
+          m_bQueuedUpdatePending(false)
     {
         // Set child lists to have at least one entry, as index 0 represents the null QModelIndex.
         // We always want to be able to query how many top-level children exist.
         m_ChildLists.append(SlotVector());
 
-        connect(&m_UpdateTimer, &QTimer::timeout, this, &ProfilerItemModelAdatper::requestUpdate);
-        connect(&m_Model, &ProfilerModel::depthReachedZero, this, &ProfilerItemModelAdatper::flagNeedsUpdate);
-
-        m_UpdateTimer.setInterval(1000);
-        m_UpdateTimer.setSingleShot(false);
-        m_UpdateTimer.start();
+        connect(&m_Model, &ProfilerModel::depthReachedZero, this, &ProfilerItemModelAdatper::queueUpdate);
+        connect(this, &ProfilerItemModelAdatper::internalQueuedUpdate, this, &ProfilerItemModelAdatper::performQueuedUpdate, Qt::QueuedConnection);
     }
 
     ProfilerItemModelAdatper::~ProfilerItemModelAdatper()
     {
-        m_UpdateTimer.stop();
+
     }
 
     QModelIndex ProfilerItemModelAdatper::index(int row, int column, const QModelIndex &parent) const
@@ -137,40 +132,30 @@ namespace Profiling
         return createIndex(slotIndexInParentsChildrenList, column, slotIndexInProfilerModel);
     }
 
-    int ProfilerItemModelAdatper::updateFrequency() const
+    void ProfilerItemModelAdatper::queueUpdate()
     {
-        return m_UpdateTimer.interval();
-    }
-
-    void ProfilerItemModelAdatper::setUpdateFrequency(int msec)
-    {
-        if ( msec == m_UpdateTimer.interval() || msec <  0 )
+        if ( !m_bQueuedUpdatePending )
         {
-            return;
+            emit internalQueuedUpdate();
         }
 
-        m_UpdateTimer.setInterval(msec);
+        m_bQueuedUpdatePending = true;
     }
 
-    void ProfilerItemModelAdatper::requestUpdate()
+    void ProfilerItemModelAdatper::performQueuedUpdate()
     {
-        if ( !m_bNeedsUpdate )
+        if ( !m_bQueuedUpdatePending )
         {
             return;
         }
 
         // Not a very precise update for now - just get all the data again.
         // We don't know how much has changed, but likely all of it.
-        refresh();
-        m_bNeedsUpdate = false;
+        refreshAllData();
+        m_bQueuedUpdatePending = false;
     }
 
-    void ProfilerItemModelAdatper::flagNeedsUpdate()
-    {
-        m_bNeedsUpdate = true;
-    }
-
-    void ProfilerItemModelAdatper::refresh()
+    void ProfilerItemModelAdatper::refreshAllData()
     {
         beginResetModel();
         m_Model.exportChildren(m_ChildLists);

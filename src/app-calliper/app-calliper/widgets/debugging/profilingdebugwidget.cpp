@@ -8,16 +8,9 @@ ProfilingDebugWidget::ProfilingDebugWidget(QWidget *parent) :
     ui(new Ui::ProfilingDebugWidget)
 {
     ui->setupUi(this);
-
-    ui->treeView->setModel(RenderSystem::RenderModelStoreEndpoint::constRenderModelStore()->profilingItemModel());
 }
 
 ProfilingDebugWidget::~ProfilingDebugWidget()
 {
     delete ui;
-}
-
-void ProfilingDebugWidget::onRefreshPressed()
-{
-    // TODO
 }
