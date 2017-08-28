@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include <QVector>
+#include <QHash>
 
 #include "containers/adapters/iobjectstoreitemmodel.h"
 
@@ -22,6 +23,7 @@ public:
 
 private slots:
     void renderModelStoreChanged();
+    void profilerModelReset();
 
 private:
     struct IndexRecord
@@ -45,6 +47,29 @@ private:
         }
     };
 
+    struct ProfilerModelInfo
+    {
+        QModelIndex m_RootIndex;
+        int m_nRowCount;
+
+        ProfilerModelInfo(const QModelIndex& rootIndex, int rowCount)
+            : m_RootIndex(rootIndex),
+              m_nRowCount(rowCount)
+        {
+        }
+
+        ProfilerModelInfo()
+            : m_RootIndex(),
+              m_nRowCount(0)
+        {
+        }
+
+        inline bool isValid() const
+        {
+            return m_RootIndex.isValid();
+        }
+    };
+
     static RenderSystem::RenderModelDefs::RenderModelId renderModelIdFromRow(int row);
     static int renderModelCount();
     static QModelIndex innerModelIndex(int row, int column, const IndexRecord& parentIndexRecord);
@@ -53,8 +78,11 @@ private:
     QModelIndex createNewIndexForOuterModel(int row, int column, const QModelIndex &parent) const;
     QModelIndex createNewIndexForInnerModel(int row, int column, const QModelIndex &parent) const;
     int getRowCountFromInnerModel(const QModelIndex& parent) const;
+    void removeAllProfilerModelSignalMappings() const;
+    void subscribeToResetNotifications(int row, const QModelIndex& rootIndex) const;
 
     mutable QVector<IndexRecord> m_IndexRecords;
+    mutable QHash<QAbstractItemModel*, ProfilerModelInfo> m_ProfilerModelToModelId;
 };
 
 #endif // RENDERMODELPROFILINGWRAPPER_H

@@ -26,7 +26,15 @@ QModelIndex RenderModelProfilingWrapper::index(int row, int column, const QModel
         // It's a top-level item in the outer model, and corresponds to a single render model.
         // The render model itself is determined by the row.
 
-        return createNewIndexForOuterModel(row, column, parent);
+        // Sanity check.
+        if ( row >= renderModelCount()  )
+        {
+            return QModelIndex();
+        }
+
+        const QModelIndex createdIndex = createNewIndexForOuterModel(row, column, parent);
+        subscribeToResetNotifications(row, createdIndex);
+        return createdIndex;
     }
 
     // The item belongs to an inner model.
@@ -37,21 +45,14 @@ QModelIndex RenderModelProfilingWrapper::createNewIndexForOuterModel(int row, in
 {
     using namespace RenderSystem;
 
-    // Sanity check.
-    if ( row >= renderModelCount()  )
-    {
-        return QModelIndex();
-    }
-
     const RenderModelDefs::RenderModelId modelId = renderModelIdFromRow(row);
     m_IndexRecords.append(IndexRecord(modelId, QModelIndex(), parent));
+
     return createIndex(row, column, static_cast<quintptr>(m_IndexRecords.count() - 1));
 }
 
 QModelIndex RenderModelProfilingWrapper::createNewIndexForInnerModel(int row, int column, const QModelIndex &parent) const
 {
-    using namespace RenderSystem;
-
     const int parentIndexRecordId = static_cast<int>(parent.internalId());
     if ( parentIndexRecordId < 0 || parentIndexRecordId >= m_IndexRecords.count() )
     {
@@ -92,8 +93,6 @@ int RenderModelProfilingWrapper::rowCount(const QModelIndex &parent) const
 
 int RenderModelProfilingWrapper::getRowCountFromInnerModel(const QModelIndex &parent) const
 {
-    using namespace RenderSystem;
-
     const int indexRecordId = static_cast<int>(parent.internalId());
     if ( indexRecordId < 0 || indexRecordId >= m_IndexRecords.count() )
     {
@@ -142,7 +141,10 @@ QVariant RenderModelProfilingWrapper::data(const QModelIndex &index, int role) c
 void RenderModelProfilingWrapper::renderModelStoreChanged()
 {
     beginResetModel();
+
+    removeAllProfilerModelSignalMappings();
     m_IndexRecords.clear();
+
     endResetModel();
 }
 
@@ -185,4 +187,57 @@ int RenderModelProfilingWrapper::profilerModelRowCount(const IndexRecord &indexR
     const RenderModelDefs::RenderModelId renderModelId = indexRecord.m_nRenderModelId;
     Profiling::ProfilerItemModelAdatper* const profilerModel = renderModelStore->profilingData(renderModelId);
     return profilerModel->rowCount(indexRecord.m_InnerIndex);
+}
+
+void RenderModelProfilingWrapper::removeAllProfilerModelSignalMappings() const
+{
+    for ( auto it = m_ProfilerModelToModelId.begin(); it != m_ProfilerModelToModelId.end(); ++it )
+    {
+        QAbstractItemModel* itemModel = it.key();
+        disconnect(itemModel, &QAbstractItemModel::modelReset, this, &RenderModelProfilingWrapper::profilerModelReset);
+    }
+
+    m_ProfilerModelToModelId.clear();
+}
+
+void RenderModelProfilingWrapper::subscribeToResetNotifications(int row, const QModelIndex& rootIndex) const
+{
+    using namespace RenderSystem;
+
+    const RenderModelDefs::RenderModelId modelId = renderModelIdFromRow(row);
+
+    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
+    Profiling::ProfilerItemModelAdatper* const profilerModel = renderModelStore->profilingData(modelId);
+
+    if ( m_ProfilerModelToModelId.contains(profilerModel) )
+    {
+        return;
+    }
+
+    m_ProfilerModelToModelId.insert(profilerModel, ProfilerModelInfo(rootIndex, profilerModel->rowCount()));
+}
+
+void RenderModelProfilingWrapper::profilerModelReset()
+{
+    using namespace RenderSystem;
+
+    QAbstractItemModel* const itemModel = qobject_cast<QAbstractItemModel*>(sender());
+    if ( !itemModel )
+    {
+        return;
+    }
+
+    ProfilerModelInfo& profilerModelInfo = m_ProfilerModelToModelId[itemModel];
+    if ( !profilerModelInfo.isValid() )
+    {
+        return;
+    }
+
+    beginRemoveRows(profilerModelInfo.m_RootIndex, 0, profilerModelInfo.m_nRowCount - 1);
+    endRemoveRows();
+
+    profilerModelInfo.m_nRowCount = itemModel->rowCount();
+
+    beginInsertRows(profilerModelInfo.m_RootIndex, 0, profilerModelInfo.m_nRowCount - 1);
+    endInsertRows();
 }
