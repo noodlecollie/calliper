@@ -20,6 +20,9 @@ public:
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+private slots:
+    void renderModelStoreChanged();
+
 private:
     struct IndexRecord
     {
@@ -41,6 +44,11 @@ private:
         {
         }
     };
+
+    static RenderSystem::RenderModelDefs::RenderModelId renderModelIdFromRow(int row);
+    static int renderModelCount();
+    static QModelIndex innerModelIndex(int row, int column, const IndexRecord& parentIndexRecord);
+    static int profilerModelRowCount(const IndexRecord& indexRecord);
 
     QModelIndex createNewIndexForOuterModel(int row, int column, const QModelIndex &parent) const;
     QModelIndex createNewIndexForInnerModel(int row, int column, const QModelIndex &parent) const;
