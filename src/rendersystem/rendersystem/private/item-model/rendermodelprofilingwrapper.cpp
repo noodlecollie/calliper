@@ -10,8 +10,6 @@ RenderModelProfilingWrapper::RenderModelProfilingWrapper(QObject *parent)
 
 QModelIndex RenderModelProfilingWrapper::index(int row, int column, const QModelIndex &parent) const
 {
-    using namespace RenderSystem;
-
     // Sanity check.
     // TODO: Make functional with more columns.
     if ( row < 0 || column != 0 )
@@ -19,33 +17,45 @@ QModelIndex RenderModelProfilingWrapper::index(int row, int column, const QModel
         return QModelIndex();
     }
 
-    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
-    Containers::IObjectStoreItemModel* const objectStoreItemModel = renderModelStore->objectStoreItemModel();
-
     if ( !parent.isValid() )
     {
         // The item doesn't belong to any inner model.
-        // It's a top-level item in the outer model, and corresponds to a render model.
+        // It's a top-level item in the outer model, and corresponds to a single render model.
         // The render model itself is determined by the row.
 
-        // Sanity check again.
-        if ( row >= objectStoreItemModel->rowCount()  )
-        {
-            return QModelIndex();
-        }
-
-        const QVariant modelIdVariant = objectStoreItemModel->objectIdForRow(row);
-        Q_ASSERT_X(modelIdVariant.isValid(), Q_FUNC_INFO, "Expected valid render model ID variant!");
-
-        const RenderModelDefs::RenderModelId modelId = modelIdVariant.value<RenderModelDefs::RenderModelId>();
-        Q_ASSERT_X(modelId != RenderModelDefs::INVALID_RENDER_MODEL_ID, Q_FUNC_INFO, "Expected valid render model ID!");
-
-        m_IndexRecords.append(IndexRecord(modelId, QModelIndex(), parent));
-        return createIndex(row, column, static_cast<quintptr>(m_IndexRecords.count() - 1));
+        return createNewIndexForOuterModel(row, column, parent);
     }
 
     // The item belongs to an inner model.
-    // Get more information from the parent index.
+    return createNewIndexForInnerModel(row, column, parent);
+}
+
+QModelIndex RenderModelProfilingWrapper::createNewIndexForOuterModel(int row, int column, const QModelIndex &parent) const
+{
+    using namespace RenderSystem;
+
+    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
+    Containers::IObjectStoreItemModel* const objectStoreItemModel = renderModelStore->objectStoreItemModel();
+
+    // Sanity check.
+    if ( row >= objectStoreItemModel->rowCount()  )
+    {
+        return QModelIndex();
+    }
+
+    const QVariant modelIdVariant = objectStoreItemModel->objectIdForRow(row);
+    Q_ASSERT_X(modelIdVariant.isValid(), Q_FUNC_INFO, "Expected valid render model ID variant!");
+
+    const RenderModelDefs::RenderModelId modelId = modelIdVariant.value<RenderModelDefs::RenderModelId>();
+    Q_ASSERT_X(modelId != RenderModelDefs::INVALID_RENDER_MODEL_ID, Q_FUNC_INFO, "Expected valid render model ID!");
+
+    m_IndexRecords.append(IndexRecord(modelId, QModelIndex(), parent));
+    return createIndex(row, column, static_cast<quintptr>(m_IndexRecords.count() - 1));
+}
+
+QModelIndex RenderModelProfilingWrapper::createNewIndexForInnerModel(int row, int column, const QModelIndex &parent) const
+{
+    using namespace RenderSystem;
 
     const int parentIndexRecordId = static_cast<int>(parent.internalId());
     if ( parentIndexRecordId < 0 || parentIndexRecordId >= m_IndexRecords.count() )
@@ -57,6 +67,7 @@ QModelIndex RenderModelProfilingWrapper::index(int row, int column, const QModel
     const IndexRecord& parentIndexRecord = m_IndexRecords.at(parentIndexRecordId);
 
     // Generate an inner index from the inner model.
+    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
     Profiling::ProfilerItemModelAdatper* const profilerModel = renderModelStore->profilingData(parentIndexRecord.m_nRenderModelId);
     const QModelIndex innerIndex = profilerModel->index(row, column, parentIndexRecord.m_InnerIndex);
 
@@ -79,13 +90,23 @@ int RenderModelProfilingWrapper::rowCount(const QModelIndex &parent) const
 {
     using namespace RenderSystem;
 
-    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
-
     if ( !parent.isValid() )
     {
+        // No parent means we need to return the number of top-level rows.
+        // This is just the number of render models in the store.
+
+        RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
         Containers::IObjectStoreItemModel* const objectStoreItemModel = renderModelStore->objectStoreItemModel();
         return objectStoreItemModel->rowCount();
     }
+
+    // There's a valid parent, which means the row count must come from a specific render model.
+    return getRowCountFromInnerModel(parent);
+}
+
+int RenderModelProfilingWrapper::getRowCountFromInnerModel(const QModelIndex &parent) const
+{
+    using namespace RenderSystem;
 
     const int indexRecordId = static_cast<int>(parent.internalId());
     if ( indexRecordId < 0 || indexRecordId >= m_IndexRecords.count() )
@@ -96,6 +117,8 @@ int RenderModelProfilingWrapper::rowCount(const QModelIndex &parent) const
 
     const IndexRecord& indexRecord = m_IndexRecords.at(indexRecordId);
     const RenderModelDefs::RenderModelId renderModelId = indexRecord.m_nRenderModelId;
+
+    RenderModelStore* const renderModelStore = RenderModelStore::globalInstance();
     Profiling::ProfilerItemModelAdatper* const profilerModel = renderModelStore->profilingData(renderModelId);
     return profilerModel->rowCount(indexRecord.m_InnerIndex);
 }

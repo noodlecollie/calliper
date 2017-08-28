@@ -3,14 +3,16 @@
 
 #include "profiling_global.h"
 
+#include <QObject>
 #include <QVector>
 
 namespace Profiling
 {
     // This class is designed to be fast when scoped profilers are created and destroyed.
     // Other non-live functions bear the brunt of the later work.
-    class PROFILINGSHARED_EXPORT ProfilerModel
+    class PROFILINGSHARED_EXPORT ProfilerModel : public QObject
     {
+        Q_OBJECT
         friend class ScopedProfiler;
     public:
         struct ProfilerData
@@ -36,6 +38,9 @@ namespace Profiling
         void exportChildren(QVector<QVector<int> >& childArrays) const;
         int parent(int childSlot) const;
 
+    signals:
+        void depthReachedZero();
+
     private:
         int allocateNextAvailableDataSlot();
 
@@ -58,6 +63,11 @@ namespace Profiling
             Q_ASSERT_X(slotIndex == m_nCurrentSlot, Q_FUNC_INFO, "Non-current slot being destroyed!");
 
             --m_nCurrentDepth;
+
+            if ( m_nCurrentDepth == 0 )
+            {
+                emit depthReachedZero();
+            }
 
             m_nCurrentSlot = m_pParentArray[m_nCurrentSlot];
             Q_ASSERT_X(m_nCurrentSlot != INVALID_PARENT_ID, Q_FUNC_INFO, "Invalid parent ID encountered!");

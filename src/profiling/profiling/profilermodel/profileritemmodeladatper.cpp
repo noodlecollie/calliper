@@ -13,18 +13,25 @@ namespace Profiling
 {
     ProfilerItemModelAdatper::ProfilerItemModelAdatper(const ProfilerModel &model, QObject *parent)
         : QAbstractItemModel(parent),
-          m_Model(model)
+          m_Model(model),
+          m_UpdateTimer(),
+          m_bNeedsUpdate(true)
     {
         // Set child lists to have at least one entry, as index 0 represents the null QModelIndex.
         // We always want to be able to query how many top-level children exist.
         m_ChildLists.append(SlotVector());
+
+        connect(&m_UpdateTimer, &QTimer::timeout, this, &ProfilerItemModelAdatper::requestUpdate);
+        connect(&m_Model, &ProfilerModel::depthReachedZero, this, &ProfilerItemModelAdatper::flagNeedsUpdate);
+
+        m_UpdateTimer.setInterval(1000);
+        m_UpdateTimer.setSingleShot(false);
+        m_UpdateTimer.start();
     }
 
-    void ProfilerItemModelAdatper::refresh()
+    ProfilerItemModelAdatper::~ProfilerItemModelAdatper()
     {
-        beginResetModel();
-        m_Model.exportChildren(m_ChildLists);
-        endResetModel();
+        m_UpdateTimer.stop();
     }
 
     QModelIndex ProfilerItemModelAdatper::index(int row, int column, const QModelIndex &parent) const
@@ -128,5 +135,45 @@ namespace Profiling
     QModelIndex ProfilerItemModelAdatper::createIndexForSlot(int slotIndexInProfilerModel, int slotIndexInParentsChildrenList, int column) const
     {
         return createIndex(slotIndexInParentsChildrenList, column, slotIndexInProfilerModel);
+    }
+
+    int ProfilerItemModelAdatper::updateFrequency() const
+    {
+        return m_UpdateTimer.interval();
+    }
+
+    void ProfilerItemModelAdatper::setUpdateFrequency(int msec)
+    {
+        if ( msec == m_UpdateTimer.interval() || msec <  0 )
+        {
+            return;
+        }
+
+        m_UpdateTimer.setInterval(msec);
+    }
+
+    void ProfilerItemModelAdatper::requestUpdate()
+    {
+        if ( !m_bNeedsUpdate )
+        {
+            return;
+        }
+
+        // Not a very precise update for now - just get all the data again.
+        // We don't know how much has changed, but likely all of it.
+        refresh();
+        m_bNeedsUpdate = false;
+    }
+
+    void ProfilerItemModelAdatper::flagNeedsUpdate()
+    {
+        m_bNeedsUpdate = true;
+    }
+
+    void ProfilerItemModelAdatper::refresh()
+    {
+        beginResetModel();
+        m_Model.exportChildren(m_ChildLists);
+        endResetModel();
     }
 }

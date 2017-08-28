@@ -42,6 +42,10 @@ private:
         }
     };
 
+    QModelIndex createNewIndexForOuterModel(int row, int column, const QModelIndex &parent) const;
+    QModelIndex createNewIndexForInnerModel(int row, int column, const QModelIndex &parent) const;
+    int getRowCountFromInnerModel(const QModelIndex& parent) const;
+
     mutable QVector<IndexRecord> m_IndexRecords;
 };
 
